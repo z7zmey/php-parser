@@ -81,6 +81,22 @@ func (l *lexer) unget(r rune) []byte{
     return buf
 }
 
+func (l *lexer) ungetN(n int) []byte{
+    l.Unget(l.Lookahead())
+    
+    chars := l.Token();
+    
+    for i := 1; i <= n; i++ {
+        char := chars[len(chars)-i];
+        l.Unget(char);
+    }
+
+    buf := l.TokenBytes(nil)
+    buf = buf[:len(buf)-n]
+
+    return buf
+}
+
 func (l *lexer) Lex() int { // Lex(lval *yySymType)
   c := l.Enter()
 
@@ -96,17 +112,13 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 D           [0-9]+
 NC          ([^\\\$\"\{])
-NCH         [^a-zA-Z_\x7f-\xff]
 ENSCAPED    ([\\].)
-DOLLAR_E    ([\$]{ENSCAPED})
-DOLLAR_N    ([\$][^a-zA-Z_\x7f-\xff\\\$\"\{])
-CURVE_E     ([\{]{ENSCAPED})
-CURVE       ([\{][^\$\"])
-ALLOWED     ({NC}|{ENSCAPED}|{DOLLAR_E}|{DOLLAR_N}|{CURVE_E}|{CURVE})
-STR_END     ([\{\$]?[\"])?
-STR         {ALLOWED}+{ALLOWED}*
-TPL         {STR}{STR_END}
-VAR         [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
+DOLLAR      ([\$]+{ENSCAPED})|([\$]+[^a-zA-Z_\x7f-\xff\$\"\{])
+CURVE       ([\{]+{ENSCAPED})|([\{]+[^\{\$\"])
+ALLOWED     ({NC}|{ENSCAPED}|{DOLLAR}|{CURVE})
+STR         {ALLOWED}*
+STR_END     [\{\$]?[\"]
+VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 
 %%
     c = l.Rule0()
@@ -120,18 +132,22 @@ VAR         [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <PHP>[ \t\n\r]+                             fmt.Println("T_WHITESPACE")
 <PHP>\?\>                                   fmt.Println("T_CLOSE_TAG");begin(INITIAL)
 
-<PHP>[\"]{STR}*[\{\$]?[\"]                  fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
+<PHP>[\"]{STR}{STR_END}                     fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']         fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
 <PHP>[\"]                                   fmt.Println("\"");begin(STRING)
 <PHP>.                                      fmt.Printf("other: %q\n", l.TokenBytes(nil))
 
 <STRING>\"                                  fmt.Println("\""); begin(PHP)
-<STRING>\{                                  fmt.Printf("T_CURLY_OPEN: %q\n", l.TokenBytes(nil));
+<STRING>\{\$                                fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));
 <STRING>\$\{                                fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil))
-<STRING>\${VAR}?                            fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
-<STRING>{TPL}                               fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.unget('"'));
+<STRING>\$                                  fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
 
-<PHP>\${VAR}         fmt.Println("T_VARIABLE")
+<STRING>{STR}{STR_END}                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE1: %q\n", l.unget('"'));
+<STRING>{STR}[\{]+[\$]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE2: %q\n", l.ungetN(2));
+<STRING>{STR}[\$]+[\{]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE3: %q\n", l.ungetN(2));
+<STRING>{STR}[^\{][\$]+[a-zA-Z_\x7f-\xff]   fmt.Printf("T_ENCAPSED_AND_WHITESPACE4: %q\n", l.ungetN(2));
+
+<PHP>\${VAR_NAME}                           fmt.Println("T_VARIABLE")
 
 %%
     if c, ok := l.Abort(); ok { return int(c) }
