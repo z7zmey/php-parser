@@ -31,6 +31,8 @@ const (
     INITIAL = iota
     PHP
     STRING
+    STRING_VAR
+    STRING_VAR_INDEX
 )
 
 type lexer struct {
@@ -102,7 +104,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING
+%s PHP STRING STRING_VAR STRING_VAR_INDEX
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -140,12 +142,24 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <STRING>\"                                  fmt.Println("\""); begin(PHP)
 <STRING>\{\$                                fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));
 <STRING>\$\{                                fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil))
-<STRING>\$                                  fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+<STRING>\$                                  l.ungetN(1);begin(STRING_VAR)
 
-<STRING>{STR}{STR_END}                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE1: %q\n", l.unget('"'));
+<STRING>{STR}{STR_END}                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE1: %q\n", l.ungetN(1));
 <STRING>{STR}[\{]+[\$]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE2: %q\n", l.ungetN(2));
 <STRING>{STR}[\$]+[\{]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE3: %q\n", l.ungetN(2));
 <STRING>{STR}[^\{][\$]+[a-zA-Z_\x7f-\xff]   fmt.Printf("T_ENCAPSED_AND_WHITESPACE4: %q\n", l.ungetN(2));
+
+<STRING_VAR>\${VAR_NAME}                    fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
+<STRING_VAR>->{VAR_NAME}                    fmt.Printf("T_OBJECT_OPERATOR: %q\n", l.ungetN(len(l.TokenBytes(nil))-2));
+<STRING_VAR>{VAR_NAME}                      fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));begin(STRING)
+<STRING_VAR>\[                              fmt.Println("["); begin(STRING_VAR_INDEX)
+<STRING_VAR>.                               l.ungetN(1);begin(STRING)
+
+<STRING_VAR_INDEX>{D}                       fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil));
+<STRING_VAR_INDEX>\${VAR_NAME}              fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
+<STRING_VAR_INDEX>{VAR_NAME}                fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
+<STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); begin(STRING)
+<STRING_VAR_INDEX>.                         fmt.Printf("%q\n", l.TokenBytes(nil));
 
 <PHP>\${VAR_NAME}                           fmt.Println("T_VARIABLE")
 
