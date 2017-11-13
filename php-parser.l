@@ -134,9 +134,53 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <PHP>[ \t\n\r]+                             fmt.Println("T_WHITESPACE")
 <PHP>\?\>                                   fmt.Println("T_CLOSE_TAG");begin(INITIAL)
 
-<PHP>[\"]{STR}{STR_END}                     fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']         fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
-<PHP>[\"]                                   fmt.Println("\"");begin(STRING)
+<PHP>[b]?[\"]
+    binPrefix := l.TokenBytes(nil)[0] == 'b'
+    F:for {
+        c := l.Next()
+        if c == -1 {
+            break;
+        }
+
+        switch c {
+            case '"' : 
+                c = l.Next();
+                fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
+                break F;
+            case '$':
+                c = l.Next();
+                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                    if binPrefix {
+                        l.ungetN(len(l.TokenBytes(nil))-2)
+                        fmt.Println("b\""); begin(STRING)
+                    } else {
+                        l.ungetN(len(l.TokenBytes(nil))-1)
+                        fmt.Println("\""); begin(STRING)
+                    }
+                    break F;
+                } else {
+                    l.ungetN(0)
+                }
+            case '{':
+                c = l.Next();
+                if rune(c) == '$' {
+                    if binPrefix {
+                        l.ungetN(len(l.TokenBytes(nil))-2)
+                        fmt.Println("b\""); begin(STRING)
+                    } else {
+                        l.ungetN(len(l.TokenBytes(nil))-1)
+                        fmt.Println("\""); begin(STRING)
+                    }
+                    break F;
+                } else {
+                    l.ungetN(0)
+                }
+            case '\\':
+                c = l.Next();
+        }
+    }
+
 <PHP>.                                      fmt.Printf("other: %q\n", l.TokenBytes(nil))
 
 <STRING>\"                                  fmt.Println("\""); begin(PHP)
