@@ -33,14 +33,36 @@ const (
     STRING
     STRING_VAR
     STRING_VAR_INDEX
+    STRING_VAR_NAME
 )
+
 
 type lexer struct {
     *lex.Lexer
 }
 
-func begin(cond int) {
-    sc = cond
+var stateStack = []int{PHP}
+
+func pushState(state int) {
+    sc = state
+    stateStack = append(stateStack, state)
+    fmt.Printf("PUSH STATE; CURRENT STATE: %d\n", state)
+}
+
+func popState() {
+    len := len(stateStack)
+    if len <= 1 {
+        return
+    }
+
+    sc = stateStack[len - 2]
+    stateStack = stateStack[:len-1]
+    
+    fmt.Printf("POP STATE; CURRENT STATE: %d\n", sc)
+}
+
+func begin(state int) {
+    sc = state
 }
 
 func rune2Class(r rune) int {
@@ -104,7 +126,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -112,15 +134,9 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 %yyn c = l.Next()
 %yym l.Mark()
 
-D           [0-9]+
-NC          ([^\\\$\"\{])
-ENSCAPED    ([\\].)
-DOLLAR      ([\$]+{ENSCAPED})|([\$]+[^a-zA-Z_\x7f-\xff\$\"\{])
-CURVE       ([\{]+{ENSCAPED})|([\{]+[^\{\$\"])
-ALLOWED     ({NC}|{ENSCAPED}|{DOLLAR}|{CURVE})
-STR         {ALLOWED}*
-STR_END     [\{\$]?[\"]
+D           ([0-9]+)
 VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
+OPERATORS   [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 
 %%
     c = l.Rule0()
@@ -144,11 +160,10 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
         l.ungetN(len(l.TokenBytes(nil))-cnt)
         tokenBytes := l.TokenBytes(nil)[:cnt]
         fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
-        begin(STRING)
+        pushState(STRING)
     }
 
     F:for {
-        c := l.Next()
         if c == -1 {
             break;
         }
@@ -178,19 +193,51 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
             case '\\':
                 c = l.Next();
         }
+
+        c = l.Next()
     }
 
-<PHP>.                                      fmt.Printf("other: %q\n", l.TokenBytes(nil))
-
-<STRING>\"                                  fmt.Println("\""); begin(PHP)
-<STRING>\{\$                                fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));
-<STRING>\$\{                                fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil))
+<STRING>\"                                  fmt.Println("\""); popState()
+<STRING>\{\$                                fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));pushState(PHP)
+<STRING>\$\{                                fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil));pushState(STRING_VAR_NAME)
 <STRING>\$                                  l.ungetN(1);begin(STRING_VAR)
+<STRING>.
+    F1:for {
+        if c == -1 {
+            break;
+        }
 
-<STRING>{STR}{STR_END}                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE1: %q\n", l.ungetN(1));
-<STRING>{STR}[\{]+[\$]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE2: %q\n", l.ungetN(2));
-<STRING>{STR}[\$]+[\{]                      fmt.Printf("T_ENCAPSED_AND_WHITESPACE3: %q\n", l.ungetN(2));
-<STRING>{STR}[^\{][\$]+[a-zA-Z_\x7f-\xff]   fmt.Printf("T_ENCAPSED_AND_WHITESPACE4: %q\n", l.ungetN(2));
+        switch c {
+            case '"' : 
+                fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", l.TokenBytes(nil));
+                break F1;
+            
+            case '$':
+                c = l.Next();
+                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                    l.ungetN(1)
+                    tb := l.TokenBytes(nil)
+                    fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1]);
+                    break F1;
+                } 
+                l.ungetN(0)
+            
+            case '{':
+                c = l.Next();
+                if rune(c) == '$' {
+                    l.ungetN(1)
+                    tb := l.TokenBytes(nil)
+                    fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1]);
+                    break F1;
+                } 
+                l.ungetN(0)
+
+            case '\\':
+                c = l.Next();
+        }
+
+        c = l.Next()
+    }
 
 <STRING_VAR>\${VAR_NAME}                    fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR>->{VAR_NAME}                    fmt.Printf("T_OBJECT_OPERATOR: %q\n", l.ungetN(len(l.TokenBytes(nil))-2));
@@ -202,10 +249,16 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <STRING_VAR_INDEX>\${VAR_NAME}              fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>{VAR_NAME}                fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); begin(STRING)
-<STRING_VAR_INDEX>[ \n\r\t\\'#]             fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.TokenBytes(nil));
+<STRING_VAR_INDEX>[ \n\r\t\\'#]             fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.ungetN(1));begin(STRING)
+<STRING_VAR_INDEX>{OPERATORS}               fmt.Printf("%q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>.                         fmt.Printf("%q\n", l.TokenBytes(nil));
 
-<PHP>\${VAR_NAME}                           fmt.Println("T_VARIABLE")
+<STRING_VAR_NAME>{VAR_NAME}[\[\}]           fmt.Printf("T_STRING_VARNAME: %q\n", l.ungetN(1));popState();pushState(PHP)
+<STRING_VAR_NAME>.                          l.ungetN(1);popState();pushState(PHP)
+
+<PHP>\}                                     fmt.Println("}"); popState();
+<PHP>\${VAR_NAME}                           fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+<PHP>.                                      fmt.Printf("other: %q\n", l.TokenBytes(nil))
 
 %%
     if c, ok := l.Abort(); ok { return int(c) }
