@@ -186,6 +186,8 @@ yyAction:
 		goto yyrule27
 	case 28:
 		goto yyrule28
+	case 29:
+		goto yyrule29
 	}
 	goto yystate1 // silence unused label error
 yystate1:
@@ -358,11 +360,11 @@ yystate16:
 
 yystate17:
 	c = l.Next()
-	yyrule = 28
+	yyrule = 29
 	l.Mark()
 	switch {
 	default:
-		goto yyrule28
+		goto yyrule29
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate17
 	}
@@ -994,35 +996,51 @@ yystart66:
 	default:
 		goto yyabort
 	case c == '$':
+		goto yystate70
+	case c == '\n':
+		goto yystate69
+	case c == '\t' || c == '\r' || c == ' ' || c == '#' || c == '\'' || c == '\\':
 		goto yystate68
 	case c == ']':
-		goto yystate74
+		goto yystate76
 	case c >= '0' && c <= '9':
-		goto yystate70
-	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate72
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '#' || c >= '%' && c <= '/' || c >= ':' && c <= '@' || c == '[' || c == '\\' || c == '^' || c == '`' || c >= '{' && c <= '~':
+	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
+		goto yystate74
+	case c >= '\x01' && c <= '\b' || c == '\v' || c == '\f' || c >= '\x0e' && c <= '\x1f' || c == '!' || c == '"' || c == '%' || c == '&' || c >= '(' && c <= '/' || c >= ':' && c <= '@' || c == '[' || c == '^' || c == '`' || c >= '{' && c <= '~':
 		goto yystate67
 	}
 
 yystate67:
 	c = l.Next()
-	yyrule = 27
+	yyrule = 28
 	l.Mark()
-	goto yyrule27
+	goto yyrule28
 
 yystate68:
 	c = l.Next()
 	yyrule = 27
 	l.Mark()
-	switch {
-	default:
-		goto yyrule27
-	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate69
-	}
+	goto yyrule27
 
 yystate69:
+	c = l.Next()
+	yyrule = 27
+	l.Mark()
+	goto yyrule27
+
+yystate70:
+	c = l.Next()
+	yyrule = 28
+	l.Mark()
+	switch {
+	default:
+		goto yyrule28
+	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
+		goto yystate71
+	}
+
+yystate71:
 	c = l.Next()
 	yyrule = 24
 	l.Mark()
@@ -1030,43 +1048,32 @@ yystate69:
 	default:
 		goto yyrule24
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate69
-	}
-
-yystate70:
-	c = l.Next()
-	yyrule = 23
-	l.Mark()
-	switch {
-	default:
-		goto yyrule23
-	case c >= '0' && c <= '9':
-		goto yystate71
-	}
-
-yystate71:
-	c = l.Next()
-	yyrule = 23
-	l.Mark()
-	switch {
-	default:
-		goto yyrule23
-	case c >= '0' && c <= '9':
 		goto yystate71
 	}
 
 yystate72:
 	c = l.Next()
-	yyrule = 25
+	yyrule = 23
 	l.Mark()
 	switch {
 	default:
-		goto yyrule25
-	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
+		goto yyrule23
+	case c >= '0' && c <= '9':
 		goto yystate73
 	}
 
 yystate73:
+	c = l.Next()
+	yyrule = 23
+	l.Mark()
+	switch {
+	default:
+		goto yyrule23
+	case c >= '0' && c <= '9':
+		goto yystate73
+	}
+
+yystate74:
 	c = l.Next()
 	yyrule = 25
 	l.Mark()
@@ -1074,10 +1081,21 @@ yystate73:
 	default:
 		goto yyrule25
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate73
+		goto yystate75
 	}
 
-yystate74:
+yystate75:
+	c = l.Next()
+	yyrule = 25
+	l.Mark()
+	switch {
+	default:
+		goto yyrule25
+	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
+		goto yystate75
+	}
+
+yystate76:
 	c = l.Next()
 	yyrule = 26
 	l.Mark()
@@ -1121,6 +1139,17 @@ yyrule8: // [b]?[\"]
 	{
 
 		binPrefix := l.TokenBytes(nil)[0] == 'b'
+		beginString := func() {
+			cnt := 1
+			if binPrefix {
+				cnt = 2
+			}
+
+			l.ungetN(len(l.TokenBytes(nil)) - cnt)
+			tokenBytes := l.TokenBytes(nil)[:cnt]
+			fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
+			begin(STRING)
+		}
 	F:
 		for {
 			c := l.Next()
@@ -1132,38 +1161,22 @@ yyrule8: // [b]?[\"]
 				c = l.Next()
 				fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil))
 				break F
+
 			case '$':
 				c = l.Next()
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-					if binPrefix {
-						l.ungetN(len(l.TokenBytes(nil)) - 2)
-						fmt.Println("b\"")
-						begin(STRING)
-					} else {
-						l.ungetN(len(l.TokenBytes(nil)) - 1)
-						fmt.Println("\"")
-						begin(STRING)
-					}
+					beginString()
 					break F
-				} else {
-					l.ungetN(0)
 				}
+				l.ungetN(0)
+
 			case '{':
 				c = l.Next()
 				if rune(c) == '$' {
-					if binPrefix {
-						l.ungetN(len(l.TokenBytes(nil)) - 2)
-						fmt.Println("b\"")
-						begin(STRING)
-					} else {
-						l.ungetN(len(l.TokenBytes(nil)) - 1)
-						fmt.Println("\"")
-						begin(STRING)
-					}
+					beginString()
 					break F
-				} else {
-					l.ungetN(0)
 				}
+				l.ungetN(0)
 			case '\\':
 				c = l.Next()
 			}
@@ -1266,12 +1279,17 @@ yyrule26: // \]
 		begin(STRING)
 		goto yystate0
 	}
-yyrule27: // .
+yyrule27: // [ \n\r\t\\'#]
+	{
+		fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.TokenBytes(nil))
+		goto yystate0
+	}
+yyrule28: // .
 	{
 		fmt.Printf("%q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule28: // \${VAR_NAME}
+yyrule29: // \${VAR_NAME}
 	{
 		fmt.Println("T_VARIABLE")
 		goto yystate0

@@ -137,6 +137,16 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']         fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
 <PHP>[b]?[\"]
     binPrefix := l.TokenBytes(nil)[0] == 'b'
+
+    beginString := func() {
+        cnt := 1; if (binPrefix) {cnt = 2}
+        
+        l.ungetN(len(l.TokenBytes(nil))-cnt)
+        tokenBytes := l.TokenBytes(nil)[:cnt]
+        fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
+        begin(STRING)
+    }
+
     F:for {
         c := l.Next()
         if c == -1 {
@@ -148,34 +158,23 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
                 c = l.Next();
                 fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
                 break F;
+            
             case '$':
                 c = l.Next();
                 if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-                    if binPrefix {
-                        l.ungetN(len(l.TokenBytes(nil))-2)
-                        fmt.Println("b\""); begin(STRING)
-                    } else {
-                        l.ungetN(len(l.TokenBytes(nil))-1)
-                        fmt.Println("\""); begin(STRING)
-                    }
+                    beginString()
                     break F;
-                } else {
-                    l.ungetN(0)
-                }
+                } 
+                l.ungetN(0)
+            
             case '{':
                 c = l.Next();
                 if rune(c) == '$' {
-                    if binPrefix {
-                        l.ungetN(len(l.TokenBytes(nil))-2)
-                        fmt.Println("b\""); begin(STRING)
-                    } else {
-                        l.ungetN(len(l.TokenBytes(nil))-1)
-                        fmt.Println("\""); begin(STRING)
-                    }
+                    beginString()
                     break F;
-                } else {
-                    l.ungetN(0)
-                }
+                } 
+                l.ungetN(0)
+
             case '\\':
                 c = l.Next();
         }
@@ -203,6 +202,7 @@ VAR_NAME    [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 <STRING_VAR_INDEX>\${VAR_NAME}              fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>{VAR_NAME}                fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); begin(STRING)
+<STRING_VAR_INDEX>[ \n\r\t\\'#]             fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>.                         fmt.Printf("%q\n", l.TokenBytes(nil));
 
 <PHP>\${VAR_NAME}                           fmt.Println("T_VARIABLE")
