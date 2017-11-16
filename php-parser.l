@@ -142,6 +142,7 @@ BNUM            0b[01]+
 EXPONENT_DNUM   (({LNUM}|{DNUM})[eE][+-]?{LNUM})
 VAR_NAME        [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
+NEW_LINE        (\r|\n|\r\n)
 
 %%
     c = l.Rule0()
@@ -256,7 +257,7 @@ OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 <PHP>\*\*                                       fmt.Println("T_POW")
 <PHP>\<\<                                       fmt.Println("T_SL")
 <PHP>\>\>                                       fmt.Println("T_SR")
-<PHP>(#|[/][/])[^\n]+                           fmt.Println("T_COMMENT"); // TODO: handle \r\n and allow ?>
+<PHP>(#|[/][/]){NEW_LINE}                       fmt.Println("T_COMMENT"); // TODO: handle \r\n and allow ?>
 <PHP>'[^']*(\\')*'                              fmt.Println("T_CONSTANT_ENCAPSED_STRING")
 <PHP>{OPERATORS}                                fmt.Printf("%s\n", l.TokenBytes(nil));
 
@@ -270,6 +271,16 @@ OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 <PROPERTY>.                                     l.ungetN(1);begin(PHP)
 
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']             fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
+
+<PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
+    tb := l.TokenBytes(nil)
+    fmt.Println(string(tb[len(tb)-2]))
+    // switch la {
+    //     case '\'' : fmt.Println("ST_NOWDOC");//begin(ST_NOWDOC)
+    //     case '"' : fmt.Println("ST_HEREDOC");//begin(ST_HEREDOC)
+    // }
+    fmt.Printf("T_START_HEREDOC: %s\n", l.TokenBytes(nil));
+
 <PHP>[b]?[\"]
     binPrefix := l.TokenBytes(nil)[0] == 'b'
 
