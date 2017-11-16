@@ -14,6 +14,7 @@ import (
     "unicode"
     "fmt"
     "os"
+    "bytes"
 
     "github.com/cznic/golex/lex"
 )
@@ -35,6 +36,7 @@ const (
     STRING_VAR_INDEX
     STRING_VAR_NAME
     PROPERTY
+    HEREDOC_END
 )
 
 
@@ -43,6 +45,7 @@ type lexer struct {
 }
 
 var stateStack = []int{PHP}
+var heredocLabel []byte
 
 func pushState(state int) {
     sc = state
@@ -127,7 +130,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -274,12 +277,66 @@ NEW_LINE        (\r|\n|\r\n)
 
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.TokenBytes(nil)
-    fmt.Println(string(tb[len(tb)-2]))
-    // switch la {
-    //     case '\'' : fmt.Println("ST_NOWDOC");//begin(ST_NOWDOC)
-    //     case '"' : fmt.Println("ST_HEREDOC");//begin(ST_HEREDOC)
-    // }
-    fmt.Printf("T_START_HEREDOC: %s\n", l.TokenBytes(nil));
+    binPrefix := 0
+    if tb[0] == 'b' {
+        binPrefix = 1
+    }
+    
+    lblFirst := 3 + binPrefix
+    lblLast := len(tb)-2
+    if tb[lblLast] == '\r' {
+        lblLast--
+    }
+
+    for {
+        if tb[lblFirst] == ' ' || tb[lblFirst] == '\t' {
+            lblFirst++
+            continue
+        }
+
+        break
+    }
+
+    switch tb[lblFirst] {
+        case '\'' : 
+            lblFirst++
+            lblLast--
+            fmt.Println("NOWDOC");
+            //begin(NOWDOC)
+        case '"' : 
+            lblFirst++
+            lblLast--
+            fmt.Println("HEREDOC");
+            //begin(HEREDOC)
+        default:
+            //begin(HEREDOC)
+    }
+
+    heredocLabel = tb[lblFirst:lblLast+1]
+    
+    ungetCnt := len(heredocLabel)
+    searchLabelAhead := []byte{}
+    for i := 0; i < len(heredocLabel); i++ {
+        if c == -1 {
+            break;
+        }
+        searchLabelAhead = append(searchLabelAhead, byte(rune(c)))
+        c = l.Next()
+    }
+
+    if bytes.Equal(heredocLabel, searchLabelAhead) && ';' == rune(c) {
+        ungetCnt++
+        c = l.Next()
+        if '\n' == rune(c) || '\r' == rune(c) {
+            begin(HEREDOC_END)
+        }
+    }
+
+    l.ungetN(ungetCnt)
+
+    fmt.Printf("T_START_HEREDOC: %q\n", tb);
+
+<HEREDOC_END>{VAR_NAME}\;                       fmt.Printf("T_END_HEREDOC: %q\n", l.ungetN(1));begin(PHP)
 
 <PHP>[b]?[\"]
     binPrefix := l.TokenBytes(nil)[0] == 'b'
