@@ -37,6 +37,7 @@ const (
     STRING_VAR_NAME
     PROPERTY
     HEREDOC_END
+    NOWDOC
 )
 
 
@@ -130,7 +131,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -301,8 +302,7 @@ NEW_LINE        (\r|\n|\r\n)
         case '\'' : 
             lblFirst++
             lblLast--
-            fmt.Println("NOWDOC");
-            //begin(NOWDOC)
+            begin(NOWDOC)
         case '"' : 
             lblFirst++
             lblLast--
@@ -336,7 +336,34 @@ NEW_LINE        (\r|\n|\r\n)
 
     fmt.Printf("T_START_HEREDOC: %q\n", tb);
 
+<NOWDOC>.
+    searchLabel := []byte{}
+    tb := []byte{}
+    
+    for {
+        if c == -1 {
+            break;
+        }
+
+        if '\n' == rune(c) || '\r' == rune(c) {
+            if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
+                begin(HEREDOC_END)
+                tb = l.ungetN(len(heredocLabel)+1)
+                break;
+            }
+            
+            searchLabel = []byte{}
+        } else {
+            searchLabel = append(searchLabel, byte(rune(c)))
+        }
+
+        c = l.Next()
+    }
+    
+    fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", tb);
+
 <HEREDOC_END>{VAR_NAME}\;                       fmt.Printf("T_END_HEREDOC: %q\n", l.ungetN(1));begin(PHP)
+<HEREDOC_END>.                       fmt.Printf("ERROR HEREDOC: %q\n", l.ungetN(1));
 
 <PHP>[b]?[\"]
     binPrefix := l.TokenBytes(nil)[0] == 'b'
