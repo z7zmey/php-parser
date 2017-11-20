@@ -157,11 +157,49 @@ NEW_LINE        (\r|\n|\r\n)
 
 <INITIAL>[ \t\n\r]+
 <INITIAL>.
-<INITIAL>\<\?|\<\?php                           fmt.Println("T_OPEN_TAG");begin(PHP)
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              fmt.Println("T_OPEN_TAG");begin(PHP)
+<INITIAL>\<\?                                   fmt.Println("T_OPEN_TAG");begin(PHP)
 <INITIAL>\<\?=                                  fmt.Println("T_OPEN_TAG_WITH_ECHO");begin(PHP)
 
 <PHP>[ \t\n\r]+                                 fmt.Println("T_WHITESPACE")
-<PHP>\?\>                                       fmt.Println("T_CLOSE_TAG");begin(INITIAL)
+<PHP>\?\>{NEW_LINE}?                            fmt.Println("T_CLOSE_TAG");begin(INITIAL)
+
+<PHP>{DNUM}|{EXPONENT_DNUM}                     fmt.Println("T_DNUMBER")
+<PHP>{BNUM}
+    tb := l.TokenBytes(nil)
+    i:=2
+    BNUMFOR:for {
+        switch tb[i] {
+            case '0': i++;
+            default: break BNUMFOR;
+        }
+    }
+    if len(tb) - i < 64 {
+        fmt.Println("T_LNUMBER")
+    } else {
+        fmt.Println("T_DNUMBER")
+    }
+<PHP>{LNUM}
+    if len(l.TokenBytes(nil)) < 20 {
+        fmt.Println("T_LNUMBER")
+    } else {
+        fmt.Println("T_DNUMBER")
+    }
+<PHP>{HNUM}
+    tb := l.TokenBytes(nil)
+    i:=2
+    HNUMFOR:for {
+        switch tb[i] {
+            case '0': i++;
+            default: break HNUMFOR;
+        }
+    }
+    length := len(tb) - i
+    if length < 16 || (length == 16 && tb[i] <= '7') {
+        fmt.Println("T_LNUMBER")
+    } else {
+        fmt.Println("T_DNUMBER")
+    }
 
 <PHP>abstract                                   fmt.Println("T_ABSTRACT")
 <PHP>array                                      fmt.Println("T_ARRAY")
@@ -223,6 +261,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>__NAMESPACE__                              fmt.Println("T_NS_C")
 <PHP>__METHOD__                                 fmt.Println("T_METHOD_C")
 <PHP>__TRAIT__                                  fmt.Println("T_TRAIT_C")
+<PHP>__halt_compiler                            fmt.Println("T_HALT_COMPILER")
 <PHP>\([ \t]*array[ \t]*\)                      fmt.Println("T_ARRAY_CAST")
 <PHP>\([ \t]*(bool|boolean)[ \t]*\)             fmt.Println("T_BOOL_CAST")
 <PHP>\([ \t]*(real|double|float)[ \t]*\)        fmt.Println("T_DOUBLE_CAST")
@@ -264,12 +303,14 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\*\*                                       fmt.Println("T_POW")
 <PHP>\<\<                                       fmt.Println("T_SL")
 <PHP>\>\>                                       fmt.Println("T_SR")
-<PHP>(#|[/][/]){NEW_LINE}                       fmt.Println("T_COMMENT"); // TODO: handle \r\n and allow ?>
+<PHP>(#|[/][/]){NEW_LINE}                       fmt.Println("T_COMMENT"); // TODO: handle ?>
 <PHP>'[^']*(\\')*'                              fmt.Println("T_CONSTANT_ENCAPSED_STRING")
 <PHP>{OPERATORS}                                fmt.Printf("%s\n", l.TokenBytes(nil));
 
+<PHP>\{                                         fmt.Println("{"); pushState(PHP);
 <PHP>\}                                         fmt.Println("}"); popState();
 <PHP>\${VAR_NAME}                               fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+<PHP>{VAR_NAME}                                 fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
 
 <PHP>->                                         fmt.Println("T_OBJECT_OPERATOR");begin(PROPERTY)
 <PROPERTY>[ \t\n\r]+                            fmt.Println("T_WHITESPACE");
@@ -554,7 +595,7 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR>\[                              fmt.Println("["); pushState(STRING_VAR_INDEX)
 <STRING_VAR>.|[ \t\n\r]                     l.ungetN(1);popState()
 
-<STRING_VAR_INDEX>{LNUM}                    fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil));
+<STRING_VAR_INDEX>{LNUM}|{HNUM}|{BNUM}      fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>\${VAR_NAME}              fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>{VAR_NAME}                fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); popState(); popState()
@@ -564,8 +605,6 @@ NEW_LINE        (\r|\n|\r\n)
 
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           fmt.Printf("T_STRING_VARNAME: %q\n", l.ungetN(1));popState();pushState(PHP)
 <STRING_VAR_NAME>.                          l.ungetN(1);popState();pushState(PHP)
-
-<PHP>.                                      fmt.Printf("other: %q\n", l.TokenBytes(nil))
 
 %%
     if c, ok := l.Abort(); ok { return int(c) }
