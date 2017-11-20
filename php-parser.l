@@ -38,6 +38,7 @@ const (
     PROPERTY
     HEREDOC_END
     NOWDOC
+    HEREDOC
 )
 
 
@@ -51,7 +52,6 @@ var heredocLabel []byte
 func pushState(state int) {
     sc = state
     stateStack = append(stateStack, state)
-    fmt.Printf("PUSH STATE; CURRENT STATE: %d\n", state)
 }
 
 func popState() {
@@ -62,11 +62,13 @@ func popState() {
 
     sc = stateStack[len - 2]
     stateStack = stateStack[:len-1]
-    
-    fmt.Printf("POP STATE; CURRENT STATE: %d\n", sc)
 }
 
 func begin(state int) {
+    len := len(stateStack)
+    stateStack = stateStack[:len-1]
+    stateStack = append(stateStack, state)
+
     sc = state
 }
 
@@ -131,7 +133,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -306,13 +308,13 @@ NEW_LINE        (\r|\n|\r\n)
         case '"' : 
             lblFirst++
             lblLast--
-            fmt.Println("HEREDOC");
-            //begin(HEREDOC)
+            begin(HEREDOC)
         default:
-            //begin(HEREDOC)
+            begin(HEREDOC)
     }
 
-    heredocLabel = tb[lblFirst:lblLast+1]
+    heredocLabel = make([]byte, lblLast - lblFirst + 1)
+    copy(heredocLabel, tb[lblFirst:lblLast+1])
     
     ungetCnt := len(heredocLabel)
     searchLabelAhead := []byte{}
@@ -359,7 +361,7 @@ NEW_LINE        (\r|\n|\r\n)
 
         c = l.Next()
     }
-    
+
     fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", tb);
 
 <HEREDOC_END>{VAR_NAME}\;                       fmt.Printf("T_END_HEREDOC: %q\n", l.ungetN(1));begin(PHP)
@@ -412,9 +414,9 @@ NEW_LINE        (\r|\n|\r\n)
     }
 
 <STRING>\"                                  fmt.Println("\""); popState()
-<STRING>\{\$                                fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));pushState(PHP)
-<STRING>\$\{                                fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil));pushState(STRING_VAR_NAME)
-<STRING>\$                                  l.ungetN(1);begin(STRING_VAR)
+<STRING,HEREDOC>\{\$                        fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));pushState(PHP)
+<STRING,HEREDOC>\$\{                        fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil));pushState(STRING_VAR_NAME)
+<STRING,HEREDOC>\$                          l.ungetN(1);pushState(STRING_VAR)
 <STRING>.
     F1:for {
         if c == -1 {
@@ -453,17 +455,68 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
+<HEREDOC>.|[ \t\n\r]
+    searchLabel := []byte{}
+    tb := []byte{}
+    
+    HEREDOCFOR:for {
+        if c == -1 {
+            break;
+        }
+
+        switch c {
+            case '\n': fallthrough
+            case '\r':
+                if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
+                    begin(HEREDOC_END)
+                    tb = l.ungetN(len(heredocLabel)+1)
+                    break HEREDOCFOR;
+                }
+                
+                searchLabel = []byte{}
+            
+            case '$':
+                c = l.Next();
+                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                    tb = l.ungetN(1)
+                    break HEREDOCFOR;
+                } 
+                l.ungetN(0)
+                searchLabel = []byte{}
+            
+            case '{':
+                c = l.Next();
+                if rune(c) == '$' {
+                    tb = l.ungetN(1)
+                    break HEREDOCFOR;
+                } 
+                l.ungetN(0)
+                searchLabel = []byte{}
+
+            case '\\':
+                c = l.Next();
+                searchLabel = []byte{}
+            
+            default:
+                searchLabel = append(searchLabel, byte(rune(c)))
+        }
+
+        c = l.Next()
+    }
+
+    fmt.Printf("T_ENCAPSED_AND_WHITESPACE(HEREDOC): %q\n", tb);
+
 <STRING_VAR>\${VAR_NAME}                    fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR>->{VAR_NAME}                    fmt.Printf("T_OBJECT_OPERATOR: %q\n", l.ungetN(len(l.TokenBytes(nil))-2));
-<STRING_VAR>{VAR_NAME}                      fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));begin(STRING)
-<STRING_VAR>\[                              fmt.Println("["); begin(STRING_VAR_INDEX)
-<STRING_VAR>.                               l.ungetN(1);begin(STRING)
+<STRING_VAR>{VAR_NAME}                      fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));popState()
+<STRING_VAR>\[                              fmt.Println("["); pushState(STRING_VAR_INDEX)
+<STRING_VAR>.|[ \t\n\r]                     l.ungetN(1);popState()
 
 <STRING_VAR_INDEX>{LNUM}                    fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>\${VAR_NAME}              fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>{VAR_NAME}                fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil));
-<STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); begin(STRING)
-<STRING_VAR_INDEX>[ \n\r\t\\'#]             fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.ungetN(1));begin(STRING)
+<STRING_VAR_INDEX>\]                        fmt.Println("\"]\""); popState(); popState()
+<STRING_VAR_INDEX>[ \n\r\t\\'#]             fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.ungetN(1)); popState(); popState()
 <STRING_VAR_INDEX>{OPERATORS}               fmt.Printf("%q\n", l.TokenBytes(nil));
 <STRING_VAR_INDEX>.                         fmt.Printf("%q\n", l.TokenBytes(nil));
 

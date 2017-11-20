@@ -39,6 +39,7 @@ const (
 	PROPERTY
 	HEREDOC_END
 	NOWDOC
+	HEREDOC
 )
 
 type lexer struct {
@@ -51,7 +52,6 @@ var heredocLabel []byte
 func pushState(state int) {
 	sc = state
 	stateStack = append(stateStack, state)
-	fmt.Printf("PUSH STATE; CURRENT STATE: %d\n", state)
 }
 
 func popState() {
@@ -62,11 +62,13 @@ func popState() {
 
 	sc = stateStack[len-2]
 	stateStack = stateStack[:len-1]
-
-	fmt.Printf("POP STATE; CURRENT STATE: %d\n", sc)
 }
 
 func begin(state int) {
+	len := len(stateStack)
+	stateStack = stateStack[:len-1]
+	stateStack = append(stateStack, state)
+
 	sc = state
 }
 
@@ -158,6 +160,8 @@ yystate0:
 		goto yystart514
 	case 8: // start condition: NOWDOC
 		goto yystart519
+	case 9: // start condition: HEREDOC
+		goto yystart521
 	}
 
 	goto yystate0 // silence unused label error
@@ -450,6 +454,8 @@ yyAction:
 		goto yyrule142
 	case 143:
 		goto yyrule143
+	case 144:
+		goto yyrule144
 	}
 	goto yystate1 // silence unused label error
 yystate1:
@@ -653,9 +659,9 @@ yystart11:
 
 yystate12:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
-	goto yyrule143
+	goto yyrule144
 
 yystate13:
 	c = l.Next()
@@ -715,11 +721,11 @@ yystate18:
 
 yystate19:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == '\n':
 		goto yystate20
 	case c == '\r':
@@ -809,11 +815,11 @@ yystate28:
 
 yystate29:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == '\'':
 		goto yystate31
 	case c == '\\':
@@ -1993,11 +1999,11 @@ yystate151:
 
 yystate152:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == '_':
 		goto yystate153
 	}
@@ -2534,11 +2540,11 @@ yystate212:
 
 yystate213:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'b':
 		goto yystate214
 	case c == 'n':
@@ -2665,11 +2671,11 @@ yystate227:
 
 yystate228:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == '"':
 		goto yystate229
 	case c == '<':
@@ -2737,11 +2743,11 @@ yystate235:
 
 yystate236:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'a':
 		goto yystate237
 	case c == 'f':
@@ -3062,11 +3068,11 @@ yystate272:
 
 yystate273:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'e':
 		goto yystate274
 	case c == 'i':
@@ -3193,11 +3199,11 @@ yystate287:
 
 yystate288:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'c':
 		goto yystate289
 	case c == 'l':
@@ -3569,11 +3575,11 @@ yystate329:
 
 yystate330:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'i':
 		goto yystate331
 	case c == 'o':
@@ -3690,11 +3696,11 @@ yystate342:
 
 yystate343:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'l':
 		goto yystate344
 	case c == 'o':
@@ -3769,11 +3775,11 @@ yystate351:
 
 yystate352:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'f':
 		goto yystate353
 	case c == 'm':
@@ -4052,11 +4058,11 @@ yystate383:
 
 yystate384:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'a':
 		goto yystate385
 	case c == 'e':
@@ -4149,11 +4155,11 @@ yystate394:
 
 yystate395:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'r':
 		goto yystate396
 	}
@@ -4166,11 +4172,11 @@ yystate396:
 
 yystate397:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'r':
 		goto yystate398
 	case c == 'u':
@@ -4334,11 +4340,11 @@ yystate415:
 
 yystate416:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'e':
 		goto yystate417
 	}
@@ -4387,11 +4393,11 @@ yystate421:
 
 yystate422:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 't':
 		goto yystate423
 	case c == 'w':
@@ -4484,11 +4490,11 @@ yystate432:
 
 yystate433:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'h':
 		goto yystate434
 	case c == 'r':
@@ -4571,11 +4577,11 @@ yystate442:
 
 yystate443:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 's':
 		goto yystate444
 	}
@@ -4597,11 +4603,11 @@ yystate445:
 
 yystate446:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'a':
 		goto yystate447
 	}
@@ -4623,11 +4629,11 @@ yystate448:
 
 yystate449:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'h':
 		goto yystate450
 	}
@@ -4667,11 +4673,11 @@ yystate453:
 
 yystate454:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'o':
 		goto yystate455
 	}
@@ -4693,11 +4699,11 @@ yystate456:
 
 yystate457:
 	c = l.Next()
-	yyrule = 143
+	yyrule = 144
 	l.Mark()
 	switch {
 	default:
-		goto yyrule143
+		goto yyrule144
 	case c == 'i':
 		goto yystate458
 	}
@@ -4902,45 +4908,45 @@ yystart479:
 		goto yystate488
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate486
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '#' || c >= '%' && c <= ',' || c >= '.' && c <= '@' || c >= '\\' && c <= '^' || c == '`' || c >= '{' && c <= '~':
+	case c >= '\x01' && c <= '#' || c >= '%' && c <= ',' || c >= '.' && c <= '@' || c >= '\\' && c <= '^' || c == '`' || c >= '{' && c <= '~':
 		goto yystate480
 	}
 
 yystate480:
 	c = l.Next()
-	yyrule = 133
+	yyrule = 134
 	l.Mark()
-	goto yyrule133
+	goto yyrule134
 
 yystate481:
 	c = l.Next()
-	yyrule = 133
+	yyrule = 134
 	l.Mark()
 	switch {
 	default:
-		goto yyrule133
+		goto yyrule134
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate482
 	}
 
 yystate482:
 	c = l.Next()
-	yyrule = 129
+	yyrule = 130
 	l.Mark()
 	switch {
 	default:
-		goto yyrule129
+		goto yyrule130
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate482
 	}
 
 yystate483:
 	c = l.Next()
-	yyrule = 133
+	yyrule = 134
 	l.Mark()
 	switch {
 	default:
-		goto yyrule133
+		goto yyrule134
 	case c == '>':
 		goto yystate484
 	}
@@ -4956,42 +4962,42 @@ yystate484:
 
 yystate485:
 	c = l.Next()
-	yyrule = 130
+	yyrule = 131
 	l.Mark()
 	switch {
 	default:
-		goto yyrule130
+		goto yyrule131
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate485
 	}
 
 yystate486:
 	c = l.Next()
-	yyrule = 131
+	yyrule = 132
 	l.Mark()
 	switch {
 	default:
-		goto yyrule131
+		goto yyrule132
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate487
 	}
 
 yystate487:
 	c = l.Next()
-	yyrule = 131
+	yyrule = 132
 	l.Mark()
 	switch {
 	default:
-		goto yyrule131
+		goto yyrule132
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate487
 	}
 
 yystate488:
 	c = l.Next()
-	yyrule = 132
+	yyrule = 133
 	l.Mark()
-	goto yyrule132
+	goto yyrule133
 
 	goto yystate489 // silence unused label error
 yystate489:
@@ -5020,99 +5026,99 @@ yystart489:
 
 yystate490:
 	c = l.Next()
-	yyrule = 140
+	yyrule = 141
 	l.Mark()
-	goto yyrule140
+	goto yyrule141
 
 yystate491:
-	c = l.Next()
-	yyrule = 138
-	l.Mark()
-	goto yyrule138
-
-yystate492:
-	c = l.Next()
-	yyrule = 138
-	l.Mark()
-	goto yyrule138
-
-yystate493:
 	c = l.Next()
 	yyrule = 139
 	l.Mark()
 	goto yyrule139
 
-yystate494:
+yystate492:
 	c = l.Next()
 	yyrule = 139
 	l.Mark()
+	goto yyrule139
+
+yystate493:
+	c = l.Next()
+	yyrule = 140
+	l.Mark()
+	goto yyrule140
+
+yystate494:
+	c = l.Next()
+	yyrule = 140
+	l.Mark()
 	switch {
 	default:
-		goto yyrule139
+		goto yyrule140
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate495
 	}
 
 yystate495:
 	c = l.Next()
-	yyrule = 135
+	yyrule = 136
 	l.Mark()
 	switch {
 	default:
-		goto yyrule135
+		goto yyrule136
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate495
 	}
 
 yystate496:
 	c = l.Next()
-	yyrule = 134
+	yyrule = 135
 	l.Mark()
 	switch {
 	default:
-		goto yyrule134
+		goto yyrule135
 	case c >= '0' && c <= '9':
 		goto yystate497
 	}
 
 yystate497:
 	c = l.Next()
-	yyrule = 134
+	yyrule = 135
 	l.Mark()
 	switch {
 	default:
-		goto yyrule134
+		goto yyrule135
 	case c >= '0' && c <= '9':
 		goto yystate497
 	}
 
 yystate498:
 	c = l.Next()
-	yyrule = 136
+	yyrule = 137
 	l.Mark()
 	switch {
 	default:
-		goto yyrule136
+		goto yyrule137
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate499
 	}
 
 yystate499:
 	c = l.Next()
-	yyrule = 136
+	yyrule = 137
 	l.Mark()
 	switch {
 	default:
-		goto yyrule136
+		goto yyrule137
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate499
 	}
 
 yystate500:
 	c = l.Next()
-	yyrule = 137
+	yyrule = 138
 	l.Mark()
-	goto yyrule137
+	goto yyrule138
 
 	goto yystate501 // silence unused label error
 yystate501:
@@ -5129,17 +5135,17 @@ yystart501:
 
 yystate502:
 	c = l.Next()
-	yyrule = 142
+	yyrule = 143
 	l.Mark()
-	goto yyrule142
+	goto yyrule143
 
 yystate503:
 	c = l.Next()
-	yyrule = 142
+	yyrule = 143
 	l.Mark()
 	switch {
 	default:
-		goto yyrule142
+		goto yyrule143
 	case c == '[' || c == '}':
 		goto yystate505
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
@@ -5159,9 +5165,9 @@ yystate504:
 
 yystate505:
 	c = l.Next()
-	yyrule = 141
+	yyrule = 142
 	l.Mark()
-	goto yyrule141
+	goto yyrule142
 
 	goto yystate506 // silence unused label error
 yystate506:
@@ -5314,6 +5320,49 @@ yystate520:
 	yyrule = 120
 	l.Mark()
 	goto yyrule120
+
+	goto yystate521 // silence unused label error
+yystate521:
+	c = l.Next()
+yystart521:
+	switch {
+	default:
+		goto yyabort
+	case c == '$':
+		goto yystate523
+	case c == '{':
+		goto yystate524
+	case c >= '\x01' && c <= '#' || c >= '%' && c <= 'z' || c >= '|' && c <= 'ÿ':
+		goto yystate522
+	}
+
+yystate522:
+	c = l.Next()
+	yyrule = 129
+	l.Mark()
+	goto yyrule129
+
+yystate523:
+	c = l.Next()
+	yyrule = 127
+	l.Mark()
+	switch {
+	default:
+		goto yyrule127
+	case c == '{':
+		goto yystate476
+	}
+
+yystate524:
+	c = l.Next()
+	yyrule = 129
+	l.Mark()
+	switch {
+	default:
+		goto yyrule129
+	case c == '$':
+		goto yystate478
+	}
 
 yyrule1: // [ \t\n\r]+
 
@@ -5937,12 +5986,12 @@ yyrule119: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 		case '"':
 			lblFirst++
 			lblLast--
-			fmt.Println("HEREDOC")
-			//begin(HEREDOC)
+			begin(HEREDOC)
 		default:
-			//begin(HEREDOC)
+			begin(HEREDOC)
 		}
-		heredocLabel = tb[lblFirst : lblLast+1]
+		heredocLabel = make([]byte, lblLast-lblFirst+1)
+		copy(heredocLabel, tb[lblFirst:lblLast+1])
 
 		ungetCnt := len(heredocLabel)
 		searchLabelAhead := []byte{}
@@ -5969,7 +6018,7 @@ yyrule120: // .
 
 		searchLabel := []byte{}
 		tb := []byte{}
-	ND_FOR:
+
 		for {
 			if c == -1 {
 				break
@@ -5978,50 +6027,13 @@ yyrule120: // .
 				if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
 					begin(HEREDOC_END)
 					tb = l.ungetN(len(heredocLabel) + 1)
-					break ND_FOR
+					break
 				}
 
 				searchLabel = []byte{}
 			} else {
 				searchLabel = append(searchLabel, byte(rune(c)))
 			}
-			// fmt.Printf("current: %q\n", rune(c));
-			// ND_SWITCH:switch c {
-			//     case '\r':
-			//         c = l.Next()
-			//         if rune(c) != '\n' {
-			//             l.ungetN(0)
-			//         }
-			//         fallthrough
-			//     case '\n':
-			//         c = l.Next()
-			//         ungetCnt := len(heredocLabel)
-			//         searchLabelAhead := []byte{}
-			//         for i := 0; i <= len(heredocLabel); i++ {
-			//             if c == -1 {
-			//                 break ND_FOR;
-			//             }
-			//             if '\n' == rune(c) || '\r' == rune(c) {
-			//                 break ND_SWITCH;
-			//             }
-			//             searchLabelAhead = append(searchLabelAhead, byte(rune(c)))
-			//             c = l.Next()
-			//         }
-			//         fmt.Printf("searchLabelAhead: %q %q\n", searchLabelAhead, heredocLabel);
-			//         if bytes.Equal(heredocLabel, searchLabelAhead) && ';' == rune(c) {
-			//             ungetCnt++
-			//             c = l.Next()
-
-			//             if c == -1 {
-			//                 break ND_FOR;
-			//             }
-			//             if '\n' == rune(c) || '\r' == rune(c) {
-			//                 begin(HEREDOC_END)
-			//                 l.ungetN(ungetCnt)
-			//                 break ND_FOR;
-			//             }
-			//         }
-			// }
 			c = l.Next()
 		}
 		fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", tb)
@@ -6107,7 +6119,7 @@ yyrule126: // \$\{
 yyrule127: // \$
 	{
 		l.ungetN(1)
-		begin(STRING_VAR)
+		pushState(STRING_VAR)
 		goto yystate0
 	}
 yyrule128: // .
@@ -6149,86 +6161,140 @@ yyrule128: // .
 		}
 		goto yystate0
 	}
-yyrule129: // \${VAR_NAME}
+yyrule129: // .|[ \t\n\r]
+	{
+
+		searchLabel := []byte{}
+		tb := []byte{}
+
+	HEREDOCFOR:
+		for {
+			if c == -1 {
+				break
+			}
+			switch c {
+			case '\n':
+				fallthrough
+			case '\r':
+				if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
+					begin(HEREDOC_END)
+					tb = l.ungetN(len(heredocLabel) + 1)
+					break HEREDOCFOR
+				}
+
+				searchLabel = []byte{}
+
+			case '$':
+				c = l.Next()
+				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+					tb = l.ungetN(1)
+					break HEREDOCFOR
+				}
+				l.ungetN(0)
+				searchLabel = []byte{}
+
+			case '{':
+				c = l.Next()
+				if rune(c) == '$' {
+					tb = l.ungetN(1)
+					break HEREDOCFOR
+				}
+				l.ungetN(0)
+				searchLabel = []byte{}
+			case '\\':
+				c = l.Next()
+				searchLabel = []byte{}
+
+			default:
+				searchLabel = append(searchLabel, byte(rune(c)))
+			}
+			c = l.Next()
+		}
+		fmt.Printf("T_ENCAPSED_AND_WHITESPACE(HEREDOC): %q\n", tb)
+		goto yystate0
+	}
+yyrule130: // \${VAR_NAME}
 	{
 		fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule130: // ->{VAR_NAME}
+yyrule131: // ->{VAR_NAME}
 	{
 		fmt.Printf("T_OBJECT_OPERATOR: %q\n", l.ungetN(len(l.TokenBytes(nil))-2))
 		goto yystate0
 	}
-yyrule131: // {VAR_NAME}
+yyrule132: // {VAR_NAME}
 	{
 		fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil))
-		begin(STRING)
+		popState()
 		goto yystate0
 	}
-yyrule132: // \[
+yyrule133: // \[
 	{
 		fmt.Println("[")
-		begin(STRING_VAR_INDEX)
+		pushState(STRING_VAR_INDEX)
 		goto yystate0
 	}
-yyrule133: // .
+yyrule134: // .|[ \t\n\r]
 	{
 		l.ungetN(1)
-		begin(STRING)
+		popState()
 		goto yystate0
 	}
-yyrule134: // {LNUM}
+yyrule135: // {LNUM}
 	{
 		fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule135: // \${VAR_NAME}
+yyrule136: // \${VAR_NAME}
 	{
 		fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule136: // {VAR_NAME}
+yyrule137: // {VAR_NAME}
 	{
 		fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule137: // \]
+yyrule138: // \]
 	{
 		fmt.Println("\"]\"")
-		begin(STRING)
+		popState()
+		popState()
 		goto yystate0
 	}
-yyrule138: // [ \n\r\t\\'#]
+yyrule139: // [ \n\r\t\\'#]
 	{
 		fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.ungetN(1))
-		begin(STRING)
+		popState()
+		popState()
 		goto yystate0
 	}
-yyrule139: // {OPERATORS}
+yyrule140: // {OPERATORS}
 	{
 		fmt.Printf("%q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule140: // .
+yyrule141: // .
 	{
 		fmt.Printf("%q\n", l.TokenBytes(nil))
 		goto yystate0
 	}
-yyrule141: // {VAR_NAME}[\[\}]
+yyrule142: // {VAR_NAME}[\[\}]
 	{
 		fmt.Printf("T_STRING_VARNAME: %q\n", l.ungetN(1))
 		popState()
 		pushState(PHP)
 		goto yystate0
 	}
-yyrule142: // .
+yyrule143: // .
 	{
 		l.ungetN(1)
 		popState()
 		pushState(PHP)
 		goto yystate0
 	}
-yyrule143: // .
+yyrule144: // .
 	{
 		fmt.Printf("other: %q\n", l.TokenBytes(nil))
 		goto yystate0
