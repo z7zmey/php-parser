@@ -39,6 +39,7 @@ const (
     HEREDOC_END
     NOWDOC
     HEREDOC
+    BACKQUOTE
 )
 
 
@@ -133,7 +134,7 @@ func (l *lexer) Lex() int { // Lex(lval *yySymType)
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC BACKQUOTE
 
 %yyb last == '\n' || last = '\0'
 %yyt sc
@@ -278,6 +279,9 @@ NEW_LINE        (\r|\n|\r\n)
 
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']             fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil));
 
+<PHP>`                                          fmt.Println("`");begin(BACKQUOTE)
+<BACKQUOTE>`                                    fmt.Println("`");begin(PHP)
+
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.TokenBytes(nil)
     binPrefix := 0
@@ -414,9 +418,9 @@ NEW_LINE        (\r|\n|\r\n)
     }
 
 <STRING>\"                                  fmt.Println("\""); popState()
-<STRING,HEREDOC>\{\$                        fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));pushState(PHP)
-<STRING,HEREDOC>\$\{                        fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil));pushState(STRING_VAR_NAME)
-<STRING,HEREDOC>\$                          l.ungetN(1);pushState(STRING_VAR)
+<STRING,HEREDOC,BACKQUOTE>\{\$              fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1));pushState(PHP)
+<STRING,HEREDOC,BACKQUOTE>\$\{              fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil));pushState(STRING_VAR_NAME)
+<STRING,HEREDOC,BACKQUOTE>\$                l.ungetN(1);pushState(STRING_VAR)
 <STRING>.
     F1:for {
         if c == -1 {
@@ -445,6 +449,44 @@ NEW_LINE        (\r|\n|\r\n)
                     tb := l.TokenBytes(nil)
                     fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1]);
                     break F1;
+                } 
+                l.ungetN(0)
+
+            case '\\':
+                c = l.Next();
+        }
+
+        c = l.Next()
+    }
+
+<BACKQUOTE>.
+    F2:for {
+        if c == -1 {
+            break;
+        }
+
+        switch c {
+            case '`' : 
+                fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", l.TokenBytes(nil));
+                break F2;
+            
+            case '$':
+                c = l.Next();
+                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                    l.ungetN(1)
+                    tb := l.TokenBytes(nil)
+                    fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1]);
+                    break F2;
+                } 
+                l.ungetN(0)
+            
+            case '{':
+                c = l.Next();
+                if rune(c) == '$' {
+                    l.ungetN(1)
+                    tb := l.TokenBytes(nil)
+                    fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1]);
+                    break F2;
                 } 
                 l.ungetN(0)
 
