@@ -4,13 +4,13 @@
 
 # blame: jnml, labs.nic.cz
 
-all: php-parser.go
+all: lexer.go
 	go build
 
 run: all
 	./php-parser
 
-php-parser.go: php-parser.l
+lexer.go: lexer.l
 	golex -t $< | gofmt > $@
 
 clean:
