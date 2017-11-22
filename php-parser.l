@@ -224,6 +224,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>endif                                      fmt.Println("T_ENDIF")
 <PHP>endswitch                                  fmt.Println("T_ENDSWITCH")
 <PHP>endwhile                                   fmt.Println("T_ENDWHILE")
+<PHP>eval                                       fmt.Println("T_EVAL")
 <PHP>exit|die                                   fmt.Println("T_EXIT")
 <PHP>extends                                    fmt.Println("T_EXTENDS")
 <PHP>final                                      fmt.Println("T_FINAL")
@@ -234,13 +235,16 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>global                                     fmt.Println("T_GLOBAL")
 <PHP>goto                                       fmt.Println("T_GOTO")
 <PHP>if                                         fmt.Println("T_IF")
+<PHP>isset                                      fmt.Println("T_ISSET")
 <PHP>implements                                 fmt.Println("T_IMPLEMENTS")
 <PHP>instanceof                                 fmt.Println("T_INSTANCEOF")
 <PHP>insteadof                                  fmt.Println("T_INSTEADOF")
 <PHP>interface                                  fmt.Println("T_INTERFACE")
+<PHP>list                                       fmt.Println("T_LIST")
 <PHP>namespace                                  fmt.Println("T_NAMESPACE")
 <PHP>private                                    fmt.Println("T_PRIVATE")
 <PHP>public                                     fmt.Println("T_PUBLIC")
+<PHP>print                                      fmt.Println("T_PRINT")
 <PHP>protected                                  fmt.Println("T_PROTECTED")
 <PHP>return                                     fmt.Println("T_RETURN")
 <PHP>static                                     fmt.Println("T_STATIC")
@@ -248,6 +252,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>throw                                      fmt.Println("T_THROW")
 <PHP>trait                                      fmt.Println("T_TRAIT")
 <PHP>try                                        fmt.Println("T_TRY")
+<PHP>unset                                      fmt.Println("T_UNSET")
 <PHP>use                                        fmt.Println("T_USE")
 <PHP>var                                        fmt.Println("T_VAR")
 <PHP>while                                      fmt.Println("T_WHILE")
@@ -308,6 +313,8 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\<\<                                       fmt.Println("T_SL")
 <PHP>\>\>                                       fmt.Println("T_SR")
 <PHP>(#|[/][/]){NEW_LINE}                       fmt.Println("T_COMMENT"); // TODO: handle ?>
+<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        fmt.Println("T_COMMENT"); // TODO: handle ?>
+<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     fmt.Println("T_DOC_COMMENT"); // TODO: handle ?>
 <PHP>'[^']*(\\')*'                              fmt.Println("T_CONSTANT_ENCAPSED_STRING")
 <PHP>{OPERATORS}                                fmt.Printf("%s\n", l.TokenBytes(nil));
 
@@ -554,7 +561,7 @@ NEW_LINE        (\r|\n|\r\n)
         switch c {
             case '\n': fallthrough
             case '\r':
-                if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
+                if bytes.Equal(append(heredocLabel, ';'), searchLabel) { // TODO handle ';' as optional
                     begin(HEREDOC_END)
                     tb = l.ungetN(len(heredocLabel)+1)
                     break HEREDOCFOR;
