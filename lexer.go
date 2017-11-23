@@ -14,7 +14,6 @@ import (
 	"fmt"
 	"go/token"
 	"io"
-	"os"
 	"unicode"
 
 	"github.com/cznic/golex/lex"
@@ -83,7 +82,8 @@ func rune2Class(r rune) int {
 	if unicode.IsDigit(r) {
 		return classUnicodeDigit
 	}
-	return classOther
+	// return classOther
+	return -1
 }
 
 func newLexer(src io.Reader, dst io.Writer, fName string) *lexer {
@@ -94,8 +94,6 @@ func newLexer(src io.Reader, dst io.Writer, fName string) *lexer {
 	}
 	return &lexer{lx}
 }
-
-type yySymType struct{}
 
 func (l *lexer) unget(r rune) []byte {
 	l.Unget(l.Lookahead())
@@ -131,14 +129,13 @@ func (l *lexer) ungetN(n int) []byte {
 	return buf
 }
 
-func (l *lexer) Lex() int { // Lex(lval *yySymType)
+func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
 	c := l.Enter()
 
 yystate0:
 	yyrule := -1
 	_ = yyrule
 	c = l.Rule0()
-	// ([\$]{NCH})*
 
 	switch yyt := sc; yyt {
 	default:
@@ -160,11 +157,11 @@ yystate0:
 	case 7: // start condition: HEREDOC_END
 		goto yystart593
 	case 8: // start condition: NOWDOC
-		goto yystart598
+		goto yystart596
 	case 9: // start condition: HEREDOC
-		goto yystart600
+		goto yystart598
 	case 10: // start condition: BACKQUOTE
-		goto yystart604
+		goto yystart602
 	}
 
 	goto yystate0 // silence unused label error
@@ -499,8 +496,6 @@ yyAction:
 		goto yyrule163
 	case 164:
 		goto yyrule164
-	case 165:
-		goto yyrule165
 	}
 	goto yystate1 // silence unused label error
 yystate1:
@@ -773,9 +768,9 @@ yystate17:
 
 yystate18:
 	c = l.Next()
-	yyrule = 144
+	yyrule = 143
 	l.Mark()
-	goto yyrule144
+	goto yyrule143
 
 yystate19:
 	c = l.Next()
@@ -7053,49 +7048,49 @@ yystart546:
 
 yystate547:
 	c = l.Next()
-	yyrule = 149
+	yyrule = 148
 	l.Mark()
-	goto yyrule149
+	goto yyrule148
 
 yystate548:
 	c = l.Next()
-	yyrule = 145
+	yyrule = 144
 	l.Mark()
-	goto yyrule145
+	goto yyrule144
 
 yystate549:
 	c = l.Next()
-	yyrule = 148
+	yyrule = 147
 	l.Mark()
 	switch {
 	default:
-		goto yyrule148
+		goto yyrule147
 	case c == '{':
 		goto yystate550
 	}
 
 yystate550:
 	c = l.Next()
-	yyrule = 147
+	yyrule = 146
 	l.Mark()
-	goto yyrule147
+	goto yyrule146
 
 yystate551:
 	c = l.Next()
-	yyrule = 149
+	yyrule = 148
 	l.Mark()
 	switch {
 	default:
-		goto yyrule149
+		goto yyrule148
 	case c == '$':
 		goto yystate552
 	}
 
 yystate552:
 	c = l.Next()
-	yyrule = 146
+	yyrule = 145
 	l.Mark()
-	goto yyrule146
+	goto yyrule145
 
 	goto yystate553 // silence unused label error
 yystate553:
@@ -7118,39 +7113,39 @@ yystart553:
 
 yystate554:
 	c = l.Next()
-	yyrule = 156
+	yyrule = 155
 	l.Mark()
-	goto yyrule156
+	goto yyrule155
 
 yystate555:
 	c = l.Next()
-	yyrule = 156
+	yyrule = 155
 	l.Mark()
 	switch {
 	default:
-		goto yyrule156
+		goto yyrule155
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate556
 	}
 
 yystate556:
 	c = l.Next()
-	yyrule = 152
+	yyrule = 151
 	l.Mark()
 	switch {
 	default:
-		goto yyrule152
+		goto yyrule151
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate556
 	}
 
 yystate557:
 	c = l.Next()
-	yyrule = 156
+	yyrule = 155
 	l.Mark()
 	switch {
 	default:
-		goto yyrule156
+		goto yyrule155
 	case c == '>':
 		goto yystate558
 	}
@@ -7166,42 +7161,42 @@ yystate558:
 
 yystate559:
 	c = l.Next()
-	yyrule = 153
+	yyrule = 152
 	l.Mark()
 	switch {
 	default:
-		goto yyrule153
+		goto yyrule152
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate559
 	}
 
 yystate560:
 	c = l.Next()
-	yyrule = 154
+	yyrule = 153
 	l.Mark()
 	switch {
 	default:
-		goto yyrule154
+		goto yyrule153
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate561
 	}
 
 yystate561:
 	c = l.Next()
-	yyrule = 154
+	yyrule = 153
 	l.Mark()
 	switch {
 	default:
-		goto yyrule154
+		goto yyrule153
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate561
 	}
 
 yystate562:
 	c = l.Next()
-	yyrule = 155
+	yyrule = 154
 	l.Mark()
-	goto yyrule155
+	goto yyrule154
 
 	goto yystate563 // silence unused label error
 yystate563:
@@ -7232,57 +7227,57 @@ yystart563:
 
 yystate564:
 	c = l.Next()
-	yyrule = 163
-	l.Mark()
-	goto yyrule163
-
-yystate565:
-	c = l.Next()
-	yyrule = 161
-	l.Mark()
-	goto yyrule161
-
-yystate566:
-	c = l.Next()
-	yyrule = 161
-	l.Mark()
-	goto yyrule161
-
-yystate567:
-	c = l.Next()
 	yyrule = 162
 	l.Mark()
 	goto yyrule162
 
+yystate565:
+	c = l.Next()
+	yyrule = 160
+	l.Mark()
+	goto yyrule160
+
+yystate566:
+	c = l.Next()
+	yyrule = 160
+	l.Mark()
+	goto yyrule160
+
+yystate567:
+	c = l.Next()
+	yyrule = 161
+	l.Mark()
+	goto yyrule161
+
 yystate568:
 	c = l.Next()
-	yyrule = 162
+	yyrule = 161
 	l.Mark()
 	switch {
 	default:
-		goto yyrule162
+		goto yyrule161
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate569
 	}
 
 yystate569:
 	c = l.Next()
-	yyrule = 158
+	yyrule = 157
 	l.Mark()
 	switch {
 	default:
-		goto yyrule158
+		goto yyrule157
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate569
 	}
 
 yystate570:
 	c = l.Next()
-	yyrule = 157
+	yyrule = 156
 	l.Mark()
 	switch {
 	default:
-		goto yyrule157
+		goto yyrule156
 	case c == 'b':
 		goto yystate572
 	case c == 'x':
@@ -7293,11 +7288,11 @@ yystate570:
 
 yystate571:
 	c = l.Next()
-	yyrule = 157
+	yyrule = 156
 	l.Mark()
 	switch {
 	default:
-		goto yyrule157
+		goto yyrule156
 	case c >= '0' && c <= '9':
 		goto yystate571
 	}
@@ -7313,11 +7308,11 @@ yystate572:
 
 yystate573:
 	c = l.Next()
-	yyrule = 157
+	yyrule = 156
 	l.Mark()
 	switch {
 	default:
-		goto yyrule157
+		goto yyrule156
 	case c == '0' || c == '1':
 		goto yystate573
 	}
@@ -7333,53 +7328,53 @@ yystate574:
 
 yystate575:
 	c = l.Next()
-	yyrule = 157
+	yyrule = 156
 	l.Mark()
 	switch {
 	default:
-		goto yyrule157
+		goto yyrule156
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'F' || c >= 'a' && c <= 'f':
 		goto yystate575
 	}
 
 yystate576:
 	c = l.Next()
-	yyrule = 157
+	yyrule = 156
 	l.Mark()
 	switch {
 	default:
-		goto yyrule157
+		goto yyrule156
 	case c >= '0' && c <= '9':
 		goto yystate571
 	}
 
 yystate577:
 	c = l.Next()
-	yyrule = 159
+	yyrule = 158
 	l.Mark()
 	switch {
 	default:
-		goto yyrule159
+		goto yyrule158
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate578
 	}
 
 yystate578:
 	c = l.Next()
-	yyrule = 159
+	yyrule = 158
 	l.Mark()
 	switch {
 	default:
-		goto yyrule159
+		goto yyrule158
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
 		goto yystate578
 	}
 
 yystate579:
 	c = l.Next()
-	yyrule = 160
+	yyrule = 159
 	l.Mark()
-	goto yyrule160
+	goto yyrule159
 
 	goto yystate580 // silence unused label error
 yystate580:
@@ -7396,17 +7391,17 @@ yystart580:
 
 yystate581:
 	c = l.Next()
-	yyrule = 165
+	yyrule = 164
 	l.Mark()
-	goto yyrule165
+	goto yyrule164
 
 yystate582:
 	c = l.Next()
-	yyrule = 165
+	yyrule = 164
 	l.Mark()
 	switch {
 	default:
-		goto yyrule165
+		goto yyrule164
 	case c == '[' || c == '}':
 		goto yystate584
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
@@ -7426,9 +7421,9 @@ yystate583:
 
 yystate584:
 	c = l.Next()
-	yyrule = 164
+	yyrule = 163
 	l.Mark()
-	goto yyrule164
+	goto yyrule163
 
 	goto yystate585 // silence unused label error
 yystate585:
@@ -7524,46 +7519,42 @@ yystart593:
 	default:
 		goto yyabort
 	case c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate595
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '@' || c >= '[' && c <= '^' || c == '`' || c >= '{' && c <= '~':
 		goto yystate594
 	}
 
 yystate594:
 	c = l.Next()
-	yyrule = 143
-	l.Mark()
-	goto yyrule143
-
-yystate595:
-	c = l.Next()
-	yyrule = 143
-	l.Mark()
-	switch {
-	default:
-		goto yyrule143
-	case c == ';':
-		goto yystate597
-	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate596
-	}
-
-yystate596:
-	c = l.Next()
 	switch {
 	default:
 		goto yyabort
 	case c == ';':
-		goto yystate597
+		goto yystate595
 	case c >= '0' && c <= '9' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ':
-		goto yystate596
+		goto yystate594
 	}
 
-yystate597:
+yystate595:
 	c = l.Next()
 	yyrule = 142
 	l.Mark()
 	goto yyrule142
+
+	goto yystate596 // silence unused label error
+yystate596:
+	c = l.Next()
+yystart596:
+	switch {
+	default:
+		goto yyabort
+	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= 'ÿ':
+		goto yystate597
+	}
+
+yystate597:
+	c = l.Next()
+	yyrule = 141
+	l.Mark()
+	goto yyrule141
 
 	goto yystate598 // silence unused label error
 yystate598:
@@ -7572,106 +7563,89 @@ yystart598:
 	switch {
 	default:
 		goto yyabort
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= 'ÿ':
+	case c == '$':
+		goto yystate600
+	case c == '{':
+		goto yystate601
+	case c >= '\x01' && c <= '#' || c >= '%' && c <= 'z' || c >= '|' && c <= 'ÿ':
 		goto yystate599
 	}
 
 yystate599:
 	c = l.Next()
-	yyrule = 141
-	l.Mark()
-	goto yyrule141
-
-	goto yystate600 // silence unused label error
-yystate600:
-	c = l.Next()
-yystart600:
-	switch {
-	default:
-		goto yyabort
-	case c == '$':
-		goto yystate602
-	case c == '{':
-		goto yystate603
-	case c >= '\x01' && c <= '#' || c >= '%' && c <= 'z' || c >= '|' && c <= 'ÿ':
-		goto yystate601
-	}
-
-yystate601:
-	c = l.Next()
-	yyrule = 151
-	l.Mark()
-	goto yyrule151
-
-yystate602:
-	c = l.Next()
-	yyrule = 148
-	l.Mark()
-	switch {
-	default:
-		goto yyrule148
-	case c == '{':
-		goto yystate550
-	}
-
-yystate603:
-	c = l.Next()
-	yyrule = 151
-	l.Mark()
-	switch {
-	default:
-		goto yyrule151
-	case c == '$':
-		goto yystate552
-	}
-
-	goto yystate604 // silence unused label error
-yystate604:
-	c = l.Next()
-yystart604:
-	switch {
-	default:
-		goto yyabort
-	case c == '$':
-		goto yystate606
-	case c == '`':
-		goto yystate607
-	case c == '{':
-		goto yystate608
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '#' || c >= '%' && c <= '_' || c >= 'a' && c <= 'z' || c >= '|' && c <= 'ÿ':
-		goto yystate605
-	}
-
-yystate605:
-	c = l.Next()
 	yyrule = 150
 	l.Mark()
 	goto yyrule150
 
-yystate606:
+yystate600:
 	c = l.Next()
-	yyrule = 148
+	yyrule = 147
 	l.Mark()
 	switch {
 	default:
-		goto yyrule148
+		goto yyrule147
 	case c == '{':
 		goto yystate550
 	}
 
-yystate607:
-	c = l.Next()
-	yyrule = 139
-	l.Mark()
-	goto yyrule139
-
-yystate608:
+yystate601:
 	c = l.Next()
 	yyrule = 150
 	l.Mark()
 	switch {
 	default:
 		goto yyrule150
+	case c == '$':
+		goto yystate552
+	}
+
+	goto yystate602 // silence unused label error
+yystate602:
+	c = l.Next()
+yystart602:
+	switch {
+	default:
+		goto yyabort
+	case c == '$':
+		goto yystate604
+	case c == '`':
+		goto yystate605
+	case c == '{':
+		goto yystate606
+	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '#' || c >= '%' && c <= '_' || c >= 'a' && c <= 'z' || c >= '|' && c <= 'ÿ':
+		goto yystate603
+	}
+
+yystate603:
+	c = l.Next()
+	yyrule = 149
+	l.Mark()
+	goto yyrule149
+
+yystate604:
+	c = l.Next()
+	yyrule = 147
+	l.Mark()
+	switch {
+	default:
+		goto yyrule147
+	case c == '{':
+		goto yystate550
+	}
+
+yystate605:
+	c = l.Next()
+	yyrule = 139
+	l.Mark()
+	goto yyrule139
+
+yystate606:
+	c = l.Next()
+	yyrule = 149
+	l.Mark()
+	switch {
+	default:
+		goto yyrule149
 	case c == '$':
 		goto yystate552
 	}
@@ -7684,36 +7658,37 @@ yyrule2: // .
 	goto yystate0
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
-		fmt.Println("T_OPEN_TAG")
-		begin(PHP)
+		begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
-		fmt.Println("T_OPEN_TAG")
-		begin(PHP)
+		begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule5: // \<\?=
 	{
-		fmt.Println("T_OPEN_TAG_WITH_ECHO")
 		begin(PHP)
+		lval.token = string(l.TokenBytes(nil))
+		return T_OPEN_TAG_WITH_ECHO
 		goto yystate0
 	}
 yyrule6: // [ \t\n\r]+
 	{
-		fmt.Println("T_WHITESPACE")
+		//lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
 		goto yystate0
 	}
 yyrule7: // \?\>{NEW_LINE}?
 	{
-		fmt.Println("T_CLOSE_TAG")
 		begin(INITIAL)
+		lval.token = string(l.TokenBytes(nil))
+		return T_CLOSE_TAG
 		goto yystate0
 	}
 yyrule8: // {DNUM}|{EXPONENT_DNUM}
 	{
-		fmt.Println("T_DNUMBER")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DNUMBER
 		goto yystate0
 	}
 yyrule9: // {BNUM}
@@ -7731,9 +7706,11 @@ yyrule9: // {BNUM}
 			}
 		}
 		if len(tb)-i < 64 {
-			fmt.Println("T_LNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_LNUMBER
 		} else {
-			fmt.Println("T_DNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_DNUMBER
 		}
 		goto yystate0
 	}
@@ -7741,9 +7718,11 @@ yyrule10: // {LNUM}
 	{
 
 		if len(l.TokenBytes(nil)) < 20 {
-			fmt.Println("T_LNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_LNUMBER
 		} else {
-			fmt.Println("T_DNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_DNUMBER
 		}
 		goto yystate0
 	}
@@ -7763,634 +7742,763 @@ yyrule11: // {HNUM}
 		}
 		length := len(tb) - i
 		if length < 16 || (length == 16 && tb[i] <= '7') {
-			fmt.Println("T_LNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_LNUMBER
 		} else {
-			fmt.Println("T_DNUMBER")
+			lval.token = string(l.TokenBytes(nil))
+			return T_DNUMBER
 		}
 		goto yystate0
 	}
 yyrule12: // abstract
 	{
-		fmt.Println("T_ABSTRACT")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ABSTRACT
 		goto yystate0
 	}
 yyrule13: // array
 	{
-		fmt.Println("T_ARRAY")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ARRAY
 		goto yystate0
 	}
 yyrule14: // as
 	{
-		fmt.Println("T_AS")
+		lval.token = string(l.TokenBytes(nil))
+		return T_AS
 		goto yystate0
 	}
 yyrule15: // break
 	{
-		fmt.Println("T_BREAK")
+		lval.token = string(l.TokenBytes(nil))
+		return T_BREAK
 		goto yystate0
 	}
 yyrule16: // callable
 	{
-		fmt.Println("T_CALLABLE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CALLABLE
 		goto yystate0
 	}
 yyrule17: // case
 	{
-		fmt.Println("T_CASE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CASE
 		goto yystate0
 	}
 yyrule18: // catch
 	{
-		fmt.Println("T_CATCH")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CATCH
 		goto yystate0
 	}
 yyrule19: // class
 	{
-		fmt.Println("T_CLASS")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CLASS
 		goto yystate0
 	}
 yyrule20: // clone
 	{
-		fmt.Println("T_CLONE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CLONE
 		goto yystate0
 	}
 yyrule21: // const
 	{
-		fmt.Println("T_CONST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CONST
 		goto yystate0
 	}
 yyrule22: // continue
 	{
-		fmt.Println("T_CONTINUE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CONTINUE
 		goto yystate0
 	}
 yyrule23: // declare
 	{
-		fmt.Println("T_DECLARE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DECLARE
 		goto yystate0
 	}
 yyrule24: // default
 	{
-		fmt.Println("T_DEFAULT")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DEFAULT
 		goto yystate0
 	}
 yyrule25: // do
 	{
-		fmt.Println("T_DO")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DO
 		goto yystate0
 	}
 yyrule26: // echo
 	{
-		fmt.Println("T_ECHO")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ECHO
 		goto yystate0
 	}
 yyrule27: // else
 	{
-		fmt.Println("T_ELSE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ELSE
 		goto yystate0
 	}
 yyrule28: // elseif
 	{
-		fmt.Println("T_ELSEIF")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ELSEIF
 		goto yystate0
 	}
 yyrule29: // empty
 	{
-		fmt.Println("T_EMPTY")
+		lval.token = string(l.TokenBytes(nil))
+		return T_EMPTY
 		goto yystate0
 	}
 yyrule30: // endfor
 	{
-		fmt.Println("T_ENDFOR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENDFOR
 		goto yystate0
 	}
 yyrule31: // endforeach
 	{
-		fmt.Println("T_ENDFOREACH")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENDFOREACH
 		goto yystate0
 	}
 yyrule32: // endif
 	{
-		fmt.Println("T_ENDIF")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENDIF
 		goto yystate0
 	}
 yyrule33: // endswitch
 	{
-		fmt.Println("T_ENDSWITCH")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENDSWITCH
 		goto yystate0
 	}
 yyrule34: // endwhile
 	{
-		fmt.Println("T_ENDWHILE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENDWHILE
 		goto yystate0
 	}
 yyrule35: // eval
 	{
-		fmt.Println("T_EVAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_EVAL
 		goto yystate0
 	}
 yyrule36: // exit|die
 	{
-		fmt.Println("T_EXIT")
+		lval.token = string(l.TokenBytes(nil))
+		return T_EXIT
 		goto yystate0
 	}
 yyrule37: // extends
 	{
-		fmt.Println("T_EXTENDS")
+		lval.token = string(l.TokenBytes(nil))
+		return T_EXTENDS
 		goto yystate0
 	}
 yyrule38: // final
 	{
-		fmt.Println("T_FINAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FINAL
 		goto yystate0
 	}
 yyrule39: // finally
 	{
-		fmt.Println("T_FINALLY")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FINALLY
 		goto yystate0
 	}
 yyrule40: // for
 	{
-		fmt.Println("T_FOR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FOR
 		goto yystate0
 	}
 yyrule41: // foreach
 	{
-		fmt.Println("T_FOREACH")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FOREACH
 		goto yystate0
 	}
 yyrule42: // function|cfunction
 	{
-		fmt.Println("T_FUNCTION")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FUNCTION
 		goto yystate0
 	}
 yyrule43: // global
 	{
-		fmt.Println("T_GLOBAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_GLOBAL
 		goto yystate0
 	}
 yyrule44: // goto
 	{
-		fmt.Println("T_GOTO")
+		lval.token = string(l.TokenBytes(nil))
+		return T_GOTO
 		goto yystate0
 	}
 yyrule45: // if
 	{
-		fmt.Println("T_IF")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IF
 		goto yystate0
 	}
 yyrule46: // isset
 	{
-		fmt.Println("T_ISSET")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ISSET
 		goto yystate0
 	}
 yyrule47: // implements
 	{
-		fmt.Println("T_IMPLEMENTS")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IMPLEMENTS
 		goto yystate0
 	}
 yyrule48: // instanceof
 	{
-		fmt.Println("T_INSTANCEOF")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INSTANCEOF
 		goto yystate0
 	}
 yyrule49: // insteadof
 	{
-		fmt.Println("T_INSTEADOF")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INSTEADOF
 		goto yystate0
 	}
 yyrule50: // interface
 	{
-		fmt.Println("T_INTERFACE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INTERFACE
 		goto yystate0
 	}
 yyrule51: // list
 	{
-		fmt.Println("T_LIST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_LIST
 		goto yystate0
 	}
 yyrule52: // namespace
 	{
-		fmt.Println("T_NAMESPACE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_NAMESPACE
 		goto yystate0
 	}
 yyrule53: // private
 	{
-		fmt.Println("T_PRIVATE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_PRIVATE
 		goto yystate0
 	}
 yyrule54: // public
 	{
-		fmt.Println("T_PUBLIC")
+		lval.token = string(l.TokenBytes(nil))
+		return T_PUBLIC
 		goto yystate0
 	}
 yyrule55: // print
 	{
-		fmt.Println("T_PRINT")
+		lval.token = string(l.TokenBytes(nil))
+		return T_PRINT
 		goto yystate0
 	}
 yyrule56: // protected
 	{
-		fmt.Println("T_PROTECTED")
+		lval.token = string(l.TokenBytes(nil))
+		return T_PROTECTED
 		goto yystate0
 	}
 yyrule57: // return
 	{
-		fmt.Println("T_RETURN")
+		lval.token = string(l.TokenBytes(nil))
+		return T_RETURN
 		goto yystate0
 	}
 yyrule58: // static
 	{
-		fmt.Println("T_STATIC")
+		lval.token = string(l.TokenBytes(nil))
+		return T_STATIC
 		goto yystate0
 	}
 yyrule59: // switch
 	{
-		fmt.Println("T_SWITCH")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SWITCH
 		goto yystate0
 	}
 yyrule60: // throw
 	{
-		fmt.Println("T_THROW")
+		lval.token = string(l.TokenBytes(nil))
+		return T_THROW
 		goto yystate0
 	}
 yyrule61: // trait
 	{
-		fmt.Println("T_TRAIT")
+		lval.token = string(l.TokenBytes(nil))
+		return T_TRAIT
 		goto yystate0
 	}
 yyrule62: // try
 	{
-		fmt.Println("T_TRY")
+		lval.token = string(l.TokenBytes(nil))
+		return T_TRY
 		goto yystate0
 	}
 yyrule63: // unset
 	{
-		fmt.Println("T_UNSET")
+		lval.token = string(l.TokenBytes(nil))
+		return T_UNSET
 		goto yystate0
 	}
 yyrule64: // use
 	{
-		fmt.Println("T_USE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_USE
 		goto yystate0
 	}
 yyrule65: // var
 	{
-		fmt.Println("T_VAR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_VAR
 		goto yystate0
 	}
 yyrule66: // while
 	{
-		fmt.Println("T_WHILE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_WHILE
 		goto yystate0
 	}
 yyrule67: // yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]
 	{
-		fmt.Println("T_YIELD_FROM")
+		lval.token = string(l.TokenBytes(nil))
+		return T_YIELD_FROM
 		goto yystate0
 	}
 yyrule68: // yield
 	{
-		fmt.Println("T_YIELD")
+		lval.token = string(l.TokenBytes(nil))
+		return T_YIELD
 		goto yystate0
 	}
 yyrule69: // include
 	{
-		fmt.Println("T_INCLUDE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INCLUDE
 		goto yystate0
 	}
 yyrule70: // include_once
 	{
-		fmt.Println("T_INCLUDE_ONCE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INCLUDE_ONCE
 		goto yystate0
 	}
 yyrule71: // require
 	{
-		fmt.Println("T_REQUIRE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_REQUIRE
 		goto yystate0
 	}
 yyrule72: // require_once
 	{
-		fmt.Println("T_REQUIRE_ONCE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_REQUIRE_ONCE
 		goto yystate0
 	}
 yyrule73: // __CLASS__
 	{
-		fmt.Println("T_CLASS_C")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CLASS_C
 		goto yystate0
 	}
 yyrule74: // __DIR__
 	{
-		fmt.Println("T_DIR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DIR
 		goto yystate0
 	}
 yyrule75: // __FILE__
 	{
-		fmt.Println("T_FILE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FILE
 		goto yystate0
 	}
 yyrule76: // __FUNCTION__
 	{
-		fmt.Println("T_FUNC_C")
+		lval.token = string(l.TokenBytes(nil))
+		return T_FUNC_C
 		goto yystate0
 	}
 yyrule77: // __LINE__
 	{
-		fmt.Println("T_LINE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_LINE
 		goto yystate0
 	}
 yyrule78: // __NAMESPACE__
 	{
-		fmt.Println("T_NS_C")
+		lval.token = string(l.TokenBytes(nil))
+		return T_NS_C
 		goto yystate0
 	}
 yyrule79: // __METHOD__
 	{
-		fmt.Println("T_METHOD_C")
+		lval.token = string(l.TokenBytes(nil))
+		return T_METHOD_C
 		goto yystate0
 	}
 yyrule80: // __TRAIT__
 	{
-		fmt.Println("T_TRAIT_C")
+		lval.token = string(l.TokenBytes(nil))
+		return T_TRAIT_C
 		goto yystate0
 	}
 yyrule81: // __halt_compiler
 	{
-		fmt.Println("T_HALT_COMPILER")
+		lval.token = string(l.TokenBytes(nil))
+		return T_HALT_COMPILER
 		goto yystate0
 	}
 yyrule82: // \([ \t]*array[ \t]*\)
 	{
-		fmt.Println("T_ARRAY_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ARRAY_CAST
 		goto yystate0
 	}
 yyrule83: // \([ \t]*(bool|boolean)[ \t]*\)
 	{
-		fmt.Println("T_BOOL_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_BOOL_CAST
 		goto yystate0
 	}
 yyrule84: // \([ \t]*(real|double|float)[ \t]*\)
 	{
-		fmt.Println("T_DOUBLE_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DOUBLE_CAST
 		goto yystate0
 	}
 yyrule85: // \([ \t]*(int|integer)[ \t]*\)
 	{
-		fmt.Println("T_INT_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INT_CAST
 		goto yystate0
 	}
 yyrule86: // \([ \t]*object[ \t]*\)
 	{
-		fmt.Println("T_OBJECT_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_OBJECT_CAST
 		goto yystate0
 	}
 yyrule87: // \([ \t]*string[ \t]*\)
 	{
-		fmt.Println("T_STRING_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_STRING_CAST
 		goto yystate0
 	}
 yyrule88: // \([ \t]*unset[ \t]*\)
 	{
-		fmt.Println("T_UNSET_CAST")
+		lval.token = string(l.TokenBytes(nil))
+		return T_UNSET_CAST
 		goto yystate0
 	}
 yyrule89: // new
 	{
-		fmt.Println("T_NEW")
+		lval.token = string(l.TokenBytes(nil))
+		return T_NEW
 		goto yystate0
 	}
 yyrule90: // and
 	{
-		fmt.Println("T_LOGICAL_AND")
+		lval.token = string(l.TokenBytes(nil))
+		return T_LOGICAL_AND
 		goto yystate0
 	}
 yyrule91: // or
 	{
-		fmt.Println("T_LOGICAL_OR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_LOGICAL_OR
 		goto yystate0
 	}
 yyrule92: // xor
 	{
-		fmt.Println("T_LOGICAL_XOR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_LOGICAL_XOR
 		goto yystate0
 	}
 yyrule93: // \\
 	{
-		fmt.Println("T_NS_SEPARATOR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_NS_SEPARATOR
 		goto yystate0
 	}
 yyrule94: // \.\.\.
 	{
-		fmt.Println("T_ELLIPSIS")
+		lval.token = string(l.TokenBytes(nil))
+		return T_ELLIPSIS
 		goto yystate0
 	}
 yyrule95: // ::
 	{
-		fmt.Println("T_PAAMAYIM_NEKUDOTAYIM") // T_DOUBLE_COLON
+		lval.token = string(l.TokenBytes(nil))
+		return T_PAAMAYIM_NEKUDOTAYIM // T_DOUBLE_COLON
 		goto yystate0
 	}
 yyrule96: // &&
 	{
-		fmt.Println("T_BOOLEAN_AND")
+		lval.token = string(l.TokenBytes(nil))
+		return T_BOOLEAN_AND
 		goto yystate0
 	}
 yyrule97: // \|\|
 	{
-		fmt.Println("T_BOOLEAN_OR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_BOOLEAN_OR
 		goto yystate0
 	}
 yyrule98: // &=
 	{
-		fmt.Println("T_AND_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_AND_EQUAL
 		goto yystate0
 	}
 yyrule99: // \|=
 	{
-		fmt.Println("T_OR_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_OR_EQUAL
 		goto yystate0
 	}
 yyrule100: // \.=
 	{
-		fmt.Println("T_CONCAT_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CONCAT_EQUAL
 		goto yystate0
 	}
 yyrule101: // \*=
 	{
-		fmt.Println("T_MUL_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_MUL_EQUAL
 		goto yystate0
 	}
 yyrule102: // \*\*=
 	{
-		fmt.Println("T_POW_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_POW_EQUAL
 		goto yystate0
 	}
 yyrule103: // [/]=
 	{
-		fmt.Println("T_DIV_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DIV_EQUAL
 		goto yystate0
 	}
 yyrule104: // \+=
 	{
-		fmt.Println("T_PLUS_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_PLUS_EQUAL
 		goto yystate0
 	}
 yyrule105: // -=
 	{
-		fmt.Println("T_MINUS_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_MINUS_EQUAL
 		goto yystate0
 	}
 yyrule106: // \^=
 	{
-		fmt.Println("T_XOR_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_XOR_EQUAL
 		goto yystate0
 	}
 yyrule107: // %=
 	{
-		fmt.Println("T_MOD_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_MOD_EQUAL
 		goto yystate0
 	}
 yyrule108: // --
 	{
-		fmt.Println("T_DEC")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DEC
 		goto yystate0
 	}
 yyrule109: // \+\+
 	{
-		fmt.Println("T_INC")
+		lval.token = string(l.TokenBytes(nil))
+		return T_INC
 		goto yystate0
 	}
 yyrule110: // =>
 	{
-		fmt.Println("T_DOUBLE_ARROW")
+		lval.token = string(l.TokenBytes(nil))
+		return T_DOUBLE_ARROW
 		goto yystate0
 	}
 yyrule111: // \<=\>
 	{
-		fmt.Println("T_SPACESHIP")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SPACESHIP
 		goto yystate0
 	}
 yyrule112: // \!=|\<\>
 	{
-		fmt.Println("T_IS_NOT_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_NOT_EQUAL
 		goto yystate0
 	}
 yyrule113: // \!==
 	{
-		fmt.Println("T_IS_NOT_IDENTICAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_NOT_IDENTICAL
 		goto yystate0
 	}
 yyrule114: // ==
 	{
-		fmt.Println("T_IS_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_EQUAL
 		goto yystate0
 	}
 yyrule115: // ===
 	{
-		fmt.Println("T_IS_IDENTICAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_IDENTICAL
 		goto yystate0
 	}
 yyrule116: // \<\<=
 	{
-		fmt.Println("T_SL_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SL_EQUAL
 		goto yystate0
 	}
 yyrule117: // \>\>=
 	{
-		fmt.Println("T_SR_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SR_EQUAL
 		goto yystate0
 	}
 yyrule118: // \>=
 	{
-		fmt.Println("T_IS_GREATER_OR_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_GREATER_OR_EQUAL
 		goto yystate0
 	}
 yyrule119: // \<=
 	{
-		fmt.Println("T_IS_SMALLER_OR_EQUAL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_IS_SMALLER_OR_EQUAL
 		goto yystate0
 	}
 yyrule120: // \*\*
 	{
-		fmt.Println("T_POW")
+		lval.token = string(l.TokenBytes(nil))
+		return T_POW
 		goto yystate0
 	}
 yyrule121: // \<\<
 	{
-		fmt.Println("T_SL")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SL
 		goto yystate0
 	}
 yyrule122: // \>\>
 	{
-		fmt.Println("T_SR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_SR
 		goto yystate0
 	}
 yyrule123: // (#|[/][/]){NEW_LINE}
 	{
-		fmt.Println("T_COMMENT") // TODO: handle ?>
+		lval.token = string(l.TokenBytes(nil))
+		return T_COMMENT // TODO: handle ?>
 		goto yystate0
 	}
 yyrule124: // [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		fmt.Println("T_COMMENT") // TODO: handle ?>
+		lval.token = string(l.TokenBytes(nil))
+		return T_COMMENT // TODO: handle ?>
 		goto yystate0
 	}
 yyrule125: // [/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		fmt.Println("T_DOC_COMMENT") // TODO: handle ?>
+		lval.token = string(l.TokenBytes(nil))
+		return T_DOC_COMMENT // TODO: handle ?>
 		goto yystate0
 	}
 yyrule126: // '[^']*(\\')*'
 	{
-		fmt.Println("T_CONSTANT_ENCAPSED_STRING")
+		lval.token = string(l.TokenBytes(nil))
+		return T_CONSTANT_ENCAPSED_STRING
 		goto yystate0
 	}
 yyrule127: // {OPERATORS}
 	{
-		fmt.Printf("%s\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
 yyrule128: // \{
 	{
-		fmt.Println("{")
 		pushState(PHP)
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
 yyrule129: // \}
 	{
-		fmt.Println("}")
 		popState()
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
 yyrule130: // \${VAR_NAME}
 	{
-		fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_VARIABLE
 		goto yystate0
 	}
 yyrule131: // {VAR_NAME}
 	{
-		fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil))
+		if c == -1 {
+			fmt.Printf("%q\n", string(l.TokenBytes(nil)))
+		}
+		lval.token = string(l.TokenBytes(nil))
+		return T_STRING
 		goto yystate0
 	}
 yyrule132: // ->
 	{
-		fmt.Println("T_OBJECT_OPERATOR")
 		begin(PROPERTY)
+		lval.token = string(l.TokenBytes(nil))
+		return T_OBJECT_OPERATOR
 		goto yystate0
 	}
 yyrule133: // [ \t\n\r]+
 	{
-		fmt.Println("T_WHITESPACE")
+		lval.token = string(l.TokenBytes(nil))
+		return T_WHITESPACE
 		goto yystate0
 	}
 yyrule134: // ->
 	{
-		fmt.Println("T_OBJECT_OPERATOR")
+		lval.token = string(l.TokenBytes(nil))
+		return T_OBJECT_OPERATOR
 		goto yystate0
 	}
 yyrule135: // {VAR_NAME}
 	{
-		fmt.Println("T_STRING")
 		begin(PHP)
+		lval.token = string(l.TokenBytes(nil))
+		return T_STRING
 		goto yystate0
 	}
 yyrule136: // .
@@ -8401,19 +8509,22 @@ yyrule136: // .
 	}
 yyrule137: // [\']([^\\\']*([\\][\'])*)*[\']
 	{
-		fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_CONSTANT_ENCAPSED_STRING
 		goto yystate0
 	}
 yyrule138: // `
 	{
-		fmt.Println("`")
 		begin(BACKQUOTE)
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
 yyrule139: // `
 	{
-		fmt.Println("`")
 		begin(PHP)
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
 yyrule140: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
@@ -8469,7 +8580,8 @@ yyrule140: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			}
 		}
 		l.ungetN(ungetCnt)
-		fmt.Printf("T_START_HEREDOC: %q\n", tb)
+		lval.token = string(tb)
+		return T_START_HEREDOC
 		goto yystate0
 	}
 yyrule141: // .
@@ -8495,25 +8607,22 @@ yyrule141: // .
 			}
 			c = l.Next()
 		}
-		fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", tb)
+		lval.token = string(tb)
+		return T_ENCAPSED_AND_WHITESPACE
 		goto yystate0
 	}
 yyrule142: // {VAR_NAME}\;
 	{
-		fmt.Printf("T_END_HEREDOC: %q\n", l.ungetN(1))
 		begin(PHP)
+		lval.token = string(l.ungetN(1))
+		return T_END_HEREDOC
 		goto yystate0
 	}
-yyrule143: // .
-	{
-		fmt.Printf("ERROR HEREDOC: %q\n", l.ungetN(1))
-		goto yystate0
-	}
-yyrule144: // [b]?[\"]
+yyrule143: // [b]?[\"]
 	{
 
 		binPrefix := l.TokenBytes(nil)[0] == 'b'
-		beginString := func() {
+		beginString := func() int {
 			cnt := 1
 			if binPrefix {
 				cnt = 2
@@ -8523,6 +8632,8 @@ yyrule144: // [b]?[\"]
 			tokenBytes := l.TokenBytes(nil)[:cnt]
 			fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
 			pushState(STRING)
+			lval.token = string(tokenBytes)
+			return rune2Class('"')
 		}
 	F:
 		for {
@@ -8532,13 +8643,14 @@ yyrule144: // [b]?[\"]
 			switch c {
 			case '"':
 				c = l.Next()
-				fmt.Printf("T_CONSTANT_ENCAPSED_STRING: %s\n", l.TokenBytes(nil))
+				lval.token = string(l.TokenBytes(nil))
+				return T_CONSTANT_ENCAPSED_STRING
 				break F
 
 			case '$':
 				c = l.Next()
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-					beginString()
+					return beginString()
 					break F
 				}
 				l.ungetN(0)
@@ -8546,7 +8658,7 @@ yyrule144: // [b]?[\"]
 			case '{':
 				c = l.Next()
 				if rune(c) == '$' {
-					beginString()
+					return beginString()
 					break F
 				}
 				l.ungetN(0)
@@ -8557,31 +8669,33 @@ yyrule144: // [b]?[\"]
 		}
 		goto yystate0
 	}
-yyrule145: // \"
+yyrule144: // \"
 	{
-		fmt.Println("\"")
 		popState()
+		lval.token = "\""
+		return c
 		goto yystate0
 	}
-yyrule146: // \{\$
+yyrule145: // \{\$
 	{
-		fmt.Printf("T_CURLY_OPEN: %q\n", l.ungetN(1))
-		pushState(PHP)
+		lval.token = string(l.ungetN(1))
+		return T_CURLY_OPEN
 		goto yystate0
 	}
-yyrule147: // \$\{
+yyrule146: // \$\{
 	{
-		fmt.Printf("T_DOLLAR_OPEN_CURLY_BRACES: %q\n", l.TokenBytes(nil))
 		pushState(STRING_VAR_NAME)
+		lval.token = string(l.TokenBytes(nil))
+		return T_DOLLAR_OPEN_CURLY_BRACES
 		goto yystate0
 	}
-yyrule148: // \$
+yyrule147: // \$
 	{
 		l.ungetN(1)
 		pushState(STRING_VAR)
 		goto yystate0
 	}
-yyrule149: // .
+yyrule148: // .
 	{
 
 	F1:
@@ -8591,7 +8705,8 @@ yyrule149: // .
 			}
 			switch c {
 			case '"':
-				fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", l.TokenBytes(nil))
+				lval.token = string(l.TokenBytes(nil))
+				return T_ENCAPSED_AND_WHITESPACE
 				break F1
 
 			case '$':
@@ -8599,7 +8714,8 @@ yyrule149: // .
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
-					fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1])
+					lval.token = string(tb[:len(tb)-1])
+					return T_ENCAPSED_AND_WHITESPACE
 					break F1
 				}
 				l.ungetN(0)
@@ -8609,7 +8725,8 @@ yyrule149: // .
 				if rune(c) == '$' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
-					fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1])
+					lval.token = string(tb[:len(tb)-1])
+					return T_ENCAPSED_AND_WHITESPACE
 					break F1
 				}
 				l.ungetN(0)
@@ -8620,7 +8737,7 @@ yyrule149: // .
 		}
 		goto yystate0
 	}
-yyrule150: // .
+yyrule149: // .
 	{
 
 	F2:
@@ -8630,7 +8747,8 @@ yyrule150: // .
 			}
 			switch c {
 			case '`':
-				fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", l.TokenBytes(nil))
+				lval.token = string(l.TokenBytes(nil))
+				return T_ENCAPSED_AND_WHITESPACE
 				break F2
 
 			case '$':
@@ -8638,7 +8756,8 @@ yyrule150: // .
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
-					fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1])
+					lval.token = string(tb[:len(tb)-1])
+					return T_ENCAPSED_AND_WHITESPACE
 					break F2
 				}
 				l.ungetN(0)
@@ -8648,7 +8767,8 @@ yyrule150: // .
 				if rune(c) == '$' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
-					fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %s\n", tb[:len(tb)-1])
+					lval.token = string(tb[:len(tb)-1])
+					return T_ENCAPSED_AND_WHITESPACE
 					break F2
 				}
 				l.ungetN(0)
@@ -8659,7 +8779,7 @@ yyrule150: // .
 		}
 		goto yystate0
 	}
-yyrule151: // .|[ \t\n\r]
+yyrule150: // .|[ \t\n\r]
 	{
 
 		searchLabel := []byte{}
@@ -8708,84 +8828,98 @@ yyrule151: // .|[ \t\n\r]
 			}
 			c = l.Next()
 		}
-		fmt.Printf("T_ENCAPSED_AND_WHITESPACE(HEREDOC): %q\n", tb)
+
+		lval.token = string(tb)
+		return T_ENCAPSED_AND_WHITESPACE
 		goto yystate0
 	}
-yyrule152: // \${VAR_NAME}
+yyrule151: // \${VAR_NAME}
 	{
-		fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_VARIABLE
 		goto yystate0
 	}
-yyrule153: // ->{VAR_NAME}
+yyrule152: // ->{VAR_NAME}
 	{
-		fmt.Printf("T_OBJECT_OPERATOR: %q\n", l.ungetN(len(l.TokenBytes(nil))-2))
+		lval.token = string(l.ungetN(len(l.TokenBytes(nil)) - 2))
+		return T_OBJECT_OPERATOR
 		goto yystate0
 	}
-yyrule154: // {VAR_NAME}
+yyrule153: // {VAR_NAME}
 	{
-		fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil))
 		popState()
+		lval.token = string(l.TokenBytes(nil))
+		return T_STRING
 		goto yystate0
 	}
-yyrule155: // \[
+yyrule154: // \[
 	{
-		fmt.Println("[")
 		pushState(STRING_VAR_INDEX)
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
-yyrule156: // .|[ \t\n\r]
+yyrule155: // .|[ \t\n\r]
 	{
 		l.ungetN(1)
 		popState()
 		goto yystate0
 	}
-yyrule157: // {LNUM}|{HNUM}|{BNUM}
+yyrule156: // {LNUM}|{HNUM}|{BNUM}
 	{
-		fmt.Printf("T_NUM_STRING: %q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_NUM_STRING
 		goto yystate0
 	}
-yyrule158: // \${VAR_NAME}
+yyrule157: // \${VAR_NAME}
 	{
-		fmt.Printf("T_VARIABLE: %q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_VARIABLE
 		goto yystate0
 	}
-yyrule159: // {VAR_NAME}
+yyrule158: // {VAR_NAME}
 	{
-		fmt.Printf("T_STRING: %q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return T_STRING
 		goto yystate0
 	}
-yyrule160: // \]
+yyrule159: // \]
 	{
-		fmt.Println("\"]\"")
 		popState()
 		popState()
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
-yyrule161: // [ \n\r\t\\'#]
+yyrule160: // [ \n\r\t\\'#]
 	{
-		fmt.Printf("T_ENCAPSED_AND_WHITESPACE: %q\n", l.ungetN(1))
 		popState()
 		popState()
+		lval.token = string(l.TokenBytes(nil))
+		return T_ENCAPSED_AND_WHITESPACE
 		goto yystate0
 	}
-yyrule162: // {OPERATORS}
+yyrule161: // {OPERATORS}
 	{
-		fmt.Printf("%q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
-yyrule163: // .
+yyrule162: // .
 	{
-		fmt.Printf("%q\n", l.TokenBytes(nil))
+		lval.token = string(l.TokenBytes(nil))
+		return c
 		goto yystate0
 	}
-yyrule164: // {VAR_NAME}[\[\}]
+yyrule163: // {VAR_NAME}[\[\}]
 	{
-		fmt.Printf("T_STRING_VARNAME: %q\n", l.ungetN(1))
 		popState()
 		pushState(PHP)
+		lval.token = string(l.ungetN(1))
+		return T_STRING_VARNAME
 		goto yystate0
 	}
-yyrule165: // .
+yyrule164: // .
 	{
 		l.ungetN(1)
 		popState()
@@ -8801,9 +8935,4 @@ yyabort: // no lexem recognized
 		return int(c)
 	}
 	goto yyAction
-}
-
-func main() {
-	l := newLexer(os.Stdin, os.Stdout, "file.name")
-	l.Lex()
 }
