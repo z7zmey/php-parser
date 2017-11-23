@@ -309,6 +309,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\*\*                                       lval.token = string(l.TokenBytes(nil)); return T_POW
 <PHP>\<\<                                       lval.token = string(l.TokenBytes(nil)); return T_SL
 <PHP>\>\>                                       lval.token = string(l.TokenBytes(nil)); return T_SR
+<PHP>\?\?                                       lval.token = string(l.TokenBytes(nil)); return T_COALESCE
 <PHP>(#|[/][/]){NEW_LINE}                       lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 <PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 <PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
