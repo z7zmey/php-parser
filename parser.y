@@ -176,6 +176,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> identifier
 %type <node> top_statement
 %type <node> namespace_name
+%type <node> namespace_name_parts
+%type <node> name
 %type <node> top_statement_list
 %type <node> statement
 %type <node> inner_statement
@@ -219,9 +221,19 @@ identifier:
     |   semi_reserved  { $$ = Node("reserved") }
 ;
 
+namespace_name_parts:
+        T_STRING                                      { $$ = Node("NamespaceParts").append(Node($1)) }
+    |   namespace_name_parts T_NS_SEPARATOR T_STRING  { $$ = $1.append(Node($3)) }
+;
+
 namespace_name:
-        T_STRING                                      { $$ = Node("Namespace").append(Node($1)) }
-    |   namespace_name T_NS_SEPARATOR T_STRING        { $$ = $1.append(Node($3)) }
+      namespace_name_parts                            { $$ = Node("Namespace").append($1); }
+;
+
+name:
+      namespace_name                                  { $$ = Node("Name").append($1); }
+    | T_NS_SEPARATOR namespace_name                   { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
+    | T_NAMESPACE T_NS_SEPARATOR namespace_name       { $$ = Node("Name").append($3).attribute("Relative", "true"); }
 ;
 
 top_statement_list:
@@ -320,7 +332,8 @@ type_expr:
 ;
 
 type:
-        T_ARRAY                                       { $$ = Node("array type"); }
+        name                                          { $$ = $1; }
+    |   T_ARRAY                                       { $$ = Node("array type"); }
     |   T_CALLABLE                                    { $$ = Node("callable type"); }
 ;
 
@@ -336,7 +349,7 @@ return_type:
 const src = `<?
 namespace foo\bar\test;
 
-function test(array $a, array $b) {
+function test(string $a, \bar\baz $b) {
 
 }
 
