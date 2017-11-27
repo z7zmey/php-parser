@@ -314,12 +314,12 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 <PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
 <PHP>'[^']*(\\')*'                              lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
-<PHP>{OPERATORS}                                lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<PHP>{OPERATORS}                                lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
-<PHP>\{                                         pushState(PHP); lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
-<PHP>\}                                         popState();     lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<PHP>\{                                         pushState(PHP); lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>\}                                         popState();     lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <PHP>\${VAR_NAME}                               lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
-<PHP>{VAR_NAME}                                 if c == -1 {fmt.Printf("%q\n", string(l.TokenBytes(nil)))};lval.token = string(l.TokenBytes(nil)); return T_STRING
+<PHP>{VAR_NAME}                                 lval.token = string(l.TokenBytes(nil)); return T_STRING
 
 <PHP>->                                         begin(PROPERTY);lval.token = string(l.TokenBytes(nil)); return T_OBJECT_OPERATOR;
 <PROPERTY>[ \t\n\r]+                            lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE;
@@ -329,8 +329,8 @@ NEW_LINE        (\r|\n|\r\n)
 
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']             lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING;
 
-<PHP>`                                          begin(BACKQUOTE); lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
-<BACKQUOTE>`                                    begin(PHP); lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<PHP>`                                          begin(BACKQUOTE); lval.token = string(l.TokenBytes(nil)); rune2Class(rune(l.TokenBytes(nil)[0]))
+<BACKQUOTE>`                                    begin(PHP); lval.token = string(l.TokenBytes(nil)); rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.TokenBytes(nil)
@@ -468,7 +468,7 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-<STRING>\"                                  popState(); lval.token = "\""; return rune2Class(l.Prev.Rune)
+<STRING>\"                                  popState(); lval.token = "\""; return rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = string(l.ungetN(1)); return T_CURLY_OPEN
 <STRING,HEREDOC,BACKQUOTE>\$\{              pushState(STRING_VAR_NAME);lval.token = string(l.TokenBytes(nil)); return T_DOLLAR_OPEN_CURLY_BRACES
 <STRING,HEREDOC,BACKQUOTE>\$                l.ungetN(1);pushState(STRING_VAR)
@@ -602,16 +602,16 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR>\${VAR_NAME}                    lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
 <STRING_VAR>->{VAR_NAME}                    lval.token = string(l.ungetN(len(l.TokenBytes(nil))-2)); return T_OBJECT_OPERATOR
 <STRING_VAR>{VAR_NAME}                      popState();lval.token = string(l.TokenBytes(nil)); return T_STRING
-<STRING_VAR>\[                              pushState(STRING_VAR_INDEX);lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<STRING_VAR>\[                              pushState(STRING_VAR_INDEX);lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING_VAR>.|[ \t\n\r]                     l.ungetN(1);popState()
 
 <STRING_VAR_INDEX>{LNUM}|{HNUM}|{BNUM}      lval.token = string(l.TokenBytes(nil)); return T_NUM_STRING
 <STRING_VAR_INDEX>\${VAR_NAME}              lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
 <STRING_VAR_INDEX>{VAR_NAME}                lval.token = string(l.TokenBytes(nil)); return T_STRING
-<STRING_VAR_INDEX>\]                        popState(); popState();lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<STRING_VAR_INDEX>\]                        popState(); popState();lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING_VAR_INDEX>[ \n\r\t\\'#]             popState(); popState();lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
-<STRING_VAR_INDEX>{OPERATORS}               lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
-<STRING_VAR_INDEX>.                         lval.token = string(l.TokenBytes(nil)); return rune2Class(l.Prev.Rune)
+<STRING_VAR_INDEX>{OPERATORS}               lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR_INDEX>.                         lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           popState();pushState(PHP);lval.token = string(l.ungetN(1)); return T_STRING_VARNAME
 <STRING_VAR_NAME>.                          l.ungetN(1);popState();pushState(PHP)

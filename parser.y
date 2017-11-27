@@ -11,6 +11,7 @@ import (
 type node struct {
   name string
   children []node
+  attributes map[string]string
 }
 
 func (n node) String() string {
@@ -20,12 +21,29 @@ func (n node) String() string {
 }
 
 func (n node) print(out io.Writer, indent string) {
-  fmt.Fprintf(out, "\n%v%v", indent, n.name)
-  for _, nn := range n.children { nn.print(out, indent + "  ") }
+  if (len(n.attributes) > 0) {
+    fmt.Fprintf(out, "\n%v%v %s", indent, n.name, n.attributes)
+  } else {
+    fmt.Fprintf(out, "\n%v%v", indent, n.name)
+  }
+  for _, nn := range n.children { 
+    nn.print(out, indent + "  ") 
+  }
 }
 
-func Node(name string) node { return node{name: name} }
-func (n node) append(nn...node) node { n.children = append(n.children, nn...); return n }
+func Node(name string) node { 
+  return node{name: name, attributes: make(map[string]string)} 
+}
+
+func (n node) append(nn...node) node {
+  n.children = append(n.children, nn...)
+  return n 
+}
+
+func (n node) attribute(key string, value string) node {
+  n.attributes[key] = value
+  return n 
+}
 
 %}
 
@@ -150,10 +168,28 @@ func (n node) append(nn...node) node { n.children = append(n.children, nn...); r
 %token <token> T_NS_SEPARATOR
 %token <token> T_ELLIPSIS
 
+%type <value> class_modifier
+%type <value> is_reference
+%type <value> is_variadic
+%type <value> returns_ref
+
 %type <node> identifier
 %type <node> top_statement
 %type <node> namespace_name
 %type <node> top_statement_list
+%type <node> statement
+%type <node> inner_statement
+%type <node> inner_statement_list
+%type <node> class_modifiers
+%type <node> class_declaration_statement
+%type <node> function_declaration_statement
+%type <node> optional_type
+%type <node> return_type
+%type <node> type_expr
+%type <node> type
+%type <node> parameter_list
+%type <node> non_empty_parameter_list
+%type <node> parameter
 
 %%
 
@@ -194,8 +230,103 @@ top_statement_list:
 ;
 
 top_statement:
-        T_INCLUDE identifier ';'                      { $$ = $2; /*TODO: identifier stub, refactor it*/ }
+        statement                                     { $$ = $1 }
+    |   function_declaration_statement                { $$ = $1 }
+    |   T_INCLUDE identifier ';'                      { $$ = $2; /*TODO: identifier stub, refactor it*/ }
     |   T_NAMESPACE namespace_name ';'                { $$ = $2; }
+    |   class_declaration_statement                   { $$ = $1; }
+;
+
+inner_statement_list:
+        inner_statement_list inner_statement          { $$ = $1.append($2); }
+    |   /* empty */                                   { $$ = Node("statement_list") }
+;
+
+inner_statement:
+    statement                                         { $$ = $1; }
+    |   class_declaration_statement                   { $$ = $1; }
+
+statement:
+    '{' inner_statement_list '}'                      { $$ = $2; }
+
+class_declaration_statement:
+        class_modifiers T_CLASS T_STRING '{' '}'      { $$ = $1.attribute("name", $3) }
+    |   T_CLASS T_STRING '{' '}'                      { $$ = Node("Class").attribute("name", $2) }
+;
+class_modifiers:
+        class_modifier                                { $$ = Node("Class").attribute($1, "true") }
+    |   class_modifiers class_modifier                { $$ = $1.attribute($2, "true") }
+;
+
+class_modifier:
+        T_ABSTRACT                                    { $$ = "abstract" }
+    |   T_FINAL                                       { $$ = "final" }
+;
+
+function_declaration_statement:
+    T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
+        {
+            $$ = Node("Function").
+              attribute("name", $3).
+              attribute("returns_ref", $2).
+              append($5).
+              append($7).
+              append($9);
+        }
+;
+
+parameter_list:
+        non_empty_parameter_list                      { $$ = $1; }
+    |   /* empty */                                   { $$ = Node("Parameter list"); }
+;
+non_empty_parameter_list:
+        parameter                                     { $$ = Node("Parameter list").append($1) }
+    |   non_empty_parameter_list ',' parameter        { $$ = $1.append($3); }
+;
+parameter:
+    optional_type is_reference is_variadic T_VARIABLE
+        {
+            $$ = Node("Parameter").
+                append($1).
+                attribute("is_reference", $2).
+                attribute("is_variadic", $3).
+                attribute("var", $4);
+        }
+;
+
+optional_type:
+        /* empty */                                   { $$ = Node("No type") }
+    |   type_expr                                     { $$ = $1; }
+;
+
+returns_ref:
+        /* empty */                                   { $$ = "false"; }
+    |   '&'                                           { $$ = "true"; }
+;
+
+is_reference:
+        /* empty */                                   { $$ = "false"; }
+    |   '&'                                           { $$ = "true"; }
+;
+
+is_variadic:
+        /* empty */                                   { $$ = "false"; }
+    |   T_ELLIPSIS                                    { $$ = "true"; }
+;
+
+type_expr:
+        type                                          { $$ = $1; }
+    |   '?' type                                      { $$ = $2; $$.attribute("nullable", "true") }
+;
+
+type:
+        T_ARRAY                                       { $$ = Node("array type"); }
+    |   T_CALLABLE                                    { $$ = Node("callable type"); }
+;
+
+return_type:
+        /* empty */                                   { $$ = Node("void"); }
+    |   ':' type_expr                                 { $$ = $2; }
 ;
 
 /////////////////////////////////////////////////////////////////////////
@@ -204,8 +335,11 @@ top_statement:
 
 const src = `<?
 namespace foo\bar\test;
-include class;
-namespace foo\bar\asdf;
+
+function test(array $a, array $b) {
+
+}
+
 `
 
 func main() {

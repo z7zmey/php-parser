@@ -8459,21 +8459,21 @@ yyrule127: // '[^']*(\\')*'
 yyrule128: // {OPERATORS}
 	{
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule129: // \{
 	{
 		pushState(PHP)
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule130: // \}
 	{
 		popState()
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule131: // \${VAR_NAME}
@@ -8484,9 +8484,6 @@ yyrule131: // \${VAR_NAME}
 	}
 yyrule132: // {VAR_NAME}
 	{
-		if c == -1 {
-			fmt.Printf("%q\n", string(l.TokenBytes(nil)))
-		}
 		lval.token = string(l.TokenBytes(nil))
 		return T_STRING
 		goto yystate0
@@ -8533,14 +8530,14 @@ yyrule139: // `
 	{
 		begin(BACKQUOTE)
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule140: // `
 	{
 		begin(PHP)
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule141: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
@@ -8689,7 +8686,7 @@ yyrule145: // \"
 	{
 		popState()
 		lval.token = "\""
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule146: // \{\$
@@ -8872,7 +8869,7 @@ yyrule155: // \[
 	{
 		pushState(STRING_VAR_INDEX)
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule156: // .|[ \t\n\r]
@@ -8904,7 +8901,7 @@ yyrule160: // \]
 		popState()
 		popState()
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule161: // [ \n\r\t\\'#]
@@ -8918,13 +8915,13 @@ yyrule161: // [ \n\r\t\\'#]
 yyrule162: // {OPERATORS}
 	{
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule163: // .
 	{
 		lval.token = string(l.TokenBytes(nil))
-		return rune2Class(l.Prev.Rune)
+		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule164: // {VAR_NAME}[\[\}]
