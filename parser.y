@@ -206,6 +206,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> for_exprs
 %type <node> non_empty_for_exprs
 %type <node> for_statement
+%type <node> switch_case_list
+%type <node> case_list
 
 %%
 
@@ -277,8 +279,8 @@ statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
-    |   T_WHILE '(' expr ')' while_statement            { $$ = Node("While").append(Node("expr").append($3)).append(Node("stmt").append($5)) }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("DoWhile").append(Node("expr").append($5)).append(Node("stmt").append($2))}
+    |   T_WHILE '(' expr ')' while_statement            { $$ = Node("While").append(Node("expr").append($3)).append(Node("stmt").append($5)); }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("DoWhile").append(Node("expr").append($5)).append(Node("stmt").append($2)); }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
                 $$ = Node("For").
@@ -287,6 +289,7 @@ statement:
                     append(Node("expr3").append($7)).
                     append(Node("stmt").append($9))
             }
+    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = Node("Switch").append(Node("expr").append($3)).append($5); }
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -339,6 +342,30 @@ for_exprs:
 non_empty_for_exprs:
         non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
     |   expr                                            { $$ = Node("ExpressionList").append($1) }
+;
+
+switch_case_list:
+        '{' case_list '}'                               { $$ = $2; }
+    |   '{' ';' case_list '}'                           { $$ = $3; }
+    |   ':' case_list T_ENDSWITCH ';'                   { $$ = $2; }
+    |   ':' ';' case_list T_ENDSWITCH ';'               { $$ = $3; }
+;
+
+case_list:
+        /* empty */                                     { $$ = Node("CaseList") }
+    |   case_list T_CASE expr case_separator inner_statement_list
+            {
+                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append(Node("stmt").append($5)))
+            }
+    |   case_list T_DEFAULT case_separator inner_statement_list
+            {
+                $$ = $1.append(Node("Default").append(Node("stmt").append($4)))
+            }
+;
+
+case_separator:
+        ':'
+    |   ';'
 ;
 
 for_statement:
@@ -539,9 +566,10 @@ simple_variable:
 
 const src = `<?
 
-for ($a = $b;;) :
-
-endfor;
+switch($a) :;
+    case $b; $b = $a;
+    default; $a;
+endswitch;
 
 `
 
