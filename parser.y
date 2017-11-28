@@ -192,13 +192,18 @@ func (n node) attribute(key string, value string) node {
 %type <node> parameter_list
 %type <node> non_empty_parameter_list
 %type <node> parameter
+%type <node> expr
+%type <node> expr_without_variable
+%type <node> callable_variable
+%type <node> variable
+%type <node> simple_variable
 
 %%
 
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                { fmt.Println($1) }
+    top_statement_list                                  { fmt.Println($1) }
 ;
 
 reserved_non_modifiers:
@@ -217,62 +222,65 @@ semi_reserved:
 ;
 
 identifier:
-        T_STRING { $$ = Node("identifier") }
-    |   semi_reserved  { $$ = Node("reserved") }
+        T_STRING                                        { $$ = Node("identifier") }
+    |   semi_reserved                                   { $$ = Node("reserved") }
 ;
 
 namespace_name_parts:
-        T_STRING                                      { $$ = Node("NamespaceParts").append(Node($1)) }
-    |   namespace_name_parts T_NS_SEPARATOR T_STRING  { $$ = $1.append(Node($3)) }
+        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1)) }
+    |   namespace_name_parts T_NS_SEPARATOR T_STRING    { $$ = $1.append(Node($3)) }
 ;
 
 namespace_name:
-      namespace_name_parts                            { $$ = Node("Namespace").append($1); }
+      namespace_name_parts                              { $$ = $1; }
 ;
 
 name:
-      namespace_name                                  { $$ = Node("Name").append($1); }
-    | T_NS_SEPARATOR namespace_name                   { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
-    | T_NAMESPACE T_NS_SEPARATOR namespace_name       { $$ = Node("Name").append($3).attribute("Relative", "true"); }
+      namespace_name                                    { $$ = Node("Name").append($1); }
+    | T_NS_SEPARATOR namespace_name                     { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
+    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = Node("Name").append($3).attribute("Relative", "true"); }
 ;
 
 top_statement_list:
-        top_statement_list top_statement              { $$ = $1.append($2); }
-    |   /* empty */                                   { $$ = Node("Statements") }
+        top_statement_list top_statement                { $$ = $1.append($2); }
+    |   /* empty */                                     { $$ = Node("Statements") }
 ;
 
 top_statement:
-        statement                                     { $$ = $1 }
-    |   function_declaration_statement                { $$ = $1 }
-    |   T_INCLUDE identifier ';'                      { $$ = $2; /*TODO: identifier stub, refactor it*/ }
-    |   T_NAMESPACE namespace_name ';'                { $$ = $2; }
-    |   class_declaration_statement                   { $$ = $1; }
+        statement                                       { $$ = $1 }
+    |   function_declaration_statement                  { $$ = $1 }
+    |   T_INCLUDE identifier ';'                        { $$ = $2; /*TODO: identifier stub, refactor it*/ }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
+    |   class_declaration_statement                     { $$ = $1; }
 ;
 
 inner_statement_list:
-        inner_statement_list inner_statement          { $$ = $1.append($2); }
-    |   /* empty */                                   { $$ = Node("statement_list") }
+        inner_statement_list inner_statement            { $$ = $1.append($2); }
+    |   /* empty */                                     { $$ = Node("statement_list") }
 ;
 
 inner_statement:
-    statement                                         { $$ = $1; }
-    |   class_declaration_statement                   { $$ = $1; }
+    statement                                           { $$ = $1; }
+    |   function_declaration_statement                  { $$ = $1; }
+    |   class_declaration_statement                     { $$ = $1; }
 
 statement:
-    '{' inner_statement_list '}'                      { $$ = $2; }
+    '{' inner_statement_list '}'                        { $$ = $2; }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("Do While").append($2).append($5)}
+    |   expr ';'                                        { $$ = $1; }
 
 class_declaration_statement:
-        class_modifiers T_CLASS T_STRING '{' '}'      { $$ = $1.attribute("name", $3) }
-    |   T_CLASS T_STRING '{' '}'                      { $$ = Node("Class").attribute("name", $2) }
+        class_modifiers T_CLASS T_STRING '{' '}'        { $$ = $1.attribute("name", $3) }
+    |   T_CLASS T_STRING '{' '}'                        { $$ = Node("Class").attribute("name", $2) }
 ;
 class_modifiers:
-        class_modifier                                { $$ = Node("Class").attribute($1, "true") }
-    |   class_modifiers class_modifier                { $$ = $1.attribute($2, "true") }
+        class_modifier                                  { $$ = Node("Class").attribute($1, "true") }
+    |   class_modifiers class_modifier                  { $$ = $1.attribute($2, "true") }
 ;
 
 class_modifier:
-        T_ABSTRACT                                    { $$ = "abstract" }
-    |   T_FINAL                                       { $$ = "final" }
+        T_ABSTRACT                                      { $$ = "abstract" }
+    |   T_FINAL                                         { $$ = "final" }
 ;
 
 function_declaration_statement:
@@ -288,58 +296,164 @@ function_declaration_statement:
 ;
 
 parameter_list:
-        non_empty_parameter_list                      { $$ = $1; }
-    |   /* empty */                                   { $$ = Node("Parameter list"); }
+        non_empty_parameter_list                        { $$ = $1; }
+    |   /* empty */                                     { $$ = Node("Parameter list"); }
 ;
 non_empty_parameter_list:
-        parameter                                     { $$ = Node("Parameter list").append($1) }
-    |   non_empty_parameter_list ',' parameter        { $$ = $1.append($3); }
+        parameter                                       { $$ = Node("Parameter list").append($1) }
+    |   non_empty_parameter_list ',' parameter          { $$ = $1.append($3); }
 ;
 parameter:
-    optional_type is_reference is_variadic T_VARIABLE
-        {
-            $$ = Node("Parameter").
-                append($1).
-                attribute("is_reference", $2).
-                attribute("is_variadic", $3).
-                attribute("var", $4);
-        }
+        optional_type is_reference is_variadic T_VARIABLE
+            {
+                $$ = Node("Parameter").
+                    append($1).
+                    attribute("is_reference", $2).
+                    attribute("is_variadic", $3).
+                    attribute("var", $4);
+            }
+    |   optional_type is_reference is_variadic T_VARIABLE '=' expr
+            {
+                $$ = Node("Parameter").
+                    append($1).
+                    attribute("is_reference", $2).
+                    attribute("is_variadic", $3).
+                    attribute("var", $4).
+                    append($6);
+            }
 ;
 
 optional_type:
-        /* empty */                                   { $$ = Node("No type") }
-    |   type_expr                                     { $$ = $1; }
+        /* empty */                                     { $$ = Node("No type") }
+    |   type_expr                                       { $$ = $1; }
 ;
 
 returns_ref:
-        /* empty */                                   { $$ = "false"; }
-    |   '&'                                           { $$ = "true"; }
+        /* empty */                                     { $$ = "false"; }
+    |   '&'                                             { $$ = "true"; }
 ;
 
 is_reference:
-        /* empty */                                   { $$ = "false"; }
-    |   '&'                                           { $$ = "true"; }
+        /* empty */                                     { $$ = "false"; }
+    |   '&'                                             { $$ = "true"; }
 ;
 
 is_variadic:
-        /* empty */                                   { $$ = "false"; }
-    |   T_ELLIPSIS                                    { $$ = "true"; }
+        /* empty */                                     { $$ = "false"; }
+    |   T_ELLIPSIS                                      { $$ = "true"; }
 ;
 
 type_expr:
-        type                                          { $$ = $1; }
-    |   '?' type                                      { $$ = $2; $$.attribute("nullable", "true") }
+        type                                            { $$ = $1; }
+    |   '?' type                                        { $$ = $2; $$.attribute("nullable", "true") }
 ;
 
 type:
-        name                                          { $$ = $1; }
-    |   T_ARRAY                                       { $$ = Node("array type"); }
-    |   T_CALLABLE                                    { $$ = Node("callable type"); }
+        name                                            { $$ = $1; }
+    |   T_ARRAY                                         { $$ = Node("array type"); }
+    |   T_CALLABLE                                      { $$ = Node("callable type"); }
 ;
 
 return_type:
-        /* empty */                                   { $$ = Node("void"); }
-    |   ':' type_expr                                 { $$ = $2; }
+        /* empty */                                     { $$ = Node("void"); }
+    |   ':' type_expr                                   { $$ = $2; }
+;
+
+expr_without_variable:
+    variable '=' expr                                   { $$ = Node("Assign").append($1).append($3); }
+    |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
+    |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
+    |   T_CLONE expr                                    { $$ = Node("Clone").append($2); }
+    |   variable T_PLUS_EQUAL expr                      { $$ = Node("AssignAdd").append($1).append($3); }
+    |   variable T_MINUS_EQUAL expr                     { $$ = Node("AssignSub").append($1).append($3); }
+    |   variable T_MUL_EQUAL expr                       { $$ = Node("AssignMul").append($1).append($3); }
+    |   variable T_POW_EQUAL expr                       { $$ = Node("AssignPow").append($1).append($3); }
+    |   variable T_DIV_EQUAL expr                       { $$ = Node("AssignDiv").append($1).append($3); }
+    |   variable T_CONCAT_EQUAL expr                    { $$ = Node("AssignConcat").append($1).append($3); }
+    |   variable T_MOD_EQUAL expr                       { $$ = Node("AssignMod").append($1).append($3); }
+    |   variable T_AND_EQUAL expr                       { $$ = Node("AssignAnd").append($1).append($3); }
+    |   variable T_AND_EQUAL expr                       { $$ = Node("AssignAnd").append($1).append($3); }
+    |   variable T_OR_EQUAL expr                        { $$ = Node("AssignOr").append($1).append($3); }
+    |   variable T_XOR_EQUAL expr                       { $$ = Node("AssignXor").append($1).append($3); }
+    |   variable T_SL_EQUAL expr                        { $$ = Node("AssignShiftLeft").append($1).append($3); }
+    |   variable T_SR_EQUAL expr                        { $$ = Node("AssignShiftRight").append($1).append($3); }
+    |   variable T_INC                                  { $$ = Node("PostIncrement").append($1) }
+    |   T_INC variable                                  { $$ = Node("PreIncrement").append($2) }
+    |   variable T_DEC                                  { $$ = Node("PostDecrement").append($1) }
+    |   T_DEC variable                                  { $$ = Node("PreDecrement").append($2) }
+    |   expr T_BOOLEAN_OR expr                          { $$ = Node("Or").append($1).append($3) }
+    |   expr T_BOOLEAN_AND expr                         { $$ = Node("And").append($1).append($3) }
+    |   expr T_LOGICAL_OR expr                          { $$ = Node("Or").append($1).append($3) }
+    |   expr T_LOGICAL_AND expr                         { $$ = Node("And").append($1).append($3) }
+    |   expr T_LOGICAL_XOR expr                         { $$ = Node("Xor").append($1).append($3) }
+    |   expr '|' expr                                   { $$ = Node("BitwiseOr").append($1).append($3) }
+    |   expr '&' expr                                   { $$ = Node("BitwiseAnd").append($1).append($3) }
+    |   expr '^' expr                                   { $$ = Node("BitwiseXor").append($1).append($3) }
+    |   expr '.' expr                                   { $$ = Node("Concat").append($1).append($3) }
+    |   expr '+' expr                                   { $$ = Node("Add").append($1).append($3) }
+    |   expr '-' expr                                   { $$ = Node("Sub").append($1).append($3) }
+    |   expr '*' expr                                   { $$ = Node("Mul").append($1).append($3) }
+    |   expr T_POW expr                                 { $$ = Node("Pow").append($1).append($3) }
+    |   expr '/' expr                                   { $$ = Node("Div").append($1).append($3) }
+    |   expr '%' expr                                   { $$ = Node("Mod").append($1).append($3) }
+    |   expr T_SL expr                                  { $$ = Node("ShiftLeft").append($1).append($3) }
+    |   expr T_SR expr                                  { $$ = Node("ShiftRight").append($1).append($3) }
+    |   '+' expr %prec T_INC                            { $$ = Node("UnaryPlus").append($2) }
+    |   '-' expr %prec T_INC                            { $$ = Node("UnaryMinus").append($2) }
+    |   '!' expr                                        { $$ = Node("BooleanNot").append($2) }
+    |   '~' expr                                        { $$ = Node("BitwiseNot").append($2) }
+    |   expr T_IS_IDENTICAL expr                        { $$ = Node("Identical").append($1).append($3) }
+    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = Node("NotIdentical").append($1).append($3) }
+    |   expr T_IS_EQUAL expr                            { $$ = Node("Equal").append($1).append($3) }
+    |   expr T_IS_NOT_EQUAL expr                        { $$ = Node("NotEqual").append($1).append($3) }
+    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3) }
+    |   expr '<' expr                                   { $$ = Node("Smaller").append($1).append($3) }
+    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = Node("SmallerOrEqual").append($1).append($3) }
+    |   expr '>' expr                                   { $$ = Node("Greater").append($1).append($3) }
+    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = Node("GreaterOrEqual").append($1).append($3) }
+    |   '(' expr ')'                                    { $$ = $2; }
+    |   expr '?' expr ':' expr                          { $$ = Node("Ternary").append($1).append($3).append($5); }
+    |   expr '?' ':' expr                               { $$ = Node("Ternary").append($1).append($4); }
+    |   expr T_COALESCE expr                            { $$ = Node("Coalesce").append($1).append($3); }
+        |   T_EMPTY '(' expr ')'                            { $$ = Node("Empty").append($3); }
+        |   T_INCLUDE expr                                  { $$ = Node("Include").append($2); }
+        |   T_INCLUDE_ONCE expr                             { $$ = Node("IncludeOnce").append($2); }
+        |   T_EVAL '(' expr ')'                             { $$ = Node("Eval").append($3); }
+        |   T_REQUIRE expr                                  { $$ = Node("Require").append($2); }
+        |   T_REQUIRE_ONCE expr                             { $$ = Node("RequireOnce").append($2); }
+    |   T_INT_CAST expr                                 { $$ = Node("CastInt").append($2); }
+    |   T_DOUBLE_CAST expr                              { $$ = Node("CastDouble").append($2); }
+    |   T_STRING_CAST expr                              { $$ = Node("CastString").append($2); }
+    |   T_ARRAY_CAST expr                               { $$ = Node("CastArray").append($2); }
+    |   T_OBJECT_CAST expr                              { $$ = Node("CastObject").append($2); }
+    |   T_BOOL_CAST expr                                { $$ = Node("CastBool").append($2); }
+    |   T_UNSET_CAST expr                               { $$ = Node("CastUnset").append($2); }
+    |   '@' expr                                        { $$ = Node("Silence").append($2); }
+
+    |   T_PRINT expr                                    { $$ = Node("Print").append($2); }
+    |   T_YIELD                                         { $$ = Node("Yield"); }
+    |   T_YIELD expr                                    { $$ = Node("Yield").append($2); }
+    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = Node("Yield").append($2).append($4); }
+    |   T_YIELD_FROM expr                               { $$ = Node("YieldFrom").append($2); }
+;
+
+expr:
+        variable                                        { $$ = $1; }
+    |   expr_without_variable                           { $$ = $1; }
+;
+
+callable_variable:
+    simple_variable                                     { $$ = $1; }
+;
+
+variable:
+    callable_variable                                   { $$ = $1; }
+;
+
+simple_variable:
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1); }
+    |   '$' '{' expr '}'                                { $$ = $3; }
+    |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
 ;
 
 /////////////////////////////////////////////////////////////////////////
@@ -349,9 +463,13 @@ return_type:
 const src = `<?
 namespace foo\bar\test;
 
-function test(string $a, \bar\baz $b) {
++$b++;
 
-}
+do {
+    function test(string $a, \bar\baz $b = $t) { 
+        yield $a => $b;
+    }
+} while($a = $b = $c);
 
 `
 
