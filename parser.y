@@ -81,6 +81,7 @@ func (n node) attribute(key string, value string) node {
 %right T_POW
 %right '['
 %nonassoc T_NEW T_CLONE
+%left T_NOELSE
 %left T_ELSEIF
 %left T_ELSE
 %left T_ENDIF
@@ -197,6 +198,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> callable_variable
 %type <node> variable
 %type <node> simple_variable
+%type <node> if_stmt_without_else
+%type <node> if_stmt
 
 %%
 
@@ -266,8 +269,27 @@ inner_statement:
 
 statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
+    |   if_stmt                                         { $$ = $1; }
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("Do While").append($2).append($5)}
     |   expr ';'                                        { $$ = $1; }
+
+if_stmt_without_else:
+        T_IF '(' expr ')' statement
+            {
+                $$ = Node("if").append(Node("expr").append($3)).append(Node("stmt").append($5))
+            }
+    |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
+            { 
+                $$ = $1.append(Node("elseif").append(Node("expr").append($4)).append(Node("stmt").append($6)))
+            }
+;
+if_stmt:
+        if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
+    |   if_stmt_without_else T_ELSE statement
+            {
+                $$ = $1.append(Node("else").append(Node("stmt").append($3)))
+            }
+;
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING '{' '}'        { $$ = $1.attribute("name", $3) }
@@ -287,11 +309,11 @@ function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
             $$ = Node("Function").
-              attribute("name", $3).
-              attribute("returns_ref", $2).
-              append($5).
-              append($7).
-              append($9);
+                attribute("name", $3).
+                attribute("returns_ref", $2).
+                append($5).
+                append($7).
+                append($9);
         }
 ;
 
@@ -461,15 +483,14 @@ simple_variable:
 %%
 
 const src = `<?
-namespace foo\bar\test;
 
-+$b++;
+if ($a > $b) {
+    $b=$c;
+} elseif ($a === $b) {
 
-do {
-    function test(string $a, \bar\baz $b = $t) { 
-        yield $a => $b;
-    }
-} while($a = $b = $c);
+} else {
+
+}
 
 `
 
