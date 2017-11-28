@@ -202,6 +202,7 @@ func (n node) attribute(key string, value string) node {
 %type <node> if_stmt
 %type <node> alt_if_stmt_without_else
 %type <node> alt_if_stmt
+%type <node> while_statement
 
 %%
 
@@ -273,7 +274,8 @@ statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("Do While").append($2).append($5)}
+    |   T_WHILE '(' expr ')' while_statement            { $$ = Node("While").append(Node("expr").append($3)).append(Node("stmt").append($5)) }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("DoWhile").append(Node("expr").append($5)).append(Node("stmt").append($2))}
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -313,6 +315,12 @@ alt_if_stmt:
                 $$ = $1.append(Node("AltElse").append(Node("stmt").append($4)))
             }
 ;
+
+while_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = $2; }
+;
+
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING '{' '}'        { $$ = $1.attribute("name", $3) }
@@ -507,13 +515,9 @@ simple_variable:
 
 const src = `<?
 
-if ($a > $b) : 
-    $b=$c;
-elseif ($a === $b) :
+do {
 
-else :
-
-endif;
+} while ($a >= $b || $a < $c);
 
 `
 
