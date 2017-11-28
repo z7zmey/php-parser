@@ -208,6 +208,7 @@ func (n node) attribute(key string, value string) node {
 %type <node> for_statement
 %type <node> switch_case_list
 %type <node> case_list
+%type <node> optional_expr
 
 %%
 
@@ -267,7 +268,7 @@ top_statement:
 
 inner_statement_list:
         inner_statement_list inner_statement            { $$ = $1.append($2); }
-    |   /* empty */                                     { $$ = Node("statement_list") }
+    |   /* empty */                                     { $$ = Node("stmt") }
 ;
 
 inner_statement:
@@ -290,6 +291,9 @@ statement:
                     append(Node("stmt").append($9))
             }
     |   T_SWITCH '(' expr ')' switch_case_list          { $$ = Node("Switch").append(Node("expr").append($3)).append($5); }
+    |   T_BREAK optional_expr ';'                       { $$ = Node("Break").append($2) }
+    |   T_CONTINUE optional_expr ';'                    { $$ = Node("Continue").append($2) }
+    |   T_RETURN optional_expr ';'                      { $$ = Node("Return").append($2) }
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -355,11 +359,11 @@ case_list:
         /* empty */                                     { $$ = Node("CaseList") }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append(Node("stmt").append($5)))
+                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append($5))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = $1.append(Node("Default").append(Node("stmt").append($4)))
+                $$ = $1.append(Node("Default").append($4))
             }
 ;
 
@@ -546,6 +550,11 @@ expr:
     |   expr_without_variable                           { $$ = $1; }
 ;
 
+optional_expr:
+        /* empty */                                     { $$ = Node("null") }
+    |   expr                                            { $$ = $1; }
+;
+
 callable_variable:
     simple_variable                                     { $$ = $1; }
 ;
@@ -567,9 +576,13 @@ simple_variable:
 const src = `<?
 
 switch($a) :;
-    case $b; $b = $a;
-    default; $a;
+    case $b; 
+        $b = $a;
+        break;
+    default; break;
 endswitch;
+
+return $a;
 
 `
 
