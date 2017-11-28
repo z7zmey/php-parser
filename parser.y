@@ -203,6 +203,9 @@ func (n node) attribute(key string, value string) node {
 %type <node> alt_if_stmt_without_else
 %type <node> alt_if_stmt
 %type <node> while_statement
+%type <node> for_exprs
+%type <node> non_empty_for_exprs
+%type <node> for_statement
 
 %%
 
@@ -276,6 +279,14 @@ statement:
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement            { $$ = Node("While").append(Node("expr").append($3)).append(Node("stmt").append($5)) }
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("DoWhile").append(Node("expr").append($5)).append(Node("stmt").append($2))}
+    |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
+            {
+                $$ = Node("For").
+                    append(Node("expr1").append($3)).
+                    append(Node("expr2").append($5)).
+                    append(Node("expr3").append($7)).
+                    append(Node("stmt").append($9))
+            }
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -321,6 +332,19 @@ while_statement:
     |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = $2; }
 ;
 
+for_exprs:
+        /* empty */                                     { $$ = Node("null"); }
+    |   non_empty_for_exprs                             { $$ = $1; }
+;
+non_empty_for_exprs:
+        non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
+    |   expr                                            { $$ = Node("ExpressionList").append($1) }
+;
+
+for_statement:
+        statement                                       { $$ = $1; }
+    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
+;
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING '{' '}'        { $$ = $1.attribute("name", $3) }
@@ -515,9 +539,9 @@ simple_variable:
 
 const src = `<?
 
-do {
+for ($a = $b;;) :
 
-} while ($a >= $b || $a < $c);
+endfor;
 
 `
 
