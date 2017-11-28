@@ -200,6 +200,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> simple_variable
 %type <node> if_stmt_without_else
 %type <node> if_stmt
+%type <node> alt_if_stmt_without_else
+%type <node> alt_if_stmt
 
 %%
 
@@ -270,24 +272,45 @@ inner_statement:
 statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
     |   if_stmt                                         { $$ = $1; }
+    |   alt_if_stmt                                     { $$ = $1; }
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("Do While").append($2).append($5)}
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                $$ = Node("if").append(Node("expr").append($3)).append(Node("stmt").append($5))
+                $$ = Node("If").append(Node("expr").append($3)).append(Node("stmt").append($5))
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                $$ = $1.append(Node("elseif").append(Node("expr").append($4)).append(Node("stmt").append($6)))
+                $$ = $1.append(Node("ElseIf").append(Node("expr").append($4)).append(Node("stmt").append($6)))
             }
 ;
+
 if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                $$ = $1.append(Node("else").append(Node("stmt").append($3)))
+                $$ = $1.append(Node("Else").append(Node("stmt").append($3)))
+            }
+;
+
+alt_if_stmt_without_else:
+        T_IF '(' expr ')' ':' inner_statement_list
+            { 
+                $$ = Node("AltIf").append(Node("expr").append($3)).append(Node("stmt").append($6))
+            }
+    |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
+            {
+                $$ = $1.append(Node("AltElseIf").append(Node("expr").append($4)).append(Node("stmt").append($7)))
+            }
+;
+
+alt_if_stmt:
+        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
+    |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
+            {
+                $$ = $1.append(Node("AltElse").append(Node("stmt").append($4)))
             }
 ;
 
@@ -484,13 +507,13 @@ simple_variable:
 
 const src = `<?
 
-if ($a > $b) {
+if ($a > $b) : 
     $b=$c;
-} elseif ($a === $b) {
+elseif ($a === $b) :
 
-} else {
+else :
 
-}
+endif;
 
 `
 
