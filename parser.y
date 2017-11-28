@@ -209,6 +209,12 @@ func (n node) attribute(key string, value string) node {
 %type <node> switch_case_list
 %type <node> case_list
 %type <node> optional_expr
+%type <node> global_var_list
+%type <node> global_var
+%type <node> static_var_list
+%type <node> static_var
+%type <node> echo_expr_list
+%type <node> echo_expr
 
 %%
 
@@ -294,6 +300,9 @@ statement:
     |   T_BREAK optional_expr ';'                       { $$ = Node("Break").append($2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = Node("Continue").append($2) }
     |   T_RETURN optional_expr ';'                      { $$ = Node("Return").append($2) }
+    |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
+    |   T_STATIC static_var_list ';'                    { $$ = $2; }
+    |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -375,6 +384,34 @@ case_separator:
 for_statement:
         statement                                       { $$ = $1; }
     |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
+;
+
+global_var_list:
+        global_var_list ',' global_var                  { $$ = $1.append($3); }
+    |   global_var                                      { $$ = Node("GlobalVarList").append($1); }
+;
+
+global_var:
+    simple_variable                                     { $$ = $1 }
+;
+
+static_var_list:
+        static_var_list ',' static_var                  { $$ = $1.append($3); }
+    |   static_var                                      { $$ = Node("StaticVarList").append($1); }
+;
+
+static_var:
+        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1); }
+    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1).append(Node("expr").append($3)); }
+;
+
+echo_expr_list:
+        echo_expr_list ',' echo_expr                    { $$ = $1.append($3) }
+    |   echo_expr                                       { $$ = Node("EchoList").append($1) }
+;
+
+echo_expr:
+    expr                                                { $$ = Node("Echo").append($1) }
 ;
 
 class_declaration_statement:
@@ -575,14 +612,9 @@ simple_variable:
 
 const src = `<?
 
-switch($a) :;
-    case $b; 
-        $b = $a;
-        break;
-    default; break;
-endswitch;
+static $a, $b = $c;
 
-return $a;
+echo $a, $b = $c;
 
 `
 
