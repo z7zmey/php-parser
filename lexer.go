@@ -7664,8 +7664,28 @@ yyrule1: // [ \t\n\r]+
 
 	goto yystate0
 yyrule2: // .
+	{
 
-	goto yystate0
+		tb := []byte{}
+		for {
+			if c == -1 {
+				break
+			}
+			if '?' == rune(c) {
+				tb = l.TokenBytes(nil)
+				if len(tb) < 2 || tb[len(tb)-1] != '<' {
+					c = l.Next()
+					continue
+				}
+				tb = l.ungetN(1)
+				break
+			}
+			c = l.Next()
+		}
+		lval.token = string(tb)
+		return T_INLINE_HTML
+		goto yystate0
+	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
 		begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
@@ -7690,9 +7710,7 @@ yyrule6: // [ \t\n\r]+
 	}
 yyrule7: // \?\>{NEW_LINE}?
 	{
-		begin(INITIAL)
-		lval.token = string(l.TokenBytes(nil))
-		return T_CLOSE_TAG
+		begin(INITIAL) //lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
 		goto yystate0
 	}
 yyrule8: // {DNUM}|{EXPONENT_DNUM}

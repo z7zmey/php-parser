@@ -303,6 +303,7 @@ statement:
     |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
+    |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1)) }
     |   expr ';'                                        { $$ = $1; }
 
 if_stmt_without_else:
@@ -610,9 +611,11 @@ simple_variable:
 
 %%
 
-const src = `<?
+const src = `a<?
 
 static $a, $b = $c;
+
+?>   test<?php 
 
 echo $a, $b = $c;
 

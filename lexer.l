@@ -154,12 +154,35 @@ NEW_LINE        (\r|\n|\r\n)
 
 <INITIAL>[ \t\n\r]+
 <INITIAL>.
+    tb := []byte{}
+
+    for {
+        if c == -1 {
+            break;
+        }
+
+        if '?' == rune(c) {
+            tb = l.TokenBytes(nil);
+            if (len(tb) < 2 || tb[len(tb)-1] != '<') {
+                c = l.Next()
+                continue;
+            }
+
+            tb = l.ungetN(1)
+            break;
+        }
+
+        c = l.Next()
+    }
+
+    lval.token = string(tb); return T_INLINE_HTML
+
 <INITIAL>\<\?php([ \t]|{NEW_LINE})              begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 <INITIAL>\<\?                                   begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 <INITIAL>\<\?=                                  begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG_WITH_ECHO;
 
 <PHP>[ \t\n\r]+                                 //lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
-<PHP>\?\>{NEW_LINE}?                            begin(INITIAL);lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
+<PHP>\?\>{NEW_LINE}?                            begin(INITIAL);//lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
 
 <PHP>{DNUM}|{EXPONENT_DNUM}                     lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
 <PHP>{BNUM}
