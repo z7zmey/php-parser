@@ -355,6 +355,9 @@ statement:
                     append($5).
                     append($6);
             }
+    |   T_THROW expr ';'                                { $$ = Node("Throw").append($2) }
+    |   T_GOTO T_STRING ';'                             { $$ = Node("GoTo").attribute("Label", $2) }
+    |   T_STRING ':'                                    { $$ = Node("Label").attribute("name", $1) }
 
 catch_list:
         /* empty */                                     { $$ = Node("CatchList") }
@@ -749,14 +752,9 @@ simple_variable:
 
 const src = `<?php
 
-try {
-
-} catch(\Exception | RuntimeException $e) {
-
-} finally {
-    
-}
-
+throw $exception;
+goto test;
+test:
 `
 
 func main() {
