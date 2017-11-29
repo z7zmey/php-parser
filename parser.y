@@ -239,6 +239,14 @@ func (n node) attribute(key string, value string) node {
 %type <node> class_const_list
 %type <node> class_const_decl
 %type <node> method_modifiers
+%type <node> name_list
+%type <node> trait_adaptations
+%type <node> trait_adaptation_list
+%type <node> trait_adaptation
+%type <node> trait_precedence
+%type <node> trait_alias
+%type <node> trait_method_reference
+%type <node> absolute_trait_method_reference
 
 %%
 
@@ -264,8 +272,8 @@ semi_reserved:
 ;
 
 identifier:
-        T_STRING                                        { $$ = Node("identifier") }
-    |   semi_reserved                                   { $$ = Node("reserved") }
+        T_STRING                                        { $$ = Node("identifier").attribute("value", $1) }
+    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", "reserved") }
 ;
 
 namespace_name_parts:
@@ -590,7 +598,50 @@ class_statement_list:
 class_statement:
         variable_modifiers property_list ';'            { $$ = $2.append($1) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.append($1); }
+    |   T_USE name_list trait_adaptations               { $$ = Node("Use").append($2).append($3); }
 ;
+
+name_list:
+        name                                            { $$ = Node("NameList").append($1) }
+    |   name_list ',' name                              { $$ = $1.append($3) }
+;
+
+trait_adaptations:
+        ';'                                             { $$ = Node(""); }
+    |   '{' '}'                                         { $$ = Node(""); }
+    |   '{' trait_adaptation_list '}'                   { $$ = $2; }
+;
+
+trait_adaptation_list:
+        trait_adaptation                                { $$ = Node("TraitAdaptionList").append($1) }
+    |   trait_adaptation_list trait_adaptation          { $$ = $1.append($2) }
+;
+
+trait_adaptation:
+        trait_precedence ';'                            { $$ = $1; }
+    |   trait_alias ';'                                 { $$ = $1; }
+;
+
+trait_precedence:
+    absolute_trait_method_reference T_INSTEADOF name_list
+                                                        { $$ = Node("TraitPrecedence").append($1).append($3) }
+;
+
+trait_alias:
+        trait_method_reference T_AS T_STRING            { $$ = $1.append(Node("as").attribute("value", $3)); }
+    |   trait_method_reference T_AS reserved_non_modifiers
+                                                        { $$ = $1.append(Node("as").append(Node("reservedNonModifiers")));  }
+    |   trait_method_reference T_AS member_modifier identifier
+                                                        { $$ = $1.append($3).append($4); }
+    |   trait_method_reference T_AS member_modifier     { $$ = $1.append($3); }
+;
+trait_method_reference:
+        identifier                                      { $$ = Node("TraitMethodRef").append($1); }
+    |   absolute_trait_method_reference                 { $$ = $1; }
+;
+
+absolute_trait_method_reference:
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = Node("TraitMethodRef").append($1).append($3) }
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
@@ -815,8 +866,13 @@ simple_variable:
 const src = `<?php
 
 abstract class test {
-    public static $a ,$b = $c;
-    private static const TEST = $a, TEST2 = $b;
+    use \test\tt, tt {
+        tt::test insteadof test;
+        \test\tt::test as include;
+        \test\tt::test as public include;
+        \test\tt::test as public private;
+        \test\tt::test as private somestring;
+    }
 }
 
 `
