@@ -229,6 +229,13 @@ func (n node) attribute(key string, value string) node {
 %type <node> catch_list
 %type <node> catch_name_list
 %type <node> finally_statement
+%type <node> class_statement_list
+%type <node> class_statement
+%type <node> variable_modifiers
+%type <node> non_empty_member_modifiers
+%type <node> member_modifier
+%type <node> property_list
+%type <node> property
 
 %%
 
@@ -557,9 +564,11 @@ possible_comma:
 ;
 
 class_declaration_statement:
-        class_modifiers T_CLASS T_STRING '{' '}'        { $$ = $1.attribute("name", $3) }
-    |   T_CLASS T_STRING '{' '}'                        { $$ = Node("Class").attribute("name", $2) }
+        class_modifiers T_CLASS T_STRING '{' class_statement_list '}'
+                                                        { $$ = $1.attribute("name", $3).append($5) }
+    |   T_CLASS T_STRING '{' class_statement_list '}'   { $$ = Node("Class").attribute("name", $2).append($4) }
 ;
+
 class_modifiers:
         class_modifier                                  { $$ = Node("Class").attribute($1, "true") }
     |   class_modifiers class_modifier                  { $$ = $1.attribute($2, "true") }
@@ -568,6 +577,42 @@ class_modifiers:
 class_modifier:
         T_ABSTRACT                                      { $$ = "abstract" }
     |   T_FINAL                                         { $$ = "final" }
+;
+
+class_statement_list:
+        class_statement_list class_statement            { $$ = $1.append($2) }
+    |   /* empty */                                     { $$ = Node("Stmt") }
+;
+
+class_statement:
+        variable_modifiers property_list ';'            { $$ = $2.append($1) }
+;
+
+variable_modifiers:
+        non_empty_member_modifiers                      { $$ = $1; }
+    |   T_VAR                                           { $$ = Node("VarMemberModifier") }
+;
+
+non_empty_member_modifiers:
+        member_modifier	                                { $$ = $1; }
+    |   non_empty_member_modifiers member_modifier      { $$ = $1.append($2) }
+;
+member_modifier:
+        T_PUBLIC                                        { $$ = Node("PublicMemberModifier"); }
+    |   T_PROTECTED                                     { $$ = Node("ProtectedMemberModifier"); }
+    |   T_PRIVATE                                       { $$ = Node("PrivateMemberModifier"); }
+    |   T_STATIC                                        { $$ = Node("StaticMemberModifier"); }
+    |   T_ABSTRACT                                      { $$ = Node("AbstractMemberModifier"); }
+    |   T_FINAL                                         { $$ = Node("FinalMemberModifier"); }
+;
+
+property_list:
+        property_list ',' property                      { $$ = $1.append($3) }
+    |   property                                        { $$ = Node("PropertyList").append($1) }
+;
+property:
+        T_VARIABLE                                      { $$ = Node("Property").attribute("name", $1) }
+    |   T_VARIABLE '=' expr                             { $$ = Node("Property").attribute("name", $1).append(Node("Default").append($3)) }
 ;
 
 function_declaration_statement:
@@ -752,9 +797,10 @@ simple_variable:
 
 const src = `<?php
 
-throw $exception;
-goto test;
-test:
+abstract class test {
+    public static $a ,$b = $c;
+}
+
 `
 
 func main() {
