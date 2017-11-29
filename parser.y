@@ -217,6 +217,12 @@ func (n node) attribute(key string, value string) node {
 %type <node> echo_expr
 %type <node> unset_variables
 %type <node> unset_variable
+%type <node> foreach_variable
+%type <node> array_pair_list
+%type <node> possible_array_pair
+%type <node> non_empty_array_pair_list
+%type <node> array_pair
+%type <node> foreach_statement
 
 %%
 
@@ -288,8 +294,18 @@ statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
-    |   T_WHILE '(' expr ')' while_statement            { $$ = Node("While").append(Node("expr").append($3)).append(Node("stmt").append($5)); }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = Node("DoWhile").append(Node("expr").append($5)).append(Node("stmt").append($2)); }
+    |   T_WHILE '(' expr ')' while_statement
+        {
+            $$ = Node("While").
+                append(Node("expr").append($3)).
+                append(Node("stmt").append($5));
+        }
+    |   T_DO statement T_WHILE '(' expr ')' ';'
+        {
+            $$ = Node("DoWhile").
+                append(Node("expr").append($5)).
+                append(Node("stmt").append($2));
+        }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
                 $$ = Node("For").
@@ -308,10 +324,22 @@ statement:
     |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1)) }
     |   expr ';'                                        { $$ = $1; }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
-        { 
-            $$ = Node("Unset").append($3); 
-        }
-    
+                                                        { $$ = Node("Unset").append($3); }
+    |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
+            { 
+                $$ = Node("Foreach").
+                    append(Node("expr").append($3)).
+                    append(Node("ForeachVariable").append($5)).
+                    append($7);
+            }
+    |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
+            { 
+                $$ = Node("Foreach").
+                    append(Node("expr").append($3)).
+                    append(Node("ForeachKey").append($5)).
+                    append(Node("ForeachVariable").append($7)).
+                    append($9);
+            }
 
 if_stmt_without_else:
         T_IF '(' expr ')' statement
@@ -392,6 +420,51 @@ case_separator:
 for_statement:
         statement                                       { $$ = $1; }
     |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
+;
+
+foreach_variable:
+        variable                                        { $$ = $1; }
+    |   '&' variable                                    { $$ = Node("Ref").append($2); }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = Node("List").append($3) }
+    |   '[' array_pair_list ']'                         { $$ = Node("ShortList").append($2) }
+;
+
+array_pair_list:
+    non_empty_array_pair_list                           { /* TODO: allow single trailing comma */ $$ = $1 }
+;
+
+possible_array_pair:
+        /* empty */                                     { $$ = Node("Null"); }
+    |   array_pair                                      { $$ = $1; }
+;
+
+non_empty_array_pair_list:
+        non_empty_array_pair_list ',' possible_array_pair
+                                                        { $$ = $1.append($3) }
+    |   possible_array_pair                             { $$ = Node("ArrayPairList").append($1) }
+;
+
+array_pair:
+        expr T_DOUBLE_ARROW expr                        { $$ = Node("ArrayElement").append($1).append($3) }
+    |   expr                                            { $$ = Node("ArrayElement").append($1) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = Node("ArrayElement").append($1).append(Node("Ref").append($4)) }
+    |   '&' variable                                    { $$ = Node("ArrayElement").append(Node("Ref").append($2)) }
+    |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
+            { 
+                $$ = Node("ArrayElement").
+                    append($1).
+                    append(Node("ArrayList").append($5))
+            }
+    |   T_LIST '(' array_pair_list ')'
+            {
+                $$ = Node("ArrayElement").
+                    append(Node("ArrayList").append($3))
+            }
+;
+
+foreach_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = $2; }
 ;
 
 global_var_list:
@@ -632,11 +705,12 @@ simple_variable:
 
 %%
 
-const src = `a<?
+const src = `<?php
 
-unset($a, $b, );
+foreach ($a = $b as $k => list($a, $b => $c,)) :
+    echo $b;
+endforeach;
 
-?>   test
 `
 
 func main() {
