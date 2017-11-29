@@ -158,6 +158,7 @@ NEW_LINE        (\r|\n|\r\n)
 
     for {
         if c == -1 {
+            tb = l.TokenBytes(nil);
             break;
         }
 

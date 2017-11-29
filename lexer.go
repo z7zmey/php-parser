@@ -7669,6 +7669,7 @@ yyrule2: // .
 		tb := []byte{}
 		for {
 			if c == -1 {
+				tb = l.TokenBytes(nil)
 				break
 			}
 			if '?' == rune(c) {

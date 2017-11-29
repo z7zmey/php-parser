@@ -215,6 +215,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> static_var
 %type <node> echo_expr_list
 %type <node> echo_expr
+%type <node> unset_variables
+%type <node> unset_variable
 
 %%
 
@@ -305,6 +307,11 @@ statement:
     |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
     |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1)) }
     |   expr ';'                                        { $$ = $1; }
+    |   T_UNSET '(' unset_variables possible_comma ')' ';' 
+        { 
+            $$ = Node("Unset").append($3); 
+        }
+    
 
 if_stmt_without_else:
         T_IF '(' expr ')' statement
@@ -413,6 +420,20 @@ echo_expr_list:
 
 echo_expr:
     expr                                                { $$ = Node("Echo").append($1) }
+;
+
+unset_variables:
+        unset_variable                                  { $$ = Node("UnsetVariablesList").append($1) }
+    |   unset_variables ',' unset_variable              { $$ = $1.append($3) }
+;
+
+unset_variable:
+    variable                                            { $$ = $1 }
+;
+
+possible_comma:
+        /* empty */
+    |   ','
 ;
 
 class_declaration_statement:
@@ -613,12 +634,9 @@ simple_variable:
 
 const src = `a<?
 
-static $a, $b = $c;
+unset($a, $b, );
 
-?>   test<?php 
-
-echo $a, $b = $c;
-
+?>   test
 `
 
 func main() {
