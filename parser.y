@@ -270,6 +270,15 @@ func (n node) attribute(key string, value string) node {
 %type <node> trait_method_reference
 %type <node> absolute_trait_method_reference
 %type <node> method_body
+%type <node> scalar
+%type <node> encaps_list
+%type <node> encaps_var
+%type <node> encaps_var_offset
+%type <node> constant
+%type <node> class_name
+%type <node> variable_class_name
+%type <node> dereferencable
+%type <node> dereferencable_scalar
 
 %%
 
@@ -866,12 +875,84 @@ expr_without_variable:
     |   T_BOOL_CAST expr                                { $$ = Node("CastBool").append($2); }
     |   T_UNSET_CAST expr                               { $$ = Node("CastUnset").append($2); }
     |   '@' expr                                        { $$ = Node("Silence").append($2); }
-
+    |   scalar                                          { $$ = $1; }
     |   T_PRINT expr                                    { $$ = Node("Print").append($2); }
     |   T_YIELD                                         { $$ = Node("Yield"); }
     |   T_YIELD expr                                    { $$ = Node("Yield").append($2); }
     |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = Node("Yield").append($2).append($4); }
     |   T_YIELD_FROM expr                               { $$ = Node("YieldFrom").append($2); }
+;
+
+scalar:
+        T_LNUMBER                                       { $$ = Node("Scalar").append(Node("Lnumber").attribute("value", $1)) }
+    |   T_DNUMBER                                       { $$ = Node("Scalar").append(Node("Dnumber").attribute("value", $1)) }
+    |   T_LINE                                          { $$ = Node("Scalar").append(Node("__LINE__")) }
+    |   T_FILE                                          { $$ = Node("Scalar").append(Node("__FILE__")) }
+    |   T_DIR                                           { $$ = Node("Scalar").append(Node("__DIR__")) }
+    |   T_TRAIT_C                                       { $$ = Node("Scalar").append(Node("__TRAIT__")) }
+    |   T_METHOD_C                                      { $$ = Node("Scalar").append(Node("__METHOD__")); }
+    |   T_FUNC_C                                        { $$ = Node("Scalar").append(Node("__FUNCTION__")); }
+    |   T_NS_C                                          { $$ = Node("Scalar").append(Node("__NAMESPACE__")); }
+    |   T_CLASS_C                                       { $$ = Node("Scalar").append(Node("__CLASS__")); }
+    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
+                                                        { $$ = Node("Scalar").append(Node("Heredoc").attribute("value", $2)) }
+    |   T_START_HEREDOC T_END_HEREDOC
+                                                        { $$ = Node("Scalar").append(Node("Heredoc")) }
+    |   '"' encaps_list '"'                             { $$ = $2; }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = $2; }
+    |   dereferencable_scalar                           { $$ = $1; }
+    |   constant                                        { $$ = $1; }
+;
+
+encaps_list:
+        encaps_list encaps_var                          { $$ = $1.append($2) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.append(Node("String").attribute("value", $2)) }
+    |   encaps_var                                      { $$ = Node("EncapsList").append($1) }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = Node("EncapsList").append(Node("String").attribute("value", $1)).append($2) }
+;
+encaps_var:
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
+    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = Node("Variable").attribute("value", $1).append(Node("offset").append($3)) }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = Node("Variable").attribute("value", $1).append(Node("property").attribute("value", $3)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = Node("Variable").append(Node("expr").append($2)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = Node("Variable").attribute("value", $2) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
+                                                        { $$ = Node("Variable").attribute("value", $2).append(Node("offset").append($4)) }
+    |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
+;
+encaps_var_offset:
+        T_STRING                                        { $$ = Node("OffsetString").attribute("value", $1) }
+    |   T_NUM_STRING                                    { $$ = Node("OffsetNumString").attribute("value", $1) }
+    |   '-' T_NUM_STRING                                { $$ = Node("OffsetNegateNumString").attribute("value", $2) }
+    |   T_VARIABLE                                      { $$ = Node("OffsetVariable").attribute("value", $1) }
+;
+
+constant:
+        name                                            { $$ = Node("Const").append($1) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = Node("Const").append($1).append($3) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
+                                                        { $$ = Node("Const").append($1).append($3) }
+;
+
+class_name:
+        T_STATIC                                        { $$ = Node("Static") }
+    |   name                                            { $$ = $1; }
+;
+
+variable_class_name:
+    dereferencable                                      { $$ = $1; }
+;
+
+dereferencable:
+        variable                                        { $$ = $1; }
+    |   '(' expr ')'                                    { $$ = $2; }
+    |   dereferencable_scalar                           { $$ = $1; }
+;
+
+dereferencable_scalar:
+        T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
+    |   '[' array_pair_list ']'                         { $$ = $2; }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1) }
 ;
 
 expr:
@@ -894,7 +975,7 @@ variable:
 
 simple_variable:
         T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1); }
-    |   '$' '{' expr '}'                                { $$ = $3; }
+    |   '$' '{' expr '}'                                { $$ = Node("Variable").append($3); }
     |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
 ;
 
@@ -904,9 +985,9 @@ simple_variable:
 
 const src = `<?php
 
-abstract class foo {
-    public function bar();
-}
+$a = +22 . $b;
+
+$a = "str {${$a+$b}} str$b";
 
 `
 

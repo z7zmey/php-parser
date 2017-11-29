@@ -453,7 +453,6 @@ NEW_LINE        (\r|\n|\r\n)
         
         l.ungetN(len(l.TokenBytes(nil))-cnt)
         tokenBytes := l.TokenBytes(nil)[:cnt]
-        fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
         pushState(STRING)
 
         lval.token = string(tokenBytes); return rune2Class('"')
@@ -494,7 +493,7 @@ NEW_LINE        (\r|\n|\r\n)
     }
 
 <STRING>\"                                  popState(); lval.token = "\""; return rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = string(l.ungetN(1)); return T_CURLY_OPEN
+<STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = string(l.ungetN(1)); pushState(PHP); return T_CURLY_OPEN
 <STRING,HEREDOC,BACKQUOTE>\$\{              pushState(STRING_VAR_NAME);lval.token = string(l.TokenBytes(nil)); return T_DOLLAR_OPEN_CURLY_BRACES
 <STRING,HEREDOC,BACKQUOTE>\$                l.ungetN(1);pushState(STRING_VAR)
 <STRING>.

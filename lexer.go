@@ -8761,7 +8761,6 @@ yyrule145: // [b]?[\"]
 
 			l.ungetN(len(l.TokenBytes(nil)) - cnt)
 			tokenBytes := l.TokenBytes(nil)[:cnt]
-			fmt.Println(string(tokenBytes)) // TODO: RETURN TOKEN
 			pushState(STRING)
 			lval.token = string(tokenBytes)
 			return rune2Class('"')
@@ -8810,6 +8809,7 @@ yyrule146: // \"
 yyrule147: // \{\$
 	{
 		lval.token = string(l.ungetN(1))
+		pushState(PHP)
 		return T_CURLY_OPEN
 		goto yystate0
 	}
