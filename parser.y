@@ -236,6 +236,9 @@ func (n node) attribute(key string, value string) node {
 %type <node> member_modifier
 %type <node> property_list
 %type <node> property
+%type <node> class_const_list
+%type <node> class_const_decl
+%type <node> method_modifiers
 
 %%
 
@@ -288,9 +291,9 @@ top_statement_list:
 top_statement:
         statement                                       { $$ = $1 }
     |   function_declaration_statement                  { $$ = $1 }
+    |   class_declaration_statement                     { $$ = $1; }
     |   T_INCLUDE identifier ';'                        { $$ = $2; /*TODO: identifier stub, refactor it*/ }
     |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
-    |   class_declaration_statement                     { $$ = $1; }
 ;
 
 inner_statement_list:
@@ -586,12 +589,26 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = $2.append($1) }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.append($1); }
 ;
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
     |   T_VAR                                           { $$ = Node("VarMemberModifier") }
 ;
+
+class_const_list:
+        class_const_list ',' class_const_decl           { $$ = $1.append($3) }
+    |   class_const_decl                                { $$ = Node("ConstList").append($1) }
+;
+
+class_const_decl:
+    identifier '=' expr                                 { $$ = Node("Const").append($3) }
+;
+
+method_modifiers:
+        /* empty */                                     { $$ = Node("PublicMemberModifier"); }
+    |   non_empty_member_modifiers                      { $$ = $1; }
 
 non_empty_member_modifiers:
         member_modifier	                                { $$ = $1; }
@@ -799,6 +816,7 @@ const src = `<?php
 
 abstract class test {
     public static $a ,$b = $c;
+    private static const TEST = $a, TEST2 = $b;
 }
 
 `
