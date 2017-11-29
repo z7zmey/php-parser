@@ -240,6 +240,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>else                                       lval.token = string(l.TokenBytes(nil)); return T_ELSE;
 <PHP>elseif                                     lval.token = string(l.TokenBytes(nil)); return T_ELSEIF;
 <PHP>empty                                      lval.token = string(l.TokenBytes(nil)); return T_EMPTY;
+<PHP>enddeclare                                 lval.token = string(l.TokenBytes(nil)); return T_ENDDECLARE
 <PHP>endfor                                     lval.token = string(l.TokenBytes(nil)); return T_ENDFOR
 <PHP>endforeach                                 lval.token = string(l.TokenBytes(nil)); return T_ENDFOREACH
 <PHP>endif                                      lval.token = string(l.TokenBytes(nil)); return T_ENDIF

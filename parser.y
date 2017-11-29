@@ -223,6 +223,9 @@ func (n node) attribute(key string, value string) node {
 %type <node> non_empty_array_pair_list
 %type <node> array_pair
 %type <node> foreach_statement
+%type <node> const_list
+%type <node> const_decl
+%type <node> declare_statement
 
 %%
 
@@ -340,6 +343,21 @@ statement:
                     append(Node("ForeachVariable").append($7)).
                     append($9);
             }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  Node("Declare").append($3).append($5) }
+
+const_list:
+        const_list ',' const_decl                       { $$ = $1.append($3) }
+    |   const_decl                                      { $$ = Node("ConstList").append($1) }
+;
+
+const_decl:
+    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1).append($3) }
+;
+
+declare_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = $2; }
+;
 
 if_stmt_without_else:
         T_IF '(' expr ')' statement
@@ -602,7 +620,6 @@ return_type:
 expr_without_variable:
     variable '=' expr                                   { $$ = Node("Assign").append($1).append($3); }
     |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
-    |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
     |   T_CLONE expr                                    { $$ = Node("Clone").append($2); }
     |   variable T_PLUS_EQUAL expr                      { $$ = Node("AssignAdd").append($1).append($3); }
     |   variable T_MINUS_EQUAL expr                     { $$ = Node("AssignSub").append($1).append($3); }
@@ -611,7 +628,6 @@ expr_without_variable:
     |   variable T_DIV_EQUAL expr                       { $$ = Node("AssignDiv").append($1).append($3); }
     |   variable T_CONCAT_EQUAL expr                    { $$ = Node("AssignConcat").append($1).append($3); }
     |   variable T_MOD_EQUAL expr                       { $$ = Node("AssignMod").append($1).append($3); }
-    |   variable T_AND_EQUAL expr                       { $$ = Node("AssignAnd").append($1).append($3); }
     |   variable T_AND_EQUAL expr                       { $$ = Node("AssignAnd").append($1).append($3); }
     |   variable T_OR_EQUAL expr                        { $$ = Node("AssignOr").append($1).append($3); }
     |   variable T_XOR_EQUAL expr                       { $$ = Node("AssignXor").append($1).append($3); }
@@ -707,9 +723,9 @@ simple_variable:
 
 const src = `<?php
 
-foreach ($a = $b as $k => list($a, $b => $c,)) :
-    echo $b;
-endforeach;
+declare (asdf = $a) :
+    $a = &$b;
+enddeclare;
 
 `
 
