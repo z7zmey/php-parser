@@ -226,6 +226,9 @@ func (n node) attribute(key string, value string) node {
 %type <node> const_list
 %type <node> const_decl
 %type <node> declare_statement
+%type <node> catch_list
+%type <node> catch_name_list
+%type <node> finally_statement
 
 %%
 
@@ -329,14 +332,14 @@ statement:
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = Node("Unset").append($3); }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
-            { 
+            {
                 $$ = Node("Foreach").
                     append(Node("expr").append($3)).
                     append(Node("ForeachVariable").append($5)).
                     append($7);
             }
     |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
-            { 
+            {
                 $$ = Node("Foreach").
                     append(Node("expr").append($3)).
                     append(Node("ForeachKey").append($5)).
@@ -344,6 +347,29 @@ statement:
                     append($9);
             }
     |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  Node("Declare").append($3).append($5) }
+    |   ';'	/* empty statement */                       { $$ = Node(""); }
+    |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
+            {
+                $$ = Node("Try").
+                    append($3).
+                    append($5).
+                    append($6);
+            }
+
+catch_list:
+        /* empty */                                     { $$ = Node("CatchList") }
+    |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
+                                                        { $$ = $1.append($4).append(Node("Variable").attribute("name", $5)).append($8) }
+;
+catch_name_list:
+        name                                            { $$ = Node("CatchNameList").append($1) }
+    |   catch_name_list '|' name                        { $$ = $1.append($3) }
+;
+
+finally_statement:
+        /* empty */                                     { $$ = Node(""); }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = Node("Finnaly").append($3) }
+;
 
 const_list:
         const_list ',' const_decl                       { $$ = $1.append($3) }
@@ -403,7 +429,7 @@ while_statement:
 ;
 
 for_exprs:
-        /* empty */                                     { $$ = Node("null"); }
+        /* empty */                                     { $$ = Node(""); }
     |   non_empty_for_exprs                             { $$ = $1; }
 ;
 non_empty_for_exprs:
@@ -452,7 +478,7 @@ array_pair_list:
 ;
 
 possible_array_pair:
-        /* empty */                                     { $$ = Node("Null"); }
+        /* empty */                                     { $$ = Node(""); }
     |   array_pair                                      { $$ = $1; }
 ;
 
@@ -699,7 +725,7 @@ expr:
 ;
 
 optional_expr:
-        /* empty */                                     { $$ = Node("null") }
+        /* empty */                                     { $$ = Node("") }
     |   expr                                            { $$ = $1; }
 ;
 
@@ -723,9 +749,13 @@ simple_variable:
 
 const src = `<?php
 
-declare (asdf = $a) :
-    $a = &$b;
-enddeclare;
+try {
+
+} catch(\Exception | RuntimeException $e) {
+
+} finally {
+    
+}
 
 `
 
