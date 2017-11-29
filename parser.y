@@ -168,11 +168,33 @@ func (n node) attribute(key string, value string) node {
 %token <token> T_DIR
 %token <token> T_NS_SEPARATOR
 %token <token> T_ELLIPSIS
+%token <token> T_EVAL
+%token <token> T_REQUIRE
+%token <token> T_REQUIRE_ONCE
+%token <token> T_LOGICAL_OR
+%token <token> T_LOGICAL_XOR
+%token <token> T_LOGICAL_AND
+%token <token> T_INSTANCEOF
+%token <token> T_NEW
+%token <token> T_CLONE
+%token <token> T_ELSEIF
+%token <token> T_ELSE
+%token <token> T_ENDIF
+%token <token> T_PRINT
+%token <token> T_YIELD
+%token <token> T_STATIC
+%token <token> T_ABSTRACT
+%token <token> T_FINAL
+%token <token> T_PRIVATE
+%token <token> T_PROTECTED
+%token <token> T_PUBLIC
 
 %type <value> class_modifier
 %type <value> is_reference
 %type <value> is_variadic
 %type <value> returns_ref
+%type <value> reserved_non_modifiers
+%type <value> semi_reserved
 
 %type <node> identifier
 %type <node> top_statement
@@ -257,23 +279,23 @@ start:
 ;
 
 reserved_non_modifiers:
-      T_INCLUDE | T_INCLUDE_ONCE | T_EVAL | T_REQUIRE | T_REQUIRE_ONCE | T_LOGICAL_OR | T_LOGICAL_XOR | T_LOGICAL_AND
-    | T_INSTANCEOF | T_NEW | T_CLONE | T_EXIT | T_IF | T_ELSEIF | T_ELSE | T_ENDIF | T_ECHO | T_DO | T_WHILE | T_ENDWHILE
-    | T_FOR | T_ENDFOR | T_FOREACH | T_ENDFOREACH | T_DECLARE | T_ENDDECLARE | T_AS | T_TRY | T_CATCH | T_FINALLY
-    | T_THROW | T_USE | T_INSTEADOF | T_GLOBAL | T_VAR | T_UNSET | T_ISSET | T_EMPTY | T_CONTINUE | T_GOTO
-    | T_FUNCTION | T_CONST | T_RETURN | T_PRINT | T_YIELD | T_LIST | T_SWITCH | T_ENDSWITCH | T_CASE | T_DEFAULT | T_BREAK
-    | T_ARRAY | T_CALLABLE | T_EXTENDS | T_IMPLEMENTS | T_NAMESPACE | T_TRAIT | T_INTERFACE | T_CLASS
-    | T_CLASS_C | T_TRAIT_C | T_FUNC_C | T_METHOD_C | T_LINE | T_FILE | T_DIR | T_NS_C
+      T_INCLUDE {$$=$1} | T_INCLUDE_ONCE {$$=$1} | T_EVAL {$$=$1} | T_REQUIRE {$$=$1} | T_REQUIRE_ONCE {$$=$1} | T_LOGICAL_OR {$$=$1} | T_LOGICAL_XOR {$$=$1} | T_LOGICAL_AND {$$=$1} 
+    | T_INSTANCEOF {$$=$1} | T_NEW {$$=$1} | T_CLONE {$$=$1} | T_EXIT {$$=$1} | T_IF {$$=$1} | T_ELSEIF {$$=$1} | T_ELSE {$$=$1} | T_ENDIF {$$=$1} | T_ECHO {$$=$1} | T_DO {$$=$1} | T_WHILE {$$=$1} | T_ENDWHILE {$$=$1} 
+    | T_FOR {$$=$1} | T_ENDFOR {$$=$1} | T_FOREACH {$$=$1} | T_ENDFOREACH {$$=$1} | T_DECLARE {$$=$1} | T_ENDDECLARE {$$=$1} | T_AS {$$=$1} | T_TRY {$$=$1} | T_CATCH {$$=$1} | T_FINALLY {$$=$1} 
+    | T_THROW {$$=$1} | T_USE {$$=$1} | T_INSTEADOF {$$=$1} | T_GLOBAL {$$=$1} | T_VAR {$$=$1} | T_UNSET {$$=$1} | T_ISSET {$$=$1} | T_EMPTY {$$=$1} | T_CONTINUE {$$=$1} | T_GOTO {$$=$1} 
+    | T_FUNCTION {$$=$1} | T_CONST {$$=$1} | T_RETURN {$$=$1} | T_PRINT {$$=$1} | T_YIELD {$$=$1} | T_LIST {$$=$1} | T_SWITCH {$$=$1} | T_ENDSWITCH {$$=$1} | T_CASE {$$=$1} | T_DEFAULT {$$=$1} | T_BREAK {$$=$1} 
+    | T_ARRAY {$$=$1} | T_CALLABLE {$$=$1} | T_EXTENDS {$$=$1} | T_IMPLEMENTS {$$=$1} | T_NAMESPACE {$$=$1} | T_TRAIT {$$=$1} | T_INTERFACE {$$=$1} | T_CLASS {$$=$1} 
+    | T_CLASS_C {$$=$1} | T_TRAIT_C {$$=$1} | T_FUNC_C {$$=$1} | T_METHOD_C {$$=$1} | T_LINE {$$=$1} | T_FILE {$$=$1} | T_DIR {$$=$1} | T_NS_C {$$=$1} 
 ;
 
 semi_reserved:
-        reserved_non_modifiers
-    | T_STATIC | T_ABSTRACT | T_FINAL | T_PRIVATE | T_PROTECTED | T_PUBLIC
+        reserved_non_modifiers {$$=$1}
+    | T_STATIC {$$=$1} | T_ABSTRACT {$$=$1} | T_FINAL {$$=$1} | T_PRIVATE {$$=$1} | T_PROTECTED {$$=$1} | T_PUBLIC {$$=$1}
 ;
 
 identifier:
         T_STRING                                        { $$ = Node("identifier").attribute("value", $1) }
-    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", "reserved") }
+    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1) }
 ;
 
 namespace_name_parts:
@@ -867,11 +889,7 @@ const src = `<?php
 
 abstract class test {
     use \test\tt, tt {
-        tt::test insteadof test;
-        \test\tt::test as include;
-        \test\tt::test as public include;
         \test\tt::test as public private;
-        \test\tt::test as private somestring;
     }
 }
 
