@@ -269,6 +269,7 @@ func (n node) attribute(key string, value string) node {
 %type <node> trait_alias
 %type <node> trait_method_reference
 %type <node> absolute_trait_method_reference
+%type <node> method_body
 
 %%
 
@@ -322,7 +323,6 @@ top_statement:
         statement                                       { $$ = $1 }
     |   function_declaration_statement                  { $$ = $1 }
     |   class_declaration_statement                     { $$ = $1; }
-    |   T_INCLUDE identifier ';'                        { $$ = $2; /*TODO: identifier stub, refactor it*/ }
     |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
 ;
 
@@ -621,6 +621,17 @@ class_statement:
         variable_modifiers property_list ';'            { $$ = $2.append($1) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.append($1); }
     |   T_USE name_list trait_adaptations               { $$ = Node("Use").append($2).append($3); }
+    |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')'
+        return_type method_body
+            {
+                $$ = Node("Function").
+                    append($1).
+                    append(Node("name").append($4)).
+                    attribute("returns_ref", $3).
+                    append($6).
+                    append($8).
+                    append($9);
+            }
 ;
 
 name_list:
@@ -664,6 +675,12 @@ trait_method_reference:
 
 absolute_trait_method_reference:
     name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = Node("TraitMethodRef").append($1).append($3) }
+;
+
+method_body:
+        ';' /* abstract method */                       { $$ = Node(""); }
+    |   '{' inner_statement_list '}'                    { $$ = $2; }
+;
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
@@ -887,10 +904,8 @@ simple_variable:
 
 const src = `<?php
 
-abstract class test {
-    use \test\tt, tt {
-        \test\tt::test as public private;
-    }
+abstract class foo {
+    public function bar();
 }
 
 `
