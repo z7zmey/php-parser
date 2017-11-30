@@ -308,6 +308,11 @@ func (n node) attribute(key string, value string) node {
 %type <node> internal_functions_in_yacc
 %type <node> isset_variables
 %type <node> isset_variable
+%type <node> exit_expr
+%type <node> backticks_expr
+%type <node> lexical_vars
+%type <node> lexical_var_list
+%type <node> lexical_var
 
 %%
 
@@ -1021,13 +1026,48 @@ expr_without_variable:
     |   T_OBJECT_CAST expr                              { $$ = Node("CastObject").append($2); }
     |   T_BOOL_CAST expr                                { $$ = Node("CastBool").append($2); }
     |   T_UNSET_CAST expr                               { $$ = Node("CastUnset").append($2); }
+    |   T_EXIT exit_expr                                { $$ = Node("Exit").append($2); }
     |   '@' expr                                        { $$ = Node("Silence").append($2); }
     |   scalar                                          { $$ = $1; }
+    |   '`' backticks_expr '`'                          { $$ = Node("ShellExec").append($2) }
     |   T_PRINT expr                                    { $$ = Node("Print").append($2); }
     |   T_YIELD                                         { $$ = Node("Yield"); }
     |   T_YIELD expr                                    { $$ = Node("Yield").append($2); }
     |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = Node("Yield").append($2).append($4); }
     |   T_YIELD_FROM expr                               { $$ = Node("YieldFrom").append($2); }
+    |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+            {
+                $$ = Node("Closure").
+                    attribute("returns_ref", $2).
+                    append($4).
+                    append($6).
+                    append($7).
+                    append($9);
+            }
+    |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+            {
+                $$ = Node("StaticClosure").
+                    attribute("returns_ref", $3).
+                    append($5).
+                    append($7).
+                    append($8).
+                    append($10);
+            }
+;
+
+lexical_vars:
+        /* empty */                                     { $$ = Node("") }
+    |   T_USE '(' lexical_var_list ')'                  { $$ = $3; }
+;
+
+lexical_var_list:
+        lexical_var_list ',' lexical_var                { $$ = $1.append($3) }
+    |   lexical_var                                     { $$ = Node("ClosureUses").append($1) }
+;
+
+lexical_var:
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
+    |   '&' T_VARIABLE                                  { $$ = Node("Variable").attribute("value", $2).attribute("ref", "true") }
 ;
 
 scalar:
@@ -1108,6 +1148,17 @@ class_name:
 class_name_reference:
         class_name                                      { $$ = $1; }
     |   new_variable                                    { $$ = $1; }
+;
+
+exit_expr:
+        /* empty */                                     { $$ = Node("") }
+    |   '(' optional_expr ')'                           { $$ = $2; }
+;
+
+backticks_expr:
+        /* empty */                                     { $$ = Node("EmptyBackticks") }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1) }
+    |   encaps_list                                     { $$ = $1; }
 ;
 
 variable_class_name:
@@ -1220,7 +1271,9 @@ new_variable:
 %%
 
 const src = `<?php
-isset($a, $b);
+$a = static function($a) use ($b) {
+
+};
 `
 
 func main() {
