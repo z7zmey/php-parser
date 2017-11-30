@@ -290,6 +290,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> unprefixed_use_declaration
 %type <node> use_declaration
 %type <node> trait_declaration_statement
+%type <node> interface_declaration_statement
+%type <node> interface_extends_list
 
 %%
 
@@ -340,9 +342,8 @@ top_statement:
     |   function_declaration_statement                  { $$ = $1 }
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
-
+    |   interface_declaration_statement                 { $$ = $1; }
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
-
     |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
                                                         { $$ = Node("Namespace").append($2).append($4) }
@@ -689,6 +690,21 @@ trait_declaration_statement:
     T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = Node("Trait").attribute("name", $2).append($4) }
 ;
 
+interface_declaration_statement:
+    T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
+        {
+            $$ = Node("Interface").
+                attribute("name", $2).
+                append(Node("Extends").append($3)).
+                append($5);
+        }
+;
+
+interface_extends_list:
+        /* empty */                                     { $$ = Node("") }
+    |   T_EXTENDS name_list                             { $$ = $2; }
+;
+
 class_statement_list:
         class_statement_list class_statement            { $$ = $1.append($2) }
     |   /* empty */                                     { $$ = Node("Stmt") }
@@ -871,7 +887,7 @@ type:
 ;
 
 return_type:
-        /* empty */                                     { $$ = Node("void"); }
+        /* empty */                                     { $$ = Node("No return type"); }
     |   ':' type_expr                                   { $$ = $2; }
 ;
 
@@ -1067,12 +1083,9 @@ static_member:
 %%
 
 const src = `<?php
-trait foo
+interface foo extends A, B
 {
-    private static function bas($a = null)
-    {
-        echo $a;
-    }
+    private static function bar($a = null);
 }
 `
 
