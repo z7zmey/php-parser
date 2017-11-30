@@ -354,6 +354,7 @@ top_statement:
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.append($2) }
     |   T_USE use_declarations ';'                      { $$ = $2; }
     |   T_USE use_type use_declarations ';'             { $$ = $3.append($2) }
+    |   T_CONST const_list ';'                          { $$ = $2; }
 ;
 
 use_type:
@@ -1109,13 +1110,7 @@ static_member:
 %%
 
 const src = `<?php
-class foo extends A implements B, C
-{
-    private static function bar($a = null)
-    {
-        
-    }
-}
+const A = 'foo', B = 'bar';
 `
 
 func main() {
