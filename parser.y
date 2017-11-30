@@ -199,7 +199,6 @@ func (n node) attribute(key string, value string) node {
 %type <node> identifier
 %type <node> top_statement
 %type <node> namespace_name
-%type <node> namespace_name_parts
 %type <node> name
 %type <node> top_statement_list
 %type <node> statement
@@ -281,6 +280,15 @@ func (n node) attribute(key string, value string) node {
 %type <node> dereferencable_scalar
 %type <node> static_member
 %type <node> property_name
+%type <node> use_type
+%type <node> group_use_declaration
+%type <node> mixed_group_use_declaration
+%type <node> inline_use_declarations
+%type <node> unprefixed_use_declarations
+%type <node> use_declarations
+%type <node> inline_use_declaration
+%type <node> unprefixed_use_declaration
+%type <node> use_declaration
 
 %%
 
@@ -310,13 +318,9 @@ identifier:
     |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1) }
 ;
 
-namespace_name_parts:
-        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1)) }
-    |   namespace_name_parts T_NS_SEPARATOR T_STRING    { $$ = $1.append(Node($3)) }
-;
-
 namespace_name:
-      namespace_name_parts                              { $$ = $1; }
+        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1)); }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.append(Node($3)); }
 ;
 
 name:
@@ -341,6 +345,56 @@ top_statement:
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
                                                         { $$ = Node("Namespace").append($2).append($4) }
     |   T_NAMESPACE '{' top_statement_list '}'          { $$ = Node("Namespace").append($3) }
+    |   T_USE mixed_group_use_declaration ';'           { $$ = $2; }
+    |   T_USE use_type group_use_declaration ';'        { $$ = $3.append($2) }
+    |   T_USE use_declarations ';'                      { $$ = $2; }
+    |   T_USE use_type use_declarations ';'             { $$ = $3.append($2) }
+;
+
+use_type:
+        T_FUNCTION                                      { $$ = Node("FuncUseType"); }
+    |   T_CONST                                         { $$ = Node("ConstUseType"); }
+;
+
+group_use_declaration:
+        namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
+                                                        { $$ = Node("GroupUse").append($1).append($4) }
+    |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
+                                                        { $$ = Node("GroupUse").append($2).append($5) }
+;
+
+mixed_group_use_declaration:
+        namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
+                                                        { $$ = Node("MixedGroupUse").append($1).append($4); }
+    |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
+                                                        { $$ = Node("MixedGroupUse").append($2).append($5); }
+;
+
+inline_use_declarations:
+        inline_use_declarations ',' inline_use_declaration
+                                                        { $$ = $1.append($3) }
+    |   inline_use_declaration                          { $$ = Node("UseList").append($1) }
+;
+unprefixed_use_declarations:
+        unprefixed_use_declarations ',' unprefixed_use_declaration
+                                                        { $$ = $1.append($3) }
+    |   unprefixed_use_declaration                      { $$ = Node("UseList").append($1) }
+;
+use_declarations:
+        use_declarations ',' use_declaration            { $$ = $1.append($3) }
+    |   use_declaration                                 { $$ = Node("UseList").append($1) }
+;
+inline_use_declaration:
+        unprefixed_use_declaration                      { $$ = $1; }
+    |   use_type unprefixed_use_declaration             { $$ = $2.append($1) }
+;
+unprefixed_use_declaration:
+        namespace_name                                  { $$ = Node("UseElem").append($1); }
+    |   namespace_name T_AS T_STRING                    { $$ = Node("UseElem").append($1).append(Node("as").attribute("value", $3)); }
+;
+use_declaration:
+        unprefixed_use_declaration                      { $$ = $1; }
+    |   T_NS_SEPARATOR unprefixed_use_declaration       { $$ = $2; }
 ;
 
 inner_statement_list:
@@ -1007,14 +1061,8 @@ static_member:
 %%
 
 const src = `<?php
-namespace test {
-    $a = [
-        'test' => [
-            'a' => 'b',
-        ]
-    ];
-}
-
+use A, B as C;
+use \D\{function E, F};
 `
 
 func main() {
