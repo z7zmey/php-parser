@@ -305,6 +305,9 @@ func (n node) attribute(key string, value string) node {
 %type <node> ctor_arguments
 %type <node> class_name_reference
 %type <node> new_variable
+%type <node> internal_functions_in_yacc
+%type <node> isset_variables
+%type <node> isset_variable
 
 %%
 
@@ -1010,12 +1013,7 @@ expr_without_variable:
     |   expr '?' expr ':' expr                          { $$ = Node("Ternary").append($1).append($3).append($5); }
     |   expr '?' ':' expr                               { $$ = Node("Ternary").append($1).append($4); }
     |   expr T_COALESCE expr                            { $$ = Node("Coalesce").append($1).append($3); }
-        |   T_EMPTY '(' expr ')'                            { $$ = Node("Empty").append($3); }
-        |   T_INCLUDE expr                                  { $$ = Node("Include").append($2); }
-        |   T_INCLUDE_ONCE expr                             { $$ = Node("IncludeOnce").append($2); }
-        |   T_EVAL '(' expr ')'                             { $$ = Node("Eval").append($3); }
-        |   T_REQUIRE expr                                  { $$ = Node("Require").append($2); }
-        |   T_REQUIRE_ONCE expr                             { $$ = Node("RequireOnce").append($2); }
+    |   internal_functions_in_yacc                      { $$ = $1}
     |   T_INT_CAST expr                                 { $$ = Node("CastInt").append($2); }
     |   T_DOUBLE_CAST expr                              { $$ = Node("CastDouble").append($2); }
     |   T_STRING_CAST expr                              { $$ = Node("CastString").append($2); }
@@ -1074,6 +1072,25 @@ encaps_var_offset:
     |   T_NUM_STRING                                    { $$ = Node("OffsetNumString").attribute("value", $1) }
     |   '-' T_NUM_STRING                                { $$ = Node("OffsetNegateNumString").attribute("value", $2) }
     |   T_VARIABLE                                      { $$ = Node("OffsetVariable").attribute("value", $1) }
+;
+
+internal_functions_in_yacc:
+        T_ISSET '(' isset_variables possible_comma ')'  { $$ = $3; }
+    |   T_EMPTY '(' expr ')'                            { $$ = Node("Empty").append($3); }
+    |   T_INCLUDE expr                                  { $$ = Node("Include").append($2); }
+    |   T_INCLUDE_ONCE expr                             { $$ = Node("IncludeOnce").append($2); }
+    |   T_EVAL '(' expr ')'                             { $$ = Node("Eval").append($3); }
+    |   T_REQUIRE expr                                  { $$ = Node("Require").append($2); }
+    |   T_REQUIRE_ONCE expr                             { $$ = Node("RequireOnce").append($2); }
+;
+
+isset_variables:
+        isset_variable                                  { $$ = $1; }
+    |   isset_variables ',' isset_variable              { $$ = Node("AndIsset").append($1).append($3); }
+;
+
+isset_variable:
+    expr                                                { $$ = Node("Isset").append($1) }
 ;
 
 constant:
@@ -1203,8 +1220,7 @@ new_variable:
 %%
 
 const src = `<?php
-$a instanceof \Test;
-new $Test[]();
+isset($a, $b);
 `
 
 func main() {
