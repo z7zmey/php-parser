@@ -300,6 +300,11 @@ func (n node) attribute(key string, value string) node {
 %type <node> callable_expr
 %type <node> function_call
 %type <node> member_name
+%type <node> anonymous_class
+%type <node> new_expr
+%type <node> ctor_arguments
+%type <node> class_name_reference
+%type <node> new_variable
 
 %%
 
@@ -564,6 +569,28 @@ for_exprs:
 non_empty_for_exprs:
         non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
     |   expr                                            { $$ = Node("ExpressionList").append($1) }
+;
+
+anonymous_class:
+    T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
+        {
+            $$ = Node("AnonymousClass").
+                attribute("name", $1).
+                append($2).
+                append($3).
+                append($4).
+                append($6);
+        }
+;
+
+new_expr:
+        T_NEW class_name_reference ctor_arguments       { $$ = Node("New").append($2).append($3) }
+    |   T_NEW anonymous_class                           { $$ = Node("New").append($2) }
+;
+
+ctor_arguments:
+        /* empty */	                                    { $$ = Node("ArgumentList") }
+    |   argument_list                                   { $$ = $1; }
 ;
 
 switch_case_list:
@@ -972,12 +999,14 @@ expr_without_variable:
     |   expr T_IS_NOT_IDENTICAL expr                    { $$ = Node("NotIdentical").append($1).append($3) }
     |   expr T_IS_EQUAL expr                            { $$ = Node("Equal").append($1).append($3) }
     |   expr T_IS_NOT_EQUAL expr                        { $$ = Node("NotEqual").append($1).append($3) }
-    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3) }
+    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3); }
     |   expr '<' expr                                   { $$ = Node("Smaller").append($1).append($3) }
     |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = Node("SmallerOrEqual").append($1).append($3) }
     |   expr '>' expr                                   { $$ = Node("Greater").append($1).append($3) }
     |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = Node("GreaterOrEqual").append($1).append($3) }
+    |   expr T_INSTANCEOF class_name_reference          { $$ = Node("InstanceOf").append($1).append($3) }
     |   '(' expr ')'                                    { $$ = $2; }
+    |   new_expr                                        { $$ = $1; }
     |   expr '?' expr ':' expr                          { $$ = Node("Ternary").append($1).append($3).append($5); }
     |   expr '?' ':' expr                               { $$ = Node("Ternary").append($1).append($4); }
     |   expr T_COALESCE expr                            { $$ = Node("Coalesce").append($1).append($3); }
@@ -1057,6 +1086,11 @@ constant:
 class_name:
         T_STATIC                                        { $$ = Node("Static") }
     |   name                                            { $$ = $1; }
+;
+
+class_name_reference:
+        class_name                                      { $$ = $1; }
+    |   new_variable                                    { $$ = $1; }
 ;
 
 variable_class_name:
@@ -1153,13 +1187,24 @@ static_member:
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
                                                         { $$ = Node("StaticProp").append($1).append($3) }
 ;
+new_variable:
+        simple_variable                                 { $$ = $1 }
+    |   new_variable '[' optional_expr ']'              { $$ = Node("Dim").append($1).append($3) }
+    |   new_variable '{' expr '}'                       { $$ = Node("Dim").append($1).append($3) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = Node("Property").append($1).append($3) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+    |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+;
 
 /////////////////////////////////////////////////////////////////////////
 
 %%
 
 const src = `<?php
-$a::test(null, $a);
+$a instanceof \Test;
+new $Test[]();
 `
 
 func main() {
