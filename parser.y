@@ -289,6 +289,7 @@ func (n node) attribute(key string, value string) node {
 %type <node> inline_use_declaration
 %type <node> unprefixed_use_declaration
 %type <node> use_declaration
+%type <node> trait_declaration_statement
 
 %%
 
@@ -338,6 +339,7 @@ top_statement:
         statement                                       { $$ = $1 }
     |   function_declaration_statement                  { $$ = $1 }
     |   class_declaration_statement                     { $$ = $1; }
+    |   trait_declaration_statement                     { $$ = $1; }
 
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
 
@@ -681,6 +683,10 @@ class_modifiers:
 class_modifier:
         T_ABSTRACT                                      { $$ = "abstract" }
     |   T_FINAL                                         { $$ = "final" }
+;
+
+trait_declaration_statement:
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = Node("Trait").attribute("name", $2).append($4) }
 ;
 
 class_statement_list:
@@ -1061,8 +1067,13 @@ static_member:
 %%
 
 const src = `<?php
-use A, B as C;
-use \D\{function E, F};
+trait foo
+{
+    private static function bas($a = null)
+    {
+        echo $a;
+    }
+}
 `
 
 func main() {
