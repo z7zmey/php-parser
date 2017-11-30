@@ -334,7 +334,13 @@ top_statement:
         statement                                       { $$ = $1 }
     |   function_declaration_statement                  { $$ = $1 }
     |   class_declaration_statement                     { $$ = $1; }
+
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
+
     |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
+    |   T_NAMESPACE namespace_name '{' top_statement_list '}'
+                                                        { $$ = Node("Namespace").append($2).append($4) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = Node("Namespace").append($3) }
 ;
 
 inner_statement_list:
@@ -1001,8 +1007,13 @@ static_member:
 %%
 
 const src = `<?php
-
-$a = $test->{$test->test};
+namespace test {
+    $a = [
+        'test' => [
+            'a' => 'b',
+        ]
+    ];
+}
 
 `
 
