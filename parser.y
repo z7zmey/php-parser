@@ -294,6 +294,12 @@ func (n node) attribute(key string, value string) node {
 %type <node> interface_extends_list
 %type <node> extends_from
 %type <node> implements_list
+%type <node> argument_list
+%type <node> non_empty_argument_list
+%type <node> argument
+%type <node> callable_expr
+%type <node> function_call
+%type <node> member_name
 
 %%
 
@@ -412,6 +418,9 @@ inner_statement:
     statement                                           { $$ = $1; }
     |   function_declaration_statement                  { $$ = $1; }
     |   class_declaration_statement                     { $$ = $1; }
+    |   trait_declaration_statement                     { $$ = $1; }
+    |   interface_declaration_statement                 { $$ = $1; }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
 
 statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
@@ -464,7 +473,7 @@ statement:
                     append($9);
             }
     |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  Node("Declare").append($3).append($5) }
-    |   ';'	/* empty statement */                       { $$ = Node(""); }
+    |   ';' /* empty statement */                       { $$ = Node(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
                 $$ = Node("Try").
@@ -1060,6 +1069,12 @@ dereferencable:
     |   dereferencable_scalar                           { $$ = $1; }
 ;
 
+callable_expr:
+        callable_variable                               { $$ = $1; }
+    |   '(' expr ')'                                    { $$ = $2; }
+    |   dereferencable_scalar                           { $$ = $1; }
+;
+
 dereferencable_scalar:
         T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
     |   '[' array_pair_list ']'                         { $$ = $2; }
@@ -1078,6 +1093,40 @@ optional_expr:
 
 callable_variable:
     simple_variable                                     { $$ = $1; }
+    |   dereferencable '[' optional_expr ']'            { $$ = Node("Dim").append($1).append($3)}
+    |   constant '[' optional_expr ']'                  { $$ = Node("Dim").append($1).append($3)}
+    |   dereferencable '{' expr '}'                     { $$ = Node("Dim").append($1).append($3)}
+    |   dereferencable T_OBJECT_OPERATOR property_name argument_list
+                                                        { $$ = Node("MethodCall").append($1).append($3).append($4)}
+    |   function_call                                   { $$ = $1; }
+;
+
+function_call:
+        name argument_list                              { $$ = Node("FunctionCall").append($1).append($2) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
+                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
+                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
+    |   callable_expr argument_list                     { $$ = Node("Call").append($1).append($2); }
+;
+
+member_name:
+        identifier                                      { $$ = $1; }
+    |   '{' expr '}'                                    { $$ = $2; }
+    |   simple_variable                                 { $$ = $1 }
+;
+
+argument_list:
+        '(' ')'                                         { $$ = Node("ArgumentList") }
+    |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
+;
+non_empty_argument_list:
+        argument                                        { $$ = Node("ArgumentList").append($1) }
+    |   non_empty_argument_list ',' argument            { $$ = $1.append($3) }
+;
+argument:
+        expr                                            { $$ = $1; }
+    |   T_ELLIPSIS expr                                 { $$ = Node("Unpack").append($2) }
 ;
 
 variable:
@@ -1110,7 +1159,7 @@ static_member:
 %%
 
 const src = `<?php
-const A = 'foo', B = 'bar';
+$a::test(null, $a);
 `
 
 func main() {
