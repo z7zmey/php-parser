@@ -292,6 +292,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> trait_declaration_statement
 %type <node> interface_declaration_statement
 %type <node> interface_extends_list
+%type <node> extends_from
+%type <node> implements_list
 
 %%
 
@@ -671,9 +673,23 @@ possible_comma:
 ;
 
 class_declaration_statement:
-        class_modifiers T_CLASS T_STRING '{' class_statement_list '}'
-                                                        { $$ = $1.attribute("name", $3).append($5) }
-    |   T_CLASS T_STRING '{' class_statement_list '}'   { $$ = Node("Class").attribute("name", $2).append($4) }
+        class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
+            {
+                $$ = Node("Class").
+                    attribute("name", $3).
+                    append($1).
+                    append(Node("Extends").append($4)).
+                    append(Node("Implements").append($5)).
+                    append($7);
+            }
+    |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
+            {
+                $$ = Node("Class").
+                    attribute("name", $2).
+                    append(Node("Extends").append($3)).
+                    append(Node("Implements").append($4)).
+                    append($6);
+            }
 ;
 
 class_modifiers:
@@ -700,9 +716,19 @@ interface_declaration_statement:
         }
 ;
 
+extends_from:
+        /* empty */                                     { $$ = Node(""); }
+    |   T_EXTENDS name                                  { $$ = $2; }
+;
+
 interface_extends_list:
         /* empty */                                     { $$ = Node("") }
     |   T_EXTENDS name_list                             { $$ = $2; }
+;
+
+implements_list:
+        /* empty */                                     { $$ = Node(""); }
+    |   T_IMPLEMENTS name_list                          { $$ = $2; }
 ;
 
 class_statement_list:
@@ -1083,9 +1109,12 @@ static_member:
 %%
 
 const src = `<?php
-interface foo extends A, B
+class foo extends A implements B, C
 {
-    private static function bar($a = null);
+    private static function bar($a = null)
+    {
+        
+    }
 }
 `
 
