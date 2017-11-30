@@ -279,6 +279,8 @@ func (n node) attribute(key string, value string) node {
 %type <node> variable_class_name
 %type <node> dereferencable
 %type <node> dereferencable_scalar
+%type <node> static_member
+%type <node> property_name
 
 %%
 
@@ -970,7 +972,15 @@ callable_variable:
 ;
 
 variable:
-    callable_variable                                   { $$ = $1; }
+        callable_variable                               { $$ = $1; }
+    |   static_member                                   { $$ = $1; }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = Node("Property").append($1).append($3) }
+;
+
+property_name:
+        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1) }
+    |   '{' expr '}'                                    { $$ = $2; }
+    |   simple_variable                                 { $$ = $1 }
 ;
 
 simple_variable:
@@ -979,15 +989,20 @@ simple_variable:
     |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
 ;
 
+static_member:
+        class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProp").append($1).append($3) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProp").append($1).append($3) }
+;
+
 /////////////////////////////////////////////////////////////////////////
 
 %%
 
 const src = `<?php
 
-$a = +22 . $b;
-
-$a = "str {${$a+$b}} str$b";
+$a = $test->{$test->test};
 
 `
 
