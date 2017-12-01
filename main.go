@@ -1,41 +1,33 @@
 package main
 
 import (
-	"bytes"
+	"flag"
+	"fmt"
+	"log"
 	"os"
-	"unicode"
+
+	"github.com/yookoala/realpath"
 )
-
-const src = `
-<?php
-namespace Test;
-
-/**
- * Class foo
- */
-class foo
-{
-    
-}
-`
 
 func main() {
 	yyDebug = 0
 	yyErrorVerbose = true
-	l := newLexer(bytes.NewBufferString(src), os.Stdout, "file.name")
-	yyParse(l)
+
+	flag.Parse()
+
+	for _, path := range flag.Args() {
+		real, err := realpath.Realpath(path)
+		checkErr(err)
+		fmt.Printf("\n==> %s", real)
+
+		src, _ := os.Open(string(real))
+		rn := parse(src, real)
+		fmt.Println(rn)
+	}
 }
 
-func rune2Class(r rune) int {
-	if r >= 0 && r < 0x80 { // Keep ASCII as it is.
-		return int(r)
+func checkErr(err error) {
+	if err != nil {
+		log.Fatal(err)
 	}
-	if unicode.IsLetter(r) {
-		return classUnicodeLeter
-	}
-	if unicode.IsDigit(r) {
-		return classUnicodeDigit
-	}
-	// return classOther
-	return -1
 }

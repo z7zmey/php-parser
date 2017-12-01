@@ -10,6 +10,7 @@ package main
 import (
     "fmt"
     "bytes"
+	"unicode"
 )
 
 const (
@@ -27,6 +28,20 @@ const (
 )
 
 var heredocLabel []byte
+
+func rune2Class(r rune) int {
+	if r >= 0 && r < 0x80 { // Keep ASCII as it is.
+		return int(r)
+	}
+	if unicode.IsLetter(r) {
+		return classUnicodeLeter
+	}
+	if unicode.IsDigit(r) {
+		return classUnicodeDigit
+	}
+	// return classOther
+	return -1
+}
 
 func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
   c := l.Enter()

@@ -2,8 +2,16 @@
 package main
 
 import (
-  "fmt"
+  "io"
 )
+
+var rootNode = Node("Root")
+
+func parse(src io.Reader, fName string) node {
+    rootNode = Node("Root") //reset
+    yyParse(newLexer(src, fName))
+    return rootNode
+}
 
 %}
 
@@ -194,7 +202,7 @@ import (
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                  { fmt.Println($1) }
+    top_statement_list                                  { rootNode = $1; }
 ;
 
 reserved_non_modifiers:

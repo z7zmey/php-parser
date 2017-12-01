@@ -10,7 +10,7 @@ all: parser.go scanner.go
 	go build
 
 run: all
-	./php-parser
+	./php-parser example.php
 
 scanner.go: scanner.l
 	golex -o $@ $<

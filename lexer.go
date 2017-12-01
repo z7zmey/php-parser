@@ -20,7 +20,7 @@ type lexer struct {
 	stateStack []int
 }
 
-func newLexer(src io.Reader, dst io.Writer, fName string) *lexer {
+func newLexer(src io.Reader, fName string) *lexer {
 	file := token.NewFileSet().AddFile(fName, -1, 1<<31-1)
 	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(rune2Class))
 	if err != nil {
