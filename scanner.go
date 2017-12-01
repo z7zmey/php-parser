@@ -685,6 +685,8 @@ yystate19:
 		goto yystate20
 	case c == '\r':
 		goto yystate21
+	case c >= '\x01' && c <= '\t' || c == '\v' || c == '\f' || c >= '\x0e' && c <= 'ÿ':
+		goto yystate19
 	}
 
 yystate20:
@@ -702,6 +704,10 @@ yystate21:
 		goto yyrule125
 	case c == '\n':
 		goto yystate20
+	case c == '\r':
+		goto yystate21
+	case c >= '\x01' && c <= '\t' || c == '\v' || c == '\f' || c >= '\x0e' && c <= 'ÿ':
+		goto yystate19
 	}
 
 yystate22:
@@ -8450,7 +8456,7 @@ yyrule124: // \?\?
 		return T_COALESCE
 		goto yystate0
 	}
-yyrule125: // (#|[/][/]){NEW_LINE}
+yyrule125: // (#|[/][/]).*{NEW_LINE}
 	{
 		// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 		goto yystate0
