@@ -27,6 +27,8 @@ const (
 	BACKQUOTE
 )
 
+var heredocLabel []byte
+
 func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
 	c := l.Enter()
 
@@ -35,7 +37,7 @@ yystate0:
 	_ = yyrule
 	c = l.Rule0()
 
-	switch yyt := sc; yyt {
+	switch yyt := l.getCurrentState(); yyt {
 	default:
 		panic(fmt.Errorf(`invalid start condition %d`, yyt))
 	case 0: // start condition: INITIAL
@@ -7680,17 +7682,17 @@ yyrule2: // .
 	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
-		begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
+		l.begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
-		begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
+		l.begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule5: // \<\?=
 	{
-		begin(PHP)
+		l.begin(PHP)
 		lval.token = string(l.TokenBytes(nil))
 		return T_OPEN_TAG_WITH_ECHO
 		goto yystate0
@@ -7702,7 +7704,7 @@ yyrule6: // [ \t\n\r]+
 	}
 yyrule7: // \?\>{NEW_LINE}?
 	{
-		begin(INITIAL) //lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
+		l.begin(INITIAL) //lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
 		goto yystate0
 	}
 yyrule8: // {DNUM}|{EXPONENT_DNUM}
@@ -8477,14 +8479,14 @@ yyrule129: // {OPERATORS}
 	}
 yyrule130: // \{
 	{
-		pushState(PHP)
+		l.pushState(PHP)
 		lval.token = string(l.TokenBytes(nil))
 		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule131: // \}
 	{
-		popState()
+		l.popState()
 		lval.token = string(l.TokenBytes(nil))
 		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
@@ -8503,7 +8505,7 @@ yyrule133: // {VAR_NAME}
 	}
 yyrule134: // ->
 	{
-		begin(PROPERTY)
+		l.begin(PROPERTY)
 		lval.token = string(l.TokenBytes(nil))
 		return T_OBJECT_OPERATOR
 		goto yystate0
@@ -8522,7 +8524,7 @@ yyrule136: // ->
 	}
 yyrule137: // {VAR_NAME}
 	{
-		begin(PHP)
+		l.begin(PHP)
 		lval.token = string(l.TokenBytes(nil))
 		return T_STRING
 		goto yystate0
@@ -8530,7 +8532,7 @@ yyrule137: // {VAR_NAME}
 yyrule138: // .
 	{
 		l.ungetN(1)
-		begin(PHP)
+		l.begin(PHP)
 		goto yystate0
 	}
 yyrule139: // [\']([^\\\']*([\\][\'])*)*[\']
@@ -8541,14 +8543,14 @@ yyrule139: // [\']([^\\\']*([\\][\'])*)*[\']
 	}
 yyrule140: // `
 	{
-		begin(BACKQUOTE)
+		l.begin(BACKQUOTE)
 		lval.token = string(l.TokenBytes(nil))
 		rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule141: // `
 	{
-		begin(PHP)
+		l.begin(PHP)
 		lval.token = string(l.TokenBytes(nil))
 		rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
@@ -8578,13 +8580,13 @@ yyrule142: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 		case '\'':
 			lblFirst++
 			lblLast--
-			begin(NOWDOC)
+			l.begin(NOWDOC)
 		case '"':
 			lblFirst++
 			lblLast--
-			begin(HEREDOC)
+			l.begin(HEREDOC)
 		default:
-			begin(HEREDOC)
+			l.begin(HEREDOC)
 		}
 		heredocLabel = make([]byte, lblLast-lblFirst+1)
 		copy(heredocLabel, tb[lblFirst:lblLast+1])
@@ -8602,7 +8604,7 @@ yyrule142: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			ungetCnt++
 			c = l.Next()
 			if '\n' == rune(c) || '\r' == rune(c) {
-				begin(HEREDOC_END)
+				l.begin(HEREDOC_END)
 			}
 		}
 		l.ungetN(ungetCnt)
@@ -8622,7 +8624,7 @@ yyrule143: // .
 			}
 			if '\n' == rune(c) || '\r' == rune(c) {
 				if bytes.Equal(append(heredocLabel, ';'), searchLabel) {
-					begin(HEREDOC_END)
+					l.begin(HEREDOC_END)
 					tb = l.ungetN(len(heredocLabel) + 1)
 					break
 				}
@@ -8639,7 +8641,7 @@ yyrule143: // .
 	}
 yyrule144: // {VAR_NAME}\;
 	{
-		begin(PHP)
+		l.begin(PHP)
 		lval.token = string(l.ungetN(1))
 		return T_END_HEREDOC
 		goto yystate0
@@ -8656,7 +8658,7 @@ yyrule145: // [b]?[\"]
 
 			l.ungetN(len(l.TokenBytes(nil)) - cnt)
 			tokenBytes := l.TokenBytes(nil)[:cnt]
-			pushState(STRING)
+			l.pushState(STRING)
 			lval.token = string(tokenBytes)
 			return rune2Class('"')
 		}
@@ -8696,7 +8698,7 @@ yyrule145: // [b]?[\"]
 	}
 yyrule146: // \"
 	{
-		popState()
+		l.popState()
 		lval.token = "\""
 		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
@@ -8704,13 +8706,13 @@ yyrule146: // \"
 yyrule147: // \{\$
 	{
 		lval.token = string(l.ungetN(1))
-		pushState(PHP)
+		l.pushState(PHP)
 		return T_CURLY_OPEN
 		goto yystate0
 	}
 yyrule148: // \$\{
 	{
-		pushState(STRING_VAR_NAME)
+		l.pushState(STRING_VAR_NAME)
 		lval.token = string(l.TokenBytes(nil))
 		return T_DOLLAR_OPEN_CURLY_BRACES
 		goto yystate0
@@ -8718,7 +8720,7 @@ yyrule148: // \$\{
 yyrule149: // \$
 	{
 		l.ungetN(1)
-		pushState(STRING_VAR)
+		l.pushState(STRING_VAR)
 		goto yystate0
 	}
 yyrule150: // .
@@ -8821,7 +8823,7 @@ yyrule152: // .|[ \t\n\r]
 				fallthrough
 			case '\r':
 				if bytes.Equal(append(heredocLabel, ';'), searchLabel) { // TODO handle ';' as optional
-					begin(HEREDOC_END)
+					l.begin(HEREDOC_END)
 					tb = l.ungetN(len(heredocLabel) + 1)
 					break HEREDOCFOR
 				}
@@ -8873,14 +8875,14 @@ yyrule154: // ->{VAR_NAME}
 	}
 yyrule155: // {VAR_NAME}
 	{
-		popState()
+		l.popState()
 		lval.token = string(l.TokenBytes(nil))
 		return T_STRING
 		goto yystate0
 	}
 yyrule156: // \[
 	{
-		pushState(STRING_VAR_INDEX)
+		l.pushState(STRING_VAR_INDEX)
 		lval.token = string(l.TokenBytes(nil))
 		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
@@ -8888,7 +8890,7 @@ yyrule156: // \[
 yyrule157: // .|[ \t\n\r]
 	{
 		l.ungetN(1)
-		popState()
+		l.popState()
 		goto yystate0
 	}
 yyrule158: // {LNUM}|{HNUM}|{BNUM}
@@ -8911,16 +8913,16 @@ yyrule160: // {VAR_NAME}
 	}
 yyrule161: // \]
 	{
-		popState()
-		popState()
+		l.popState()
+		l.popState()
 		lval.token = string(l.TokenBytes(nil))
 		return rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule162: // [ \n\r\t\\'#]
 	{
-		popState()
-		popState()
+		l.popState()
+		l.popState()
 		lval.token = string(l.TokenBytes(nil))
 		return T_ENCAPSED_AND_WHITESPACE
 		goto yystate0
@@ -8939,8 +8941,8 @@ yyrule164: // .
 	}
 yyrule165: // {VAR_NAME}[\[\}]
 	{
-		popState()
-		pushState(PHP)
+		l.popState()
+		l.pushState(PHP)
 		lval.token = string(l.ungetN(1))
 		return T_STRING_VARNAME
 		goto yystate0
@@ -8948,8 +8950,8 @@ yyrule165: // {VAR_NAME}[\[\}]
 yyrule166: // .
 	{
 		l.ungetN(1)
-		popState()
-		pushState(PHP)
+		l.popState()
+		l.pushState(PHP)
 		goto yystate0
 	}
 	panic("unreachable")
