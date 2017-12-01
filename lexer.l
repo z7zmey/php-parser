@@ -335,9 +335,9 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\<\<                                       lval.token = string(l.TokenBytes(nil)); return T_SL
 <PHP>\>\>                                       lval.token = string(l.TokenBytes(nil)); return T_SR
 <PHP>\?\?                                       lval.token = string(l.TokenBytes(nil)); return T_COALESCE
-<PHP>(#|[/][/]){NEW_LINE}                       lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
+<PHP>(#|[/][/]){NEW_LINE}                       // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     // lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
 <PHP>'[^']*(\\')*'                              lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
 <PHP>{OPERATORS}                                lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 

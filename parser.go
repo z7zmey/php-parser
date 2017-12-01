@@ -369,10 +369,18 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line parser.y:1286
-const src = `<?php
-$a = static function($a) use ($b) {
+const src = `
+<?php
 
-};
+namespace Test;
+
+/**
+ * Class foo
+ */
+class foo
+{
+    
+}
 `
 
 func main() {

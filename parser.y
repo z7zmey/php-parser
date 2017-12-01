@@ -1285,10 +1285,18 @@ isset_variable:
 
 %%
 
-const src = `<?php
-$a = static function($a) use ($b) {
+const src = `
+<?php
 
-};
+namespace Test;
+
+/**
+ * Class foo
+ */
+class foo
+{
+    
+}
 `
 
 func main() {

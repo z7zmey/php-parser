@@ -8552,20 +8552,17 @@ yyrule124: // \?\?
 	}
 yyrule125: // (#|[/][/]){NEW_LINE}
 	{
-		lval.token = string(l.TokenBytes(nil))
-		return T_COMMENT // TODO: handle ?>
+		// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule126: // [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		lval.token = string(l.TokenBytes(nil))
-		return T_COMMENT // TODO: handle ?>
+		// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule127: // [/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		lval.token = string(l.TokenBytes(nil))
-		return T_DOC_COMMENT // TODO: handle ?>
+		// lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule128: // '[^']*(\\')*'
