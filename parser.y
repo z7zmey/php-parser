@@ -269,13 +269,13 @@ namespace_name:
 
 name:
       namespace_name                                    { $$ = Node("Name").append($1); }
-    | T_NS_SEPARATOR namespace_name                     { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
     | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = Node("Name").append($3).attribute("Relative", "true"); }
+    | T_NS_SEPARATOR namespace_name                     { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
 ;
 
 top_statement:
-        statement                                       { $$ = $1 }
-    |   function_declaration_statement                  { $$ = $1 }
+        statement                                       { $$ = $1; }
+    |   function_declaration_statement                  { $$ = $1; }
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
@@ -663,9 +663,9 @@ type_expr:
 ;
 
 type:
-        name                                            { $$ = $1; }
-    |   T_ARRAY                                         { $$ = Node("array type"); }
+        T_ARRAY                                         { $$ = Node("array type"); }
     |   T_CALLABLE                                      { $$ = Node("callable type"); }
+    |   name                                            { $$ = $1; }
 ;
 
 return_type:
@@ -861,7 +861,9 @@ new_expr:
 ;
 
 expr_without_variable:
-    variable '=' expr                                   { $$ = Node("Assign").append($1).append($3); }
+        T_LIST '(' array_pair_list ')' '=' expr         { $$ = Node("Assign").append($3).append($6); }
+    |   '[' array_pair_list ']' '=' expr                { $$ = Node("Assign").append($2).append($5); }
+    |   variable '=' expr                               { $$ = Node("Assign").append($1).append($3); }
     |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
     |   T_CLONE expr                                    { $$ = Node("Clone").append($2); }
     |   variable T_PLUS_EQUAL expr                      { $$ = Node("AssignAdd").append($1).append($3); }
@@ -905,11 +907,11 @@ expr_without_variable:
     |   expr T_IS_NOT_IDENTICAL expr                    { $$ = Node("NotIdentical").append($1).append($3) }
     |   expr T_IS_EQUAL expr                            { $$ = Node("Equal").append($1).append($3) }
     |   expr T_IS_NOT_EQUAL expr                        { $$ = Node("NotEqual").append($1).append($3) }
-    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3); }
     |   expr '<' expr                                   { $$ = Node("Smaller").append($1).append($3) }
     |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = Node("SmallerOrEqual").append($1).append($3) }
     |   expr '>' expr                                   { $$ = Node("Greater").append($1).append($3) }
     |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = Node("GreaterOrEqual").append($1).append($3) }
+    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3); }
     |   expr T_INSTANCEOF class_name_reference          { $$ = Node("InstanceOf").append($1).append($3) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
