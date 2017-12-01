@@ -196,123 +196,38 @@ func (n node) attribute(key string, value string) node {
 %type <value> reserved_non_modifiers
 %type <value> semi_reserved
 
-%type <node> identifier
-%type <node> top_statement
-%type <node> namespace_name
-%type <node> name
-%type <node> top_statement_list
-%type <node> statement
-%type <node> inner_statement
-%type <node> inner_statement_list
-%type <node> class_modifiers
-%type <node> class_declaration_statement
-%type <node> function_declaration_statement
-%type <node> optional_type
-%type <node> return_type
-%type <node> type_expr
-%type <node> type
-%type <node> parameter_list
-%type <node> non_empty_parameter_list
-%type <node> parameter
-%type <node> expr
-%type <node> expr_without_variable
-%type <node> callable_variable
-%type <node> variable
-%type <node> simple_variable
-%type <node> if_stmt_without_else
-%type <node> if_stmt
-%type <node> alt_if_stmt_without_else
-%type <node> alt_if_stmt
-%type <node> while_statement
-%type <node> for_exprs
-%type <node> non_empty_for_exprs
-%type <node> for_statement
-%type <node> switch_case_list
-%type <node> case_list
-%type <node> optional_expr
-%type <node> global_var_list
-%type <node> global_var
-%type <node> static_var_list
-%type <node> static_var
-%type <node> echo_expr_list
-%type <node> echo_expr
-%type <node> unset_variables
-%type <node> unset_variable
-%type <node> foreach_variable
-%type <node> array_pair_list
-%type <node> possible_array_pair
-%type <node> non_empty_array_pair_list
-%type <node> array_pair
-%type <node> foreach_statement
-%type <node> const_list
-%type <node> const_decl
-%type <node> declare_statement
-%type <node> catch_list
-%type <node> catch_name_list
-%type <node> finally_statement
-%type <node> class_statement_list
-%type <node> class_statement
-%type <node> variable_modifiers
-%type <node> non_empty_member_modifiers
-%type <node> member_modifier
-%type <node> property_list
-%type <node> property
-%type <node> class_const_list
-%type <node> class_const_decl
-%type <node> method_modifiers
-%type <node> name_list
-%type <node> trait_adaptations
-%type <node> trait_adaptation_list
-%type <node> trait_adaptation
-%type <node> trait_precedence
-%type <node> trait_alias
-%type <node> trait_method_reference
-%type <node> absolute_trait_method_reference
-%type <node> method_body
-%type <node> scalar
-%type <node> encaps_list
-%type <node> encaps_var
-%type <node> encaps_var_offset
-%type <node> constant
-%type <node> class_name
-%type <node> variable_class_name
-%type <node> dereferencable
-%type <node> dereferencable_scalar
-%type <node> static_member
-%type <node> property_name
-%type <node> use_type
-%type <node> group_use_declaration
-%type <node> mixed_group_use_declaration
-%type <node> inline_use_declarations
-%type <node> unprefixed_use_declarations
-%type <node> use_declarations
-%type <node> inline_use_declaration
-%type <node> unprefixed_use_declaration
-%type <node> use_declaration
-%type <node> trait_declaration_statement
-%type <node> interface_declaration_statement
-%type <node> interface_extends_list
-%type <node> extends_from
-%type <node> implements_list
-%type <node> argument_list
-%type <node> non_empty_argument_list
-%type <node> argument
-%type <node> callable_expr
-%type <node> function_call
-%type <node> member_name
-%type <node> anonymous_class
-%type <node> new_expr
-%type <node> ctor_arguments
-%type <node> class_name_reference
-%type <node> new_variable
+%type <node> top_statement namespace_name name statement function_declaration_statement
+%type <node> class_declaration_statement trait_declaration_statement
+%type <node> interface_declaration_statement interface_extends_list
+%type <node> group_use_declaration inline_use_declarations inline_use_declaration
+%type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
+%type <node> unprefixed_use_declarations const_decl inner_statement
+%type <node> expr optional_expr while_statement for_statement foreach_variable
+%type <node> foreach_statement declare_statement finally_statement unset_variable variable
+%type <node> extends_from parameter optional_type argument expr_without_variable global_var
+%type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
+%type <node> absolute_trait_method_reference trait_method_reference property echo_expr
+%type <node> new_expr anonymous_class class_name class_name_reference simple_variable
 %type <node> internal_functions_in_yacc
-%type <node> isset_variables
-%type <node> isset_variable
-%type <node> exit_expr
-%type <node> backticks_expr
-%type <node> lexical_vars
-%type <node> lexical_var_list
-%type <node> lexical_var
+%type <node> exit_expr scalar backticks_expr lexical_var function_call member_name property_name
+%type <node> variable_class_name dereferencable_scalar constant dereferencable
+%type <node> callable_expr callable_variable static_member new_variable
+%type <node> encaps_var encaps_var_offset isset_variables
+%type <node> top_statement_list use_declarations const_list inner_statement_list if_stmt
+%type <node> alt_if_stmt for_exprs switch_case_list global_var_list static_var_list
+%type <node> echo_expr_list unset_variables catch_name_list catch_list parameter_list class_statement_list
+%type <node> implements_list case_list if_stmt_without_else
+%type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
+%type <node> class_const_list class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
+%type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
+%type <node> lexical_var_list encaps_list
+%type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
+%type <node> isset_variable type return_type type_expr
+%type <node> identifier
+
+%type <node> variable_modifiers
+%type <node> method_modifiers non_empty_member_modifiers member_modifier
+%type <node> class_modifiers use_type
 
 %%
 
