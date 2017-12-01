@@ -96,10 +96,10 @@ NEW_LINE        (\r|\n|\r\n)
 
 <INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 <INITIAL>\<\?                                   l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
-<INITIAL>\<\?=                                  l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG_WITH_ECHO;
+<INITIAL>\<\?=                                  l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_ECHO;
 
 <PHP>[ \t\n\r]+                                 //lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
-<PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);//lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
+<PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.token = ";"; return rune2Class(';');
 
 <PHP>{DNUM}|{EXPONENT_DNUM}                     lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
 <PHP>{BNUM}

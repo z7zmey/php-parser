@@ -14,3 +14,13 @@ abstract class Foo extends Bar implements Buz, Buzz {
         
     }
 }
+
+if ($a === true) {
+} elseif ($a === false) {
+} elseif ($a === null) {
+} else {
+}
+
+?>
+
+<?= $b; $b ?>

@@ -7715,7 +7715,7 @@ yyrule5: // \<\?=
 	{
 		l.begin(PHP)
 		lval.token = string(l.TokenBytes(nil))
-		return T_OPEN_TAG_WITH_ECHO
+		return T_ECHO
 		goto yystate0
 	}
 yyrule6: // [ \t\n\r]+
@@ -7725,7 +7725,9 @@ yyrule6: // [ \t\n\r]+
 	}
 yyrule7: // \?\>{NEW_LINE}?
 	{
-		l.begin(INITIAL) //lval.token = string(l.TokenBytes(nil)); return T_CLOSE_TAG;
+		l.begin(INITIAL)
+		lval.token = ";"
+		return rune2Class(';')
 		goto yystate0
 	}
 yyrule8: // {DNUM}|{EXPONENT_DNUM}
