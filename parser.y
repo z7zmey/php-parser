@@ -342,6 +342,11 @@ identifier:
     |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1) }
 ;
 
+top_statement_list:
+        top_statement_list top_statement                { $$ = $1.append($2); }
+    |   /* empty */                                     { $$ = Node("Statements") }
+;
+
 namespace_name:
         T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1)); }
     |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.append(Node($3)); }
@@ -351,11 +356,6 @@ name:
       namespace_name                                    { $$ = Node("Name").append($1); }
     | T_NS_SEPARATOR namespace_name                     { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
     | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = Node("Name").append($3).attribute("Relative", "true"); }
-;
-
-top_statement_list:
-        top_statement_list top_statement                { $$ = $1.append($2); }
-    |   /* empty */                                     { $$ = Node("Statements") }
 ;
 
 top_statement:
@@ -395,31 +395,46 @@ mixed_group_use_declaration:
                                                         { $$ = Node("MixedGroupUse").append($2).append($5); }
 ;
 
+possible_comma:
+        /* empty */
+    |   ','
+;
+
 inline_use_declarations:
         inline_use_declarations ',' inline_use_declaration
                                                         { $$ = $1.append($3) }
     |   inline_use_declaration                          { $$ = Node("UseList").append($1) }
 ;
+
 unprefixed_use_declarations:
         unprefixed_use_declarations ',' unprefixed_use_declaration
                                                         { $$ = $1.append($3) }
     |   unprefixed_use_declaration                      { $$ = Node("UseList").append($1) }
 ;
+
 use_declarations:
         use_declarations ',' use_declaration            { $$ = $1.append($3) }
     |   use_declaration                                 { $$ = Node("UseList").append($1) }
 ;
+
 inline_use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
     |   use_type unprefixed_use_declaration             { $$ = $2.append($1) }
 ;
+
 unprefixed_use_declaration:
         namespace_name                                  { $$ = Node("UseElem").append($1); }
     |   namespace_name T_AS T_STRING                    { $$ = Node("UseElem").append($1).append(Node("as").attribute("value", $3)); }
 ;
+
 use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
     |   T_NS_SEPARATOR unprefixed_use_declaration       { $$ = $2; }
+;
+
+const_list:
+        const_list ',' const_decl                       { $$ = $1.append($3) }
+    |   const_decl                                      { $$ = Node("ConstList").append($1) }
 ;
 
 inner_statement_list:
@@ -513,196 +528,6 @@ finally_statement:
     |   T_FINALLY '{' inner_statement_list '}'          { $$ = Node("Finnaly").append($3) }
 ;
 
-const_list:
-        const_list ',' const_decl                       { $$ = $1.append($3) }
-    |   const_decl                                      { $$ = Node("ConstList").append($1) }
-;
-
-const_decl:
-    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1).append($3) }
-;
-
-declare_statement:
-        statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = $2; }
-;
-
-if_stmt_without_else:
-        T_IF '(' expr ')' statement
-            {
-                $$ = Node("If").append(Node("expr").append($3)).append(Node("stmt").append($5))
-            }
-    |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
-            { 
-                $$ = $1.append(Node("ElseIf").append(Node("expr").append($4)).append(Node("stmt").append($6)))
-            }
-;
-
-if_stmt:
-        if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
-    |   if_stmt_without_else T_ELSE statement
-            {
-                $$ = $1.append(Node("Else").append(Node("stmt").append($3)))
-            }
-;
-
-alt_if_stmt_without_else:
-        T_IF '(' expr ')' ':' inner_statement_list
-            { 
-                $$ = Node("AltIf").append(Node("expr").append($3)).append(Node("stmt").append($6))
-            }
-    |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
-            {
-                $$ = $1.append(Node("AltElseIf").append(Node("expr").append($4)).append(Node("stmt").append($7)))
-            }
-;
-
-alt_if_stmt:
-        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
-    |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
-            {
-                $$ = $1.append(Node("AltElse").append(Node("stmt").append($4)))
-            }
-;
-
-while_statement:
-        statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = $2; }
-;
-
-for_exprs:
-        /* empty */                                     { $$ = Node(""); }
-    |   non_empty_for_exprs                             { $$ = $1; }
-;
-non_empty_for_exprs:
-        non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
-    |   expr                                            { $$ = Node("ExpressionList").append($1) }
-;
-
-anonymous_class:
-    T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
-        {
-            $$ = Node("AnonymousClass").
-                attribute("name", $1).
-                append($2).
-                append($3).
-                append($4).
-                append($6);
-        }
-;
-
-new_expr:
-        T_NEW class_name_reference ctor_arguments       { $$ = Node("New").append($2).append($3) }
-    |   T_NEW anonymous_class                           { $$ = Node("New").append($2) }
-;
-
-ctor_arguments:
-        /* empty */	                                    { $$ = Node("ArgumentList") }
-    |   argument_list                                   { $$ = $1; }
-;
-
-switch_case_list:
-        '{' case_list '}'                               { $$ = $2; }
-    |   '{' ';' case_list '}'                           { $$ = $3; }
-    |   ':' case_list T_ENDSWITCH ';'                   { $$ = $2; }
-    |   ':' ';' case_list T_ENDSWITCH ';'               { $$ = $3; }
-;
-
-case_list:
-        /* empty */                                     { $$ = Node("CaseList") }
-    |   case_list T_CASE expr case_separator inner_statement_list
-            {
-                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append($5))
-            }
-    |   case_list T_DEFAULT case_separator inner_statement_list
-            {
-                $$ = $1.append(Node("Default").append($4))
-            }
-;
-
-case_separator:
-        ':'
-    |   ';'
-;
-
-for_statement:
-        statement                                       { $$ = $1; }
-    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
-;
-
-foreach_variable:
-        variable                                        { $$ = $1; }
-    |   '&' variable                                    { $$ = Node("Ref").append($2); }
-    |   T_LIST '(' array_pair_list ')'                  { $$ = Node("List").append($3) }
-    |   '[' array_pair_list ']'                         { $$ = Node("ShortList").append($2) }
-;
-
-array_pair_list:
-    non_empty_array_pair_list                           { /* TODO: allow single trailing comma */ $$ = $1 }
-;
-
-possible_array_pair:
-        /* empty */                                     { $$ = Node(""); }
-    |   array_pair                                      { $$ = $1; }
-;
-
-non_empty_array_pair_list:
-        non_empty_array_pair_list ',' possible_array_pair
-                                                        { $$ = $1.append($3) }
-    |   possible_array_pair                             { $$ = Node("ArrayPairList").append($1) }
-;
-
-array_pair:
-        expr T_DOUBLE_ARROW expr                        { $$ = Node("ArrayElement").append($1).append($3) }
-    |   expr                                            { $$ = Node("ArrayElement").append($1) }
-    |   expr T_DOUBLE_ARROW '&' variable                { $$ = Node("ArrayElement").append($1).append(Node("Ref").append($4)) }
-    |   '&' variable                                    { $$ = Node("ArrayElement").append(Node("Ref").append($2)) }
-    |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
-            { 
-                $$ = Node("ArrayElement").
-                    append($1).
-                    append(Node("ArrayList").append($5))
-            }
-    |   T_LIST '(' array_pair_list ')'
-            {
-                $$ = Node("ArrayElement").
-                    append(Node("ArrayList").append($3))
-            }
-;
-
-foreach_statement:
-        statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = $2; }
-;
-
-global_var_list:
-        global_var_list ',' global_var                  { $$ = $1.append($3); }
-    |   global_var                                      { $$ = Node("GlobalVarList").append($1); }
-;
-
-global_var:
-    simple_variable                                     { $$ = $1 }
-;
-
-static_var_list:
-        static_var_list ',' static_var                  { $$ = $1.append($3); }
-    |   static_var                                      { $$ = Node("StaticVarList").append($1); }
-;
-
-static_var:
-        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1); }
-    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1).append(Node("expr").append($3)); }
-;
-
-echo_expr_list:
-        echo_expr_list ',' echo_expr                    { $$ = $1.append($3) }
-    |   echo_expr                                       { $$ = Node("EchoList").append($1) }
-;
-
-echo_expr:
-    expr                                                { $$ = Node("Echo").append($1) }
-;
-
 unset_variables:
         unset_variable                                  { $$ = Node("UnsetVariablesList").append($1) }
     |   unset_variables ',' unset_variable              { $$ = $1.append($3) }
@@ -712,9 +537,26 @@ unset_variable:
     variable                                            { $$ = $1 }
 ;
 
-possible_comma:
-        /* empty */
-    |   ','
+function_declaration_statement:
+    T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
+        {
+            $$ = Node("Function").
+                attribute("name", $3).
+                attribute("returns_ref", $2).
+                append($5).
+                append($7).
+                append($9);
+        }
+;
+
+is_reference:
+        /* empty */                                     { $$ = "false"; }
+    |   '&'                                             { $$ = "true"; }
+;
+
+is_variadic:
+        /* empty */                                     { $$ = "false"; }
+    |   T_ELLIPSIS                                      { $$ = "true"; }
 ;
 
 class_declaration_statement:
@@ -776,6 +618,180 @@ implements_list:
     |   T_IMPLEMENTS name_list                          { $$ = $2; }
 ;
 
+foreach_variable:
+        variable                                        { $$ = $1; }
+    |   '&' variable                                    { $$ = Node("Ref").append($2); }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = Node("List").append($3) }
+    |   '[' array_pair_list ']'                         { $$ = Node("ShortList").append($2) }
+;
+
+for_statement:
+        statement                                       { $$ = $1; }
+    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
+;
+
+foreach_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = $2; }
+;
+
+declare_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = $2; }
+;
+
+switch_case_list:
+        '{' case_list '}'                               { $$ = $2; }
+    |   '{' ';' case_list '}'                           { $$ = $3; }
+    |   ':' case_list T_ENDSWITCH ';'                   { $$ = $2; }
+    |   ':' ';' case_list T_ENDSWITCH ';'               { $$ = $3; }
+;
+
+case_list:
+        /* empty */                                     { $$ = Node("CaseList") }
+    |   case_list T_CASE expr case_separator inner_statement_list
+            {
+                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append($5))
+            }
+    |   case_list T_DEFAULT case_separator inner_statement_list
+            {
+                $$ = $1.append(Node("Default").append($4))
+            }
+;
+
+case_separator:
+        ':'
+    |   ';'
+;
+
+while_statement:
+        statement                                       { $$ = $1; }
+    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = $2; }
+;
+
+if_stmt_without_else:
+        T_IF '(' expr ')' statement
+            {
+                $$ = Node("If").append(Node("expr").append($3)).append(Node("stmt").append($5))
+            }
+    |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
+            { 
+                $$ = $1.append(Node("ElseIf").append(Node("expr").append($4)).append(Node("stmt").append($6)))
+            }
+;
+
+if_stmt:
+        if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
+    |   if_stmt_without_else T_ELSE statement
+            {
+                $$ = $1.append(Node("Else").append(Node("stmt").append($3)))
+            }
+;
+
+alt_if_stmt_without_else:
+        T_IF '(' expr ')' ':' inner_statement_list
+            { 
+                $$ = Node("AltIf").append(Node("expr").append($3)).append(Node("stmt").append($6))
+            }
+    |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
+            {
+                $$ = $1.append(Node("AltElseIf").append(Node("expr").append($4)).append(Node("stmt").append($7)))
+            }
+;
+
+alt_if_stmt:
+        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
+    |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
+            {
+                $$ = $1.append(Node("AltElse").append(Node("stmt").append($4)))
+            }
+;
+
+parameter_list:
+        non_empty_parameter_list                        { $$ = $1; }
+    |   /* empty */                                     { $$ = Node("Parameter list"); }
+;
+
+non_empty_parameter_list:
+        parameter                                       { $$ = Node("Parameter list").append($1) }
+    |   non_empty_parameter_list ',' parameter          { $$ = $1.append($3); }
+;
+
+parameter:
+        optional_type is_reference is_variadic T_VARIABLE
+            {
+                $$ = Node("Parameter").
+                    append($1).
+                    attribute("is_reference", $2).
+                    attribute("is_variadic", $3).
+                    attribute("var", $4);
+            }
+    |   optional_type is_reference is_variadic T_VARIABLE '=' expr
+            {
+                $$ = Node("Parameter").
+                    append($1).
+                    attribute("is_reference", $2).
+                    attribute("is_variadic", $3).
+                    attribute("var", $4).
+                    append($6);
+            }
+;
+
+optional_type:
+        /* empty */                                     { $$ = Node("No type") }
+    |   type_expr                                       { $$ = $1; }
+;
+
+type_expr:
+        type                                            { $$ = $1; }
+    |   '?' type                                        { $$ = $2; $$.attribute("nullable", "true") }
+;
+
+type:
+        name                                            { $$ = $1; }
+    |   T_ARRAY                                         { $$ = Node("array type"); }
+    |   T_CALLABLE                                      { $$ = Node("callable type"); }
+;
+
+return_type:
+        /* empty */                                     { $$ = Node("No return type"); }
+    |   ':' type_expr                                   { $$ = $2; }
+;
+
+argument_list:
+        '(' ')'                                         { $$ = Node("ArgumentList") }
+    |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
+;
+
+non_empty_argument_list:
+        argument                                        { $$ = Node("ArgumentList").append($1) }
+    |   non_empty_argument_list ',' argument            { $$ = $1.append($3) }
+;
+
+argument:
+        expr                                            { $$ = $1; }
+    |   T_ELLIPSIS expr                                 { $$ = Node("Unpack").append($2) }
+;
+
+global_var_list:
+        global_var_list ',' global_var                  { $$ = $1.append($3); }
+    |   global_var                                      { $$ = Node("GlobalVarList").append($1); }
+;
+
+global_var:
+    simple_variable                                     { $$ = $1 }
+;
+
+static_var_list:
+        static_var_list ',' static_var                  { $$ = $1.append($3); }
+    |   static_var                                      { $$ = Node("StaticVarList").append($1); }
+;
+
+static_var:
+        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1); }
+    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1).append(Node("expr").append($3)); }
+;
+
 class_statement_list:
         class_statement_list class_statement            { $$ = $1.append($2) }
     |   /* empty */                                     { $$ = Node("Stmt") }
@@ -832,6 +848,7 @@ trait_alias:
                                                         { $$ = $1.append($3).append($4); }
     |   trait_method_reference T_AS member_modifier     { $$ = $1.append($3); }
 ;
+
 trait_method_reference:
         identifier                                      { $$ = Node("TraitMethodRef").append($1); }
     |   absolute_trait_method_reference                 { $$ = $1; }
@@ -851,23 +868,16 @@ variable_modifiers:
     |   T_VAR                                           { $$ = Node("VarMemberModifier") }
 ;
 
-class_const_list:
-        class_const_list ',' class_const_decl           { $$ = $1.append($3) }
-    |   class_const_decl                                { $$ = Node("ConstList").append($1) }
-;
-
-class_const_decl:
-    identifier '=' expr                                 { $$ = Node("Const").append($3) }
-;
-
 method_modifiers:
         /* empty */                                     { $$ = Node("PublicMemberModifier"); }
     |   non_empty_member_modifiers                      { $$ = $1; }
+;
 
 non_empty_member_modifiers:
         member_modifier	                                { $$ = $1; }
     |   non_empty_member_modifiers member_modifier      { $$ = $1.append($2) }
 ;
+
 member_modifier:
         T_PUBLIC                                        { $$ = Node("PublicMemberModifier"); }
     |   T_PROTECTED                                     { $$ = Node("ProtectedMemberModifier"); }
@@ -881,85 +891,58 @@ property_list:
         property_list ',' property                      { $$ = $1.append($3) }
     |   property                                        { $$ = Node("PropertyList").append($1) }
 ;
+
 property:
         T_VARIABLE                                      { $$ = Node("Property").attribute("name", $1) }
     |   T_VARIABLE '=' expr                             { $$ = Node("Property").attribute("name", $1).append(Node("Default").append($3)) }
 ;
 
-function_declaration_statement:
-    T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
+class_const_list:
+        class_const_list ',' class_const_decl           { $$ = $1.append($3) }
+    |   class_const_decl                                { $$ = Node("ConstList").append($1) }
+;
+
+class_const_decl:
+    identifier '=' expr                                 { $$ = Node("Const").append($3) }
+;
+
+const_decl:
+    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1).append($3) }
+;
+
+echo_expr_list:
+        echo_expr_list ',' echo_expr                    { $$ = $1.append($3) }
+    |   echo_expr                                       { $$ = Node("EchoList").append($1) }
+;
+
+echo_expr:
+    expr                                                { $$ = Node("Echo").append($1) }
+;
+
+for_exprs:
+        /* empty */                                     { $$ = Node(""); }
+    |   non_empty_for_exprs                             { $$ = $1; }
+;
+non_empty_for_exprs:
+        non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
+    |   expr                                            { $$ = Node("ExpressionList").append($1) }
+;
+
+anonymous_class:
+    T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            $$ = Node("Function").
-                attribute("name", $3).
-                attribute("returns_ref", $2).
-                append($5).
-                append($7).
-                append($9);
+            $$ = Node("AnonymousClass").
+                attribute("name", $1).
+                append($2).
+                append($3).
+                append($4).
+                append($6);
         }
 ;
 
-parameter_list:
-        non_empty_parameter_list                        { $$ = $1; }
-    |   /* empty */                                     { $$ = Node("Parameter list"); }
-;
-non_empty_parameter_list:
-        parameter                                       { $$ = Node("Parameter list").append($1) }
-    |   non_empty_parameter_list ',' parameter          { $$ = $1.append($3); }
-;
-parameter:
-        optional_type is_reference is_variadic T_VARIABLE
-            {
-                $$ = Node("Parameter").
-                    append($1).
-                    attribute("is_reference", $2).
-                    attribute("is_variadic", $3).
-                    attribute("var", $4);
-            }
-    |   optional_type is_reference is_variadic T_VARIABLE '=' expr
-            {
-                $$ = Node("Parameter").
-                    append($1).
-                    attribute("is_reference", $2).
-                    attribute("is_variadic", $3).
-                    attribute("var", $4).
-                    append($6);
-            }
-;
-
-optional_type:
-        /* empty */                                     { $$ = Node("No type") }
-    |   type_expr                                       { $$ = $1; }
-;
-
-returns_ref:
-        /* empty */                                     { $$ = "false"; }
-    |   '&'                                             { $$ = "true"; }
-;
-
-is_reference:
-        /* empty */                                     { $$ = "false"; }
-    |   '&'                                             { $$ = "true"; }
-;
-
-is_variadic:
-        /* empty */                                     { $$ = "false"; }
-    |   T_ELLIPSIS                                      { $$ = "true"; }
-;
-
-type_expr:
-        type                                            { $$ = $1; }
-    |   '?' type                                        { $$ = $2; $$.attribute("nullable", "true") }
-;
-
-type:
-        name                                            { $$ = $1; }
-    |   T_ARRAY                                         { $$ = Node("array type"); }
-    |   T_CALLABLE                                      { $$ = Node("callable type"); }
-;
-
-return_type:
-        /* empty */                                     { $$ = Node("No return type"); }
-    |   ':' type_expr                                   { $$ = $2; }
+new_expr:
+        T_NEW class_name_reference ctor_arguments       { $$ = Node("New").append($2).append($3) }
+    |   T_NEW anonymous_class                           { $$ = Node("New").append($2) }
 ;
 
 expr_without_variable:
@@ -1055,6 +1038,11 @@ expr_without_variable:
             }
 ;
 
+returns_ref:
+        /* empty */                                     { $$ = "false"; }
+    |   '&'                                             { $$ = "true"; }
+;
+
 lexical_vars:
         /* empty */                                     { $$ = Node("") }
     |   T_USE '(' lexical_var_list ')'                  { $$ = $3; }
@@ -1068,6 +1056,47 @@ lexical_var_list:
 lexical_var:
         T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
     |   '&' T_VARIABLE                                  { $$ = Node("Variable").attribute("value", $2).attribute("ref", "true") }
+;
+
+function_call:
+        name argument_list                              { $$ = Node("FunctionCall").append($1).append($2) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
+                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
+                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
+    |   callable_expr argument_list                     { $$ = Node("Call").append($1).append($2); }
+;
+
+class_name:
+        T_STATIC                                        { $$ = Node("Static") }
+    |   name                                            { $$ = $1; }
+;
+
+class_name_reference:
+        class_name                                      { $$ = $1; }
+    |   new_variable                                    { $$ = $1; }
+;
+
+exit_expr:
+        /* empty */                                     { $$ = Node("") }
+    |   '(' optional_expr ')'                           { $$ = $2; }
+;
+
+backticks_expr:
+        /* empty */                                     { $$ = Node("EmptyBackticks") }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1) }
+    |   encaps_list                                     { $$ = $1; }
+;
+
+ctor_arguments:
+        /* empty */	                                    { $$ = Node("ArgumentList") }
+    |   argument_list                                   { $$ = $1; }
+;
+
+dereferencable_scalar:
+        T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
+    |   '[' array_pair_list ']'                         { $$ = $2; }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1) }
 ;
 
 scalar:
@@ -1091,12 +1120,131 @@ scalar:
     |   constant                                        { $$ = $1; }
 ;
 
+constant:
+        name                                            { $$ = Node("Const").append($1) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = Node("Const").append($1).append($3) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
+                                                        { $$ = Node("Const").append($1).append($3) }
+;
+
+expr:
+        variable                                        { $$ = $1; }
+    |   expr_without_variable                           { $$ = $1; }
+;
+
+optional_expr:
+        /* empty */                                     { $$ = Node("") }
+    |   expr                                            { $$ = $1; }
+;
+
+variable_class_name:
+    dereferencable                                      { $$ = $1; }
+;
+
+dereferencable:
+        variable                                        { $$ = $1; }
+    |   '(' expr ')'                                    { $$ = $2; }
+    |   dereferencable_scalar                           { $$ = $1; }
+;
+
+callable_expr:
+        callable_variable                               { $$ = $1; }
+    |   '(' expr ')'                                    { $$ = $2; }
+    |   dereferencable_scalar                           { $$ = $1; }
+;
+
+callable_variable:
+    simple_variable                                     { $$ = $1; }
+    |   dereferencable '[' optional_expr ']'            { $$ = Node("Dim").append($1).append($3)}
+    |   constant '[' optional_expr ']'                  { $$ = Node("Dim").append($1).append($3)}
+    |   dereferencable '{' expr '}'                     { $$ = Node("Dim").append($1).append($3)}
+    |   dereferencable T_OBJECT_OPERATOR property_name argument_list
+                                                        { $$ = Node("MethodCall").append($1).append($3).append($4)}
+    |   function_call                                   { $$ = $1; }
+;
+
+variable:
+        callable_variable                               { $$ = $1; }
+    |   static_member                                   { $$ = $1; }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = Node("Property").append($1).append($3) }
+;
+
+simple_variable:
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1); }
+    |   '$' '{' expr '}'                                { $$ = Node("Variable").append($3); }
+    |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
+;
+
+static_member:
+        class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProp").append($1).append($3) }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProp").append($1).append($3) }
+;
+
+new_variable:
+        simple_variable                                 { $$ = $1 }
+    |   new_variable '[' optional_expr ']'              { $$ = Node("Dim").append($1).append($3) }
+    |   new_variable '{' expr '}'                       { $$ = Node("Dim").append($1).append($3) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = Node("Property").append($1).append($3) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+    |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
+                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+;
+
+member_name:
+        identifier                                      { $$ = $1; }
+    |   '{' expr '}'                                    { $$ = $2; }
+    |   simple_variable                                 { $$ = $1 }
+;
+
+property_name:
+        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1) }
+    |   '{' expr '}'                                    { $$ = $2; }
+    |   simple_variable                                 { $$ = $1 }
+;
+
+array_pair_list:
+    non_empty_array_pair_list                           { /* TODO: allow single trailing comma */ $$ = $1 }
+;
+
+possible_array_pair:
+        /* empty */                                     { $$ = Node(""); }
+    |   array_pair                                      { $$ = $1; }
+;
+
+non_empty_array_pair_list:
+        non_empty_array_pair_list ',' possible_array_pair
+                                                        { $$ = $1.append($3) }
+    |   possible_array_pair                             { $$ = Node("ArrayPairList").append($1) }
+;
+
+array_pair:
+        expr T_DOUBLE_ARROW expr                        { $$ = Node("ArrayElement").append($1).append($3) }
+    |   expr                                            { $$ = Node("ArrayElement").append($1) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = Node("ArrayElement").append($1).append(Node("Ref").append($4)) }
+    |   '&' variable                                    { $$ = Node("ArrayElement").append(Node("Ref").append($2)) }
+    |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
+            { 
+                $$ = Node("ArrayElement").
+                    append($1).
+                    append(Node("ArrayList").append($5))
+            }
+    |   T_LIST '(' array_pair_list ')'
+            {
+                $$ = Node("ArrayElement").
+                    append(Node("ArrayList").append($3))
+            }
+;
+
 encaps_list:
         encaps_list encaps_var                          { $$ = $1.append($2) }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.append(Node("String").attribute("value", $2)) }
     |   encaps_var                                      { $$ = Node("EncapsList").append($1) }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = Node("EncapsList").append(Node("String").attribute("value", $1)).append($2) }
 ;
+
 encaps_var:
         T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
     |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = Node("Variable").attribute("value", $1).append(Node("offset").append($3)) }
@@ -1131,139 +1279,6 @@ isset_variables:
 
 isset_variable:
     expr                                                { $$ = Node("Isset").append($1) }
-;
-
-constant:
-        name                                            { $$ = Node("Const").append($1) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = Node("Const").append($1).append($3) }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = Node("Const").append($1).append($3) }
-;
-
-class_name:
-        T_STATIC                                        { $$ = Node("Static") }
-    |   name                                            { $$ = $1; }
-;
-
-class_name_reference:
-        class_name                                      { $$ = $1; }
-    |   new_variable                                    { $$ = $1; }
-;
-
-exit_expr:
-        /* empty */                                     { $$ = Node("") }
-    |   '(' optional_expr ')'                           { $$ = $2; }
-;
-
-backticks_expr:
-        /* empty */                                     { $$ = Node("EmptyBackticks") }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1) }
-    |   encaps_list                                     { $$ = $1; }
-;
-
-variable_class_name:
-    dereferencable                                      { $$ = $1; }
-;
-
-dereferencable:
-        variable                                        { $$ = $1; }
-    |   '(' expr ')'                                    { $$ = $2; }
-    |   dereferencable_scalar                           { $$ = $1; }
-;
-
-callable_expr:
-        callable_variable                               { $$ = $1; }
-    |   '(' expr ')'                                    { $$ = $2; }
-    |   dereferencable_scalar                           { $$ = $1; }
-;
-
-dereferencable_scalar:
-        T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
-    |   '[' array_pair_list ']'                         { $$ = $2; }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1) }
-;
-
-expr:
-        variable                                        { $$ = $1; }
-    |   expr_without_variable                           { $$ = $1; }
-;
-
-optional_expr:
-        /* empty */                                     { $$ = Node("") }
-    |   expr                                            { $$ = $1; }
-;
-
-callable_variable:
-    simple_variable                                     { $$ = $1; }
-    |   dereferencable '[' optional_expr ']'            { $$ = Node("Dim").append($1).append($3)}
-    |   constant '[' optional_expr ']'                  { $$ = Node("Dim").append($1).append($3)}
-    |   dereferencable '{' expr '}'                     { $$ = Node("Dim").append($1).append($3)}
-    |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = Node("MethodCall").append($1).append($3).append($4)}
-    |   function_call                                   { $$ = $1; }
-;
-
-function_call:
-        name argument_list                              { $$ = Node("FunctionCall").append($1).append($2) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
-    |   callable_expr argument_list                     { $$ = Node("Call").append($1).append($2); }
-;
-
-member_name:
-        identifier                                      { $$ = $1; }
-    |   '{' expr '}'                                    { $$ = $2; }
-    |   simple_variable                                 { $$ = $1 }
-;
-
-argument_list:
-        '(' ')'                                         { $$ = Node("ArgumentList") }
-    |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
-;
-non_empty_argument_list:
-        argument                                        { $$ = Node("ArgumentList").append($1) }
-    |   non_empty_argument_list ',' argument            { $$ = $1.append($3) }
-;
-argument:
-        expr                                            { $$ = $1; }
-    |   T_ELLIPSIS expr                                 { $$ = Node("Unpack").append($2) }
-;
-
-variable:
-        callable_variable                               { $$ = $1; }
-    |   static_member                                   { $$ = $1; }
-    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = Node("Property").append($1).append($3) }
-;
-
-property_name:
-        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1) }
-    |   '{' expr '}'                                    { $$ = $2; }
-    |   simple_variable                                 { $$ = $1 }
-;
-
-simple_variable:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1); }
-    |   '$' '{' expr '}'                                { $$ = Node("Variable").append($3); }
-    |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
-;
-
-static_member:
-        class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProp").append($1).append($3) }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProp").append($1).append($3) }
-;
-new_variable:
-        simple_variable                                 { $$ = $1 }
-    |   new_variable '[' optional_expr ']'              { $$ = Node("Dim").append($1).append($3) }
-    |   new_variable '{' expr '}'                       { $$ = Node("Dim").append($1).append($3) }
-    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = Node("Property").append($1).append($3) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProperty").append($1).append($3) }
-    |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProperty").append($1).append($3) }
 ;
 
 /////////////////////////////////////////////////////////////////////////
