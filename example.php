@@ -31,10 +31,9 @@ $a = 'string
 with out $var';
 
 $a = <<<test
-heredoc
-$var
+string
 test;
 
 ?>
 
-<?= $b; $b ?>
+<?= $b = 22; $b ?>

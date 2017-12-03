@@ -2,22 +2,24 @@
 package main
 
 import (
-  "io"
+    "io"
+    "github.com/z7zmey/php-parser/token"
+    "github.com/z7zmey/php-parser/node"
 )
 
-var rootNode = Node("Root")
+var rootnode = node.SimpleNode("Root")
 
-func parse(src io.Reader, fName string) node {
-    rootNode = Node("Root") //reset
+func parse(src io.Reader, fName string) node.Node {
+    rootnode = node.SimpleNode("Root") //reset
     yyParse(newLexer(src, fName))
-    return rootNode
+    return rootnode
 }
 
 %}
 
 %union{
-    node node
-    token token
+    node node.Node
+    token token.Token
     value string
 }
 
@@ -203,7 +205,7 @@ func parse(src io.Reader, fName string) node {
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                  { rootNode = $1; }
+    top_statement_list                                  { rootnode = $1; }
 ;
 
 reserved_non_modifiers:
@@ -222,24 +224,24 @@ semi_reserved:
 ;
 
 identifier:
-        T_STRING                                        { $$ = Node("identifier").attribute("value", $1.String()) }
-    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1.String()) }
+        T_STRING                                        { $$ = node.TokenNode("identifier", $1) }
+    |   semi_reserved                                   { $$ = node.TokenNode("identifier", $1) }
 ;
 
 top_statement_list:
-        top_statement_list top_statement                { $$ = $1.append($2); }
-    |   /* empty */                                     { $$ = Node("Statements") }
+        top_statement_list top_statement                { $$ = $1.Append($2); }
+    |   /* empty */                                     { $$ = node.SimpleNode("Statements") }
 ;
 
 namespace_name:
-        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1.String())); }
-    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.append(Node($3.String())); }
+        T_STRING                                        { $$ = node.SimpleNode("NamespaceParts").Append(node.TokenNode("NsPart", $1)); }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.Append(node.TokenNode("NsPart", $3)); }
 ;
 
 name:
-      namespace_name                                    { $$ = Node("Name").append($1); }
-    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = Node("Name").append($3).attribute("Relative", "true"); }
-    | T_NS_SEPARATOR namespace_name                     { $$ = Node("Name").append($2).attribute("FullyQualified", "true"); }
+      namespace_name                                    { $$ = node.SimpleNode("Name").Append($1); }
+    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = node.SimpleNode("Name").Append($3).Attribute("Relative", "true"); }
+    | T_NS_SEPARATOR namespace_name                     { $$ = node.SimpleNode("Name").Append($2).Attribute("FullyQualified", "true"); }
 ;
 
 top_statement:
@@ -248,35 +250,35 @@ top_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
-    |   T_NAMESPACE namespace_name ';'                  { $$ = Node("Namespace").append($2); }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.SimpleNode("THaltCompiler") }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = node.SimpleNode("Namespace").Append($2); }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = Node("Namespace").append($2).append($4) }
-    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = Node("Namespace").append($3) }
+                                                        { $$ = node.SimpleNode("Namespace").Append($2).Append($4) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = node.SimpleNode("Namespace").Append($3) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2; }
-    |   T_USE use_type group_use_declaration ';'        { $$ = $3.append($2) }
+    |   T_USE use_type group_use_declaration ';'        { $$ = $3.Append($2) }
     |   T_USE use_declarations ';'                      { $$ = $2; }
-    |   T_USE use_type use_declarations ';'             { $$ = $3.append($2) }
+    |   T_USE use_type use_declarations ';'             { $$ = $3.Append($2) }
     |   T_CONST const_list ';'                          { $$ = $2; }
 ;
 
 use_type:
-        T_FUNCTION                                      { $$ = Node("FuncUseType"); }
-    |   T_CONST                                         { $$ = Node("ConstUseType"); }
+        T_FUNCTION                                      { $$ = node.SimpleNode("FuncUseType"); }
+    |   T_CONST                                         { $$ = node.SimpleNode("ConstUseType"); }
 ;
 
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = Node("GroupUse").append($1).append($4) }
+                                                        { $$ = node.SimpleNode("GroupUse").Append($1).Append($4) }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = Node("GroupUse").append($2).append($5) }
+                                                        { $$ = node.SimpleNode("GroupUse").Append($2).Append($5) }
 ;
 
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = Node("MixedGroupUse").append($1).append($4); }
+                                                        { $$ = node.SimpleNode("MixedGroupUse").Append($1).Append($4); }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = Node("MixedGroupUse").append($2).append($5); }
+                                                        { $$ = node.SimpleNode("MixedGroupUse").Append($2).Append($5); }
 ;
 
 possible_comma:
@@ -286,29 +288,29 @@ possible_comma:
 
 inline_use_declarations:
         inline_use_declarations ',' inline_use_declaration
-                                                        { $$ = $1.append($3) }
-    |   inline_use_declaration                          { $$ = Node("UseList").append($1) }
+                                                        { $$ = $1.Append($3) }
+    |   inline_use_declaration                          { $$ = node.SimpleNode("UseList").Append($1) }
 ;
 
 unprefixed_use_declarations:
         unprefixed_use_declarations ',' unprefixed_use_declaration
-                                                        { $$ = $1.append($3) }
-    |   unprefixed_use_declaration                      { $$ = Node("UseList").append($1) }
+                                                        { $$ = $1.Append($3) }
+    |   unprefixed_use_declaration                      { $$ = node.SimpleNode("UseList").Append($1) }
 ;
 
 use_declarations:
-        use_declarations ',' use_declaration            { $$ = $1.append($3) }
-    |   use_declaration                                 { $$ = Node("UseList").append($1) }
+        use_declarations ',' use_declaration            { $$ = $1.Append($3) }
+    |   use_declaration                                 { $$ = node.SimpleNode("UseList").Append($1) }
 ;
 
 inline_use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
-    |   use_type unprefixed_use_declaration             { $$ = $2.append($1) }
+    |   use_type unprefixed_use_declaration             { $$ = $2.Append($1) }
 ;
 
 unprefixed_use_declaration:
-        namespace_name                                  { $$ = Node("UseElem").append($1); }
-    |   namespace_name T_AS T_STRING                    { $$ = Node("UseElem").append($1).append(Node("as").attribute("value", $3.String())); }
+        namespace_name                                  { $$ = node.SimpleNode("UseElem").Append($1); }
+    |   namespace_name T_AS T_STRING                    { $$ = node.SimpleNode("UseElem").Append($1).Append(node.SimpleNode("as").Attribute("value", $3.String())); }
 ;
 
 use_declaration:
@@ -317,13 +319,13 @@ use_declaration:
 ;
 
 const_list:
-        const_list ',' const_decl                       { $$ = $1.append($3) }
-    |   const_decl                                      { $$ = Node("ConstList").append($1) }
+        const_list ',' const_decl                       { $$ = $1.Append($3) }
+    |   const_decl                                      { $$ = node.SimpleNode("ConstList").Append($1) }
 ;
 
 inner_statement_list:
-        inner_statement_list inner_statement            { $$ = $1.append($2); }
-    |   /* empty */                                     { $$ = Node("stmt") }
+        inner_statement_list inner_statement            { $$ = $1.Append($2); }
+    |   /* empty */                                     { $$ = node.SimpleNode("stmt") }
 ;
 
 inner_statement:
@@ -332,7 +334,7 @@ inner_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = Node("THaltCompiler") }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.SimpleNode("THaltCompiler") }
 
 statement:
     '{' inner_statement_list '}'                        { $$ = $2; }
@@ -340,81 +342,81 @@ statement:
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
         {
-            $$ = Node("While").
-                append(Node("expr").append($3)).
-                append(Node("stmt").append($5));
+            $$ = node.SimpleNode("While").
+                Append(node.SimpleNode("expr").Append($3)).
+                Append(node.SimpleNode("stmt").Append($5));
         }
     |   T_DO statement T_WHILE '(' expr ')' ';'
         {
-            $$ = Node("DoWhile").
-                append(Node("expr").append($5)).
-                append(Node("stmt").append($2));
+            $$ = node.SimpleNode("DoWhile").
+                Append(node.SimpleNode("expr").Append($5)).
+                Append(node.SimpleNode("stmt").Append($2));
         }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
-                $$ = Node("For").
-                    append(Node("expr1").append($3)).
-                    append(Node("expr2").append($5)).
-                    append(Node("expr3").append($7)).
-                    append(Node("stmt").append($9))
+                $$ = node.SimpleNode("For").
+                    Append(node.SimpleNode("expr1").Append($3)).
+                    Append(node.SimpleNode("expr2").Append($5)).
+                    Append(node.SimpleNode("expr3").Append($7)).
+                    Append(node.SimpleNode("stmt").Append($9))
             }
-    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = Node("Switch").append(Node("expr").append($3)).append($5); }
-    |   T_BREAK optional_expr ';'                       { $$ = Node("Break").append($2) }
-    |   T_CONTINUE optional_expr ';'                    { $$ = Node("Continue").append($2) }
-    |   T_RETURN optional_expr ';'                      { $$ = Node("Return").append($2) }
+    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = node.SimpleNode("Switch").Append(node.SimpleNode("expr").Append($3)).Append($5); }
+    |   T_BREAK optional_expr ';'                       { $$ = node.SimpleNode("Break").Append($2) }
+    |   T_CONTINUE optional_expr ';'                    { $$ = node.SimpleNode("Continue").Append($2) }
+    |   T_RETURN optional_expr ';'                      { $$ = node.SimpleNode("Return").Append($2) }
     |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
-    |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1.String())) }
+    |   T_INLINE_HTML                                   { $$ = node.SimpleNode("Echo").Append(node.SimpleNode("InlineHtml").Attribute("value", $1.String())) }
     |   expr ';'                                        { $$ = $1; }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
-                                                        { $$ = Node("Unset").append($3); }
+                                                        { $$ = node.SimpleNode("Unset").Append($3); }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
-                $$ = Node("Foreach").
-                    append(Node("expr").append($3)).
-                    append(Node("ForeachVariable").append($5)).
-                    append($7);
+                $$ = node.SimpleNode("Foreach").
+                    Append(node.SimpleNode("expr").Append($3)).
+                    Append(node.SimpleNode("ForeachVariable").Append($5)).
+                    Append($7);
             }
     |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
-                $$ = Node("Foreach").
-                    append(Node("expr").append($3)).
-                    append(Node("ForeachKey").append($5)).
-                    append(Node("ForeachVariable").append($7)).
-                    append($9);
+                $$ = node.SimpleNode("Foreach").
+                    Append(node.SimpleNode("expr").Append($3)).
+                    Append(node.SimpleNode("ForeachKey").Append($5)).
+                    Append(node.SimpleNode("ForeachVariable").Append($7)).
+                    Append($9);
             }
-    |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  Node("Declare").append($3).append($5) }
-    |   ';' /* empty statement */                       { $$ = Node(""); }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  node.SimpleNode("Declare").Append($3).Append($5) }
+    |   ';' /* empty statement */                       { $$ = node.SimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                $$ = Node("Try").
-                    append($3).
-                    append($5).
-                    append($6);
+                $$ = node.SimpleNode("Try").
+                    Append($3).
+                    Append($5).
+                    Append($6);
             }
-    |   T_THROW expr ';'                                { $$ = Node("Throw").append($2) }
-    |   T_GOTO T_STRING ';'                             { $$ = Node("GoTo").attribute("Label", $2.String()) }
-    |   T_STRING ':'                                    { $$ = Node("Label").attribute("name", $1.String()) }
+    |   T_THROW expr ';'                                { $$ = node.SimpleNode("Throw").Append($2) }
+    |   T_GOTO T_STRING ';'                             { $$ = node.SimpleNode("GoTo").Attribute("Label", $2.String()) }
+    |   T_STRING ':'                                    { $$ = node.SimpleNode("Label").Attribute("name", $1.String()) }
 
 catch_list:
-        /* empty */                                     { $$ = Node("CatchList") }
+        /* empty */                                     { $$ = node.SimpleNode("CatchList") }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = $1.append($4).append(Node("Variable").attribute("name", $5.String())).append($8) }
+                                                        { $$ = $1.Append($4).Append(node.SimpleNode("Variable").Attribute("name", $5.String())).Append($8) }
 ;
 catch_name_list:
-        name                                            { $$ = Node("CatchNameList").append($1) }
-    |   catch_name_list '|' name                        { $$ = $1.append($3) }
+        name                                            { $$ = node.SimpleNode("CatchNameList").Append($1) }
+    |   catch_name_list '|' name                        { $$ = $1.Append($3) }
 ;
 
 finally_statement:
-        /* empty */                                     { $$ = Node(""); }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = Node("Finnaly").append($3) }
+        /* empty */                                     { $$ = node.SimpleNode(""); }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = node.SimpleNode("Finnaly").Append($3) }
 ;
 
 unset_variables:
-        unset_variable                                  { $$ = Node("UnsetVariablesList").append($1) }
-    |   unset_variables ',' unset_variable              { $$ = $1.append($3) }
+        unset_variable                                  { $$ = node.SimpleNode("UnsetVariablesList").Append($1) }
+    |   unset_variables ',' unset_variable              { $$ = $1.Append($3) }
 ;
 
 unset_variable:
@@ -424,12 +426,12 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = Node("Function").
-                attribute("name", $3.String()).
-                attribute("returns_ref", $2).
-                append($5).
-                append($7).
-                append($9);
+            $$ = node.SimpleNode("Function").
+                Attribute("name", $3.String()).
+                Attribute("returns_ref", $2).
+                Append($5).
+                Append($7).
+                Append($9);
         }
 ;
 
@@ -446,26 +448,26 @@ is_variadic:
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
             {
-                $$ = Node("Class").
-                    attribute("name", $3.String()).
-                    append($1).
-                    append(Node("Extends").append($4)).
-                    append(Node("Implements").append($5)).
-                    append($7);
+                $$ = node.SimpleNode("Class").
+                    Attribute("name", $3.String()).
+                    Append($1).
+                    Append(node.SimpleNode("Extends").Append($4)).
+                    Append(node.SimpleNode("Implements").Append($5)).
+                    Append($7);
             }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
             {
-                $$ = Node("Class").
-                    attribute("name", $2.String()).
-                    append(Node("Extends").append($3)).
-                    append(Node("Implements").append($4)).
-                    append($6);
+                $$ = node.SimpleNode("Class").
+                    Attribute("name", $2.String()).
+                    Append(node.SimpleNode("Extends").Append($3)).
+                    Append(node.SimpleNode("Implements").Append($4)).
+                    Append($6);
             }
 ;
 
 class_modifiers:
-        class_modifier                                  { $$ = Node("Class").attribute($1, "true") }
-    |   class_modifiers class_modifier                  { $$ = $1.attribute($2, "true") }
+        class_modifier                                  { $$ = node.SimpleNode("Class").Attribute($1, "true") }
+    |   class_modifiers class_modifier                  { $$ = $1.Attribute($2, "true") }
 ;
 
 class_modifier:
@@ -474,39 +476,39 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = Node("Trait").attribute("name", $2.String()).append($4) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = node.SimpleNode("Trait").Attribute("name", $2.String()).Append($4) }
 ;
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
         {
-            $$ = Node("Interface").
-                attribute("name", $2.String()).
-                append(Node("Extends").append($3)).
-                append($5);
+            $$ = node.SimpleNode("Interface").
+                Attribute("name", $2.String()).
+                Append(node.SimpleNode("Extends").Append($3)).
+                Append($5);
         }
 ;
 
 extends_from:
-        /* empty */                                     { $$ = Node(""); }
+        /* empty */                                     { $$ = node.SimpleNode(""); }
     |   T_EXTENDS name                                  { $$ = $2; }
 ;
 
 interface_extends_list:
-        /* empty */                                     { $$ = Node("") }
+        /* empty */                                     { $$ = node.SimpleNode("") }
     |   T_EXTENDS name_list                             { $$ = $2; }
 ;
 
 implements_list:
-        /* empty */                                     { $$ = Node(""); }
+        /* empty */                                     { $$ = node.SimpleNode(""); }
     |   T_IMPLEMENTS name_list                          { $$ = $2; }
 ;
 
 foreach_variable:
         variable                                        { $$ = $1; }
-    |   '&' variable                                    { $$ = Node("Ref").append($2); }
-    |   T_LIST '(' array_pair_list ')'                  { $$ = Node("List").append($3) }
-    |   '[' array_pair_list ']'                         { $$ = Node("ShortList").append($2) }
+    |   '&' variable                                    { $$ = node.SimpleNode("Ref").Append($2); }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = node.SimpleNode("List").Append($3) }
+    |   '[' array_pair_list ']'                         { $$ = node.SimpleNode("ShortList").Append($2) }
 ;
 
 for_statement:
@@ -532,14 +534,14 @@ switch_case_list:
 ;
 
 case_list:
-        /* empty */                                     { $$ = Node("CaseList") }
+        /* empty */                                     { $$ = node.SimpleNode("CaseList") }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = $1.append(Node("Case").append(Node("expr").append($3)).append($5))
+                $$ = $1.Append(node.SimpleNode("Case").Append(node.SimpleNode("expr").Append($3)).Append($5))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = $1.append(Node("Default").append($4))
+                $$ = $1.Append(node.SimpleNode("Default").Append($4))
             }
 ;
 
@@ -556,11 +558,11 @@ while_statement:
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                $$ = Node("If").append(Node("expr").append($3)).append(Node("stmt").append($5))
+                $$ = node.SimpleNode("If").Append(node.SimpleNode("expr").Append($3)).Append(node.SimpleNode("stmt").Append($5))
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                $$ = $1.append(Node("ElseIf").append(Node("expr").append($4)).append(Node("stmt").append($6)))
+                $$ = $1.Append(node.SimpleNode("ElseIf").Append(node.SimpleNode("expr").Append($4)).Append(node.SimpleNode("stmt").Append($6)))
             }
 ;
 
@@ -568,18 +570,18 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                $$ = $1.append(Node("Else").append(Node("stmt").append($3)))
+                $$ = $1.Append(node.SimpleNode("Else").Append(node.SimpleNode("stmt").Append($3)))
             }
 ;
 
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = Node("AltIf").append(Node("expr").append($3)).append(Node("stmt").append($6))
+                $$ = node.SimpleNode("AltIf").Append(node.SimpleNode("expr").Append($3)).Append(node.SimpleNode("stmt").Append($6))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                $$ = $1.append(Node("AltElseIf").append(Node("expr").append($4)).append(Node("stmt").append($7)))
+                $$ = $1.Append(node.SimpleNode("AltElseIf").Append(node.SimpleNode("expr").Append($4)).Append(node.SimpleNode("stmt").Append($7)))
             }
 ;
 
@@ -587,79 +589,79 @@ alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                $$ = $1.append(Node("AltElse").append(Node("stmt").append($4)))
+                $$ = $1.Append(node.SimpleNode("AltElse").Append(node.SimpleNode("stmt").Append($4)))
             }
 ;
 
 parameter_list:
         non_empty_parameter_list                        { $$ = $1; }
-    |   /* empty */                                     { $$ = Node("Parameter list"); }
+    |   /* empty */                                     { $$ = node.SimpleNode("Parameter list"); }
 ;
 
 non_empty_parameter_list:
-        parameter                                       { $$ = Node("Parameter list").append($1) }
-    |   non_empty_parameter_list ',' parameter          { $$ = $1.append($3); }
+        parameter                                       { $$ = node.SimpleNode("Parameter list").Append($1) }
+    |   non_empty_parameter_list ',' parameter          { $$ = $1.Append($3); }
 ;
 
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                $$ = Node("Parameter").
-                    append($1).
-                    attribute("is_reference", $2).
-                    attribute("is_variadic", $3).
-                    attribute("var", $4.String());
+                $$ = node.SimpleNode("Parameter").
+                    Append($1).
+                    Attribute("is_reference", $2).
+                    Attribute("is_variadic", $3).
+                    Attribute("var", $4.String());
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                $$ = Node("Parameter").
-                    append($1).
-                    attribute("is_reference", $2).
-                    attribute("is_variadic", $3).
-                    attribute("var", $4.String()).
-                    append($6);
+                $$ = node.SimpleNode("Parameter").
+                    Append($1).
+                    Attribute("is_reference", $2).
+                    Attribute("is_variadic", $3).
+                    Attribute("var", $4.String()).
+                    Append($6);
             }
 ;
 
 optional_type:
-        /* empty */                                     { $$ = Node("No type") }
+        /* empty */                                     { $$ = node.SimpleNode("No type") }
     |   type_expr                                       { $$ = $1; }
 ;
 
 type_expr:
         type                                            { $$ = $1; }
-    |   '?' type                                        { $$ = $2; $$.attribute("nullable", "true") }
+    |   '?' type                                        { $$ = $2; $$.Attribute("nullable", "true") }
 ;
 
 type:
-        T_ARRAY                                         { $$ = Node("array type"); }
-    |   T_CALLABLE                                      { $$ = Node("callable type"); }
+        T_ARRAY                                         { $$ = node.SimpleNode("array type"); }
+    |   T_CALLABLE                                      { $$ = node.SimpleNode("callable type"); }
     |   name                                            { $$ = $1; }
 ;
 
 return_type:
-        /* empty */                                     { $$ = Node("No return type"); }
+        /* empty */                                     { $$ = node.SimpleNode("No return type"); }
     |   ':' type_expr                                   { $$ = $2; }
 ;
 
 argument_list:
-        '(' ')'                                         { $$ = Node("ArgumentList") }
+        '(' ')'                                         { $$ = node.SimpleNode("ArgumentList") }
     |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
 ;
 
 non_empty_argument_list:
-        argument                                        { $$ = Node("ArgumentList").append($1) }
-    |   non_empty_argument_list ',' argument            { $$ = $1.append($3) }
+        argument                                        { $$ = node.SimpleNode("ArgumentList").Append($1) }
+    |   non_empty_argument_list ',' argument            { $$ = $1.Append($3) }
 ;
 
 argument:
         expr                                            { $$ = $1; }
-    |   T_ELLIPSIS expr                                 { $$ = Node("Unpack").append($2) }
+    |   T_ELLIPSIS expr                                 { $$ = node.SimpleNode("Unpack").Append($2) }
 ;
 
 global_var_list:
-        global_var_list ',' global_var                  { $$ = $1.append($3); }
-    |   global_var                                      { $$ = Node("GlobalVarList").append($1); }
+        global_var_list ',' global_var                  { $$ = $1.Append($3); }
+    |   global_var                                      { $$ = node.SimpleNode("GlobalVarList").Append($1); }
 ;
 
 global_var:
@@ -667,51 +669,51 @@ global_var:
 ;
 
 static_var_list:
-        static_var_list ',' static_var                  { $$ = $1.append($3); }
-    |   static_var                                      { $$ = Node("StaticVarList").append($1); }
+        static_var_list ',' static_var                  { $$ = $1.Append($3); }
+    |   static_var                                      { $$ = node.SimpleNode("StaticVarList").Append($1); }
 ;
 
 static_var:
-        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1.String()); }
-    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1.String()).append(Node("expr").append($3)); }
+        T_VARIABLE                                      { $$ = node.SimpleNode("StaticVariable").Attribute("Name", $1.String()); }
+    |   T_VARIABLE '=' expr                             { $$ = node.SimpleNode("StaticVariable").Attribute("Name", $1.String()).Append(node.SimpleNode("expr").Append($3)); }
 ;
 
 class_statement_list:
-        class_statement_list class_statement            { $$ = $1.append($2) }
-    |   /* empty */                                     { $$ = Node("Stmt") }
+        class_statement_list class_statement            { $$ = $1.Append($2) }
+    |   /* empty */                                     { $$ = node.SimpleNode("Stmt") }
 ;
 
 class_statement:
-        variable_modifiers property_list ';'            { $$ = $2.append($1) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.append($1); }
-    |   T_USE name_list trait_adaptations               { $$ = Node("Use").append($2).append($3); }
+        variable_modifiers property_list ';'            { $$ = $2.Append($1) }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.Append($1); }
+    |   T_USE name_list trait_adaptations               { $$ = node.SimpleNode("Use").Append($2).Append($3); }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')'
         return_type method_body
             {
-                $$ = Node("Function").
-                    append($1).
-                    append(Node("name").append($4)).
-                    attribute("returns_ref", $3).
-                    append($6).
-                    append($8).
-                    append($9);
+                $$ = node.SimpleNode("Function").
+                    Append($1).
+                    Append(node.SimpleNode("name").Append($4)).
+                    Attribute("returns_ref", $3).
+                    Append($6).
+                    Append($8).
+                    Append($9);
             }
 ;
 
 name_list:
-        name                                            { $$ = Node("NameList").append($1) }
-    |   name_list ',' name                              { $$ = $1.append($3) }
+        name                                            { $$ = node.SimpleNode("NameList").Append($1) }
+    |   name_list ',' name                              { $$ = $1.Append($3) }
 ;
 
 trait_adaptations:
-        ';'                                             { $$ = Node(""); }
-    |   '{' '}'                                         { $$ = Node(""); }
+        ';'                                             { $$ = node.SimpleNode(""); }
+    |   '{' '}'                                         { $$ = node.SimpleNode(""); }
     |   '{' trait_adaptation_list '}'                   { $$ = $2; }
 ;
 
 trait_adaptation_list:
-        trait_adaptation                                { $$ = Node("TraitAdaptionList").append($1) }
-    |   trait_adaptation_list trait_adaptation          { $$ = $1.append($2) }
+        trait_adaptation                                { $$ = node.SimpleNode("TraitAdaptionList").Append($1) }
+    |   trait_adaptation_list trait_adaptation          { $$ = $1.Append($2) }
 ;
 
 trait_adaptation:
@@ -721,206 +723,206 @@ trait_adaptation:
 
 trait_precedence:
     absolute_trait_method_reference T_INSTEADOF name_list
-                                                        { $$ = Node("TraitPrecedence").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("TraitPrecedence").Append($1).Append($3) }
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = $1.append(Node("as").attribute("value", $3.String())); }
+        trait_method_reference T_AS T_STRING            { $$ = $1.Append(node.SimpleNode("as").Attribute("value", $3.String())); }
     |   trait_method_reference T_AS reserved_non_modifiers
-                                                        { $$ = $1.append(Node("as").append(Node("reservedNonModifiers")));  }
+                                                        { $$ = $1.Append(node.SimpleNode("as").Append(node.SimpleNode("reservedNonModifiers")));  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = $1.append($3).append($4); }
-    |   trait_method_reference T_AS member_modifier     { $$ = $1.append($3); }
+                                                        { $$ = $1.Append($3).Append($4); }
+    |   trait_method_reference T_AS member_modifier     { $$ = $1.Append($3); }
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = Node("TraitMethodRef").append($1); }
+        identifier                                      { $$ = node.SimpleNode("TraitMethodRef").Append($1); }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = Node("TraitMethodRef").append($1).append($3) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = node.SimpleNode("TraitMethodRef").Append($1).Append($3) }
 ;
 
 method_body:
-        ';' /* abstract method */                       { $$ = Node(""); }
+        ';' /* abstract method */                       { $$ = node.SimpleNode(""); }
     |   '{' inner_statement_list '}'                    { $$ = $2; }
 ;
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
-    |   T_VAR                                           { $$ = Node("VarMemberModifier") }
+    |   T_VAR                                           { $$ = node.SimpleNode("VarMemberModifier") }
 ;
 
 method_modifiers:
-        /* empty */                                     { $$ = Node("PublicMemberModifier"); }
+        /* empty */                                     { $$ = node.SimpleNode("PublicMemberModifier"); }
     |   non_empty_member_modifiers                      { $$ = $1; }
 ;
 
 non_empty_member_modifiers:
         member_modifier	                                { $$ = $1; }
-    |   non_empty_member_modifiers member_modifier      { $$ = $1.append($2) }
+    |   non_empty_member_modifiers member_modifier      { $$ = $1.Append($2) }
 ;
 
 member_modifier:
-        T_PUBLIC                                        { $$ = Node("PublicMemberModifier"); }
-    |   T_PROTECTED                                     { $$ = Node("ProtectedMemberModifier"); }
-    |   T_PRIVATE                                       { $$ = Node("PrivateMemberModifier"); }
-    |   T_STATIC                                        { $$ = Node("StaticMemberModifier"); }
-    |   T_ABSTRACT                                      { $$ = Node("AbstractMemberModifier"); }
-    |   T_FINAL                                         { $$ = Node("FinalMemberModifier"); }
+        T_PUBLIC                                        { $$ = node.SimpleNode("PublicMemberModifier"); }
+    |   T_PROTECTED                                     { $$ = node.SimpleNode("ProtectedMemberModifier"); }
+    |   T_PRIVATE                                       { $$ = node.SimpleNode("PrivateMemberModifier"); }
+    |   T_STATIC                                        { $$ = node.SimpleNode("StaticMemberModifier"); }
+    |   T_ABSTRACT                                      { $$ = node.SimpleNode("AbstractMemberModifier"); }
+    |   T_FINAL                                         { $$ = node.SimpleNode("FinalMemberModifier"); }
 ;
 
 property_list:
-        property_list ',' property                      { $$ = $1.append($3) }
-    |   property                                        { $$ = Node("PropertyList").append($1) }
+        property_list ',' property                      { $$ = $1.Append($3) }
+    |   property                                        { $$ = node.SimpleNode("PropertyList").Append($1) }
 ;
 
 property:
-        T_VARIABLE                                      { $$ = Node("Property").attribute("name", $1.String()) }
-    |   T_VARIABLE '=' expr                             { $$ = Node("Property").attribute("name", $1.String()).append(Node("Default").append($3)) }
+        T_VARIABLE                                      { $$ = node.SimpleNode("Property").Attribute("name", $1.String()) }
+    |   T_VARIABLE '=' expr                             { $$ = node.SimpleNode("Property").Attribute("name", $1.String()).Append(node.SimpleNode("Default").Append($3)) }
 ;
 
 class_const_list:
-        class_const_list ',' class_const_decl           { $$ = $1.append($3) }
-    |   class_const_decl                                { $$ = Node("ConstList").append($1) }
+        class_const_list ',' class_const_decl           { $$ = $1.Append($3) }
+    |   class_const_decl                                { $$ = node.SimpleNode("ConstList").Append($1) }
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = Node("Const").append($3) }
+    identifier '=' expr                                 { $$ = node.SimpleNode("Const").Append($3) }
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1.String()).append($3) }
+    T_STRING '=' expr                                   { $$ = node.SimpleNode("Const").Attribute("name", $1.String()).Append($3) }
 ;
 
 echo_expr_list:
-        echo_expr_list ',' echo_expr                    { $$ = $1.append($3) }
-    |   echo_expr                                       { $$ = Node("EchoList").append($1) }
+        echo_expr_list ',' echo_expr                    { $$ = $1.Append($3) }
+    |   echo_expr                                       { $$ = node.SimpleNode("EchoList").Append($1) }
 ;
 
 echo_expr:
-    expr                                                { $$ = Node("Echo").append($1) }
+    expr                                                { $$ = node.SimpleNode("Echo").Append($1) }
 ;
 
 for_exprs:
-        /* empty */                                     { $$ = Node(""); }
+        /* empty */                                     { $$ = node.SimpleNode(""); }
     |   non_empty_for_exprs                             { $$ = $1; }
 ;
 non_empty_for_exprs:
-        non_empty_for_exprs ',' expr                    { $$ = $1.append($3) }
-    |   expr                                            { $$ = Node("ExpressionList").append($1) }
+        non_empty_for_exprs ',' expr                    { $$ = $1.Append($3) }
+    |   expr                                            { $$ = node.SimpleNode("ExpressionList").Append($1) }
 ;
 
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            $$ = Node("AnonymousClass").
-                attribute("name", $1.String()).
-                append($2).
-                append($3).
-                append($4).
-                append($6);
+            $$ = node.SimpleNode("AnonymousClass").
+                Attribute("name", $1.String()).
+                Append($2).
+                Append($3).
+                Append($4).
+                Append($6);
         }
 ;
 
 new_expr:
-        T_NEW class_name_reference ctor_arguments       { $$ = Node("New").append($2).append($3) }
-    |   T_NEW anonymous_class                           { $$ = Node("New").append($2) }
+        T_NEW class_name_reference ctor_arguments       { $$ = node.SimpleNode("New").Append($2).Append($3) }
+    |   T_NEW anonymous_class                           { $$ = node.SimpleNode("New").Append($2) }
 ;
 
 expr_without_variable:
-        T_LIST '(' array_pair_list ')' '=' expr         { $$ = Node("Assign").append($3).append($6); }
-    |   '[' array_pair_list ']' '=' expr                { $$ = Node("Assign").append($2).append($5); }
-    |   variable '=' expr                               { $$ = Node("Assign").append($1).append($3); }
-    |   variable '=' '&' expr                           { $$ = Node("AssignRef").append($1).append($4); }
-    |   T_CLONE expr                                    { $$ = Node("Clone").append($2); }
-    |   variable T_PLUS_EQUAL expr                      { $$ = Node("AssignAdd").append($1).append($3); }
-    |   variable T_MINUS_EQUAL expr                     { $$ = Node("AssignSub").append($1).append($3); }
-    |   variable T_MUL_EQUAL expr                       { $$ = Node("AssignMul").append($1).append($3); }
-    |   variable T_POW_EQUAL expr                       { $$ = Node("AssignPow").append($1).append($3); }
-    |   variable T_DIV_EQUAL expr                       { $$ = Node("AssignDiv").append($1).append($3); }
-    |   variable T_CONCAT_EQUAL expr                    { $$ = Node("AssignConcat").append($1).append($3); }
-    |   variable T_MOD_EQUAL expr                       { $$ = Node("AssignMod").append($1).append($3); }
-    |   variable T_AND_EQUAL expr                       { $$ = Node("AssignAnd").append($1).append($3); }
-    |   variable T_OR_EQUAL expr                        { $$ = Node("AssignOr").append($1).append($3); }
-    |   variable T_XOR_EQUAL expr                       { $$ = Node("AssignXor").append($1).append($3); }
-    |   variable T_SL_EQUAL expr                        { $$ = Node("AssignShiftLeft").append($1).append($3); }
-    |   variable T_SR_EQUAL expr                        { $$ = Node("AssignShiftRight").append($1).append($3); }
-    |   variable T_INC                                  { $$ = Node("PostIncrement").append($1) }
-    |   T_INC variable                                  { $$ = Node("PreIncrement").append($2) }
-    |   variable T_DEC                                  { $$ = Node("PostDecrement").append($1) }
-    |   T_DEC variable                                  { $$ = Node("PreDecrement").append($2) }
-    |   expr T_BOOLEAN_OR expr                          { $$ = Node("Or").append($1).append($3) }
-    |   expr T_BOOLEAN_AND expr                         { $$ = Node("And").append($1).append($3) }
-    |   expr T_LOGICAL_OR expr                          { $$ = Node("Or").append($1).append($3) }
-    |   expr T_LOGICAL_AND expr                         { $$ = Node("And").append($1).append($3) }
-    |   expr T_LOGICAL_XOR expr                         { $$ = Node("Xor").append($1).append($3) }
-    |   expr '|' expr                                   { $$ = Node("BitwiseOr").append($1).append($3) }
-    |   expr '&' expr                                   { $$ = Node("BitwiseAnd").append($1).append($3) }
-    |   expr '^' expr                                   { $$ = Node("BitwiseXor").append($1).append($3) }
-    |   expr '.' expr                                   { $$ = Node("Concat").append($1).append($3) }
-    |   expr '+' expr                                   { $$ = Node("Add").append($1).append($3) }
-    |   expr '-' expr                                   { $$ = Node("Sub").append($1).append($3) }
-    |   expr '*' expr                                   { $$ = Node("Mul").append($1).append($3) }
-    |   expr T_POW expr                                 { $$ = Node("Pow").append($1).append($3) }
-    |   expr '/' expr                                   { $$ = Node("Div").append($1).append($3) }
-    |   expr '%' expr                                   { $$ = Node("Mod").append($1).append($3) }
-    |   expr T_SL expr                                  { $$ = Node("ShiftLeft").append($1).append($3) }
-    |   expr T_SR expr                                  { $$ = Node("ShiftRight").append($1).append($3) }
-    |   '+' expr %prec T_INC                            { $$ = Node("UnaryPlus").append($2) }
-    |   '-' expr %prec T_INC                            { $$ = Node("UnaryMinus").append($2) }
-    |   '!' expr                                        { $$ = Node("BooleanNot").append($2) }
-    |   '~' expr                                        { $$ = Node("BitwiseNot").append($2) }
-    |   expr T_IS_IDENTICAL expr                        { $$ = Node("Identical").append($1).append($3) }
-    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = Node("NotIdentical").append($1).append($3) }
-    |   expr T_IS_EQUAL expr                            { $$ = Node("Equal").append($1).append($3) }
-    |   expr T_IS_NOT_EQUAL expr                        { $$ = Node("NotEqual").append($1).append($3) }
-    |   expr '<' expr                                   { $$ = Node("Smaller").append($1).append($3) }
-    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = Node("SmallerOrEqual").append($1).append($3) }
-    |   expr '>' expr                                   { $$ = Node("Greater").append($1).append($3) }
-    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = Node("GreaterOrEqual").append($1).append($3) }
-    |   expr T_SPACESHIP expr                           { $$ = Node("Spaceship").append($1).append($3); }
-    |   expr T_INSTANCEOF class_name_reference          { $$ = Node("InstanceOf").append($1).append($3) }
+        T_LIST '(' array_pair_list ')' '=' expr         { $$ = node.SimpleNode("Assign").Append($3).Append($6); }
+    |   '[' array_pair_list ']' '=' expr                { $$ = node.SimpleNode("Assign").Append($2).Append($5); }
+    |   variable '=' expr                               { $$ = node.SimpleNode("Assign").Append($1).Append($3); }
+    |   variable '=' '&' expr                           { $$ = node.SimpleNode("AssignRef").Append($1).Append($4); }
+    |   T_CLONE expr                                    { $$ = node.SimpleNode("Clone").Append($2); }
+    |   variable T_PLUS_EQUAL expr                      { $$ = node.SimpleNode("AssignAdd").Append($1).Append($3); }
+    |   variable T_MINUS_EQUAL expr                     { $$ = node.SimpleNode("AssignSub").Append($1).Append($3); }
+    |   variable T_MUL_EQUAL expr                       { $$ = node.SimpleNode("AssignMul").Append($1).Append($3); }
+    |   variable T_POW_EQUAL expr                       { $$ = node.SimpleNode("AssignPow").Append($1).Append($3); }
+    |   variable T_DIV_EQUAL expr                       { $$ = node.SimpleNode("AssignDiv").Append($1).Append($3); }
+    |   variable T_CONCAT_EQUAL expr                    { $$ = node.SimpleNode("AssignConcat").Append($1).Append($3); }
+    |   variable T_MOD_EQUAL expr                       { $$ = node.SimpleNode("AssignMod").Append($1).Append($3); }
+    |   variable T_AND_EQUAL expr                       { $$ = node.SimpleNode("AssignAnd").Append($1).Append($3); }
+    |   variable T_OR_EQUAL expr                        { $$ = node.SimpleNode("AssignOr").Append($1).Append($3); }
+    |   variable T_XOR_EQUAL expr                       { $$ = node.SimpleNode("AssignXor").Append($1).Append($3); }
+    |   variable T_SL_EQUAL expr                        { $$ = node.SimpleNode("AssignShiftLeft").Append($1).Append($3); }
+    |   variable T_SR_EQUAL expr                        { $$ = node.SimpleNode("AssignShiftRight").Append($1).Append($3); }
+    |   variable T_INC                                  { $$ = node.SimpleNode("PostIncrement").Append($1) }
+    |   T_INC variable                                  { $$ = node.SimpleNode("PreIncrement").Append($2) }
+    |   variable T_DEC                                  { $$ = node.SimpleNode("PostDecrement").Append($1) }
+    |   T_DEC variable                                  { $$ = node.SimpleNode("PreDecrement").Append($2) }
+    |   expr T_BOOLEAN_OR expr                          { $$ = node.SimpleNode("Or").Append($1).Append($3) }
+    |   expr T_BOOLEAN_AND expr                         { $$ = node.SimpleNode("And").Append($1).Append($3) }
+    |   expr T_LOGICAL_OR expr                          { $$ = node.SimpleNode("Or").Append($1).Append($3) }
+    |   expr T_LOGICAL_AND expr                         { $$ = node.SimpleNode("And").Append($1).Append($3) }
+    |   expr T_LOGICAL_XOR expr                         { $$ = node.SimpleNode("Xor").Append($1).Append($3) }
+    |   expr '|' expr                                   { $$ = node.SimpleNode("BitwiseOr").Append($1).Append($3) }
+    |   expr '&' expr                                   { $$ = node.SimpleNode("BitwiseAnd").Append($1).Append($3) }
+    |   expr '^' expr                                   { $$ = node.SimpleNode("BitwiseXor").Append($1).Append($3) }
+    |   expr '.' expr                                   { $$ = node.SimpleNode("Concat").Append($1).Append($3) }
+    |   expr '+' expr                                   { $$ = node.SimpleNode("Add").Append($1).Append($3) }
+    |   expr '-' expr                                   { $$ = node.SimpleNode("Sub").Append($1).Append($3) }
+    |   expr '*' expr                                   { $$ = node.SimpleNode("Mul").Append($1).Append($3) }
+    |   expr T_POW expr                                 { $$ = node.SimpleNode("Pow").Append($1).Append($3) }
+    |   expr '/' expr                                   { $$ = node.SimpleNode("Div").Append($1).Append($3) }
+    |   expr '%' expr                                   { $$ = node.SimpleNode("Mod").Append($1).Append($3) }
+    |   expr T_SL expr                                  { $$ = node.SimpleNode("ShiftLeft").Append($1).Append($3) }
+    |   expr T_SR expr                                  { $$ = node.SimpleNode("ShiftRight").Append($1).Append($3) }
+    |   '+' expr %prec T_INC                            { $$ = node.SimpleNode("UnaryPlus").Append($2) }
+    |   '-' expr %prec T_INC                            { $$ = node.SimpleNode("UnaryMinus").Append($2) }
+    |   '!' expr                                        { $$ = node.SimpleNode("BooleanNot").Append($2) }
+    |   '~' expr                                        { $$ = node.SimpleNode("BitwiseNot").Append($2) }
+    |   expr T_IS_IDENTICAL expr                        { $$ = node.SimpleNode("Identical").Append($1).Append($3) }
+    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = node.SimpleNode("NotIdentical").Append($1).Append($3) }
+    |   expr T_IS_EQUAL expr                            { $$ = node.SimpleNode("Equal").Append($1).Append($3) }
+    |   expr T_IS_NOT_EQUAL expr                        { $$ = node.SimpleNode("NotEqual").Append($1).Append($3) }
+    |   expr '<' expr                                   { $$ = node.SimpleNode("Smaller").Append($1).Append($3) }
+    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = node.SimpleNode("SmallerOrEqual").Append($1).Append($3) }
+    |   expr '>' expr                                   { $$ = node.SimpleNode("Greater").Append($1).Append($3) }
+    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = node.SimpleNode("GreaterOrEqual").Append($1).Append($3) }
+    |   expr T_SPACESHIP expr                           { $$ = node.SimpleNode("Spaceship").Append($1).Append($3); }
+    |   expr T_INSTANCEOF class_name_reference          { $$ = node.SimpleNode("InstanceOf").Append($1).Append($3) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
-    |   expr '?' expr ':' expr                          { $$ = Node("Ternary").append($1).append($3).append($5); }
-    |   expr '?' ':' expr                               { $$ = Node("Ternary").append($1).append($4); }
-    |   expr T_COALESCE expr                            { $$ = Node("Coalesce").append($1).append($3); }
+    |   expr '?' expr ':' expr                          { $$ = node.SimpleNode("Ternary").Append($1).Append($3).Append($5); }
+    |   expr '?' ':' expr                               { $$ = node.SimpleNode("Ternary").Append($1).Append($4); }
+    |   expr T_COALESCE expr                            { $$ = node.SimpleNode("Coalesce").Append($1).Append($3); }
     |   internal_functions_in_yacc                      { $$ = $1}
-    |   T_INT_CAST expr                                 { $$ = Node("CastInt").append($2); }
-    |   T_DOUBLE_CAST expr                              { $$ = Node("CastDouble").append($2); }
-    |   T_STRING_CAST expr                              { $$ = Node("CastString").append($2); }
-    |   T_ARRAY_CAST expr                               { $$ = Node("CastArray").append($2); }
-    |   T_OBJECT_CAST expr                              { $$ = Node("CastObject").append($2); }
-    |   T_BOOL_CAST expr                                { $$ = Node("CastBool").append($2); }
-    |   T_UNSET_CAST expr                               { $$ = Node("CastUnset").append($2); }
-    |   T_EXIT exit_expr                                { $$ = Node("Exit").append($2); }
-    |   '@' expr                                        { $$ = Node("Silence").append($2); }
+    |   T_INT_CAST expr                                 { $$ = node.SimpleNode("CastInt").Append($2); }
+    |   T_DOUBLE_CAST expr                              { $$ = node.SimpleNode("CastDouble").Append($2); }
+    |   T_STRING_CAST expr                              { $$ = node.SimpleNode("CastString").Append($2); }
+    |   T_ARRAY_CAST expr                               { $$ = node.SimpleNode("CastArray").Append($2); }
+    |   T_OBJECT_CAST expr                              { $$ = node.SimpleNode("CastObject").Append($2); }
+    |   T_BOOL_CAST expr                                { $$ = node.SimpleNode("CastBool").Append($2); }
+    |   T_UNSET_CAST expr                               { $$ = node.SimpleNode("CastUnset").Append($2); }
+    |   T_EXIT exit_expr                                { $$ = node.SimpleNode("Exit").Append($2); }
+    |   '@' expr                                        { $$ = node.SimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
-    |   '`' backticks_expr '`'                          { $$ = Node("ShellExec").append($2) }
-    |   T_PRINT expr                                    { $$ = Node("Print").append($2); }
-    |   T_YIELD                                         { $$ = Node("Yield"); }
-    |   T_YIELD expr                                    { $$ = Node("Yield").append($2); }
-    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = Node("Yield").append($2).append($4); }
-    |   T_YIELD_FROM expr                               { $$ = Node("YieldFrom").append($2); }
+    |   '`' backticks_expr '`'                          { $$ = node.SimpleNode("ShellExec").Append($2) }
+    |   T_PRINT expr                                    { $$ = node.SimpleNode("Print").Append($2); }
+    |   T_YIELD                                         { $$ = node.SimpleNode("Yield"); }
+    |   T_YIELD expr                                    { $$ = node.SimpleNode("Yield").Append($2); }
+    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = node.SimpleNode("Yield").Append($2).Append($4); }
+    |   T_YIELD_FROM expr                               { $$ = node.SimpleNode("YieldFrom").Append($2); }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = Node("Closure").
-                    attribute("returns_ref", $2).
-                    append($4).
-                    append($6).
-                    append($7).
-                    append($9);
+                $$ = node.SimpleNode("Closure").
+                    Attribute("returns_ref", $2).
+                    Append($4).
+                    Append($6).
+                    Append($7).
+                    Append($9);
             }
     |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = Node("StaticClosure").
-                    attribute("returns_ref", $3).
-                    append($5).
-                    append($7).
-                    append($8).
-                    append($10);
+                $$ = node.SimpleNode("StaticClosure").
+                    Attribute("returns_ref", $3).
+                    Append($5).
+                    Append($7).
+                    Append($8).
+                    Append($10);
             }
 ;
 
@@ -930,31 +932,31 @@ returns_ref:
 ;
 
 lexical_vars:
-        /* empty */                                     { $$ = Node("") }
+        /* empty */                                     { $$ = node.SimpleNode("") }
     |   T_USE '(' lexical_var_list ')'                  { $$ = $3; }
 ;
 
 lexical_var_list:
-        lexical_var_list ',' lexical_var                { $$ = $1.append($3) }
-    |   lexical_var                                     { $$ = Node("ClosureUses").append($1) }
+        lexical_var_list ',' lexical_var                { $$ = $1.Append($3) }
+    |   lexical_var                                     { $$ = node.SimpleNode("ClosureUses").Append($1) }
 ;
 
 lexical_var:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1.String()) }
-    |   '&' T_VARIABLE                                  { $$ = Node("Variable").attribute("value", $2.String()).attribute("ref", "true") }
+        T_VARIABLE                                      { $$ = node.SimpleNode("Variable").Attribute("value", $1.String()) }
+    |   '&' T_VARIABLE                                  { $$ = node.SimpleNode("Variable").Attribute("value", $2.String()).Attribute("ref", "true") }
 ;
 
 function_call:
-        name argument_list                              { $$ = Node("FunctionCall").append($1).append($2) }
+        name argument_list                              { $$ = node.SimpleNode("FunctionCall").Append($1).Append($2) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
+                                                        { $$ = node.SimpleNode("StaticCall").Append($1).Append($3).Append($4) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = Node("StaticCall").append($1).append($3).append($4) }
-    |   callable_expr argument_list                     { $$ = Node("Call").append($1).append($2); }
+                                                        { $$ = node.SimpleNode("StaticCall").Append($1).Append($3).Append($4) }
+    |   callable_expr argument_list                     { $$ = node.SimpleNode("Call").Append($1).Append($2); }
 ;
 
 class_name:
-        T_STATIC                                        { $$ = Node("Static") }
+        T_STATIC                                        { $$ = node.SimpleNode("Static") }
     |   name                                            { $$ = $1; }
 ;
 
@@ -964,42 +966,42 @@ class_name_reference:
 ;
 
 exit_expr:
-        /* empty */                                     { $$ = Node("") }
+        /* empty */                                     { $$ = node.SimpleNode("") }
     |   '(' optional_expr ')'                           { $$ = $2; }
 ;
 
 backticks_expr:
-        /* empty */                                     { $$ = Node("EmptyBackticks") }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1.String()) }
+        /* empty */                                     { $$ = node.SimpleNode("EmptyBackticks") }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = node.TokenNode("String", $1) }
     |   encaps_list                                     { $$ = $1; }
 ;
 
 ctor_arguments:
-        /* empty */	                                    { $$ = Node("ArgumentList") }
+        /* empty */	                                    { $$ = node.SimpleNode("ArgumentList") }
     |   argument_list                                   { $$ = $1; }
 ;
 
 dereferencable_scalar:
         T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
     |   '[' array_pair_list ']'                         { $$ = $2; }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1.String()) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = node.TokenNode("String", $1) }
 ;
 
 scalar:
-        T_LNUMBER                                       { $$ = Node("Scalar").append(Node("Lnumber").attribute("value", $1.String())) }
-    |   T_DNUMBER                                       { $$ = Node("Scalar").append(Node("Dnumber").attribute("value", $1.String())) }
-    |   T_LINE                                          { $$ = Node("Scalar").append(Node("__LINE__")) }
-    |   T_FILE                                          { $$ = Node("Scalar").append(Node("__FILE__")) }
-    |   T_DIR                                           { $$ = Node("Scalar").append(Node("__DIR__")) }
-    |   T_TRAIT_C                                       { $$ = Node("Scalar").append(Node("__TRAIT__")) }
-    |   T_METHOD_C                                      { $$ = Node("Scalar").append(Node("__METHOD__")); }
-    |   T_FUNC_C                                        { $$ = Node("Scalar").append(Node("__FUNCTION__")); }
-    |   T_NS_C                                          { $$ = Node("Scalar").append(Node("__NAMESPACE__")); }
-    |   T_CLASS_C                                       { $$ = Node("Scalar").append(Node("__CLASS__")); }
+        T_LNUMBER                                       { $$ = node.TokenNode("Lnumber", $1) }
+    |   T_DNUMBER                                       { $$ = node.TokenNode("Dnumber", $1) }
+    |   T_LINE                                          { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_FILE                                          { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_DIR                                           { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_TRAIT_C                                       { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_METHOD_C                                      { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_FUNC_C                                        { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_NS_C                                          { $$ = node.TokenNode("MagicConst", $1) }
+    |   T_CLASS_C                                       { $$ = node.TokenNode("MagicConst", $1) }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = Node("Scalar").append(Node("Heredoc").attribute("value", $2.String())) }
+                                                        { $$ = node.SimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("string", $2)).Append(node.TokenNode("HeredocEnd", $3)) }
     |   T_START_HEREDOC T_END_HEREDOC
-                                                        { $$ = Node("Scalar").append(Node("Heredoc")) }
+                                                        { $$ = node.SimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("HeredocEnd", $2)) }
     |   '"' encaps_list '"'                             { $$ = $2; }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = $2; }
     |   dereferencable_scalar                           { $$ = $1; }
@@ -1007,10 +1009,10 @@ scalar:
 ;
 
 constant:
-        name                                            { $$ = Node("Const").append($1) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = Node("Const").append($1).append($3) }
+        name                                            { $$ = node.SimpleNode("Const").Append($1) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = node.SimpleNode("Const").Append($1).Append($3) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = Node("Const").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("Const").Append($1).Append($3) }
 ;
 
 expr:
@@ -1019,7 +1021,7 @@ expr:
 ;
 
 optional_expr:
-        /* empty */                                     { $$ = Node("") }
+        /* empty */                                     { $$ = node.SimpleNode("") }
     |   expr                                            { $$ = $1; }
 ;
 
@@ -1041,42 +1043,42 @@ callable_expr:
 
 callable_variable:
     simple_variable                                     { $$ = $1; }
-    |   dereferencable '[' optional_expr ']'            { $$ = Node("Dim").append($1).append($3)}
-    |   constant '[' optional_expr ']'                  { $$ = Node("Dim").append($1).append($3)}
-    |   dereferencable '{' expr '}'                     { $$ = Node("Dim").append($1).append($3)}
+    |   dereferencable '[' optional_expr ']'            { $$ = node.SimpleNode("Dim").Append($1).Append($3)}
+    |   constant '[' optional_expr ']'                  { $$ = node.SimpleNode("Dim").Append($1).Append($3)}
+    |   dereferencable '{' expr '}'                     { $$ = node.SimpleNode("Dim").Append($1).Append($3)}
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = Node("MethodCall").append($1).append($3).append($4)}
+                                                        { $$ = node.SimpleNode("MethodCall").Append($1).Append($3).Append($4)}
     |   function_call                                   { $$ = $1; }
 ;
 
 variable:
         callable_variable                               { $$ = $1; }
     |   static_member                                   { $$ = $1; }
-    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = Node("Property").append($1).append($3) }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = node.SimpleNode("Property").Append($1).Append($3) }
 ;
 
 simple_variable:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1.String()); }
-    |   '$' '{' expr '}'                                { $$ = Node("Variable").append($3); }
-    |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
+        T_VARIABLE                                      { $$ = node.SimpleNode("Variable").Attribute("name", $1.String()); }
+    |   '$' '{' expr '}'                                { $$ = node.SimpleNode("Variable").Append($3); }
+    |   '$' simple_variable                             { $$ = node.SimpleNode("Variable").Append($2); }
 ;
 
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProp").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("StaticProp").Append($1).Append($3) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProp").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("StaticProp").Append($1).Append($3) }
 ;
 
 new_variable:
         simple_variable                                 { $$ = $1 }
-    |   new_variable '[' optional_expr ']'              { $$ = Node("Dim").append($1).append($3) }
-    |   new_variable '{' expr '}'                       { $$ = Node("Dim").append($1).append($3) }
-    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = Node("Property").append($1).append($3) }
+    |   new_variable '[' optional_expr ']'              { $$ = node.SimpleNode("Dim").Append($1).Append($3) }
+    |   new_variable '{' expr '}'                       { $$ = node.SimpleNode("Dim").Append($1).Append($3) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = node.SimpleNode("Property").Append($1).Append($3) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("StaticProperty").Append($1).Append($3) }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = Node("StaticProperty").append($1).append($3) }
+                                                        { $$ = node.SimpleNode("StaticProperty").Append($1).Append($3) }
 ;
 
 member_name:
@@ -1086,7 +1088,7 @@ member_name:
 ;
 
 property_name:
-        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1.String()) }
+        T_STRING                                        { $$ = node.SimpleNode("PropertyName").Attribute("value", $1.String()) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1096,75 +1098,75 @@ array_pair_list:
 ;
 
 possible_array_pair:
-        /* empty */                                     { $$ = Node(""); }
+        /* empty */                                     { $$ = node.SimpleNode(""); }
     |   array_pair                                      { $$ = $1; }
 ;
 
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
-                                                        { $$ = $1.append($3) }
-    |   possible_array_pair                             { $$ = Node("ArrayPairList").append($1) }
+                                                        { $$ = $1.Append($3) }
+    |   possible_array_pair                             { $$ = node.SimpleNode("ArrayPairList").Append($1) }
 ;
 
 array_pair:
-        expr T_DOUBLE_ARROW expr                        { $$ = Node("ArrayElement").append($1).append($3) }
-    |   expr                                            { $$ = Node("ArrayElement").append($1) }
-    |   expr T_DOUBLE_ARROW '&' variable                { $$ = Node("ArrayElement").append($1).append(Node("Ref").append($4)) }
-    |   '&' variable                                    { $$ = Node("ArrayElement").append(Node("Ref").append($2)) }
+        expr T_DOUBLE_ARROW expr                        { $$ = node.SimpleNode("ArrayElement").Append($1).Append($3) }
+    |   expr                                            { $$ = node.SimpleNode("ArrayElement").Append($1) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = node.SimpleNode("ArrayElement").Append($1).Append(node.SimpleNode("Ref").Append($4)) }
+    |   '&' variable                                    { $$ = node.SimpleNode("ArrayElement").Append(node.SimpleNode("Ref").Append($2)) }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             { 
-                $$ = Node("ArrayElement").
-                    append($1).
-                    append(Node("ArrayList").append($5))
+                $$ = node.SimpleNode("ArrayElement").
+                    Append($1).
+                    Append(node.SimpleNode("ArrayList").Append($5))
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = Node("ArrayElement").
-                    append(Node("ArrayList").append($3))
+                $$ = node.SimpleNode("ArrayElement").
+                    Append(node.SimpleNode("ArrayList").Append($3))
             }
 ;
 
 encaps_list:
-        encaps_list encaps_var                          { $$ = $1.append($2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.append(Node("String").attribute("value", $2.String())) }
-    |   encaps_var                                      { $$ = Node("EncapsList").append($1) }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = Node("EncapsList").append(Node("String").attribute("value", $1.String())).append($2) }
+        encaps_list encaps_var                          { $$ = $1.Append($2) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.Append(node.SimpleNode("String").Attribute("value", $2.String())) }
+    |   encaps_var                                      { $$ = node.SimpleNode("EncapsList").Append($1) }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = node.SimpleNode("EncapsList").Append(node.SimpleNode("String").Attribute("value", $1.String())).Append($2) }
 ;
 
 encaps_var:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1.String()) }
-    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = Node("Variable").attribute("value", $1.String()).append(Node("offset").append($3)) }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = Node("Variable").attribute("value", $1.String()).append(Node("property").attribute("value", $3.String())) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = Node("Variable").append(Node("expr").append($2)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = Node("Variable").attribute("value", $2.String()) }
+        T_VARIABLE                                      { $$ = node.SimpleNode("Variable").Attribute("value", $1.String()) }
+    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = node.SimpleNode("Variable").Attribute("value", $1.String()).Append(node.SimpleNode("offset").Append($3)) }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = node.SimpleNode("Variable").Attribute("value", $1.String()).Append(node.SimpleNode("property").Attribute("value", $3.String())) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = node.SimpleNode("Variable").Append(node.SimpleNode("expr").Append($2)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = node.SimpleNode("Variable").Attribute("value", $2.String()) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
-                                                        { $$ = Node("Variable").attribute("value", $2.String()).append(Node("offset").append($4)) }
+                                                        { $$ = node.SimpleNode("Variable").Attribute("value", $2.String()).Append(node.SimpleNode("offset").Append($4)) }
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
-        T_STRING                                        { $$ = Node("OffsetString").attribute("value", $1.String()) }
-    |   T_NUM_STRING                                    { $$ = Node("OffsetNumString").attribute("value", $1.String()) }
-    |   '-' T_NUM_STRING                                { $$ = Node("OffsetNegateNumString").attribute("value", $2.String()) }
-    |   T_VARIABLE                                      { $$ = Node("OffsetVariable").attribute("value", $1.String()) }
+        T_STRING                                        { $$ = node.SimpleNode("OffsetString").Attribute("value", $1.String()) }
+    |   T_NUM_STRING                                    { $$ = node.SimpleNode("OffsetNumString").Attribute("value", $1.String()) }
+    |   '-' T_NUM_STRING                                { $$ = node.SimpleNode("OffsetNegateNumString").Attribute("value", $2.String()) }
+    |   T_VARIABLE                                      { $$ = node.SimpleNode("OffsetVariable").Attribute("value", $1.String()) }
 ;
 
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables possible_comma ')'  { $$ = $3; }
-    |   T_EMPTY '(' expr ')'                            { $$ = Node("Empty").append($3); }
-    |   T_INCLUDE expr                                  { $$ = Node("Include").append($2); }
-    |   T_INCLUDE_ONCE expr                             { $$ = Node("IncludeOnce").append($2); }
-    |   T_EVAL '(' expr ')'                             { $$ = Node("Eval").append($3); }
-    |   T_REQUIRE expr                                  { $$ = Node("Require").append($2); }
-    |   T_REQUIRE_ONCE expr                             { $$ = Node("RequireOnce").append($2); }
+    |   T_EMPTY '(' expr ')'                            { $$ = node.SimpleNode("Empty").Append($3); }
+    |   T_INCLUDE expr                                  { $$ = node.SimpleNode("Include").Append($2); }
+    |   T_INCLUDE_ONCE expr                             { $$ = node.SimpleNode("IncludeOnce").Append($2); }
+    |   T_EVAL '(' expr ')'                             { $$ = node.SimpleNode("Eval").Append($3); }
+    |   T_REQUIRE expr                                  { $$ = node.SimpleNode("Require").Append($2); }
+    |   T_REQUIRE_ONCE expr                             { $$ = node.SimpleNode("RequireOnce").Append($2); }
 ;
 
 isset_variables:
         isset_variable                                  { $$ = $1; }
-    |   isset_variables ',' isset_variable              { $$ = Node("AndIsset").append($1).append($3); }
+    |   isset_variables ',' isset_variable              { $$ = node.SimpleNode("AndIsset").Append($1).Append($3); }
 ;
 
 isset_variable:
-    expr                                                { $$ = Node("Isset").append($1) }
+    expr                                                { $$ = node.SimpleNode("Isset").Append($1) }
 ;
 
 /////////////////////////////////////////////////////////////////////////

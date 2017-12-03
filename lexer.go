@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	gotoken "go/token"
+	"go/token"
 	"io"
 	"unicode"
 
@@ -37,7 +37,7 @@ func rune2Class(r rune) int {
 }
 
 func newLexer(src io.Reader, fName string) *lexer {
-	file := gotoken.NewFileSet().AddFile(fName, -1, 1<<31-1)
+	file := token.NewFileSet().AddFile(fName, -1, 1<<31-1)
 	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(rune2Class))
 	if err != nil {
 		panic(err)

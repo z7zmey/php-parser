@@ -21,8 +21,8 @@ func main() {
 		fmt.Printf("\n==> %s", real)
 
 		src, _ := os.Open(string(real))
-		rn := parse(src, real)
-		fmt.Println(rn)
+		rootnode := parse(src, real)
+		fmt.Println(rootnode)
 	}
 }
 
