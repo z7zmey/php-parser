@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"go/token"
+	gotoken "go/token"
 	"io"
 	"unicode"
 
@@ -37,7 +37,7 @@ func rune2Class(r rune) int {
 }
 
 func newLexer(src io.Reader, fName string) *lexer {
-	file := token.NewFileSet().AddFile(fName, -1, 1<<31-1)
+	file := gotoken.NewFileSet().AddFile(fName, -1, 1<<31-1)
 	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(rune2Class))
 	if err != nil {
 		panic(err)
@@ -84,12 +84,12 @@ func (l *lexer) getCurrentState() int {
 	return l.stateStack[len(l.stateStack)-1]
 }
 
-func (l *lexer) handleNewLine(str []byte) (int, int) {
+func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int) {
 	startln := l.lineNumber
 
 	var prev byte
 
-	for _, b := range str {
+	for _, b := range tokenBytes {
 		if b == '\n' || prev == '\r' {
 			l.lineNumber++
 		}
@@ -102,5 +102,5 @@ func (l *lexer) handleNewLine(str []byte) (int, int) {
 		l.lineNumber++
 	}
 
-	return startln, l.lineNumber
+	return tokenBytes, startln, l.lineNumber
 }

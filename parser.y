@@ -17,7 +17,7 @@ func parse(src io.Reader, fName string) node {
 
 %union{
     node node
-    token string
+    token token
     value string
 }
 
@@ -157,12 +157,13 @@ func parse(src io.Reader, fName string) node {
 %token <token> T_PROTECTED
 %token <token> T_PUBLIC
 
-%type <value> class_modifier
 %type <value> is_reference
 %type <value> is_variadic
 %type <value> returns_ref
-%type <value> reserved_non_modifiers
-%type <value> semi_reserved
+%type <value> class_modifier
+
+%type <token> reserved_non_modifiers
+%type <token> semi_reserved
 
 %type <node> top_statement namespace_name name statement function_declaration_statement
 %type <node> class_declaration_statement trait_declaration_statement
@@ -221,8 +222,8 @@ semi_reserved:
 ;
 
 identifier:
-        T_STRING                                        { $$ = Node("identifier").attribute("value", $1) }
-    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1) }
+        T_STRING                                        { $$ = Node("identifier").attribute("value", $1.String()) }
+    |   semi_reserved                                   { $$ = Node("identifier").attribute("value", $1.String()) }
 ;
 
 top_statement_list:
@@ -231,8 +232,8 @@ top_statement_list:
 ;
 
 namespace_name:
-        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1)); }
-    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.append(Node($3)); }
+        T_STRING                                        { $$ = Node("NamespaceParts").append(Node($1.String())); }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.append(Node($3.String())); }
 ;
 
 name:
@@ -307,7 +308,7 @@ inline_use_declaration:
 
 unprefixed_use_declaration:
         namespace_name                                  { $$ = Node("UseElem").append($1); }
-    |   namespace_name T_AS T_STRING                    { $$ = Node("UseElem").append($1).append(Node("as").attribute("value", $3)); }
+    |   namespace_name T_AS T_STRING                    { $$ = Node("UseElem").append($1).append(Node("as").attribute("value", $3.String())); }
 ;
 
 use_declaration:
@@ -364,7 +365,7 @@ statement:
     |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
-    |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1)) }
+    |   T_INLINE_HTML                                   { $$ = Node("Echo").append(Node("InlineHtml").attribute("value", $1.String())) }
     |   expr ';'                                        { $$ = $1; }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = Node("Unset").append($3); }
@@ -393,13 +394,13 @@ statement:
                     append($6);
             }
     |   T_THROW expr ';'                                { $$ = Node("Throw").append($2) }
-    |   T_GOTO T_STRING ';'                             { $$ = Node("GoTo").attribute("Label", $2) }
-    |   T_STRING ':'                                    { $$ = Node("Label").attribute("name", $1) }
+    |   T_GOTO T_STRING ';'                             { $$ = Node("GoTo").attribute("Label", $2.String()) }
+    |   T_STRING ':'                                    { $$ = Node("Label").attribute("name", $1.String()) }
 
 catch_list:
         /* empty */                                     { $$ = Node("CatchList") }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = $1.append($4).append(Node("Variable").attribute("name", $5)).append($8) }
+                                                        { $$ = $1.append($4).append(Node("Variable").attribute("name", $5.String())).append($8) }
 ;
 catch_name_list:
         name                                            { $$ = Node("CatchNameList").append($1) }
@@ -424,7 +425,7 @@ function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
             $$ = Node("Function").
-                attribute("name", $3).
+                attribute("name", $3.String()).
                 attribute("returns_ref", $2).
                 append($5).
                 append($7).
@@ -446,7 +447,7 @@ class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
             {
                 $$ = Node("Class").
-                    attribute("name", $3).
+                    attribute("name", $3.String()).
                     append($1).
                     append(Node("Extends").append($4)).
                     append(Node("Implements").append($5)).
@@ -455,7 +456,7 @@ class_declaration_statement:
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
             {
                 $$ = Node("Class").
-                    attribute("name", $2).
+                    attribute("name", $2.String()).
                     append(Node("Extends").append($3)).
                     append(Node("Implements").append($4)).
                     append($6);
@@ -473,14 +474,14 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = Node("Trait").attribute("name", $2).append($4) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = Node("Trait").attribute("name", $2.String()).append($4) }
 ;
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
         {
             $$ = Node("Interface").
-                attribute("name", $2).
+                attribute("name", $2.String()).
                 append(Node("Extends").append($3)).
                 append($5);
         }
@@ -607,7 +608,7 @@ parameter:
                     append($1).
                     attribute("is_reference", $2).
                     attribute("is_variadic", $3).
-                    attribute("var", $4);
+                    attribute("var", $4.String());
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
@@ -615,7 +616,7 @@ parameter:
                     append($1).
                     attribute("is_reference", $2).
                     attribute("is_variadic", $3).
-                    attribute("var", $4).
+                    attribute("var", $4.String()).
                     append($6);
             }
 ;
@@ -671,8 +672,8 @@ static_var_list:
 ;
 
 static_var:
-        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1); }
-    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1).append(Node("expr").append($3)); }
+        T_VARIABLE                                      { $$ = Node("StaticVariable").attribute("Name", $1.String()); }
+    |   T_VARIABLE '=' expr                             { $$ = Node("StaticVariable").attribute("Name", $1.String()).append(Node("expr").append($3)); }
 ;
 
 class_statement_list:
@@ -724,7 +725,7 @@ trait_precedence:
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = $1.append(Node("as").attribute("value", $3)); }
+        trait_method_reference T_AS T_STRING            { $$ = $1.append(Node("as").attribute("value", $3.String())); }
     |   trait_method_reference T_AS reserved_non_modifiers
                                                         { $$ = $1.append(Node("as").append(Node("reservedNonModifiers")));  }
     |   trait_method_reference T_AS member_modifier identifier
@@ -776,8 +777,8 @@ property_list:
 ;
 
 property:
-        T_VARIABLE                                      { $$ = Node("Property").attribute("name", $1) }
-    |   T_VARIABLE '=' expr                             { $$ = Node("Property").attribute("name", $1).append(Node("Default").append($3)) }
+        T_VARIABLE                                      { $$ = Node("Property").attribute("name", $1.String()) }
+    |   T_VARIABLE '=' expr                             { $$ = Node("Property").attribute("name", $1.String()).append(Node("Default").append($3)) }
 ;
 
 class_const_list:
@@ -790,7 +791,7 @@ class_const_decl:
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1).append($3) }
+    T_STRING '=' expr                                   { $$ = Node("Const").attribute("name", $1.String()).append($3) }
 ;
 
 echo_expr_list:
@@ -815,7 +816,7 @@ anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
             $$ = Node("AnonymousClass").
-                attribute("name", $1).
+                attribute("name", $1.String()).
                 append($2).
                 append($3).
                 append($4).
@@ -939,8 +940,8 @@ lexical_var_list:
 ;
 
 lexical_var:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
-    |   '&' T_VARIABLE                                  { $$ = Node("Variable").attribute("value", $2).attribute("ref", "true") }
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1.String()) }
+    |   '&' T_VARIABLE                                  { $$ = Node("Variable").attribute("value", $2.String()).attribute("ref", "true") }
 ;
 
 function_call:
@@ -969,7 +970,7 @@ exit_expr:
 
 backticks_expr:
         /* empty */                                     { $$ = Node("EmptyBackticks") }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1) }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = Node("String").attribute("value", $1.String()) }
     |   encaps_list                                     { $$ = $1; }
 ;
 
@@ -981,12 +982,12 @@ ctor_arguments:
 dereferencable_scalar:
         T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
     |   '[' array_pair_list ']'                         { $$ = $2; }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = Node("String").attribute("value", $1.String()) }
 ;
 
 scalar:
-        T_LNUMBER                                       { $$ = Node("Scalar").append(Node("Lnumber").attribute("value", $1)) }
-    |   T_DNUMBER                                       { $$ = Node("Scalar").append(Node("Dnumber").attribute("value", $1)) }
+        T_LNUMBER                                       { $$ = Node("Scalar").append(Node("Lnumber").attribute("value", $1.String())) }
+    |   T_DNUMBER                                       { $$ = Node("Scalar").append(Node("Dnumber").attribute("value", $1.String())) }
     |   T_LINE                                          { $$ = Node("Scalar").append(Node("__LINE__")) }
     |   T_FILE                                          { $$ = Node("Scalar").append(Node("__FILE__")) }
     |   T_DIR                                           { $$ = Node("Scalar").append(Node("__DIR__")) }
@@ -996,7 +997,7 @@ scalar:
     |   T_NS_C                                          { $$ = Node("Scalar").append(Node("__NAMESPACE__")); }
     |   T_CLASS_C                                       { $$ = Node("Scalar").append(Node("__CLASS__")); }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = Node("Scalar").append(Node("Heredoc").attribute("value", $2)) }
+                                                        { $$ = Node("Scalar").append(Node("Heredoc").attribute("value", $2.String())) }
     |   T_START_HEREDOC T_END_HEREDOC
                                                         { $$ = Node("Scalar").append(Node("Heredoc")) }
     |   '"' encaps_list '"'                             { $$ = $2; }
@@ -1055,7 +1056,7 @@ variable:
 ;
 
 simple_variable:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1); }
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("name", $1.String()); }
     |   '$' '{' expr '}'                                { $$ = Node("Variable").append($3); }
     |   '$' simple_variable                             { $$ = Node("Variable").append($2); }
 ;
@@ -1085,7 +1086,7 @@ member_name:
 ;
 
 property_name:
-        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1) }
+        T_STRING                                        { $$ = Node("PropertyName").attribute("value", $1.String()) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1125,26 +1126,26 @@ array_pair:
 
 encaps_list:
         encaps_list encaps_var                          { $$ = $1.append($2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.append(Node("String").attribute("value", $2)) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.append(Node("String").attribute("value", $2.String())) }
     |   encaps_var                                      { $$ = Node("EncapsList").append($1) }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = Node("EncapsList").append(Node("String").attribute("value", $1)).append($2) }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = Node("EncapsList").append(Node("String").attribute("value", $1.String())).append($2) }
 ;
 
 encaps_var:
-        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1) }
-    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = Node("Variable").attribute("value", $1).append(Node("offset").append($3)) }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = Node("Variable").attribute("value", $1).append(Node("property").attribute("value", $3)) }
+        T_VARIABLE                                      { $$ = Node("Variable").attribute("value", $1.String()) }
+    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = Node("Variable").attribute("value", $1.String()).append(Node("offset").append($3)) }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = Node("Variable").attribute("value", $1.String()).append(Node("property").attribute("value", $3.String())) }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = Node("Variable").append(Node("expr").append($2)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = Node("Variable").attribute("value", $2) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = Node("Variable").attribute("value", $2.String()) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
-                                                        { $$ = Node("Variable").attribute("value", $2).append(Node("offset").append($4)) }
+                                                        { $$ = Node("Variable").attribute("value", $2.String()).append(Node("offset").append($4)) }
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
-        T_STRING                                        { $$ = Node("OffsetString").attribute("value", $1) }
-    |   T_NUM_STRING                                    { $$ = Node("OffsetNumString").attribute("value", $1) }
-    |   '-' T_NUM_STRING                                { $$ = Node("OffsetNegateNumString").attribute("value", $2) }
-    |   T_VARIABLE                                      { $$ = Node("OffsetVariable").attribute("value", $1) }
+        T_STRING                                        { $$ = Node("OffsetString").attribute("value", $1.String()) }
+    |   T_NUM_STRING                                    { $$ = Node("OffsetNumString").attribute("value", $1.String()) }
+    |   '-' T_NUM_STRING                                { $$ = Node("OffsetNegateNumString").attribute("value", $2.String()) }
+    |   T_VARIABLE                                      { $$ = Node("OffsetVariable").attribute("value", $1.String()) }
 ;
 
 internal_functions_in_yacc:

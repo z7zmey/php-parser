@@ -53,7 +53,7 @@ NEW_LINE        (\r|\n|\r\n)
 %%
     c = l.Rule0()
 
-<INITIAL>[ \t\n\r]+                             l.handleNewLine(l.TokenBytes(nil));
+<INITIAL>[ \t\n\r]+                             lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));
 <INITIAL>.
     tb := []byte{}
 
@@ -77,18 +77,17 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    l.handleNewLine(tb);
-    lval.token = string(tb); 
+    lval.token = newToken(l.handleNewLine(tb)); 
     return T_INLINE_HTML
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.handleNewLine(l.TokenBytes(nil));l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
-<INITIAL>\<\?                                   l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
-<INITIAL>\<\?=                                  l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_ECHO;
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_OPEN_TAG;
+<INITIAL>\<\?                                   l.begin(PHP);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_OPEN_TAG;
+<INITIAL>\<\?=                                  l.begin(PHP);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ECHO;
 
-<PHP>[ \t\n\r]+                                 l.handleNewLine(l.TokenBytes(nil));//lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
-<PHP>\?\>{NEW_LINE}?                            l.handleNewLine(l.TokenBytes(nil));l.begin(INITIAL);lval.token = ";"; return rune2Class(';');
+<PHP>[ \t\n\r]+                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_WHITESPACE
+<PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(';');
 
-<PHP>{DNUM}|{EXPONENT_DNUM}                     lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
+<PHP>{DNUM}|{EXPONENT_DNUM}                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DNUMBER
 <PHP>{BNUM}
     tb := l.TokenBytes(nil)
     i:=2
@@ -99,15 +98,15 @@ NEW_LINE        (\r|\n|\r\n)
         }
     }
     if len(tb) - i < 64 {
-        lval.token = string(l.TokenBytes(nil)); return T_LNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LNUMBER
     } else {
-        lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DNUMBER
     }
 <PHP>{LNUM}
     if len(l.TokenBytes(nil)) < 20 {
-        lval.token = string(l.TokenBytes(nil)); return T_LNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LNUMBER
     } else {
-        lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DNUMBER
     }
 <PHP>{HNUM}
     tb := l.TokenBytes(nil)
@@ -120,145 +119,145 @@ NEW_LINE        (\r|\n|\r\n)
     }
     length := len(tb) - i
     if length < 16 || (length == 16 && tb[i] <= '7') {
-        lval.token = string(l.TokenBytes(nil)); return T_LNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LNUMBER
     } else {
-        lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
+        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DNUMBER
     }
 
-<PHP>abstract                                   lval.token = string(l.TokenBytes(nil)); return T_ABSTRACT
-<PHP>array                                      lval.token = string(l.TokenBytes(nil)); return T_ARRAY
-<PHP>as                                         lval.token = string(l.TokenBytes(nil)); return T_AS
-<PHP>break                                      lval.token = string(l.TokenBytes(nil)); return T_BREAK
-<PHP>callable                                   lval.token = string(l.TokenBytes(nil)); return T_CALLABLE
-<PHP>case                                       lval.token = string(l.TokenBytes(nil)); return T_CASE
-<PHP>catch                                      lval.token = string(l.TokenBytes(nil)); return T_CATCH
-<PHP>class                                      lval.token = string(l.TokenBytes(nil)); return T_CLASS
-<PHP>clone                                      lval.token = string(l.TokenBytes(nil)); return T_CLONE
-<PHP>const                                      lval.token = string(l.TokenBytes(nil)); return T_CONST;
-<PHP>continue                                   lval.token = string(l.TokenBytes(nil)); return T_CONTINUE;
-<PHP>declare                                    lval.token = string(l.TokenBytes(nil)); return T_DECLARE;
-<PHP>default                                    lval.token = string(l.TokenBytes(nil)); return T_DEFAULT;
-<PHP>do                                         lval.token = string(l.TokenBytes(nil)); return T_DO;
-<PHP>echo                                       lval.token = string(l.TokenBytes(nil)); return T_ECHO;
-<PHP>else                                       lval.token = string(l.TokenBytes(nil)); return T_ELSE;
-<PHP>elseif                                     lval.token = string(l.TokenBytes(nil)); return T_ELSEIF;
-<PHP>empty                                      lval.token = string(l.TokenBytes(nil)); return T_EMPTY;
-<PHP>enddeclare                                 lval.token = string(l.TokenBytes(nil)); return T_ENDDECLARE
-<PHP>endfor                                     lval.token = string(l.TokenBytes(nil)); return T_ENDFOR
-<PHP>endforeach                                 lval.token = string(l.TokenBytes(nil)); return T_ENDFOREACH
-<PHP>endif                                      lval.token = string(l.TokenBytes(nil)); return T_ENDIF
-<PHP>endswitch                                  lval.token = string(l.TokenBytes(nil)); return T_ENDSWITCH
-<PHP>endwhile                                   lval.token = string(l.TokenBytes(nil)); return T_ENDWHILE
-<PHP>eval                                       lval.token = string(l.TokenBytes(nil)); return T_EVAL
-<PHP>exit|die                                   lval.token = string(l.TokenBytes(nil)); return T_EXIT
-<PHP>extends                                    lval.token = string(l.TokenBytes(nil)); return T_EXTENDS
-<PHP>final                                      lval.token = string(l.TokenBytes(nil)); return T_FINAL
-<PHP>finally                                    lval.token = string(l.TokenBytes(nil)); return T_FINALLY
-<PHP>for                                        lval.token = string(l.TokenBytes(nil)); return T_FOR
-<PHP>foreach                                    lval.token = string(l.TokenBytes(nil)); return T_FOREACH
-<PHP>function|cfunction                         lval.token = string(l.TokenBytes(nil)); return T_FUNCTION
-<PHP>global                                     lval.token = string(l.TokenBytes(nil)); return T_GLOBAL
-<PHP>goto                                       lval.token = string(l.TokenBytes(nil)); return T_GOTO
-<PHP>if                                         lval.token = string(l.TokenBytes(nil)); return T_IF
-<PHP>isset                                      lval.token = string(l.TokenBytes(nil)); return T_ISSET
-<PHP>implements                                 lval.token = string(l.TokenBytes(nil)); return T_IMPLEMENTS
-<PHP>instanceof                                 lval.token = string(l.TokenBytes(nil)); return T_INSTANCEOF
-<PHP>insteadof                                  lval.token = string(l.TokenBytes(nil)); return T_INSTEADOF
-<PHP>interface                                  lval.token = string(l.TokenBytes(nil)); return T_INTERFACE
-<PHP>list                                       lval.token = string(l.TokenBytes(nil)); return T_LIST
-<PHP>namespace                                  lval.token = string(l.TokenBytes(nil)); return T_NAMESPACE
-<PHP>private                                    lval.token = string(l.TokenBytes(nil)); return T_PRIVATE
-<PHP>public                                     lval.token = string(l.TokenBytes(nil)); return T_PUBLIC
-<PHP>print                                      lval.token = string(l.TokenBytes(nil)); return T_PRINT
-<PHP>protected                                  lval.token = string(l.TokenBytes(nil)); return T_PROTECTED
-<PHP>return                                     lval.token = string(l.TokenBytes(nil)); return T_RETURN
-<PHP>static                                     lval.token = string(l.TokenBytes(nil)); return T_STATIC
-<PHP>switch                                     lval.token = string(l.TokenBytes(nil)); return T_SWITCH
-<PHP>throw                                      lval.token = string(l.TokenBytes(nil)); return T_THROW
-<PHP>trait                                      lval.token = string(l.TokenBytes(nil)); return T_TRAIT
-<PHP>try                                        lval.token = string(l.TokenBytes(nil)); return T_TRY
-<PHP>unset                                      lval.token = string(l.TokenBytes(nil)); return T_UNSET
-<PHP>use                                        lval.token = string(l.TokenBytes(nil)); return T_USE
-<PHP>var                                        lval.token = string(l.TokenBytes(nil)); return T_VAR
-<PHP>while                                      lval.token = string(l.TokenBytes(nil)); return T_WHILE
-<PHP>yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]  l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_YIELD_FROM
-<PHP>yield                                      lval.token = string(l.TokenBytes(nil)); return T_YIELD
-<PHP>include                                    lval.token = string(l.TokenBytes(nil)); return T_INCLUDE
-<PHP>include_once                               lval.token = string(l.TokenBytes(nil)); return T_INCLUDE_ONCE
-<PHP>require                                    lval.token = string(l.TokenBytes(nil)); return T_REQUIRE
-<PHP>require_once                               lval.token = string(l.TokenBytes(nil)); return T_REQUIRE_ONCE
-<PHP>__CLASS__                                  lval.token = string(l.TokenBytes(nil)); return T_CLASS_C
-<PHP>__DIR__                                    lval.token = string(l.TokenBytes(nil)); return T_DIR
-<PHP>__FILE__                                   lval.token = string(l.TokenBytes(nil)); return T_FILE
-<PHP>__FUNCTION__                               lval.token = string(l.TokenBytes(nil)); return T_FUNC_C
-<PHP>__LINE__                                   lval.token = string(l.TokenBytes(nil)); return T_LINE
-<PHP>__NAMESPACE__                              lval.token = string(l.TokenBytes(nil)); return T_NS_C
-<PHP>__METHOD__                                 lval.token = string(l.TokenBytes(nil)); return T_METHOD_C
-<PHP>__TRAIT__                                  lval.token = string(l.TokenBytes(nil)); return T_TRAIT_C
-<PHP>__halt_compiler                            lval.token = string(l.TokenBytes(nil)); return T_HALT_COMPILER
-<PHP>\([ \t]*array[ \t]*\)                      lval.token = string(l.TokenBytes(nil)); return T_ARRAY_CAST
-<PHP>\([ \t]*(bool|boolean)[ \t]*\)             lval.token = string(l.TokenBytes(nil)); return T_BOOL_CAST
-<PHP>\([ \t]*(real|double|float)[ \t]*\)        lval.token = string(l.TokenBytes(nil)); return T_DOUBLE_CAST
-<PHP>\([ \t]*(int|integer)[ \t]*\)              lval.token = string(l.TokenBytes(nil)); return T_INT_CAST
-<PHP>\([ \t]*object[ \t]*\)                     lval.token = string(l.TokenBytes(nil)); return T_OBJECT_CAST
-<PHP>\([ \t]*string[ \t]*\)                     lval.token = string(l.TokenBytes(nil)); return T_STRING_CAST
-<PHP>\([ \t]*unset[ \t]*\)                      lval.token = string(l.TokenBytes(nil)); return T_UNSET_CAST
-<PHP>new                                        lval.token = string(l.TokenBytes(nil)); return T_NEW
-<PHP>and                                        lval.token = string(l.TokenBytes(nil)); return T_LOGICAL_AND
-<PHP>or                                         lval.token = string(l.TokenBytes(nil)); return T_LOGICAL_OR
-<PHP>xor                                        lval.token = string(l.TokenBytes(nil)); return T_LOGICAL_XOR
-<PHP>\\                                         lval.token = string(l.TokenBytes(nil)); return T_NS_SEPARATOR
-<PHP>\.\.\.                                     lval.token = string(l.TokenBytes(nil)); return T_ELLIPSIS;
-<PHP>::                                         lval.token = string(l.TokenBytes(nil)); return T_PAAMAYIM_NEKUDOTAYIM; // T_DOUBLE_COLON
-<PHP>&&                                         lval.token = string(l.TokenBytes(nil)); return T_BOOLEAN_AND
-<PHP>\|\|                                       lval.token = string(l.TokenBytes(nil)); return T_BOOLEAN_OR
-<PHP>&=                                         lval.token = string(l.TokenBytes(nil)); return T_AND_EQUAL
-<PHP>\|=                                        lval.token = string(l.TokenBytes(nil)); return T_OR_EQUAL
-<PHP>\.=                                        lval.token = string(l.TokenBytes(nil)); return T_CONCAT_EQUAL;
-<PHP>\*=                                        lval.token = string(l.TokenBytes(nil)); return T_MUL_EQUAL
-<PHP>\*\*=                                      lval.token = string(l.TokenBytes(nil)); return T_POW_EQUAL
-<PHP>[/]=                                       lval.token = string(l.TokenBytes(nil)); return T_DIV_EQUAL;
-<PHP>\+=                                        lval.token = string(l.TokenBytes(nil)); return T_PLUS_EQUAL
-<PHP>-=                                         lval.token = string(l.TokenBytes(nil)); return T_MINUS_EQUAL
-<PHP>\^=                                        lval.token = string(l.TokenBytes(nil)); return T_XOR_EQUAL
-<PHP>%=                                         lval.token = string(l.TokenBytes(nil)); return T_MOD_EQUAL
-<PHP>--                                         lval.token = string(l.TokenBytes(nil)); return T_DEC;
-<PHP>\+\+                                       lval.token = string(l.TokenBytes(nil)); return T_INC
-<PHP>=>                                         lval.token = string(l.TokenBytes(nil)); return T_DOUBLE_ARROW;
-<PHP>\<=\>                                      lval.token = string(l.TokenBytes(nil)); return T_SPACESHIP
-<PHP>\!=|\<\>                                   lval.token = string(l.TokenBytes(nil)); return T_IS_NOT_EQUAL
-<PHP>\!==                                       lval.token = string(l.TokenBytes(nil)); return T_IS_NOT_IDENTICAL
-<PHP>==                                         lval.token = string(l.TokenBytes(nil)); return T_IS_EQUAL
-<PHP>===                                        lval.token = string(l.TokenBytes(nil)); return T_IS_IDENTICAL
-<PHP>\<\<=                                      lval.token = string(l.TokenBytes(nil)); return T_SL_EQUAL
-<PHP>\>\>=                                      lval.token = string(l.TokenBytes(nil)); return T_SR_EQUAL
-<PHP>\>=                                        lval.token = string(l.TokenBytes(nil)); return T_IS_GREATER_OR_EQUAL
-<PHP>\<=                                        lval.token = string(l.TokenBytes(nil)); return T_IS_SMALLER_OR_EQUAL
-<PHP>\*\*                                       lval.token = string(l.TokenBytes(nil)); return T_POW
-<PHP>\<\<                                       lval.token = string(l.TokenBytes(nil)); return T_SL
-<PHP>\>\>                                       lval.token = string(l.TokenBytes(nil)); return T_SR
-<PHP>\?\?                                       lval.token = string(l.TokenBytes(nil)); return T_COALESCE
-<PHP>(#|[/][/]).*{NEW_LINE}                     l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
-<PHP>'[^']*(\\')*'                              l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
-<PHP>{OPERATORS}                                lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>abstract                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ABSTRACT
+<PHP>array                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ARRAY
+<PHP>as                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_AS
+<PHP>break                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_BREAK
+<PHP>callable                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CALLABLE
+<PHP>case                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CASE
+<PHP>catch                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CATCH
+<PHP>class                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CLASS
+<PHP>clone                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CLONE
+<PHP>const                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONST;
+<PHP>continue                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONTINUE;
+<PHP>declare                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DECLARE;
+<PHP>default                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DEFAULT;
+<PHP>do                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DO;
+<PHP>echo                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ECHO;
+<PHP>else                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ELSE;
+<PHP>elseif                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ELSEIF;
+<PHP>empty                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_EMPTY;
+<PHP>enddeclare                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDDECLARE
+<PHP>endfor                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDFOR
+<PHP>endforeach                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDFOREACH
+<PHP>endif                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDIF
+<PHP>endswitch                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDSWITCH
+<PHP>endwhile                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENDWHILE
+<PHP>eval                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_EVAL
+<PHP>exit|die                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_EXIT
+<PHP>extends                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_EXTENDS
+<PHP>final                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FINAL
+<PHP>finally                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FINALLY
+<PHP>for                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FOR
+<PHP>foreach                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FOREACH
+<PHP>function|cfunction                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FUNCTION
+<PHP>global                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_GLOBAL
+<PHP>goto                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_GOTO
+<PHP>if                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IF
+<PHP>isset                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ISSET
+<PHP>implements                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IMPLEMENTS
+<PHP>instanceof                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INSTANCEOF
+<PHP>insteadof                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INSTEADOF
+<PHP>interface                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INTERFACE
+<PHP>list                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LIST
+<PHP>namespace                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_NAMESPACE
+<PHP>private                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PRIVATE
+<PHP>public                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PUBLIC
+<PHP>print                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PRINT
+<PHP>protected                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PROTECTED
+<PHP>return                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_RETURN
+<PHP>static                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STATIC
+<PHP>switch                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SWITCH
+<PHP>throw                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_THROW
+<PHP>trait                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_TRAIT
+<PHP>try                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_TRY
+<PHP>unset                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_UNSET
+<PHP>use                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_USE
+<PHP>var                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_VAR
+<PHP>while                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_WHILE
+<PHP>yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_YIELD_FROM
+<PHP>yield                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_YIELD
+<PHP>include                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INCLUDE
+<PHP>include_once                               lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INCLUDE_ONCE
+<PHP>require                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_REQUIRE
+<PHP>require_once                               lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_REQUIRE_ONCE
+<PHP>__CLASS__                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CLASS_C
+<PHP>__DIR__                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DIR
+<PHP>__FILE__                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FILE
+<PHP>__FUNCTION__                               lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_FUNC_C
+<PHP>__LINE__                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LINE
+<PHP>__NAMESPACE__                              lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_NS_C
+<PHP>__METHOD__                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_METHOD_C
+<PHP>__TRAIT__                                  lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_TRAIT_C
+<PHP>__halt_compiler                            lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_HALT_COMPILER
+<PHP>\([ \t]*array[ \t]*\)                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ARRAY_CAST
+<PHP>\([ \t]*(bool|boolean)[ \t]*\)             lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_BOOL_CAST
+<PHP>\([ \t]*(real|double|float)[ \t]*\)        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DOUBLE_CAST
+<PHP>\([ \t]*(int|integer)[ \t]*\)              lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INT_CAST
+<PHP>\([ \t]*object[ \t]*\)                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_OBJECT_CAST
+<PHP>\([ \t]*string[ \t]*\)                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING_CAST
+<PHP>\([ \t]*unset[ \t]*\)                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_UNSET_CAST
+<PHP>new                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_NEW
+<PHP>and                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LOGICAL_AND
+<PHP>or                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LOGICAL_OR
+<PHP>xor                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_LOGICAL_XOR
+<PHP>\\                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_NS_SEPARATOR
+<PHP>\.\.\.                                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ELLIPSIS;
+<PHP>::                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PAAMAYIM_NEKUDOTAYIM; // T_DOUBLE_COLON
+<PHP>&&                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_BOOLEAN_AND
+<PHP>\|\|                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_BOOLEAN_OR
+<PHP>&=                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_AND_EQUAL
+<PHP>\|=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_OR_EQUAL
+<PHP>\.=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONCAT_EQUAL;
+<PHP>\*=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_MUL_EQUAL
+<PHP>\*\*=                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_POW_EQUAL
+<PHP>[/]=                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DIV_EQUAL;
+<PHP>\+=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_PLUS_EQUAL
+<PHP>-=                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_MINUS_EQUAL
+<PHP>\^=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_XOR_EQUAL
+<PHP>%=                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_MOD_EQUAL
+<PHP>--                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DEC;
+<PHP>\+\+                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_INC
+<PHP>=>                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DOUBLE_ARROW;
+<PHP>\<=\>                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SPACESHIP
+<PHP>\!=|\<\>                                   lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_NOT_EQUAL
+<PHP>\!==                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_NOT_IDENTICAL
+<PHP>==                                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_EQUAL
+<PHP>===                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_IDENTICAL
+<PHP>\<\<=                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SL_EQUAL
+<PHP>\>\>=                                      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SR_EQUAL
+<PHP>\>=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_GREATER_OR_EQUAL
+<PHP>\<=                                        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_IS_SMALLER_OR_EQUAL
+<PHP>\*\*                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_POW
+<PHP>\<\<                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SL
+<PHP>\>\>                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_SR
+<PHP>\?\?                                       lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_COALESCE
+<PHP>(#|[/][/]).*{NEW_LINE}                     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));// return T_DOC_COMMENT; // TODO: handle ?>
+<PHP>'[^']*(\\')*'                              lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING
+<PHP>{OPERATORS}                                lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
-<PHP>\{                                         l.pushState(PHP); lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<PHP>\}                                         l.popState();     lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<PHP>\${VAR_NAME}                               lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
-<PHP>{VAR_NAME}                                 lval.token = string(l.TokenBytes(nil)); return T_STRING
+<PHP>\{                                         l.pushState(PHP); lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>\}                                         l.popState();     lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>\${VAR_NAME}                               lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_VARIABLE
+<PHP>{VAR_NAME}                                 lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING
 
-<PHP>->                                         l.begin(PROPERTY);lval.token = string(l.TokenBytes(nil)); return T_OBJECT_OPERATOR;
-<PROPERTY>[ \t\n\r]+                            l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE;
-<PROPERTY>->                                    lval.token = string(l.TokenBytes(nil)); return T_OBJECT_OPERATOR;
-<PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_STRING;
+<PHP>->                                         l.begin(PROPERTY);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_OBJECT_OPERATOR;
+<PROPERTY>[ \t\n\r]+                            lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_WHITESPACE;
+<PROPERTY>->                                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_OBJECT_OPERATOR;
+<PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING;
 <PROPERTY>.                                     l.ungetN(1);l.begin(PHP)
 
-<PHP>[\']([^\\\']*([\\][\'])*)*[\']             lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING;
+<PHP>[\']([^\\\']*([\\][\'])*)*[\']             lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING;
 
-<PHP>`                                          l.begin(BACKQUOTE); lval.token = string(l.TokenBytes(nil)); rune2Class(rune(l.TokenBytes(nil)[0]))
-<BACKQUOTE>`                                    l.begin(PHP); lval.token = string(l.TokenBytes(nil)); rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>`                                          l.begin(BACKQUOTE); lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); rune2Class(rune(l.TokenBytes(nil)[0]))
+<BACKQUOTE>`                                    l.begin(PHP); lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.TokenBytes(nil)
@@ -318,8 +317,7 @@ NEW_LINE        (\r|\n|\r\n)
 
     l.ungetN(ungetCnt)
 
-    l.handleNewLine(tb);
-    lval.token = string(tb); 
+    lval.token = newToken(l.handleNewLine(tb)); 
     return T_START_HEREDOC
 
 <NOWDOC>.
@@ -346,11 +344,10 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    l.handleNewLine(tb);
-    lval.token = string(tb); 
+    lval.token = newToken(l.handleNewLine(tb)); 
     return T_ENCAPSED_AND_WHITESPACE
 
-<HEREDOC_END>{VAR_NAME}\;                       l.begin(PHP);lval.token = string(l.ungetN(1)); return T_END_HEREDOC
+<HEREDOC_END>{VAR_NAME}\;                       l.begin(PHP);lval.token = newToken(l.handleNewLine(l.ungetN(1))); return T_END_HEREDOC
 
 <PHP>[b]?[\"]
     binPrefix := l.TokenBytes(nil)[0] == 'b'
@@ -362,7 +359,7 @@ NEW_LINE        (\r|\n|\r\n)
         tokenBytes := l.TokenBytes(nil)[:cnt]
         l.pushState(STRING)
 
-        lval.token = string(tokenBytes); return rune2Class('"')
+        lval.token = newToken(l.handleNewLine(tokenBytes)); return rune2Class('"')
     }
 
     F:for {
@@ -373,7 +370,7 @@ NEW_LINE        (\r|\n|\r\n)
         switch c {
             case '"' : 
                 c = l.Next();
-                lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
+                lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING
                 break F;
             
             case '$':
@@ -399,9 +396,9 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-<STRING>\"                                  l.popState(); lval.token = "\""; return rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = string(l.ungetN(1)); l.pushState(PHP); return T_CURLY_OPEN
-<STRING,HEREDOC,BACKQUOTE>\$\{              l.pushState(STRING_VAR_NAME);lval.token = string(l.TokenBytes(nil)); return T_DOLLAR_OPEN_CURLY_BRACES
+<STRING>\"                                  l.popState(); lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = newToken(l.handleNewLine(l.ungetN(1))); l.pushState(PHP); return T_CURLY_OPEN
+<STRING,HEREDOC,BACKQUOTE>\$\{              l.pushState(STRING_VAR_NAME);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_DOLLAR_OPEN_CURLY_BRACES
 <STRING,HEREDOC,BACKQUOTE>\$                l.ungetN(1);l.pushState(STRING_VAR)
 <STRING>.|[ \t\n\r]
     F1:for {
@@ -411,8 +408,7 @@ NEW_LINE        (\r|\n|\r\n)
 
         switch c {
             case '"' : 
-                l.handleNewLine(l.TokenBytes(nil));
-                lval.token = string(l.TokenBytes(nil));
+                lval.token = newToken(l.handleNewLine(l.TokenBytes(nil)));
                 return T_ENCAPSED_AND_WHITESPACE
                 break F1;
             
@@ -421,8 +417,7 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    l.handleNewLine(tb[:len(tb)-1]);
-                    lval.token = string(tb[:len(tb)-1]);
+                    lval.token = newToken(l.handleNewLine(tb[:len(tb)-1]));
                     return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
@@ -433,8 +428,7 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '$' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    l.handleNewLine(tb[:len(tb)-1]);
-                    lval.token = string(tb[:len(tb)-1]); 
+                    lval.token = newToken(l.handleNewLine(tb[:len(tb)-1])); 
                     return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
@@ -455,8 +449,7 @@ NEW_LINE        (\r|\n|\r\n)
 
         switch c {
             case '`' :
-                l.handleNewLine(l.TokenBytes(nil));
-                lval.token = string(l.TokenBytes(nil)); 
+                lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); 
                 return T_ENCAPSED_AND_WHITESPACE
                 break F2;
             
@@ -465,8 +458,7 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    l.handleNewLine(tb[:len(tb)-1]);
-                    lval.token = string(tb[:len(tb)-1]); 
+                    lval.token = newToken(l.handleNewLine(tb[:len(tb)-1])); 
                     return T_ENCAPSED_AND_WHITESPACE
                     break F2;
                 } 
@@ -477,8 +469,7 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '$' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    l.handleNewLine(tb[:len(tb)-1]);
-                    lval.token = string(tb[:len(tb)-1]); 
+                    lval.token = newToken(l.handleNewLine(tb[:len(tb)-1])); 
                     return T_ENCAPSED_AND_WHITESPACE
                     break F2;
                 } 
@@ -540,25 +531,24 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
     
-    l.handleNewLine(tb);
-    lval.token = string(tb); 
+    lval.token = newToken(l.handleNewLine(tb)); 
     return T_ENCAPSED_AND_WHITESPACE
 
-<STRING_VAR>\${VAR_NAME}                    lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
-<STRING_VAR>->{VAR_NAME}                    lval.token = string(l.ungetN(len(l.TokenBytes(nil))-2)); return T_OBJECT_OPERATOR
-<STRING_VAR>{VAR_NAME}                      l.popState();lval.token = string(l.TokenBytes(nil)); return T_STRING
-<STRING_VAR>\[                              l.pushState(STRING_VAR_INDEX);lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR>\${VAR_NAME}                    lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_VARIABLE
+<STRING_VAR>->{VAR_NAME}                    lval.token = newToken(l.handleNewLine(l.ungetN(len(l.TokenBytes(nil))-2))); return T_OBJECT_OPERATOR
+<STRING_VAR>{VAR_NAME}                      l.popState();lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING
+<STRING_VAR>\[                              l.pushState(STRING_VAR_INDEX);lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING_VAR>.|[ \t\n\r]                     l.ungetN(1);l.popState()
 
-<STRING_VAR_INDEX>{LNUM}|{HNUM}|{BNUM}      lval.token = string(l.TokenBytes(nil)); return T_NUM_STRING
-<STRING_VAR_INDEX>\${VAR_NAME}              lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
-<STRING_VAR_INDEX>{VAR_NAME}                lval.token = string(l.TokenBytes(nil)); return T_STRING
-<STRING_VAR_INDEX>\]                        l.popState(); l.popState();lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING_VAR_INDEX>[ \n\r\t\\'#]             l.handleNewLine(l.TokenBytes(nil));l.popState(); l.popState();lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
-<STRING_VAR_INDEX>{OPERATORS}               lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING_VAR_INDEX>.                         lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR_INDEX>{LNUM}|{HNUM}|{BNUM}      lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_NUM_STRING
+<STRING_VAR_INDEX>\${VAR_NAME}              lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_VARIABLE
+<STRING_VAR_INDEX>{VAR_NAME}                lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING
+<STRING_VAR_INDEX>\]                        l.popState(); l.popState();lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR_INDEX>[ \n\r\t\\'#]             l.popState(); l.popState();lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return T_ENCAPSED_AND_WHITESPACE
+<STRING_VAR_INDEX>{OPERATORS}               lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR_INDEX>.                         lval.token = newToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
-<STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.token = string(l.ungetN(1)); return T_STRING_VARNAME
+<STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.token = newToken(l.handleNewLine(l.ungetN(1))); return T_STRING_VARNAME
 <STRING_VAR_NAME>.                          l.ungetN(1);l.popState();l.pushState(PHP)
 
 %%
