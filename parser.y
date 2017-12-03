@@ -10,6 +10,8 @@ import (
 var rootnode = node.SimpleNode("Root")
 
 func parse(src io.Reader, fName string) node.Node {
+    yyDebug        = 0
+    yyErrorVerbose = true
     rootnode = node.SimpleNode("Root") //reset
     yyParse(newLexer(src, fName))
     return rootnode
@@ -21,6 +23,7 @@ func parse(src io.Reader, fName string) node.Node {
     node node.Node
     token token.Token
     value string
+    list []node.Node
 }
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
@@ -158,6 +161,8 @@ func parse(src io.Reader, fName string) node.Node {
 %token <token> T_PRIVATE
 %token <token> T_PROTECTED
 %token <token> T_PUBLIC
+%token <token> '"'
+%token <token> '`'
 
 %type <value> is_reference
 %type <value> is_variadic
@@ -180,7 +185,7 @@ func parse(src io.Reader, fName string) node.Node {
 %type <node> absolute_trait_method_reference trait_method_reference property echo_expr
 %type <node> new_expr anonymous_class class_name class_name_reference simple_variable
 %type <node> internal_functions_in_yacc
-%type <node> exit_expr scalar backticks_expr lexical_var function_call member_name property_name
+%type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
@@ -191,7 +196,7 @@ func parse(src io.Reader, fName string) node.Node {
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
 %type <node> class_const_list class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
 %type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
-%type <node> lexical_var_list encaps_list
+%type <node> lexical_var_list
 %type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
 %type <node> isset_variable type return_type type_expr
 %type <node> identifier
@@ -199,6 +204,8 @@ func parse(src io.Reader, fName string) node.Node {
 %type <node> variable_modifiers
 %type <node> method_modifiers non_empty_member_modifiers member_modifier
 %type <node> class_modifiers use_type
+
+%type <list> encaps_list backticks_expr
 
 %%
 
@@ -900,7 +907,7 @@ expr_without_variable:
     |   T_EXIT exit_expr                                { $$ = node.SimpleNode("Exit").Append($2); }
     |   '@' expr                                        { $$ = node.SimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
-    |   '`' backticks_expr '`'                          { $$ = node.SimpleNode("ShellExec").Append($2) }
+    |   '`' backticks_expr '`'                          { $$ = node.NewNodeExprShellExec($1, $2, $3) }
     |   T_PRINT expr                                    { $$ = node.SimpleNode("Print").Append($2); }
     |   T_YIELD                                         { $$ = node.SimpleNode("Yield"); }
     |   T_YIELD expr                                    { $$ = node.SimpleNode("Yield").Append($2); }
@@ -971,8 +978,8 @@ exit_expr:
 ;
 
 backticks_expr:
-        /* empty */                                     { $$ = node.SimpleNode("EmptyBackticks") }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = node.TokenNode("String", $1) }
+        /* empty */                                     { $$ = []node.Node{} }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = []node.Node{node.NewNodeScalarEncapsedStringPart($1)} }
     |   encaps_list                                     { $$ = $1; }
 ;
 
@@ -984,7 +991,7 @@ ctor_arguments:
 dereferencable_scalar:
         T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
     |   '[' array_pair_list ']'                         { $$ = $2; }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = node.TokenNode("String", $1) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = node.NewNodeScalarString($1) }
 ;
 
 scalar:
@@ -999,11 +1006,11 @@ scalar:
     |   T_NS_C                                          { $$ = node.TokenNode("MagicConst", $1) }
     |   T_CLASS_C                                       { $$ = node.TokenNode("MagicConst", $1) }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = node.SimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("string", $2)).Append(node.TokenNode("HeredocEnd", $3)) }
+                                                        { $$ = node.NewNodeScalarString($2) /* TODO: mark as Heredoc*/ }
     |   T_START_HEREDOC T_END_HEREDOC
                                                         { $$ = node.SimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("HeredocEnd", $2)) }
-    |   '"' encaps_list '"'                             { $$ = $2; }
-    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = $2; }
+    |   '"' encaps_list '"'                             { $$ = node.NewNodeScalarEncapsed($1, $2, $3) }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = node.NewNodeScalarEncapsed($1, $2, $3) }
     |   dereferencable_scalar                           { $$ = $1; }
     |   constant                                        { $$ = $1; }
 ;
@@ -1127,10 +1134,10 @@ array_pair:
 ;
 
 encaps_list:
-        encaps_list encaps_var                          { $$ = $1.Append($2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = $1.Append(node.SimpleNode("String").Attribute("value", $2.String())) }
-    |   encaps_var                                      { $$ = node.SimpleNode("EncapsList").Append($1) }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = node.SimpleNode("EncapsList").Append(node.SimpleNode("String").Attribute("value", $1.String())).Append($2) }
+        encaps_list encaps_var                          { $$ = append($1, $2) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, node.NewNodeScalarEncapsedStringPart($2)) }
+    |   encaps_var                                      { $$ = []node.Node{$1} }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{node.NewNodeScalarEncapsedStringPart($1), $2} }
 ;
 
 encaps_var:

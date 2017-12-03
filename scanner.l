@@ -241,7 +241,6 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>(#|[/][/]).*{NEW_LINE}                     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
 <PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
 <PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_DOC_COMMENT; // TODO: handle ?>
-<PHP>'[^']*(\\')*'                              lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING
 <PHP>{OPERATORS}                                lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>\{                                         l.pushState(PHP); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
@@ -257,8 +256,8 @@ NEW_LINE        (\r|\n|\r\n)
 
 <PHP>[\']([^\\\']*([\\][\'])*)*[\']             lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING;
 
-<PHP>`                                          l.begin(BACKQUOTE); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); rune2Class(rune(l.TokenBytes(nil)[0]))
-<BACKQUOTE>`                                    l.begin(PHP); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>`                                          l.begin(BACKQUOTE); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<BACKQUOTE>`                                    l.begin(PHP); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.TokenBytes(nil)
@@ -442,7 +441,7 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-<BACKQUOTE>.
+<BACKQUOTE>.|[ \t\n\r]
     F2:for {
         if c == -1 {
             break;

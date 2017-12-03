@@ -27,12 +27,16 @@ $a = "string
 with $var
 ";
 
-$a = 'string
-with out $var';
+$a = "string
+with out \$var";
 
 $a = <<<test
-string
+string $var
 test;
+
+`test
+$var
+`;
 
 ?>
 
