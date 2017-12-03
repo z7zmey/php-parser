@@ -11,7 +11,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"unicode"
 )
 
 const (
@@ -29,20 +28,6 @@ const (
 )
 
 var heredocLabel []byte
-
-func rune2Class(r rune) int {
-	if r >= 0 && r < 0x80 { // Keep ASCII as it is.
-		return int(r)
-	}
-	if unicode.IsLetter(r) {
-		return classUnicodeLeter
-	}
-	if unicode.IsDigit(r) {
-		return classUnicodeDigit
-	}
-	// return classOther
-	return -1
-}
 
 func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
 	c := l.Enter()
@@ -7066,7 +7051,7 @@ yystart554:
 		goto yystate557
 	case c == '{':
 		goto yystate559
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= '!' || c == '#' || c >= '%' && c <= 'z' || c >= '|' && c <= 'ÿ':
+	case c >= '\x01' && c <= '!' || c == '#' || c >= '%' && c <= 'z' || c >= '|' && c <= 'ÿ':
 		goto yystate555
 	}
 
@@ -7675,8 +7660,10 @@ yystate614:
 	}
 
 yyrule1: // [ \t\n\r]+
-
-	goto yystate0
+	{
+		l.handleNewLine(l.TokenBytes(nil))
+		goto yystate0
+	}
 yyrule2: // .
 	{
 
@@ -7697,12 +7684,13 @@ yyrule2: // .
 			}
 			c = l.Next()
 		}
+		l.handleNewLine(tb)
 		lval.token = string(tb)
 		return T_INLINE_HTML
-		goto yystate0
 	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		l.begin(PHP) //lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 		goto yystate0
 	}
@@ -7720,11 +7708,12 @@ yyrule5: // \<\?=
 	}
 yyrule6: // [ \t\n\r]+
 	{
-		//lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
+		l.handleNewLine(l.TokenBytes(nil)) //lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
 		goto yystate0
 	}
 yyrule7: // \?\>{NEW_LINE}?
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		l.begin(INITIAL)
 		lval.token = ";"
 		return rune2Class(';')
@@ -8133,6 +8122,7 @@ yyrule67: // while
 	}
 yyrule68: // yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		lval.token = string(l.TokenBytes(nil))
 		return T_YIELD_FROM
 		goto yystate0
@@ -8475,21 +8465,22 @@ yyrule124: // \?\?
 	}
 yyrule125: // (#|[/][/]).*{NEW_LINE}
 	{
-		// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+		l.handleNewLine(l.TokenBytes(nil)) // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule126: // [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+		l.handleNewLine(l.TokenBytes(nil)) // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule127: // [/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
 	{
-		// lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
+		l.handleNewLine(l.TokenBytes(nil)) // lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule128: // '[^']*(\\')*'
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		lval.token = string(l.TokenBytes(nil))
 		return T_CONSTANT_ENCAPSED_STRING
 		goto yystate0
@@ -8535,6 +8526,7 @@ yyrule134: // ->
 	}
 yyrule135: // [ \t\n\r]+
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		lval.token = string(l.TokenBytes(nil))
 		return T_WHITESPACE
 		goto yystate0
@@ -8631,9 +8623,9 @@ yyrule142: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			}
 		}
 		l.ungetN(ungetCnt)
+		l.handleNewLine(tb)
 		lval.token = string(tb)
 		return T_START_HEREDOC
-		goto yystate0
 	}
 yyrule143: // .
 	{
@@ -8658,9 +8650,9 @@ yyrule143: // .
 			}
 			c = l.Next()
 		}
+		l.handleNewLine(tb)
 		lval.token = string(tb)
 		return T_ENCAPSED_AND_WHITESPACE
-		goto yystate0
 	}
 yyrule144: // {VAR_NAME}\;
 	{
@@ -8746,7 +8738,7 @@ yyrule149: // \$
 		l.pushState(STRING_VAR)
 		goto yystate0
 	}
-yyrule150: // .
+yyrule150: // .|[ \t\n\r]
 	{
 
 	F1:
@@ -8756,6 +8748,7 @@ yyrule150: // .
 			}
 			switch c {
 			case '"':
+				l.handleNewLine(l.TokenBytes(nil))
 				lval.token = string(l.TokenBytes(nil))
 				return T_ENCAPSED_AND_WHITESPACE
 				break F1
@@ -8765,6 +8758,7 @@ yyrule150: // .
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
+					l.handleNewLine(tb[:len(tb)-1])
 					lval.token = string(tb[:len(tb)-1])
 					return T_ENCAPSED_AND_WHITESPACE
 					break F1
@@ -8776,6 +8770,7 @@ yyrule150: // .
 				if rune(c) == '$' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
+					l.handleNewLine(tb[:len(tb)-1])
 					lval.token = string(tb[:len(tb)-1])
 					return T_ENCAPSED_AND_WHITESPACE
 					break F1
@@ -8798,6 +8793,7 @@ yyrule151: // .
 			}
 			switch c {
 			case '`':
+				l.handleNewLine(l.TokenBytes(nil))
 				lval.token = string(l.TokenBytes(nil))
 				return T_ENCAPSED_AND_WHITESPACE
 				break F2
@@ -8807,6 +8803,7 @@ yyrule151: // .
 				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
+					l.handleNewLine(tb[:len(tb)-1])
 					lval.token = string(tb[:len(tb)-1])
 					return T_ENCAPSED_AND_WHITESPACE
 					break F2
@@ -8818,6 +8815,7 @@ yyrule151: // .
 				if rune(c) == '$' {
 					l.ungetN(1)
 					tb := l.TokenBytes(nil)
+					l.handleNewLine(tb[:len(tb)-1])
 					lval.token = string(tb[:len(tb)-1])
 					return T_ENCAPSED_AND_WHITESPACE
 					break F2
@@ -8880,9 +8878,9 @@ yyrule152: // .|[ \t\n\r]
 			c = l.Next()
 		}
 
+		l.handleNewLine(tb)
 		lval.token = string(tb)
 		return T_ENCAPSED_AND_WHITESPACE
-		goto yystate0
 	}
 yyrule153: // \${VAR_NAME}
 	{
@@ -8944,6 +8942,7 @@ yyrule161: // \]
 	}
 yyrule162: // [ \n\r\t\\'#]
 	{
+		l.handleNewLine(l.TokenBytes(nil))
 		l.popState()
 		l.popState()
 		lval.token = string(l.TokenBytes(nil))

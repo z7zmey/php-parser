@@ -10,7 +10,6 @@ package main
 import (
     "fmt"
     "bytes"
-	"unicode"
 )
 
 const (
@@ -28,20 +27,6 @@ const (
 )
 
 var heredocLabel []byte
-
-func rune2Class(r rune) int {
-	if r >= 0 && r < 0x80 { // Keep ASCII as it is.
-		return int(r)
-	}
-	if unicode.IsLetter(r) {
-		return classUnicodeLeter
-	}
-	if unicode.IsDigit(r) {
-		return classUnicodeDigit
-	}
-	// return classOther
-	return -1
-}
 
 func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
   c := l.Enter()
@@ -68,7 +53,7 @@ NEW_LINE        (\r|\n|\r\n)
 %%
     c = l.Rule0()
 
-<INITIAL>[ \t\n\r]+
+<INITIAL>[ \t\n\r]+                             l.handleNewLine(l.TokenBytes(nil));
 <INITIAL>.
     tb := []byte{}
 
@@ -92,14 +77,16 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    lval.token = string(tb); return T_INLINE_HTML
+    l.handleNewLine(tb);
+    lval.token = string(tb); 
+    return T_INLINE_HTML
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.handleNewLine(l.TokenBytes(nil));l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 <INITIAL>\<\?                                   l.begin(PHP);//lval.token = string(l.TokenBytes(nil)); return T_OPEN_TAG;
 <INITIAL>\<\?=                                  l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_ECHO;
 
-<PHP>[ \t\n\r]+                                 //lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
-<PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.token = ";"; return rune2Class(';');
+<PHP>[ \t\n\r]+                                 l.handleNewLine(l.TokenBytes(nil));//lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE
+<PHP>\?\>{NEW_LINE}?                            l.handleNewLine(l.TokenBytes(nil));l.begin(INITIAL);lval.token = ";"; return rune2Class(';');
 
 <PHP>{DNUM}|{EXPONENT_DNUM}                     lval.token = string(l.TokenBytes(nil)); return T_DNUMBER
 <PHP>{BNUM}
@@ -194,7 +181,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>use                                        lval.token = string(l.TokenBytes(nil)); return T_USE
 <PHP>var                                        lval.token = string(l.TokenBytes(nil)); return T_VAR
 <PHP>while                                      lval.token = string(l.TokenBytes(nil)); return T_WHILE
-<PHP>yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]  lval.token = string(l.TokenBytes(nil)); return T_YIELD_FROM
+<PHP>yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]  l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_YIELD_FROM
 <PHP>yield                                      lval.token = string(l.TokenBytes(nil)); return T_YIELD
 <PHP>include                                    lval.token = string(l.TokenBytes(nil)); return T_INCLUDE
 <PHP>include_once                               lval.token = string(l.TokenBytes(nil)); return T_INCLUDE_ONCE
@@ -251,10 +238,10 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\<\<                                       lval.token = string(l.TokenBytes(nil)); return T_SL
 <PHP>\>\>                                       lval.token = string(l.TokenBytes(nil)); return T_SR
 <PHP>\?\?                                       lval.token = string(l.TokenBytes(nil)); return T_COALESCE
-<PHP>(#|[/][/]).*{NEW_LINE}                     // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        // lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     // lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
-<PHP>'[^']*(\\')*'                              lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
+<PHP>(#|[/][/]).*{NEW_LINE}                     l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_COMMENT; // TODO: handle ?>
+<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     l.handleNewLine(l.TokenBytes(nil));// lval.token = string(l.TokenBytes(nil)); return T_DOC_COMMENT; // TODO: handle ?>
+<PHP>'[^']*(\\')*'                              l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_CONSTANT_ENCAPSED_STRING
 <PHP>{OPERATORS}                                lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>\{                                         l.pushState(PHP); lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
@@ -263,7 +250,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>{VAR_NAME}                                 lval.token = string(l.TokenBytes(nil)); return T_STRING
 
 <PHP>->                                         l.begin(PROPERTY);lval.token = string(l.TokenBytes(nil)); return T_OBJECT_OPERATOR;
-<PROPERTY>[ \t\n\r]+                            lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE;
+<PROPERTY>[ \t\n\r]+                            l.handleNewLine(l.TokenBytes(nil));lval.token = string(l.TokenBytes(nil)); return T_WHITESPACE;
 <PROPERTY>->                                    lval.token = string(l.TokenBytes(nil)); return T_OBJECT_OPERATOR;
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.token = string(l.TokenBytes(nil)); return T_STRING;
 <PROPERTY>.                                     l.ungetN(1);l.begin(PHP)
@@ -331,7 +318,9 @@ NEW_LINE        (\r|\n|\r\n)
 
     l.ungetN(ungetCnt)
 
-    lval.token = string(tb); return T_START_HEREDOC
+    l.handleNewLine(tb);
+    lval.token = string(tb); 
+    return T_START_HEREDOC
 
 <NOWDOC>.
     searchLabel := []byte{}
@@ -357,7 +346,9 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    lval.token = string(tb); return T_ENCAPSED_AND_WHITESPACE
+    l.handleNewLine(tb);
+    lval.token = string(tb); 
+    return T_ENCAPSED_AND_WHITESPACE
 
 <HEREDOC_END>{VAR_NAME}\;                       l.begin(PHP);lval.token = string(l.ungetN(1)); return T_END_HEREDOC
 
@@ -412,7 +403,7 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING,HEREDOC,BACKQUOTE>\{\$              lval.token = string(l.ungetN(1)); l.pushState(PHP); return T_CURLY_OPEN
 <STRING,HEREDOC,BACKQUOTE>\$\{              l.pushState(STRING_VAR_NAME);lval.token = string(l.TokenBytes(nil)); return T_DOLLAR_OPEN_CURLY_BRACES
 <STRING,HEREDOC,BACKQUOTE>\$                l.ungetN(1);l.pushState(STRING_VAR)
-<STRING>.
+<STRING>.|[ \t\n\r]
     F1:for {
         if c == -1 {
             break;
@@ -420,7 +411,9 @@ NEW_LINE        (\r|\n|\r\n)
 
         switch c {
             case '"' : 
-                lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
+                l.handleNewLine(l.TokenBytes(nil));
+                lval.token = string(l.TokenBytes(nil));
+                return T_ENCAPSED_AND_WHITESPACE
                 break F1;
             
             case '$':
@@ -428,7 +421,9 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    lval.token = string(tb[:len(tb)-1]); return T_ENCAPSED_AND_WHITESPACE
+                    l.handleNewLine(tb[:len(tb)-1]);
+                    lval.token = string(tb[:len(tb)-1]);
+                    return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
                 l.ungetN(0)
@@ -438,7 +433,9 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '$' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    lval.token = string(tb[:len(tb)-1]); return T_ENCAPSED_AND_WHITESPACE
+                    l.handleNewLine(tb[:len(tb)-1]);
+                    lval.token = string(tb[:len(tb)-1]); 
+                    return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
                 l.ungetN(0)
@@ -457,8 +454,10 @@ NEW_LINE        (\r|\n|\r\n)
         }
 
         switch c {
-            case '`' : 
-                lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
+            case '`' :
+                l.handleNewLine(l.TokenBytes(nil));
+                lval.token = string(l.TokenBytes(nil)); 
+                return T_ENCAPSED_AND_WHITESPACE
                 break F2;
             
             case '$':
@@ -466,7 +465,9 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    lval.token = string(tb[:len(tb)-1]); return T_ENCAPSED_AND_WHITESPACE
+                    l.handleNewLine(tb[:len(tb)-1]);
+                    lval.token = string(tb[:len(tb)-1]); 
+                    return T_ENCAPSED_AND_WHITESPACE
                     break F2;
                 } 
                 l.ungetN(0)
@@ -476,7 +477,9 @@ NEW_LINE        (\r|\n|\r\n)
                 if rune(c) == '$' {
                     l.ungetN(1)
                     tb := l.TokenBytes(nil)
-                    lval.token = string(tb[:len(tb)-1]); return T_ENCAPSED_AND_WHITESPACE
+                    l.handleNewLine(tb[:len(tb)-1]);
+                    lval.token = string(tb[:len(tb)-1]); 
+                    return T_ENCAPSED_AND_WHITESPACE
                     break F2;
                 } 
                 l.ungetN(0)
@@ -537,7 +540,9 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
     
-    lval.token = string(tb); return T_ENCAPSED_AND_WHITESPACE
+    l.handleNewLine(tb);
+    lval.token = string(tb); 
+    return T_ENCAPSED_AND_WHITESPACE
 
 <STRING_VAR>\${VAR_NAME}                    lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
 <STRING_VAR>->{VAR_NAME}                    lval.token = string(l.ungetN(len(l.TokenBytes(nil))-2)); return T_OBJECT_OPERATOR
@@ -549,7 +554,7 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR_INDEX>\${VAR_NAME}              lval.token = string(l.TokenBytes(nil)); return T_VARIABLE
 <STRING_VAR_INDEX>{VAR_NAME}                lval.token = string(l.TokenBytes(nil)); return T_STRING
 <STRING_VAR_INDEX>\]                        l.popState(); l.popState();lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING_VAR_INDEX>[ \n\r\t\\'#]             l.popState(); l.popState();lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
+<STRING_VAR_INDEX>[ \n\r\t\\'#]             l.handleNewLine(l.TokenBytes(nil));l.popState(); l.popState();lval.token = string(l.TokenBytes(nil)); return T_ENCAPSED_AND_WHITESPACE
 <STRING_VAR_INDEX>{OPERATORS}               lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING_VAR_INDEX>.                         lval.token = string(l.TokenBytes(nil)); return rune2Class(rune(l.TokenBytes(nil)[0]))
 

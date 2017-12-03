@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"go/token"
 	"io"
+	"unicode"
 
 	"github.com/cznic/golex/lex"
 )
@@ -18,6 +19,21 @@ const (
 type lexer struct {
 	*lex.Lexer
 	stateStack []int
+	lineNumber int
+}
+
+func rune2Class(r rune) int {
+	if r >= 0 && r < 0x80 { // Keep ASCII as it is.
+		return int(r)
+	}
+	if unicode.IsLetter(r) {
+		return classUnicodeLeter
+	}
+	if unicode.IsDigit(r) {
+		return classUnicodeDigit
+	}
+	// return classOther
+	return -1
 }
 
 func newLexer(src io.Reader, fName string) *lexer {
@@ -26,7 +42,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &lexer{lx, []int{0}}
+	return &lexer{lx, []int{0}, 1}
 }
 
 func (l *lexer) ungetN(n int) []byte {
@@ -66,4 +82,25 @@ func (l *lexer) begin(state int) {
 
 func (l *lexer) getCurrentState() int {
 	return l.stateStack[len(l.stateStack)-1]
+}
+
+func (l *lexer) handleNewLine(str []byte) (int, int) {
+	startln := l.lineNumber
+
+	var prev byte
+
+	for _, b := range str {
+		if b == '\n' || prev == '\r' {
+			l.lineNumber++
+		}
+
+		prev = b
+	}
+
+	// handle last \r
+	if prev == '\r' {
+		l.lineNumber++
+	}
+
+	return startln, l.lineNumber
 }
