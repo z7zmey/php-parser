@@ -4,7 +4,7 @@
 
 # blame: jnml, labs.nic.cz
 
-all: parser.go scanner.go
+all: ./parser/parser.go ./parser/scanner.go
 	rm -f y.output
 	gofmt -l -s -w *.go
 	go build
@@ -12,14 +12,11 @@ all: parser.go scanner.go
 run: all
 	./php-parser example.php
 
-scanner.go: scanner.l
+test: all
+	go test ./test/...
+
+./parser/scanner.go: ./parser/scanner.l
 	golex -o $@ $<
 
-parser.go: parser.y
+./parser/parser.go: ./parser/parser.y
 	goyacc -o $@ $<
-
-clean:
-	rm -f php-parser.go lex.yy.go y.output *~
-
-nuke: clean
-	rm -f example

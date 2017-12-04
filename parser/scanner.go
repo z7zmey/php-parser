@@ -6,11 +6,12 @@
 
 // blame: jnml, labs.nic.cz
 
-package main
+package parser
 
 import (
 	"bytes"
 	"fmt"
+
 	"github.com/z7zmey/php-parser/token"
 )
 

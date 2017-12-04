@@ -1,5 +1,5 @@
 %{
-package main
+package parser
 
 import (
     "io"
@@ -9,7 +9,7 @@ import (
 
 var rootnode = node.SimpleNode("Root")
 
-func parse(src io.Reader, fName string) node.Node {
+func Parse(src io.Reader, fName string) node.Node {
     yyDebug        = 0
     yyErrorVerbose = true
     rootnode = node.SimpleNode("Root") //reset

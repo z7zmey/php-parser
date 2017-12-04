@@ -7,12 +7,10 @@ import (
 	"os"
 
 	"github.com/yookoala/realpath"
+	"github.com/z7zmey/php-parser/parser"
 )
 
 func main() {
-	yyDebug = 0
-	yyErrorVerbose = true
-
 	flag.Parse()
 
 	for _, path := range flag.Args() {
@@ -21,7 +19,7 @@ func main() {
 		fmt.Printf("\n==> %s", real)
 
 		src, _ := os.Open(string(real))
-		rootnode := parse(src, real)
+		rootnode := parser.Parse(src, real)
 		fmt.Println(rootnode)
 	}
 }
