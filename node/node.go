@@ -13,58 +13,58 @@ type Node interface {
 	Attribute(key string, value string) Node
 }
 
-type simpleNode struct {
-	name       string
-	children   []Node
-	attributes map[string]string
+type SimpleNode struct {
+	Name       string
+	Children   []Node
+	Attributes map[string]string
 }
 
 type tokenNode struct {
-	*simpleNode
+	*SimpleNode
 	token token.Token
 }
 
-func (n simpleNode) String() string {
+func (n SimpleNode) String() string {
 	buf := new(bytes.Buffer)
 	n.Print(buf, " ")
 	return buf.String()
 }
 
-func (n simpleNode) Print(out io.Writer, indent string) {
-	if len(n.attributes) > 0 {
-		fmt.Fprintf(out, "\n%v%v %s", indent, n.name, n.attributes)
+func (n SimpleNode) Print(out io.Writer, indent string) {
+	if len(n.Attributes) > 0 {
+		fmt.Fprintf(out, "\n%v%v %s", indent, n.Name, n.Attributes)
 	} else {
-		fmt.Fprintf(out, "\n%v%v", indent, n.name)
+		fmt.Fprintf(out, "\n%v%v", indent, n.Name)
 	}
-	for _, nn := range n.children {
+	for _, nn := range n.Children {
 		nn.Print(out, indent+"  ")
 	}
 }
 
-func SimpleNode(name string) Node {
-	return simpleNode{name: name, attributes: make(map[string]string)}
+func NewSimpleNode(name string) Node {
+	return SimpleNode{Name: name, Attributes: make(map[string]string)}
 }
 
 func TokenNode(name string, t token.Token) Node {
 	return tokenNode{
-		&simpleNode{name: name, attributes: make(map[string]string)},
+		&SimpleNode{Name: name, Attributes: make(map[string]string)},
 		t,
 	}
 }
 
 func (n tokenNode) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	for _, nn := range n.children {
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	for _, nn := range n.Children {
 		nn.Print(out, indent+"  ")
 	}
 }
 
-func (n simpleNode) Append(nn ...Node) Node {
-	n.children = append(n.children, nn...)
+func (n SimpleNode) Append(nn ...Node) Node {
+	n.Children = append(n.Children, nn...)
 	return n
 }
 
-func (n simpleNode) Attribute(key string, value string) Node {
-	n.attributes[key] = value
+func (n SimpleNode) Attribute(key string, value string) Node {
+	n.Attributes[key] = value
 	return n
 }

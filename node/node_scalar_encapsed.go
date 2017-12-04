@@ -8,7 +8,7 @@ import (
 
 
 type NodeScalarEncapsed struct {
-	*simpleNode
+	*SimpleNode
 	startToken token.Token
 	endToken token.Token
 	parts []Node
@@ -17,7 +17,7 @@ type NodeScalarEncapsed struct {
 
 func NewNodeScalarEncapsed(startToken token.Token, parts []Node, endToken token.Token) Node {
 	return NodeScalarEncapsed{
-		&simpleNode{name: "NodeScalarEncapsed", attributes: make(map[string]string)},
+		&SimpleNode{Name: "NodeScalarEncapsed", Attributes: make(map[string]string)},
 		startToken,
 		endToken,
 		parts,
@@ -25,7 +25,7 @@ func NewNodeScalarEncapsed(startToken token.Token, parts []Node, endToken token.
 }
 
 func (n NodeScalarEncapsed) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.name, n.startToken.StartLine, n.endToken.EndLine)
+	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.Name, n.startToken.StartLine, n.endToken.EndLine)
 	fmt.Fprintf(out, "\n%vparts:", indent+"  ",)
 	for _, nn := range n.parts {
 		nn.Print(out, indent+"    ")

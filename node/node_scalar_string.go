@@ -8,21 +8,21 @@ import (
 
 
 type NodeScalarString struct {
-	*simpleNode
+	*SimpleNode
 	token token.Token
 }
 
 
 func NewNodeScalarString(t token.Token) Node {
 	return NodeScalarString{
-		&simpleNode{name: "NodeScalarString", attributes: make(map[string]string)},
+		&SimpleNode{Name: "NodeScalarString", Attributes: make(map[string]string)},
 		t,
 	}
 }
 
 func (n NodeScalarString) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	for _, nn := range n.children {
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	for _, nn := range n.Children {
 		nn.Print(out, indent+"  ")
 	}
 }

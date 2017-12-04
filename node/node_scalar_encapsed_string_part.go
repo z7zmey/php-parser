@@ -7,21 +7,21 @@ import (
 )
 
 type NodeScalarEncapsedStringPart struct {
-	*simpleNode
+	*SimpleNode
 	token token.Token
 }
 
 
 func NewNodeScalarEncapsedStringPart(t token.Token) Node {
 	return NodeScalarEncapsedStringPart{
-		&simpleNode{name: "NodeScalarEncapsedStringPart", attributes: make(map[string]string)},
+		&SimpleNode{Name: "NodeScalarEncapsedStringPart", Attributes: make(map[string]string)},
 		t,
 	}
 }
 
 func (n NodeScalarEncapsedStringPart) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	for _, nn := range n.children {
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	for _, nn := range n.Children {
 		nn.Print(out, indent+"  ")
 	}
 }
