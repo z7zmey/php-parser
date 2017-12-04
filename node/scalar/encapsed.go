@@ -1,30 +1,31 @@
-package node
+package scalar
 
 import (
 	"fmt"
 	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/node"
 	"io"
 )
 
 
-type NodeScalarEncapsed struct {
-	*SimpleNode
+type Encapsed struct {
+	node.SimpleNode
 	startToken token.Token
 	endToken token.Token
-	parts []Node
+	parts []node.Node
 }
 
 
-func NewNodeScalarEncapsed(startToken token.Token, parts []Node, endToken token.Token) Node {
-	return NodeScalarEncapsed{
-		&SimpleNode{Name: "NodeScalarEncapsed", Attributes: make(map[string]string)},
+func NewEncapsed(startToken token.Token, parts []node.Node, endToken token.Token) node.Node {
+	return Encapsed{
+		node.SimpleNode{Name: "Encapsed", Attributes: make(map[string]string)},
 		startToken,
 		endToken,
 		parts,
 	}
 }
 
-func (n NodeScalarEncapsed) Print(out io.Writer, indent string) {
+func (n Encapsed) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.Name, n.startToken.StartLine, n.endToken.EndLine)
 	fmt.Fprintf(out, "\n%vparts:", indent+"  ",)
 	for _, nn := range n.parts {

@@ -8,14 +8,15 @@ import (
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/node/scalar"
 )
 
 func TestDoubleQuotedScalarString(t *testing.T) {
 	src := `<? "test";`
 
 	strToken := token.NewToken([]byte("\"test\""), 1, 1)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -30,8 +31,8 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 	";`
 
 	strToken := token.NewToken([]byte("\"\n\ttest\n\t\""), 1, 3)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -44,8 +45,8 @@ func TestSingleQuotedScalarString(t *testing.T) {
 	src := `<? '$test';`
 
 	strToken := token.NewToken([]byte("'$test'"), 1, 1)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -60,8 +61,8 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 	';`
 
 	strToken := token.NewToken([]byte("'\n\t$test\n\t'"), 1, 3)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -77,8 +78,8 @@ CAD;
 `
 
 	strToken := token.NewToken([]byte("\thello\n"), 2, 3)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -94,8 +95,8 @@ CAD;
 `
 
 	strToken := token.NewToken([]byte("\thello\n"), 2, 3)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
@@ -111,8 +112,8 @@ CAD;
 `
 
 	strToken := token.NewToken([]byte("\thello $world\n"), 2, 3)
-	strNode := node.NewNodeScalarString(strToken)
-	expected := node.SimpleNode("Statements").Append(strNode)
+	strNode := scalar.NewString(strToken)
+	expected := node.NewSimpleNode("Statements").Append(strNode)
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 

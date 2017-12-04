@@ -5,6 +5,7 @@ import (
     "io"
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
+    "github.com/z7zmey/php-parser/node/scalar"
 )
 
 var rootnode = node.NewSimpleNode("Root")
@@ -979,7 +980,7 @@ exit_expr:
 
 backticks_expr:
         /* empty */                                     { $$ = []node.Node{} }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = []node.Node{node.NewNodeScalarEncapsedStringPart($1)} }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = []node.Node{scalar.NewEncapsedStringPart($1)} }
     |   encaps_list                                     { $$ = $1; }
 ;
 
@@ -991,26 +992,26 @@ ctor_arguments:
 dereferencable_scalar:
         T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
     |   '[' array_pair_list ']'                         { $$ = $2; }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = node.NewNodeScalarString($1) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1) }
 ;
 
 scalar:
-        T_LNUMBER                                       { $$ = node.TokenNode("Lnumber", $1) }
-    |   T_DNUMBER                                       { $$ = node.TokenNode("Dnumber", $1) }
-    |   T_LINE                                          { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_FILE                                          { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_DIR                                           { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_TRAIT_C                                       { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_METHOD_C                                      { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_FUNC_C                                        { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_NS_C                                          { $$ = node.TokenNode("MagicConst", $1) }
-    |   T_CLASS_C                                       { $$ = node.TokenNode("MagicConst", $1) }
+        T_LNUMBER                                       { $$ = scalar.NewLnumber($1) }
+    |   T_DNUMBER                                       { $$ = scalar.NewDnumber($1) }
+    |   T_LINE                                          { $$ = scalar.NewMagicConstant($1) }
+    |   T_FILE                                          { $$ = scalar.NewMagicConstant($1) }
+    |   T_DIR                                           { $$ = scalar.NewMagicConstant($1) }
+    |   T_TRAIT_C                                       { $$ = scalar.NewMagicConstant($1) }
+    |   T_METHOD_C                                      { $$ = scalar.NewMagicConstant($1) }
+    |   T_FUNC_C                                        { $$ = scalar.NewMagicConstant($1) }
+    |   T_NS_C                                          { $$ = scalar.NewMagicConstant($1) }
+    |   T_CLASS_C                                       { $$ = scalar.NewMagicConstant($1) }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = node.NewNodeScalarString($2) /* TODO: mark as Heredoc*/ }
+                                                        { $$ = scalar.NewString($2) /* TODO: mark as Heredoc*/ }
     |   T_START_HEREDOC T_END_HEREDOC
                                                         { $$ = node.NewSimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("HeredocEnd", $2)) }
-    |   '"' encaps_list '"'                             { $$ = node.NewNodeScalarEncapsed($1, $2, $3) }
-    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = node.NewNodeScalarEncapsed($1, $2, $3) }
+    |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($1, $2, $3) }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($1, $2, $3) }
     |   dereferencable_scalar                           { $$ = $1; }
     |   constant                                        { $$ = $1; }
 ;
@@ -1135,9 +1136,9 @@ array_pair:
 
 encaps_list:
         encaps_list encaps_var                          { $$ = append($1, $2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, node.NewNodeScalarEncapsedStringPart($2)) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, scalar.NewEncapsedStringPart($2)) }
     |   encaps_var                                      { $$ = []node.Node{$1} }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{node.NewNodeScalarEncapsedStringPart($1), $2} }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{scalar.NewEncapsedStringPart($1), $2} }
 ;
 
 encaps_var:
