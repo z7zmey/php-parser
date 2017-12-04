@@ -2,9 +2,9 @@ package test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
+	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/token"
@@ -19,7 +19,7 @@ func TestNewNodeScalarString(t *testing.T) {
 
 	node := parser.Parse(bytes.NewBufferString(src), "test.php")
 
-	if !reflect.DeepEqual(expected, node) {
-		t.Error("Not equal")
+	if diff := pretty.Compare(expected, node); diff != "" {
+		t.Errorf("post-AddCrew diff: (-expected +actual)\n%s", diff)
 	}
 }
