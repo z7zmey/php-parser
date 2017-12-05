@@ -6,6 +6,7 @@ import (
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
+    "github.com/z7zmey/php-parser/node/name"
 )
 
 var rootnode = node.NewSimpleNode("Root")
@@ -173,7 +174,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <token> reserved_non_modifiers
 %type <token> semi_reserved
 
-%type <node> top_statement namespace_name name statement function_declaration_statement
+%type <node> top_statement name statement function_declaration_statement
 %type <node> class_declaration_statement trait_declaration_statement
 %type <node> interface_declaration_statement interface_extends_list
 %type <node> group_use_declaration inline_use_declarations inline_use_declaration
@@ -206,7 +207,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> method_modifiers non_empty_member_modifiers member_modifier
 %type <node> class_modifiers use_type
 
-%type <list> encaps_list backticks_expr
+%type <list> encaps_list backticks_expr namespace_name
 
 %%
 
@@ -242,14 +243,14 @@ top_statement_list:
 ;
 
 namespace_name:
-        T_STRING                                        { $$ = node.NewSimpleNode("NamespaceParts").Append(node.TokenNode("NsPart", $1)); }
-    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = $1.Append(node.TokenNode("NsPart", $3)); }
+        T_STRING                                        { $$ = []node.Node{name.NewNamePart($1)} }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = append($1, name.NewNamePart($3)) }
 ;
 
 name:
-      namespace_name                                    { $$ = node.NewSimpleNode("Name").Append($1); }
-    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = node.NewSimpleNode("Name").Append($3).Attribute("Relative", "true"); }
-    | T_NS_SEPARATOR namespace_name                     { $$ = node.NewSimpleNode("Name").Append($2).Attribute("FullyQualified", "true"); }
+      namespace_name                                    { $$ = name.NewName($1) }
+    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = name.NewRelative($3) }
+    | T_NS_SEPARATOR namespace_name                     { $$ = name.NewFullyQualified($2) }
 ;
 
 top_statement:
@@ -259,9 +260,9 @@ top_statement:
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.NewSimpleNode("THaltCompiler") }
-    |   T_NAMESPACE namespace_name ';'                  { $$ = node.NewSimpleNode("Namespace").Append($2); }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)); }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = node.NewSimpleNode("Namespace").Append($2).Append($4) }
+                                                        { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)).Append($4) }
     |   T_NAMESPACE '{' top_statement_list '}'          { $$ = node.NewSimpleNode("Namespace").Append($3) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2; }
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.Append($2) }
@@ -277,16 +278,16 @@ use_type:
 
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("GroupUse").Append($1).Append($4) }
+                                                        { $$ = node.NewSimpleNode("GroupUse").Append(name.NewName($1)).Append($4) }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("GroupUse").Append($2).Append($5) }
+                                                        { $$ = node.NewSimpleNode("GroupUse").Append(name.NewName($2)).Append($5) }
 ;
 
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append($1).Append($4); }
+                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append(name.NewName($1)).Append($4); }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append($2).Append($5); }
+                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append(name.NewName($2)).Append($5); }
 ;
 
 possible_comma:
@@ -317,8 +318,8 @@ inline_use_declaration:
 ;
 
 unprefixed_use_declaration:
-        namespace_name                                  { $$ = node.NewSimpleNode("UseElem").Append($1); }
-    |   namespace_name T_AS T_STRING                    { $$ = node.NewSimpleNode("UseElem").Append($1).Append(node.NewSimpleNode("as").Attribute("value", $3.String())); }
+        namespace_name                                  { $$ = node.NewSimpleNode("UseElem").Append(name.NewName($1)); }
+    |   namespace_name T_AS T_STRING                    { $$ = node.NewSimpleNode("UseElem").Append(name.NewName($1)).Append(node.NewSimpleNode("as").Attribute("value", $3.String())); }
 ;
 
 use_declaration:

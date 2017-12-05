@@ -1,3 +1,2 @@
-<? $a = 'test
-$a test
-test';
+<? 
+namespace \foo\bar\baz;
