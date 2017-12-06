@@ -549,13 +549,11 @@ while_statement:
 ;
 
 if_stmt_without_else:
-        T_IF '(' expr ')' statement
-            {
-                $$ = node.NewSimpleNode("If").Append(node.NewSimpleNode("expr").Append($3)).Append(node.NewSimpleNode("stmt").Append($5))
-            }
+        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($1, $3, $5.(node.SimpleNode).Children) }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                $$ = $1.Append(node.NewSimpleNode("ElseIf").Append(node.NewSimpleNode("expr").Append($4)).Append(node.NewSimpleNode("stmt").Append($6)))
+                _elseIf := stmt.NewElseIf($2, $4, $6.(node.SimpleNode).Children)
+                $$ = $1.(stmt.If).AddElseIf(_elseIf)
             }
 ;
 
@@ -563,18 +561,23 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                $$ = $1.Append(node.NewSimpleNode("Else").Append(node.NewSimpleNode("stmt").Append($3)))
+                _else := stmt.NewElse($2, $3.(node.SimpleNode).Children)
+                $$ = $1.(stmt.If).SetElse(_else)
             }
 ;
 
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = node.NewSimpleNode("AltIf").Append(node.NewSimpleNode("expr").Append($3)).Append(node.NewSimpleNode("stmt").Append($6))
+                $$ = node.NewSimpleNode("AltIf").
+                    Append(node.NewSimpleNode("expr").Append($3)).
+                    Append(node.NewSimpleNode("stmt").Append($6))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                $$ = $1.Append(node.NewSimpleNode("AltElseIf").Append(node.NewSimpleNode("expr").Append($4)).Append(node.NewSimpleNode("stmt").Append($7)))
+                $$ = $1.Append(node.NewSimpleNode("AltElseIf").
+                    Append(node.NewSimpleNode("expr").Append($4)).
+                    Append(node.NewSimpleNode("stmt").Append($7)))
             }
 ;
 
