@@ -197,7 +197,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
 %type <node> alt_if_stmt for_exprs switch_case_list global_var_list static_var_list
-%type <node> echo_expr_list unset_variables parameter_list class_statement_list
+%type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
 %type <node> class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
@@ -212,7 +212,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list
+%type <list> const_list echo_expr_list
 
 %%
 
@@ -375,7 +375,7 @@ statement:
     |   T_RETURN optional_expr ';'                      { $$ = node.NewSimpleNode("Return").Append($2) }
     |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
-    |   T_ECHO echo_expr_list ';'                       { $$ = $2; }
+    |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }
     |   T_INLINE_HTML                                   { $$ = node.NewSimpleNode("Echo").Append(node.NewSimpleNode("InlineHtml").Attribute("value", $1.String())) }
     |   expr ';'                                        { $$ = $1; }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
@@ -790,12 +790,12 @@ const_decl:
 ;
 
 echo_expr_list:
-        echo_expr_list ',' echo_expr                    { $$ = $1.Append($3) }
-    |   echo_expr                                       { $$ = node.NewSimpleNode("EchoList").Append($1) }
+        echo_expr_list ',' echo_expr                    { $$ = append($1, $3) }
+    |   echo_expr                                       { $$ = []node.Node{$1} }
 ;
 
 echo_expr:
-    expr                                                { $$ = node.NewSimpleNode("Echo").Append($1) }
+    expr                                                { $$ = $1 }
 ;
 
 for_exprs:
