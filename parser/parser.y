@@ -547,11 +547,11 @@ case_list:
         /* empty */                                     { $$ = node.NewSimpleNode("CaseList") }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = $1.Append(node.NewSimpleNode("Case").Append(node.NewSimpleNode("expr").Append($3)).Append($5))
+                $$ = $1.Append(stmt.NewCase($2, $3, $5))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = $1.Append(node.NewSimpleNode("Default").Append($4))
+                $$ = $1.Append(stmt.NewDefault($2, $4))
             }
 ;
 

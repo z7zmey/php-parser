@@ -3234,13 +3234,13 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:549
 		{
-			yyVAL.node = yyDollar[1].node.Append(node.NewSimpleNode("Case").Append(node.NewSimpleNode("expr").Append(yyDollar[3].node)).Append(yyDollar[5].node))
+			yyVAL.node = yyDollar[1].node.Append(stmt.NewCase(yyDollar[2].token, yyDollar[3].node, yyDollar[5].node))
 		}
 	case 197:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:553
 		{
-			yyVAL.node = yyDollar[1].node.Append(node.NewSimpleNode("Default").Append(yyDollar[4].node))
+			yyVAL.node = yyDollar[1].node.Append(stmt.NewDefault(yyDollar[2].token, yyDollar[4].node))
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
