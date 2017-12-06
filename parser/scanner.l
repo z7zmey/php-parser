@@ -93,6 +93,9 @@ NEW_LINE        (\r|\n|\r\n)
     tb := l.TokenBytes(nil)
     i:=2
     BNUMFOR:for {
+        if i > len(tb)-1 {
+            break BNUMFOR;
+        }
         switch tb[i] {
             case '0': i++;
             default: break BNUMFOR;
@@ -113,6 +116,9 @@ NEW_LINE        (\r|\n|\r\n)
     tb := l.TokenBytes(nil)
     i:=2
     HNUMFOR:for {
+        if i > len(tb)-1 {
+            break HNUMFOR;
+        }
         switch tb[i] {
             case '0': i++;
             default: break HNUMFOR;
@@ -254,7 +260,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING;
 <PROPERTY>.                                     l.ungetN(1);l.begin(PHP)
 
-<PHP>[\']([^\\\']*([\\][\'])*)*[\']             lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING;
+<PHP>[\']([^\\\']*([\\].)*)*[\']             lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_CONSTANT_ENCAPSED_STRING;
 
 <PHP>`                                          l.begin(BACKQUOTE); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 <BACKQUOTE>`                                    l.begin(PHP); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))

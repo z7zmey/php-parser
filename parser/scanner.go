@@ -11,7 +11,6 @@ package parser
 import (
 	"bytes"
 	"fmt"
-
 	"github.com/z7zmey/php-parser/token"
 )
 
@@ -798,7 +797,7 @@ yystate31:
 	switch {
 	default:
 		goto yyabort
-	case c == '\'':
+	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= 'ÿ':
 		goto yystate29
 	}
 
@@ -7597,6 +7596,9 @@ yyrule9: // {BNUM}
 		i := 2
 	BNUMFOR:
 		for {
+			if i > len(tb)-1 {
+				break BNUMFOR
+			}
 			switch tb[i] {
 			case '0':
 				i++
@@ -7632,6 +7634,9 @@ yyrule11: // {HNUM}
 		i := 2
 	HNUMFOR:
 		for {
+			if i > len(tb)-1 {
+				break HNUMFOR
+			}
 			switch tb[i] {
 			case '0':
 				i++
@@ -8406,7 +8411,7 @@ yyrule137: // .
 		l.begin(PHP)
 		goto yystate0
 	}
-yyrule138: // [\']([^\\\']*([\\][\'])*)*[\']
+yyrule138: // [\']([^\\\']*([\\].)*)*[\']
 	{
 		lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)))
 		return T_CONSTANT_ENCAPSED_STRING
