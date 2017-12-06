@@ -176,6 +176,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <token> reserved_non_modifiers
 %type <token> semi_reserved
+%type <token> identifier
 
 %type <node> top_statement name statement function_declaration_statement
 %type <node> class_declaration_statement trait_declaration_statement
@@ -194,24 +195,24 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
-%type <node> top_statement_list use_declarations const_list inner_statement_list if_stmt
+%type <node> top_statement_list use_declarations inner_statement_list if_stmt
 %type <node> alt_if_stmt for_exprs switch_case_list global_var_list static_var_list
 %type <node> echo_expr_list unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
-%type <node> class_const_list class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
+%type <node> class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
 %type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
 %type <node> lexical_var_list
 %type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
 %type <node> isset_variable type return_type type_expr
-%type <node> identifier
 
 %type <node> variable_modifiers
 %type <node> method_modifiers non_empty_member_modifiers member_modifier
 %type <node> use_type
 
 %type <strings> class_modifiers
-%type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list
+%type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
+%type <list> const_list
 
 %%
 
@@ -237,8 +238,8 @@ semi_reserved:
 ;
 
 identifier:
-        T_STRING                                        { $$ = node.TokenNode("identifier", $1) }
-    |   semi_reserved                                   { $$ = node.TokenNode("identifier", $1) }
+        T_STRING                                        { $$ = $1 }
+    |   semi_reserved                                   { $$ = $1 }
 ;
 
 top_statement_list:
@@ -272,7 +273,7 @@ top_statement:
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.Append($2) }
     |   T_USE use_declarations ';'                      { $$ = $2; }
     |   T_USE use_type use_declarations ';'             { $$ = $3.Append($2) }
-    |   T_CONST const_list ';'                          { $$ = $2; }
+    |   T_CONST const_list ';'                          { $$ = stmt.NewStmtConst($1, $2) }
 ;
 
 use_type:
@@ -332,8 +333,8 @@ use_declaration:
 ;
 
 const_list:
-        const_list ',' const_decl                       { $$ = $1.Append($3) }
-    |   const_decl                                      { $$ = node.NewSimpleNode("ConstList").Append($1) }
+        const_list ',' const_decl                       { $$ = append($1, $3) }
+    |   const_decl                                      { $$ = []node.Node{$1} }
 ;
 
 inner_statement_list:
@@ -399,7 +400,7 @@ statement:
                     Append(node.NewSimpleNode("ForeachVariable").Append($7)).
                     Append($9);
             }
-    |   T_DECLARE '(' const_list ')' declare_statement  { $$ =  node.NewSimpleNode("Declare").Append($3).Append($5) }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5.(node.SimpleNode).Children) }
     |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
@@ -682,14 +683,14 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = $2.Append($1) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3.(node.SimpleNode).Children); }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3); }
     |   T_USE name_list trait_adaptations               { $$ = node.NewSimpleNode("Use").Append($2).Append($3); }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')'
         return_type method_body
             {
                 $$ = node.NewSimpleNode("Function").
                     Append($1).
-                    Append(node.NewSimpleNode("name").Append($4)).
+                    Attribute("name", $4.Value).
                     Attribute("returns_ref", $3).
                     Append($6).
                     Append($8).
@@ -728,17 +729,17 @@ trait_alias:
     |   trait_method_reference T_AS reserved_non_modifiers
                                                         { $$ = $1.Append(node.NewSimpleNode("as").Append(node.NewSimpleNode("reservedNonModifiers")));  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = $1.Append($3).Append($4); }
+                                                        { $$ = $1.Append($3).Attribute("as", $4.Value); }
     |   trait_method_reference T_AS member_modifier     { $$ = $1.Append($3); }
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = node.NewSimpleNode("TraitMethodRef").Append($1); }
+        identifier                                      { $$ = node.NewSimpleNode("TraitMethodRef").Attribute("value", $1.Value); }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = node.NewSimpleNode("TraitMethodRef").Append($1).Append($3) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = node.NewSimpleNode("TraitMethodRef").Append($1).Attribute("value", $3.Value) }
 ;
 
 method_body:
@@ -781,16 +782,16 @@ property:
 ;
 
 class_const_list:
-        class_const_list ',' class_const_decl           { $$ = $1.Append($3) }
-    |   class_const_decl                                { $$ = node.NewSimpleNode("ConstList").Append($1) }
+        class_const_list ',' class_const_decl           { $$ = append($1, $3) }
+    |   class_const_decl                                { $$ = []node.Node{$1} }
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = node.NewSimpleNode("Const").Append($1).Append($3) }
+    identifier '=' expr                                 { $$ = stmt.NewConstant($1, $3) }
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = node.NewSimpleNode("Const").Attribute("name", $1.String()).Append($3) }
+    T_STRING '=' expr                                   { $$ = stmt.NewConstant($1, $3) }
 ;
 
 echo_expr_list:
@@ -1002,9 +1003,9 @@ scalar:
 
 constant:
         name                                            { $$ = node.NewSimpleNode("Const").Append($1) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = node.NewSimpleNode("Const").Append($1).Append($3) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = node.NewSimpleNode("Const").Append($1).Attribute("value", $3.Value) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = node.NewSimpleNode("Const").Append($1).Append($3) }
+                                                        { $$ = node.NewSimpleNode("Const").Append($1).Attribute("value", $3.Value) }
 ;
 
 expr:
@@ -1074,7 +1075,7 @@ new_variable:
 ;
 
 member_name:
-        identifier                                      { $$ = $1; }
+        identifier                                      { $$ = node.NewSimpleNode("MemberName").Attribute("value", $1.Value); }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
