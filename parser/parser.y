@@ -7,6 +7,7 @@ import (
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
     "github.com/z7zmey/php-parser/node/name"
+    "github.com/z7zmey/php-parser/node/stmt"
 )
 
 var rootnode = node.NewSimpleNode("Root")
@@ -370,7 +371,7 @@ statement:
                     Append(node.NewSimpleNode("stmt").Append($9))
             }
     |   T_SWITCH '(' expr ')' switch_case_list          { $$ = node.NewSimpleNode("Switch").Append(node.NewSimpleNode("expr").Append($3)).Append($5); }
-    |   T_BREAK optional_expr ';'                       { $$ = node.NewSimpleNode("Break").Append($2) }
+    |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = node.NewSimpleNode("Continue").Append($2) }
     |   T_RETURN optional_expr ';'                      { $$ = node.NewSimpleNode("Return").Append($2) }
     |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
