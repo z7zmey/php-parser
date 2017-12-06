@@ -30,7 +30,7 @@ func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts no
 func (n Catch) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
-	fmt.Fprintf(out, "\n%vtyps:", indent+"  ")
+	fmt.Fprintf(out, "\n%vtypes:", indent+"  ")
 	for _, nn := range n.types {
 		nn.Print(out, indent+"    ")
 	}

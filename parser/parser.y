@@ -194,7 +194,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations const_list inner_statement_list if_stmt
 %type <node> alt_if_stmt for_exprs switch_case_list global_var_list static_var_list
-%type <node> echo_expr_list unset_variables catch_list parameter_list class_statement_list
+%type <node> echo_expr_list unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
 %type <node> class_const_list class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
@@ -208,7 +208,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> method_modifiers non_empty_member_modifiers member_modifier
 %type <node> class_modifiers use_type
 
-%type <list> encaps_list backticks_expr namespace_name catch_name_list
+%type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list
 
 %%
 
@@ -400,19 +400,16 @@ statement:
     |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                $$ = node.NewSimpleNode("Try").
-                    Append($3).
-                    Append($5).
-                    Append($6);
+                $$ = stmt.NewTry($1, $3, $5, $6)
             }
     |   T_THROW expr ';'                                { $$ = node.NewSimpleNode("Throw").Append($2) }
     |   T_GOTO T_STRING ';'                             { $$ = node.NewSimpleNode("GoTo").Attribute("Label", $2.String()) }
     |   T_STRING ':'                                    { $$ = node.NewSimpleNode("Label").Attribute("name", $1.String()) }
 
 catch_list:
-        /* empty */                                     { $$ = node.NewSimpleNode("CatchList") }
+        /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = $1.Append(stmt.NewCatch($2, $4, node.NewSimpleNode("TODO: handle variable"), $8)) }
+                                                        { $$ = append($1, stmt.NewCatch($2, $4, node.NewSimpleNode("TODO: handle variable"), $8)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -421,7 +418,7 @@ catch_name_list:
 
 finally_statement:
         /* empty */                                     { $$ = node.NewSimpleNode(""); }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = node.NewSimpleNode("Finnaly").Append($3) }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3) }
 ;
 
 unset_variables:
