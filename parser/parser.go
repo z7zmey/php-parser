@@ -2855,7 +2855,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:379
 		{
-			yyVAL.node = node.NewSimpleNode("Continue").Append(yyDollar[2].node)
+			yyVAL.node = stmt.NewContinue(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
