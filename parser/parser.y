@@ -28,6 +28,7 @@ func Parse(src io.Reader, fName string) node.Node {
     token token.Token
     value string
     list []node.Node
+    strings []string
 }
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
@@ -207,8 +208,9 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <node> variable_modifiers
 %type <node> method_modifiers non_empty_member_modifiers member_modifier
-%type <node> class_modifiers use_type
+%type <node> use_type
 
+%type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list
 
 %%
@@ -455,27 +457,14 @@ is_variadic:
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-            {
-                $$ = node.NewSimpleNode("Class").
-                    Attribute("name", $3.String()).
-                    Append($1).
-                    Append(node.NewSimpleNode("Extends").Append($4)).
-                    Append(node.NewSimpleNode("Implements").Append($5)).
-                    Append($7);
-            }
+                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5, $7) }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-            {
-                $$ = node.NewSimpleNode("Class").
-                    Attribute("name", $2.String()).
-                    Append(node.NewSimpleNode("Extends").Append($3)).
-                    Append(node.NewSimpleNode("Implements").Append($4)).
-                    Append($6);
-            }
+                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4, $6) }
 ;
 
 class_modifiers:
-        class_modifier                                  { $$ = node.NewSimpleNode("Class").Attribute($1, "true") }
-    |   class_modifiers class_modifier                  { $$ = $1.Attribute($2, "true") }
+        class_modifier                                  { $$ = []string{$1} }
+    |   class_modifiers class_modifier                  { $$ = append($1, $2) }
 ;
 
 class_modifier:
@@ -498,7 +487,7 @@ interface_declaration_statement:
 ;
 
 extends_from:
-        /* empty */                                     { $$ = node.NewSimpleNode(""); }
+        /* empty */                                     { $$ = nil }
     |   T_EXTENDS name                                  { $$ = $2; }
 ;
 
@@ -825,12 +814,7 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            $$ = node.NewSimpleNode("AnonymousClass").
-                Attribute("name", $1.String()).
-                Append($2).
-                Append($3).
-                Append($4).
-                Append($6);
+            { $$ = stmt.NewClass($1, nil, $2, $3, $4, $6) }
         }
 ;
 
