@@ -12,14 +12,14 @@ type Class struct {
 	node.SimpleNode
 	token      token.Token
 	modifiers  []string
-	args       node.Node
+	args       []node.Node
 	extends    node.Node
-	implements node.Node
-	stmts      node.Node
+	implements []node.Node
+	stmts      []node.Node
 }
 
 //TODO: stmts myst be []node.Node
-func NewClass(token token.Token, modifiers []string, args node.Node, extends node.Node, implements node.Node, stmts node.Node) node.Node {
+func NewClass(token token.Token, modifiers []string, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
 	return Class{
 		node.SimpleNode{Name: "Class", Attributes: make(map[string]string)},
 		token,
@@ -43,7 +43,9 @@ func (n Class) Print(out io.Writer, indent string) {
 
 	if n.args != nil {
 		fmt.Fprintf(out, "\n%vargs:", indent+"  ")
-		n.args.Print(out, indent+"    ")
+		for _, nn := range n.args {
+			nn.Print(out, indent+"    ")
+		}
 	}
 
 	if n.extends != nil {
@@ -53,9 +55,15 @@ func (n Class) Print(out io.Writer, indent string) {
 
 	if n.implements != nil {
 		fmt.Fprintf(out, "\n%vimplements:", indent+"  ")
-		n.implements.Print(out, indent+"    ")
+		for _, nn := range n.implements {
+			nn.Print(out, indent+"    ")
+		}
 	}
 
-	fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-	n.stmts.Print(out, indent+"    ")
+	if n.stmts != nil {
+		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		for _, nn := range n.stmts {
+			nn.Print(out, indent+"    ")
+		}
+	}
 }

@@ -403,7 +403,7 @@ statement:
     |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                $$ = stmt.NewTry($1, $3, $5, $6)
+                $$ = stmt.NewTry($1, $3.(node.SimpleNode).Children, $5, $6)
             }
     |   T_THROW expr ';'                                { $$ = node.NewSimpleNode("Throw").Append($2) }
     |   T_GOTO T_STRING ';'                             { $$ = node.NewSimpleNode("GoTo").Attribute("Label", $2.String()) }
@@ -412,7 +412,7 @@ statement:
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable($5), $8)) }
+                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable($5), $8.(node.SimpleNode).Children)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -421,7 +421,7 @@ catch_name_list:
 
 finally_statement:
         /* empty */                                     { $$ = nil }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3) }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3.(node.SimpleNode).Children) }
 ;
 
 unset_variables:
@@ -457,9 +457,9 @@ is_variadic:
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5, $7) }
+                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5.(node.SimpleNode).Children, $7.(node.SimpleNode).Children) }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4, $6) }
+                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
 ;
 
 class_modifiers:
@@ -534,11 +534,11 @@ case_list:
         /* empty */                                     { $$ = node.NewSimpleNode("CaseList") }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = $1.Append(stmt.NewCase($2, $3, $5))
+                $$ = $1.Append(stmt.NewCase($2, $3, $5.(node.SimpleNode).Children))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = $1.Append(stmt.NewDefault($2, $4))
+                $$ = $1.Append(stmt.NewDefault($2, $4.(node.SimpleNode).Children))
             }
 ;
 
@@ -814,7 +814,7 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass($1, nil, $2, $3, $4, $6) }
+            { $$ = stmt.NewClass($1, nil, $2.(node.SimpleNode).Children, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
         }
 ;
 

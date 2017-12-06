@@ -11,11 +11,10 @@ import (
 type Finally struct {
 	node.SimpleNode
 	token token.Token
-	stmts node.Node
+	stmts []node.Node
 }
 
-//TODO: stmts myst be []node.Node
-func NewFinally(token token.Token, stmts node.Node) node.Node {
+func NewFinally(token token.Token, stmts []node.Node) node.Node {
 	return Finally{
 		node.SimpleNode{Name: "Finally", Attributes: make(map[string]string)},
 		token,
@@ -26,6 +25,10 @@ func NewFinally(token token.Token, stmts node.Node) node.Node {
 func (n Finally) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
-	fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-	n.stmts.Print(out, indent+"    ")
+	if n.stmts != nil {
+		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		for _, nn := range n.stmts {
+			nn.Print(out, indent+"    ")
+		}
+	}
 }

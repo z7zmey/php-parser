@@ -13,11 +13,10 @@ type Catch struct {
 	token    token.Token
 	types    []node.Node
 	variable node.Node
-	stmts    node.Node
+	stmts    []node.Node
 }
 
-//TODO: stmts myst be []node.Node
-func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts node.Node) node.Node {
+func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts []node.Node) node.Node {
 	return Catch{
 		node.SimpleNode{Name: "Catch", Attributes: make(map[string]string)},
 		token,
@@ -38,6 +37,10 @@ func (n Catch) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
 	n.variable.Print(out, indent+"    ")
 
-	fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-	n.stmts.Print(out, indent+"    ")
+	if n.stmts != nil {
+		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		for _, nn := range n.stmts {
+			nn.Print(out, indent+"    ")
+		}
+	}
 }
