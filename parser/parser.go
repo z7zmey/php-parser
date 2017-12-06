@@ -4510,7 +4510,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:1011
 		{
-			yyVAL.node = node.NewSimpleNode("Scalar").Append(node.TokenNode("Heredoc", yyDollar[1].token)).Append(node.TokenNode("HeredocEnd", yyDollar[2].token))
+			yyVAL.node = scalar.NewEncapsed(yyDollar[1].token, nil, yyDollar[2].token)
 		}
 	case 407:
 		yyDollar = yyS[yypt-3 : yypt+1]

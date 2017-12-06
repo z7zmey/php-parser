@@ -1008,7 +1008,7 @@ scalar:
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
                                                         { $$ = scalar.NewString($2) /* TODO: mark as Heredoc*/ }
     |   T_START_HEREDOC T_END_HEREDOC
-                                                        { $$ = node.NewSimpleNode("Scalar").Append(node.TokenNode("Heredoc", $1)).Append(node.TokenNode("HeredocEnd", $2)) }
+                                                        { $$ = scalar.NewEncapsed($1, nil, $2) }
     |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($1, $2, $3) }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($1, $2, $3) }
     |   dereferencable_scalar                           { $$ = $1; }
