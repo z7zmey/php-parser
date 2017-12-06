@@ -360,12 +360,7 @@ statement:
                 Append(node.NewSimpleNode("expr").Append($3)).
                 Append(node.NewSimpleNode("stmt").Append($5));
         }
-    |   T_DO statement T_WHILE '(' expr ')' ';'
-        {
-            $$ = node.NewSimpleNode("DoWhile").
-                Append(node.NewSimpleNode("expr").Append($5)).
-                Append(node.NewSimpleNode("stmt").Append($2));
-        }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2.(node.SimpleNode).Children, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
                 $$ = node.NewSimpleNode("For").
