@@ -3,8 +3,9 @@ package node
 import (
 	"bytes"
 	"fmt"
-	"github.com/z7zmey/php-parser/token"
 	"io"
+
+	"github.com/z7zmey/php-parser/token"
 )
 
 type Node interface {
