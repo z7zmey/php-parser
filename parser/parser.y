@@ -8,6 +8,7 @@ import (
     "github.com/z7zmey/php-parser/node/scalar"
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
+    "github.com/z7zmey/php-parser/node/expr"
 )
 
 var rootnode = node.NewSimpleNode("Root")
@@ -409,7 +410,7 @@ statement:
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($2, $4, node.NewSimpleNode("TODO: handle variable"), $8)) }
+                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable($5), $8)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -417,7 +418,7 @@ catch_name_list:
 ;
 
 finally_statement:
-        /* empty */                                     { $$ = node.NewSimpleNode(""); }
+        /* empty */                                     { $$ = nil }
     |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3) }
 ;
 

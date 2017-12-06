@@ -38,6 +38,8 @@ func (n Try) Print(out io.Writer, indent string) {
 		nn.Print(out, indent+"    ")
 	}
 
-	fmt.Fprintf(out, "\n%vfinally:", indent+"  ")
-	n.finally.Print(out, indent+"    ")
+	if n.finally != nil {
+		fmt.Fprintf(out, "\n%vfinally:", indent+"  ")
+		n.finally.Print(out, indent+"    ")
+	}
 }
