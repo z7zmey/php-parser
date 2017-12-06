@@ -682,7 +682,7 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = $2.Append($1) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = $3.Append($1); }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3.(node.SimpleNode).Children); }
     |   T_USE name_list trait_adaptations               { $$ = node.NewSimpleNode("Use").Append($2).Append($3); }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')'
         return_type method_body
@@ -752,12 +752,12 @@ variable_modifiers:
 ;
 
 method_modifiers:
-        /* empty */                                     { $$ = node.NewSimpleNode("PublicMemberModifier"); }
+        /* empty */                                     { $$ = node.NewSimpleNode("MemberModifiers").Append(node.NewSimpleNode("PublicMemberModifier")); }
     |   non_empty_member_modifiers                      { $$ = $1; }
 ;
 
 non_empty_member_modifiers:
-        member_modifier	                                { $$ = $1; }
+        member_modifier	                                { $$ = node.NewSimpleNode("MemberModifiers").Append($1); }
     |   non_empty_member_modifiers member_modifier      { $$ = $1.Append($2) }
 ;
 
@@ -786,7 +786,7 @@ class_const_list:
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = node.NewSimpleNode("Const").Append($3) }
+    identifier '=' expr                                 { $$ = node.NewSimpleNode("Const").Append($1).Append($3) }
 ;
 
 const_decl:
