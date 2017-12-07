@@ -379,7 +379,7 @@ statement:
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }
     |   T_INLINE_HTML                                   { $$ = node.NewSimpleNode("Echo").Append(node.NewSimpleNode("InlineHtml").Attribute("value", $1.String())) }
-    |   expr ';'                                        { $$ = $1; }
+    |   expr ';'                                        { $$ = stmt.NewExpression($1); }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = node.NewSimpleNode("Unset").Append($3); }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement

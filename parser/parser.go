@@ -2886,7 +2886,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:382
 		{
-			yyVAL.node = yyDollar[1].node
+			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
 		}
 	case 144:
 		yyDollar = yyS[yypt-6 : yypt+1]
