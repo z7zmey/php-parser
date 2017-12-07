@@ -685,16 +685,9 @@ class_statement:
         variable_modifiers property_list ';'            { $$ = $2.Append($1) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3); }
     |   T_USE name_list trait_adaptations               { $$ = node.NewSimpleNode("Use").Append($2).Append($3); }
-    |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')'
-        return_type method_body
+    |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = node.NewSimpleNode("Function").
-                    Append($1).
-                    Attribute("name", $4.Value).
-                    Attribute("returns_ref", $3).
-                    Append($6).
-                    Append($8).
-                    Append($9);
+                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6.(node.SimpleNode).Children, $8, $9.(node.SimpleNode).Children)
             }
 ;
 
@@ -743,7 +736,7 @@ absolute_trait_method_reference:
 ;
 
 method_body:
-        ';' /* abstract method */                       { $$ = node.NewSimpleNode(""); }
+        ';' /* abstract method */                       { $$ = node.NewSimpleNode("") }
     |   '{' inner_statement_list '}'                    { $$ = $2; }
 ;
 
