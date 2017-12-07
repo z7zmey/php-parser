@@ -198,7 +198,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
-%type <node> alt_if_stmt switch_case_list global_var_list static_var_list
+%type <node> alt_if_stmt switch_case_list static_var_list
 %type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
@@ -214,7 +214,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs
+%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 
 %%
 
@@ -369,7 +369,7 @@ statement:
     |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
     |   T_RETURN optional_expr ';'                      { $$ = node.NewSimpleNode("Return").Append($2) }
-    |   T_GLOBAL global_var_list ';'                    { $$ = $2; }
+    |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($1, $2) }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }
     |   T_INLINE_HTML                                   { $$ = node.NewSimpleNode("Echo").Append(node.NewSimpleNode("InlineHtml").Attribute("value", $1.String())) }
@@ -636,8 +636,8 @@ argument:
 ;
 
 global_var_list:
-        global_var_list ',' global_var                  { $$ = $1.Append($3); }
-    |   global_var                                      { $$ = node.NewSimpleNode("GlobalVarList").Append($1); }
+        global_var_list ',' global_var                  { $$ = append($1, $3); }
+    |   global_var                                      { $$ = []node.Node{$1} }
 ;
 
 global_var:
