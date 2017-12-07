@@ -198,11 +198,11 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
-%type <node> alt_if_stmt for_exprs switch_case_list global_var_list static_var_list
+%type <node> alt_if_stmt switch_case_list global_var_list static_var_list
 %type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
-%type <node> class_const_decl name_list trait_adaptations method_body non_empty_for_exprs
+%type <node> class_const_decl name_list trait_adaptations method_body
 %type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
 %type <node> lexical_var_list
 %type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
@@ -214,7 +214,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
-%type <list> const_list echo_expr_list
+%type <list> const_list echo_expr_list for_exprs non_empty_for_exprs
 
 %%
 
@@ -364,13 +364,7 @@ statement:
         }
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
-            {
-                $$ = node.NewSimpleNode("For").
-                    Append(node.NewSimpleNode("expr1").Append($3)).
-                    Append(node.NewSimpleNode("expr2").Append($5)).
-                    Append(node.NewSimpleNode("expr3").Append($7)).
-                    Append(node.NewSimpleNode("stmt").Append($9))
-            }
+                                                        { $$ = stmt.NewFor($1, $3, $5, $7, $9) }
     |   T_SWITCH '(' expr ')' switch_case_list          { $$ = node.NewSimpleNode("Switch").Append(node.NewSimpleNode("expr").Append($3)).Append($5); }
     |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
@@ -797,12 +791,12 @@ echo_expr:
 ;
 
 for_exprs:
-        /* empty */                                     { $$ = node.NewSimpleNode(""); }
+        /* empty */                                     { $$ = nil; }
     |   non_empty_for_exprs                             { $$ = $1; }
 ;
 non_empty_for_exprs:
-        non_empty_for_exprs ',' expr                    { $$ = $1.Append($3) }
-    |   expr                                            { $$ = node.NewSimpleNode("ExpressionList").Append($1) }
+        non_empty_for_exprs ',' expr                    { $$ = append($1, $3) }
+    |   expr                                            { $$ = []node.Node{$1} }
 ;
 
 anonymous_class:
