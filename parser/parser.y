@@ -168,6 +168,8 @@ func Parse(src io.Reader, fName string) node.Node {
 %token <token> T_PUBLIC
 %token <token> '"'
 %token <token> '`'
+%token <token> '{'
+%token <token> '}'
 
 %type <value> is_reference
 %type <value> is_variadic
@@ -351,7 +353,7 @@ inner_statement:
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.NewSimpleNode("THaltCompiler") }
 
 statement:
-    '{' inner_statement_list '}'                        { $$ = $2; }
+    '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($1, $3, $2.(node.SimpleNode).Children) }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
