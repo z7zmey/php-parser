@@ -3,6 +3,7 @@ package parser
 
 import (
     "io"
+    "fmt"
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
@@ -183,9 +184,9 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> top_statement name statement function_declaration_statement
 %type <node> class_declaration_statement trait_declaration_statement
 %type <node> interface_declaration_statement interface_extends_list
-%type <node> group_use_declaration inline_use_declarations inline_use_declaration
+%type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
-%type <node> unprefixed_use_declarations const_decl inner_statement
+%type <node> const_decl inner_statement
 %type <node> expr optional_expr while_statement for_statement foreach_variable
 %type <node> foreach_statement declare_statement finally_statement unset_variable variable
 %type <node> extends_from parameter optional_type argument expr_without_variable global_var
@@ -215,6 +216,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
+%type <list> unprefixed_use_declarations inline_use_declarations
 
 %%
 
@@ -271,8 +273,8 @@ top_statement:
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
                                                         { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)).Append($4) }
     |   T_NAMESPACE '{' top_statement_list '}'          { $$ = node.NewSimpleNode("Namespace").Append($3) }
-    |   T_USE mixed_group_use_declaration ';'           { $$ = $2; }
-    |   T_USE use_type group_use_declaration ';'        { $$ = $3.Append($2) }
+    |   T_USE mixed_group_use_declaration ';'           { $$ = $2.(stmt.GroupUse).SetToken($1) }
+    |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
     |   T_USE use_declarations ';'                      { $$ = $2; }
     |   T_USE use_type use_declarations ';'             { $$ = $3.Append($2) }
     |   T_CONST const_list ';'                          { $$ = stmt.NewStmtConst($1, $2) }
@@ -285,16 +287,26 @@ use_type:
 
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("GroupUse").Append(name.NewName($1)).Append($4) }
+            {
+                fmt.Println("group")
+                $$ = stmt.NewGroupUse(nil, nil, name.NewName($1), $4)
+            }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("GroupUse").Append(name.NewName($2)).Append($5) }
+            {
+                $$ = stmt.NewGroupUse(nil, nil, name.NewName($2), $5)
+            }
 ;
 
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append(name.NewName($1)).Append($4); }
+            {
+                fmt.Println("mixed")
+                $$ = stmt.NewGroupUse(nil, nil, name.NewName($1), $4)
+            }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
-                                                        { $$ = node.NewSimpleNode("MixedGroupUse").Append(name.NewName($2)).Append($5); }
+            {
+                $$ = stmt.NewGroupUse(nil, nil, name.NewName($2), $5)
+            }
 ;
 
 possible_comma:
@@ -304,14 +316,14 @@ possible_comma:
 
 inline_use_declarations:
         inline_use_declarations ',' inline_use_declaration
-                                                        { $$ = $1.Append($3) }
-    |   inline_use_declaration                          { $$ = node.NewSimpleNode("UseList").Append($1) }
+                                                        { $$ = append($1, $3) }
+    |   inline_use_declaration                          { $$ = []node.Node{$1} }
 ;
 
 unprefixed_use_declarations:
         unprefixed_use_declarations ',' unprefixed_use_declaration
-                                                        { $$ = $1.Append($3) }
-    |   unprefixed_use_declaration                      { $$ = node.NewSimpleNode("UseList").Append($1) }
+                                                        { $$ = append($1, $3) }
+    |   unprefixed_use_declaration                      { $$ = []node.Node{$1} }
 ;
 
 use_declarations:
