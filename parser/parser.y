@@ -417,12 +417,7 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = node.NewSimpleNode("Function").
-                Attribute("name", $3.String()).
-                Attribute("returns_ref", $2).
-                Append($5).
-                Append($7).
-                Append($9);
+            $$ = stmt.NewFunction($3, $2 == "true", $5.(node.SimpleNode).Children, $7, $9.(node.SimpleNode).Children)
         }
 ;
 
