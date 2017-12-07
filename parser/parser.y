@@ -377,20 +377,9 @@ statement:
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = node.NewSimpleNode("Unset").Append($3); }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
-            {
-                $$ = node.NewSimpleNode("Foreach").
-                    Append(node.NewSimpleNode("expr").Append($3)).
-                    Append(node.NewSimpleNode("ForeachVariable").Append($5)).
-                    Append($7);
-            }
+                                                        { $$ = stmt.NewForeach($1, $3, nil, $5, $7); }
     |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
-            {
-                $$ = node.NewSimpleNode("Foreach").
-                    Append(node.NewSimpleNode("expr").Append($3)).
-                    Append(node.NewSimpleNode("ForeachKey").Append($5)).
-                    Append(node.NewSimpleNode("ForeachVariable").Append($7)).
-                    Append($9);
-            }
+                                                        { $$ = stmt.NewForeach($1, $3, $5, $7, $9); }
     |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5) }
     |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
