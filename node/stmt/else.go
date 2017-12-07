@@ -11,24 +11,22 @@ import (
 type Else struct {
 	node.SimpleNode
 	token token.Token
-	stmts []node.Node
+	stmt  node.Node
 }
 
-func NewElse(token token.Token, stmts []node.Node) node.Node {
+func NewElse(token token.Token, stmt node.Node) node.Node {
 	return Else{
 		node.SimpleNode{Name: "Else", Attributes: make(map[string]string)},
 		token,
-		stmts,
+		stmt,
 	}
 }
 
 func (n Else) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
-	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
-		}
+	if n.stmt != nil {
+		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
+		n.stmt.Print(out, indent+"    ")
 	}
 }

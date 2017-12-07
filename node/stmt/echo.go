@@ -11,23 +11,23 @@ import (
 type Echo struct {
 	node.SimpleNode
 	token token.Token
-	stmts []node.Node
+	exprs []node.Node
 }
 
-func NewEcho(token token.Token, stmts []node.Node) node.Node {
+func NewEcho(token token.Token, exprs []node.Node) node.Node {
 	return Echo{
 		node.SimpleNode{Name: "Echo", Attributes: make(map[string]string)},
 		token,
-		stmts,
+		exprs,
 	}
 }
 
 func (n Echo) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
-	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-		for _, nn := range n.stmts {
+	if n.exprs != nil {
+		fmt.Fprintf(out, "\n%vexprs:", indent+"  ")
+		for _, nn := range n.exprs {
 			nn.Print(out, indent+"    ")
 		}
 	}

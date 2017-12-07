@@ -2757,7 +2757,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		//line parser/parser.y:342
 		{
-			yyVAL.node = node.NewSimpleNode("stmt")
+			yyVAL.node = node.NewSimpleNode("StmtList")
 		}
 	case 123:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -2825,7 +2825,7 @@ yydefault:
 		yyDollar = yyS[yypt-7 : yypt+1]
 		//line parser/parser.y:363
 		{
-			yyVAL.node = stmt.NewDo(yyDollar[1].token, yyDollar[2].node.(node.SimpleNode).Children, yyDollar[5].node)
+			yyVAL.node = stmt.NewDo(yyDollar[1].token, yyDollar[2].node, yyDollar[5].node)
 		}
 	case 134:
 		yyDollar = yyS[yypt-9 : yypt+1]
@@ -2920,7 +2920,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:398
 		{
-			yyVAL.node = stmt.NewDeclare(yyDollar[1].token, yyDollar[3].list, yyDollar[5].node.(node.SimpleNode).Children)
+			yyVAL.node = stmt.NewDeclare(yyDollar[1].token, yyDollar[3].list, yyDollar[5].node)
 		}
 	case 148:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -3246,13 +3246,13 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:552
 		{
-			yyVAL.node = stmt.NewIf(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node.(node.SimpleNode).Children)
+			yyVAL.node = stmt.NewIf(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node)
 		}
 	case 203:
 		yyDollar = yyS[yypt-6 : yypt+1]
 		//line parser/parser.y:554
 		{
-			_elseIf := stmt.NewElseIf(yyDollar[2].token, yyDollar[4].node, yyDollar[6].node.(node.SimpleNode).Children)
+			_elseIf := stmt.NewElseIf(yyDollar[2].token, yyDollar[4].node, yyDollar[6].node)
 			yyVAL.node = yyDollar[1].node.(stmt.If).AddElseIf(_elseIf)
 		}
 	case 204:
@@ -3265,7 +3265,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:563
 		{
-			_else := stmt.NewElse(yyDollar[2].token, yyDollar[3].node.(node.SimpleNode).Children)
+			_else := stmt.NewElse(yyDollar[2].token, yyDollar[3].node)
 			yyVAL.node = yyDollar[1].node.(stmt.If).SetElse(_else)
 		}
 	case 206:

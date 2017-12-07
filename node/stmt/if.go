@@ -12,24 +12,24 @@ type If struct {
 	node.SimpleNode
 	token  token.Token
 	cond   node.Node
-	stmts  []node.Node
+	stmt   node.Node
 	elseIf []node.Node
 	_else  node.Node
 }
 
-func NewIf(token token.Token, cond node.Node, stmts []node.Node) node.Node {
+func NewIf(token token.Token, cond node.Node, stmt node.Node) node.Node {
 	return If{
 		node.SimpleNode{Name: "If", Attributes: make(map[string]string)},
 		token,
 		cond,
-		stmts,
+		stmt,
 		nil,
 		nil,
 	}
 }
 
 func (n If) AddElseIf(elseIf node.Node) node.Node {
-	if (n.elseIf == nil) {
+	if n.elseIf == nil {
 		n.elseIf = make([]node.Node, 0)
 	}
 
@@ -52,13 +52,11 @@ func (n If) Print(out io.Writer, indent string) {
 		n.cond.Print(out, indent+"    ")
 	}
 
-	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
-		}
+	if n.stmt != nil {
+		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
+		n.stmt.Print(out, indent+"    ")
 	}
-	
+
 	if n.elseIf != nil {
 		fmt.Fprintf(out, "\n%velseIfs:", indent+"  ")
 		for _, nn := range n.elseIf {

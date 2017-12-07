@@ -11,15 +11,15 @@ import (
 type Do struct {
 	node.SimpleNode
 	token token.Token
-	stmts []node.Node
+	stmt  node.Node
 	cond  node.Node
 }
 
-func NewDo(token token.Token, stmts []node.Node, cond node.Node) node.Node {
+func NewDo(token token.Token, stmt node.Node, cond node.Node) node.Node {
 	return Do{
 		node.SimpleNode{Name: "Do", Attributes: make(map[string]string)},
 		token,
-		stmts,
+		stmt,
 		cond,
 	}
 }
@@ -32,10 +32,8 @@ func (n Do) Print(out io.Writer, indent string) {
 		n.cond.Print(out, indent+"    ")
 	}
 
-	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
-		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
-		}
+	if n.stmt != nil {
+		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
+		n.stmt.Print(out, indent+"    ")
 	}
 }

@@ -339,7 +339,7 @@ const_list:
 
 inner_statement_list:
         inner_statement_list inner_statement            { $$ = $1.Append($2); }
-    |   /* empty */                                     { $$ = node.NewSimpleNode("stmt") }
+    |   /* empty */                                     { $$ = node.NewSimpleNode("StmtList") }
 ;
 
 inner_statement:
@@ -360,7 +360,7 @@ statement:
                 Append(node.NewSimpleNode("expr").Append($3)).
                 Append(node.NewSimpleNode("stmt").Append($5));
         }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2.(node.SimpleNode).Children, $5) }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
                 $$ = node.NewSimpleNode("For").
@@ -395,7 +395,7 @@ statement:
                     Append(node.NewSimpleNode("ForeachVariable").Append($7)).
                     Append($9);
             }
-    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5.(node.SimpleNode).Children) }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5) }
     |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
@@ -549,10 +549,10 @@ while_statement:
 ;
 
 if_stmt_without_else:
-        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($1, $3, $5.(node.SimpleNode).Children) }
+        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($1, $3, $5) }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                _elseIf := stmt.NewElseIf($2, $4, $6.(node.SimpleNode).Children)
+                _elseIf := stmt.NewElseIf($2, $4, $6)
                 $$ = $1.(stmt.If).AddElseIf(_elseIf)
             }
 ;
@@ -561,7 +561,7 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                _else := stmt.NewElse($2, $3.(node.SimpleNode).Children)
+                _else := stmt.NewElse($2, $3)
                 $$ = $1.(stmt.If).SetElse(_else)
             }
 ;
