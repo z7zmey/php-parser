@@ -387,7 +387,7 @@ statement:
                 $$ = stmt.NewTry($1, $3.(node.SimpleNode).Children, $5, $6)
             }
     |   T_THROW expr ';'                                { $$ = node.NewSimpleNode("Throw").Append($2) }
-    |   T_GOTO T_STRING ';'                             { $$ = node.NewSimpleNode("GoTo").Attribute("Label", $2.String()) }
+    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto($1, $2) }
     |   T_STRING ':'                                    { $$ = node.NewSimpleNode("Label").Attribute("name", $1.String()) }
 
 catch_list:

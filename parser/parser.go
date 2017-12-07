@@ -2930,7 +2930,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:390
 		{
-			yyVAL.node = node.NewSimpleNode("GoTo").Attribute("Label", yyDollar[2].token.String())
+			yyVAL.node = stmt.NewGoto(yyDollar[1].token, yyDollar[2].token)
 		}
 	case 152:
 		yyDollar = yyS[yypt-2 : yypt+1]
