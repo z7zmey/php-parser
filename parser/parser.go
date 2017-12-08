@@ -2581,19 +2581,19 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:272
 		{
-			yyVAL.node = node.NewSimpleNode("Namespace").Append(name.NewName(yyDollar[2].list))
+			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, name.NewName(yyDollar[2].list), nil)
 		}
 	case 92:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:274
 		{
-			yyVAL.node = node.NewSimpleNode("Namespace").Append(name.NewName(yyDollar[2].list)).Append(yyDollar[4].node)
+			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, name.NewName(yyDollar[2].list), yyDollar[4].node.(node.SimpleNode).Children)
 		}
 	case 93:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:275
 		{
-			yyVAL.node = node.NewSimpleNode("Namespace").Append(yyDollar[3].node)
+			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, nil, yyDollar[3].node.(node.SimpleNode).Children)
 		}
 	case 94:
 		yyDollar = yyS[yypt-3 : yypt+1]

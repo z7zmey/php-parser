@@ -269,10 +269,10 @@ top_statement:
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
-    |   T_NAMESPACE namespace_name ';'                  { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)); }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace($1, name.NewName($2), nil) }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)).Append($4) }
-    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = node.NewSimpleNode("Namespace").Append($3) }
+                                                        { $$ = stmt.NewNamespace($1, name.NewName($2), $4.(node.SimpleNode).Children) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace($1, nil, $3.(node.SimpleNode).Children) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2.(stmt.GroupUse).SetToken($1) }
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
     |   T_USE use_declarations ';'                      { $$ = $2; }
