@@ -203,7 +203,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> alt_if_stmt switch_case_list static_var_list
 %type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
-%type <node> non_empty_parameter_list argument_list non_empty_argument_list property_list
+%type <node> non_empty_parameter_list argument_list non_empty_argument_list
 %type <node> class_const_decl name_list trait_adaptations method_body
 %type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
 %type <node> lexical_var_list
@@ -217,7 +217,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
-%type <list> unprefixed_use_declarations inline_use_declarations
+%type <list> unprefixed_use_declarations inline_use_declarations property_list
 
 %%
 
@@ -668,7 +668,7 @@ class_statement_list:
 ;
 
 class_statement:
-        variable_modifiers property_list ';'            { $$ = $2.Append($1) }
+        variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3); }
     |   T_USE name_list trait_adaptations               { $$ = node.NewSimpleNode("Use").Append($2).Append($3); }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
@@ -751,13 +751,13 @@ member_modifier:
 ;
 
 property_list:
-        property_list ',' property                      { $$ = $1.Append($3) }
-    |   property                                        { $$ = node.NewSimpleNode("PropertyList").Append($1) }
+        property_list ',' property                      { $$ = append($1, $3) }
+    |   property                                        { $$ = []node.Node{$1} }
 ;
 
 property:
-        T_VARIABLE                                      { $$ = node.NewSimpleNode("Property").Attribute("name", $1.String()) }
-    |   T_VARIABLE '=' expr                             { $$ = node.NewSimpleNode("Property").Attribute("name", $1.String()).Append(node.NewSimpleNode("Default").Append($3)) }
+        T_VARIABLE                                      { $$ = stmt.NewProperty($1, nil) }
+    |   T_VARIABLE '=' expr                             { $$ = stmt.NewProperty($1, $3) }
 ;
 
 class_const_list:
