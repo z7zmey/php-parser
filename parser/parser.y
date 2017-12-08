@@ -171,6 +171,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %token <token> '`'
 %token <token> '{'
 %token <token> '}'
+%token <token> ';'
 
 %type <value> is_reference
 %type <value> is_variadic
@@ -393,7 +394,7 @@ statement:
     |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
                                                         { $$ = stmt.NewForeach($1, $3, $5, $7, $9); }
     |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5) }
-    |   ';' /* empty statement */                       { $$ = node.NewSimpleNode(""); }
+    |   ';'                                             { $$ = stmt.NewNop($1) }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
                 $$ = stmt.NewTry($1, $3.(node.SimpleNode).Children, $5, $6)
