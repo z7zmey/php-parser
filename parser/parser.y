@@ -381,7 +381,7 @@ statement:
     |   T_SWITCH '(' expr ')' switch_case_list          { $$ = node.NewSimpleNode("Switch").Append(node.NewSimpleNode("expr").Append($3)).Append($5); }
     |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
-    |   T_RETURN optional_expr ';'                      { $$ = node.NewSimpleNode("Return").Append($2) }
+    |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($1, $2) }
     |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($1, $2) }
     |   T_STATIC static_var_list ';'                    { $$ = $2; }
     |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }

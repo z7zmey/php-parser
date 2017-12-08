@@ -2860,7 +2860,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:384
 		{
-			yyVAL.node = node.NewSimpleNode("Return").Append(yyDollar[2].node)
+			yyVAL.node = stmt.NewReturn(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
