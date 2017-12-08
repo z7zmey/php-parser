@@ -200,7 +200,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
-%type <node> alt_if_stmt switch_case_list static_var_list
+%type <node> alt_if_stmt switch_case_list 
 %type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list case_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
@@ -217,7 +217,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
-%type <list> unprefixed_use_declarations inline_use_declarations property_list
+%type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 
 %%
 
@@ -383,7 +383,7 @@ statement:
     |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
     |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($1, $2) }
     |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($1, $2) }
-    |   T_STATIC static_var_list ';'                    { $$ = $2; }
+    |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($1, $2); }
     |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }
     |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1) }
     |   expr ';'                                        { $$ = stmt.NewExpression($1); }
@@ -653,8 +653,8 @@ global_var:
 ;
 
 static_var_list:
-        static_var_list ',' static_var                  { $$ = $1.Append($3); }
-    |   static_var                                      { $$ = node.NewSimpleNode("StaticVarList").Append($1); }
+        static_var_list ',' static_var                  { $$ = append($1, $3) }
+    |   static_var                                      { $$ = []node.Node{$1} }
 ;
 
 static_var:
