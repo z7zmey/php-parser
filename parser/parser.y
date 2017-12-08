@@ -400,7 +400,7 @@ statement:
             }
     |   T_THROW expr ';'                                { $$ = node.NewSimpleNode("Throw").Append($2) }
     |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto($1, $2) }
-    |   T_STRING ':'                                    { $$ = node.NewSimpleNode("Label").Attribute("name", $1.String()) }
+    |   T_STRING ':'                                    { $$ = stmt.NewLabel($1) }
 
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
