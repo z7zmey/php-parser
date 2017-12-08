@@ -466,12 +466,7 @@ trait_declaration_statement:
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
-        {
-            $$ = node.NewSimpleNode("Interface").
-                Attribute("name", $2.String()).
-                Append(node.NewSimpleNode("Extends").Append($3)).
-                Append($5);
-        }
+                                                        { $$ = stmt.NewInterface($1, $2, $3, $5.(node.SimpleNode).Children) }
 ;
 
 extends_from:
@@ -480,7 +475,7 @@ extends_from:
 ;
 
 interface_extends_list:
-        /* empty */                                     { $$ = node.NewSimpleNode("") }
+        /* empty */                                     { $$ = nil }
     |   T_EXTENDS name_list                             { $$ = $2; }
 ;
 
