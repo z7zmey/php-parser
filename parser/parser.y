@@ -268,7 +268,7 @@ top_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.NewSimpleNode("THaltCompiler") }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
     |   T_NAMESPACE namespace_name ';'                  { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)); }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
                                                         { $$ = node.NewSimpleNode("Namespace").Append(name.NewName($2)).Append($4) }
@@ -362,7 +362,7 @@ inner_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = node.NewSimpleNode("THaltCompiler") }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
 
 statement:
     '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($1, $3, $2.(node.SimpleNode).Children) }

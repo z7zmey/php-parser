@@ -2575,7 +2575,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:271
 		{
-			yyVAL.node = node.NewSimpleNode("THaltCompiler")
+			yyVAL.node = stmt.NewHaltCompiler(yyDollar[1].token)
 		}
 	case 91:
 		yyDollar = yyS[yypt-3 : yypt+1]
@@ -2793,7 +2793,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:365
 		{
-			yyVAL.node = node.NewSimpleNode("THaltCompiler")
+			yyVAL.node = stmt.NewHaltCompiler(yyDollar[1].token)
 		}
 	case 129:
 		yyDollar = yyS[yypt-3 : yypt+1]
