@@ -2879,7 +2879,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:387
 		{
-			yyVAL.node = node.NewSimpleNode("Echo").Append(node.NewSimpleNode("InlineHtml").Attribute("value", yyDollar[1].token.String()))
+			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token)
 		}
 	case 143:
 		yyDollar = yyS[yypt-2 : yypt+1]
