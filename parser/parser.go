@@ -3452,13 +3452,13 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:661
 		{
-			yyVAL.node = node.NewSimpleNode("StaticVariable").Attribute("Name", yyDollar[1].token.String())
+			yyVAL.node = stmt.NewStaticVar(yyDollar[1].token, nil)
 		}
 	case 237:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:662
 		{
-			yyVAL.node = node.NewSimpleNode("StaticVariable").Attribute("Name", yyDollar[1].token.String()).Append(node.NewSimpleNode("expr").Append(yyDollar[3].node))
+			yyVAL.node = stmt.NewStaticVar(yyDollar[1].token, yyDollar[3].node)
 		}
 	case 238:
 		yyDollar = yyS[yypt-2 : yypt+1]

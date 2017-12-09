@@ -658,8 +658,8 @@ static_var_list:
 ;
 
 static_var:
-        T_VARIABLE                                      { $$ = node.NewSimpleNode("StaticVariable").Attribute("Name", $1.String()); }
-    |   T_VARIABLE '=' expr                             { $$ = node.NewSimpleNode("StaticVariable").Attribute("Name", $1.String()).Append(node.NewSimpleNode("expr").Append($3)); }
+        T_VARIABLE                                      { $$ = stmt.NewStaticVar($1, nil) }
+    |   T_VARIABLE '=' expr                             { $$ = stmt.NewStaticVar($1, $3) }
 ;
 
 class_statement_list:
