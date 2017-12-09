@@ -201,7 +201,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
 %type <node> alt_if_stmt 
-%type <node> unset_variables parameter_list class_statement_list
+%type <node> parameter_list class_statement_list
 %type <node> implements_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
 %type <node> class_const_decl name_list method_body
@@ -218,7 +218,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
-%type <list> switch_case_list case_list trait_adaptation_list trait_adaptations
+%type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
 
 %%
 
@@ -389,7 +389,7 @@ statement:
     |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1) }
     |   expr ';'                                        { $$ = stmt.NewExpression($1); }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
-                                                        { $$ = node.NewSimpleNode("Unset").Append($3); }
+                                                        { $$ = stmt.NewUnset($1, $3) }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
                                                         { $$ = stmt.NewForeach($1, $3, nil, $5, $7); }
     |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
@@ -420,8 +420,8 @@ finally_statement:
 ;
 
 unset_variables:
-        unset_variable                                  { $$ = node.NewSimpleNode("UnsetVariablesList").Append($1) }
-    |   unset_variables ',' unset_variable              { $$ = $1.Append($3) }
+        unset_variable                                  { $$ = []node.Node{$1} }
+    |   unset_variables ',' unset_variable              { $$ = append($1, $3) }
 ;
 
 unset_variable:
