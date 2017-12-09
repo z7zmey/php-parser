@@ -2714,19 +2714,19 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:338
 		{
-			yyVAL.node = yyDollar[2].node.Append(yyDollar[1].node)
+			yyVAL.node = yyDollar[2].node.(stmt.Use).SetType(yyDollar[1].node)
 		}
 	case 115:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:342
 		{
-			yyVAL.node = node.NewSimpleNode("UseElem").Append(name.NewName(yyDollar[1].list))
+			yyVAL.node = stmt.NewUse(nil, name.NewName(yyDollar[1].list), nil)
 		}
 	case 116:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:343
 		{
-			yyVAL.node = node.NewSimpleNode("UseElem").Append(name.NewName(yyDollar[1].list)).Append(node.NewSimpleNode("as").Attribute("value", yyDollar[3].token.String()))
+			yyVAL.node = stmt.NewUse(nil, name.NewName(yyDollar[1].list), yyDollar[3].token)
 		}
 	case 117:
 		yyDollar = yyS[yypt-1 : yypt+1]

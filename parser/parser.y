@@ -335,12 +335,12 @@ use_declarations:
 
 inline_use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
-    |   use_type unprefixed_use_declaration             { $$ = $2.Append($1) }
+    |   use_type unprefixed_use_declaration             { $$ = $2.(stmt.Use).SetType($1) }
 ;
 
 unprefixed_use_declaration:
-        namespace_name                                  { $$ = node.NewSimpleNode("UseElem").Append(name.NewName($1)); }
-    |   namespace_name T_AS T_STRING                    { $$ = node.NewSimpleNode("UseElem").Append(name.NewName($1)).Append(node.NewSimpleNode("as").Attribute("value", $3.String())); }
+        namespace_name                                  { $$ = stmt.NewUse(nil, name.NewName($1), nil) }
+    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1), $3) }
 ;
 
 use_declaration:
