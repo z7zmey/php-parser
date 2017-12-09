@@ -705,12 +705,12 @@ trait_precedence:
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = $1.Append(node.NewSimpleNode("as").Attribute("value", $3.String())); }
+        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, $3) }
     |   trait_method_reference T_AS reserved_non_modifiers
-                                                        { $$ = $1.Append(node.NewSimpleNode("as").Append(node.NewSimpleNode("reservedNonModifiers")));  }
+                                                        { $$ = stmt.NewTraitUseAlias($1, nil, $3)  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = $1.Append($3).Attribute("as", $4.Value); }
-    |   trait_method_reference T_AS member_modifier     { $$ = $1.Append($3); }
+                                                        { $$ = stmt.NewTraitUseAlias($1, $3, $4) }
+    |   trait_method_reference T_AS member_modifier     { $$ = stmt.NewTraitUseAlias($1, $3, nil) }
 ;
 
 trait_method_reference:

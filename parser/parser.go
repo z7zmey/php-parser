@@ -3560,25 +3560,25 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:708
 		{
-			yyVAL.node = yyDollar[1].node.Append(node.NewSimpleNode("as").Attribute("value", yyDollar[3].token.String()))
+			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, yyDollar[3].token)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:710
 		{
-			yyVAL.node = yyDollar[1].node.Append(node.NewSimpleNode("as").Append(node.NewSimpleNode("reservedNonModifiers")))
+			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, yyDollar[3].token)
 		}
 	case 256:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:712
 		{
-			yyVAL.node = yyDollar[1].node.Append(yyDollar[3].node).Attribute("as", yyDollar[4].token.Value)
+			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, yyDollar[4].token)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:713
 		{
-			yyVAL.node = yyDollar[1].node.Append(yyDollar[3].node)
+			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
 		}
 	case 258:
 		yyDollar = yyS[yypt-1 : yypt+1]
