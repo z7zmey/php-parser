@@ -717,12 +717,12 @@ trait_alias:
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = node.NewSimpleNode("TraitMethodRef").Attribute("value", $1.Value); }
+        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, $1) }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = node.NewSimpleNode("TraitMethodRef").Append($1).Attribute("value", $3.Value) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, $3) }
 ;
 
 method_body:

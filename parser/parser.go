@@ -3585,7 +3585,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:720
 		{
-			yyVAL.node = node.NewSimpleNode("TraitMethodRef").Attribute("value", yyDollar[1].token.Value)
+			yyVAL.node = stmt.NewTraitMethodRef(nil, yyDollar[1].token)
 		}
 	case 259:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -3597,7 +3597,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:725
 		{
-			yyVAL.node = node.NewSimpleNode("TraitMethodRef").Append(yyDollar[1].node).Attribute("value", yyDollar[3].token.Value)
+			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
