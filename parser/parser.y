@@ -200,9 +200,9 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
 %type <node> top_statement_list use_declarations inner_statement_list if_stmt
-%type <node> alt_if_stmt switch_case_list 
+%type <node> alt_if_stmt 
 %type <node> unset_variables parameter_list class_statement_list
-%type <node> implements_list case_list if_stmt_without_else
+%type <node> implements_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
 %type <node> class_const_decl name_list trait_adaptations method_body
 %type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
@@ -218,6 +218,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
+%type <list> switch_case_list case_list
 
 %%
 
@@ -378,7 +379,7 @@ statement:
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
                                                         { $$ = stmt.NewFor($1, $3, $5, $7, $9) }
-    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = node.NewSimpleNode("Switch").Append(node.NewSimpleNode("expr").Append($3)).Append($5); }
+    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = stmt.NewSwitch($1, $3, $5) }
     |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
     |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
     |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($1, $2) }
@@ -515,14 +516,14 @@ switch_case_list:
 ;
 
 case_list:
-        /* empty */                                     { $$ = node.NewSimpleNode("CaseList") }
+        /* empty */                                     { $$ = []node.Node{} }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = $1.Append(stmt.NewCase($2, $3, $5.(node.SimpleNode).Children))
+                $$ = append($1, stmt.NewCase($2, $3, $5.(node.SimpleNode).Children))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = $1.Append(stmt.NewDefault($2, $4.(node.SimpleNode).Children))
+                $$ = append($1, stmt.NewDefault($2, $4.(node.SimpleNode).Children))
             }
 ;
 
