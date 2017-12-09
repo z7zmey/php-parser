@@ -204,8 +204,8 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> unset_variables parameter_list class_statement_list
 %type <node> implements_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
-%type <node> class_const_decl name_list trait_adaptations method_body
-%type <node> ctor_arguments alt_if_stmt_without_else trait_adaptation_list lexical_vars
+%type <node> class_const_decl name_list method_body
+%type <node> ctor_arguments alt_if_stmt_without_else lexical_vars
 %type <node> lexical_var_list
 %type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
 %type <node> isset_variable type return_type type_expr
@@ -218,7 +218,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
-%type <list> switch_case_list case_list
+%type <list> switch_case_list case_list trait_adaptation_list trait_adaptations
 
 %%
 
@@ -671,7 +671,7 @@ class_statement_list:
 class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3); }
-    |   T_USE name_list trait_adaptations               { $$ = node.NewSimpleNode("Use").Append($2).Append($3); }
+    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2.(node.SimpleNode).Children, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
                 $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6.(node.SimpleNode).Children, $8, $9.(node.SimpleNode).Children)
@@ -684,14 +684,14 @@ name_list:
 ;
 
 trait_adaptations:
-        ';'                                             { $$ = node.NewSimpleNode(""); }
-    |   '{' '}'                                         { $$ = node.NewSimpleNode(""); }
+        ';'                                             { $$ = nil }
+    |   '{' '}'                                         { $$ = nil }
     |   '{' trait_adaptation_list '}'                   { $$ = $2; }
 ;
 
 trait_adaptation_list:
-        trait_adaptation                                { $$ = node.NewSimpleNode("TraitAdaptionList").Append($1) }
-    |   trait_adaptation_list trait_adaptation          { $$ = $1.Append($2) }
+        trait_adaptation                                { $$ = []node.Node{$1} }
+    |   trait_adaptation_list trait_adaptation          { $$ = append($1, $2) }
 ;
 
 trait_adaptation:
