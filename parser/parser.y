@@ -371,11 +371,7 @@ statement:
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
-        {
-            $$ = node.NewSimpleNode("While").
-                Append(node.NewSimpleNode("expr").Append($3)).
-                Append(node.NewSimpleNode("stmt").Append($5));
-        }
+                                                        { $$ = stmt.NewWhile($1, $3, $5) }
     |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
                                                         { $$ = stmt.NewFor($1, $3, $5, $7, $9) }
