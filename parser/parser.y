@@ -701,7 +701,10 @@ trait_adaptation:
 
 trait_precedence:
     absolute_trait_method_reference T_INSTEADOF name_list
-                                                        { $$ = node.NewSimpleNode("TraitPrecedence").Append($1).Append($3) }
+        {
+            name := name.NewName($3.(node.SimpleNode).Children)
+            $$ = stmt.NewTraitUsePrecedence($1, name)
+        }
 ;
 
 trait_alias:
