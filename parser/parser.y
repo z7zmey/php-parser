@@ -199,7 +199,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset isset_variables
-%type <node> top_statement_list use_declarations inner_statement_list if_stmt
+%type <node> top_statement_list inner_statement_list if_stmt
 %type <node> alt_if_stmt 
 %type <node> parameter_list class_statement_list
 %type <node> implements_list if_stmt_without_else
@@ -219,6 +219,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
+%type <list> use_declarations
 
 %%
 
@@ -277,8 +278,8 @@ top_statement:
     |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace($1, nil, $3.(node.SimpleNode).Children) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2.(stmt.GroupUse).SetToken($1) }
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
-    |   T_USE use_declarations ';'                      { $$ = $2; }
-    |   T_USE use_type use_declarations ';'             { $$ = $3.Append($2) }
+    |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList($1, nil, $2) }
+    |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($1, $2, $3) }
     |   T_CONST const_list ';'                          { $$ = stmt.NewStmtConst($1, $2) }
 ;
 
@@ -329,8 +330,8 @@ unprefixed_use_declarations:
 ;
 
 use_declarations:
-        use_declarations ',' use_declaration            { $$ = $1.Append($3) }
-    |   use_declaration                                 { $$ = node.NewSimpleNode("UseList").Append($1) }
+        use_declarations ',' use_declaration            { $$ = append($1, $3) }
+    |   use_declaration                                 { $$ = []node.Node{$1} }
 ;
 
 inline_use_declaration:

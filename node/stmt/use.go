@@ -33,7 +33,7 @@ func (n Use) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
 
 	if n.useType != nil {
-		fmt.Fprintf(out, "\n%vtype: %q", indent+"  ", n.alias.GetValue())
+		fmt.Fprintf(out, "\n%vtype:", indent+"  ")
 		n.useType.Print(out, indent+"    ")
 	}
 
