@@ -400,7 +400,7 @@ statement:
             {
                 $$ = stmt.NewTry($1, $3.(node.SimpleNode).Children, $5, $6)
             }
-    |   T_THROW expr ';'                                { $$ = node.NewSimpleNode("Throw").Append($2) }
+    |   T_THROW expr ';'                                { $$ = stmt.NewThrow($1, $2) }
     |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto($1, $2) }
     |   T_STRING ':'                                    { $$ = stmt.NewLabel($1) }
 
@@ -463,7 +463,7 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = node.NewSimpleNode("Trait").Attribute("name", $2.String()).Append($4) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait($2, $4.(node.SimpleNode).Children) }
 ;
 
 interface_declaration_statement:

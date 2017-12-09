@@ -2932,7 +2932,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:403
 		{
-			yyVAL.node = node.NewSimpleNode("Throw").Append(yyDollar[2].node)
+			yyVAL.node = stmt.NewThrow(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 151:
 		yyDollar = yyS[yypt-3 : yypt+1]
@@ -3070,7 +3070,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:466
 		{
-			yyVAL.node = node.NewSimpleNode("Trait").Attribute("name", yyDollar[2].token.String()).Append(yyDollar[4].node)
+			yyVAL.node = stmt.NewTrait(yyDollar[2].token, yyDollar[4].node.(node.SimpleNode).Children)
 		}
 	case 174:
 		yyDollar = yyS[yypt-6 : yypt+1]
