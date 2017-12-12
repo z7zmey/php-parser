@@ -10,6 +10,9 @@ import (
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
     "github.com/z7zmey/php-parser/node/expr"
+    "github.com/z7zmey/php-parser/node/expr/assign_op"
+    "github.com/z7zmey/php-parser/node/expr/binary_op"
+    "github.com/z7zmey/php-parser/node/expr/cast"
 )
 
 var rootnode = node.NewSimpleNode("Root")
@@ -807,69 +810,69 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr         { $$ = node.NewSimpleNode("Assign").Append($3).Append($6); }
     |   '[' array_pair_list ']' '=' expr                { $$ = node.NewSimpleNode("Assign").Append($2).Append($5); }
-    |   variable '=' expr                               { $$ = node.NewSimpleNode("Assign").Append($1).Append($3); }
-    |   variable '=' '&' expr                           { $$ = node.NewSimpleNode("AssignRef").Append($1).Append($4); }
+    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3, false) }
+    |   variable '=' '&' expr                           { $$ = assign_op.NewAssign($1, $4, true) }
     |   T_CLONE expr                                    { $$ = node.NewSimpleNode("Clone").Append($2); }
-    |   variable T_PLUS_EQUAL expr                      { $$ = node.NewSimpleNode("AssignAdd").Append($1).Append($3); }
-    |   variable T_MINUS_EQUAL expr                     { $$ = node.NewSimpleNode("AssignSub").Append($1).Append($3); }
-    |   variable T_MUL_EQUAL expr                       { $$ = node.NewSimpleNode("AssignMul").Append($1).Append($3); }
-    |   variable T_POW_EQUAL expr                       { $$ = node.NewSimpleNode("AssignPow").Append($1).Append($3); }
-    |   variable T_DIV_EQUAL expr                       { $$ = node.NewSimpleNode("AssignDiv").Append($1).Append($3); }
-    |   variable T_CONCAT_EQUAL expr                    { $$ = node.NewSimpleNode("AssignConcat").Append($1).Append($3); }
-    |   variable T_MOD_EQUAL expr                       { $$ = node.NewSimpleNode("AssignMod").Append($1).Append($3); }
-    |   variable T_AND_EQUAL expr                       { $$ = node.NewSimpleNode("AssignAnd").Append($1).Append($3); }
-    |   variable T_OR_EQUAL expr                        { $$ = node.NewSimpleNode("AssignOr").Append($1).Append($3); }
-    |   variable T_XOR_EQUAL expr                       { $$ = node.NewSimpleNode("AssignXor").Append($1).Append($3); }
-    |   variable T_SL_EQUAL expr                        { $$ = node.NewSimpleNode("AssignShiftLeft").Append($1).Append($3); }
-    |   variable T_SR_EQUAL expr                        { $$ = node.NewSimpleNode("AssignShiftRight").Append($1).Append($3); }
+    |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3) }
+    |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3) }
+    |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3) }
+    |   variable T_POW_EQUAL expr                       { $$ = assign_op.NewPow($1, $3) }
+    |   variable T_DIV_EQUAL expr                       { $$ = assign_op.NewDiv($1, $3) }
+    |   variable T_CONCAT_EQUAL expr                    { $$ = assign_op.NewConcat($1, $3) }
+    |   variable T_MOD_EQUAL expr                       { $$ = assign_op.NewMod($1, $3) }
+    |   variable T_AND_EQUAL expr                       { $$ = assign_op.NewBitwiseAnd($1, $3) }
+    |   variable T_OR_EQUAL expr                        { $$ = assign_op.NewBitwiseOr($1, $3) }
+    |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3) }
+    |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3) }
+    |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3) }
     |   variable T_INC                                  { $$ = node.NewSimpleNode("PostIncrement").Append($1) }
     |   T_INC variable                                  { $$ = node.NewSimpleNode("PreIncrement").Append($2) }
     |   variable T_DEC                                  { $$ = node.NewSimpleNode("PostDecrement").Append($1) }
     |   T_DEC variable                                  { $$ = node.NewSimpleNode("PreDecrement").Append($2) }
-    |   expr T_BOOLEAN_OR expr                          { $$ = node.NewSimpleNode("Or").Append($1).Append($3) }
-    |   expr T_BOOLEAN_AND expr                         { $$ = node.NewSimpleNode("And").Append($1).Append($3) }
-    |   expr T_LOGICAL_OR expr                          { $$ = node.NewSimpleNode("Or").Append($1).Append($3) }
-    |   expr T_LOGICAL_AND expr                         { $$ = node.NewSimpleNode("And").Append($1).Append($3) }
-    |   expr T_LOGICAL_XOR expr                         { $$ = node.NewSimpleNode("Xor").Append($1).Append($3) }
-    |   expr '|' expr                                   { $$ = node.NewSimpleNode("BitwiseOr").Append($1).Append($3) }
-    |   expr '&' expr                                   { $$ = node.NewSimpleNode("BitwiseAnd").Append($1).Append($3) }
-    |   expr '^' expr                                   { $$ = node.NewSimpleNode("BitwiseXor").Append($1).Append($3) }
-    |   expr '.' expr                                   { $$ = node.NewSimpleNode("Concat").Append($1).Append($3) }
-    |   expr '+' expr                                   { $$ = node.NewSimpleNode("Add").Append($1).Append($3) }
-    |   expr '-' expr                                   { $$ = node.NewSimpleNode("Sub").Append($1).Append($3) }
-    |   expr '*' expr                                   { $$ = node.NewSimpleNode("Mul").Append($1).Append($3) }
-    |   expr T_POW expr                                 { $$ = node.NewSimpleNode("Pow").Append($1).Append($3) }
-    |   expr '/' expr                                   { $$ = node.NewSimpleNode("Div").Append($1).Append($3) }
-    |   expr '%' expr                                   { $$ = node.NewSimpleNode("Mod").Append($1).Append($3) }
-    |   expr T_SL expr                                  { $$ = node.NewSimpleNode("ShiftLeft").Append($1).Append($3) }
-    |   expr T_SR expr                                  { $$ = node.NewSimpleNode("ShiftRight").Append($1).Append($3) }
+    |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3) }
+    |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3) }
+    |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3) }
+    |   expr T_LOGICAL_AND expr                         { $$ = binary_op.NewLogicalAnd($1, $3) }
+    |   expr T_LOGICAL_XOR expr                         { $$ = binary_op.NewLogicalXor($1, $3) }
+    |   expr '|' expr                                   { $$ = binary_op.NewBitwiseOr($1, $3) }
+    |   expr '&' expr                                   { $$ = binary_op.NewBitwiseAnd($1, $3) }
+    |   expr '^' expr                                   { $$ = binary_op.NewBitwiseXor($1, $3) }
+    |   expr '.' expr                                   { $$ = binary_op.NewConcat($1, $3) }
+    |   expr '+' expr                                   { $$ = binary_op.NewPlus($1, $3) }
+    |   expr '-' expr                                   { $$ = binary_op.NewMinus($1, $3) }
+    |   expr '*' expr                                   { $$ = binary_op.NewMul($1, $3) }
+    |   expr T_POW expr                                 { $$ = binary_op.NewPow($1, $3) }
+    |   expr '/' expr                                   { $$ = binary_op.NewDiv($1, $3) }
+    |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3) }
+    |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3) }
+    |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3) }
     |   '+' expr %prec T_INC                            { $$ = node.NewSimpleNode("UnaryPlus").Append($2) }
     |   '-' expr %prec T_INC                            { $$ = node.NewSimpleNode("UnaryMinus").Append($2) }
     |   '!' expr                                        { $$ = node.NewSimpleNode("BooleanNot").Append($2) }
     |   '~' expr                                        { $$ = node.NewSimpleNode("BitwiseNot").Append($2) }
-    |   expr T_IS_IDENTICAL expr                        { $$ = node.NewSimpleNode("Identical").Append($1).Append($3) }
-    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = node.NewSimpleNode("NotIdentical").Append($1).Append($3) }
-    |   expr T_IS_EQUAL expr                            { $$ = node.NewSimpleNode("Equal").Append($1).Append($3) }
-    |   expr T_IS_NOT_EQUAL expr                        { $$ = node.NewSimpleNode("NotEqual").Append($1).Append($3) }
-    |   expr '<' expr                                   { $$ = node.NewSimpleNode("Smaller").Append($1).Append($3) }
-    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = node.NewSimpleNode("SmallerOrEqual").Append($1).Append($3) }
-    |   expr '>' expr                                   { $$ = node.NewSimpleNode("Greater").Append($1).Append($3) }
-    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = node.NewSimpleNode("GreaterOrEqual").Append($1).Append($3) }
-    |   expr T_SPACESHIP expr                           { $$ = node.NewSimpleNode("Spaceship").Append($1).Append($3); }
+    |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3) }
+    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3) }
+    |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3) }
+    |   expr T_IS_NOT_EQUAL expr                        { $$ = binary_op.NewNotEqual($1, $3) }
+    |   expr '<' expr                                   { $$ = binary_op.NewSmaller($1, $3) }
+    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = binary_op.NewSmallerOrEqual($1, $3) }
+    |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3) }
+    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3) }
+    |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3) }
     |   expr T_INSTANCEOF class_name_reference          { $$ = node.NewSimpleNode("InstanceOf").Append($1).Append($3) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
     |   expr '?' expr ':' expr                          { $$ = node.NewSimpleNode("Ternary").Append($1).Append($3).Append($5); }
     |   expr '?' ':' expr                               { $$ = node.NewSimpleNode("Ternary").Append($1).Append($4); }
-    |   expr T_COALESCE expr                            { $$ = node.NewSimpleNode("Coalesce").Append($1).Append($3); }
+    |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3) }
     |   internal_functions_in_yacc                      { $$ = $1}
-    |   T_INT_CAST expr                                 { $$ = node.NewSimpleNode("CastInt").Append($2); }
-    |   T_DOUBLE_CAST expr                              { $$ = node.NewSimpleNode("CastDouble").Append($2); }
-    |   T_STRING_CAST expr                              { $$ = node.NewSimpleNode("CastString").Append($2); }
-    |   T_ARRAY_CAST expr                               { $$ = node.NewSimpleNode("CastArray").Append($2); }
-    |   T_OBJECT_CAST expr                              { $$ = node.NewSimpleNode("CastObject").Append($2); }
-    |   T_BOOL_CAST expr                                { $$ = node.NewSimpleNode("CastBool").Append($2); }
-    |   T_UNSET_CAST expr                               { $$ = node.NewSimpleNode("CastUnset").Append($2); }
+    |   T_INT_CAST expr                                 { $$ = cast.NewCastInt($2) }
+    |   T_DOUBLE_CAST expr                              { $$ = cast.NewCastDouble($2) }
+    |   T_STRING_CAST expr                              { $$ = cast.NewCastString($2) }
+    |   T_ARRAY_CAST expr                               { $$ = cast.NewCastArray($2) }
+    |   T_OBJECT_CAST expr                              { $$ = cast.NewCastObject($2) }
+    |   T_BOOL_CAST expr                                { $$ = cast.NewCastBool($2) }
+    |   T_UNSET_CAST expr                               { $$ = cast.NewCastUnset($2) }
     |   T_EXIT exit_expr                                { $$ = node.NewSimpleNode("Exit").Append($2); }
     |   '@' expr                                        { $$ = node.NewSimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
