@@ -4188,7 +4188,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:879
 		{
-			yyVAL.node = node.NewSimpleNode("Exit").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewExit(yyDollar[2].node, yyDollar[1].token.Value == "die")
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]

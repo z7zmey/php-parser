@@ -876,7 +876,7 @@ expr_without_variable:
     |   T_OBJECT_CAST expr                              { $$ = cast.NewCastObject($2) }
     |   T_BOOL_CAST expr                                { $$ = cast.NewCastBool($2) }
     |   T_UNSET_CAST expr                               { $$ = cast.NewCastUnset($2) }
-    |   T_EXIT exit_expr                                { $$ = node.NewSimpleNode("Exit").Append($2); }
+    |   T_EXIT exit_expr                                { $$ = expr.NewExit($2, $1.Value == "die") }
     |   '@' expr                                        { $$ = node.NewSimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
     |   '`' backticks_expr '`'                          { $$ = node.NewNodeExprShellExec($1, $2, $3) }
