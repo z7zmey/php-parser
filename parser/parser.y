@@ -816,7 +816,7 @@ expr_without_variable:
     |   '[' array_pair_list ']' '=' expr                { $$ = node.NewSimpleNode("Assign").Append($2).Append($5); }
     |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3, false) }
     |   variable '=' '&' expr                           { $$ = assign_op.NewAssign($1, $4, true) }
-    |   T_CLONE expr                                    { $$ = node.NewSimpleNode("Clone").Append($2); }
+    |   T_CLONE expr                                    { $$ = expr.NewClone($2) }
     |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3) }
     |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3) }
     |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3) }

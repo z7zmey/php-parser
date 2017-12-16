@@ -3822,7 +3822,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:819
 		{
-			yyVAL.node = node.NewSimpleNode("Clone").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewClone(yyDollar[2].node)
 		}
 	case 298:
 		yyDollar = yyS[yypt-3 : yypt+1]
