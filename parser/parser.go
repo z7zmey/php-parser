@@ -4290,13 +4290,13 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:914
 		{
-			yyVAL.node = node.NewSimpleNode("Variable").Attribute("value", yyDollar[1].token.String())
+			yyVAL.node = expr.NewClusureUse(expr.NewVariable(yyDollar[1].token), false)
 		}
 	case 376:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:915
 		{
-			yyVAL.node = node.NewSimpleNode("Variable").Attribute("value", yyDollar[2].token.String()).Attribute("ref", "true")
+			yyVAL.node = expr.NewClusureUse(expr.NewVariable(yyDollar[2].token), true)
 		}
 	case 377:
 		yyDollar = yyS[yypt-2 : yypt+1]

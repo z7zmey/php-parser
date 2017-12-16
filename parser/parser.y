@@ -911,8 +911,8 @@ lexical_var_list:
 ;
 
 lexical_var:
-        T_VARIABLE                                      { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()) }
-    |   '&' T_VARIABLE                                  { $$ = node.NewSimpleNode("Variable").Attribute("value", $2.String()).Attribute("ref", "true") }
+        T_VARIABLE                                      { $$ = expr.NewClusureUse(expr.NewVariable($1), false) }
+    |   '&' T_VARIABLE                                  { $$ = expr.NewClusureUse(expr.NewVariable($2), true) }
 ;
 
 function_call:
