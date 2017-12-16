@@ -4522,13 +4522,13 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:993
 		{
-			yyVAL.node = node.NewSimpleNode("Const").Append(yyDollar[1].node).Attribute("value", yyDollar[3].token.Value)
+			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 413:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:995
 		{
-			yyVAL.node = node.NewSimpleNode("Const").Append(yyDollar[1].node).Attribute("value", yyDollar[3].token.Value)
+			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
