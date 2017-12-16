@@ -4909,37 +4909,37 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:1122
 		{
-			yyVAL.node = node.NewSimpleNode("Empty").Append(yyDollar[3].node)
+			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 		}
 	case 479:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:1123
 		{
-			yyVAL.node = node.NewSimpleNode("Include").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewInclude(yyDollar[2].node)
 		}
 	case 480:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:1124
 		{
-			yyVAL.node = node.NewSimpleNode("IncludeOnce").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:1125
 		{
-			yyVAL.node = node.NewSimpleNode("Eval").Append(yyDollar[3].node)
+			yyVAL.node = expr.NewEval(yyDollar[3].node)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:1126
 		{
-			yyVAL.node = node.NewSimpleNode("Require").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewRequire(yyDollar[2].node)
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:1127
 		{
-			yyVAL.node = node.NewSimpleNode("RequireOnce").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
 		}
 	case 484:
 		yyDollar = yyS[yypt-1 : yypt+1]

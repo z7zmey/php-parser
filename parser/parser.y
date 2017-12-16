@@ -1119,12 +1119,12 @@ encaps_var_offset:
 
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables possible_comma ')'  { $$ = $3; }
-    |   T_EMPTY '(' expr ')'                            { $$ = node.NewSimpleNode("Empty").Append($3); }
-    |   T_INCLUDE expr                                  { $$ = node.NewSimpleNode("Include").Append($2); }
-    |   T_INCLUDE_ONCE expr                             { $$ = node.NewSimpleNode("IncludeOnce").Append($2); }
-    |   T_EVAL '(' expr ')'                             { $$ = node.NewSimpleNode("Eval").Append($3); }
-    |   T_REQUIRE expr                                  { $$ = node.NewSimpleNode("Require").Append($2); }
-    |   T_REQUIRE_ONCE expr                             { $$ = node.NewSimpleNode("RequireOnce").Append($2); }
+    |   T_EMPTY '(' expr ')'                            { $$ = expr.NewEmpty($3) }
+    |   T_INCLUDE expr                                  { $$ = expr.NewInclude($2) }
+    |   T_INCLUDE_ONCE expr                             { $$ = expr.NewIncludeOnce($2) }
+    |   T_EVAL '(' expr ')'                             { $$ = expr.NewEval($3) }
+    |   T_REQUIRE expr                                  { $$ = expr.NewRequire($2) }
+    |   T_REQUIRE_ONCE expr                             { $$ = expr.NewRequireOnce($2) }
 ;
 
 isset_variables:
