@@ -212,8 +212,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> implements_list if_stmt_without_else
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
 %type <node> class_const_decl name_list method_body
-%type <node> ctor_arguments alt_if_stmt_without_else lexical_vars
-%type <node> lexical_var_list
+%type <node> ctor_arguments alt_if_stmt_without_else
 %type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
 %type <node> isset_variable type return_type type_expr
 
@@ -226,7 +225,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
-%type <list> use_declarations
+%type <list> use_declarations lexical_var_list lexical_vars
 
 %%
 
@@ -888,21 +887,11 @@ expr_without_variable:
     |   T_YIELD_FROM expr                               { $$ = node.NewSimpleNode("YieldFrom").Append($2); }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = node.NewSimpleNode("Closure").
-                    Attribute("returns_ref", $2).
-                    Append($4).
-                    Append($6).
-                    Append($7).
-                    Append($9);
+                $$ = expr.NewClosure($4.(node.SimpleNode).Children, $6, $7, $9.(node.SimpleNode).Children, false, $2 == "true")
             }
     |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = node.NewSimpleNode("StaticClosure").
-                    Attribute("returns_ref", $3).
-                    Append($5).
-                    Append($7).
-                    Append($8).
-                    Append($10);
+                $$ = expr.NewClosure($5.(node.SimpleNode).Children, $7, $8, $10.(node.SimpleNode).Children, true, $3 == "true")
             }
 ;
 
@@ -912,13 +901,13 @@ returns_ref:
 ;
 
 lexical_vars:
-        /* empty */                                     { $$ = node.NewSimpleNode("") }
+        /* empty */                                     { $$ = []node.Node{} }
     |   T_USE '(' lexical_var_list ')'                  { $$ = $3; }
 ;
 
 lexical_var_list:
-        lexical_var_list ',' lexical_var                { $$ = $1.Append($3) }
-    |   lexical_var                                     { $$ = node.NewSimpleNode("ClosureUses").Append($1) }
+        lexical_var_list ',' lexical_var                { $$ = append($1, $3) }
+    |   lexical_var                                     { $$ = []node.Node{$1} }
 ;
 
 lexical_var:
