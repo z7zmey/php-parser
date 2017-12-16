@@ -175,6 +175,10 @@ func Parse(src io.Reader, fName string) node.Node {
 %token <token> '{'
 %token <token> '}'
 %token <token> ';'
+%token <token> '('
+%token <token> ')'
+%token <token> '['
+%token <token> ']'
 
 %type <value> is_reference
 %type <value> is_variadic
@@ -958,8 +962,8 @@ ctor_arguments:
 ;
 
 dereferencable_scalar:
-        T_ARRAY '(' array_pair_list ')'                 { $$ = $3; }
-    |   '[' array_pair_list ']'                         { $$ = $2; }
+        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($1, $4, $3.(node.SimpleNode).Children, false) }
+    |   '[' array_pair_list ']'                         { $$ = expr.NewArray($1, $3, $2.(node.SimpleNode).Children, true) }
     |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1) }
 ;
 
@@ -997,7 +1001,7 @@ expr:
 ;
 
 optional_expr:
-        /* empty */                                     { $$ = node.NewSimpleNode("") }
+        /* empty */                                     { $$ = node.NewSimpleNode("optional node. TODO: must be nil") }
     |   expr                                            { $$ = $1; }
 ;
 
@@ -1019,9 +1023,9 @@ callable_expr:
 
 callable_variable:
     simple_variable                                     { $$ = $1; }
-    |   dereferencable '[' optional_expr ']'            { $$ = node.NewSimpleNode("Dim").Append($1).Append($3)}
-    |   constant '[' optional_expr ']'                  { $$ = node.NewSimpleNode("Dim").Append($1).Append($3)}
-    |   dereferencable '{' expr '}'                     { $$ = node.NewSimpleNode("Dim").Append($1).Append($3)}
+    |   dereferencable '[' optional_expr ']'            { $$ = expr.NewArrayDimFetch($1, $3) }
+    |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3) }
+    |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3) }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
                                                         { $$ = node.NewSimpleNode("MethodCall").Append($1).Append($3).Append($4)}
     |   function_call                                   { $$ = $1; }
@@ -1048,8 +1052,8 @@ static_member:
 
 new_variable:
         simple_variable                                 { $$ = $1 }
-    |   new_variable '[' optional_expr ']'              { $$ = node.NewSimpleNode("Dim").Append($1).Append($3) }
-    |   new_variable '{' expr '}'                       { $$ = node.NewSimpleNode("Dim").Append($1).Append($3) }
+    |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3) }
+    |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3) }
     |   new_variable T_OBJECT_OPERATOR property_name    { $$ = node.NewSimpleNode("Property").Append($1).Append($3) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
                                                         { $$ = node.NewSimpleNode("StaticProperty").Append($1).Append($3) }
@@ -1111,12 +1115,12 @@ encaps_list:
 
 encaps_var:
         T_VARIABLE                                      { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()) }
-    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()).Append(node.NewSimpleNode("offset").Append($3)) }
+    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = expr.NewArrayDimFetch(expr.NewVariable($1), $3) }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()).Append(node.NewSimpleNode("property").Attribute("value", $3.String())) }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = node.NewSimpleNode("Variable").Append(node.NewSimpleNode("expr").Append($2)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = node.NewSimpleNode("Variable").Attribute("value", $2.String()) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
-                                                        { $$ = node.NewSimpleNode("Variable").Attribute("value", $2.String()).Append(node.NewSimpleNode("offset").Append($4)) }
+                                                        { $$ = expr.NewArrayDimFetch(expr.NewVariable($2), $4) }
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
