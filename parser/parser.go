@@ -4026,25 +4026,25 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:853
 		{
-			yyVAL.node = node.NewSimpleNode("UnaryPlus").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
 		}
 	case 332:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:854
 		{
-			yyVAL.node = node.NewSimpleNode("UnaryMinus").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:855
 		{
-			yyVAL.node = node.NewSimpleNode("BooleanNot").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:856
 		{
-			yyVAL.node = node.NewSimpleNode("BitwiseNot").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
 		}
 	case 335:
 		yyDollar = yyS[yypt-3 : yypt+1]

@@ -850,10 +850,10 @@ expr_without_variable:
     |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3) }
     |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3) }
     |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3) }
-    |   '+' expr %prec T_INC                            { $$ = node.NewSimpleNode("UnaryPlus").Append($2) }
-    |   '-' expr %prec T_INC                            { $$ = node.NewSimpleNode("UnaryMinus").Append($2) }
-    |   '!' expr                                        { $$ = node.NewSimpleNode("BooleanNot").Append($2) }
-    |   '~' expr                                        { $$ = node.NewSimpleNode("BitwiseNot").Append($2) }
+    |   '+' expr %prec T_INC                            { $$ = expr.NewUnaryPlus($2) }
+    |   '-' expr %prec T_INC                            { $$ = expr.NewUnaryMinus($2) }
+    |   '!' expr                                        { $$ = expr.NewBooleanNot($2) }
+    |   '~' expr                                        { $$ = expr.NewBitwiseNot($2) }
     |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3) }
     |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3) }
     |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3) }
