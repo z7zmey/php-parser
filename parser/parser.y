@@ -486,7 +486,7 @@ interface_extends_list:
 ;
 
 implements_list:
-        /* empty */                                     { $$ = node.NewSimpleNode(""); }
+        /* empty */                                     { $$ = node.NewSimpleNode("TODO: must be nil"); }
     |   T_IMPLEMENTS name_list                          { $$ = $2; }
 ;
 
@@ -1078,7 +1078,7 @@ array_pair_list:
 ;
 
 possible_array_pair:
-        /* empty */                                     { $$ = node.NewSimpleNode(""); }
+        /* empty */                                     { $$ = node.NewSimpleNode("TODO: must be nil"); }
     |   array_pair                                      { $$ = $1; }
 ;
 
@@ -1089,20 +1089,18 @@ non_empty_array_pair_list:
 ;
 
 array_pair:
-        expr T_DOUBLE_ARROW expr                        { $$ = node.NewSimpleNode("ArrayElement").Append($1).Append($3) }
-    |   expr                                            { $$ = node.NewSimpleNode("ArrayElement").Append($1) }
-    |   expr T_DOUBLE_ARROW '&' variable                { $$ = node.NewSimpleNode("ArrayElement").Append($1).Append(node.NewSimpleNode("Ref").Append($4)) }
-    |   '&' variable                                    { $$ = node.NewSimpleNode("ArrayElement").Append(node.NewSimpleNode("Ref").Append($2)) }
+        expr T_DOUBLE_ARROW expr                        { $$ = expr.NewArrayItem($1, $3, false) }
+    |   expr                                            { $$ = expr.NewArrayItem(nil, $1, false) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = expr.NewArrayItem($1, $4, true) }
+    |   '&' variable                                    { $$ = expr.NewArrayItem(nil, $2, true) }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
-            { 
-                $$ = node.NewSimpleNode("ArrayElement").
-                    Append($1).
-                    Append(node.NewSimpleNode("ArrayList").Append($5))
+            {
+                fmt.Println("\nHellow world\n")
+                $$ = expr.NewArrayItem($1, node.NewSimpleNode("List").Append($5), true)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = node.NewSimpleNode("ArrayElement").
-                    Append(node.NewSimpleNode("ArrayList").Append($3))
+                $$ = expr.NewArrayItem(nil, node.NewSimpleNode("List").Append($3), true)
             }
 ;
 
