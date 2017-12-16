@@ -4506,7 +4506,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:981
 		{
-			yyVAL.node = node.NewSimpleNode("Const").Append(yyDollar[1].node)
+			yyVAL.node = expr.NewConstFetch(yyDollar[1].node)
 		}
 	case 412:
 		yyDollar = yyS[yypt-3 : yypt+1]

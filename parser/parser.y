@@ -978,7 +978,7 @@ scalar:
 ;
 
 constant:
-        name                                            { $$ = node.NewSimpleNode("Const").Append($1) }
+        name                                            { $$ = expr.NewConstFetch($1) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, $3) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
                                                         { $$ = expr.NewClassConstFetch($1, $3) }
