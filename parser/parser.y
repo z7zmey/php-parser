@@ -214,7 +214,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> non_empty_parameter_list argument_list non_empty_argument_list
 %type <node> class_const_decl name_list method_body
 %type <node> ctor_arguments alt_if_stmt_without_else
-%type <node> array_pair non_empty_array_pair_list array_pair_list possible_array_pair
+%type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
 
 %type <node> variable_modifiers
@@ -226,7 +226,8 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
-%type <list> use_declarations lexical_var_list lexical_vars isset_variables
+%type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
+%type <list> array_pair_list
 
 %%
 
@@ -493,8 +494,8 @@ implements_list:
 foreach_variable:
         variable                                        { $$ = $1; }
     |   '&' variable                                    { $$ = node.NewSimpleNode("Ref").Append($2); }
-    |   T_LIST '(' array_pair_list ')'                  { $$ = node.NewSimpleNode("List").Append($3) }
-    |   '[' array_pair_list ']'                         { $$ = node.NewSimpleNode("ShortList").Append($2) }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = expr.NewList($3) }
+    |   '[' array_pair_list ']'                         { $$ = expr.NewShortList($2) }
 ;
 
 for_statement:
@@ -812,8 +813,16 @@ new_expr:
 ;
 
 expr_without_variable:
-        T_LIST '(' array_pair_list ')' '=' expr         { $$ = node.NewSimpleNode("Assign").Append($3).Append($6); }
-    |   '[' array_pair_list ']' '=' expr                { $$ = node.NewSimpleNode("Assign").Append($2).Append($5); }
+        T_LIST '(' array_pair_list ')' '=' expr
+            {
+                list := expr.NewList($3)
+                $$ = assign_op.NewAssign(list, $6, false)
+            }
+    |   '[' array_pair_list ']' '=' expr
+        {
+            shortList := expr.NewShortList($2)
+            $$ = assign_op.NewAssign(shortList, $5, false)
+        }
     |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3, false) }
     |   variable '=' '&' expr                           { $$ = assign_op.NewAssign($1, $4, true) }
     |   T_CLONE expr                                    { $$ = expr.NewClone($2) }
@@ -952,8 +961,8 @@ ctor_arguments:
 ;
 
 dereferencable_scalar:
-        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($1, $4, $3.(node.SimpleNode).Children, false) }
-    |   '[' array_pair_list ']'                         { $$ = expr.NewArray($1, $3, $2.(node.SimpleNode).Children, true) }
+        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($1, $4, $3) }
+    |   '[' array_pair_list ']'                         { $$ = expr.NewShortArray($1, $3, $2) }
     |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1) }
 ;
 
@@ -1064,18 +1073,25 @@ property_name:
 ;
 
 array_pair_list:
-    non_empty_array_pair_list                           { /* TODO: allow single trailing comma */ $$ = $1 }
+    non_empty_array_pair_list
+        {
+            if ($1[len($1)-1] == nil) {
+                $$ = $1[:len($1)-1]
+            } else {
+                $$ = $1
+            }
+        }
 ;
 
 possible_array_pair:
-        /* empty */                                     { $$ = node.NewSimpleNode("TODO: must be nil"); }
+        /* empty */                                     { $$ = nil }
     |   array_pair                                      { $$ = $1; }
 ;
 
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
-                                                        { $$ = $1.Append($3) }
-    |   possible_array_pair                             { $$ = node.NewSimpleNode("ArrayPairList").Append($1) }
+                                                        { $$ = append($1, $3) }
+    |   possible_array_pair                             { $$ = []node.Node{$1} }
 ;
 
 array_pair:
@@ -1085,12 +1101,15 @@ array_pair:
     |   '&' variable                                    { $$ = expr.NewArrayItem(nil, $2, true) }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                fmt.Println("\nHellow world\n")
-                $$ = expr.NewArrayItem($1, node.NewSimpleNode("List").Append($5), true)
+                // TODO: Cannot use list() as standalone expression
+                list := expr.NewList($5)
+                $$ = expr.NewArrayItem($1, list, false)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = expr.NewArrayItem(nil, node.NewSimpleNode("List").Append($3), true)
+                // TODO: Cannot use list() as standalone expression
+                list := expr.NewList($3)
+                $$ = expr.NewArrayItem(nil, list, false)
             }
 ;
 

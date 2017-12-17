@@ -8,23 +8,23 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
-type Array struct {
+type ShortArray struct {
 	node.SimpleNode
 	opentToken token.Token
 	closeToken token.Token
 	items      []node.Node
 }
 
-func NewArray(opentToken token.Token, closeToken token.Token, items []node.Node) node.Node {
-	return Array{
-		node.SimpleNode{Name: "Array", Attributes: make(map[string]string)},
+func NewShortArray(opentToken token.Token, closeToken token.Token, items []node.Node) node.Node {
+	return ShortArray{
+		node.SimpleNode{Name: "ShortArray", Attributes: make(map[string]string)},
 		opentToken,
 		closeToken,
 		items,
 	}
 }
 
-func (n Array) Print(out io.Writer, indent string) {
+func (n ShortArray) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.Name, n.opentToken.StartLine, n.closeToken.EndLine)
 
 	if n.items != nil {
