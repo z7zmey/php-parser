@@ -206,7 +206,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> exit_expr scalar lexical_var function_call member_name property_name
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
-%type <node> encaps_var encaps_var_offset isset_variables
+%type <node> encaps_var encaps_var_offset
 %type <node> top_statement_list inner_statement_list if_stmt
 %type <node> alt_if_stmt 
 %type <node> parameter_list class_statement_list
@@ -226,7 +226,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
-%type <list> use_declarations lexical_var_list lexical_vars
+%type <list> use_declarations lexical_var_list lexical_vars isset_variables
 
 %%
 
@@ -1119,7 +1119,7 @@ encaps_var_offset:
 ;
 
 internal_functions_in_yacc:
-        T_ISSET '(' isset_variables possible_comma ')'  { $$ = $3; }
+        T_ISSET '(' isset_variables possible_comma ')'  { $$ = expr.NewIsset($3) }
     |   T_EMPTY '(' expr ')'                            { $$ = expr.NewEmpty($3) }
     |   T_INCLUDE expr                                  { $$ = expr.NewInclude($2) }
     |   T_INCLUDE_ONCE expr                             { $$ = expr.NewIncludeOnce($2) }
@@ -1129,12 +1129,12 @@ internal_functions_in_yacc:
 ;
 
 isset_variables:
-        isset_variable                                  { $$ = $1; }
-    |   isset_variables ',' isset_variable              { $$ = node.NewSimpleNode("AndIsset").Append($1).Append($3); }
+        isset_variable                                  { $$ = []node.Node{$1} }
+    |   isset_variables ',' isset_variable              { $$ = append($1, $3) }
 ;
 
 isset_variable:
-    expr                                                { $$ = node.NewSimpleNode("Isset").Append($1) }
+    expr                                                { $$ = $1 }
 ;
 
 /////////////////////////////////////////////////////////////////////////
