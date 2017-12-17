@@ -41,6 +41,7 @@ func (l *lexer) Lex(lval *yySymType) int { // Lex(lval *yySymType)
 %yyc c
 %yyn c = l.Next()
 %yym l.Mark()
+%optioncase-insensitive
 
 LNUM            [0-9]+
 DNUM            ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
