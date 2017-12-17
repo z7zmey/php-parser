@@ -863,7 +863,7 @@ expr_without_variable:
     |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3) }
     |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3) }
     |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3) }
-    |   expr T_INSTANCEOF class_name_reference          { $$ = node.NewSimpleNode("InstanceOf").Append($1).Append($3) }
+    |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
     |   expr '?' expr ':' expr                          { $$ = node.NewSimpleNode("Ternary").Append($1).Append($3).Append($5); }

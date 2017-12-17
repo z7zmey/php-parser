@@ -4105,7 +4105,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:866
 		{
-			yyVAL.node = node.NewSimpleNode("InstanceOf").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
