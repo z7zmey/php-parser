@@ -917,12 +917,12 @@ lexical_var:
 ;
 
 function_call:
-        name argument_list                              { $$ = node.NewSimpleNode("FunctionCall").Append($1).Append($2) }
+        name argument_list                              { $$ = expr.NewFunctionCall($1, $2.(node.SimpleNode).Children) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
                                                         { $$ = node.NewSimpleNode("StaticCall").Append($1).Append($3).Append($4) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
                                                         { $$ = node.NewSimpleNode("StaticCall").Append($1).Append($3).Append($4) }
-    |   callable_expr argument_list                     { $$ = node.NewSimpleNode("Call").Append($1).Append($2); }
+    |   callable_expr argument_list                     { $$ = expr.NewFunctionCall($1, $2.(node.SimpleNode).Children) }
 ;
 
 class_name:

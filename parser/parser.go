@@ -4303,7 +4303,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:920
 		{
-			yyVAL.node = node.NewSimpleNode("FunctionCall").Append(yyDollar[1].node).Append(yyDollar[2].node)
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(node.SimpleNode).Children)
 		}
 	case 378:
 		yyDollar = yyS[yypt-4 : yypt+1]
@@ -4321,7 +4321,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:925
 		{
-			yyVAL.node = node.NewSimpleNode("Call").Append(yyDollar[1].node).Append(yyDollar[2].node)
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(node.SimpleNode).Children)
 		}
 	case 381:
 		yyDollar = yyS[yypt-1 : yypt+1]
