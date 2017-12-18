@@ -808,8 +808,8 @@ anonymous_class:
 ;
 
 new_expr:
-        T_NEW class_name_reference ctor_arguments       { $$ = node.NewSimpleNode("New").Append($2).Append($3) }
-    |   T_NEW anonymous_class                           { $$ = node.NewSimpleNode("New").Append($2) }
+        T_NEW class_name_reference ctor_arguments       { $$ = expr.NewNew($2, $3.(node.SimpleNode).Children) }
+    |   T_NEW anonymous_class                           { $$ = expr.NewNew($2, nil) }
 ;
 
 expr_without_variable:

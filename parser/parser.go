@@ -3787,13 +3787,13 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:811
 		{
-			yyVAL.node = node.NewSimpleNode("New").Append(yyDollar[2].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].node.(node.SimpleNode).Children)
 		}
 	case 292:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:812
 		{
-			yyVAL.node = node.NewSimpleNode("New").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 		}
 	case 293:
 		yyDollar = yyS[yypt-6 : yypt+1]
