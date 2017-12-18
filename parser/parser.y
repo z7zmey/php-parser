@@ -211,9 +211,9 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> alt_if_stmt 
 %type <node> parameter_list class_statement_list
 %type <node> implements_list if_stmt_without_else
-%type <node> non_empty_parameter_list argument_list non_empty_argument_list
+%type <node> non_empty_parameter_list
 %type <node> class_const_decl name_list method_body
-%type <node> ctor_arguments alt_if_stmt_without_else
+%type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
 
@@ -227,7 +227,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
-%type <list> array_pair_list
+%type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list
 
 %%
 
@@ -635,13 +635,13 @@ return_type:
 ;
 
 argument_list:
-        '(' ')'                                         { $$ = node.NewSimpleNode("ArgumentList") }
+        '(' ')'                                         { $$ = []node.Node{} }
     |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
 ;
 
 non_empty_argument_list:
-        argument                                        { $$ = node.NewSimpleNode("ArgumentList").Append($1) }
-    |   non_empty_argument_list ',' argument            { $$ = $1.Append($3) }
+        argument                                        { $$ = []node.Node{$1} }
+    |   non_empty_argument_list ',' argument            { $$ = append($1, $3) }
 ;
 
 argument:
@@ -803,12 +803,12 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass($1, nil, $2.(node.SimpleNode).Children, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
+            { $$ = stmt.NewClass($1, nil, $2, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
         }
 ;
 
 new_expr:
-        T_NEW class_name_reference ctor_arguments       { $$ = expr.NewNew($2, $3.(node.SimpleNode).Children) }
+        T_NEW class_name_reference ctor_arguments       { $$ = expr.NewNew($2, $3) }
     |   T_NEW anonymous_class                           { $$ = expr.NewNew($2, nil) }
 ;
 
@@ -926,12 +926,12 @@ lexical_var:
 ;
 
 function_call:
-        name argument_list                              { $$ = expr.NewFunctionCall($1, $2.(node.SimpleNode).Children) }
+        name argument_list                              { $$ = expr.NewFunctionCall($1, $2) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = expr.NewStaticCall($1, $3, $4.(node.SimpleNode).Children) }
+                                                        { $$ = expr.NewStaticCall($1, $3, $4) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = expr.NewStaticCall($1, $3, $4.(node.SimpleNode).Children) }
-    |   callable_expr argument_list                     { $$ = expr.NewFunctionCall($1, $2.(node.SimpleNode).Children) }
+                                                        { $$ = expr.NewStaticCall($1, $3, $4) }
+    |   callable_expr argument_list                     { $$ = expr.NewFunctionCall($1, $2) }
 ;
 
 class_name:
@@ -956,8 +956,8 @@ backticks_expr:
 ;
 
 ctor_arguments:
-        /* empty */	                                    { $$ = node.NewSimpleNode("ArgumentList") }
-    |   argument_list                                   { $$ = $1; }
+        /* empty */	                                    { $$ = nil }
+    |   argument_list                                   { $$ = $1 }
 ;
 
 dereferencable_scalar:
@@ -1026,7 +1026,7 @@ callable_variable:
     |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3) }
     |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3) }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = expr.NewMethodCall($1, $3, $4.(node.SimpleNode).Children) }
+                                                        { $$ = expr.NewMethodCall($1, $3, $4) }
     |   function_call                                   { $$ = $1; }
 ;
 
