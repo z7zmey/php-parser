@@ -5,21 +5,25 @@ import (
 	"io"
 
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
 
 type Variable struct {
 	node.SimpleNode
-	token token.Token
+	name node.Node
 }
 
-func NewVariable(token token.Token) node.Node {
+func NewVariable(name node.Node) node.Node {
 	return Variable{
 		node.SimpleNode{Name: "Variable", Attributes: make(map[string]string)},
-		token,
+		name,
 	}
 }
 
 func (n Variable) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+
+	if n.name != nil {
+		fmt.Fprintf(out, "\n%vname:", indent+"  ")
+		n.name.Print(out, indent+"    ")
+	}
 }

@@ -412,7 +412,7 @@ statement:
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable($5), $8.(node.SimpleNode).Children)) }
+                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable(node.NewIdentifier($5)), $8.(node.SimpleNode).Children)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -921,8 +921,8 @@ lexical_var_list:
 ;
 
 lexical_var:
-        T_VARIABLE                                      { $$ = expr.NewClusureUse(expr.NewVariable($1), false) }
-    |   '&' T_VARIABLE                                  { $$ = expr.NewClusureUse(expr.NewVariable($2), true) }
+        T_VARIABLE                                      { $$ = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier($1)), false) }
+    |   '&' T_VARIABLE                                  { $$ = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier($2)), true) }
 ;
 
 function_call:
@@ -1037,9 +1037,9 @@ variable:
 ;
 
 simple_variable:
-        T_VARIABLE                                      { $$ = node.NewSimpleNode("Variable").Attribute("name", $1.String()); }
-    |   '$' '{' expr '}'                                { $$ = node.NewSimpleNode("Variable").Append($3); }
-    |   '$' simple_variable                             { $$ = node.NewSimpleNode("Variable").Append($2); }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
+    |   '$' '{' expr '}'                                { $$ = expr.NewVariable($3) }
+    |   '$' simple_variable                             { $$ = expr.NewVariable($2) }
 ;
 
 static_member:
@@ -1121,13 +1121,13 @@ encaps_list:
 ;
 
 encaps_var:
-        T_VARIABLE                                      { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()) }
-    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = expr.NewArrayDimFetch(expr.NewVariable($1), $3) }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = expr.NewPropertyFetch(expr.NewVariable($1), node.NewIdentifier($3)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = node.NewSimpleNode("Variable").Append(node.NewSimpleNode("expr").Append($2)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = node.NewSimpleNode("Variable").Attribute("value", $2.String()) }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
+    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier($1)), $3) }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = expr.NewPropertyFetch(expr.NewVariable(node.NewIdentifier($1)), node.NewIdentifier($3)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = expr.NewVariable($2) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = expr.NewVariable(node.NewIdentifier($2)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
-                                                        { $$ = expr.NewArrayDimFetch(expr.NewVariable($2), $4) }
+                                                        { $$ = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier($2)), $4) }
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
