@@ -1033,7 +1033,7 @@ callable_variable:
 variable:
         callable_variable                               { $$ = $1; }
     |   static_member                                   { $$ = $1; }
-    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = node.NewSimpleNode("Property").Append($1).Append($3) }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = expr.NewPropertyFetch($1, $3) }
 ;
 
 simple_variable:
@@ -1044,20 +1044,20 @@ simple_variable:
 
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = node.NewSimpleNode("StaticProp").Append($1).Append($3) }
+                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = node.NewSimpleNode("StaticProp").Append($1).Append($3) }
+                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
 ;
 
 new_variable:
         simple_variable                                 { $$ = $1 }
     |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3) }
     |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3) }
-    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = node.NewSimpleNode("Property").Append($1).Append($3) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = expr.NewPropertyFetch($1, $3) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = node.NewSimpleNode("StaticProperty").Append($1).Append($3) }
+                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = node.NewSimpleNode("StaticProperty").Append($1).Append($3) }
+                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
 ;
 
 member_name:
@@ -1067,7 +1067,7 @@ member_name:
 ;
 
 property_name:
-        T_STRING                                        { $$ = node.NewSimpleNode("PropertyName").Attribute("value", $1.String()) }
+        T_STRING                                        { $$ = node.NewIdentifier($1) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1123,7 +1123,7 @@ encaps_list:
 encaps_var:
         T_VARIABLE                                      { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()) }
     |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = expr.NewArrayDimFetch(expr.NewVariable($1), $3) }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = node.NewSimpleNode("Variable").Attribute("value", $1.String()).Append(node.NewSimpleNode("property").Attribute("value", $3.String())) }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = expr.NewPropertyFetch(expr.NewVariable($1), node.NewIdentifier($3)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = node.NewSimpleNode("Variable").Append(node.NewSimpleNode("expr").Append($2)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = node.NewSimpleNode("Variable").Attribute("value", $2.String()) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'

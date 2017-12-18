@@ -4641,7 +4641,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1036
 		{
-			yyVAL.node = node.NewSimpleNode("Property").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -4665,13 +4665,13 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1047
 		{
-			yyVAL.node = node.NewSimpleNode("StaticProp").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 438:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1049
 		{
-			yyVAL.node = node.NewSimpleNode("StaticProp").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 439:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -4695,19 +4695,19 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1056
 		{
-			yyVAL.node = node.NewSimpleNode("Property").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 443:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1058
 		{
-			yyVAL.node = node.NewSimpleNode("StaticProperty").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 444:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1060
 		{
-			yyVAL.node = node.NewSimpleNode("StaticProperty").Append(yyDollar[1].node).Append(yyDollar[3].node)
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 445:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -4731,7 +4731,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:1070
 		{
-			yyVAL.node = node.NewSimpleNode("PropertyName").Attribute("value", yyDollar[1].token.String())
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
@@ -4859,7 +4859,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:1126
 		{
-			yyVAL.node = node.NewSimpleNode("Variable").Attribute("value", yyDollar[1].token.String()).Append(node.NewSimpleNode("property").Attribute("value", yyDollar[3].token.String()))
+			yyVAL.node = expr.NewPropertyFetch(expr.NewVariable(yyDollar[1].token), node.NewIdentifier(yyDollar[3].token))
 		}
 	case 469:
 		yyDollar = yyS[yypt-3 : yypt+1]
