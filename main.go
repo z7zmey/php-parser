@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -20,7 +21,10 @@ func main() {
 
 		src, _ := os.Open(string(real))
 		rootnode := parser.Parse(src, real)
-		fmt.Println(rootnode)
+
+		buf := new(bytes.Buffer)
+		rootnode.Print(buf, "")
+		fmt.Println(buf.String())
 	}
 }
 

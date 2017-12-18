@@ -16,12 +16,12 @@ import (
     "github.com/z7zmey/php-parser/node/expr/cast"
 )
 
-var rootnode = node.NewSimpleNode("Root")
+var rootnode = stmt.NewStmtList([]node.Node{})
 
 func Parse(src io.Reader, fName string) node.Node {
     yyDebug        = 0
     yyErrorVerbose = true
-    rootnode = node.NewSimpleNode("Root") //reset
+    rootnode = stmt.NewStmtList([]node.Node{}) //reset
     yyParse(newLexer(src, fName))
     return rootnode
 }
@@ -207,11 +207,9 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> variable_class_name dereferencable_scalar constant dereferencable
 %type <node> callable_expr callable_variable static_member new_variable
 %type <node> encaps_var encaps_var_offset
-%type <node> top_statement_list inner_statement_list if_stmt
-%type <node> alt_if_stmt 
-%type <node> parameter_list class_statement_list
+%type <node> if_stmt
+%type <node> alt_if_stmt
 %type <node> implements_list if_stmt_without_else
-%type <node> non_empty_parameter_list
 %type <node> class_const_decl name_list method_body
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
@@ -227,14 +225,15 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
-%type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list
+%type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
+%type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 
 %%
 
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                  { rootnode = $1; }
+    top_statement_list                                  { rootnode = stmt.NewStmtList($1); }
 ;
 
 reserved_non_modifiers:
@@ -258,8 +257,8 @@ identifier:
 ;
 
 top_statement_list:
-        top_statement_list top_statement                { $$ = $1.Append($2); }
-    |   /* empty */                                     { $$ = node.NewSimpleNode("Statements") }
+        top_statement_list top_statement                { $$ = append($1, $2) }
+    |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
 namespace_name:
@@ -282,8 +281,8 @@ top_statement:
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
     |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace($1, name.NewName($2), nil) }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = stmt.NewNamespace($1, name.NewName($2), $4.(node.SimpleNode).Children) }
-    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace($1, nil, $3.(node.SimpleNode).Children) }
+                                                        { $$ = stmt.NewNamespace($1, name.NewName($2), $4) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace($1, nil, $3) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2.(stmt.GroupUse).SetToken($1) }
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
     |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList($1, nil, $2) }
@@ -363,8 +362,8 @@ const_list:
 ;
 
 inner_statement_list:
-        inner_statement_list inner_statement            { $$ = $1.Append($2); }
-    |   /* empty */                                     { $$ = node.NewSimpleNode("StmtList") }
+        inner_statement_list inner_statement            { $$ = append($1, $2) }
+    |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
 inner_statement:
@@ -376,7 +375,7 @@ inner_statement:
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
 
 statement:
-    '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($1, $3, $2.(node.SimpleNode).Children) }
+    '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($2) }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
@@ -403,7 +402,7 @@ statement:
     |   ';'                                             { $$ = stmt.NewNop($1) }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
-                $$ = stmt.NewTry($1, $3.(node.SimpleNode).Children, $5, $6)
+                $$ = stmt.NewTry($1, $3, $5, $6)
             }
     |   T_THROW expr ';'                                { $$ = stmt.NewThrow($1, $2) }
     |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto($1, $2) }
@@ -412,7 +411,7 @@ statement:
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable(node.NewIdentifier($5)), $8.(node.SimpleNode).Children)) }
+                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable(node.NewIdentifier($5)), $8)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -421,7 +420,7 @@ catch_name_list:
 
 finally_statement:
         /* empty */                                     { $$ = nil }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3.(node.SimpleNode).Children) }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3) }
 ;
 
 unset_variables:
@@ -436,7 +435,7 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = stmt.NewFunction($3, $2 == "true", $5.(node.SimpleNode).Children, $7, $9.(node.SimpleNode).Children)
+            $$ = stmt.NewFunction($3, $2 == "true", $5, $7, $9)
         }
 ;
 
@@ -452,9 +451,9 @@ is_variadic:
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5.(node.SimpleNode).Children, $7.(node.SimpleNode).Children) }
+                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5.(node.SimpleNode).Children, $7) }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
+                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4.(node.SimpleNode).Children, $6) }
 ;
 
 class_modifiers:
@@ -468,12 +467,12 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait($2, $4.(node.SimpleNode).Children) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait($2, $4) }
 ;
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewInterface($1, $2, $3, $5.(node.SimpleNode).Children) }
+                                                        { $$ = stmt.NewInterface($1, $2, $3, $5) }
 ;
 
 extends_from:
@@ -500,17 +499,17 @@ foreach_variable:
 
 for_statement:
         statement                                       { $$ = $1; }
-    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = $2; }
+    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = stmt.NewStmtList($2); }
 ;
 
 foreach_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = $2; }
+    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = stmt.NewStmtList($2); }
 ;
 
 declare_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = $2; }
+    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = stmt.NewStmtList($2); }
 ;
 
 switch_case_list:
@@ -524,11 +523,11 @@ case_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewCase($2, $3, $5.(node.SimpleNode).Children))
+                $$ = append($1, stmt.NewCase($2, $3, $5))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewDefault($2, $4.(node.SimpleNode).Children))
+                $$ = append($1, stmt.NewDefault($2, $4))
             }
 ;
 
@@ -539,7 +538,7 @@ case_separator:
 
 while_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = $2; }
+    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = stmt.NewStmtList($2); }
 ;
 
 if_stmt_without_else:
@@ -563,15 +562,12 @@ if_stmt:
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = node.NewSimpleNode("AltIf").
-                    Append(node.NewSimpleNode("expr").Append($3)).
-                    Append(node.NewSimpleNode("stmt").Append($6))
+                $$ = stmt.NewAltIf($1, $3, stmt.NewStmtList($6))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                $$ = $1.Append(node.NewSimpleNode("AltElseIf").
-                    Append(node.NewSimpleNode("expr").Append($4)).
-                    Append(node.NewSimpleNode("stmt").Append($7)))
+                _elseIf := stmt.NewAltElseIf($2, $4, stmt.NewStmtList($7))
+                $$ = $1.(stmt.AltIf).AddElseIf(_elseIf)
             }
 ;
 
@@ -579,18 +575,19 @@ alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                $$ = $1.Append(node.NewSimpleNode("AltElse").Append(node.NewSimpleNode("stmt").Append($4)))
+                _else := stmt.NewAltElse($2, stmt.NewStmtList($4))
+                $$ = $1.(stmt.AltIf).SetElse(_else)
             }
 ;
 
 parameter_list:
         non_empty_parameter_list                        { $$ = $1; }
-    |   /* empty */                                     { $$ = node.NewSimpleNode("Parameter list"); }
+    |   /* empty */                                     { $$ = nil }
 ;
 
 non_empty_parameter_list:
-        parameter                                       { $$ = node.NewSimpleNode("Parameter list").Append($1) }
-    |   non_empty_parameter_list ',' parameter          { $$ = $1.Append($3); }
+        parameter                                       { $$ = []node.Node{$1} }
+    |   non_empty_parameter_list ',' parameter          { $$ = append($1, $3) }
 ;
 
 parameter:
@@ -669,8 +666,8 @@ static_var:
 ;
 
 class_statement_list:
-        class_statement_list class_statement            { $$ = $1.Append($2) }
-    |   /* empty */                                     { $$ = node.NewSimpleNode("Stmt") }
+        class_statement_list class_statement            { $$ = append($1, $2) }
+    |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
 class_statement:
@@ -679,7 +676,7 @@ class_statement:
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2.(node.SimpleNode).Children, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6.(node.SimpleNode).Children, $8, $9.(node.SimpleNode).Children)
+                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6, $8, $9.(node.SimpleNode).Children)
             }
 ;
 
@@ -732,7 +729,7 @@ absolute_trait_method_reference:
 
 method_body:
         ';' /* abstract method */                       { $$ = node.NewSimpleNode("") }
-    |   '{' inner_statement_list '}'                    { $$ = $2; }
+    |   '{' inner_statement_list '}'                    { $$ = stmt.NewStmtList($2) }
 ;
 
 variable_modifiers:
@@ -803,7 +800,7 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass($1, nil, $2, $3, $4.(node.SimpleNode).Children, $6.(node.SimpleNode).Children) }
+            { $$ = stmt.NewClass($1, nil, $2, $3, $4.(node.SimpleNode).Children, $6) }
         }
 ;
 
@@ -897,11 +894,11 @@ expr_without_variable:
     |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2) }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4.(node.SimpleNode).Children, $6, $7, $9.(node.SimpleNode).Children, false, $2 == "true")
+                $$ = expr.NewClosure($4, $6, $7, $9, false, $2 == "true")
             }
     |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5.(node.SimpleNode).Children, $7, $8, $10.(node.SimpleNode).Children, true, $3 == "true")
+                $$ = expr.NewClosure($5, $7, $8, $10, true, $3 == "true")
             }
 ;
 
