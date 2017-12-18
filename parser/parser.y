@@ -1026,7 +1026,7 @@ callable_variable:
     |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3) }
     |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3) }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = node.NewSimpleNode("MethodCall").Append($1).Append($3).Append($4)}
+                                                        { $$ = expr.NewMethodCall($1, $3, $4.(node.SimpleNode).Children) }
     |   function_call                                   { $$ = $1; }
 ;
 
