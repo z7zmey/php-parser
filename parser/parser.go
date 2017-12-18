@@ -3800,26 +3800,26 @@ yydefault:
 		//line parser/parser.y:817
 		{
 			list := expr.NewList(yyDollar[3].list)
-			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node, false)
+			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node)
 		}
 	case 294:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line parser/parser.y:822
 		{
 			shortList := expr.NewShortList(yyDollar[2].list)
-			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node, false)
+			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node)
 		}
 	case 295:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:826
 		{
-			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node, false)
+			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 296:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:827
 		{
-			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[4].node, true)
+			yyVAL.node = assign_op.NewAssignRef(yyDollar[1].node, yyDollar[4].node)
 		}
 	case 297:
 		yyDollar = yyS[yypt-2 : yypt+1]

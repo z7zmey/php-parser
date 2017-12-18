@@ -816,15 +816,15 @@ expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
                 list := expr.NewList($3)
-                $$ = assign_op.NewAssign(list, $6, false)
+                $$ = assign_op.NewAssign(list, $6)
             }
     |   '[' array_pair_list ']' '=' expr
         {
             shortList := expr.NewShortList($2)
-            $$ = assign_op.NewAssign(shortList, $5, false)
+            $$ = assign_op.NewAssign(shortList, $5)
         }
-    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3, false) }
-    |   variable '=' '&' expr                           { $$ = assign_op.NewAssign($1, $4, true) }
+    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3) }
+    |   variable '=' '&' expr                           { $$ = assign_op.NewAssignRef($1, $4) }
     |   T_CLONE expr                                    { $$ = expr.NewClone($2) }
     |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3) }
     |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3) }
