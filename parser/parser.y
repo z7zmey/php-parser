@@ -890,7 +890,7 @@ expr_without_variable:
     |   '@' expr                                        { $$ = node.NewSimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
     |   '`' backticks_expr '`'                          { $$ = node.NewNodeExprShellExec($1, $2, $3) }
-    |   T_PRINT expr                                    { $$ = node.NewSimpleNode("Print").Append($2); }
+    |   T_PRINT expr                                    { $$ = expr.NewPrint($2) }
     |   T_YIELD                                         { $$ = node.NewSimpleNode("Yield"); }
     |   T_YIELD expr                                    { $$ = node.NewSimpleNode("Yield").Append($2); }
     |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = node.NewSimpleNode("Yield").Append($2).Append($4); }
