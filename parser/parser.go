@@ -4311,13 +4311,13 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:931
 		{
-			yyVAL.node = node.NewSimpleNode("StaticCall").Append(yyDollar[1].node).Append(yyDollar[3].node).Append(yyDollar[4].node)
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(node.SimpleNode).Children)
 		}
 	case 379:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:933
 		{
-			yyVAL.node = node.NewSimpleNode("StaticCall").Append(yyDollar[1].node).Append(yyDollar[3].node).Append(yyDollar[4].node)
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(node.SimpleNode).Children)
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
