@@ -875,8 +875,8 @@ expr_without_variable:
     |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
-    |   expr '?' expr ':' expr                          { $$ = node.NewSimpleNode("Ternary").Append($1).Append($3).Append($5); }
-    |   expr '?' ':' expr                               { $$ = node.NewSimpleNode("Ternary").Append($1).Append($4); }
+    |   expr '?' expr ':' expr                          { $$ = expr.NewTernary($1, $3, $5) }
+    |   expr '?' ':' expr                               { $$ = expr.NewTernary($1, nil, $4) }
     |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3) }
     |   internal_functions_in_yacc                      { $$ = $1}
     |   T_INT_CAST expr                                 { $$ = cast.NewCastInt($2) }
