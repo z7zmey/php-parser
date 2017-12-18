@@ -838,10 +838,10 @@ expr_without_variable:
     |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3) }
     |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3) }
     |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3) }
-    |   variable T_INC                                  { $$ = node.NewSimpleNode("PostIncrement").Append($1) }
-    |   T_INC variable                                  { $$ = node.NewSimpleNode("PreIncrement").Append($2) }
-    |   variable T_DEC                                  { $$ = node.NewSimpleNode("PostDecrement").Append($1) }
-    |   T_DEC variable                                  { $$ = node.NewSimpleNode("PreDecrement").Append($2) }
+    |   variable T_INC                                  { $$ = expr.NewPostInc($1) }
+    |   T_INC variable                                  { $$ = expr.NewPreInc($2) }
+    |   variable T_DEC                                  { $$ = expr.NewPostDec($1) }
+    |   T_DEC variable                                  { $$ = expr.NewPreDec($2) }
     |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3) }
     |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3) }
     |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3) }

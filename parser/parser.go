@@ -3903,25 +3903,25 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:841
 		{
-			yyVAL.node = node.NewSimpleNode("PostIncrement").Append(yyDollar[1].node)
+			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
 		}
 	case 311:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:842
 		{
-			yyVAL.node = node.NewSimpleNode("PreIncrement").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:843
 		{
-			yyVAL.node = node.NewSimpleNode("PostDecrement").Append(yyDollar[1].node)
+			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:844
 		{
-			yyVAL.node = node.NewSimpleNode("PreDecrement").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
 		}
 	case 314:
 		yyDollar = yyS[yypt-3 : yypt+1]
