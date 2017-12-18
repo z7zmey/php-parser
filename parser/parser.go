@@ -4209,7 +4209,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:892
 		{
-			yyVAL.node = node.NewNodeExprShellExec(yyDollar[1].token, yyDollar[2].list, yyDollar[3].token)
+			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
 		}
 	case 362:
 		yyDollar = yyS[yypt-2 : yypt+1]

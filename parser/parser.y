@@ -889,7 +889,7 @@ expr_without_variable:
     |   T_EXIT exit_expr                                { $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die")) }
     |   '@' expr                                        { $$ = node.NewSimpleNode("Silence").Append($2); }
     |   scalar                                          { $$ = $1; }
-    |   '`' backticks_expr '`'                          { $$ = node.NewNodeExprShellExec($1, $2, $3) }
+    |   '`' backticks_expr '`'                          { $$ = expr.NewShellExec($2) }
     |   T_PRINT expr                                    { $$ = expr.NewPrint($2) }
     |   T_YIELD                                         { $$ = node.NewSimpleNode("Yield"); }
     |   T_YIELD expr                                    { $$ = node.NewSimpleNode("Yield").Append($2); }
