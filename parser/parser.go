@@ -4221,25 +4221,25 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line parser/parser.y:894
 		{
-			yyVAL.node = node.NewSimpleNode("Yield")
+			yyVAL.node = expr.NewYield(nil, nil)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:895
 		{
-			yyVAL.node = node.NewSimpleNode("Yield").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
 		}
 	case 365:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:896
 		{
-			yyVAL.node = node.NewSimpleNode("Yield").Append(yyDollar[2].node).Append(yyDollar[4].node)
+			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:897
 		{
-			yyVAL.node = node.NewSimpleNode("YieldFrom").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node)
 		}
 	case 367:
 		yyDollar = yyS[yypt-10 : yypt+1]

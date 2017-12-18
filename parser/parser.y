@@ -891,10 +891,10 @@ expr_without_variable:
     |   scalar                                          { $$ = $1; }
     |   '`' backticks_expr '`'                          { $$ = expr.NewShellExec($2) }
     |   T_PRINT expr                                    { $$ = expr.NewPrint($2) }
-    |   T_YIELD                                         { $$ = node.NewSimpleNode("Yield"); }
-    |   T_YIELD expr                                    { $$ = node.NewSimpleNode("Yield").Append($2); }
-    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = node.NewSimpleNode("Yield").Append($2).Append($4); }
-    |   T_YIELD_FROM expr                               { $$ = node.NewSimpleNode("YieldFrom").Append($2); }
+    |   T_YIELD                                         { $$ = expr.NewYield(nil, nil) }
+    |   T_YIELD expr                                    { $$ = expr.NewYield(nil, $2) }
+    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = expr.NewYield($2, $4) }
+    |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2) }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
                 $$ = expr.NewClosure($4.(node.SimpleNode).Children, $6, $7, $9.(node.SimpleNode).Children, false, $2 == "true")
