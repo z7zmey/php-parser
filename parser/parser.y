@@ -210,7 +210,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> if_stmt
 %type <node> alt_if_stmt
 %type <node> implements_list if_stmt_without_else
-%type <node> class_const_decl name_list method_body
+%type <node> class_const_decl name_list
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
@@ -227,6 +227,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
+%type <list> method_body
 
 %%
 
@@ -676,7 +677,7 @@ class_statement:
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2.(node.SimpleNode).Children, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6, $8, $9.(node.SimpleNode).Children)
+                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6, $8, $9)
             }
 ;
 
@@ -728,8 +729,8 @@ absolute_trait_method_reference:
 ;
 
 method_body:
-        ';' /* abstract method */                       { $$ = node.NewSimpleNode("") }
-    |   '{' inner_statement_list '}'                    { $$ = stmt.NewStmtList($2) }
+        ';' /* abstract method */                       { $$ = nil }
+    |   '{' inner_statement_list '}'                    { $$ = $2 }
 ;
 
 variable_modifiers:
