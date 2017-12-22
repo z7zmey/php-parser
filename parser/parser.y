@@ -192,7 +192,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <node> top_statement name statement function_declaration_statement
 %type <node> class_declaration_statement trait_declaration_statement
-%type <node> interface_declaration_statement interface_extends_list
+%type <node> interface_declaration_statement
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
@@ -227,7 +227,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
-%type <list> method_body
+%type <list> method_body interface_extends_list
 
 %%
 
@@ -292,7 +292,7 @@ top_statement:
 ;
 
 use_type:
-        T_FUNCTION                                      { $$ = node.NewSimpleNode("FuncUseType"); }
+        T_FUNCTION                                      { $$ = node.NewIdentifier($1) }
     |   T_CONST                                         { $$ = node.NewSimpleNode("ConstUseType"); }
 ;
 
@@ -483,7 +483,7 @@ extends_from:
 
 interface_extends_list:
         /* empty */                                     { $$ = nil }
-    |   T_EXTENDS name_list                             { $$ = $2; }
+    |   T_EXTENDS name_list                             { $$ = $2.(node.SimpleNode).Children }
 ;
 
 implements_list:

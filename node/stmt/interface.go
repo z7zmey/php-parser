@@ -12,12 +12,11 @@ type Interface struct {
 	node.SimpleNode
 	token   token.Token
 	name    token.Token
-	extends node.Node
+	extends []node.Node
 	stmts   []node.Node
 }
 
-//TODO: stmts myst be []node.Node
-func NewInterface(token token.Token, name token.Token, extends node.Node, stmts []node.Node) node.Node {
+func NewInterface(token token.Token, name token.Token, extends []node.Node, stmts []node.Node) node.Node {
 	return Interface{
 		node.SimpleNode{Name: "Interface", Attributes: make(map[string]string)},
 		token,
@@ -32,7 +31,9 @@ func (n Interface) Print(out io.Writer, indent string) {
 
 	if n.extends != nil {
 		fmt.Fprintf(out, "\n%vextends:", indent+"  ")
-		n.extends.Print(out, indent+"    ")
+		for _, nn := range n.extends {
+			nn.Print(out, indent+"    ")
+		}
 	}
 
 	if n.stmts != nil {
