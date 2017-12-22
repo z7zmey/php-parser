@@ -24,6 +24,9 @@ func NewBreak(token token.Token, expr node.Node) node.Node {
 
 func (n Break) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-	n.expr.Print(out, indent+"    ")
+
+	if n.expr != nil {
+		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
+		n.expr.Print(out, indent+"    ")
+	}
 }

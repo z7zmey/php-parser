@@ -26,6 +26,11 @@ func Parse(src io.Reader, fName string) node.Node {
     return rootnode
 }
 
+type foreachVariable struct {
+    node  node.Node
+    byRef bool
+}
+
 %}
 
 %union{
@@ -34,6 +39,7 @@ func Parse(src io.Reader, fName string) node.Node {
     value string
     list []node.Node
     strings []string
+    foreachVariable foreachVariable
 }
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
@@ -196,7 +202,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
-%type <node> expr optional_expr while_statement for_statement foreach_variable
+%type <node> expr optional_expr while_statement for_statement 
 %type <node> foreach_statement declare_statement finally_statement unset_variable variable
 %type <node> extends_from parameter optional_type argument expr_without_variable global_var
 %type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
@@ -217,6 +223,7 @@ func Parse(src io.Reader, fName string) node.Node {
 
 %type <node> member_modifier
 %type <node> use_type
+%type <foreachVariable> foreach_variable
 
 %type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
@@ -293,7 +300,7 @@ top_statement:
 
 use_type:
         T_FUNCTION                                      { $$ = node.NewIdentifier($1) }
-    |   T_CONST                                         { $$ = node.NewSimpleNode("ConstUseType"); }
+    |   T_CONST                                         { $$ = node.NewIdentifier($1) }
 ;
 
 group_use_declaration:
@@ -396,9 +403,9 @@ statement:
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = stmt.NewUnset($1, $3) }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($1, $3, nil, $5, $7); }
-    |   T_FOREACH '(' expr T_AS foreach_variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($1, $3, $5, $7, $9); }
+                                                        { $$ = stmt.NewForeach($1, $3, nil, $5.node, $7, $5.byRef); }
+    |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
+                                                        { $$ = stmt.NewForeach($1, $3, $5, $7.node, $9, $7.byRef); }
     |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5) }
     |   ';'                                             { $$ = stmt.NewNop($1) }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
@@ -492,10 +499,10 @@ implements_list:
 ;
 
 foreach_variable:
-        variable                                        { $$ = $1; }
-    |   '&' variable                                    { $$ = node.NewSimpleNode("Ref").Append($2); }
-    |   T_LIST '(' array_pair_list ')'                  { $$ = expr.NewList($3) }
-    |   '[' array_pair_list ']'                         { $$ = expr.NewShortList($2) }
+        variable                                        { $$ = foreachVariable{$1, false} }
+    |   '&' variable                                    { $$ = foreachVariable{$2, true} }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = foreachVariable{expr.NewList($3), false} }
+    |   '[' array_pair_list ']'                         { $$ = foreachVariable{expr.NewShortList($2), false} }
 ;
 
 for_statement:
@@ -933,7 +940,7 @@ function_call:
 ;
 
 class_name:
-        T_STATIC                                        { $$ = node.NewSimpleNode("Static") }
+        T_STATIC                                        { $$ = node.NewIdentifier($1) }
     |   name                                            { $$ = $1; }
 ;
 
@@ -943,7 +950,7 @@ class_name_reference:
 ;
 
 exit_expr:
-        /* empty */                                     { $$ = node.NewSimpleNode("") }
+        /* empty */                                     { $$ = nil }
     |   '(' optional_expr ')'                           { $$ = $2; }
 ;
 
@@ -998,7 +1005,7 @@ expr:
 ;
 
 optional_expr:
-        /* empty */                                     { $$ = node.NewSimpleNode("optional node. TODO: must be nil") }
+        /* empty */                                     { $$ = nil }
     |   expr                                            { $$ = $1; }
 ;
 

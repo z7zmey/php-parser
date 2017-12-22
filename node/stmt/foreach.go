@@ -15,9 +15,10 @@ type Foreach struct {
 	key      node.Node
 	variable node.Node
 	stmt     node.Node
+	byRef    bool
 }
 
-func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.Node, stmt node.Node) node.Node {
+func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
 	return Foreach{
 		node.SimpleNode{Name: "Foreach", Attributes: make(map[string]string)},
 		token,
@@ -25,6 +26,7 @@ func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.
 		key,
 		variable,
 		stmt,
+		byRef,
 	}
 }
 
@@ -42,7 +44,7 @@ func (n Foreach) Print(out io.Writer, indent string) {
 	}
 
 	if n.variable != nil {
-		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
+		fmt.Fprintf(out, "\n%vvariable[byRef: %t]:", indent+"  ", n.byRef)
 		n.variable.Print(out, indent+"    ")
 	}
 
