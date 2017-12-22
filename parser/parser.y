@@ -215,8 +215,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
 
-%type <node> variable_modifiers
-%type <node> method_modifiers non_empty_member_modifiers member_modifier
+%type <node> member_modifier
 %type <node> use_type
 
 %type <strings> class_modifiers
@@ -227,7 +226,8 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
-%type <list> method_body interface_extends_list implements_list
+%type <list> method_body interface_extends_list implements_list method_modifiers variable_modifiers
+%type <list> non_empty_member_modifiers
 
 %%
 
@@ -673,11 +673,11 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1.(node.SimpleNode).Children, $3); }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1, $3); }
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2.(node.SimpleNode).Children, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod($4, $1.(node.SimpleNode).Children, $3 == "true", $6, $8, $9)
+                $$ = stmt.NewClassMethod($4, $1, $3 == "true", $6, $8, $9)
             }
 ;
 
@@ -735,26 +735,26 @@ method_body:
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
-    |   T_VAR                                           { $$ = node.NewSimpleNode("VarMemberModifier") }
+    |   T_VAR                                           { $$ = []node.Node{node.NewIdentifier($1)} }
 ;
 
 method_modifiers:
-        /* empty */                                     { $$ = node.NewSimpleNode("MemberModifiers").Append(node.NewSimpleNode("PublicMemberModifier")); }
-    |   non_empty_member_modifiers                      { $$ = $1; }
+        /* empty */                                     { $$ = nil }
+    |   non_empty_member_modifiers                      { $$ = $1 }
 ;
 
 non_empty_member_modifiers:
-        member_modifier	                                { $$ = node.NewSimpleNode("MemberModifiers").Append($1); }
-    |   non_empty_member_modifiers member_modifier      { $$ = $1.Append($2) }
+        member_modifier	                                { $$ = []node.Node{$1} }
+    |   non_empty_member_modifiers member_modifier      { $$ = append($1, $2) }
 ;
 
 member_modifier:
-        T_PUBLIC                                        { $$ = node.NewSimpleNode("PublicMemberModifier"); }
-    |   T_PROTECTED                                     { $$ = node.NewSimpleNode("ProtectedMemberModifier"); }
-    |   T_PRIVATE                                       { $$ = node.NewSimpleNode("PrivateMemberModifier"); }
-    |   T_STATIC                                        { $$ = node.NewSimpleNode("StaticMemberModifier"); }
-    |   T_ABSTRACT                                      { $$ = node.NewSimpleNode("AbstractMemberModifier"); }
-    |   T_FINAL                                         { $$ = node.NewSimpleNode("FinalMemberModifier"); }
+        T_PUBLIC                                        { $$ = node.NewIdentifier($1) }
+    |   T_PROTECTED                                     { $$ = node.NewIdentifier($1) }
+    |   T_PRIVATE                                       { $$ = node.NewIdentifier($1) }
+    |   T_STATIC                                        { $$ = node.NewIdentifier($1) }
+    |   T_ABSTRACT                                      { $$ = node.NewIdentifier($1) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1) }
 ;
 
 property_list:

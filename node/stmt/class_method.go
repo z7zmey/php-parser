@@ -34,9 +34,9 @@ func (n ClassMethod) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.modifiers != nil {
-		fmt.Fprintf(out, "\n%vmotifiers:", indent+"  ")
+		fmt.Fprintf(out, "\n%vmodifiers:", indent+"  ")
 		for _, nn := range n.modifiers {
-			fmt.Fprintf(out, "\n%v%q", indent+"    ", nn)
+			nn.Print(out, indent+"    ")
 		}
 	}
 

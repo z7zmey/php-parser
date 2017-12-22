@@ -9,11 +9,11 @@ import (
 
 type PropertyList struct {
 	node.SimpleNode
-	modifiers  node.Node
+	modifiers  []node.Node
 	properties []node.Node
 }
 
-func NewPropertyList(modifiers node.Node, properties []node.Node) node.Node {
+func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
 	return PropertyList{
 		node.SimpleNode{Name: "PropertyList", Attributes: make(map[string]string)},
 		modifiers,
@@ -26,7 +26,9 @@ func (n PropertyList) Print(out io.Writer, indent string) {
 
 	if n.modifiers != nil {
 		fmt.Fprintf(out, "\n%vmodifiers:", indent+"  ")
-		n.modifiers.Print(out, indent+"    ")
+		for _, nn := range n.modifiers {
+			nn.Print(out, indent+"    ")
+		}
 	}
 
 	if n.properties != nil {
