@@ -209,7 +209,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <node> encaps_var encaps_var_offset
 %type <node> if_stmt
 %type <node> alt_if_stmt
-%type <node> implements_list if_stmt_without_else
+%type <node> if_stmt_without_else
 %type <node> class_const_decl name_list
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
@@ -227,7 +227,7 @@ func Parse(src io.Reader, fName string) node.Node {
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
-%type <list> method_body interface_extends_list
+%type <list> method_body interface_extends_list implements_list
 
 %%
 
@@ -452,9 +452,9 @@ is_variadic:
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5.(node.SimpleNode).Children, $7) }
+                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5, $7) }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4.(node.SimpleNode).Children, $6) }
+                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4, $6) }
 ;
 
 class_modifiers:
@@ -487,8 +487,8 @@ interface_extends_list:
 ;
 
 implements_list:
-        /* empty */                                     { $$ = node.NewSimpleNode("TODO: must be nil"); }
-    |   T_IMPLEMENTS name_list                          { $$ = $2; }
+        /* empty */                                     { $$ = nil }
+    |   T_IMPLEMENTS name_list                          { $$ = $2.(node.SimpleNode).Children }
 ;
 
 foreach_variable:
@@ -801,7 +801,7 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass($1, nil, $2, $3, $4.(node.SimpleNode).Children, $6) }
+            { $$ = stmt.NewClass($1, nil, $2, $3, $4, $6) }
         }
 ;
 
