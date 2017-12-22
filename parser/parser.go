@@ -4195,7 +4195,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line parser/parser.y:888
 		{
-			yyVAL.node = node.NewSimpleNode("Silence").Append(yyDollar[2].node)
+			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
 		}
 	case 360:
 		yyDollar = yyS[yypt-1 : yypt+1]

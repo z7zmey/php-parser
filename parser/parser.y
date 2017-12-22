@@ -885,7 +885,7 @@ expr_without_variable:
     |   T_BOOL_CAST expr                                { $$ = cast.NewCastBool($2) }
     |   T_UNSET_CAST expr                               { $$ = cast.NewCastUnset($2) }
     |   T_EXIT exit_expr                                { $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die")) }
-    |   '@' expr                                        { $$ = node.NewSimpleNode("Silence").Append($2); }
+    |   '@' expr                                        { $$ = expr.NewErrorSuppress($2) }
     |   scalar                                          { $$ = $1; }
     |   '`' backticks_expr '`'                          { $$ = expr.NewShellExec($2) }
     |   T_PRINT expr                                    { $$ = expr.NewPrint($2) }
