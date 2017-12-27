@@ -8,17 +8,21 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Interface) Name() string {
+	return "Interface"
+}
+
 type Interface struct {
-	node.SimpleNode
+	name    string
 	token   token.Token
-	name    token.Token
+	iName   token.Token
 	extends []node.Node
 	stmts   []node.Node
 }
 
 func NewInterface(token token.Token, name token.Token, extends []node.Node, stmts []node.Node) node.Node {
 	return Interface{
-		node.SimpleNode{Name: "Interface", Attributes: make(map[string]string)},
+		"Interface",
 		token,
 		name,
 		extends,
@@ -27,7 +31,7 @@ func NewInterface(token token.Token, name token.Token, extends []node.Node, stmt
 }
 
 func (n Interface) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.name.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.iName.Value)
 
 	if n.extends != nil {
 		fmt.Fprintf(out, "\n%vextends:", indent+"  ")

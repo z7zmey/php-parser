@@ -2,27 +2,28 @@ package scalar
 
 import (
 	"fmt"
-	"github.com/z7zmey/php-parser/token"
-	"github.com/z7zmey/php-parser/node"
 	"io"
+
+	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/token"
 )
 
+func(n EncapsedStringPart) Name() string {
+	return "EncapsedStringPart"
+}
+
 type EncapsedStringPart struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 }
 
-
 func NewEncapsedStringPart(t token.Token) node.Node {
 	return EncapsedStringPart{
-		node.SimpleNode{Name: "EncapsedStringPart", Attributes: make(map[string]string)},
+		"EncapsedStringPart",
 		t,
 	}
 }
 
 func (n EncapsedStringPart) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	for _, nn := range n.Children {
-		nn.Print(out, indent+"  ")
-	}
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 }

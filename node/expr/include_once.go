@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n IncludeOnce) Name() string {
+	return "IncludeOnce"
+}
+
 type IncludeOnce struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewIncludeOnce(expression node.Node) node.Node {
 	return IncludeOnce{
-		node.SimpleNode{Name: "IncludeOnce", Attributes: make(map[string]string)},
+		"IncludeOnce",
 		expression,
 	}
 }
 
 func (n IncludeOnce) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

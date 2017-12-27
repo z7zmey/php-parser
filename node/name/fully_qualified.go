@@ -5,14 +5,18 @@ import (
 )
 
 type FullyQualified struct {
-	Name
+	NameNode
 }
 
 func NewFullyQualified(parts []node.Node) node.Node {
 	return FullyQualified{
-		Name{
-			node.SimpleNode{Name: "FullyQualifiedName", Attributes: make(map[string]string)},
+		NameNode{
+			"FullyQualifiedName",
 			parts,
 		},
 	}
+}
+
+func (n FullyQualified) Name() string {
+	return "FullyQualified"
 }

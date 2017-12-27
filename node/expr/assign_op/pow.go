@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Pow) Name() string {
+	return "Pow"
+}
+
 type Pow struct {
 	AssignOp
 }
 
-func NewPow(variable  node.Node, expression node.Node) node.Node {
+func NewPow(variable node.Node, expression node.Node) node.Node {
 	return Pow{
 		AssignOp{
-			node.SimpleNode{Name: "AssignPow", Attributes: make(map[string]string)},
+			"AssignPow",
 			variable,
 			expression,
 		},

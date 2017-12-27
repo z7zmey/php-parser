@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Try) Name() string {
+	return "Try"
+}
+
 type Try struct {
-	node.SimpleNode
+	name    string
 	token   token.Token
 	stmts   []node.Node
 	catches []node.Node
@@ -18,7 +22,7 @@ type Try struct {
 
 func NewTry(token token.Token, stmts []node.Node, catches []node.Node, finally node.Node) node.Node {
 	return Try{
-		node.SimpleNode{Name: "Try", Attributes: make(map[string]string)},
+		"Try",
 		token,
 		stmts,
 		catches,
@@ -27,7 +31,7 @@ func NewTry(token token.Token, stmts []node.Node, catches []node.Node, finally n
 }
 
 func (n Try) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.stmts != nil {
 		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")

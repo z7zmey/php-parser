@@ -7,15 +7,19 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ArrayDimFetch) Name() string {
+	return "ArrayDimFetch"
+}
+
 type ArrayDimFetch struct {
-	node.SimpleNode
+	name     string
 	variable node.Node
 	dim      node.Node
 }
 
 func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
 	return ArrayDimFetch{
-		node.SimpleNode{Name: "ArrayDimFetch", Attributes: make(map[string]string)},
+		"ArrayDimFetch",
 		variable,
 		dim,
 	}

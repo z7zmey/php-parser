@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func(n ShiftRight) Name() string {
+	return "ShiftRight"
+}
+
 type ShiftRight struct {
 	BinaryOp
 }
 
-func NewShiftRight(variable  node.Node, expression node.Node) node.Node {
+func NewShiftRight(variable node.Node, expression node.Node) node.Node {
 	return ShiftRight{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryShiftRight", Attributes: make(map[string]string)},
+			"BinaryShiftRight",
 			variable,
 			expression,
 		},

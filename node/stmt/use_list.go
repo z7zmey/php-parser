@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n UseList) Name() string {
+	return "UseList"
+}
+
 type UseList struct {
-	node.SimpleNode
+	name    string
 	token   token.Token
 	useType node.Node
 	uses    []node.Node
@@ -17,7 +21,7 @@ type UseList struct {
 
 func NewUseList(token token.Token, useType node.Node, uses []node.Node) node.Node {
 	return UseList{
-		node.SimpleNode{Name: "UseList", Attributes: make(map[string]string)},
+		"UseList",
 		token,
 		useType,
 		uses,
@@ -25,7 +29,7 @@ func NewUseList(token token.Token, useType node.Node, uses []node.Node) node.Nod
 }
 
 func (n UseList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.useType != nil {
 		fmt.Fprintf(out, "\n%vtype:", indent+"  ")

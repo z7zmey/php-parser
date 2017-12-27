@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Concat) Name() string {
+	return "Concat"
+}
+
 type Concat struct {
 	BinaryOp
 }
 
-func NewConcat(variable  node.Node, expression node.Node) node.Node {
+func NewConcat(variable node.Node, expression node.Node) node.Node {
 	return Concat{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryConcat", Attributes: make(map[string]string)},
+			"BinaryConcat",
 			variable,
 			expression,
 		},

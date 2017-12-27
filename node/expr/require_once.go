@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n RequireOnce) Name() string {
+	return "RequireOnce"
+}
+
 type RequireOnce struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewRequireOnce(expression node.Node) node.Node {
 	return RequireOnce{
-		node.SimpleNode{Name: "RequireOnce", Attributes: make(map[string]string)},
+		"RequireOnce",
 		expression,
 	}
 }
 
 func (n RequireOnce) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

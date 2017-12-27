@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Mul) Name() string {
+	return "Mul"
+}
+
 type Mul struct {
 	AssignOp
 }
 
-func NewMul(variable  node.Node, expression node.Node) node.Node {
+func NewMul(variable node.Node, expression node.Node) node.Node {
 	return Mul{
 		AssignOp{
-			node.SimpleNode{Name: "AssignMul", Attributes: make(map[string]string)},
+			"AssignMul",
 			variable,
 			expression,
 		},

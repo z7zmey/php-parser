@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Identical) Name() string {
+	return "Identical"
+}
+
 type Identical struct {
 	BinaryOp
 }
@@ -11,7 +15,7 @@ type Identical struct {
 func NewIdentical(variable node.Node, expression node.Node) node.Node {
 	return Identical{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryIdentical", Attributes: make(map[string]string)},
+			"BinaryIdentical",
 			variable,
 			expression,
 		},

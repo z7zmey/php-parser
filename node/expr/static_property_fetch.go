@@ -7,30 +7,34 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-type StaticPropertyFetch struct {
-	node.SimpleNode
-	class node.Node
-	name  node.Node
+func (n StaticPropertyFetch) Name() string {
+	return "StaticPropertyFetch"
 }
 
-func NewStaticPropertyFetch(class node.Node, name node.Node) node.Node {
+type StaticPropertyFetch struct {
+	name     string
+	class    node.Node
+	property node.Node
+}
+
+func NewStaticPropertyFetch(class node.Node, property node.Node) node.Node {
 	return StaticPropertyFetch{
-		node.SimpleNode{Name: "StaticPropertyFetch", Attributes: make(map[string]string)},
+		"StaticPropertyFetch",
 		class,
-		name,
+		property,
 	}
 }
 
 func (n StaticPropertyFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.class != nil {
 		fmt.Fprintf(out, "\n%vclass:", indent+"  ")
 		n.class.Print(out, indent+"    ")
 	}
 
-	if n.name != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.name.Print(out, indent+"    ")
+	if n.property != nil {
+		fmt.Fprintf(out, "\n%vproperty:", indent+"  ")
+		n.property.Print(out, indent+"    ")
 	}
 }

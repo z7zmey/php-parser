@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Minus) Name() string {
+	return "Minus"
+}
+
 type Minus struct {
 	BinaryOp
 }
 
-func NewMinus(variable  node.Node, expression node.Node) node.Node {
+func NewMinus(variable node.Node, expression node.Node) node.Node {
 	return Minus{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryMinus", Attributes: make(map[string]string)},
+			"BinaryMinus",
 			variable,
 			expression,
 		},

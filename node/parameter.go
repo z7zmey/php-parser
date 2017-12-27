@@ -6,7 +6,7 @@ import (
 )
 
 type Parameter struct {
-	SimpleNode
+	name         string
 	variableType Node
 	variable     Node
 	defaultValue Node
@@ -14,9 +14,13 @@ type Parameter struct {
 	variadic     bool
 }
 
+func (n Parameter) Name() string {
+	return "Parameter"
+}
+
 func NewParameter(variableType Node, variable Node, defaultValue Node, byRef bool, variadic bool) Node {
 	return Parameter{
-		SimpleNode{Name: "Parameter", Attributes: make(map[string]string)},
+		"Parameter",
 		variableType,
 		variable,
 		defaultValue,
@@ -26,7 +30,7 @@ func NewParameter(variableType Node, variable Node, defaultValue Node, byRef boo
 }
 
 func (n Parameter) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 	fmt.Fprintf(out, "\n%vbyRef: %t", indent+"  ", n.byRef)
 	fmt.Fprintf(out, "\n%vvariadic: %t", indent+"  ", n.variadic)
 

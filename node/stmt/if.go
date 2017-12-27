@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n If) Name() string {
+	return "If"
+}
+
 type If struct {
-	node.SimpleNode
+	name   string
 	token  token.Token
 	cond   node.Node
 	stmt   node.Node
@@ -19,7 +23,7 @@ type If struct {
 
 func NewIf(token token.Token, cond node.Node, stmt node.Node) node.Node {
 	return If{
-		node.SimpleNode{Name: "If", Attributes: make(map[string]string)},
+		"If",
 		token,
 		cond,
 		stmt,
@@ -45,7 +49,7 @@ func (n If) SetElse(_else node.Node) node.Node {
 }
 
 func (n If) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.cond != nil {
 		fmt.Fprintf(out, "\n%vcond:", indent+"  ")

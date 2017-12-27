@@ -5,15 +5,18 @@ import (
 )
 
 type Relative struct {
-	Name
+	NameNode
 }
 
 func NewRelative(parts []node.Node) node.Node {
 	return Relative{
-		Name{
-			node.SimpleNode{Name: "RelativeName", Attributes: make(map[string]string)},
+		NameNode{
+			"RelativeName",
 			parts,
 		},
 	}
 }
 
+func (n Relative) Name() string {
+	return "Relative"
+}

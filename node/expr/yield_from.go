@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n YieldFrom) Name() string {
+	return "YieldFrom"
+}
+
 type YieldFrom struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewYieldFrom(expression node.Node) node.Node {
 	return YieldFrom{
-		node.SimpleNode{Name: "YieldFrom", Attributes: make(map[string]string)},
+		"YieldFrom",
 		expression,
 	}
 }
 
 func (n YieldFrom) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

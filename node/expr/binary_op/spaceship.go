@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func(n Spaceship) Name() string {
+	return "Spaceship"
+}
+
 type Spaceship struct {
 	BinaryOp
 }
@@ -11,7 +15,7 @@ type Spaceship struct {
 func NewSpaceship(variable node.Node, expression node.Node) node.Node {
 	return Spaceship{
 		BinaryOp{
-			node.SimpleNode{Name: "BinarySpaceship", Attributes: make(map[string]string)},
+			"BinarySpaceship",
 			variable,
 			expression,
 		},

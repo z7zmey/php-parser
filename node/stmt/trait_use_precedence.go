@@ -7,22 +7,26 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func(n TraitUsePrecedence) Name() string {
+	return "TraitUsePrecedence"
+}
+
 type TraitUsePrecedence struct {
-	node.SimpleNode
+	name      string
 	ref       node.Node
 	insteadof node.Node
 }
 
 func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
 	return TraitUsePrecedence{
-		node.SimpleNode{Name: "TraitUsePrecedence", Attributes: make(map[string]string)},
+		"TraitUsePrecedence",
 		ref,
 		insteadof,
 	}
 }
 
 func (n TraitUsePrecedence) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.ref != nil {
 		fmt.Fprintf(out, "\n%vmethod", indent+"  ")

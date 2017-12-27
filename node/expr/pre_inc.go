@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n PreInc) Name() string {
+	return "PreInc"
+}
+
 type PreInc struct {
-	node.SimpleNode
+	name     string
 	variable node.Node
 }
 
 func NewPreInc(variableession node.Node) node.Node {
 	return PreInc{
-		node.SimpleNode{Name: "PreInc", Attributes: make(map[string]string)},
+		"PreInc",
 		variableession,
 	}
 }
 
 func (n PreInc) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.variable != nil {
 		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")

@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n BooleanNot) Name() string {
+	return "BooleanNot"
+}
+
 type BooleanNot struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewBooleanNot(expression node.Node) node.Node {
 	return BooleanNot{
-		node.SimpleNode{Name: "BooleanNot", Attributes: make(map[string]string)},
+		"BooleanNot",
 		expression,
 	}
 }
 
 func (n BooleanNot) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

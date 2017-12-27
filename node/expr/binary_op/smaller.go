@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func(n Smaller) Name() string {
+	return "Smaller"
+}
+
 type Smaller struct {
 	BinaryOp
 }
@@ -11,7 +15,7 @@ type Smaller struct {
 func NewSmaller(variable node.Node, expression node.Node) node.Node {
 	return Smaller{
 		BinaryOp{
-			node.SimpleNode{Name: "BinarySmaller", Attributes: make(map[string]string)},
+			"BinarySmaller",
 			variable,
 			expression,
 		},

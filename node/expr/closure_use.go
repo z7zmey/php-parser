@@ -7,22 +7,26 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ClusureUse) Name() string {
+	return "ClusureUse"
+}
+
 type ClusureUse struct {
-	node.SimpleNode
+	name     string
 	variable node.Node
 	byRef    bool
 }
 
 func NewClusureUse(variable node.Node, byRef bool) node.Node {
 	return ClusureUse{
-		node.SimpleNode{Name: "ClusureUse", Attributes: make(map[string]string)},
+		"ClusureUse",
 		variable,
 		byRef,
 	}
 }
 
 func (n ClusureUse) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 	fmt.Fprintf(out, "\n%vby ref: %t", indent+"  ", n.byRef)
 
 	if n.variable != nil {

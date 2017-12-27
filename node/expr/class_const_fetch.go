@@ -8,23 +8,27 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
-type ClassConstFetch struct {
-	node.SimpleNode
-	class node.Node
-	name  token.Token
+func (n ClassConstFetch) Name() string {
+	return "ClassConstFetch"
 }
 
-func NewClassConstFetch(class node.Node, name token.Token) node.Node {
+type ClassConstFetch struct {
+	name     string
+	class    node.Node
+	constant token.Token
+}
+
+func NewClassConstFetch(class node.Node, constant token.Token) node.Node {
 	return ClassConstFetch{
-		node.SimpleNode{Name: "ClassConstFetch", Attributes: make(map[string]string)},
+		"ClassConstFetch",
 		class,
-		name,
+		constant,
 	}
 }
 
 func (n ClassConstFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
-	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.constant.Value)
 
 	if n.class != nil {
 		fmt.Fprintf(out, "\n%vclass:", indent+"  ")

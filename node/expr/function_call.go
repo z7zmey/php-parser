@@ -7,22 +7,26 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n FunctionCall) Name() string {
+	return "FunctionCall"
+}
+
 type FunctionCall struct {
-	node.SimpleNode
+	name      string
 	function  node.Node
 	arguments []node.Node
 }
 
 func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
 	return FunctionCall{
-		node.SimpleNode{Name: "FunctionCall", Attributes: make(map[string]string)},
+		"FunctionCall",
 		function,
 		arguments,
 	}
 }
 
 func (n FunctionCall) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.function != nil {
 		fmt.Fprintf(out, "\n%vfunction:", indent+"  ")

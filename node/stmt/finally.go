@@ -8,22 +8,26 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Finally) Name() string {
+	return "Finally"
+}
+
 type Finally struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	stmts []node.Node
 }
 
 func NewFinally(token token.Token, stmts []node.Node) node.Node {
 	return Finally{
-		node.SimpleNode{Name: "Finally", Attributes: make(map[string]string)},
+		"Finally",
 		token,
 		stmts,
 	}
 }
 
 func (n Finally) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.stmts != nil {
 		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")

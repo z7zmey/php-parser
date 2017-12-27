@@ -8,13 +8,13 @@ import (
 )
 
 type AssignOp struct {
-	node.SimpleNode
+	name       string
 	variable   node.Node
 	expression node.Node
 }
 
 func (n AssignOp) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.variable != nil {
 		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")

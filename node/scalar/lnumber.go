@@ -2,28 +2,28 @@ package scalar
 
 import (
 	"fmt"
-	"github.com/z7zmey/php-parser/token"
-	"github.com/z7zmey/php-parser/node"
 	"io"
+
+	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Lnumber) Name() string {
+	return "Lnumber"
+}
 
 type Lnumber struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 }
 
-
 func NewLnumber(token token.Token) node.Node {
 	return Lnumber{
-		node.SimpleNode{Name: "Lnumber", Attributes: make(map[string]string)},
+		"Lnumber",
 		token,
 	}
 }
 
 func (n Lnumber) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
-	for _, nn := range n.Children {
-		nn.Print(out, indent+"  ")
-	}
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 }

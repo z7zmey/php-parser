@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Isset) Name() string {
+	return "Isset"
+}
+
 type Isset struct {
-	node.SimpleNode
+	name      string
 	variables []node.Node
 }
 
 func NewIsset(variables []node.Node) node.Node {
 	return Isset{
-		node.SimpleNode{Name: "Isset", Attributes: make(map[string]string)},
+		"Isset",
 		variables,
 	}
 }
 
 func (n Isset) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.variables != nil {
 		fmt.Fprintf(out, "\n%vvariables:", indent+"  ")

@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n CastBool) Name() string {
+	return "CastBool"
+}
+
 type CastBool struct {
 	Cast
 }
@@ -11,7 +15,7 @@ type CastBool struct {
 func NewCastBool(expr node.Node) node.Node {
 	return CastBool{
 		Cast{
-			node.SimpleNode{Name: "CastBool", Attributes: make(map[string]string)},
+			"CastBool",
 			expr,
 		},
 	}

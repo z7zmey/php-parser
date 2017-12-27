@@ -8,18 +8,22 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Nop) Name() string {
+	return "Nop"
+}
+
 type Nop struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 }
 
 func NewNop(token token.Token) node.Node {
 	return Nop{
-		node.SimpleNode{Name: "Nop", Attributes: make(map[string]string)},
+		"Nop",
 		token,
 	}
 }
 
 func (n Nop) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 }

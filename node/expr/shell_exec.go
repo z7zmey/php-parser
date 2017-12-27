@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ShellExec) Name() string {
+	return "ShellExec"
+}
+
 type ShellExec struct {
-	node.SimpleNode
+	name  string
 	parts []node.Node
 }
 
 func NewShellExec(parts []node.Node) node.Node {
 	return ShellExec{
-		node.SimpleNode{Name: "ShellExec", Attributes: make(map[string]string)},
+		"ShellExec",
 		parts,
 	}
 }
 
 func (n ShellExec) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.parts != nil {
 		fmt.Fprintf(out, "\n%vparts:", indent+"  ")

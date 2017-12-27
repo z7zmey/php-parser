@@ -8,18 +8,22 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Use) Name() string {
+	return "Use"
+}
+
 type Use struct {
-	node.SimpleNode
+	name    string
 	useType node.Node
-	name    node.Node
+	use     node.Node
 	alias   token.TokenInterface
 }
 
-func NewUse(useType node.Node, name node.Node, alias token.TokenInterface) node.Node {
+func NewUse(useType node.Node, use node.Node, alias token.TokenInterface) node.Node {
 	return Use{
-		node.SimpleNode{Name: "Use", Attributes: make(map[string]string)},
+		"Use",
 		useType,
-		name,
+		use,
 		alias,
 	}
 }
@@ -30,16 +34,16 @@ func (n Use) SetType(useType node.Node) node.Node {
 }
 
 func (n Use) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.useType != nil {
 		fmt.Fprintf(out, "\n%vtype:", indent+"  ")
 		n.useType.Print(out, indent+"    ")
 	}
 
-	if n.name != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.name.Print(out, indent+"    ")
+	if n.use != nil {
+		fmt.Fprintf(out, "\n%vuse:", indent+"  ")
+		n.use.Print(out, indent+"    ")
 	}
 
 	if n.alias != nil {

@@ -8,12 +8,16 @@ type BitwiseOr struct {
 	BinaryOp
 }
 
-func NewBitwiseOr(variable  node.Node, expression node.Node) node.Node {
+func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
 	return BitwiseOr{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryBitwiseOr", Attributes: make(map[string]string)},
+			"BinaryBitwiseOr",
 			variable,
 			expression,
 		},
 	}
+}
+
+func (n BitwiseOr) Name() string {
+	return "BitwiseOr"
 }

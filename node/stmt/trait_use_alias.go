@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n TraitUseAlias) Name() string {
+	return "TraitUseAlias"
+}
+
 type TraitUseAlias struct {
-	node.SimpleNode
+	name     string
 	ref      node.Node
 	modifier node.Node
 	alias    token.TokenInterface
@@ -17,7 +21,7 @@ type TraitUseAlias struct {
 
 func NewTraitUseAlias(ref node.Node, modifier node.Node, alias token.TokenInterface) node.Node {
 	return TraitUseAlias{
-		node.SimpleNode{Name: "TraitUseAlias", Attributes: make(map[string]string)},
+		"TraitUseAlias",
 		ref,
 		modifier,
 		alias,
@@ -25,7 +29,7 @@ func NewTraitUseAlias(ref node.Node, modifier node.Node, alias token.TokenInterf
 }
 
 func (n TraitUseAlias) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.alias != nil {
 		fmt.Fprintf(out, "\n%valias: %q", indent+"  ", n.alias.GetValue())

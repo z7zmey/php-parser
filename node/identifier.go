@@ -8,18 +8,22 @@ import (
 )
 
 type Identifier struct {
-	SimpleNode
-	name token.Token
+	name  string
+	token token.Token
 }
 
-func NewIdentifier(name token.Token) Node {
+func (n Identifier) Name() string {
+	return "Identifier"
+}
+
+func NewIdentifier(token token.Token) Node {
 	return Identifier{
-		SimpleNode{Name: "Identifier", Attributes: make(map[string]string)},
-		name,
+		"Identifier",
+		token,
 	}
 }
 
 func (n Identifier) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
-	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.name.Value)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.token.Value)
 }

@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n GroupUse) Name() string {
+	return "GroupUse"
+}
+
 type GroupUse struct {
-	node.SimpleNode
+	name    string
 	token   token.TokenInterface
 	useType node.Node
 	prefix  node.Node
@@ -19,7 +23,7 @@ type GroupUse struct {
 //TODO: stmts myst be []node.Node
 func NewGroupUse(token token.TokenInterface, useType node.Node, prefix node.Node, useList []node.Node) node.Node {
 	return GroupUse{
-		node.SimpleNode{Name: "GroupUse", Attributes: make(map[string]string)},
+		"GroupUse",
 		token,
 		useType,
 		prefix,
@@ -38,7 +42,7 @@ func (n GroupUse) SetUseType(useType node.Node) node.Node {
 }
 
 func (n GroupUse) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.GetStartLine(), n.token.GetEndLine(), n.token.GetValue())
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.GetStartLine(), n.token.GetEndLine(), n.token.GetValue())
 
 	if n.useType != nil {
 		fmt.Fprintf(out, "\n%vuse type:", indent+"  ")

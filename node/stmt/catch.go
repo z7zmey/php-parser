@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Catch) Name() string {
+	return "Catch"
+}
+
 type Catch struct {
-	node.SimpleNode
+	name     string
 	token    token.Token
 	types    []node.Node
 	variable node.Node
@@ -18,7 +22,7 @@ type Catch struct {
 
 func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts []node.Node) node.Node {
 	return Catch{
-		node.SimpleNode{Name: "Catch", Attributes: make(map[string]string)},
+		"Catch",
 		token,
 		types,
 		variable,
@@ -27,7 +31,7 @@ func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts []
 }
 
 func (n Catch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	fmt.Fprintf(out, "\n%vtypes:", indent+"  ")
 	for _, nn := range n.types {

@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Equal) Name() string {
+	return "Equal"
+}
+
 type Equal struct {
 	BinaryOp
 }
@@ -11,7 +15,7 @@ type Equal struct {
 func NewEqual(variable node.Node, expression node.Node) node.Node {
 	return Equal{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryEqual", Attributes: make(map[string]string)},
+			"BinaryEqual",
 			variable,
 			expression,
 		},

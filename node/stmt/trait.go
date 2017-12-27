@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Trait) Name() string {
+	return "Trait"
+}
+
 type Trait struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	stmts []node.Node
 }
@@ -17,14 +21,14 @@ type Trait struct {
 //TODO: stmts myst be []node.Node
 func NewTrait(token token.Token, stmts []node.Node) node.Node {
 	return Trait{
-		node.SimpleNode{Name: "Trait", Attributes: make(map[string]string)},
+		"Trait",
 		token,
 		stmts,
 	}
 }
 
 func (n Trait) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.stmts != nil {
 		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")

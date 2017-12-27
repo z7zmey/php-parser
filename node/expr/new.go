@@ -7,22 +7,26 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n New) Name() string {
+	return "New"
+}
+
 type New struct {
-	node.SimpleNode
+	name      string
 	class     node.Node
 	arguments []node.Node
 }
 
 func NewNew(class node.Node, arguments []node.Node) node.Node {
 	return New{
-		node.SimpleNode{Name: "New", Attributes: make(map[string]string)},
+		"New",
 		class,
 		arguments,
 	}
 }
 
 func (n New) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.class != nil {
 		fmt.Fprintf(out, "\n%vclass:", indent+"  ")

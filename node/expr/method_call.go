@@ -7,33 +7,37 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n MethodCall) Name() string {
+	return "MethodCall"
+}
+
 type MethodCall struct {
-	node.SimpleNode
+	name      string
 	variable  node.Node
-	name      node.Node
+	method    node.Node
 	arguments []node.Node
 }
 
-func NewMethodCall(variable node.Node, name node.Node, arguments []node.Node) node.Node {
+func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) node.Node {
 	return MethodCall{
-		node.SimpleNode{Name: "MethodCall", Attributes: make(map[string]string)},
+		"MethodCall",
 		variable,
-		name,
+		method,
 		arguments,
 	}
 }
 
 func (n MethodCall) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.variable != nil {
 		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
 		n.variable.Print(out, indent+"    ")
 	}
 
-	if n.name != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.name.Print(out, indent+"    ")
+	if n.method != nil {
+		fmt.Fprintf(out, "\n%vmethod:", indent+"  ")
+		n.method.Print(out, indent+"    ")
 	}
 
 	if n.arguments != nil {

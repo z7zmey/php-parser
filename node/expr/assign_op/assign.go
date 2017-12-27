@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Assign) Name() string {
+	return "Assign"
+}
+
 type Assign struct {
 	AssignOp
 }
@@ -11,7 +15,7 @@ type Assign struct {
 func NewAssign(variable node.Node, expression node.Node) node.Node {
 	return Assign{
 		AssignOp{
-			node.SimpleNode{Name: "Assign", Attributes: make(map[string]string)},
+			"Assign",
 			variable,
 			expression,
 		},

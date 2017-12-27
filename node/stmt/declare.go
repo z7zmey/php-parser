@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Declare) Name() string {
+	return "Declare"
+}
+
 type Declare struct {
-	node.SimpleNode
+	name   string
 	token  token.Token
 	consts []node.Node
 	stmt   node.Node
@@ -17,7 +21,7 @@ type Declare struct {
 
 func NewDeclare(token token.Token, consts []node.Node, stmt node.Node) node.Node {
 	return Declare{
-		node.SimpleNode{Name: "Declare", Attributes: make(map[string]string)},
+		"Declare",
 		token,
 		consts,
 		stmt,
@@ -25,7 +29,7 @@ func NewDeclare(token token.Token, consts []node.Node, stmt node.Node) node.Node
 }
 
 func (n Declare) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.consts != nil {
 		fmt.Fprintf(out, "\n%vconsts:", indent+"  ")

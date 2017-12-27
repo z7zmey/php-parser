@@ -8,20 +8,24 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Goto) Name() string {
+	return "Goto"
+}
+
 type Goto struct {
-	node.SimpleNode
+	name  string
 	token token.Token
-	name  token.Token
+	label token.Token
 }
 
 func NewGoto(token token.Token, name token.Token) node.Node {
 	return Goto{
-		node.SimpleNode{Name: "Goto", Attributes: make(map[string]string)},
+		"Goto",
 		token,
 		name,
 	}
 }
 
 func (n Goto) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.name.EndLine, n.name.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.label.EndLine, n.label.Value)
 }

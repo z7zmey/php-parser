@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n UnaryPlus) Name() string {
+	return "UnaryPlus"
+}
+
 type UnaryPlus struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewUnaryPlus(expression node.Node) node.Node {
 	return UnaryPlus{
-		node.SimpleNode{Name: "UnaryPlus", Attributes: make(map[string]string)},
+		"UnaryPlus",
 		expression,
 	}
 }
 
 func (n UnaryPlus) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

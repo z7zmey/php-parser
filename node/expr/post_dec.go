@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n PostDec) Name() string {
+	return "PostDec"
+}
+
 type PostDec struct {
-	node.SimpleNode
+	name     string
 	variable node.Node
 }
 
 func NewPostDec(variableession node.Node) node.Node {
 	return PostDec{
-		node.SimpleNode{Name: "PostDec", Attributes: make(map[string]string)},
+		"PostDec",
 		variableession,
 	}
 }
 
 func (n PostDec) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.variable != nil {
 		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")

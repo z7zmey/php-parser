@@ -8,22 +8,26 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Else) Name() string {
+	return "Else"
+}
+
 type Else struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	stmt  node.Node
 }
 
 func NewElse(token token.Token, stmt node.Node) node.Node {
 	return Else{
-		node.SimpleNode{Name: "Else", Attributes: make(map[string]string)},
+		"Else",
 		token,
 		stmt,
 	}
 }
 
 func (n Else) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.stmt != nil {
 		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")

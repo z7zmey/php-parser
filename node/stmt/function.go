@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Function) Name() string {
+	return "Function"
+}
+
 type Function struct {
-	node.SimpleNode
+	name        string
 	token       token.Token
 	isReturnRef bool
 	params      []node.Node
@@ -19,7 +23,7 @@ type Function struct {
 
 func NewFunction(token token.Token, isReturnRef bool, params []node.Node, returnType node.Node, stmts []node.Node) node.Node {
 	return Function{
-		node.SimpleNode{Name: "Function", Attributes: make(map[string]string)},
+		"Function",
 		token,
 		isReturnRef,
 		params,
@@ -29,7 +33,7 @@ func NewFunction(token token.Token, isReturnRef bool, params []node.Node, return
 }
 
 func (n Function) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	fmt.Fprintf(out, "\n%vreturn ref: %t", indent+"  ", n.isReturnRef)
 

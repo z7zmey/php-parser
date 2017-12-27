@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Empty) Name() string {
+	return "Empty"
+}
+
 type Empty struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewEmpty(expression node.Node) node.Node {
 	return Empty{
-		node.SimpleNode{Name: "Empty", Attributes: make(map[string]string)},
+		"Empty",
 		expression,
 	}
 }
 
 func (n Empty) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

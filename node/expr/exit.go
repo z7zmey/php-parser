@@ -7,22 +7,26 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Exit) Name() string {
+	return "Exit"
+}
+
 type Exit struct {
-	node.SimpleNode
+	name  string
 	expr  node.Node
 	isDie bool
 }
 
 func NewExit(expr node.Node, isDie bool) node.Node {
 	return Exit{
-		node.SimpleNode{Name: "Exit", Attributes: make(map[string]string)},
+		"Exit",
 		expr,
 		isDie,
 	}
 }
 
 func (n Exit) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 	fmt.Fprintf(out, "\n%vis die: %t", indent+"  ", n.isDie)
 
 	if n.expr != nil {

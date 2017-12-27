@@ -7,8 +7,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Closure) Name() string {
+	return "Closure"
+}
+
 type Closure struct {
-	node.SimpleNode
+	name        string
 	params      []node.Node
 	uses        []node.Node
 	returnType  node.Node
@@ -19,7 +23,7 @@ type Closure struct {
 
 func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool) node.Node {
 	return Closure{
-		node.SimpleNode{Name: "Closure", Attributes: make(map[string]string)},
+		"Closure",
 		params,
 		uses,
 		returnType,
@@ -30,7 +34,7 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 }
 
 func (n Closure) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	fmt.Fprintf(out, "\n%vis static: %t", indent+"  ", n.isStatic)
 	fmt.Fprintf(out, "\n%vis return ref: %t", indent+"  ", n.isReturnRef)

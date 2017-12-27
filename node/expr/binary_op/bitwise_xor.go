@@ -8,12 +8,16 @@ type BitwiseXor struct {
 	BinaryOp
 }
 
-func NewBitwiseXor(variable  node.Node, expression node.Node) node.Node {
+func NewBitwiseXor(variable node.Node, expression node.Node) node.Node {
 	return BitwiseXor{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryBitwiseXor", Attributes: make(map[string]string)},
+			"BinaryBitwiseXor",
 			variable,
 			expression,
 		},
 	}
+}
+
+func (n BitwiseXor) Name() string {
+	return "BitwiseXor"
 }

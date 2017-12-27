@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n BitwiseAnd) Name() string {
+	return "BitwiseAnd"
+}
+
 type BitwiseAnd struct {
 	AssignOp
 }
 
-func NewBitwiseAnd(variable  node.Node, expression node.Node) node.Node {
+func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
 	return BitwiseAnd{
 		AssignOp{
-			node.SimpleNode{Name: "AssignBitwiseAnd", Attributes: make(map[string]string)},
+			"AssignBitwiseAnd",
 			variable,
 			expression,
 		},

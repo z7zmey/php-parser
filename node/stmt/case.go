@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Case) Name() string {
+	return "Case"
+}
+
 type Case struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	cond  node.Node
 	stmts []node.Node
@@ -17,7 +21,7 @@ type Case struct {
 
 func NewCase(token token.Token, cond node.Node, stmts []node.Node) node.Node {
 	return Case{
-		node.SimpleNode{Name: "Case", Attributes: make(map[string]string)},
+		"Case",
 		token,
 		cond,
 		stmts,
@@ -25,7 +29,7 @@ func NewCase(token token.Token, cond node.Node, stmts []node.Node) node.Node {
 }
 
 func (n Case) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	fmt.Fprintf(out, "\n%vcond:", indent+"  ")
 	n.cond.Print(out, indent+"    ")

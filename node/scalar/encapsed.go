@@ -2,23 +2,26 @@ package scalar
 
 import (
 	"fmt"
-	"github.com/z7zmey/php-parser/token"
-	"github.com/z7zmey/php-parser/node"
 	"io"
+
+	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/token"
 )
 
-
-type Encapsed struct {
-	node.SimpleNode
-	startToken token.Token
-	endToken token.Token
-	parts []node.Node
+func(n Encapsed) Name() string {
+	return "Encapsed"
 }
 
+type Encapsed struct {
+	name       string
+	startToken token.Token
+	endToken   token.Token
+	parts      []node.Node
+}
 
 func NewEncapsed(startToken token.Token, parts []node.Node, endToken token.Token) node.Node {
 	return Encapsed{
-		node.SimpleNode{Name: "Encapsed", Attributes: make(map[string]string)},
+		"Encapsed",
 		startToken,
 		endToken,
 		parts,
@@ -26,9 +29,12 @@ func NewEncapsed(startToken token.Token, parts []node.Node, endToken token.Token
 }
 
 func (n Encapsed) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.Name, n.startToken.StartLine, n.endToken.EndLine)
-	fmt.Fprintf(out, "\n%vparts:", indent+"  ",)
-	for _, nn := range n.parts {
-		nn.Print(out, indent+"    ")
+	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.name, n.startToken.StartLine, n.endToken.EndLine)
+
+	if n.parts != nil {
+		fmt.Fprintf(out, "\n%vparts:", indent+"  ")
+		for _, nn := range n.parts {
+			nn.Print(out, indent+"    ")
+		}
 	}
 }

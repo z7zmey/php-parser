@@ -7,23 +7,27 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-type Variable struct {
-	node.SimpleNode
-	name node.Node
+func (n Variable) Name() string {
+	return "Variable"
 }
 
-func NewVariable(name node.Node) node.Node {
+type Variable struct {
+	name     string
+	variable node.Node
+}
+
+func NewVariable(variable node.Node) node.Node {
 	return Variable{
-		node.SimpleNode{Name: "Variable", Attributes: make(map[string]string)},
-		name,
+		"Variable",
+		variable,
 	}
 }
 
 func (n Variable) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
-	if n.name != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.name.Print(out, indent+"    ")
+	if n.variable != nil {
+		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
+		n.variable.Print(out, indent+"    ")
 	}
 }

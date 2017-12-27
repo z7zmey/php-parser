@@ -7,16 +7,20 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ArrayItem) Name() string {
+	return "ArrayItem"
+}
+
 type ArrayItem struct {
-	node.SimpleNode
-	key node.Node
-	val node.Node
+	name  string
+	key   node.Node
+	val   node.Node
 	byRef bool
 }
 
 func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 	return ArrayItem{
-		node.SimpleNode{Name: "ArrayItem", Attributes: make(map[string]string)},
+		"ArrayItem",
 		key,
 		val,
 		byRef,
@@ -24,7 +28,7 @@ func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 }
 
 func (n ArrayItem) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 	fmt.Fprintf(out, "\n%vbyRef: %t", indent+"  ", n.byRef)
 
 	if n.key != nil {

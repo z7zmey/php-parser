@@ -8,22 +8,26 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Echo) Name() string {
+	return "Echo"
+}
+
 type Echo struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	exprs []node.Node
 }
 
 func NewEcho(token token.Token, exprs []node.Node) node.Node {
 	return Echo{
-		node.SimpleNode{Name: "Echo", Attributes: make(map[string]string)},
+		"Echo",
 		token,
 		exprs,
 	}
 }
 
 func (n Echo) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.exprs != nil {
 		fmt.Fprintf(out, "\n%vexprs:", indent+"  ")

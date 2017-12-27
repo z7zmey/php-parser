@@ -8,22 +8,26 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n ConstList) Name() string {
+	return "ConstList"
+}
+
 type ConstList struct {
-	node.SimpleNode
+	name   string
 	token  token.Token
 	consts []node.Node
 }
 
 func NewConstList(token token.Token, consts []node.Node) node.Node {
 	return ConstList{
-		node.SimpleNode{Name: "ConstList", Attributes: make(map[string]string)},
+		"ConstList",
 		token,
 		consts,
 	}
 }
 
 func (n ConstList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.consts != nil {
 		fmt.Fprintf(out, "\n%vconsts:", indent+"  ")

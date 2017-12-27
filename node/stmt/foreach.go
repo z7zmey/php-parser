@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Foreach) Name() string {
+	return "Foreach"
+}
+
 type Foreach struct {
-	node.SimpleNode
+	name     string
 	token    token.Token
 	expr     node.Node
 	key      node.Node
@@ -20,7 +24,7 @@ type Foreach struct {
 
 func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
 	return Foreach{
-		node.SimpleNode{Name: "Foreach", Attributes: make(map[string]string)},
+		"Foreach",
 		token,
 		expr,
 		key,
@@ -31,7 +35,7 @@ func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.
 }
 
 func (n Foreach) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

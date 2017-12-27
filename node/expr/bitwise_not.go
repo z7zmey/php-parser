@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n BitwiseNot) Name() string {
+	return "BitwiseNot"
+}
+
 type BitwiseNot struct {
-	node.SimpleNode
+	name string
 	expr node.Node
 }
 
 func NewBitwiseNot(expression node.Node) node.Node {
 	return BitwiseNot{
-		node.SimpleNode{Name: "BitwiseNot", Attributes: make(map[string]string)},
+		"BitwiseNot",
 		expression,
 	}
 }
 
 func (n BitwiseNot) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Class) Name() string {
+	return "Class"
+}
+
 type Class struct {
-	node.SimpleNode
+	name       string
 	token      token.Token
 	modifiers  []node.Node
 	args       []node.Node
@@ -20,7 +24,7 @@ type Class struct {
 
 func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
 	return Class{
-		node.SimpleNode{Name: "Class", Attributes: make(map[string]string)},
+		"Class",
 		token,
 		modifiers,
 		args,
@@ -31,7 +35,7 @@ func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extend
 }
 
 func (n Class) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.modifiers != nil {
 		fmt.Fprintf(out, "\n%vmotifiers:", indent+"  ")

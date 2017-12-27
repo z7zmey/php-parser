@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ShiftLeft) Name() string {
+	return "ShiftLeft"
+}
+
 type ShiftLeft struct {
 	AssignOp
 }
 
-func NewShiftLeft(variable  node.Node, expression node.Node) node.Node {
+func NewShiftLeft(variable node.Node, expression node.Node) node.Node {
 	return ShiftLeft{
 		AssignOp{
-			node.SimpleNode{Name: "AssignShiftLeft", Attributes: make(map[string]string)},
+			"AssignShiftLeft",
 			variable,
 			expression,
 		},

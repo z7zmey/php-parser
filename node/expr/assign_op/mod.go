@@ -4,14 +4,18 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Mod) Name() string {
+	return "Mod"
+}
+
 type Mod struct {
 	AssignOp
 }
 
-func NewMod(variable  node.Node, expression node.Node) node.Node {
+func NewMod(variable node.Node, expression node.Node) node.Node {
 	return Mod{
 		AssignOp{
-			node.SimpleNode{Name: "AssignMod", Attributes: make(map[string]string)},
+			"AssignMod",
 			variable,
 			expression,
 		},

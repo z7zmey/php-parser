@@ -7,20 +7,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n ShortList) Name() string {
+	return "ShortList"
+}
+
 type ShortList struct {
-	node.SimpleNode
+	name  string
 	items []node.Node
 }
 
 func NewShortList(items []node.Node) node.Node {
 	return ShortList{
-		node.SimpleNode{Name: "ShortList", Attributes: make(map[string]string)},
+		"ShortList",
 		items,
 	}
 }
 
 func (n ShortList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.items != nil {
 		fmt.Fprintf(out, "\n%vitems:", indent+"  ")

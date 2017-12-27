@@ -4,6 +4,10 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Coalesce) Name() string {
+	return "Coalesce"
+}
+
 type Coalesce struct {
 	BinaryOp
 }
@@ -11,7 +15,7 @@ type Coalesce struct {
 func NewCoalesce(variable node.Node, expression node.Node) node.Node {
 	return Coalesce{
 		BinaryOp{
-			node.SimpleNode{Name: "BinaryCoalesce", Attributes: make(map[string]string)},
+			"BinaryCoalesce",
 			variable,
 			expression,
 		},

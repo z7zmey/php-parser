@@ -6,19 +6,23 @@ import (
 )
 
 type Nullable struct {
-	SimpleNode
+	name string
 	expr Node
+}
+
+func (n Nullable) Name() string {
+	return "Nullable"
 }
 
 func NewNullable(expression Node) Node {
 	return Nullable{
-		SimpleNode{Name: "Nullable", Attributes: make(map[string]string)},
+		"Nullable",
 		expression,
 	}
 }
 
 func (n Nullable) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

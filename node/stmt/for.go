@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n For) Name() string {
+	return "For"
+}
+
 type For struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	init  []node.Node
 	cond  []node.Node
@@ -19,7 +23,7 @@ type For struct {
 
 func NewFor(token token.Token, init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
 	return For{
-		node.SimpleNode{Name: "For", Attributes: make(map[string]string)},
+		"For",
 		token,
 		init,
 		cond,
@@ -29,7 +33,7 @@ func NewFor(token token.Token, init []node.Node, cond []node.Node, loop []node.N
 }
 
 func (n For) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.init != nil {
 		fmt.Fprintf(out, "\n%vinit:", indent+"  ")

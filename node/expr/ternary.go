@@ -7,8 +7,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+func (n Ternary) Name() string {
+	return "Ternary"
+}
+
 type Ternary struct {
-	node.SimpleNode
+	name      string
 	condition node.Node
 	ifTrue    node.Node
 	ifFalse   node.Node
@@ -16,7 +20,7 @@ type Ternary struct {
 
 func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.Node {
 	return Ternary{
-		node.SimpleNode{Name: "Ternary", Attributes: make(map[string]string)},
+		"Ternary",
 		condition,
 		ifTrue,
 		ifFalse,
@@ -24,7 +28,7 @@ func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.N
 }
 
 func (n Ternary) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
 	if n.condition != nil {
 		fmt.Fprintf(out, "\n%vcondition:", indent+"  ")

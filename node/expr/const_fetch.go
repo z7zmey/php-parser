@@ -7,23 +7,27 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-type ConstFetch struct {
-	node.SimpleNode
-	name node.Node
+func (n ConstFetch) Name() string {
+	return "ConstFetch"
 }
 
-func NewConstFetch(name node.Node) node.Node {
+type ConstFetch struct {
+	name     string
+	constant node.Node
+}
+
+func NewConstFetch(constant node.Node) node.Node {
 	return ConstFetch{
-		node.SimpleNode{Name: "ConstFetch", Attributes: make(map[string]string)},
-		name,
+		"ConstFetch",
+		constant,
 	}
 }
 
 func (n ConstFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
 
-	if n.name != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.name.Print(out, indent+"    ")
+	if n.constant != nil {
+		fmt.Fprintf(out, "\n%vconstant:", indent+"  ")
+		n.constant.Print(out, indent+"    ")
 	}
 }

@@ -8,22 +8,26 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n Break) Name() string {
+	return "Break"
+}
+
 type Break struct {
-	node.SimpleNode
+	name  string
 	token token.Token
 	expr  node.Node
 }
 
 func NewBreak(token token.Token, expr node.Node) node.Node {
 	return Break{
-		node.SimpleNode{Name: "Break", Attributes: make(map[string]string)},
+		"Break",
 		token,
 		expr,
 	}
 }
 
 func (n Break) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.expr != nil {
 		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")

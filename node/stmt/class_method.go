@@ -8,8 +8,12 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+func(n ClassMethod) Name() string {
+	return "ClassMethod"
+}
+
 type ClassMethod struct {
-	node.SimpleNode
+	name        string
 	token       token.Token
 	modifiers   []node.Node
 	isReturnRef bool
@@ -20,7 +24,7 @@ type ClassMethod struct {
 
 func NewClassMethod(token token.Token, modifiers []node.Node, isReturnRef bool, params []node.Node, returnType node.Node, stmts []node.Node) node.Node {
 	return ClassMethod{
-		node.SimpleNode{Name: "ClassMethod", Attributes: make(map[string]string)},
+		"ClassMethod",
 		token,
 		modifiers,
 		isReturnRef,
@@ -31,7 +35,7 @@ func NewClassMethod(token token.Token, modifiers []node.Node, isReturnRef bool, 
 }
 
 func (n ClassMethod) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
+	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.modifiers != nil {
 		fmt.Fprintf(out, "\n%vmodifiers:", indent+"  ")
