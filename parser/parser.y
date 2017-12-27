@@ -5,6 +5,7 @@ import (
     "io"
     "fmt"
     "strings"
+    "strconv"
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
@@ -216,7 +217,7 @@ type foreachVariable struct {
 %type <node> if_stmt
 %type <node> alt_if_stmt
 %type <node> if_stmt_without_else
-%type <node> class_const_decl name_list
+%type <node> class_const_decl
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
@@ -234,7 +235,7 @@ type foreachVariable struct {
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_body interface_extends_list implements_list method_modifiers variable_modifiers
-%type <list> non_empty_member_modifiers
+%type <list> non_empty_member_modifiers name_list
 
 %%
 
@@ -490,12 +491,12 @@ extends_from:
 
 interface_extends_list:
         /* empty */                                     { $$ = nil }
-    |   T_EXTENDS name_list                             { $$ = $2.(node.SimpleNode).Children }
+    |   T_EXTENDS name_list                             { $$ = $2 }
 ;
 
 implements_list:
         /* empty */                                     { $$ = nil }
-    |   T_IMPLEMENTS name_list                          { $$ = $2.(node.SimpleNode).Children }
+    |   T_IMPLEMENTS name_list                          { $$ = $2 }
 ;
 
 foreach_variable:
@@ -629,13 +630,13 @@ type_expr:
 ;
 
 type:
-        T_ARRAY                                         { $$ = node.NewSimpleNode("array type"); }
-    |   T_CALLABLE                                      { $$ = node.NewSimpleNode("callable type"); }
+        T_ARRAY                                         { $$ = node.NewIdentifier($1) }
+    |   T_CALLABLE                                      { $$ = node.NewIdentifier($1) }
     |   name                                            { $$ = $1; }
 ;
 
 return_type:
-        /* empty */                                     { $$ = node.NewSimpleNode("No return type"); }
+        /* empty */                                     { $$ = nil }
     |   ':' type_expr                                   { $$ = $2; }
 ;
 
@@ -681,7 +682,7 @@ class_statement_list:
 class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1, $3); }
-    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2.(node.SimpleNode).Children, $3) }
+    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
                 $$ = stmt.NewClassMethod($4, $1, $3 == "true", $6, $8, $9)
@@ -689,8 +690,8 @@ class_statement:
 ;
 
 name_list:
-        name                                            { $$ = node.NewSimpleNode("NameList").Append($1) }
-    |   name_list ',' name                              { $$ = $1.Append($3) }
+        name                                            { $$ = []node.Node{$1} }
+    |   name_list ',' name                              { $$ = append($1, $3) }
 ;
 
 trait_adaptations:
@@ -712,8 +713,7 @@ trait_adaptation:
 trait_precedence:
     absolute_trait_method_reference T_INSTEADOF name_list
         {
-            name := name.NewName($3.(node.SimpleNode).Children)
-            $$ = stmt.NewTraitUsePrecedence($1, name)
+            $$ = stmt.NewTraitUsePrecedence($1, name.NewName($3))
         }
 ;
 
@@ -1066,7 +1066,7 @@ new_variable:
 ;
 
 member_name:
-        identifier                                      { $$ = node.NewSimpleNode("MemberName").Attribute("value", $1.Value); }
+        identifier                                      { $$ = node.NewIdentifier($1) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1136,10 +1136,27 @@ encaps_var:
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
-        T_STRING                                        { $$ = node.NewSimpleNode("OffsetString").Attribute("value", $1.String()) }
-    |   T_NUM_STRING                                    { $$ = node.NewSimpleNode("OffsetNumString").Attribute("value", $1.String()) }
-    |   '-' T_NUM_STRING                                { $$ = node.NewSimpleNode("OffsetNegateNumString").Attribute("value", $2.String()) }
-    |   T_VARIABLE                                      { $$ = node.NewSimpleNode("OffsetVariable").Attribute("value", $1.String()) }
+        T_STRING                                        { $$ = scalar.NewString($1) }
+    |   T_NUM_STRING
+        {
+            // TODO: add option to handle 64 bit integer
+            if _, err := strconv.Atoi($1.Value); err == nil {
+                $$ = scalar.NewLnumber($1)
+            } else {
+                $$ = scalar.NewString($1)
+            }
+        }
+    |   '-' T_NUM_STRING
+        {
+            // TODO: add option to handle 64 bit integer
+            if _, err := strconv.Atoi($2.Value); err == nil {
+                $$ = expr.NewUnaryMinus(scalar.NewLnumber($2))
+            } else {
+                $2.Value = "-"+$2.Value
+                $$ = scalar.NewString($2)
+            }
+        }
+    |   T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
 ;
 
 internal_functions_in_yacc:
