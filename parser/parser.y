@@ -602,31 +602,22 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                $$ = node.NewSimpleNode("Parameter").
-                    Append($1).
-                    Attribute("is_reference", $2).
-                    Attribute("is_variadic", $3).
-                    Attribute("var", $4.String());
+                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), nil, $2 == "true", $3 == "true")
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                $$ = node.NewSimpleNode("Parameter").
-                    Append($1).
-                    Attribute("is_reference", $2).
-                    Attribute("is_variadic", $3).
-                    Attribute("var", $4.String()).
-                    Append($6);
+                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), $6, $2 == "true", $3 == "true")
             }
 ;
 
 optional_type:
-        /* empty */                                     { $$ = node.NewSimpleNode("No type") }
+        /* empty */                                     { $$ = nil }
     |   type_expr                                       { $$ = $1; }
 ;
 
 type_expr:
         type                                            { $$ = $1; }
-    |   '?' type                                        { $$ = $2; $$.Attribute("nullable", "true") }
+    |   '?' type                                        { $$ = node.NewNullable($2) }
 ;
 
 type:
@@ -651,8 +642,8 @@ non_empty_argument_list:
 ;
 
 argument:
-        expr                                            { $$ = $1; }
-    |   T_ELLIPSIS expr                                 { $$ = node.NewSimpleNode("Unpack").Append($2) }
+        expr                                            { $$ = node.NewArgument($1, false) }
+    |   T_ELLIPSIS expr                                 { $$ = node.NewArgument($2, true) }
 ;
 
 global_var_list:
