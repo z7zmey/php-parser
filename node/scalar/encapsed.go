@@ -1,14 +1,11 @@
 package scalar
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Encapsed) Name() string {
+func (n Encapsed) Name() string {
 	return "Encapsed"
 }
 
@@ -28,13 +25,15 @@ func NewEncapsed(startToken token.Token, parts []node.Node, endToken token.Token
 	}
 }
 
-func (n Encapsed) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d]", indent, n.name, n.startToken.StartLine, n.endToken.EndLine)
+func (n Encapsed) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.parts != nil {
-		fmt.Fprintf(out, "\n%vparts:", indent+"  ")
+		vv := v.Children("parts")
 		for _, nn := range n.parts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

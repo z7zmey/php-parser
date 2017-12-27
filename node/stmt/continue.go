@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Continue) Name() string {
+func (n Continue) Name() string {
 	return "Continue"
 }
 
@@ -26,11 +23,13 @@ func NewContinue(token token.Token, expr node.Node) node.Node {
 	}
 }
 
-func (n Continue) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Continue) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

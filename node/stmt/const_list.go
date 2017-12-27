@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n ConstList) Name() string {
+func (n ConstList) Name() string {
 	return "ConstList"
 }
 
@@ -26,13 +23,15 @@ func NewConstList(token token.Token, consts []node.Node) node.Node {
 	}
 }
 
-func (n ConstList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n ConstList) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.consts != nil {
-		fmt.Fprintf(out, "\n%vconsts:", indent+"  ")
+		vv := v.Children("consts")
 		for _, nn := range n.consts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

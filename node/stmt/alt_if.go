@@ -1,24 +1,21 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n AltIf) Name() string {
+func (n AltIf) Name() string {
 	return "AltIf"
 }
 
 type AltIf struct {
-	name      string
-	token     token.Token
-	cond      node.Node
-	stmt      node.Node
-	elseAltIf []node.Node
-	_else     node.Node
+	name   string
+	token  token.Token
+	cond   node.Node
+	stmt   node.Node
+	elseIf []node.Node
+	_else  node.Node
 }
 
 func NewAltIf(token token.Token, cond node.Node, stmt node.Node) node.Node {
@@ -32,12 +29,12 @@ func NewAltIf(token token.Token, cond node.Node, stmt node.Node) node.Node {
 	}
 }
 
-func (n AltIf) AddElseIf(elseAltIf node.Node) node.Node {
-	if n.elseAltIf == nil {
-		n.elseAltIf = make([]node.Node, 0)
+func (n AltIf) AddElseIf(elseIf node.Node) node.Node {
+	if n.elseIf == nil {
+		n.elseIf = make([]node.Node, 0)
 	}
 
-	n.elseAltIf = append(n.elseAltIf, elseAltIf)
+	n.elseIf = append(n.elseIf, elseIf)
 
 	return n
 }
@@ -48,27 +45,30 @@ func (n AltIf) SetElse(_else node.Node) node.Node {
 	return n
 }
 
-func (n AltIf) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n AltIf) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.cond != nil {
-		fmt.Fprintf(out, "\n%vcond:", indent+"  ")
-		n.cond.Print(out, indent+"    ")
+		vv := v.Children("cond")
+		n.cond.Walk(vv)
 	}
 
 	if n.stmt != nil {
-		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
-		n.stmt.Print(out, indent+"    ")
+		vv := v.Children("stmt")
+		n.stmt.Walk(vv)
 	}
 
-	if n.elseAltIf != nil {
-		fmt.Fprintf(out, "\n%velseAltIfs:", indent+"  ")
-		for _, nn := range n.elseAltIf {
-			nn.Print(out, indent+"    ")
+	if n.elseIf != nil {
+		vv := v.Children("elseIf")
+		for _, nn := range n.elseIf {
+			nn.Walk(vv)
 		}
 	}
+
 	if n._else != nil {
-		fmt.Fprintf(out, "\n%velse:", indent+"  ")
-		n._else.Print(out, indent+"    ")
+		vv := v.Children("else")
+		n._else.Walk(vv)
 	}
 }

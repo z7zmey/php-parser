@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Static) Name() string {
+func (n Static) Name() string {
 	return "Static"
 }
 
@@ -26,13 +23,15 @@ func NewStatic(token token.Token, vars []node.Node) node.Node {
 	}
 }
 
-func (n Static) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Static) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.vars != nil {
-		fmt.Fprintf(out, "\n%vvars:", indent+"  ")
+		vv := v.Children("vars")
 		for _, nn := range n.vars {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Property) Name() string {
+func (n Property) Name() string {
 	return "Property"
 }
 
@@ -26,11 +23,15 @@ func NewProperty(token token.Token, expr node.Node) node.Node {
 	}
 }
 
-func (n Property) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Property) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.token.Value)
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,12 +22,13 @@ func NewExit(expr node.Node, isDie bool) node.Node {
 	}
 }
 
-func (n Exit) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vis die: %t", indent+"  ", n.isDie)
+func (n Exit) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

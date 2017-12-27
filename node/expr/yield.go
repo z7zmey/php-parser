@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,16 +22,18 @@ func NewYield(key node.Node, value node.Node) node.Node {
 	}
 }
 
-func (n Yield) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Yield) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.key != nil {
-		fmt.Fprintf(out, "\n%vkey:", indent+"  ")
-		n.key.Print(out, indent+"    ")
+		vv := v.Children("key")
+		n.key.Walk(vv)
 	}
 
 	if n.value != nil {
-		fmt.Fprintf(out, "\n%vvalue:", indent+"  ")
-		n.value.Print(out, indent+"    ")
+		vv := v.Children("value")
+		n.value.Walk(vv)
 	}
 }

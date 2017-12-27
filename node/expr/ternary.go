@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -27,21 +24,23 @@ func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.N
 	}
 }
 
-func (n Ternary) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Ternary) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.condition != nil {
-		fmt.Fprintf(out, "\n%vcondition:", indent+"  ")
-		n.condition.Print(out, indent+"    ")
+		vv := v.Children("condition")
+		n.condition.Walk(vv)
 	}
 
 	if n.ifTrue != nil {
-		fmt.Fprintf(out, "\n%vifTrue:", indent+"  ")
-		n.ifTrue.Print(out, indent+"    ")
+		vv := v.Children("ifTrue")
+		n.ifTrue.Walk(vv)
 	}
 
 	if n.ifFalse != nil {
-		fmt.Fprintf(out, "\n%vifFalse:", indent+"  ")
-		n.ifFalse.Print(out, indent+"    ")
+		vv := v.Children("ifFalse")
+		n.ifFalse.Walk(vv)
 	}
 }

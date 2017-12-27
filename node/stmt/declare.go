@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Declare) Name() string {
+func (n Declare) Name() string {
 	return "Declare"
 }
 
@@ -28,18 +25,20 @@ func NewDeclare(token token.Token, consts []node.Node, stmt node.Node) node.Node
 	}
 }
 
-func (n Declare) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Declare) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.consts != nil {
-		fmt.Fprintf(out, "\n%vconsts:", indent+"  ")
+		vv := v.Children("consts")
 		for _, nn := range n.consts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.stmt != nil {
-		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
-		n.stmt.Print(out, indent+"    ")
+		vv := v.Children("stmt")
+		n.stmt.Walk(vv)
 	}
 }

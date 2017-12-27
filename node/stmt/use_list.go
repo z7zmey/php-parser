@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n UseList) Name() string {
+func (n UseList) Name() string {
 	return "UseList"
 }
 
@@ -28,18 +25,20 @@ func NewUseList(token token.Token, useType node.Node, uses []node.Node) node.Nod
 	}
 }
 
-func (n UseList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n UseList) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.useType != nil {
-		fmt.Fprintf(out, "\n%vtype:", indent+"  ")
-		n.useType.Print(out, indent+"    ")
+		vv := v.Children("useType")
+		n.useType.Walk(vv)
 	}
 
 	if n.uses != nil {
-		fmt.Fprintf(out, "\n%vuses:", indent+"  ")
+		vv := v.Children("uses")
 		for _, nn := range n.uses {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

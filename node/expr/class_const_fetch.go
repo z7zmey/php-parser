@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
@@ -18,6 +15,7 @@ type ClassConstFetch struct {
 	constant token.Token
 }
 
+// TODO: constant must be identifier
 func NewClassConstFetch(class node.Node, constant token.Token) node.Node {
 	return ClassConstFetch{
 		"ClassConstFetch",
@@ -26,12 +24,15 @@ func NewClassConstFetch(class node.Node, constant token.Token) node.Node {
 	}
 }
 
-func (n ClassConstFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.constant.Value)
+func (n ClassConstFetch) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("constant", n.constant.Value)
 
 	if n.class != nil {
-		fmt.Fprintf(out, "\n%vclass:", indent+"  ")
-		n.class.Print(out, indent+"    ")
+		vv := v.Children("class")
+		n.class.Walk(vv)
 	}
 }

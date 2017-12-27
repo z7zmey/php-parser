@@ -1,13 +1,10 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
-func(n Require) Name() string {
+func (n Require) Name() string {
 	return "Require"
 }
 
@@ -23,11 +20,13 @@ func NewRequire(expression node.Node) node.Node {
 	}
 }
 
-func (n Require) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Require) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

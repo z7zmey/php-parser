@@ -1,13 +1,10 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
-func(n PropertyList) Name() string {
+func (n PropertyList) Name() string {
 	return "PropertyList"
 }
 
@@ -25,20 +22,22 @@ func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
 	}
 }
 
-func (n PropertyList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n PropertyList) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.modifiers != nil {
-		fmt.Fprintf(out, "\n%vmodifiers:", indent+"  ")
+		vv := v.Children("modifiers")
 		for _, nn := range n.modifiers {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.properties != nil {
-		fmt.Fprintf(out, "\n%vproperties:", indent+"  ")
+		vv := v.Children("properties")
 		for _, nn := range n.properties {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

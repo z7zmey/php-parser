@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -23,11 +20,13 @@ func NewPostDec(variableession node.Node) node.Node {
 	}
 }
 
-func (n PostDec) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n PostDec) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.variable != nil {
-		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
-		n.variable.Print(out, indent+"    ")
+		vv := v.Children("variable")
+		n.variable.Walk(vv)
 	}
 }

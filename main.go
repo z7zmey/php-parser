@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -17,14 +16,12 @@ func main() {
 	for _, path := range flag.Args() {
 		real, err := realpath.Realpath(path)
 		checkErr(err)
-		fmt.Printf("\n==> %s", real)
+		fmt.Printf("==> %s\n", real)
 
 		src, _ := os.Open(string(real))
 		rootnode := parser.Parse(src, real)
 
-		buf := new(bytes.Buffer)
-		rootnode.Print(buf, "")
-		fmt.Println(buf.String())
+		rootnode.Walk(dumper{"  | "})
 	}
 }
 

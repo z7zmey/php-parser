@@ -1,45 +1,44 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Namespace) Name() string {
+func (n Namespace) Name() string {
 	return "Namespace"
 }
 
 type Namespace struct {
-	name  string
-	token token.Token
-	nName node.Node
-	stmts []node.Node
+	name          string
+	token         token.Token
+	namespaceName node.Node
+	stmts         []node.Node
 }
 
-func NewNamespace(token token.Token, name node.Node, stmts []node.Node) node.Node {
+func NewNamespace(token token.Token, namespaceName node.Node, stmts []node.Node) node.Node {
 	return Namespace{
 		"Namespace",
 		token,
-		name,
+		namespaceName,
 		stmts,
 	}
 }
 
-func (n Namespace) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Namespace) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
-	if n.nName != nil {
-		fmt.Fprintf(out, "\n%vname:", indent+"  ")
-		n.nName.Print(out, indent+"    ")
+	if n.namespaceName != nil {
+		vv := v.Children("namespaceName")
+		n.namespaceName.Walk(vv)
 	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Goto) Name() string {
+func (n Goto) Name() string {
 	return "Goto"
 }
 
@@ -18,14 +15,19 @@ type Goto struct {
 	label token.Token
 }
 
-func NewGoto(token token.Token, name token.Token) node.Node {
+// todl label must be identifier
+func NewGoto(token token.Token, label token.Token) node.Node {
 	return Goto{
 		"Goto",
 		token,
-		name,
+		label,
 	}
 }
 
-func (n Goto) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.label.EndLine, n.label.Value)
+func (n Goto) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("label", n.label.Value)
 }

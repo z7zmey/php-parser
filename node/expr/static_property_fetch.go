@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,16 +22,18 @@ func NewStaticPropertyFetch(class node.Node, property node.Node) node.Node {
 	}
 }
 
-func (n StaticPropertyFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n StaticPropertyFetch) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.class != nil {
-		fmt.Fprintf(out, "\n%vclass:", indent+"  ")
-		n.class.Print(out, indent+"    ")
+		vv := v.Children("class")
+		n.class.Walk(vv)
 	}
 
 	if n.property != nil {
-		fmt.Fprintf(out, "\n%vproperty:", indent+"  ")
-		n.property.Print(out, indent+"    ")
+		vv := v.Children("property")
+		n.property.Walk(vv)
 	}
 }

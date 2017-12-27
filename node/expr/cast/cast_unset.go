@@ -20,3 +20,14 @@ func NewCastUnset(expr node.Node) node.Node {
 		},
 	}
 }
+
+func (n CastUnset) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	if n.expr != nil {
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
+	}
+}

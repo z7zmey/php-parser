@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n TraitUseAlias) Name() string {
+func (n TraitUseAlias) Name() string {
 	return "TraitUseAlias"
 }
 
@@ -28,20 +25,18 @@ func NewTraitUseAlias(ref node.Node, modifier node.Node, alias token.TokenInterf
 	}
 }
 
-func (n TraitUseAlias) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-
-	if n.alias != nil {
-		fmt.Fprintf(out, "\n%valias: %q", indent+"  ", n.alias.GetValue())
+func (n TraitUseAlias) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
 	}
 
 	if n.ref != nil {
-		fmt.Fprintf(out, "\n%vmethod", indent+"  ")
-		n.ref.Print(out, indent+"    ")
+		vv := v.Children("ref")
+		n.ref.Walk(vv)
 	}
 
 	if n.modifier != nil {
-		fmt.Fprintf(out, "\n%vmodifier:", indent+"  ")
-		n.modifier.Print(out, indent+"    ")
+		vv := v.Children("modifier")
+		n.modifier.Walk(vv)
 	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Try) Name() string {
+func (n Try) Name() string {
 	return "Try"
 }
 
@@ -30,25 +27,27 @@ func NewTry(token token.Token, stmts []node.Node, catches []node.Node, finally n
 	}
 }
 
-func (n Try) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Try) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.catches != nil {
-		fmt.Fprintf(out, "\n%vcatches:", indent+"  ")
+		vv := v.Children("catches")
 		for _, nn := range n.catches {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.finally != nil {
-		fmt.Fprintf(out, "\n%vfinally:", indent+"  ")
-		n.finally.Print(out, indent+"    ")
+		vv := v.Children("finally")
+		n.finally.Walk(vv)
 	}
 }

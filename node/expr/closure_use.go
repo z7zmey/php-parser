@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,12 +22,15 @@ func NewClusureUse(variable node.Node, byRef bool) node.Node {
 	}
 }
 
-func (n ClusureUse) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vby ref: %t", indent+"  ", n.byRef)
+func (n ClusureUse) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("byRef", n.byRef)
 
 	if n.variable != nil {
-		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
-		n.variable.Print(out, indent+"    ")
+		vv := v.Children("variable")
+		n.variable.Walk(vv)
 	}
 }

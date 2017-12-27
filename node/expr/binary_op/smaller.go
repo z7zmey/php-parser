@@ -4,7 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func(n Smaller) Name() string {
+func (n Smaller) Name() string {
 	return "Smaller"
 }
 
@@ -19,5 +19,21 @@ func NewSmaller(variable node.Node, expression node.Node) node.Node {
 			variable,
 			expression,
 		},
+	}
+}
+
+func (n Smaller) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	if n.left != nil {
+		vv := v.Children("left")
+		n.left.Walk(vv)
+	}
+
+	if n.right != nil {
+		vv := v.Children("right")
+		n.right.Walk(vv)
 	}
 }

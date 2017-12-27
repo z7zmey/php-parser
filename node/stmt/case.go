@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Case) Name() string {
+func (n Case) Name() string {
 	return "Case"
 }
 
@@ -28,16 +25,20 @@ func NewCase(token token.Token, cond node.Node, stmts []node.Node) node.Node {
 	}
 }
 
-func (n Case) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Case) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
-	fmt.Fprintf(out, "\n%vcond:", indent+"  ")
-	n.cond.Print(out, indent+"    ")
+	if n.cond != nil {
+		vv := v.Children("cond")
+		n.cond.Walk(vv)
+	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

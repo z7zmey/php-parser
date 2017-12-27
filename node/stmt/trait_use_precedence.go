@@ -1,13 +1,10 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
-func(n TraitUsePrecedence) Name() string {
+func (n TraitUsePrecedence) Name() string {
 	return "TraitUsePrecedence"
 }
 
@@ -25,16 +22,18 @@ func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
 	}
 }
 
-func (n TraitUsePrecedence) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n TraitUsePrecedence) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.ref != nil {
-		fmt.Fprintf(out, "\n%vmethod", indent+"  ")
-		n.ref.Print(out, indent+"    ")
+		vv := v.Children("ref")
+		n.ref.Walk(vv)
 	}
 
 	if n.insteadof != nil {
-		fmt.Fprintf(out, "\n%vinsteadof:", indent+"  ")
-		n.insteadof.Print(out, indent+"    ")
+		vv := v.Children("insteadof")
+		n.insteadof.Walk(vv)
 	}
 }

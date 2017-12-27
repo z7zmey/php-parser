@@ -1,10 +1,5 @@
 package node
 
-import (
-	"fmt"
-	"io"
-)
-
 type Nullable struct {
 	name string
 	expr Node
@@ -21,11 +16,13 @@ func NewNullable(expression Node) Node {
 	}
 }
 
-func (n Nullable) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Nullable) Walk(v Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

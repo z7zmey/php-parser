@@ -1,9 +1,6 @@
 package name
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -23,13 +20,15 @@ func NewName(parts []node.Node) node.Node {
 	}
 }
 
-func (n NameNode) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v", indent, n.name)
+func (n NameNode) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.parts != nil {
-		fmt.Fprintf(out, "\n%vparts:", indent+"  ")
+		vv := v.Children("parts")
 		for _, nn := range n.parts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

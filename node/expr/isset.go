@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -23,13 +20,15 @@ func NewIsset(variables []node.Node) node.Node {
 	}
 }
 
-func (n Isset) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Isset) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.variables != nil {
-		fmt.Fprintf(out, "\n%vvariables:", indent+"  ")
+		vv := v.Children("variables")
 		for _, nn := range n.variables {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

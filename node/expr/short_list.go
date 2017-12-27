@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -23,13 +20,15 @@ func NewShortList(items []node.Node) node.Node {
 	}
 }
 
-func (n ShortList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n ShortList) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.items != nil {
-		fmt.Fprintf(out, "\n%vitems:", indent+"  ")
+		vv := v.Children("items")
 		for _, nn := range n.items {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

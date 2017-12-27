@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n HaltCompiler) Name() string {
+func (n HaltCompiler) Name() string {
 	return "HaltCompiler"
 }
 
@@ -24,6 +21,8 @@ func NewHaltCompiler(token token.Token) node.Node {
 	}
 }
 
-func (n HaltCompiler) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n HaltCompiler) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Unset) Name() string {
+func (n Unset) Name() string {
 	return "Unset"
 }
 
@@ -26,13 +23,15 @@ func NewUnset(token token.Token, vars []node.Node) node.Node {
 	}
 }
 
-func (n Unset) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Unset) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.vars != nil {
-		fmt.Fprintf(out, "\n%vvars:", indent+"  ")
+		vv := v.Children("vars")
 		for _, nn := range n.vars {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

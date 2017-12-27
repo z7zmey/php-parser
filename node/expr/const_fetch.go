@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -23,11 +20,13 @@ func NewConstFetch(constant node.Node) node.Node {
 	}
 }
 
-func (n ConstFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n ConstFetch) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.constant != nil {
-		fmt.Fprintf(out, "\n%vconstant:", indent+"  ")
-		n.constant.Print(out, indent+"    ")
+		vv := v.Children("constant")
+		n.constant.Walk(vv)
 	}
 }

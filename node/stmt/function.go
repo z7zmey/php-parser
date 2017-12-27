@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Function) Name() string {
+func (n Function) Name() string {
 	return "Function"
 }
 
@@ -32,27 +29,30 @@ func NewFunction(token token.Token, isReturnRef bool, params []node.Node, return
 	}
 }
 
-func (n Function) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Function) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
-	fmt.Fprintf(out, "\n%vreturn ref: %t", indent+"  ", n.isReturnRef)
+	v.Scalar("token", n.token.Value)
+	v.Scalar("isReturnRef", n.isReturnRef)
 
 	if n.params != nil {
-		fmt.Fprintf(out, "\n%vparams:", indent+"  ")
+		vv := v.Children("params")
 		for _, nn := range n.params {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.returnType != nil {
-		fmt.Fprintf(out, "\n%vreturn type:", indent+"  ")
-		n.returnType.Print(out, indent+"    ")
+		vv := v.Children("returnType")
+		n.returnType.Walk(vv)
 	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

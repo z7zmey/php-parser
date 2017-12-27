@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -27,17 +24,18 @@ func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 	}
 }
 
-func (n ArrayItem) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vbyRef: %t", indent+"  ", n.byRef)
+func (n ArrayItem) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.key != nil {
-		fmt.Fprintf(out, "\n%vkey:", indent+"  ")
-		n.key.Print(out, indent+"    ")
+		vv := v.Children("key")
+		n.key.Walk(vv)
 	}
 
 	if n.val != nil {
-		fmt.Fprintf(out, "\n%vval:", indent+"  ")
-		n.val.Print(out, indent+"    ")
+		vv := v.Children("val")
+		n.val.Walk(vv)
 	}
 }

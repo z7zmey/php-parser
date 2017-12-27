@@ -1,16 +1,9 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
-
-func(n Use) Name() string {
-	return "Use"
-}
 
 type Use struct {
 	name    string
@@ -28,25 +21,27 @@ func NewUse(useType node.Node, use node.Node, alias token.TokenInterface) node.N
 	}
 }
 
+func (n Use) Name() string {
+	return "Use"
+}
+
 func (n Use) SetType(useType node.Node) node.Node {
 	n.useType = useType
 	return n
 }
 
-func (n Use) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Use) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.useType != nil {
-		fmt.Fprintf(out, "\n%vtype:", indent+"  ")
-		n.useType.Print(out, indent+"    ")
+		vv := v.Children("useType")
+		n.useType.Walk(vv)
 	}
 
 	if n.use != nil {
-		fmt.Fprintf(out, "\n%vuse:", indent+"  ")
-		n.use.Print(out, indent+"    ")
-	}
-
-	if n.alias != nil {
-		fmt.Fprintf(out, "\n%valias: %q", indent+"  ", n.alias.GetValue())
+		vv := v.Children("use")
+		n.use.Walk(vv)
 	}
 }

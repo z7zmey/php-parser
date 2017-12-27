@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -27,23 +24,25 @@ func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.
 	}
 }
 
-func (n StaticCall) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n StaticCall) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.class != nil {
-		fmt.Fprintf(out, "\n%vclass:", indent+"  ")
-		n.class.Print(out, indent+"    ")
+		vv := v.Children("class")
+		n.class.Walk(vv)
 	}
 
 	if n.call != nil {
-		fmt.Fprintf(out, "\n%vcall:", indent+"  ")
-		n.call.Print(out, indent+"    ")
+		vv := v.Children("call")
+		n.call.Walk(vv)
 	}
 
 	if n.arguments != nil {
-		fmt.Fprintf(out, "\n%varguments:", indent+"  ")
+		vv := v.Children("arguments")
 		for _, nn := range n.arguments {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

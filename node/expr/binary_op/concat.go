@@ -21,3 +21,19 @@ func NewConcat(variable node.Node, expression node.Node) node.Node {
 		},
 	}
 }
+
+func (n Concat) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	if n.left != nil {
+		vv := v.Children("left")
+		n.left.Walk(vv)
+	}
+
+	if n.right != nil {
+		vv := v.Children("right")
+		n.right.Walk(vv)
+	}
+}

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Class) Name() string {
+func (n Class) Name() string {
 	return "Class"
 }
 
@@ -34,39 +31,43 @@ func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extend
 	}
 }
 
-func (n Class) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n Class) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.token.Value)
 
 	if n.modifiers != nil {
-		fmt.Fprintf(out, "\n%vmotifiers:", indent+"  ")
+		vv := v.Children("modifiers")
 		for _, nn := range n.modifiers {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.args != nil {
-		fmt.Fprintf(out, "\n%vargs:", indent+"  ")
+		vv := v.Children("args")
 		for _, nn := range n.args {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.extends != nil {
-		fmt.Fprintf(out, "\n%vextends:", indent+"  ")
-		n.extends.Print(out, indent+"    ")
+		vv := v.Children("extends")
+		n.extends.Walk(vv)
 	}
 
 	if n.implements != nil {
-		fmt.Fprintf(out, "\n%vimplements:", indent+"  ")
+		vv := v.Children("implements")
 		for _, nn := range n.implements {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

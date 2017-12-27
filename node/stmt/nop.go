@@ -8,7 +8,7 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Nop) Name() string {
+func (n Nop) Name() string {
 	return "Nop"
 }
 
@@ -26,4 +26,12 @@ func NewNop(token token.Token) node.Node {
 
 func (n Nop) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+}
+
+func (n Nop) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.token.Value)
 }

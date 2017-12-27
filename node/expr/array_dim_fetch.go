@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,16 +22,18 @@ func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
 	}
 }
 
-func (n ArrayDimFetch) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.Name)
+func (n ArrayDimFetch) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.variable != nil {
-		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
-		n.variable.Print(out, indent+"    ")
+		vv := v.Children("variable")
+		n.variable.Walk(vv)
 	}
 
 	if n.dim != nil {
-		fmt.Fprintf(out, "\n%vdim:", indent+"  ")
-		n.dim.Print(out, indent+"    ")
+		vv := v.Children("dim")
+		n.dim.Walk(vv)
 	}
 }

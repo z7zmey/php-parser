@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -33,35 +30,37 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 	}
 }
 
-func (n Closure) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Closure) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
-	fmt.Fprintf(out, "\n%vis static: %t", indent+"  ", n.isStatic)
-	fmt.Fprintf(out, "\n%vis return ref: %t", indent+"  ", n.isReturnRef)
+	v.Scalar("isStatic", n.isStatic)
+	v.Scalar("isReturnRef", n.isReturnRef)
 
 	if n.params != nil {
-		fmt.Fprintf(out, "\n%vparams:", indent+"  ")
+		vv := v.Children("params")
 		for _, nn := range n.params {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.uses != nil {
-		fmt.Fprintf(out, "\n%vuses:", indent+"  ")
+		vv := v.Children("uses")
 		for _, nn := range n.uses {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.returnType != nil {
-		fmt.Fprintf(out, "\n%vreturn type:", indent+"  ")
-		n.returnType.Print(out, indent+"    ")
+		vv := v.Children("returnType")
+		n.returnType.Walk(vv)
 	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n GroupUse) Name() string {
+func (n GroupUse) Name() string {
 	return "GroupUse"
 }
 
@@ -41,23 +38,25 @@ func (n GroupUse) SetUseType(useType node.Node) node.Node {
 	return n
 }
 
-func (n GroupUse) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.GetStartLine(), n.token.GetEndLine(), n.token.GetValue())
+func (n GroupUse) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.useType != nil {
-		fmt.Fprintf(out, "\n%vuse type:", indent+"  ")
-		n.useType.Print(out, indent+"    ")
+		vv := v.Children("useType")
+		n.useType.Walk(vv)
 	}
 
 	if n.prefix != nil {
-		fmt.Fprintf(out, "\n%vprefix:", indent+"  ")
-		n.prefix.Print(out, indent+"    ")
+		vv := v.Children("prefix")
+		n.prefix.Walk(vv)
 	}
 
 	if n.useList != nil {
-		fmt.Fprintf(out, "\n%vuse list:", indent+"  ")
+		vv := v.Children("useList")
 		for _, nn := range n.useList {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

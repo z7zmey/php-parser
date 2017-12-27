@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,22 +9,24 @@ func (n Variable) Name() string {
 }
 
 type Variable struct {
-	name     string
-	variable node.Node
+	name    string
+	varName node.Node
 }
 
-func NewVariable(variable node.Node) node.Node {
+func NewVariable(varName node.Node) node.Node {
 	return Variable{
 		"Variable",
-		variable,
+		varName,
 	}
 }
 
-func (n Variable) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n Variable) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
-	if n.variable != nil {
-		fmt.Fprintf(out, "\n%vvariable:", indent+"  ")
-		n.variable.Print(out, indent+"    ")
+	if n.varName != nil {
+		vv := v.Children("varName")
+		n.varName.Walk(vv)
 	}
 }

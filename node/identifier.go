@@ -1,9 +1,6 @@
 package node
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/token"
 )
 
@@ -23,7 +20,10 @@ func NewIdentifier(token token.Token) Node {
 	}
 }
 
-func (n Identifier) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vname: %q", indent+"  ", n.token.Value)
+func (n Identifier) Walk(v Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.token.Value)
 }

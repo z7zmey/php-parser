@@ -1,14 +1,11 @@
 package scalar
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n String) Name() string {
+func (n String) Name() string {
 	return "String"
 }
 
@@ -24,6 +21,10 @@ func NewString(token token.Token) node.Node {
 	}
 }
 
-func (n String) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n String) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.token.Value)
 }

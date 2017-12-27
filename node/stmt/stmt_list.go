@@ -1,13 +1,10 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
-func(n StmtList) Name() string {
+func (n StmtList) Name() string {
 	return "StmtList"
 }
 
@@ -23,13 +20,15 @@ func NewStmtList(stmts []node.Node) node.Node {
 	}
 }
 
-func (n StmtList) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n StmtList) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n For) Name() string {
+func (n For) Name() string {
 	return "For"
 }
 
@@ -32,32 +29,34 @@ func NewFor(token token.Token, init []node.Node, cond []node.Node, loop []node.N
 	}
 }
 
-func (n For) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n For) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.init != nil {
-		fmt.Fprintf(out, "\n%vinit:", indent+"  ")
+		vv := v.Children("init")
 		for _, nn := range n.init {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.cond != nil {
-		fmt.Fprintf(out, "\n%vcond:", indent+"  ")
+		vv := v.Children("cond")
 		for _, nn := range n.cond {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.loop != nil {
-		fmt.Fprintf(out, "\n%vloop:", indent+"  ")
+		vv := v.Children("loop")
 		for _, nn := range n.loop {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.stmt != nil {
-		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
-		n.stmt.Print(out, indent+"    ")
+		vv := v.Children("stmt")
+		n.stmt.Walk(vv)
 	}
 }

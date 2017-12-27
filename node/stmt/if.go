@@ -1,14 +1,11 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n If) Name() string {
+func (n If) Name() string {
 	return "If"
 }
 
@@ -48,27 +45,30 @@ func (n If) SetElse(_else node.Node) node.Node {
 	return n
 }
 
-func (n If) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.token.Value)
+func (n If) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.cond != nil {
-		fmt.Fprintf(out, "\n%vcond:", indent+"  ")
-		n.cond.Print(out, indent+"    ")
+		vv := v.Children("cond")
+		n.cond.Walk(vv)
 	}
 
 	if n.stmt != nil {
-		fmt.Fprintf(out, "\n%vstmt:", indent+"  ")
-		n.stmt.Print(out, indent+"    ")
+		vv := v.Children("stmt")
+		n.stmt.Walk(vv)
 	}
 
 	if n.elseIf != nil {
-		fmt.Fprintf(out, "\n%velseIfs:", indent+"  ")
+		vv := v.Children("elseIf")
 		for _, nn := range n.elseIf {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
+
 	if n._else != nil {
-		fmt.Fprintf(out, "\n%velse:", indent+"  ")
-		n._else.Print(out, indent+"    ")
+		vv := v.Children("else")
+		n._else.Walk(vv)
 	}
 }

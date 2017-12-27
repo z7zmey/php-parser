@@ -1,10 +1,5 @@
 package node
 
-import (
-	"fmt"
-	"io"
-)
-
 type Argument struct {
 	name     string
 	expr     Node
@@ -23,12 +18,13 @@ func NewArgument(expression Node, variadic bool) Node {
 	}
 }
 
-func (n Argument) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
-	fmt.Fprintf(out, "\n%vvariadic: %t", indent+"  ", n.variadic)
+func (n Argument) Walk(v Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 }

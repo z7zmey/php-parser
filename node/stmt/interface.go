@@ -1,23 +1,20 @@
 package stmt
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
-func(n Interface) Name() string {
+func (n Interface) Name() string {
 	return "Interface"
 }
 
 type Interface struct {
-	name    string
-	token   token.Token
-	iName   token.Token
-	extends []node.Node
-	stmts   []node.Node
+	name          string
+	token         token.Token
+	interfaceName token.Token
+	extends       []node.Node
+	stmts         []node.Node
 }
 
 func NewInterface(token token.Token, name token.Token, extends []node.Node, stmts []node.Node) node.Node {
@@ -30,20 +27,24 @@ func NewInterface(token token.Token, name token.Token, extends []node.Node, stmt
 	}
 }
 
-func (n Interface) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.name, n.token.StartLine, n.token.EndLine, n.iName.Value)
+func (n Interface) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
+
+	v.Scalar("token", n.interfaceName.Value)
 
 	if n.extends != nil {
-		fmt.Fprintf(out, "\n%vextends:", indent+"  ")
+		vv := v.Children("extends")
 		for _, nn := range n.extends {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 
 	if n.stmts != nil {
-		fmt.Fprintf(out, "\n%vstmts:", indent+"  ")
+		vv := v.Children("stmts")
 		for _, nn := range n.stmts {
-			nn.Print(out, indent+"    ")
+			nn.Walk(vv)
 		}
 	}
 }

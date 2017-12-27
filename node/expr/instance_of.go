@@ -1,9 +1,6 @@
 package expr
 
 import (
-	"fmt"
-	"io"
-
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -25,16 +22,18 @@ func NewInstanceOf(expr node.Node, class node.Node) node.Node {
 	}
 }
 
-func (n InstanceOf) Print(out io.Writer, indent string) {
-	fmt.Fprintf(out, "\n%v%v [- -]", indent, n.name)
+func (n InstanceOf) Walk(v node.Visitor) {
+	if v.Visit(n) == false {
+		return
+	}
 
 	if n.expr != nil {
-		fmt.Fprintf(out, "\n%vexpr:", indent+"  ")
-		n.expr.Print(out, indent+"    ")
+		vv := v.Children("expr")
+		n.expr.Walk(vv)
 	}
 
 	if n.class != nil {
-		fmt.Fprintf(out, "\n%vclass:", indent+"  ")
-		n.class.Print(out, indent+"    ")
+		vv := v.Children("class")
+		n.class.Walk(vv)
 	}
 }
