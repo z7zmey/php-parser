@@ -8,23 +8,23 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
-type ClassConst struct {
+type ClassConstList struct {
 	node.SimpleNode
 	token     token.Token
 	modifiers []node.Node
 	consts    []node.Node
 }
 
-func NewClassConst(token token.Token, modifiers []node.Node, consts []node.Node) node.Node {
-	return ClassConst{
-		node.SimpleNode{Name: "ClassConst", Attributes: make(map[string]string)},
+func NewClassConstList(token token.Token, modifiers []node.Node, consts []node.Node) node.Node {
+	return ClassConstList{
+		node.SimpleNode{Name: "ClassConstList", Attributes: make(map[string]string)},
 		token,
 		modifiers,
 		consts,
 	}
 }
 
-func (n ClassConst) Print(out io.Writer, indent string) {
+func (n ClassConstList) Print(out io.Writer, indent string) {
 	fmt.Fprintf(out, "\n%v%v [%d %d] %q", indent, n.Name, n.token.StartLine, n.token.EndLine, n.token.Value)
 
 	if n.modifiers != nil {

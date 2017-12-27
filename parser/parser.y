@@ -296,7 +296,7 @@ top_statement:
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
     |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList($1, nil, $2) }
     |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($1, $2, $3) }
-    |   T_CONST const_list ';'                          { $$ = stmt.NewStmtConst($1, $2) }
+    |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($1, $2) }
 ;
 
 use_type:
@@ -672,7 +672,7 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConst($2, $1, $3); }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($2, $1, $3); }
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {

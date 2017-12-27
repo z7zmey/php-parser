@@ -2639,7 +2639,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line parser/parser.y:299
 		{
-			yyVAL.node = stmt.NewStmtConst(yyDollar[1].token, yyDollar[2].list)
+			yyVAL.node = stmt.NewConstList(yyDollar[1].token, yyDollar[2].list)
 		}
 	case 99:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -3479,7 +3479,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line parser/parser.y:675
 		{
-			yyVAL.node = stmt.NewClassConst(yyDollar[2].token, yyDollar[1].list, yyDollar[3].list)
+			yyVAL.node = stmt.NewClassConstList(yyDollar[2].token, yyDollar[1].list, yyDollar[3].list)
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
