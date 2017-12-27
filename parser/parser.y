@@ -37,9 +37,8 @@ type foreachVariable struct {
 %union{
     node node.Node
     token token.Token
-    value string
+    boolean bool
     list []node.Node
-    strings []string
     foreachVariable foreachVariable
 }
 
@@ -188,10 +187,9 @@ type foreachVariable struct {
 %token <token> '['
 %token <token> ']'
 
-%type <value> is_reference
-%type <value> is_variadic
-%type <value> returns_ref
-%type <value> class_modifier
+%type <boolean> is_reference
+%type <boolean> is_variadic
+%type <boolean> returns_ref
 
 %type <token> reserved_non_modifiers
 %type <token> semi_reserved
@@ -221,12 +219,12 @@ type foreachVariable struct {
 %type <node> alt_if_stmt_without_else
 %type <node> array_pair possible_array_pair
 %type <node> isset_variable type return_type type_expr
+%type <node> class_modifier
 
 %type <node> member_modifier
 %type <node> use_type
 %type <foreachVariable> foreach_variable
 
-%type <strings> class_modifiers
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
@@ -235,7 +233,7 @@ type foreachVariable struct {
 %type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_body interface_extends_list implements_list method_modifiers variable_modifiers
-%type <list> non_empty_member_modifiers name_list
+%type <list> non_empty_member_modifiers name_list class_modifiers
 
 %%
 
@@ -444,18 +442,18 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = stmt.NewFunction($3, $2 == "true", $5, $7, $9)
+            $$ = stmt.NewFunction($3, $2, $5, $7, $9)
         }
 ;
 
 is_reference:
-        /* empty */                                     { $$ = "false"; }
-    |   '&'                                             { $$ = "true"; }
+        /* empty */                                     { $$ = false }
+    |   '&'                                             { $$ = true }
 ;
 
 is_variadic:
-        /* empty */                                     { $$ = "false"; }
-    |   T_ELLIPSIS                                      { $$ = "true"; }
+        /* empty */                                     { $$ = false }
+    |   T_ELLIPSIS                                      { $$ = true }
 ;
 
 class_declaration_statement:
@@ -466,13 +464,13 @@ class_declaration_statement:
 ;
 
 class_modifiers:
-        class_modifier                                  { $$ = []string{$1} }
+        class_modifier                                  { $$ = []node.Node{$1} }
     |   class_modifiers class_modifier                  { $$ = append($1, $2) }
 ;
 
 class_modifier:
-        T_ABSTRACT                                      { $$ = "abstract" }
-    |   T_FINAL                                         { $$ = "final" }
+        T_ABSTRACT                                      { $$ = node.NewIdentifier($1) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1) }
 ;
 
 trait_declaration_statement:
@@ -602,11 +600,11 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), nil, $2 == "true", $3 == "true")
+                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), nil, $2, $3)
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), $6, $2 == "true", $3 == "true")
+                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), $6, $2, $3)
             }
 ;
 
@@ -676,7 +674,7 @@ class_statement:
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod($4, $1, $3 == "true", $6, $8, $9)
+                $$ = stmt.NewClassMethod($4, $1, $3, $6, $8, $9)
             }
 ;
 
@@ -893,17 +891,17 @@ expr_without_variable:
     |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2) }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, $7, $9, false, $2 == "true")
+                $$ = expr.NewClosure($4, $6, $7, $9, false, $2)
             }
     |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5, $7, $8, $10, true, $3 == "true")
+                $$ = expr.NewClosure($5, $7, $8, $10, true, $3)
             }
 ;
 
 returns_ref:
-        /* empty */                                     { $$ = "false"; }
-    |   '&'                                             { $$ = "true"; }
+        /* empty */                                     { $$ = false }
+    |   '&'                                             { $$ = true }
 ;
 
 lexical_vars:

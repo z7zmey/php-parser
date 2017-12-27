@@ -40,9 +40,8 @@ type yySymType struct {
 	yys             int
 	node            node.Node
 	token           token.Token
-	value           string
+	boolean         bool
 	list            []node.Node
-	strings         []string
 	foreachVariable foreachVariable
 }
 
@@ -358,7 +357,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser/parser.y:1174
+//line parser/parser.y:1172
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -612,12 +611,12 @@ var yyAct = [...]int{
 	688, 689, 686, 685, 684, 669, 818, 118, 191, 786,
 	229, 633, 813, 825, 811, 826, 255, 256, 231, 255,
 	256, 628, 832, 564, 785, 544, 197, 199, 198, 804,
-	554, 843, 409, 1, 831, 814, 681, 578, 847, 834,
-	678, 856, 679, 842, 379, 913, 570, 529, 221, 519,
-	836, 865, 855, 167, 168, 161, 162, 160, 163, 165,
-	166, 864, 178, 365, 805, 873, 849, 874, 651, 869,
-	144, 878, 748, 141, 164, 862, 321, 880, 148, 801,
-	666, 830, 250, 856, 37, 782, 879, 223, 42, 883,
+	554, 843, 409, 1, 831, 814, 37, 578, 847, 834,
+	681, 856, 678, 842, 679, 379, 913, 570, 529, 221,
+	519, 865, 855, 167, 168, 161, 162, 160, 163, 165,
+	166, 864, 178, 836, 365, 873, 805, 874, 849, 869,
+	651, 878, 144, 748, 164, 862, 141, 880, 321, 148,
+	801, 666, 830, 856, 250, 782, 879, 223, 42, 883,
 	41, 15, 14, 606, 855, 889, 890, 266, 48, 891,
 	87, 88, 89, 90, 91, 47, 107, 49, 82, 73,
 	74, 80, 75, 71, 247, 897, 894, 61, 264, 898,
@@ -1371,71 +1370,71 @@ var yyPact = [...]int{
 }
 var yyPgo = [...]int{
 
-	0, 940, 939, 46, 740, 6, 938, 3, 934, 14,
-	27, 79, 77, 70, 51, 922, 20, 920, 94, 15,
-	78, 919, 0, 62, 918, 913, 11, 912, 911, 36,
-	61, 49, 33, 909, 35, 907, 72, 50, 905, 9,
-	904, 903, 897, 895, 13, 48, 890, 888, 111, 98,
-	197, 887, 884, 883, 8, 881, 81, 43, 878, 55,
-	47, 877, 876, 875, 868, 867, 97, 863, 862, 861,
-	860, 10, 858, 857, 42, 32, 41, 2, 16, 5,
-	765, 17, 854, 664, 852, 28, 851, 850, 849, 90,
-	848, 31, 846, 843, 25, 29, 842, 840, 838, 24,
-	836, 834, 833, 549, 820, 18, 819, 818, 44, 86,
-	83, 817, 103, 1, 7, 816, 19, 815, 814, 38,
-	812, 810, 806, 4, 803, 37, 12,
+	0, 940, 939, 46, 6, 938, 3, 934, 14, 27,
+	79, 77, 70, 51, 922, 20, 920, 94, 15, 78,
+	919, 0, 62, 918, 913, 11, 912, 911, 36, 61,
+	49, 33, 909, 35, 907, 72, 50, 905, 9, 904,
+	903, 897, 895, 13, 48, 890, 888, 111, 98, 197,
+	887, 884, 883, 8, 881, 81, 43, 878, 55, 47,
+	877, 876, 875, 868, 867, 97, 863, 862, 861, 860,
+	10, 858, 857, 42, 32, 41, 2, 16, 740, 5,
+	765, 17, 664, 854, 28, 852, 851, 850, 90, 849,
+	31, 848, 846, 25, 29, 843, 842, 840, 24, 838,
+	836, 834, 549, 833, 18, 820, 819, 44, 86, 83,
+	818, 103, 1, 7, 817, 19, 816, 815, 38, 814,
+	812, 810, 4, 806, 803, 37, 12,
 }
 var yyR1 = [...]int{
 
-	0, 124, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-	5, 5, 5, 5, 5, 5, 5, 5, 5, 6,
-	6, 6, 6, 6, 6, 6, 7, 7, 112, 112,
-	85, 85, 9, 9, 9, 8, 8, 8, 8, 8,
-	8, 8, 8, 8, 8, 8, 8, 8, 8, 80,
-	80, 15, 15, 17, 17, 125, 125, 95, 95, 94,
-	94, 103, 103, 16, 16, 19, 19, 18, 18, 89,
-	89, 113, 113, 21, 21, 21, 21, 21, 21, 10,
-	10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-	10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-	10, 10, 10, 87, 87, 86, 86, 28, 28, 102,
-	102, 29, 11, 1, 1, 2, 2, 12, 12, 82,
-	82, 4, 4, 13, 14, 31, 31, 118, 118, 119,
-	119, 81, 81, 81, 81, 25, 25, 26, 26, 27,
-	27, 98, 98, 98, 98, 99, 99, 99, 126, 126,
-	24, 24, 70, 70, 68, 68, 72, 72, 69, 69,
-	114, 114, 115, 115, 32, 32, 33, 33, 78, 78,
-	76, 76, 76, 77, 77, 110, 110, 111, 111, 34,
-	34, 93, 93, 36, 97, 97, 37, 37, 116, 116,
-	38, 38, 38, 38, 123, 123, 101, 101, 101, 100,
-	100, 39, 39, 40, 41, 41, 41, 41, 43, 43,
-	42, 117, 117, 121, 121, 120, 120, 122, 122, 79,
-	79, 79, 79, 79, 79, 96, 96, 44, 44, 88,
-	88, 71, 20, 90, 90, 45, 91, 91, 92, 92,
-	47, 46, 46, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 35,
-	35, 35, 35, 35, 35, 35, 35, 35, 35, 3,
-	3, 105, 105, 104, 104, 54, 54, 55, 55, 55,
-	55, 48, 48, 49, 49, 52, 52, 84, 84, 84,
-	109, 109, 59, 59, 59, 53, 53, 53, 53, 53,
-	53, 53, 53, 53, 53, 53, 53, 53, 53, 53,
-	53, 60, 60, 60, 22, 22, 23, 23, 58, 61,
-	61, 61, 62, 62, 62, 63, 63, 63, 63, 63,
-	63, 30, 30, 30, 50, 50, 50, 64, 64, 65,
-	65, 65, 65, 65, 65, 56, 56, 56, 57, 57,
-	57, 108, 74, 74, 107, 107, 73, 73, 73, 73,
-	73, 73, 83, 83, 83, 83, 66, 66, 66, 66,
-	66, 66, 66, 67, 67, 67, 67, 51, 51, 51,
-	51, 51, 51, 51, 106, 106, 75,
+	0, 124, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+	4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
+	5, 5, 5, 5, 5, 5, 6, 6, 111, 111,
+	84, 84, 8, 8, 8, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 80,
+	80, 14, 14, 16, 16, 125, 125, 94, 94, 93,
+	93, 102, 102, 15, 15, 18, 18, 17, 17, 88,
+	88, 112, 112, 20, 20, 20, 20, 20, 20, 9,
+	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+	9, 9, 9, 86, 86, 85, 85, 27, 27, 101,
+	101, 28, 10, 1, 1, 2, 2, 11, 11, 123,
+	123, 78, 78, 12, 13, 30, 30, 117, 117, 118,
+	118, 81, 81, 81, 81, 24, 24, 25, 25, 26,
+	26, 97, 97, 97, 97, 98, 98, 98, 126, 126,
+	23, 23, 69, 69, 67, 67, 71, 71, 68, 68,
+	113, 113, 114, 114, 31, 31, 32, 32, 77, 77,
+	75, 75, 75, 76, 76, 109, 109, 110, 110, 33,
+	33, 92, 92, 35, 96, 96, 36, 36, 115, 115,
+	37, 37, 37, 37, 122, 122, 100, 100, 100, 99,
+	99, 38, 38, 39, 40, 40, 40, 40, 42, 42,
+	41, 116, 116, 120, 120, 119, 119, 121, 121, 79,
+	79, 79, 79, 79, 79, 95, 95, 43, 43, 87,
+	87, 70, 19, 89, 89, 44, 90, 90, 91, 91,
+	46, 45, 45, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 34,
+	34, 34, 34, 34, 34, 34, 34, 34, 34, 3,
+	3, 104, 104, 103, 103, 53, 53, 54, 54, 54,
+	54, 47, 47, 48, 48, 51, 51, 83, 83, 83,
+	108, 108, 58, 58, 58, 52, 52, 52, 52, 52,
+	52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
+	52, 59, 59, 59, 21, 21, 22, 22, 57, 60,
+	60, 60, 61, 61, 61, 62, 62, 62, 62, 62,
+	62, 29, 29, 29, 49, 49, 49, 63, 63, 64,
+	64, 64, 64, 64, 64, 55, 55, 55, 56, 56,
+	56, 107, 73, 73, 106, 106, 72, 72, 72, 72,
+	72, 72, 82, 82, 82, 82, 65, 65, 65, 65,
+	65, 65, 65, 66, 66, 66, 66, 50, 50, 50,
+	50, 50, 50, 50, 105, 105, 74,
 }
 var yyR2 = [...]int{
 
@@ -1491,98 +1490,98 @@ var yyR2 = [...]int{
 }
 var yyChk = [...]int{
 
-	-1000, -124, -112, -8, -10, -11, -12, -13, -14, 127,
-	154, 120, 114, 161, -68, -69, 97, 96, 99, 106,
-	110, 111, 115, 122, 76, 95, 90, -22, 124, 101,
-	103, 163, 116, 119, 112, 86, 113, -82, 128, 129,
-	130, -70, -72, -30, -35, -4, 83, -63, -64, -61,
+	-1000, -124, -111, -7, -9, -10, -11, -12, -13, 127,
+	154, 120, 114, 161, -67, -68, 97, 96, 99, 106,
+	110, 111, 115, 122, 76, 95, 90, -21, 124, 101,
+	103, 163, 116, 119, 112, 86, 113, -123, 128, 129,
+	130, -69, -71, -29, -34, -78, 83, -62, -63, -60,
 	134, 69, 71, 58, 59, 49, 50, 55, 57, 164,
-	-46, -51, 60, 61, 62, 63, 64, 65, 66, 82,
-	67, -53, 160, 13, 14, 16, 77, 78, -50, -60,
-	-55, -48, -58, -59, 70, 125, 126, 4, 5, 6,
+	-45, -50, 60, 61, 62, 63, 64, 65, 66, 82,
+	67, -52, 160, 13, 14, 16, 77, 78, -49, -59,
+	-54, -47, -57, -58, 70, 125, 126, 4, 5, 6,
 	7, 8, 84, 85, 141, 142, 156, 138, 139, 140,
-	155, 137, 149, 159, 88, 167, -9, -62, 135, 94,
-	-85, 157, 164, 157, -85, 161, 86, -17, -80, -103,
-	-85, 157, 113, 114, -18, -19, -89, -20, 86, -113,
-	164, -10, 113, 154, 164, 164, -23, -22, 76, -23,
-	-23, -93, -36, -50, -97, 113, -37, 88, -90, -45,
-	-22, 163, 33, 34, 10, 12, 11, 35, 37, 36,
+	155, 137, 149, 159, 88, 167, -8, -61, 135, 94,
+	-84, 157, 164, 157, -84, 161, 86, -16, -80, -102,
+	-84, 157, 113, 114, -17, -18, -88, -19, 86, -112,
+	164, -9, 113, 154, 164, 164, -22, -21, 76, -22,
+	-22, -92, -35, -49, -96, 113, -36, 88, -89, -44,
+	-21, 163, 33, 34, 10, 12, 11, 35, 37, 36,
 	51, 49, 50, 52, 68, 53, 54, 47, 48, 40,
 	41, 38, 39, 43, 44, 45, 46, 42, 56, 30,
-	32, 164, 164, 164, 161, -22, 86, 31, -3, 37,
-	128, -4, 86, 86, 86, 73, 74, 73, 75, 74,
+	32, 164, 164, 164, 161, -21, 86, 31, -3, 37,
+	128, -78, 86, 86, 86, 73, 74, 73, 75, 74,
 	17, 18, 19, 20, 29, 21, 22, 23, 24, 25,
 	26, 27, 28, 58, 59, 164, 69, 161, 133, 164,
-	-108, -107, -74, -73, -22, 37, 134, -22, -30, -60,
-	164, -59, 76, 69, -30, -22, -22, -22, -22, -22,
-	-22, -22, -22, -22, -22, -22, -22, -52, 164, -22,
-	-84, 93, -83, -66, 88, 151, 152, -22, -22, -22,
-	69, 153, 153, -49, -47, -48, -65, 128, -9, -50,
-	164, 164, -22, -22, 164, -22, -22, 93, 150, -83,
-	-83, 93, 161, -50, -110, 164, -110, 164, 157, -85,
-	165, -85, 163, 161, -112, 163, -15, -103, -85, 157,
-	163, 9, 157, 105, -85, -19, 163, 9, 17, -21,
-	162, -10, -11, -12, -13, -14, 127, -22, 97, -3,
-	-91, -92, -22, -22, 163, 163, 163, 163, 9, 163,
-	9, -3, 17, 163, 9, -22, -22, -22, -22, -22,
-	-22, -22, -22, -22, -22, -22, -22, -22, -22, -22,
-	-22, -22, -22, -22, -22, -22, -22, -22, -22, -22,
-	-22, -49, -22, 31, -22, -102, -29, -30, -22, -89,
-	-113, 163, 163, 86, 164, 86, -31, 131, 161, -118,
-	131, 164, -10, 164, 163, 31, -22, 37, -22, -22,
-	-22, -22, -22, -22, -22, -22, -22, -22, -22, -22,
-	-22, -23, -22, -57, 86, 161, -50, -108, 166, 9,
-	15, -30, 164, -22, -108, 165, -23, 160, -66, -66,
-	93, 69, 133, -22, 87, -30, 15, -23, -56, -7,
-	-50, 161, 86, -6, -5, 76, 77, 78, 79, 80,
+	-107, -106, -73, -72, -21, 37, 134, -21, -29, -59,
+	164, -58, 76, 69, -29, -21, -21, -21, -21, -21,
+	-21, -21, -21, -21, -21, -21, -21, -51, 164, -21,
+	-83, 93, -82, -65, 88, 151, 152, -21, -21, -21,
+	69, 153, 153, -48, -46, -47, -64, 128, -8, -49,
+	164, 164, -21, -21, 164, -21, -21, 93, 150, -82,
+	-82, 93, 161, -49, -109, 164, -109, 164, 157, -84,
+	165, -84, 163, 161, -111, 163, -14, -102, -84, 157,
+	163, 9, 157, 105, -84, -18, 163, 9, 17, -20,
+	162, -9, -10, -11, -12, -13, 127, -21, 97, -3,
+	-90, -91, -21, -21, 163, 163, 163, 163, 9, 163,
+	9, -3, 17, 163, 9, -21, -21, -21, -21, -21,
+	-21, -21, -21, -21, -21, -21, -21, -21, -21, -21,
+	-21, -21, -21, -21, -21, -21, -21, -21, -21, -21,
+	-21, -48, -21, 31, -21, -101, -28, -29, -21, -88,
+	-112, 163, 163, 86, 164, 86, -30, 131, 161, -117,
+	131, 164, -9, 164, 163, 31, -21, 37, -21, -21,
+	-21, -21, -21, -21, -21, -21, -21, -21, -21, -21,
+	-21, -22, -21, -56, 86, 161, -49, -107, 166, 9,
+	15, -29, 164, -21, -107, 165, -22, 160, -65, -65,
+	93, 69, 133, -21, 87, -29, 15, -22, -55, -6,
+	-49, 161, 86, -5, -4, 76, 77, 78, 79, 80,
 	81, 4, 5, 6, 7, 8, 10, 11, 12, 56,
 	70, 71, 82, 83, 73, 74, 75, 95, 96, 97,
 	98, 99, 100, 101, 102, 103, 104, 105, 116, 117,
 	118, 119, 120, 121, 122, 123, 124, 125, 126, 111,
 	112, 113, 114, 115, 13, 14, 134, 106, 107, 108,
 	109, 110, 135, 136, 131, 132, 154, 129, 130, 128,
-	137, 138, 140, 139, 141, 142, 156, 155, -56, -7,
-	-50, -109, -110, 153, 69, 161, 133, 153, -109, -106,
-	-75, -22, -22, -22, 150, 150, 159, -22, 165, -111,
-	-34, -22, 158, -108, 86, 163, -112, 162, 163, 163,
-	157, -85, -18, 157, -85, 161, 86, 157, -20, -22,
-	164, 165, 164, 163, 9, 165, -36, -37, 164, -22,
-	-45, 31, -22, -125, 9, 105, 165, 162, 164, -114,
-	-115, -32, -33, -78, -76, 30, 135, 136, -9, -31,
-	-119, 132, -9, -116, 161, -123, -9, -22, -22, -113,
-	-22, 165, 166, 162, -110, -22, 165, 17, -74, -22,
-	37, 134, -108, 165, 166, 165, -67, 86, 89, 50,
-	88, 86, 162, 162, 69, 162, -22, 166, -110, -22,
-	-110, -50, -23, -22, -57, -50, -31, -125, 9, 165,
-	165, 162, -125, 9, -22, 165, 162, 161, 157, -95,
-	-16, -19, -80, 161, 165, -24, -10, 31, -22, -91,
-	-22, -98, 161, 31, -114, -22, 165, -29, -81, -30,
-	37, 134, 69, -27, -10, 31, -87, -114, 165, 9,
-	-1, 37, -76, -119, 161, -123, 162, -38, -121, -120,
-	120, -122, 123, -79, 81, 80, 79, 76, 77, 78,
-	-116, 9, 165, 165, 75, -10, 31, 162, 17, -22,
-	-30, 164, 165, 166, 89, -22, 162, 166, 162, -119,
-	165, -75, 165, -34, -94, -19, 161, -125, 9, -19,
-	-95, 163, -113, 165, 163, -99, 163, -99, 163, 165,
-	163, 165, 15, -30, 164, -108, -113, -28, 117, 118,
-	165, -105, 120, -32, -2, 158, 161, -116, -96, -44,
-	88, 114, 113, -123, -79, 162, -9, -10, 31, 163,
-	-113, -22, -108, 166, 161, -125, 9, -94, 162, -16,
-	-125, 98, 163, -91, 162, 108, 109, -99, 107, -99,
-	-105, -26, -10, 31, -81, -30, -108, 166, 104, 164,
-	161, -77, 31, -77, 164, 88, -116, 162, 163, 9,
-	17, -88, -71, -7, -3, -101, 163, 161, -113, 165,
-	162, -116, 162, -19, -125, 162, 163, 165, -22, -126,
-	31, 163, 162, 163, 107, -77, -113, 165, 165, 163,
-	-86, -9, -113, 161, -78, 161, -104, -54, 88, 37,
-	17, 162, -44, -22, 163, 9, 17, -7, 162, -100,
-	-39, -40, -41, -42, -43, -9, -7, 154, 86, 162,
-	162, -25, -10, 31, -126, -113, 163, 161, 102, -26,
-	88, 35, 162, -113, -113, 165, 9, 88, -22, -71,
-	-22, 164, 162, -39, 163, 163, 121, 105, 153, -113,
-	-113, -113, 163, 165, -9, 162, 162, -54, -114, -123,
-	86, -5, -79, -7, 100, 162, 161, 165, -7, 163,
-	-113, -77, 162, -117, 163, 161, -113, 162,
+	137, 138, 140, 139, 141, 142, 156, 155, -55, -6,
+	-49, -108, -109, 153, 69, 161, 133, 153, -108, -105,
+	-74, -21, -21, -21, 150, 150, 159, -21, 165, -110,
+	-33, -21, 158, -107, 86, 163, -111, 162, 163, 163,
+	157, -84, -17, 157, -84, 161, 86, 157, -19, -21,
+	164, 165, 164, 163, 9, 165, -35, -36, 164, -21,
+	-44, 31, -21, -125, 9, 105, 165, 162, 164, -113,
+	-114, -31, -32, -77, -75, 30, 135, 136, -8, -30,
+	-118, 132, -8, -115, 161, -122, -8, -21, -21, -112,
+	-21, 165, 166, 162, -109, -21, 165, 17, -73, -21,
+	37, 134, -107, 165, 166, 165, -66, 86, 89, 50,
+	88, 86, 162, 162, 69, 162, -21, 166, -109, -21,
+	-109, -49, -22, -21, -56, -49, -30, -125, 9, 165,
+	165, 162, -125, 9, -21, 165, 162, 161, 157, -94,
+	-15, -18, -80, 161, 165, -23, -9, 31, -21, -90,
+	-21, -97, 161, 31, -113, -21, 165, -28, -81, -29,
+	37, 134, 69, -26, -9, 31, -86, -113, 165, 9,
+	-1, 37, -75, -118, 161, -122, 162, -37, -120, -119,
+	120, -121, 123, -79, 81, 80, 79, 76, 77, 78,
+	-115, 9, 165, 165, 75, -9, 31, 162, 17, -21,
+	-29, 164, 165, 166, 89, -21, 162, 166, 162, -118,
+	165, -74, 165, -33, -93, -18, 161, -125, 9, -18,
+	-94, 163, -112, 165, 163, -98, 163, -98, 163, 165,
+	163, 165, 15, -29, 164, -107, -112, -27, 117, 118,
+	165, -104, 120, -31, -2, 158, 161, -115, -95, -43,
+	88, 114, 113, -122, -79, 162, -8, -9, 31, 163,
+	-112, -21, -107, 166, 161, -125, 9, -93, 162, -15,
+	-125, 98, 163, -90, 162, 108, 109, -98, 107, -98,
+	-104, -25, -9, 31, -81, -29, -107, 166, 104, 164,
+	161, -76, 31, -76, 164, 88, -115, 162, 163, 9,
+	17, -87, -70, -6, -3, -100, 163, 161, -112, 165,
+	162, -115, 162, -18, -125, 162, 163, 165, -21, -126,
+	31, 163, 162, 163, 107, -76, -112, 165, 165, 163,
+	-85, -8, -112, 161, -77, 161, -103, -53, 88, 37,
+	17, 162, -43, -21, 163, 9, 17, -6, 162, -99,
+	-38, -39, -40, -41, -42, -8, -6, 154, 86, 162,
+	162, -24, -9, 31, -126, -112, 163, 161, 102, -25,
+	88, 35, 162, -112, -112, 165, 9, 88, -21, -70,
+	-21, 164, 162, -38, 163, 163, 121, 105, 153, -112,
+	-112, -112, 163, 165, -8, 162, 162, -53, -113, -122,
+	86, -4, -79, -6, 100, 162, 161, 165, -6, 163,
+	-112, -76, 162, -116, 163, 161, -112, 162,
 }
 var yyDef = [...]int{
 
@@ -2055,1723 +2054,1723 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:245
+		//line parser/parser.y:243
 		{
 			rootnode = stmt.NewStmtList(yyDollar[1].list)
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:249
+		//line parser/parser.y:247
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:250
+		//line parser/parser.y:248
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:251
+		//line parser/parser.y:249
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:252
+		//line parser/parser.y:250
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:253
+		//line parser/parser.y:251
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:254
+		//line parser/parser.y:252
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:255
+		//line parser/parser.y:253
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:259
+		//line parser/parser.y:257
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:260
+		//line parser/parser.y:258
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:264
+		//line parser/parser.y:262
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:265
+		//line parser/parser.y:263
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:269
+		//line parser/parser.y:267
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:270
+		//line parser/parser.y:268
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:274
+		//line parser/parser.y:272
 		{
 			yyVAL.list = []node.Node{name.NewNamePart(yyDollar[1].token)}
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:275
+		//line parser/parser.y:273
 		{
 			yyVAL.list = append(yyDollar[1].list, name.NewNamePart(yyDollar[3].token))
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:279
+		//line parser/parser.y:277
 		{
 			yyVAL.node = name.NewName(yyDollar[1].list)
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:280
+		//line parser/parser.y:278
 		{
 			yyVAL.node = name.NewRelative(yyDollar[3].list)
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:281
+		//line parser/parser.y:279
 		{
 			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:285
+		//line parser/parser.y:283
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:286
+		//line parser/parser.y:284
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:287
+		//line parser/parser.y:285
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:288
+		//line parser/parser.y:286
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:289
+		//line parser/parser.y:287
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 90:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:290
+		//line parser/parser.y:288
 		{
 			yyVAL.node = stmt.NewHaltCompiler(yyDollar[1].token)
 		}
 	case 91:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:291
+		//line parser/parser.y:289
 		{
 			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, name.NewName(yyDollar[2].list), nil)
 		}
 	case 92:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:293
+		//line parser/parser.y:291
 		{
 			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, name.NewName(yyDollar[2].list), yyDollar[4].list)
 		}
 	case 93:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:292
 		{
 			yyVAL.node = stmt.NewNamespace(yyDollar[1].token, nil, yyDollar[3].list)
 		}
 	case 94:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:293
 		{
 			yyVAL.node = yyDollar[2].node.(stmt.GroupUse).SetToken(yyDollar[1].token)
 		}
 	case 95:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:294
 		{
 			yyVAL.node = yyDollar[3].node.(stmt.GroupUse).SetToken(yyDollar[1].token).(stmt.GroupUse).SetUseType(yyDollar[2].node)
 		}
 	case 96:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:295
 		{
 			yyVAL.node = stmt.NewUseList(yyDollar[1].token, nil, yyDollar[2].list)
 		}
 	case 97:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:296
 		{
 			yyVAL.node = stmt.NewUseList(yyDollar[1].token, yyDollar[2].node, yyDollar[3].list)
 		}
 	case 98:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:297
 		{
 			yyVAL.node = stmt.NewConstList(yyDollar[1].token, yyDollar[2].list)
 		}
 	case 99:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:303
+		//line parser/parser.y:301
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:304
+		//line parser/parser.y:302
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 101:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:309
+		//line parser/parser.y:307
 		{
 			fmt.Println("group")
 			yyVAL.node = stmt.NewGroupUse(nil, nil, name.NewName(yyDollar[1].list), yyDollar[4].list)
 		}
 	case 102:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:314
+		//line parser/parser.y:312
 		{
 			yyVAL.node = stmt.NewGroupUse(nil, nil, name.NewName(yyDollar[2].list), yyDollar[5].list)
 		}
 	case 103:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:321
+		//line parser/parser.y:319
 		{
 			fmt.Println("mixed")
 			yyVAL.node = stmt.NewGroupUse(nil, nil, name.NewName(yyDollar[1].list), yyDollar[4].list)
 		}
 	case 104:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:326
+		//line parser/parser.y:324
 		{
 			yyVAL.node = stmt.NewGroupUse(nil, nil, name.NewName(yyDollar[2].list), yyDollar[5].list)
 		}
 	case 107:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:338
+		//line parser/parser.y:336
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 108:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:339
+		//line parser/parser.y:337
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 109:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:344
+		//line parser/parser.y:342
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 110:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:345
+		//line parser/parser.y:343
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 111:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:349
+		//line parser/parser.y:347
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 112:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:350
+		//line parser/parser.y:348
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:354
+		//line parser/parser.y:352
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 114:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:355
+		//line parser/parser.y:353
 		{
 			yyVAL.node = yyDollar[2].node.(stmt.Use).SetType(yyDollar[1].node)
 		}
 	case 115:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:359
+		//line parser/parser.y:357
 		{
 			yyVAL.node = stmt.NewUse(nil, name.NewName(yyDollar[1].list), nil)
 		}
 	case 116:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:360
+		//line parser/parser.y:358
 		{
 			yyVAL.node = stmt.NewUse(nil, name.NewName(yyDollar[1].list), yyDollar[3].token)
 		}
 	case 117:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:364
+		//line parser/parser.y:362
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 118:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:365
+		//line parser/parser.y:363
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 119:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:369
+		//line parser/parser.y:367
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 120:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:370
+		//line parser/parser.y:368
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 121:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:374
+		//line parser/parser.y:372
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 122:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:375
+		//line parser/parser.y:373
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 123:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:379
+		//line parser/parser.y:377
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:380
+		//line parser/parser.y:378
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:381
+		//line parser/parser.y:379
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:382
+		//line parser/parser.y:380
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:383
+		//line parser/parser.y:381
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 128:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:384
+		//line parser/parser.y:382
 		{
 			yyVAL.node = stmt.NewHaltCompiler(yyDollar[1].token)
 		}
 	case 129:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:387
+		//line parser/parser.y:385
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 		}
 	case 130:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:388
+		//line parser/parser.y:386
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 131:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:389
+		//line parser/parser.y:387
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 132:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:391
+		//line parser/parser.y:389
 		{
 			yyVAL.node = stmt.NewWhile(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node)
 		}
 	case 133:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:392
+		//line parser/parser.y:390
 		{
 			yyVAL.node = stmt.NewDo(yyDollar[1].token, yyDollar[2].node, yyDollar[5].node)
 		}
 	case 134:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:394
+		//line parser/parser.y:392
 		{
 			yyVAL.node = stmt.NewFor(yyDollar[1].token, yyDollar[3].list, yyDollar[5].list, yyDollar[7].list, yyDollar[9].node)
 		}
 	case 135:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:395
+		//line parser/parser.y:393
 		{
 			yyVAL.node = stmt.NewSwitch(yyDollar[1].token, yyDollar[3].node, yyDollar[5].list)
 		}
 	case 136:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:396
+		//line parser/parser.y:394
 		{
 			yyVAL.node = stmt.NewBreak(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 137:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:397
+		//line parser/parser.y:395
 		{
 			yyVAL.node = stmt.NewContinue(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:398
+		//line parser/parser.y:396
 		{
 			yyVAL.node = stmt.NewReturn(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:399
+		//line parser/parser.y:397
 		{
 			yyVAL.node = stmt.NewGlobal(yyDollar[1].token, yyDollar[2].list)
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:400
+		//line parser/parser.y:398
 		{
 			yyVAL.node = stmt.NewStatic(yyDollar[1].token, yyDollar[2].list)
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:401
+		//line parser/parser.y:399
 		{
 			yyVAL.node = stmt.NewEcho(yyDollar[1].token, yyDollar[2].list)
 		}
 	case 142:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:402
+		//line parser/parser.y:400
 		{
 			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token)
 		}
 	case 143:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:403
+		//line parser/parser.y:401
 		{
 			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
 		}
 	case 144:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:405
+		//line parser/parser.y:403
 		{
 			yyVAL.node = stmt.NewUnset(yyDollar[1].token, yyDollar[3].list)
 		}
 	case 145:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:407
+		//line parser/parser.y:405
 		{
 			yyVAL.node = stmt.NewForeach(yyDollar[1].token, yyDollar[3].node, nil, yyDollar[5].foreachVariable.node, yyDollar[7].node, yyDollar[5].foreachVariable.byRef)
 		}
 	case 146:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:409
+		//line parser/parser.y:407
 		{
 			yyVAL.node = stmt.NewForeach(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node, yyDollar[7].foreachVariable.node, yyDollar[9].node, yyDollar[7].foreachVariable.byRef)
 		}
 	case 147:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:410
+		//line parser/parser.y:408
 		{
 			yyVAL.node = stmt.NewDeclare(yyDollar[1].token, yyDollar[3].list, yyDollar[5].node)
 		}
 	case 148:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:411
+		//line parser/parser.y:409
 		{
 			yyVAL.node = stmt.NewNop(yyDollar[1].token)
 		}
 	case 149:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:413
+		//line parser/parser.y:411
 		{
 			yyVAL.node = stmt.NewTry(yyDollar[1].token, yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
 		}
 	case 150:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:416
+		//line parser/parser.y:414
 		{
 			yyVAL.node = stmt.NewThrow(yyDollar[1].token, yyDollar[2].node)
 		}
 	case 151:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:417
+		//line parser/parser.y:415
 		{
 			yyVAL.node = stmt.NewGoto(yyDollar[1].token, yyDollar[2].token)
 		}
 	case 152:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:418
+		//line parser/parser.y:416
 		{
 			yyVAL.node = stmt.NewLabel(yyDollar[1].token)
 		}
 	case 153:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:421
+		//line parser/parser.y:419
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 154:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:423
+		//line parser/parser.y:421
 		{
 			yyVAL.list = append(yyDollar[1].list, stmt.NewCatch(yyDollar[2].token, yyDollar[4].list, expr.NewVariable(node.NewIdentifier(yyDollar[5].token)), yyDollar[8].list))
 		}
 	case 155:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:426
+		//line parser/parser.y:424
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 156:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:427
+		//line parser/parser.y:425
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 157:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:431
+		//line parser/parser.y:429
 		{
 			yyVAL.node = nil
 		}
 	case 158:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:432
+		//line parser/parser.y:430
 		{
 			yyVAL.node = stmt.NewFinally(yyDollar[1].token, yyDollar[3].list)
 		}
 	case 159:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:436
+		//line parser/parser.y:434
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 160:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:437
+		//line parser/parser.y:435
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:441
+		//line parser/parser.y:439
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 162:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line parser/parser.y:446
+		//line parser/parser.y:444
 		{
-			yyVAL.node = stmt.NewFunction(yyDollar[3].token, yyDollar[2].value == "true", yyDollar[5].list, yyDollar[7].node, yyDollar[9].list)
+			yyVAL.node = stmt.NewFunction(yyDollar[3].token, yyDollar[2].boolean, yyDollar[5].list, yyDollar[7].node, yyDollar[9].list)
 		}
 	case 163:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:452
+		//line parser/parser.y:450
 		{
-			yyVAL.value = "false"
+			yyVAL.boolean = false
 		}
 	case 164:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:453
+		//line parser/parser.y:451
 		{
-			yyVAL.value = "true"
+			yyVAL.boolean = true
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:457
+		//line parser/parser.y:455
 		{
-			yyVAL.value = "false"
+			yyVAL.boolean = false
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:458
+		//line parser/parser.y:456
 		{
-			yyVAL.value = "true"
+			yyVAL.boolean = true
 		}
 	case 167:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line parser/parser.y:463
+		//line parser/parser.y:461
 		{
-			yyVAL.node = stmt.NewClass(yyDollar[3].token, yyDollar[1].strings, nil, yyDollar[4].node, yyDollar[5].list, yyDollar[7].list)
+			yyVAL.node = stmt.NewClass(yyDollar[3].token, yyDollar[1].list, nil, yyDollar[4].node, yyDollar[5].list, yyDollar[7].list)
 		}
 	case 168:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:465
+		//line parser/parser.y:463
 		{
 			yyVAL.node = stmt.NewClass(yyDollar[2].token, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[6].list)
 		}
 	case 169:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:469
+		//line parser/parser.y:467
 		{
-			yyVAL.strings = []string{yyDollar[1].value}
+			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 170:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:470
+		//line parser/parser.y:468
 		{
-			yyVAL.strings = append(yyDollar[1].strings, yyDollar[2].value)
+			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:474
+		//line parser/parser.y:472
 		{
-			yyVAL.value = "abstract"
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 172:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:475
+		//line parser/parser.y:473
 		{
-			yyVAL.value = "final"
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 173:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:479
+		//line parser/parser.y:477
 		{
 			yyVAL.node = stmt.NewTrait(yyDollar[2].token, yyDollar[4].list)
 		}
 	case 174:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:484
+		//line parser/parser.y:482
 		{
 			yyVAL.node = stmt.NewInterface(yyDollar[1].token, yyDollar[2].token, yyDollar[3].list, yyDollar[5].list)
 		}
 	case 175:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:488
+		//line parser/parser.y:486
 		{
 			yyVAL.node = nil
 		}
 	case 176:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:489
+		//line parser/parser.y:487
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:493
+		//line parser/parser.y:491
 		{
 			yyVAL.list = nil
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:494
+		//line parser/parser.y:492
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:498
+		//line parser/parser.y:496
 		{
 			yyVAL.list = nil
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:499
+		//line parser/parser.y:497
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 181:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:503
+		//line parser/parser.y:501
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[1].node, false}
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:504
+		//line parser/parser.y:502
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[2].node, true}
 		}
 	case 183:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:505
+		//line parser/parser.y:503
 		{
 			yyVAL.foreachVariable = foreachVariable{expr.NewList(yyDollar[3].list), false}
 		}
 	case 184:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:506
+		//line parser/parser.y:504
 		{
 			yyVAL.foreachVariable = foreachVariable{expr.NewShortList(yyDollar[2].list), false}
 		}
 	case 185:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:510
+		//line parser/parser.y:508
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 186:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:511
+		//line parser/parser.y:509
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:515
+		//line parser/parser.y:513
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:516
+		//line parser/parser.y:514
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:520
+		//line parser/parser.y:518
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:521
+		//line parser/parser.y:519
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 		}
 	case 191:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:525
+		//line parser/parser.y:523
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:526
+		//line parser/parser.y:524
 		{
 			yyVAL.list = yyDollar[3].list
 		}
 	case 193:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:527
+		//line parser/parser.y:525
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 194:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:528
+		//line parser/parser.y:526
 		{
 			yyVAL.list = yyDollar[3].list
 		}
 	case 195:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:532
+		//line parser/parser.y:530
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:534
+		//line parser/parser.y:532
 		{
 			yyVAL.list = append(yyDollar[1].list, stmt.NewCase(yyDollar[2].token, yyDollar[3].node, yyDollar[5].list))
 		}
 	case 197:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:538
+		//line parser/parser.y:536
 		{
 			yyVAL.list = append(yyDollar[1].list, stmt.NewDefault(yyDollar[2].token, yyDollar[4].list))
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:549
+		//line parser/parser.y:547
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 201:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:550
+		//line parser/parser.y:548
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 		}
 	case 202:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:554
+		//line parser/parser.y:552
 		{
 			yyVAL.node = stmt.NewIf(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node)
 		}
 	case 203:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:556
+		//line parser/parser.y:554
 		{
 			_elseIf := stmt.NewElseIf(yyDollar[2].token, yyDollar[4].node, yyDollar[6].node)
 			yyVAL.node = yyDollar[1].node.(stmt.If).AddElseIf(_elseIf)
 		}
 	case 204:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:563
+		//line parser/parser.y:561
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 205:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:565
+		//line parser/parser.y:563
 		{
 			_else := stmt.NewElse(yyDollar[2].token, yyDollar[3].node)
 			yyVAL.node = yyDollar[1].node.(stmt.If).SetElse(_else)
 		}
 	case 206:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:573
+		//line parser/parser.y:571
 		{
 			yyVAL.node = stmt.NewAltIf(yyDollar[1].token, yyDollar[3].node, stmt.NewStmtList(yyDollar[6].list))
 		}
 	case 207:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:577
+		//line parser/parser.y:575
 		{
 			_elseIf := stmt.NewAltElseIf(yyDollar[2].token, yyDollar[4].node, stmt.NewStmtList(yyDollar[7].list))
 			yyVAL.node = yyDollar[1].node.(stmt.AltIf).AddElseIf(_elseIf)
 		}
 	case 208:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:584
+		//line parser/parser.y:582
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 209:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:586
+		//line parser/parser.y:584
 		{
 			_else := stmt.NewAltElse(yyDollar[2].token, stmt.NewStmtList(yyDollar[4].list))
 			yyVAL.node = yyDollar[1].node.(stmt.AltIf).SetElse(_else)
 		}
 	case 210:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:593
+		//line parser/parser.y:591
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 211:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:594
+		//line parser/parser.y:592
 		{
 			yyVAL.list = nil
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:598
+		//line parser/parser.y:596
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 213:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:599
+		//line parser/parser.y:597
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 214:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:604
+		//line parser/parser.y:602
 		{
-			yyVAL.node = node.NewParameter(yyDollar[1].node, expr.NewVariable(node.NewIdentifier(yyDollar[4].token)), nil, yyDollar[2].value == "true", yyDollar[3].value == "true")
+			yyVAL.node = node.NewParameter(yyDollar[1].node, expr.NewVariable(node.NewIdentifier(yyDollar[4].token)), nil, yyDollar[2].boolean, yyDollar[3].boolean)
 		}
 	case 215:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:608
+		//line parser/parser.y:606
 		{
-			yyVAL.node = node.NewParameter(yyDollar[1].node, expr.NewVariable(node.NewIdentifier(yyDollar[4].token)), yyDollar[6].node, yyDollar[2].value == "true", yyDollar[3].value == "true")
+			yyVAL.node = node.NewParameter(yyDollar[1].node, expr.NewVariable(node.NewIdentifier(yyDollar[4].token)), yyDollar[6].node, yyDollar[2].boolean, yyDollar[3].boolean)
 		}
 	case 216:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:614
+		//line parser/parser.y:612
 		{
 			yyVAL.node = nil
 		}
 	case 217:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:615
+		//line parser/parser.y:613
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 218:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:619
+		//line parser/parser.y:617
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 219:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:620
+		//line parser/parser.y:618
 		{
 			yyVAL.node = node.NewNullable(yyDollar[2].node)
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:624
+		//line parser/parser.y:622
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 221:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:625
+		//line parser/parser.y:623
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:626
+		//line parser/parser.y:624
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 223:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:630
+		//line parser/parser.y:628
 		{
 			yyVAL.node = nil
 		}
 	case 224:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:631
+		//line parser/parser.y:629
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 225:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:635
+		//line parser/parser.y:633
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 226:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:636
+		//line parser/parser.y:634
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 227:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:640
+		//line parser/parser.y:638
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 228:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:641
+		//line parser/parser.y:639
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:645
+		//line parser/parser.y:643
 		{
 			yyVAL.node = node.NewArgument(yyDollar[1].node, false)
 		}
 	case 230:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:646
+		//line parser/parser.y:644
 		{
 			yyVAL.node = node.NewArgument(yyDollar[2].node, true)
 		}
 	case 231:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:650
+		//line parser/parser.y:648
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 232:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:651
+		//line parser/parser.y:649
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 233:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:655
+		//line parser/parser.y:653
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 234:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:659
+		//line parser/parser.y:657
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:660
+		//line parser/parser.y:658
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 236:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:664
+		//line parser/parser.y:662
 		{
 			yyVAL.node = stmt.NewStaticVar(yyDollar[1].token, nil)
 		}
 	case 237:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:665
+		//line parser/parser.y:663
 		{
 			yyVAL.node = stmt.NewStaticVar(yyDollar[1].token, yyDollar[3].node)
 		}
 	case 238:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:669
+		//line parser/parser.y:667
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 239:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:670
+		//line parser/parser.y:668
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 240:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:674
+		//line parser/parser.y:672
 		{
 			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
 		}
 	case 241:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:675
+		//line parser/parser.y:673
 		{
 			yyVAL.node = stmt.NewClassConstList(yyDollar[2].token, yyDollar[1].list, yyDollar[3].list)
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:676
+		//line parser/parser.y:674
 		{
 			yyVAL.node = stmt.NewTraitUse(yyDollar[1].token, yyDollar[2].list, yyDollar[3].list)
 		}
 	case 243:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:678
+		//line parser/parser.y:676
 		{
-			yyVAL.node = stmt.NewClassMethod(yyDollar[4].token, yyDollar[1].list, yyDollar[3].value == "true", yyDollar[6].list, yyDollar[8].node, yyDollar[9].list)
+			yyVAL.node = stmt.NewClassMethod(yyDollar[4].token, yyDollar[1].list, yyDollar[3].boolean, yyDollar[6].list, yyDollar[8].node, yyDollar[9].list)
 		}
 	case 244:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:684
+		//line parser/parser.y:682
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 245:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:685
+		//line parser/parser.y:683
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:689
+		//line parser/parser.y:687
 		{
 			yyVAL.list = nil
 		}
 	case 247:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:690
+		//line parser/parser.y:688
 		{
 			yyVAL.list = nil
 		}
 	case 248:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:691
+		//line parser/parser.y:689
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 249:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:695
+		//line parser/parser.y:693
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 250:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:696
+		//line parser/parser.y:694
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 251:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:700
+		//line parser/parser.y:698
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:701
+		//line parser/parser.y:699
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 253:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:706
+		//line parser/parser.y:704
 		{
 			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, name.NewName(yyDollar[3].list))
 		}
 	case 254:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:712
+		//line parser/parser.y:710
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, yyDollar[3].token)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:714
+		//line parser/parser.y:712
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, yyDollar[3].token)
 		}
 	case 256:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:716
+		//line parser/parser.y:714
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, yyDollar[4].token)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:717
+		//line parser/parser.y:715
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
 		}
 	case 258:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:721
+		//line parser/parser.y:719
 		{
 			yyVAL.node = stmt.NewTraitMethodRef(nil, yyDollar[1].token)
 		}
 	case 259:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:722
+		//line parser/parser.y:720
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 260:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:726
+		//line parser/parser.y:724
 		{
 			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:730
+		//line parser/parser.y:728
 		{
 			yyVAL.list = nil
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:731
+		//line parser/parser.y:729
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:735
+		//line parser/parser.y:733
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 264:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:736
+		//line parser/parser.y:734
 		{
 			yyVAL.list = []node.Node{node.NewIdentifier(yyDollar[1].token)}
 		}
 	case 265:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:740
+		//line parser/parser.y:738
 		{
 			yyVAL.list = nil
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:741
+		//line parser/parser.y:739
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 267:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:745
+		//line parser/parser.y:743
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 268:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:746
+		//line parser/parser.y:744
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:750
+		//line parser/parser.y:748
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 270:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:751
+		//line parser/parser.y:749
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:752
+		//line parser/parser.y:750
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:753
+		//line parser/parser.y:751
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:754
+		//line parser/parser.y:752
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:755
+		//line parser/parser.y:753
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 275:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:759
+		//line parser/parser.y:757
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:760
+		//line parser/parser.y:758
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 277:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:764
+		//line parser/parser.y:762
 		{
 			yyVAL.node = stmt.NewProperty(yyDollar[1].token, nil)
 		}
 	case 278:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:765
+		//line parser/parser.y:763
 		{
 			yyVAL.node = stmt.NewProperty(yyDollar[1].token, yyDollar[3].node)
 		}
 	case 279:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:769
+		//line parser/parser.y:767
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 280:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:770
+		//line parser/parser.y:768
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:774
+		//line parser/parser.y:772
 		{
 			yyVAL.node = stmt.NewConstant(yyDollar[1].token, yyDollar[3].node)
 		}
 	case 282:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:778
+		//line parser/parser.y:776
 		{
 			yyVAL.node = stmt.NewConstant(yyDollar[1].token, yyDollar[3].node)
 		}
 	case 283:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:782
+		//line parser/parser.y:780
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 284:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:783
+		//line parser/parser.y:781
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 285:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:787
+		//line parser/parser.y:785
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 286:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:791
+		//line parser/parser.y:789
 		{
 			yyVAL.list = nil
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:792
+		//line parser/parser.y:790
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 288:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:795
+		//line parser/parser.y:793
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:796
+		//line parser/parser.y:794
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 290:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:801
+		//line parser/parser.y:799
 		{
 			{
 				yyVAL.node = stmt.NewClass(yyDollar[1].token, nil, yyDollar[2].list, yyDollar[3].node, yyDollar[4].list, yyDollar[6].list)
@@ -3779,969 +3778,969 @@ yydefault:
 		}
 	case 291:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:807
+		//line parser/parser.y:805
 		{
 			yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].list)
 		}
 	case 292:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:808
+		//line parser/parser.y:806
 		{
 			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 		}
 	case 293:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:813
+		//line parser/parser.y:811
 		{
 			list := expr.NewList(yyDollar[3].list)
 			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node)
 		}
 	case 294:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:818
+		//line parser/parser.y:816
 		{
 			shortList := expr.NewShortList(yyDollar[2].list)
 			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node)
 		}
 	case 295:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:822
+		//line parser/parser.y:820
 		{
 			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 296:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:823
+		//line parser/parser.y:821
 		{
 			yyVAL.node = assign_op.NewAssignRef(yyDollar[1].node, yyDollar[4].node)
 		}
 	case 297:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:824
+		//line parser/parser.y:822
 		{
 			yyVAL.node = expr.NewClone(yyDollar[2].node)
 		}
 	case 298:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:825
+		//line parser/parser.y:823
 		{
 			yyVAL.node = assign_op.NewPlus(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 299:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:826
+		//line parser/parser.y:824
 		{
 			yyVAL.node = assign_op.NewMinus(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:827
+		//line parser/parser.y:825
 		{
 			yyVAL.node = assign_op.NewMul(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:828
+		//line parser/parser.y:826
 		{
 			yyVAL.node = assign_op.NewPow(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:829
+		//line parser/parser.y:827
 		{
 			yyVAL.node = assign_op.NewDiv(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:830
+		//line parser/parser.y:828
 		{
 			yyVAL.node = assign_op.NewConcat(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:831
+		//line parser/parser.y:829
 		{
 			yyVAL.node = assign_op.NewMod(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:832
+		//line parser/parser.y:830
 		{
 			yyVAL.node = assign_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:833
+		//line parser/parser.y:831
 		{
 			yyVAL.node = assign_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:834
+		//line parser/parser.y:832
 		{
 			yyVAL.node = assign_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:835
+		//line parser/parser.y:833
 		{
 			yyVAL.node = assign_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:836
+		//line parser/parser.y:834
 		{
 			yyVAL.node = assign_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 310:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:837
+		//line parser/parser.y:835
 		{
 			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
 		}
 	case 311:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:838
+		//line parser/parser.y:836
 		{
 			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:839
+		//line parser/parser.y:837
 		{
 			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:840
+		//line parser/parser.y:838
 		{
 			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
 		}
 	case 314:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:841
+		//line parser/parser.y:839
 		{
 			yyVAL.node = binary_op.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 315:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:842
+		//line parser/parser.y:840
 		{
 			yyVAL.node = binary_op.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:843
+		//line parser/parser.y:841
 		{
 			yyVAL.node = binary_op.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:844
+		//line parser/parser.y:842
 		{
 			yyVAL.node = binary_op.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:845
+		//line parser/parser.y:843
 		{
 			yyVAL.node = binary_op.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:846
+		//line parser/parser.y:844
 		{
 			yyVAL.node = binary_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:847
+		//line parser/parser.y:845
 		{
 			yyVAL.node = binary_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:848
+		//line parser/parser.y:846
 		{
 			yyVAL.node = binary_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:849
+		//line parser/parser.y:847
 		{
 			yyVAL.node = binary_op.NewConcat(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:850
+		//line parser/parser.y:848
 		{
 			yyVAL.node = binary_op.NewPlus(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:851
+		//line parser/parser.y:849
 		{
 			yyVAL.node = binary_op.NewMinus(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:852
+		//line parser/parser.y:850
 		{
 			yyVAL.node = binary_op.NewMul(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:853
+		//line parser/parser.y:851
 		{
 			yyVAL.node = binary_op.NewPow(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:854
+		//line parser/parser.y:852
 		{
 			yyVAL.node = binary_op.NewDiv(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:855
+		//line parser/parser.y:853
 		{
 			yyVAL.node = binary_op.NewMod(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:856
+		//line parser/parser.y:854
 		{
 			yyVAL.node = binary_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:857
+		//line parser/parser.y:855
 		{
 			yyVAL.node = binary_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 331:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:858
+		//line parser/parser.y:856
 		{
 			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
 		}
 	case 332:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:859
+		//line parser/parser.y:857
 		{
 			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:860
+		//line parser/parser.y:858
 		{
 			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:861
+		//line parser/parser.y:859
 		{
 			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
 		}
 	case 335:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:862
+		//line parser/parser.y:860
 		{
 			yyVAL.node = binary_op.NewIdentical(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 336:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:863
+		//line parser/parser.y:861
 		{
 			yyVAL.node = binary_op.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:864
+		//line parser/parser.y:862
 		{
 			yyVAL.node = binary_op.NewEqual(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:865
+		//line parser/parser.y:863
 		{
 			yyVAL.node = binary_op.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:866
+		//line parser/parser.y:864
 		{
 			yyVAL.node = binary_op.NewSmaller(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:867
+		//line parser/parser.y:865
 		{
 			yyVAL.node = binary_op.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:868
+		//line parser/parser.y:866
 		{
 			yyVAL.node = binary_op.NewGreater(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:869
+		//line parser/parser.y:867
 		{
 			yyVAL.node = binary_op.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:870
+		//line parser/parser.y:868
 		{
 			yyVAL.node = binary_op.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:871
+		//line parser/parser.y:869
 		{
 			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:872
+		//line parser/parser.y:870
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 346:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:873
+		//line parser/parser.y:871
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 347:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:874
+		//line parser/parser.y:872
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
 		}
 	case 348:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:875
+		//line parser/parser.y:873
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
 		}
 	case 349:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:876
+		//line parser/parser.y:874
 		{
 			yyVAL.node = binary_op.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 350:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:877
+		//line parser/parser.y:875
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 351:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:878
+		//line parser/parser.y:876
 		{
 			yyVAL.node = cast.NewCastInt(yyDollar[2].node)
 		}
 	case 352:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:879
+		//line parser/parser.y:877
 		{
 			yyVAL.node = cast.NewCastDouble(yyDollar[2].node)
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:880
+		//line parser/parser.y:878
 		{
 			yyVAL.node = cast.NewCastString(yyDollar[2].node)
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:881
+		//line parser/parser.y:879
 		{
 			yyVAL.node = cast.NewCastArray(yyDollar[2].node)
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:882
+		//line parser/parser.y:880
 		{
 			yyVAL.node = cast.NewCastObject(yyDollar[2].node)
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:883
+		//line parser/parser.y:881
 		{
 			yyVAL.node = cast.NewCastBool(yyDollar[2].node)
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:884
+		//line parser/parser.y:882
 		{
 			yyVAL.node = cast.NewCastUnset(yyDollar[2].node)
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:885
+		//line parser/parser.y:883
 		{
 			yyVAL.node = expr.NewExit(yyDollar[2].node, strings.EqualFold(yyDollar[1].token.Value, "die"))
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:886
+		//line parser/parser.y:884
 		{
 			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
 		}
 	case 360:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:887
+		//line parser/parser.y:885
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 361:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:888
+		//line parser/parser.y:886
 		{
 			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
 		}
 	case 362:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:889
+		//line parser/parser.y:887
 		{
 			yyVAL.node = expr.NewPrint(yyDollar[2].node)
 		}
 	case 363:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:890
+		//line parser/parser.y:888
 		{
 			yyVAL.node = expr.NewYield(nil, nil)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:891
+		//line parser/parser.y:889
 		{
 			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
 		}
 	case 365:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:892
+		//line parser/parser.y:890
 		{
 			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:893
+		//line parser/parser.y:891
 		{
 			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node)
 		}
 	case 367:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line parser/parser.y:895
+		//line parser/parser.y:893
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[4].list, yyDollar[6].list, yyDollar[7].node, yyDollar[9].list, false, yyDollar[2].value == "true")
+			yyVAL.node = expr.NewClosure(yyDollar[4].list, yyDollar[6].list, yyDollar[7].node, yyDollar[9].list, false, yyDollar[2].boolean)
 		}
 	case 368:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line parser/parser.y:899
+		//line parser/parser.y:897
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].list, yyDollar[8].node, yyDollar[10].list, true, yyDollar[3].value == "true")
+			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].list, yyDollar[8].node, yyDollar[10].list, true, yyDollar[3].boolean)
 		}
 	case 369:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:905
+		//line parser/parser.y:903
 		{
-			yyVAL.value = "false"
+			yyVAL.boolean = false
 		}
 	case 370:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:906
+		//line parser/parser.y:904
 		{
-			yyVAL.value = "true"
+			yyVAL.boolean = true
 		}
 	case 371:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:910
+		//line parser/parser.y:908
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 372:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:911
+		//line parser/parser.y:909
 		{
 			yyVAL.list = yyDollar[3].list
 		}
 	case 373:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:915
+		//line parser/parser.y:913
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 374:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:916
+		//line parser/parser.y:914
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 375:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:920
+		//line parser/parser.y:918
 		{
 			yyVAL.node = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier(yyDollar[1].token)), false)
 		}
 	case 376:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:921
+		//line parser/parser.y:919
 		{
 			yyVAL.node = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier(yyDollar[2].token)), true)
 		}
 	case 377:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:925
+		//line parser/parser.y:923
 		{
 			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].list)
 		}
 	case 378:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:927
+		//line parser/parser.y:925
 		{
 			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].list)
 		}
 	case 379:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:929
+		//line parser/parser.y:927
 		{
 			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].list)
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:930
+		//line parser/parser.y:928
 		{
 			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].list)
 		}
 	case 381:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:934
+		//line parser/parser.y:932
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 382:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:935
+		//line parser/parser.y:933
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 383:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:939
+		//line parser/parser.y:937
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:940
+		//line parser/parser.y:938
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 385:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:944
+		//line parser/parser.y:942
 		{
 			yyVAL.node = nil
 		}
 	case 386:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:945
+		//line parser/parser.y:943
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 387:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:949
+		//line parser/parser.y:947
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 388:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:950
+		//line parser/parser.y:948
 		{
 			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token)}
 		}
 	case 389:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:951
+		//line parser/parser.y:949
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:955
+		//line parser/parser.y:953
 		{
 			yyVAL.list = nil
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:956
+		//line parser/parser.y:954
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 392:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:960
+		//line parser/parser.y:958
 		{
 			yyVAL.node = expr.NewArray(yyDollar[1].token, yyDollar[4].token, yyDollar[3].list)
 		}
 	case 393:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:961
+		//line parser/parser.y:959
 		{
 			yyVAL.node = expr.NewShortArray(yyDollar[1].token, yyDollar[3].token, yyDollar[2].list)
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:962
+		//line parser/parser.y:960
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token)
 		}
 	case 395:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:966
+		//line parser/parser.y:964
 		{
 			yyVAL.node = scalar.NewLnumber(yyDollar[1].token)
 		}
 	case 396:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:967
+		//line parser/parser.y:965
 		{
 			yyVAL.node = scalar.NewDnumber(yyDollar[1].token)
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:968
+		//line parser/parser.y:966
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:969
+		//line parser/parser.y:967
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:970
+		//line parser/parser.y:968
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:971
+		//line parser/parser.y:969
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:972
+		//line parser/parser.y:970
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:973
+		//line parser/parser.y:971
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:974
+		//line parser/parser.y:972
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:975
+		//line parser/parser.y:973
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token)
 		}
 	case 405:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:977
+		//line parser/parser.y:975
 		{
 			yyVAL.node = scalar.NewString(yyDollar[2].token) /* TODO: mark as Heredoc*/
 		}
 	case 406:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:979
+		//line parser/parser.y:977
 		{
 			yyVAL.node = scalar.NewEncapsed(yyDollar[1].token, nil, yyDollar[2].token)
 		}
 	case 407:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:980
+		//line parser/parser.y:978
 		{
 			yyVAL.node = scalar.NewEncapsed(yyDollar[1].token, yyDollar[2].list, yyDollar[3].token)
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:981
+		//line parser/parser.y:979
 		{
 			yyVAL.node = scalar.NewEncapsed(yyDollar[1].token, yyDollar[2].list, yyDollar[3].token)
 		}
 	case 409:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:982
+		//line parser/parser.y:980
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 410:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:983
+		//line parser/parser.y:981
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 411:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:987
+		//line parser/parser.y:985
 		{
 			yyVAL.node = expr.NewConstFetch(yyDollar[1].node)
 		}
 	case 412:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:988
+		//line parser/parser.y:986
 		{
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 413:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:990
+		//line parser/parser.y:988
 		{
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, yyDollar[3].token)
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:994
+		//line parser/parser.y:992
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 415:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:995
+		//line parser/parser.y:993
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 416:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:999
+		//line parser/parser.y:997
 		{
 			yyVAL.node = nil
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1000
+		//line parser/parser.y:998
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1004
+		//line parser/parser.y:1002
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 419:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1008
+		//line parser/parser.y:1006
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 420:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1009
+		//line parser/parser.y:1007
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1010
+		//line parser/parser.y:1008
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1014
+		//line parser/parser.y:1012
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1015
+		//line parser/parser.y:1013
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1016
+		//line parser/parser.y:1014
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1020
+		//line parser/parser.y:1018
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 426:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1021
+		//line parser/parser.y:1019
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 427:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1022
+		//line parser/parser.y:1020
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 428:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1023
+		//line parser/parser.y:1021
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1025
+		//line parser/parser.y:1023
 		{
 			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].list)
 		}
 	case 430:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1026
+		//line parser/parser.y:1024
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 431:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1030
+		//line parser/parser.y:1028
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 432:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1031
+		//line parser/parser.y:1029
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 433:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1032
+		//line parser/parser.y:1030
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1036
+		//line parser/parser.y:1034
 		{
 			yyVAL.node = expr.NewVariable(node.NewIdentifier(yyDollar[1].token))
 		}
 	case 435:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1037
+		//line parser/parser.y:1035
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[3].node)
 		}
 	case 436:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1038
+		//line parser/parser.y:1036
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 		}
 	case 437:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1043
+		//line parser/parser.y:1041
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 438:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1045
+		//line parser/parser.y:1043
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 439:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1049
+		//line parser/parser.y:1047
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 440:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1050
+		//line parser/parser.y:1048
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 441:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1051
+		//line parser/parser.y:1049
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 442:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1052
+		//line parser/parser.y:1050
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 443:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1054
+		//line parser/parser.y:1052
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 444:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1056
+		//line parser/parser.y:1054
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 		}
 	case 445:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1060
+		//line parser/parser.y:1058
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1061
+		//line parser/parser.y:1059
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 447:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1062
+		//line parser/parser.y:1060
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1066
+		//line parser/parser.y:1064
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1067
+		//line parser/parser.y:1065
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1068
+		//line parser/parser.y:1066
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1073
+		//line parser/parser.y:1071
 		{
 			if yyDollar[1].list[len(yyDollar[1].list)-1] == nil {
 				yyVAL.list = yyDollar[1].list[:len(yyDollar[1].list)-1]
@@ -4751,55 +4750,55 @@ yydefault:
 		}
 	case 452:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1083
+		//line parser/parser.y:1081
 		{
 			yyVAL.node = nil
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1084
+		//line parser/parser.y:1082
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 454:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1089
+		//line parser/parser.y:1087
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 455:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1090
+		//line parser/parser.y:1088
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 456:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1094
+		//line parser/parser.y:1092
 		{
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false)
 		}
 	case 457:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1095
+		//line parser/parser.y:1093
 		{
 			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node, false)
 		}
 	case 458:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1096
+		//line parser/parser.y:1094
 		{
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[4].node, true)
 		}
 	case 459:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1097
+		//line parser/parser.y:1095
 		{
 			yyVAL.node = expr.NewArrayItem(nil, yyDollar[2].node, true)
 		}
 	case 460:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:1099
+		//line parser/parser.y:1097
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[5].list)
@@ -4807,7 +4806,7 @@ yydefault:
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1105
+		//line parser/parser.y:1103
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[3].list)
@@ -4815,79 +4814,79 @@ yydefault:
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1113
+		//line parser/parser.y:1111
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 463:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1114
+		//line parser/parser.y:1112
 		{
 			yyVAL.list = append(yyDollar[1].list, scalar.NewEncapsedStringPart(yyDollar[2].token))
 		}
 	case 464:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1115
+		//line parser/parser.y:1113
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1116
+		//line parser/parser.y:1114
 		{
 			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token), yyDollar[2].node}
 		}
 	case 466:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1120
+		//line parser/parser.y:1118
 		{
 			yyVAL.node = expr.NewVariable(node.NewIdentifier(yyDollar[1].token))
 		}
 	case 467:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1121
+		//line parser/parser.y:1119
 		{
 			yyVAL.node = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier(yyDollar[1].token)), yyDollar[3].node)
 		}
 	case 468:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1122
+		//line parser/parser.y:1120
 		{
 			yyVAL.node = expr.NewPropertyFetch(expr.NewVariable(node.NewIdentifier(yyDollar[1].token)), node.NewIdentifier(yyDollar[3].token))
 		}
 	case 469:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1123
+		//line parser/parser.y:1121
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 		}
 	case 470:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1124
+		//line parser/parser.y:1122
 		{
 			yyVAL.node = expr.NewVariable(node.NewIdentifier(yyDollar[2].token))
 		}
 	case 471:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:1126
+		//line parser/parser.y:1124
 		{
 			yyVAL.node = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier(yyDollar[2].token)), yyDollar[4].node)
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1127
+		//line parser/parser.y:1125
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 473:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1130
+		//line parser/parser.y:1128
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token)
 		}
 	case 474:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1132
+		//line parser/parser.y:1130
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
@@ -4898,7 +4897,7 @@ yydefault:
 		}
 	case 475:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1141
+		//line parser/parser.y:1139
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[2].token.Value); err == nil {
@@ -4910,67 +4909,67 @@ yydefault:
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1150
+		//line parser/parser.y:1148
 		{
 			yyVAL.node = expr.NewVariable(node.NewIdentifier(yyDollar[1].token))
 		}
 	case 477:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:1154
+		//line parser/parser.y:1152
 		{
 			yyVAL.node = expr.NewIsset(yyDollar[3].list)
 		}
 	case 478:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1155
+		//line parser/parser.y:1153
 		{
 			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 		}
 	case 479:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1156
+		//line parser/parser.y:1154
 		{
 			yyVAL.node = expr.NewInclude(yyDollar[2].node)
 		}
 	case 480:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1157
+		//line parser/parser.y:1155
 		{
 			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1158
+		//line parser/parser.y:1156
 		{
 			yyVAL.node = expr.NewEval(yyDollar[3].node)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1159
+		//line parser/parser.y:1157
 		{
 			yyVAL.node = expr.NewRequire(yyDollar[2].node)
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1160
+		//line parser/parser.y:1158
 		{
 			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
 		}
 	case 484:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1164
+		//line parser/parser.y:1162
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 485:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1165
+		//line parser/parser.y:1163
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 486:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1169
+		//line parser/parser.y:1167
 		{
 			yyVAL.node = yyDollar[1].node
 		}

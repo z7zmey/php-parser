@@ -11,15 +11,14 @@ import (
 type Class struct {
 	node.SimpleNode
 	token      token.Token
-	modifiers  []string
+	modifiers  []node.Node
 	args       []node.Node
 	extends    node.Node
 	implements []node.Node
 	stmts      []node.Node
 }
 
-//TODO: stmts myst be []node.Node
-func NewClass(token token.Token, modifiers []string, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
+func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
 	return Class{
 		node.SimpleNode{Name: "Class", Attributes: make(map[string]string)},
 		token,
@@ -37,7 +36,7 @@ func (n Class) Print(out io.Writer, indent string) {
 	if n.modifiers != nil {
 		fmt.Fprintf(out, "\n%vmotifiers:", indent+"  ")
 		for _, nn := range n.modifiers {
-			fmt.Fprintf(out, "\n%v%q", indent+"    ", nn)
+			nn.Print(out, indent+"    ")
 		}
 	}
 
