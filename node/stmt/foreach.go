@@ -32,27 +32,29 @@ func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.
 }
 
 func (n Foreach) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
 
 	if n.key != nil {
-		vv := v.Children("key")
+		vv := v.GetChildrenVisitor("key")
 		n.key.Walk(vv)
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.stmt != nil {
-		vv := v.Children("stmt")
+		vv := v.GetChildrenVisitor("stmt")
 		n.stmt.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

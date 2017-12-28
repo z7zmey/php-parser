@@ -27,21 +27,23 @@ func NewTraitUse(token token.Token, traits []node.Node, adaptations []node.Node)
 }
 
 func (n TraitUse) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.traits != nil {
-		vv := v.Children("traits")
+		vv := v.GetChildrenVisitor("traits")
 		for _, nn := range n.traits {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.adaptations != nil {
-		vv := v.Children("adaptations")
+		vv := v.GetChildrenVisitor("adaptations")
 		for _, nn := range n.adaptations {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

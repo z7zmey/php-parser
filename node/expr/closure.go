@@ -31,7 +31,7 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 }
 
 func (n Closure) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
@@ -39,28 +39,30 @@ func (n Closure) Walk(v node.Visitor) {
 	v.Scalar("isReturnRef", n.isReturnRef)
 
 	if n.params != nil {
-		vv := v.Children("params")
+		vv := v.GetChildrenVisitor("params")
 		for _, nn := range n.params {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.uses != nil {
-		vv := v.Children("uses")
+		vv := v.GetChildrenVisitor("uses")
 		for _, nn := range n.uses {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.returnType != nil {
-		vv := v.Children("returnType")
+		vv := v.GetChildrenVisitor("returnType")
 		n.returnType.Walk(vv)
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

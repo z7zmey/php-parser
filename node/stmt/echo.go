@@ -24,14 +24,16 @@ func NewEcho(token token.Token, exprs []node.Node) node.Node {
 }
 
 func (n Echo) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.exprs != nil {
-		vv := v.Children("exprs")
+		vv := v.GetChildrenVisitor("exprs")
 		for _, nn := range n.exprs {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

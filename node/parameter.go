@@ -25,7 +25,7 @@ func NewParameter(variableType Node, variable Node, defaultValue Node, byRef boo
 }
 
 func (n Parameter) Walk(v Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
@@ -33,17 +33,19 @@ func (n Parameter) Walk(v Visitor) {
 	v.Scalar("variadic", n.variadic)
 
 	if n.variableType != nil {
-		vv := v.Children("variableType")
+		vv := v.GetChildrenVisitor("variableType")
 		n.variableType.Walk(vv)
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.defaultValue != nil {
-		vv := v.Children("defaultValue")
+		vv := v.GetChildrenVisitor("defaultValue")
 		n.defaultValue.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

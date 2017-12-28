@@ -23,12 +23,14 @@ func NewExit(expr node.Node, isDie bool) node.Node {
 }
 
 func (n Exit) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

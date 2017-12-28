@@ -22,7 +22,7 @@ func NewString(token token.Token) node.Node {
 }
 
 func (n String) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 

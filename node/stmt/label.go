@@ -22,9 +22,11 @@ func NewLabel(token token.Token) node.Node {
 }
 
 func (n Label) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("token", n.token.Value)
+
+	v.LeaveNode(n)
 }

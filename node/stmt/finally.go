@@ -24,14 +24,16 @@ func NewFinally(token token.Token, stmts []node.Node) node.Node {
 }
 
 func (n Finally) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

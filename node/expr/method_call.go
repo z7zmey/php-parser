@@ -25,24 +25,26 @@ func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) 
 }
 
 func (n MethodCall) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.method != nil {
-		vv := v.Children("method")
+		vv := v.GetChildrenVisitor("method")
 		n.method.Walk(vv)
 	}
 
 	if n.arguments != nil {
-		vv := v.Children("arguments")
+		vv := v.GetChildrenVisitor("arguments")
 		for _, nn := range n.arguments {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

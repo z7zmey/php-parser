@@ -25,24 +25,26 @@ func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.
 }
 
 func (n StaticCall) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.class != nil {
-		vv := v.Children("class")
+		vv := v.GetChildrenVisitor("class")
 		n.class.Walk(vv)
 	}
 
 	if n.call != nil {
-		vv := v.Children("call")
+		vv := v.GetChildrenVisitor("call")
 		n.call.Walk(vv)
 	}
 
 	if n.arguments != nil {
-		vv := v.Children("arguments")
+		vv := v.GetChildrenVisitor("arguments")
 		for _, nn := range n.arguments {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

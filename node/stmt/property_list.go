@@ -23,21 +23,23 @@ func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
 }
 
 func (n PropertyList) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.modifiers != nil {
-		vv := v.Children("modifiers")
+		vv := v.GetChildrenVisitor("modifiers")
 		for _, nn := range n.modifiers {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.properties != nil {
-		vv := v.Children("properties")
+		vv := v.GetChildrenVisitor("properties")
 		for _, nn := range n.properties {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

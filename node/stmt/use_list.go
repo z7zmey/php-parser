@@ -26,19 +26,21 @@ func NewUseList(token token.Token, useType node.Node, uses []node.Node) node.Nod
 }
 
 func (n UseList) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.useType != nil {
-		vv := v.Children("useType")
+		vv := v.GetChildrenVisitor("useType")
 		n.useType.Walk(vv)
 	}
 
 	if n.uses != nil {
-		vv := v.Children("uses")
+		vv := v.GetChildrenVisitor("uses")
 		for _, nn := range n.uses {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

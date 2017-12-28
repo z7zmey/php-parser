@@ -21,9 +21,11 @@ func NewIdentifier(token token.Token) Node {
 }
 
 func (n Identifier) Walk(v Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("token", n.token.Value)
+
+	v.LeaveNode(n)
 }

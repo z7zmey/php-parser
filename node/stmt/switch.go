@@ -26,19 +26,21 @@ func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
 }
 
 func (n Switch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.cond != nil {
-		vv := v.Children("cond")
+		vv := v.GetChildrenVisitor("cond")
 		n.cond.Walk(vv)
 	}
 
 	if n.cases != nil {
-		vv := v.Children("cases")
+		vv := v.GetChildrenVisitor("cases")
 		for _, nn := range n.cases {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

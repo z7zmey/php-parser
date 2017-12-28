@@ -24,14 +24,16 @@ func NewUnset(token token.Token, vars []node.Node) node.Node {
 }
 
 func (n Unset) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.vars != nil {
-		vv := v.Children("vars")
+		vv := v.GetChildrenVisitor("vars")
 		for _, nn := range n.vars {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

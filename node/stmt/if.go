@@ -46,29 +46,31 @@ func (n If) SetElse(_else node.Node) node.Node {
 }
 
 func (n If) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.cond != nil {
-		vv := v.Children("cond")
+		vv := v.GetChildrenVisitor("cond")
 		n.cond.Walk(vv)
 	}
 
 	if n.stmt != nil {
-		vv := v.Children("stmt")
+		vv := v.GetChildrenVisitor("stmt")
 		n.stmt.Walk(vv)
 	}
 
 	if n.elseIf != nil {
-		vv := v.Children("elseIf")
+		vv := v.GetChildrenVisitor("elseIf")
 		for _, nn := range n.elseIf {
 			nn.Walk(vv)
 		}
 	}
 
 	if n._else != nil {
-		vv := v.Children("else")
+		vv := v.GetChildrenVisitor("else")
 		n._else.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

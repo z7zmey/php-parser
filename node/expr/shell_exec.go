@@ -21,14 +21,16 @@ func NewShellExec(parts []node.Node) node.Node {
 }
 
 func (n ShellExec) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.parts != nil {
-		vv := v.Children("parts")
+		vv := v.GetChildrenVisitor("parts")
 		for _, nn := range n.parts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

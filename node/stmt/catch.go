@@ -28,21 +28,23 @@ func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts []
 }
 
 func (n Catch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.types != nil {
-		vv := v.Children("types")
+		vv := v.GetChildrenVisitor("types")
 		for _, nn := range n.types {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

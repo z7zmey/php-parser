@@ -23,19 +23,21 @@ func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
 }
 
 func (n FunctionCall) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.function != nil {
-		vv := v.Children("function")
+		vv := v.GetChildrenVisitor("function")
 		n.function.Walk(vv)
 	}
 
 	if n.arguments != nil {
-		vv := v.Children("arguments")
+		vv := v.GetChildrenVisitor("arguments")
 		for _, nn := range n.arguments {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

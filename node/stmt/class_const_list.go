@@ -26,21 +26,23 @@ func NewClassConstList(token token.Token, modifiers []node.Node, consts []node.N
 }
 
 func (n ClassConstList) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.modifiers != nil {
-		vv := v.Children("modifiers")
+		vv := v.GetChildrenVisitor("modifiers")
 		for _, nn := range n.modifiers {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.consts != nil {
-		vv := v.Children("consts")
+		vv := v.GetChildrenVisitor("consts")
 		for _, nn := range n.consts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

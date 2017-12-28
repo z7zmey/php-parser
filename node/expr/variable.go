@@ -21,12 +21,14 @@ func NewVariable(varName node.Node) node.Node {
 }
 
 func (n Variable) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.varName != nil {
-		vv := v.Children("varName")
+		vv := v.GetChildrenVisitor("varName")
 		n.varName.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

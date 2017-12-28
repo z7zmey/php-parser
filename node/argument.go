@@ -19,12 +19,14 @@ func NewArgument(expression Node, variadic bool) Node {
 }
 
 func (n Argument) Walk(v Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

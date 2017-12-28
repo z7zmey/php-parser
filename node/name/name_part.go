@@ -22,7 +22,7 @@ func NewNamePart(token token.Token) node.Node {
 }
 
 func (n NamePart) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 

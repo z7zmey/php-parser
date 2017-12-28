@@ -24,14 +24,16 @@ func NewConstList(token token.Token, consts []node.Node) node.Node {
 }
 
 func (n ConstList) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.consts != nil {
-		vv := v.Children("consts")
+		vv := v.GetChildrenVisitor("consts")
 		for _, nn := range n.consts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

@@ -21,12 +21,14 @@ func NewConstFetch(constant node.Node) node.Node {
 }
 
 func (n ConstFetch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.constant != nil {
-		vv := v.Children("constant")
+		vv := v.GetChildrenVisitor("constant")
 		n.constant.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

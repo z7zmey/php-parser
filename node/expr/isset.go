@@ -21,14 +21,16 @@ func NewIsset(variables []node.Node) node.Node {
 }
 
 func (n Isset) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.variables != nil {
-		vv := v.Children("variables")
+		vv := v.GetChildrenVisitor("variables")
 		for _, nn := range n.variables {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

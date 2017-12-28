@@ -24,12 +24,14 @@ func NewElse(token token.Token, stmt node.Node) node.Node {
 }
 
 func (n Else) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.stmt != nil {
-		vv := v.Children("stmt")
+		vv := v.GetChildrenVisitor("stmt")
 		n.stmt.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

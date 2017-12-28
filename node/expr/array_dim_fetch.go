@@ -23,17 +23,19 @@ func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
 }
 
 func (n ArrayDimFetch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.dim != nil {
-		vv := v.Children("dim")
+		vv := v.GetChildrenVisitor("dim")
 		n.dim.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

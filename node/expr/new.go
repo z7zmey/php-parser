@@ -23,19 +23,21 @@ func NewNew(class node.Node, arguments []node.Node) node.Node {
 }
 
 func (n New) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.class != nil {
-		vv := v.Children("class")
+		vv := v.GetChildrenVisitor("class")
 		n.class.Walk(vv)
 	}
 
 	if n.arguments != nil {
-		vv := v.Children("arguments")
+		vv := v.GetChildrenVisitor("arguments")
 		for _, nn := range n.arguments {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

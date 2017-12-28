@@ -17,12 +17,14 @@ func NewNullable(expression Node) Node {
 }
 
 func (n Nullable) Walk(v Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

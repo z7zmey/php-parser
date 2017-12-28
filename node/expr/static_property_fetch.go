@@ -23,17 +23,19 @@ func NewStaticPropertyFetch(class node.Node, property node.Node) node.Node {
 }
 
 func (n StaticPropertyFetch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.class != nil {
-		vv := v.Children("class")
+		vv := v.GetChildrenVisitor("class")
 		n.class.Walk(vv)
 	}
 
 	if n.property != nil {
-		vv := v.Children("property")
+		vv := v.GetChildrenVisitor("property")
 		n.property.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

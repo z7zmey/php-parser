@@ -28,23 +28,25 @@ func NewInterface(token token.Token, name token.Token, extends []node.Node, stmt
 }
 
 func (n Interface) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("token", n.interfaceName.Value)
 
 	if n.extends != nil {
-		vv := v.Children("extends")
+		vv := v.GetChildrenVisitor("extends")
 		for _, nn := range n.extends {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

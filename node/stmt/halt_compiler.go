@@ -22,7 +22,9 @@ func NewHaltCompiler(token token.Token) node.Node {
 }
 
 func (n HaltCompiler) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
+
+	v.LeaveNode(n)
 }

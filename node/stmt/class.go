@@ -32,42 +32,44 @@ func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extend
 }
 
 func (n Class) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("token", n.token.Value)
 
 	if n.modifiers != nil {
-		vv := v.Children("modifiers")
+		vv := v.GetChildrenVisitor("modifiers")
 		for _, nn := range n.modifiers {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.args != nil {
-		vv := v.Children("args")
+		vv := v.GetChildrenVisitor("args")
 		for _, nn := range n.args {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.extends != nil {
-		vv := v.Children("extends")
+		vv := v.GetChildrenVisitor("extends")
 		n.extends.Walk(vv)
 	}
 
 	if n.implements != nil {
-		vv := v.Children("implements")
+		vv := v.GetChildrenVisitor("implements")
 		for _, nn := range n.implements {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

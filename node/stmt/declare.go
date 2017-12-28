@@ -26,19 +26,21 @@ func NewDeclare(token token.Token, consts []node.Node, stmt node.Node) node.Node
 }
 
 func (n Declare) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.consts != nil {
-		vv := v.Children("consts")
+		vv := v.GetChildrenVisitor("consts")
 		for _, nn := range n.consts {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.stmt != nil {
-		vv := v.Children("stmt")
+		vv := v.GetChildrenVisitor("stmt")
 		n.stmt.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

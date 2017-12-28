@@ -23,17 +23,19 @@ func NewSmallerOrEqual(variable node.Node, expression node.Node) node.Node {
 }
 
 func (n SmallerOrEqual) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.left != nil {
-		vv := v.Children("left")
+		vv := v.GetChildrenVisitor("left")
 		n.left.Walk(vv)
 	}
 
 	if n.right != nil {
-		vv := v.Children("right")
+		vv := v.GetChildrenVisitor("right")
 		n.right.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

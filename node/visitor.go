@@ -1,7 +1,8 @@
 package node
 
 type Visitor interface {
-	Visit(node Node) bool
-	Children(key string) Visitor
+	EnterNode(node Node) bool
+	GetChildrenVisitor(key string) Visitor
 	Scalar(key string, value interface{})
+	LeaveNode(node Node)
 }

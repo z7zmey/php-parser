@@ -23,17 +23,19 @@ func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
 }
 
 func (n TraitUsePrecedence) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.ref != nil {
-		vv := v.Children("ref")
+		vv := v.GetChildrenVisitor("ref")
 		n.ref.Walk(vv)
 	}
 
 	if n.insteadof != nil {
-		vv := v.Children("insteadof")
+		vv := v.GetChildrenVisitor("insteadof")
 		n.insteadof.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

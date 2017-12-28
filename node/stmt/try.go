@@ -28,26 +28,28 @@ func NewTry(token token.Token, stmts []node.Node, catches []node.Node, finally n
 }
 
 func (n Try) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.stmts != nil {
-		vv := v.Children("stmts")
+		vv := v.GetChildrenVisitor("stmts")
 		for _, nn := range n.stmts {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.catches != nil {
-		vv := v.Children("catches")
+		vv := v.GetChildrenVisitor("catches")
 		for _, nn := range n.catches {
 			nn.Walk(vv)
 		}
 	}
 
 	if n.finally != nil {
-		vv := v.Children("finally")
+		vv := v.GetChildrenVisitor("finally")
 		n.finally.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

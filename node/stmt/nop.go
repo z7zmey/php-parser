@@ -29,9 +29,11 @@ func (n Nop) Print(out io.Writer, indent string) {
 }
 
 func (n Nop) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("token", n.token.Value)
+
+	v.LeaveNode(n)
 }

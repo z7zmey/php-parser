@@ -24,12 +24,14 @@ func NewThrow(token token.Token, expr node.Node) node.Node {
 }
 
 func (n Throw) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

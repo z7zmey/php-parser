@@ -39,24 +39,26 @@ func (n GroupUse) SetUseType(useType node.Node) node.Node {
 }
 
 func (n GroupUse) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.useType != nil {
-		vv := v.Children("useType")
+		vv := v.GetChildrenVisitor("useType")
 		n.useType.Walk(vv)
 	}
 
 	if n.prefix != nil {
-		vv := v.Children("prefix")
+		vv := v.GetChildrenVisitor("prefix")
 		n.prefix.Walk(vv)
 	}
 
 	if n.useList != nil {
-		vv := v.Children("useList")
+		vv := v.GetChildrenVisitor("useList")
 		for _, nn := range n.useList {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

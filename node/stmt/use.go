@@ -31,17 +31,19 @@ func (n Use) SetType(useType node.Node) node.Node {
 }
 
 func (n Use) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.useType != nil {
-		vv := v.Children("useType")
+		vv := v.GetChildrenVisitor("useType")
 		n.useType.Walk(vv)
 	}
 
 	if n.use != nil {
-		vv := v.Children("use")
+		vv := v.GetChildrenVisitor("use")
 		n.use.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

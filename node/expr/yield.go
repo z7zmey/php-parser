@@ -23,17 +23,19 @@ func NewYield(key node.Node, value node.Node) node.Node {
 }
 
 func (n Yield) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.key != nil {
-		vv := v.Children("key")
+		vv := v.GetChildrenVisitor("key")
 		n.key.Walk(vv)
 	}
 
 	if n.value != nil {
-		vv := v.Children("value")
+		vv := v.GetChildrenVisitor("value")
 		n.value.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

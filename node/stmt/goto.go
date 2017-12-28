@@ -25,9 +25,11 @@ func NewGoto(token token.Token, label token.Token) node.Node {
 }
 
 func (n Goto) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("label", n.label.Value)
+
+	v.LeaveNode(n)
 }

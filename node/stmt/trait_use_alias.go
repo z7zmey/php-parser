@@ -26,17 +26,19 @@ func NewTraitUseAlias(ref node.Node, modifier node.Node, alias token.TokenInterf
 }
 
 func (n TraitUseAlias) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.ref != nil {
-		vv := v.Children("ref")
+		vv := v.GetChildrenVisitor("ref")
 		n.ref.Walk(vv)
 	}
 
 	if n.modifier != nil {
-		vv := v.Children("modifier")
+		vv := v.GetChildrenVisitor("modifier")
 		n.modifier.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

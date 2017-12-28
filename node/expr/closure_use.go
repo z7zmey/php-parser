@@ -23,14 +23,16 @@ func NewClusureUse(variable node.Node, byRef bool) node.Node {
 }
 
 func (n ClusureUse) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("byRef", n.byRef)
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

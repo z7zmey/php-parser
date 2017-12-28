@@ -23,17 +23,19 @@ func NewMinus(variable node.Node, expression node.Node) node.Node {
 }
 
 func (n Minus) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.expression != nil {
-		vv := v.Children("expression")
+		vv := v.GetChildrenVisitor("expression")
 		n.expression.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

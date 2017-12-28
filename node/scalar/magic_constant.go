@@ -22,7 +22,7 @@ func NewMagicConstant(token token.Token) node.Node {
 }
 
 func (n MagicConstant) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 

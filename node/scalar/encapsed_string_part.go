@@ -22,7 +22,7 @@ func NewEncapsedStringPart(t token.Token) node.Node {
 }
 
 func (n EncapsedStringPart) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 

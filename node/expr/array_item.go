@@ -25,17 +25,19 @@ func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 }
 
 func (n ArrayItem) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.key != nil {
-		vv := v.Children("key")
+		vv := v.GetChildrenVisitor("key")
 		n.key.Walk(vv)
 	}
 
 	if n.val != nil {
-		vv := v.Children("val")
+		vv := v.GetChildrenVisitor("val")
 		n.val.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

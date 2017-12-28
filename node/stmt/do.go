@@ -26,17 +26,19 @@ func NewDo(token token.Token, stmt node.Node, cond node.Node) node.Node {
 }
 
 func (n Do) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.cond != nil {
-		vv := v.Children("cond")
+		vv := v.GetChildrenVisitor("cond")
 		n.cond.Walk(vv)
 	}
 
 	if n.stmt != nil {
-		vv := v.Children("stmt")
+		vv := v.GetChildrenVisitor("stmt")
 		n.stmt.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

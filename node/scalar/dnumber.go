@@ -22,7 +22,7 @@ func NewDnumber(token token.Token) node.Node {
 }
 
 func (n Dnumber) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 

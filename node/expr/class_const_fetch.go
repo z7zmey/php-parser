@@ -25,14 +25,16 @@ func NewClassConstFetch(class node.Node, constant token.Token) node.Node {
 }
 
 func (n ClassConstFetch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("constant", n.constant.Value)
 
 	if n.class != nil {
-		vv := v.Children("class")
+		vv := v.GetChildrenVisitor("class")
 		n.class.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

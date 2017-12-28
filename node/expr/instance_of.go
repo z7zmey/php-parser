@@ -23,17 +23,19 @@ func NewInstanceOf(expr node.Node, class node.Node) node.Node {
 }
 
 func (n InstanceOf) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.expr != nil {
-		vv := v.Children("expr")
+		vv := v.GetChildrenVisitor("expr")
 		n.expr.Walk(vv)
 	}
 
 	if n.class != nil {
-		vv := v.Children("class")
+		vv := v.GetChildrenVisitor("class")
 		n.class.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

@@ -25,22 +25,24 @@ func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.N
 }
 
 func (n Ternary) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.condition != nil {
-		vv := v.Children("condition")
+		vv := v.GetChildrenVisitor("condition")
 		n.condition.Walk(vv)
 	}
 
 	if n.ifTrue != nil {
-		vv := v.Children("ifTrue")
+		vv := v.GetChildrenVisitor("ifTrue")
 		n.ifTrue.Walk(vv)
 	}
 
 	if n.ifFalse != nil {
-		vv := v.Children("ifFalse")
+		vv := v.GetChildrenVisitor("ifFalse")
 		n.ifFalse.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

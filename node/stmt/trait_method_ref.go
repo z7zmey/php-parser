@@ -25,14 +25,16 @@ func NewTraitMethodRef(trait node.Node, method token.Token) node.Node {
 }
 
 func (n TraitMethodRef) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	v.Scalar("method", n.method.Value)
 
 	if n.trait != nil {
-		vv := v.Children("trait")
+		vv := v.GetChildrenVisitor("trait")
 		n.trait.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

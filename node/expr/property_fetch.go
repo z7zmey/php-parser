@@ -23,17 +23,19 @@ func NewPropertyFetch(variable node.Node, property node.Node) node.Node {
 }
 
 func (n PropertyFetch) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.variable != nil {
-		vv := v.Children("variable")
+		vv := v.GetChildrenVisitor("variable")
 		n.variable.Walk(vv)
 	}
 
 	if n.property != nil {
-		vv := v.Children("property")
+		vv := v.GetChildrenVisitor("property")
 		n.property.Walk(vv)
 	}
+
+	v.LeaveNode(n)
 }

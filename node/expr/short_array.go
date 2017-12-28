@@ -26,14 +26,16 @@ func NewShortArray(opentToken token.Token, closeToken token.Token, items []node.
 }
 
 func (n ShortArray) Walk(v node.Visitor) {
-	if v.Visit(n) == false {
+	if v.EnterNode(n) == false {
 		return
 	}
 
 	if n.items != nil {
-		vv := v.Children("items")
+		vv := v.GetChildrenVisitor("items")
 		for _, nn := range n.items {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }
