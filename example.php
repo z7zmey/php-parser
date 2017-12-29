@@ -1,2 +1,0 @@
-<? 
-namespace \foo\bar\baz;
