@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Pow) Name() string {
-	return "Pow"
-}
-
 type Pow struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewPow(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Pow) Name() string {
+	return "Pow"
+}
+
+func (n Pow) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Pow) Walk(v node.Visitor) {

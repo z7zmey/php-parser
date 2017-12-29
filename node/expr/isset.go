@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Isset) Name() string {
-	return "Isset"
-}
-
 type Isset struct {
 	name      string
 	variables []node.Node
@@ -18,6 +14,14 @@ func NewIsset(variables []node.Node) node.Node {
 		"Isset",
 		variables,
 	}
+}
+
+func (n Isset) Name() string {
+	return "Isset"
+}
+
+func (n Isset) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Isset) Walk(v node.Visitor) {

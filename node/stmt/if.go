@@ -2,31 +2,32 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
-
-func (n If) Name() string {
-	return "If"
-}
 
 type If struct {
 	name   string
-	token  token.Token
 	cond   node.Node
 	stmt   node.Node
 	elseIf []node.Node
 	_else  node.Node
 }
 
-func NewIf(token token.Token, cond node.Node, stmt node.Node) node.Node {
+func NewIf(cond node.Node, stmt node.Node) node.Node {
 	return If{
 		"If",
-		token,
 		cond,
 		stmt,
 		nil,
 		nil,
 	}
+}
+
+func (n If) Name() string {
+	return "If"
+}
+
+func (n If) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n If) AddElseIf(elseIf node.Node) node.Node {

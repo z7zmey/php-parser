@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Unset struct {
+	name string
+	vars []node.Node
+}
+
+func NewUnset(vars []node.Node) node.Node {
+	return Unset{
+		"Unset",
+		vars,
+	}
+}
 
 func (n Unset) Name() string {
 	return "Unset"
 }
 
-type Unset struct {
-	name  string
-	token token.Token
-	vars  []node.Node
-}
-
-func NewUnset(token token.Token, vars []node.Node) node.Node {
-	return Unset{
-		"Unset",
-		token,
-		vars,
-	}
+func (n Unset) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Unset) Walk(v node.Visitor) {

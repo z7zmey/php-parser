@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n YieldFrom) Name() string {
-	return "YieldFrom"
-}
-
 type YieldFrom struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewYieldFrom(expression node.Node) node.Node {
 		"YieldFrom",
 		expression,
 	}
+}
+
+func (n YieldFrom) Name() string {
+	return "YieldFrom"
+}
+
+func (n YieldFrom) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n YieldFrom) Walk(v node.Visitor) {

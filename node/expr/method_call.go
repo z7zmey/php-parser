@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n MethodCall) Name() string {
-	return "MethodCall"
-}
-
 type MethodCall struct {
 	name      string
 	variable  node.Node
@@ -22,6 +18,14 @@ func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) 
 		method,
 		arguments,
 	}
+}
+
+func (n MethodCall) Name() string {
+	return "MethodCall"
+}
+
+func (n MethodCall) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n MethodCall) Walk(v node.Visitor) {

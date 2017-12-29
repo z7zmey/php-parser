@@ -269,8 +269,8 @@ top_statement_list:
 ;
 
 namespace_name:
-        T_STRING                                        { $$ = []node.Node{name.NewNamePart($1)} }
-    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = append($1, name.NewNamePart($3)) }
+        T_STRING                                        { $$ = []node.Node{name.NewNamePart($1.Value)} }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = append($1, name.NewNamePart($3.Value)) }
 ;
 
 name:
@@ -285,16 +285,16 @@ top_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
-    |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace($1, name.NewName($2), nil) }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace(name.NewName($2), nil) }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = stmt.NewNamespace($1, name.NewName($2), $4) }
-    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace($1, nil, $3) }
-    |   T_USE mixed_group_use_declaration ';'           { $$ = $2.(stmt.GroupUse).SetToken($1) }
-    |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetToken($1).(stmt.GroupUse).SetUseType($2) }
-    |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList($1, nil, $2) }
-    |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($1, $2, $3) }
-    |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($1, $2) }
+                                                        { $$ = stmt.NewNamespace(name.NewName($2), $4) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace(nil, $3) }
+    |   T_USE mixed_group_use_declaration ';'           { $$ = $2 }
+    |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetUseType($2) }
+    |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList(nil, $2) }
+    |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($2, $3) }
+    |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($2) }
 ;
 
 use_type:
@@ -306,11 +306,11 @@ group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
                 fmt.Println("group")
-                $$ = stmt.NewGroupUse(nil, nil, name.NewName($1), $4)
+                $$ = stmt.NewGroupUse(nil, name.NewName($1), $4)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                $$ = stmt.NewGroupUse(nil, nil, name.NewName($2), $5)
+                $$ = stmt.NewGroupUse(nil, name.NewName($2), $5)
             }
 ;
 
@@ -318,11 +318,11 @@ mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
                 fmt.Println("mixed")
-                $$ = stmt.NewGroupUse(nil, nil, name.NewName($1), $4)
+                $$ = stmt.NewGroupUse(nil, name.NewName($1), $4)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                $$ = stmt.NewGroupUse(nil, nil, name.NewName($2), $5)
+                $$ = stmt.NewGroupUse(nil, name.NewName($2), $5)
             }
 ;
 
@@ -350,12 +350,12 @@ use_declarations:
 
 inline_use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
-    |   use_type unprefixed_use_declaration             { $$ = $2.(stmt.Use).SetType($1) }
+    |   use_type unprefixed_use_declaration             { $$ = $2.(stmt.Use).SetUseType($1) }
 ;
 
 unprefixed_use_declaration:
         namespace_name                                  { $$ = stmt.NewUse(nil, name.NewName($1), nil) }
-    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1), $3) }
+    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1), node.NewIdentifier($3)) }
 ;
 
 use_declaration:
@@ -379,7 +379,7 @@ inner_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler($1) }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
 
 statement:
     '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($2) }
@@ -387,38 +387,36 @@ statement:
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
                                                         { $$ = stmt.NewWhile($1, $3, $5) }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($1, $2, $5) }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($2, $5) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
-                                                        { $$ = stmt.NewFor($1, $3, $5, $7, $9) }
+                                                        { $$ = stmt.NewFor($3, $5, $7, $9) }
     |   T_SWITCH '(' expr ')' switch_case_list          { $$ = stmt.NewSwitch($1, $3, $5) }
-    |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($1, $2) }
-    |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($1, $2) }
-    |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($1, $2) }
-    |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($1, $2) }
-    |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($1, $2); }
-    |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($1, $2) }
-    |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1) }
+    |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($2) }
+    |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($2) }
+    |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($2) }
+    |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($2) }
+    |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($2); }
+    |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($2) }
+    |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1.Value) }
     |   expr ';'                                        { $$ = stmt.NewExpression($1); }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
-                                                        { $$ = stmt.NewUnset($1, $3) }
+                                                        { $$ = stmt.NewUnset($3) }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($1, $3, nil, $5.node, $7, $5.byRef); }
+                                                        { $$ = stmt.NewForeach($3, nil, $5.node, $7, $5.byRef); }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($1, $3, $5, $7.node, $9, $7.byRef); }
-    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($1, $3, $5) }
-    |   ';'                                             { $$ = stmt.NewNop($1) }
+                                                        { $$ = stmt.NewForeach($3, $5, $7.node, $9, $7.byRef); }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($3, $5) }
+    |   ';'                                             { $$ = stmt.NewNop() }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
-            {
-                $$ = stmt.NewTry($1, $3, $5, $6)
-            }
-    |   T_THROW expr ';'                                { $$ = stmt.NewThrow($1, $2) }
-    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto($1, $2) }
-    |   T_STRING ':'                                    { $$ = stmt.NewLabel($1) }
+                                                        { $$ = stmt.NewTry($3, $5, $6) }
+    |   T_THROW expr ';'                                { $$ = stmt.NewThrow($2) }
+    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto(node.NewIdentifier($2)) }
+    |   T_STRING ':'                                    { $$ = stmt.NewLabel(node.NewIdentifier($1)) }
 
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($2, $4, expr.NewVariable(node.NewIdentifier($5)), $8)) }
+                                                        { $$ = append($1, stmt.NewCatch($4, expr.NewVariable(node.NewIdentifier($5)), $8)) }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -427,7 +425,7 @@ catch_name_list:
 
 finally_statement:
         /* empty */                                     { $$ = nil }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($1, $3) }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($3) }
 ;
 
 unset_variables:
@@ -442,7 +440,7 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = stmt.NewFunction($3, $2, $5, $7, $9)
+            $$ = stmt.NewFunction(node.NewIdentifier($3), $2, $5, $7, $9)
         }
 ;
 
@@ -458,9 +456,9 @@ is_variadic:
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($3, $1, nil, $4, $5, $7) }
+                                                        { $$ = stmt.NewClass(node.NewIdentifier($3), $1, nil, $4, $5, $7) }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass($2, nil, nil, $3, $4, $6) }
+                                                        { $$ = stmt.NewClass(node.NewIdentifier($2), nil, nil, $3, $4, $6) }
 ;
 
 class_modifiers:
@@ -474,12 +472,12 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait($2, $4) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait(node.NewIdentifier($2), $4) }
 ;
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewInterface($1, $2, $3, $5) }
+                                                        { $$ = stmt.NewInterface(node.NewIdentifier($2), $3, $5) }
 ;
 
 extends_from:
@@ -530,11 +528,11 @@ case_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewCase($2, $3, $5))
+                $$ = append($1, stmt.NewCase($3, $5))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewDefault($2, $4))
+                $$ = append($1, stmt.NewDefault($4))
             }
 ;
 
@@ -549,10 +547,10 @@ while_statement:
 ;
 
 if_stmt_without_else:
-        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($1, $3, $5) }
+        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($3, $5) }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                _elseIf := stmt.NewElseIf($2, $4, $6)
+                _elseIf := stmt.NewElseIf($4, $6)
                 $$ = $1.(stmt.If).AddElseIf(_elseIf)
             }
 ;
@@ -561,7 +559,7 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                _else := stmt.NewElse($2, $3)
+                _else := stmt.NewElse($3)
                 $$ = $1.(stmt.If).SetElse(_else)
             }
 ;
@@ -569,11 +567,11 @@ if_stmt:
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = stmt.NewAltIf($1, $3, stmt.NewStmtList($6))
+                $$ = stmt.NewAltIf($3, stmt.NewStmtList($6))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                _elseIf := stmt.NewAltElseIf($2, $4, stmt.NewStmtList($7))
+                _elseIf := stmt.NewAltElseIf($4, stmt.NewStmtList($7))
                 $$ = $1.(stmt.AltIf).AddElseIf(_elseIf)
             }
 ;
@@ -582,7 +580,7 @@ alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                _else := stmt.NewAltElse($2, stmt.NewStmtList($4))
+                _else := stmt.NewAltElse(stmt.NewStmtList($4))
                 $$ = $1.(stmt.AltIf).SetElse(_else)
             }
 ;
@@ -659,8 +657,8 @@ static_var_list:
 ;
 
 static_var:
-        T_VARIABLE                                      { $$ = stmt.NewStaticVar($1, nil) }
-    |   T_VARIABLE '=' expr                             { $$ = stmt.NewStaticVar($1, $3) }
+        T_VARIABLE                                      { $$ = stmt.NewStaticVar(expr.NewVariable(node.NewIdentifier($1)), nil) }
+    |   T_VARIABLE '=' expr                             { $$ = stmt.NewStaticVar(expr.NewVariable(node.NewIdentifier($1)), $3) }
 ;
 
 class_statement_list:
@@ -670,11 +668,11 @@ class_statement_list:
 
 class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($2, $1, $3); }
-    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($1, $2, $3) }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($1, $3); }
+    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($2, $3) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod($4, $1, $3, $6, $8, $9)
+                $$ = stmt.NewClassMethod(node.NewIdentifier($4), $1, $3, $6, $8, $9)
             }
 ;
 
@@ -707,21 +705,21 @@ trait_precedence:
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, $3) }
+        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3)) }
     |   trait_method_reference T_AS reserved_non_modifiers
-                                                        { $$ = stmt.NewTraitUseAlias($1, nil, $3)  }
+                                                        { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3))  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = stmt.NewTraitUseAlias($1, $3, $4) }
+                                                        { $$ = stmt.NewTraitUseAlias($1, $3, node.NewIdentifier($4)) }
     |   trait_method_reference T_AS member_modifier     { $$ = stmt.NewTraitUseAlias($1, $3, nil) }
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, $1) }
+        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, node.NewIdentifier($1)) }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, $3) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, node.NewIdentifier($3)) }
 ;
 
 method_body:
@@ -759,8 +757,8 @@ property_list:
 ;
 
 property:
-        T_VARIABLE                                      { $$ = stmt.NewProperty($1, nil) }
-    |   T_VARIABLE '=' expr                             { $$ = stmt.NewProperty($1, $3) }
+        T_VARIABLE                                      { $$ = stmt.NewProperty(expr.NewVariable(node.NewIdentifier($1)), nil) }
+    |   T_VARIABLE '=' expr                             { $$ = stmt.NewProperty(expr.NewVariable(node.NewIdentifier($1)), $3) }
 ;
 
 class_const_list:
@@ -769,11 +767,11 @@ class_const_list:
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = stmt.NewConstant($1, $3) }
+    identifier '=' expr                                 { $$ = stmt.NewConstant(node.NewIdentifier($1), $3) }
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = stmt.NewConstant($1, $3) }
+    T_STRING '=' expr                                   { $$ = stmt.NewConstant(node.NewIdentifier($1), $3) }
 ;
 
 echo_expr_list:
@@ -797,7 +795,7 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass($1, nil, $2, $3, $4, $6) }
+            { $$ = stmt.NewClass(nil, nil, $2, $3, $4, $6) }
         }
 ;
 
@@ -945,7 +943,7 @@ exit_expr:
 
 backticks_expr:
         /* empty */                                     { $$ = []node.Node{} }
-    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = []node.Node{scalar.NewEncapsedStringPart($1)} }
+    |   T_ENCAPSED_AND_WHITESPACE                       { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value)} }
     |   encaps_list                                     { $$ = $1; }
 ;
 
@@ -955,37 +953,37 @@ ctor_arguments:
 ;
 
 dereferencable_scalar:
-        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($1, $4, $3) }
-    |   '[' array_pair_list ']'                         { $$ = expr.NewShortArray($1, $3, $2) }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1) }
+        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($3) }
+    |   '[' array_pair_list ']'                         { $$ = expr.NewShortArray($2) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1.Value) }
 ;
 
 scalar:
-        T_LNUMBER                                       { $$ = scalar.NewLnumber($1) }
-    |   T_DNUMBER                                       { $$ = scalar.NewDnumber($1) }
-    |   T_LINE                                          { $$ = scalar.NewMagicConstant($1) }
-    |   T_FILE                                          { $$ = scalar.NewMagicConstant($1) }
-    |   T_DIR                                           { $$ = scalar.NewMagicConstant($1) }
-    |   T_TRAIT_C                                       { $$ = scalar.NewMagicConstant($1) }
-    |   T_METHOD_C                                      { $$ = scalar.NewMagicConstant($1) }
-    |   T_FUNC_C                                        { $$ = scalar.NewMagicConstant($1) }
-    |   T_NS_C                                          { $$ = scalar.NewMagicConstant($1) }
-    |   T_CLASS_C                                       { $$ = scalar.NewMagicConstant($1) }
+        T_LNUMBER                                       { $$ = scalar.NewLnumber($1.Value) }
+    |   T_DNUMBER                                       { $$ = scalar.NewDnumber($1.Value) }
+    |   T_LINE                                          { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_FILE                                          { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_DIR                                           { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_TRAIT_C                                       { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_METHOD_C                                      { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_FUNC_C                                        { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_NS_C                                          { $$ = scalar.NewMagicConstant($1.Value) }
+    |   T_CLASS_C                                       { $$ = scalar.NewMagicConstant($1.Value) }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = scalar.NewString($2) /* TODO: mark as Heredoc*/ }
+                                                        { $$ = scalar.NewString($2.Value) /* TODO: mark as Heredoc*/ }
     |   T_START_HEREDOC T_END_HEREDOC
-                                                        { $$ = scalar.NewEncapsed($1, nil, $2) }
-    |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($1, $2, $3) }
-    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($1, $2, $3) }
+                                                        { $$ = scalar.NewEncapsed(nil) }
+    |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($2) }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($2) }
     |   dereferencable_scalar                           { $$ = $1; }
     |   constant                                        { $$ = $1; }
 ;
 
 constant:
         name                                            { $$ = expr.NewConstFetch($1) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, $3) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3)) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = expr.NewClassConstFetch($1, $3) }
+                                                        { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3)) }
 ;
 
 expr:
@@ -1109,9 +1107,9 @@ array_pair:
 
 encaps_list:
         encaps_list encaps_var                          { $$ = append($1, $2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, scalar.NewEncapsedStringPart($2)) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, scalar.NewEncapsedStringPart($2.Value)) }
     |   encaps_var                                      { $$ = []node.Node{$1} }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{scalar.NewEncapsedStringPart($1), $2} }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value), $2} }
 ;
 
 encaps_var:
@@ -1125,24 +1123,24 @@ encaps_var:
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
-        T_STRING                                        { $$ = scalar.NewString($1) }
+        T_STRING                                        { $$ = scalar.NewString($1.Value) }
     |   T_NUM_STRING
         {
             // TODO: add option to handle 64 bit integer
             if _, err := strconv.Atoi($1.Value); err == nil {
-                $$ = scalar.NewLnumber($1)
+                $$ = scalar.NewLnumber($1.Value)
             } else {
-                $$ = scalar.NewString($1)
+                $$ = scalar.NewString($1.Value)
             }
         }
     |   '-' T_NUM_STRING
         {
             // TODO: add option to handle 64 bit integer
             if _, err := strconv.Atoi($2.Value); err == nil {
-                $$ = expr.NewUnaryMinus(scalar.NewLnumber($2))
+                $$ = expr.NewUnaryMinus(scalar.NewLnumber($2.Value))
             } else {
                 $2.Value = "-"+$2.Value
-                $$ = scalar.NewString($2)
+                $$ = scalar.NewString($2.Value)
             }
         }
     |   T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }

@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n NameNode) Name() string {
-	return "Name"
-}
-
 type NameNode struct {
 	name  string
 	parts []node.Node
@@ -18,6 +14,14 @@ func NewName(parts []node.Node) node.Node {
 		"Name",
 		parts,
 	}
+}
+
+func (n NameNode) Name() string {
+	return "Name"
+}
+
+func (n NameNode) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n NameNode) Walk(v node.Visitor) {
@@ -31,4 +35,6 @@ func (n NameNode) Walk(v node.Visitor) {
 			nn.Walk(vv)
 		}
 	}
+
+	v.LeaveNode(n)
 }

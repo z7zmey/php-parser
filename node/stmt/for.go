@@ -2,31 +2,32 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
 
-func (n For) Name() string {
-	return "For"
-}
-
 type For struct {
-	name  string
-	token token.Token
-	init  []node.Node
-	cond  []node.Node
-	loop  []node.Node
-	stmt  node.Node
+	name string
+	init []node.Node
+	cond []node.Node
+	loop []node.Node
+	stmt node.Node
 }
 
-func NewFor(token token.Token, init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
+func NewFor(init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
 	return For{
 		"For",
-		token,
 		init,
 		cond,
 		loop,
 		stmt,
 	}
+}
+
+func (n For) Name() string {
+	return "For"
+}
+
+func (n For) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n For) Walk(v node.Visitor) {

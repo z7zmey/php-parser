@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n AssignRef) Name() string {
-	return "AssignRef"
-}
-
 type AssignRef struct {
 	AssignOp
 }
@@ -20,6 +16,14 @@ func NewAssignRef(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n AssignRef) Name() string {
+	return "AssignRef"
+}
+
+func (n AssignRef) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n AssignRef) Walk(v node.Visitor) {

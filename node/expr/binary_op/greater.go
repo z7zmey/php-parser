@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Greater) Name() string {
-	return "Greater"
-}
-
 type Greater struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewGreater(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Greater) Name() string {
+	return "Greater"
+}
+
+func (n Greater) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Greater) Walk(v node.Visitor) {

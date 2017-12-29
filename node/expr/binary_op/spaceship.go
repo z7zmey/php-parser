@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Spaceship) Name() string {
-	return "Spaceship"
-}
-
 type Spaceship struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewSpaceship(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Spaceship) Name() string {
+	return "Spaceship"
+}
+
+func (n Spaceship) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Spaceship) Walk(v node.Visitor) {

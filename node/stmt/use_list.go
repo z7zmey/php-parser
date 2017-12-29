@@ -2,27 +2,28 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type UseList struct {
+	name    string
+	useType node.Node
+	uses    []node.Node
+}
+
+func NewUseList(useType node.Node, uses []node.Node) node.Node {
+	return UseList{
+		"UseList",
+		useType,
+		uses,
+	}
+}
 
 func (n UseList) Name() string {
 	return "UseList"
 }
 
-type UseList struct {
-	name    string
-	token   token.Token
-	useType node.Node
-	uses    []node.Node
-}
-
-func NewUseList(token token.Token, useType node.Node, uses []node.Node) node.Node {
-	return UseList{
-		"UseList",
-		token,
-		useType,
-		uses,
-	}
+func (n UseList) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n UseList) Walk(v node.Visitor) {

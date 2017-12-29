@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n LogicalXor) Name() string {
-	return "LogicalXor"
-}
-
 type LogicalXor struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewLogicalXor(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n LogicalXor) Name() string {
+	return "LogicalXor"
+}
+
+func (n LogicalXor) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n LogicalXor) Walk(v node.Visitor) {

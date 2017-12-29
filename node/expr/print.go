@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Print) Name() string {
-	return "Print"
-}
-
 type Print struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewPrint(expression node.Node) node.Node {
 		"Print",
 		expression,
 	}
+}
+
+func (n Print) Name() string {
+	return "Print"
+}
+
+func (n Print) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Print) Walk(v node.Visitor) {

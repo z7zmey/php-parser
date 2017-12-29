@@ -2,33 +2,36 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Foreach struct {
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
+	key        node.Node
+	variable   node.Node
+	stmt       node.Node
+}
+
+func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
+	return Foreach{
+		"Foreach",
+		map[string]interface{}{
+			"byRef": byRef,
+		},
+		expr,
+		key,
+		variable,
+		stmt,
+	}
+}
 
 func (n Foreach) Name() string {
 	return "Foreach"
 }
 
-type Foreach struct {
-	name     string
-	token    token.Token
-	expr     node.Node
-	key      node.Node
-	variable node.Node
-	stmt     node.Node
-	byRef    bool
-}
-
-func NewForeach(token token.Token, expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
-	return Foreach{
-		"Foreach",
-		token,
-		expr,
-		key,
-		variable,
-		stmt,
-		byRef,
-	}
+func (n Foreach) Attributes() map[string]interface{} {
+	return n.attributes
 }
 
 func (n Foreach) Walk(v node.Visitor) {

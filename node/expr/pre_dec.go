@@ -4,20 +4,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n PreDec) Name() string {
-	return "PreDec"
-}
-
 type PreDec struct {
 	name     string
 	variable node.Node
 }
 
-func NewPreDec(variableession node.Node) node.Node {
+func NewPreDec(variable node.Node) node.Node {
 	return PreDec{
 		"PreDec",
-		variableession,
+		variable,
 	}
+}
+
+func (n PreDec) Name() string {
+	return "PreDec"
+}
+
+func (n PreDec) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n PreDec) Walk(v node.Visitor) {

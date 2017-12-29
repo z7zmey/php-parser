@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n GreaterOrEqual) Name() string {
-	return "GreaterOrEqual"
-}
-
 type GreaterOrEqual struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewGreaterOrEqual(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n GreaterOrEqual) Name() string {
+	return "GreaterOrEqual"
+}
+
+func (n GreaterOrEqual) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n GreaterOrEqual) Walk(v node.Visitor) {

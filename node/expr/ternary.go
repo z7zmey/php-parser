@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Ternary) Name() string {
-	return "Ternary"
-}
-
 type Ternary struct {
 	name      string
 	condition node.Node
@@ -22,6 +18,14 @@ func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.N
 		ifTrue,
 		ifFalse,
 	}
+}
+
+func (n Ternary) Name() string {
+	return "Ternary"
+}
+
+func (n Ternary) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Ternary) Walk(v node.Visitor) {

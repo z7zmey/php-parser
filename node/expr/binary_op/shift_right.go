@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ShiftRight) Name() string {
-	return "ShiftRight"
-}
-
 type ShiftRight struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewShiftRight(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n ShiftRight) Name() string {
+	return "ShiftRight"
+}
+
+func (n ShiftRight) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ShiftRight) Walk(v node.Visitor) {

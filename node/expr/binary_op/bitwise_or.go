@@ -18,6 +18,10 @@ func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
 	}
 }
 
+func (n BitwiseOr) Attributes() map[string]interface{} {
+	return nil
+}
+
 func (n BitwiseOr) Name() string {
 	return "BitwiseOr"
 }

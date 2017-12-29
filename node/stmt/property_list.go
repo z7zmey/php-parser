@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n PropertyList) Name() string {
-	return "PropertyList"
-}
-
 type PropertyList struct {
 	name       string
 	modifiers  []node.Node
@@ -20,6 +16,14 @@ func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
 		modifiers,
 		properties,
 	}
+}
+
+func (n PropertyList) Name() string {
+	return "PropertyList"
+}
+
+func (n PropertyList) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n PropertyList) Walk(v node.Visitor) {

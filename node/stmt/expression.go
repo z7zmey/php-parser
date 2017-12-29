@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Expression) Name() string {
-	return "Expression"
-}
-
 type Expression struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewExpression(expr node.Node) node.Node {
 		"Expression",
 		expr,
 	}
+}
+
+func (n Expression) Name() string {
+	return "Expression"
+}
+
+func (n Expression) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Expression) Walk(v node.Visitor) {

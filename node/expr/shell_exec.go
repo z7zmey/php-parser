@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ShellExec) Name() string {
-	return "ShellExec"
-}
-
 type ShellExec struct {
 	name  string
 	parts []node.Node
@@ -18,6 +14,14 @@ func NewShellExec(parts []node.Node) node.Node {
 		"ShellExec",
 		parts,
 	}
+}
+
+func (n ShellExec) Name() string {
+	return "ShellExec"
+}
+
+func (n ShellExec) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ShellExec) Walk(v node.Visitor) {

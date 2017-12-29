@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ShiftLeft) Name() string {
-	return "ShiftLeft"
-}
-
 type ShiftLeft struct {
 	AssignOp
 }
@@ -20,6 +16,14 @@ func NewShiftLeft(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n ShiftLeft) Name() string {
+	return "ShiftLeft"
+}
+
+func (n ShiftLeft) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ShiftLeft) Walk(v node.Visitor) {

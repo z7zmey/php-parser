@@ -4,30 +4,34 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ClusureUse) Name() string {
-	return "ClusureUse"
-}
-
 type ClusureUse struct {
-	name     string
-	variable node.Node
-	byRef    bool
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
 }
 
 func NewClusureUse(variable node.Node, byRef bool) node.Node {
 	return ClusureUse{
 		"ClusureUse",
+		map[string]interface{}{
+			"byRef": byRef,
+		},
 		variable,
-		byRef,
 	}
+}
+
+func (n ClusureUse) Name() string {
+	return "ClusureUse"
+}
+
+func (n ClusureUse) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ClusureUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
-
-	v.Scalar("byRef", n.byRef)
 
 	if n.variable != nil {
 		vv := v.GetChildrenVisitor("variable")

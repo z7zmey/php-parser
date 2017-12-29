@@ -2,29 +2,30 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Interface struct {
+	name          string
+	interfaceName node.Node
+	extends       []node.Node
+	stmts         []node.Node
+}
+
+func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node) node.Node {
+	return Interface{
+		"Interface",
+		interfaceName,
+		extends,
+		stmts,
+	}
+}
 
 func (n Interface) Name() string {
 	return "Interface"
 }
 
-type Interface struct {
-	name          string
-	token         token.Token
-	interfaceName token.Token
-	extends       []node.Node
-	stmts         []node.Node
-}
-
-func NewInterface(token token.Token, name token.Token, extends []node.Node, stmts []node.Node) node.Node {
-	return Interface{
-		"Interface",
-		token,
-		name,
-		extends,
-		stmts,
-	}
+func (n Interface) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Interface) Walk(v node.Visitor) {
@@ -32,7 +33,10 @@ func (n Interface) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("token", n.interfaceName.Value)
+	if n.interfaceName != nil {
+		vv := v.GetChildrenVisitor("interfaceName")
+		n.interfaceName.Walk(vv)
+	}
 
 	if n.extends != nil {
 		vv := v.GetChildrenVisitor("extends")

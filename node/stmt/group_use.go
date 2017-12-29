@@ -2,35 +2,30 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
-
-func (n GroupUse) Name() string {
-	return "GroupUse"
-}
 
 type GroupUse struct {
 	name    string
-	token   token.TokenInterface
 	useType node.Node
 	prefix  node.Node
 	useList []node.Node
 }
 
-//TODO: stmts myst be []node.Node
-func NewGroupUse(token token.TokenInterface, useType node.Node, prefix node.Node, useList []node.Node) node.Node {
+func NewGroupUse(useType node.Node, prefix node.Node, useList []node.Node) node.Node {
 	return GroupUse{
 		"GroupUse",
-		token,
 		useType,
 		prefix,
 		useList,
 	}
 }
 
-func (n GroupUse) SetToken(token token.TokenInterface) node.Node {
-	n.token = token
-	return n
+func (n GroupUse) Name() string {
+	return "GroupUse"
+}
+
+func (n GroupUse) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n GroupUse) SetUseType(useType node.Node) node.Node {

@@ -2,25 +2,28 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Constant struct {
+	name         string
+	constantName node.Node
+	expr         node.Node
+}
+
+func NewConstant(constantName node.Node, expr node.Node) node.Node {
+	return Constant{
+		"Constant",
+		constantName,
+		expr,
+	}
+}
 
 func (n Constant) Name() string {
 	return "Constant"
 }
 
-type Constant struct {
-	name  string
-	token token.Token
-	expr  node.Node
-}
-
-func NewConstant(token token.Token, expr node.Node) node.Node {
-	return Constant{
-		"Constant",
-		token,
-		expr,
-	}
+func (n Constant) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Constant) Walk(v node.Visitor) {
@@ -28,7 +31,10 @@ func (n Constant) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("token", n.token.Value)
+	if n.constantName != nil {
+		vv := v.GetChildrenVisitor("constantName")
+		n.constantName.Walk(vv)
+	}
 
 	if n.expr != nil {
 		vv := v.GetChildrenVisitor("expr")

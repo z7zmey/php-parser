@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Coalesce) Name() string {
-	return "Coalesce"
-}
-
 type Coalesce struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewCoalesce(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Coalesce) Name() string {
+	return "Coalesce"
+}
+
+func (n Coalesce) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Coalesce) Walk(v node.Visitor) {

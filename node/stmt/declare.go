@@ -2,27 +2,28 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Declare struct {
+	name   string
+	consts []node.Node
+	stmt   node.Node
+}
+
+func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
+	return Declare{
+		"Declare",
+		consts,
+		stmt,
+	}
+}
 
 func (n Declare) Name() string {
 	return "Declare"
 }
 
-type Declare struct {
-	name   string
-	token  token.Token
-	consts []node.Node
-	stmt   node.Node
-}
-
-func NewDeclare(token token.Token, consts []node.Node, stmt node.Node) node.Node {
-	return Declare{
-		"Declare",
-		token,
-		consts,
-		stmt,
-	}
+func (n Declare) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Declare) Walk(v node.Visitor) {

@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Global struct {
+	name string
+	vars []node.Node
+}
+
+func NewGlobal(vars []node.Node) node.Node {
+	return Global{
+		"Global",
+		vars,
+	}
+}
 
 func (n Global) Name() string {
 	return "Global"
 }
 
-type Global struct {
-	name  string
-	token token.Token
-	vars  []node.Node
-}
-
-func NewGlobal(token token.Token, vars []node.Node) node.Node {
-	return Global{
-		"Global",
-		token,
-		vars,
-	}
+func (n Global) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Global) Walk(v node.Visitor) {

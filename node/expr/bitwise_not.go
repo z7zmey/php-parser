@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n BitwiseNot) Name() string {
-	return "BitwiseNot"
-}
-
 type BitwiseNot struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewBitwiseNot(expression node.Node) node.Node {
 		"BitwiseNot",
 		expression,
 	}
+}
+
+func (n BitwiseNot) Name() string {
+	return "BitwiseNot"
+}
+
+func (n BitwiseNot) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n BitwiseNot) Walk(v node.Visitor) {

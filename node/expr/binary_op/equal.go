@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Equal) Name() string {
-	return "Equal"
-}
-
 type Equal struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewEqual(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Equal) Name() string {
+	return "Equal"
+}
+
+func (n Equal) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Equal) Walk(v node.Visitor) {

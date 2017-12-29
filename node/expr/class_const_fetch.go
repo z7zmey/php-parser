@@ -2,25 +2,27 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+func (n ClassConstFetch) Attributes() map[string]interface{} {
+	return nil
+}
 
 func (n ClassConstFetch) Name() string {
 	return "ClassConstFetch"
 }
 
 type ClassConstFetch struct {
-	name     string
-	class    node.Node
-	constant token.Token
+	name         string
+	class        node.Node
+	constantName node.Node
 }
 
-// TODO: constant must be identifier
-func NewClassConstFetch(class node.Node, constant token.Token) node.Node {
+func NewClassConstFetch(class node.Node, constantName node.Node) node.Node {
 	return ClassConstFetch{
 		"ClassConstFetch",
 		class,
-		constant,
+		constantName,
 	}
 }
 
@@ -29,7 +31,10 @@ func (n ClassConstFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("constant", n.constant.Value)
+	if n.constantName != nil {
+		vv := v.GetChildrenVisitor("constantName")
+		n.constantName.Walk(vv)
+	}
 
 	if n.class != nil {
 		vv := v.GetChildrenVisitor("class")

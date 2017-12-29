@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Mod) Name() string {
-	return "Mod"
-}
-
 type Mod struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewMod(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Mod) Name() string {
+	return "Mod"
+}
+
+func (n Mod) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Mod) Walk(v node.Visitor) {

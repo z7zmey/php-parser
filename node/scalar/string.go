@@ -2,23 +2,29 @@ package scalar
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type String struct {
+	name       string
+	attributes map[string]interface{}
+}
+
+func NewString(value string) node.Node {
+	return String{
+		"String",
+
+		map[string]interface{}{
+			"value": value,
+		},
+	}
+}
 
 func (n String) Name() string {
 	return "String"
 }
 
-type String struct {
-	name  string
-	token token.Token
-}
-
-func NewString(token token.Token) node.Node {
-	return String{
-		"String",
-		token,
-	}
+func (n String) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n String) Walk(v node.Visitor) {
@@ -26,5 +32,5 @@ func (n String) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("token", n.token.Value)
+	v.LeaveNode(n)
 }

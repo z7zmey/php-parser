@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ArrayDimFetch) Name() string {
-	return "ArrayDimFetch"
-}
-
 type ArrayDimFetch struct {
 	name     string
 	variable node.Node
@@ -20,6 +16,14 @@ func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
 		variable,
 		dim,
 	}
+}
+
+func (n ArrayDimFetch) Name() string {
+	return "ArrayDimFetch"
+}
+
+func (n ArrayDimFetch) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ArrayDimFetch) Walk(v node.Visitor) {

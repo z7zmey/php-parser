@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Clone) Name() string {
-	return "Clone"
-}
-
 type Clone struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewClone(expression node.Node) node.Node {
 		"Clone",
 		expression,
 	}
+}
+
+func (n Clone) Name() string {
+	return "Clone"
+}
+
+func (n Clone) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Clone) Walk(v node.Visitor) {

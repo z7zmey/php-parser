@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n BitwiseAnd) Name() string {
-	return "BitwiseAnd"
-}
-
 type BitwiseAnd struct {
 	AssignOp
 }
@@ -20,6 +16,14 @@ func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n BitwiseAnd) Name() string {
+	return "BitwiseAnd"
+}
+
+func (n BitwiseAnd) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n BitwiseAnd) Walk(v node.Visitor) {

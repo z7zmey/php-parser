@@ -2,23 +2,28 @@ package name
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type NamePart struct {
+	name       string
+	attributes map[string]interface{}
+}
+
+func NewNamePart(value string) node.Node {
+	return NamePart{
+		"NamePart",
+		map[string]interface{}{
+			"value": value,
+		},
+	}
+}
 
 func (n NamePart) Name() string {
 	return "NamePart"
 }
 
-type NamePart struct {
-	name  string
-	token token.Token
-}
-
-func NewNamePart(token token.Token) node.Node {
-	return NamePart{
-		"NamePart",
-		token,
-	}
+func (n NamePart) Attributes() map[string]interface{} {
+	return n.attributes
 }
 
 func (n NamePart) Walk(v node.Visitor) {
@@ -26,5 +31,5 @@ func (n NamePart) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("token", n.token.Value)
+	v.LeaveNode(n)
 }

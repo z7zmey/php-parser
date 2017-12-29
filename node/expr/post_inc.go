@@ -4,20 +4,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n PostInc) Name() string {
-	return "PostInc"
-}
-
 type PostInc struct {
 	name     string
 	variable node.Node
 }
 
-func NewPostInc(variableession node.Node) node.Node {
+func NewPostInc(variable node.Node) node.Node {
 	return PostInc{
 		"PostInc",
-		variableession,
+		variable,
 	}
+}
+
+func (n PostInc) Name() string {
+	return "PostInc"
+}
+
+func (n PostInc) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n PostInc) Walk(v node.Visitor) {

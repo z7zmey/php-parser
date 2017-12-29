@@ -4,22 +4,28 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Exit) Name() string {
-	return "Exit"
-}
-
 type Exit struct {
-	name  string
-	expr  node.Node
-	isDie bool
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewExit(expr node.Node, isDie bool) node.Node {
 	return Exit{
 		"Exit",
+		map[string]interface{}{
+			"isDie": isDie,
+		},
 		expr,
-		isDie,
 	}
+}
+
+func (n Exit) Name() string {
+	return "Exit"
+}
+
+func (n Exit) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Exit) Walk(v node.Visitor) {

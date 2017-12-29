@@ -2,31 +2,34 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type InlineHtml struct {
+	name       string
+	attributes map[string]interface{}
+}
+
+func NewInlineHtml(value string) node.Node {
+	return InlineHtml{
+		"InlineHtml",
+		map[string]interface{}{
+			"value": value,
+		},
+	}
+}
 
 func (n InlineHtml) Name() string {
 	return "InlineHtml"
 }
 
-type InlineHtml struct {
-	name  string
-	token token.Token
-}
-
-func NewInlineHtml(token token.Token) node.Node {
-	return InlineHtml{
-		"InlineHtml",
-		token,
-	}
+func (n InlineHtml) Attributes() map[string]interface{} {
+	return n.attributes
 }
 
 func (n InlineHtml) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
-
-	v.Scalar("token", n.token.Value)
 
 	v.LeaveNode(n)
 }

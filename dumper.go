@@ -11,18 +11,19 @@ type dumper struct {
 }
 
 func (d dumper) EnterNode(n node.Node) bool {
-	fmt.Printf("%v[%v]:\n", d.indent, n.Name())
+
+	fmt.Printf("%v%v", d.indent, n.Name())
+	if a := n.Attributes(); a != nil {
+		fmt.Printf(" %v", a)
+	}
+	fmt.Println()
 
 	return true
 }
 
 func (d dumper) GetChildrenVisitor(key string) node.Visitor {
-	fmt.Printf("%v%v:\n", d.indent+". ", key)
-	return dumper{d.indent + ". . "}
-}
-
-func (d dumper) Scalar(key string, value interface{}) {
-	fmt.Printf("%v%v: %v\n", d.indent+". ", key, value)
+	fmt.Printf("%v%q:\n", d.indent+"  ", key)
+	return dumper{d.indent + "    "}
 }
 
 func (d dumper) LeaveNode(n node.Node) {

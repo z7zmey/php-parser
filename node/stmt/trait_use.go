@@ -2,28 +2,28 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type TraitUse struct {
+	name        string
+	traits      []node.Node
+	adaptations []node.Node
+}
+
+func NewTraitUse(traits []node.Node, adaptations []node.Node) node.Node {
+	return TraitUse{
+		"TraitUse",
+		traits,
+		adaptations,
+	}
+}
 
 func (n TraitUse) Name() string {
 	return "TraitUse"
 }
 
-type TraitUse struct {
-	name        string
-	token       token.Token
-	traits      []node.Node
-	adaptations []node.Node
-}
-
-//TODO: traits myst be []node.Node
-func NewTraitUse(token token.Token, traits []node.Node, adaptations []node.Node) node.Node {
-	return TraitUse{
-		"TraitUse",
-		token,
-		traits,
-		adaptations,
-	}
+func (n TraitUse) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n TraitUse) Walk(v node.Visitor) {

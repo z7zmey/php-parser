@@ -2,29 +2,30 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
-
-func (n Catch) Name() string {
-	return "Catch"
-}
 
 type Catch struct {
 	name     string
-	token    token.Token
 	types    []node.Node
 	variable node.Node
 	stmts    []node.Node
 }
 
-func NewCatch(token token.Token, types []node.Node, variable node.Node, stmts []node.Node) node.Node {
+func NewCatch(types []node.Node, variable node.Node, stmts []node.Node) node.Node {
 	return Catch{
 		"Catch",
-		token,
 		types,
 		variable,
 		stmts,
 	}
+}
+
+func (n Catch) Name() string {
+	return "Catch"
+}
+
+func (n Catch) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Catch) Walk(v node.Visitor) {

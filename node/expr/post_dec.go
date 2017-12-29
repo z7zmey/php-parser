@@ -4,20 +4,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n PostDec) Name() string {
-	return "PostDec"
-}
-
 type PostDec struct {
 	name     string
 	variable node.Node
 }
 
-func NewPostDec(variableession node.Node) node.Node {
+func NewPostDec(variable node.Node) node.Node {
 	return PostDec{
 		"PostDec",
-		variableession,
+		variable,
 	}
+}
+
+func (n PostDec) Name() string {
+	return "PostDec"
+}
+
+func (n PostDec) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n PostDec) Walk(v node.Visitor) {

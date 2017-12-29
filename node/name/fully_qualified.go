@@ -20,3 +20,7 @@ func NewFullyQualified(parts []node.Node) node.Node {
 func (n FullyQualified) Name() string {
 	return "FullyQualified"
 }
+
+func (n FullyQualified) Attributes() map[string]interface{} {
+	return nil
+}

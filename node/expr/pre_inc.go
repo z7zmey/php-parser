@@ -4,20 +4,24 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n PreInc) Name() string {
-	return "PreInc"
-}
-
 type PreInc struct {
 	name     string
 	variable node.Node
 }
 
-func NewPreInc(variableession node.Node) node.Node {
+func NewPreInc(variable node.Node) node.Node {
 	return PreInc{
 		"PreInc",
-		variableession,
+		variable,
 	}
+}
+
+func (n PreInc) Name() string {
+	return "PreInc"
+}
+
+func (n PreInc) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n PreInc) Walk(v node.Visitor) {

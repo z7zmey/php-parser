@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Echo struct {
+	name  string
+	exprs []node.Node
+}
+
+func NewEcho(exprs []node.Node) node.Node {
+	return Echo{
+		"Echo",
+		exprs,
+	}
+}
 
 func (n Echo) Name() string {
 	return "Echo"
 }
 
-type Echo struct {
-	name  string
-	token token.Token
-	exprs []node.Node
-}
-
-func NewEcho(token token.Token, exprs []node.Node) node.Node {
-	return Echo{
-		"Echo",
-		token,
-		exprs,
-	}
+func (n Echo) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Echo) Walk(v node.Visitor) {

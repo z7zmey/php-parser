@@ -4,39 +4,41 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Closure) Name() string {
-	return "Closure"
-}
-
 type Closure struct {
-	name        string
-	params      []node.Node
-	uses        []node.Node
-	returnType  node.Node
-	stmts       []node.Node
-	isReturnRef bool
-	isStatic    bool
+	name       string
+	attributes map[string]interface{}
+	params     []node.Node
+	uses       []node.Node
+	returnType node.Node
+	stmts      []node.Node
 }
 
 func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool) node.Node {
 	return Closure{
 		"Closure",
+		map[string]interface{}{
+			"isReturnRef": isReturnRef,
+			"isStatic":    isStatic,
+		},
 		params,
 		uses,
 		returnType,
 		stmts,
-		isReturnRef,
-		isStatic,
 	}
+}
+
+func (n Closure) Name() string {
+	return "Closure"
+}
+
+func (n Closure) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Closure) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
-
-	v.Scalar("isStatic", n.isStatic)
-	v.Scalar("isReturnRef", n.isReturnRef)
 
 	if n.params != nil {
 		vv := v.GetChildrenVisitor("params")

@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ShortList) Name() string {
-	return "ShortList"
-}
-
 type ShortList struct {
 	name  string
 	items []node.Node
@@ -18,6 +14,14 @@ func NewShortList(items []node.Node) node.Node {
 		"ShortList",
 		items,
 	}
+}
+
+func (n ShortList) Name() string {
+	return "ShortList"
+}
+
+func (n ShortList) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ShortList) Walk(v node.Visitor) {

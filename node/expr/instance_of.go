@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n InstanceOf) Name() string {
-	return "InstanceOf"
-}
-
 type InstanceOf struct {
 	name  string
 	expr  node.Node
@@ -20,6 +16,14 @@ func NewInstanceOf(expr node.Node, class node.Node) node.Node {
 		expr,
 		class,
 	}
+}
+
+func (n InstanceOf) Name() string {
+	return "InstanceOf"
+}
+
+func (n InstanceOf) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n InstanceOf) Walk(v node.Visitor) {

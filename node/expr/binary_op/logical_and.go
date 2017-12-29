@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n LogicalAnd) Name() string {
-	return "LogicalAnd"
-}
-
 type LogicalAnd struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n LogicalAnd) Name() string {
+	return "LogicalAnd"
+}
+
+func (n LogicalAnd) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n LogicalAnd) Walk(v node.Visitor) {

@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Div) Name() string {
-	return "Div"
-}
-
 type Div struct {
 	AssignOp
 }
@@ -20,6 +16,14 @@ func NewDiv(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n Div) Name() string {
+	return "Div"
+}
+
+func (n Div) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Div) Walk(v node.Visitor) {

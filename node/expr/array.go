@@ -2,27 +2,26 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Array struct {
+	name  string
+	items []node.Node
+}
+
+func NewArray(items []node.Node) node.Node {
+	return Array{
+		"Array",
+		items,
+	}
+}
 
 func (n Array) Name() string {
 	return "Array"
 }
 
-type Array struct {
-	name       string
-	opentToken token.Token
-	closeToken token.Token
-	items      []node.Node
-}
-
-func NewArray(opentToken token.Token, closeToken token.Token, items []node.Node) node.Node {
-	return Array{
-		"Array",
-		opentToken,
-		closeToken,
-		items,
-	}
+func (n Array) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Array) Walk(v node.Visitor) {

@@ -4,24 +4,30 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n ArrayItem) Name() string {
-	return "ArrayItem"
-}
-
 type ArrayItem struct {
-	name  string
-	key   node.Node
-	val   node.Node
-	byRef bool
+	name       string
+	attributes map[string]interface{}
+	key        node.Node
+	val        node.Node
 }
 
 func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 	return ArrayItem{
 		"ArrayItem",
+		map[string]interface{}{
+			"byRef": byRef,
+		},
 		key,
 		val,
-		byRef,
 	}
+}
+
+func (n ArrayItem) Name() string {
+	return "ArrayItem"
+}
+
+func (n ArrayItem) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ArrayItem) Walk(v node.Visitor) {

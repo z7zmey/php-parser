@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Continue struct {
+	name string
+	expr node.Node
+}
+
+func NewContinue(expr node.Node) node.Node {
+	return Continue{
+		"Continue",
+		expr,
+	}
+}
 
 func (n Continue) Name() string {
 	return "Continue"
 }
 
-type Continue struct {
-	name  string
-	token token.Token
-	expr  node.Node
-}
-
-func NewContinue(token token.Token, expr node.Node) node.Node {
-	return Continue{
-		"Continue",
-		token,
-		expr,
-	}
+func (n Continue) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Continue) Walk(v node.Visitor) {

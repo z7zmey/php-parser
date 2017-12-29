@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Empty) Name() string {
-	return "Empty"
-}
-
 type Empty struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewEmpty(expression node.Node) node.Node {
 		"Empty",
 		expression,
 	}
+}
+
+func (n Empty) Name() string {
+	return "Empty"
+}
+
+func (n Empty) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Empty) Walk(v node.Visitor) {

@@ -18,6 +18,10 @@ func NewBitwiseXor(variable node.Node, expression node.Node) node.Node {
 	}
 }
 
+func (n BitwiseXor) Attributes() map[string]interface{} {
+	return nil
+}
+
 func (n BitwiseXor) Name() string {
 	return "BitwiseXor"
 }

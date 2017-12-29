@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n New) Name() string {
-	return "New"
-}
-
 type New struct {
 	name      string
 	class     node.Node
@@ -20,6 +16,14 @@ func NewNew(class node.Node, arguments []node.Node) node.Node {
 		class,
 		arguments,
 	}
+}
+
+func (n New) Name() string {
+	return "New"
+}
+
+func (n New) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n New) Walk(v node.Visitor) {

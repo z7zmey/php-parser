@@ -20,3 +20,7 @@ func NewRelative(parts []node.Node) node.Node {
 func (n Relative) Name() string {
 	return "Relative"
 }
+
+func (n Relative) Attributes() map[string]interface{} {
+	return nil
+}

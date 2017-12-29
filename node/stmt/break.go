@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Break struct {
+	name string
+	expr node.Node
+}
+
+func NewBreak(expr node.Node) node.Node {
+	return Break{
+		"Break",
+		expr,
+	}
+}
 
 func (n Break) Name() string {
 	return "Break"
 }
 
-type Break struct {
-	name  string
-	token token.Token
-	expr  node.Node
-}
-
-func NewBreak(token token.Token, expr node.Node) node.Node {
-	return Break{
-		"Break",
-		token,
-		expr,
-	}
+func (n Break) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Break) Walk(v node.Visitor) {

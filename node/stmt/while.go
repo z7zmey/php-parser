@@ -25,6 +25,10 @@ func (n While) Name() string {
 	return "While"
 }
 
+func (n While) Attributes() map[string]interface{} {
+	return nil
+}
+
 func (n While) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

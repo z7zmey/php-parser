@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n BooleanOr) Name() string {
-	return "BooleanOr"
-}
-
 type BooleanOr struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewBooleanOr(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n BooleanOr) Name() string {
+	return "BooleanOr"
+}
+
+func (n BooleanOr) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n BooleanOr) Walk(v node.Visitor) {

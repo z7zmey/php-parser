@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n LogicalOr) Name() string {
-	return "LogicalOr"
-}
-
 type LogicalOr struct {
 	BinaryOp
 }
@@ -20,6 +16,14 @@ func NewLogicalOr(variable node.Node, expression node.Node) node.Node {
 			expression,
 		},
 	}
+}
+
+func (n LogicalOr) Name() string {
+	return "LogicalOr"
+}
+
+func (n LogicalOr) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n LogicalOr) Walk(v node.Visitor) {

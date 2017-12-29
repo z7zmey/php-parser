@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Variable) Name() string {
-	return "Variable"
-}
-
 type Variable struct {
 	name    string
 	varName node.Node
@@ -18,6 +14,14 @@ func NewVariable(varName node.Node) node.Node {
 		"Variable",
 		varName,
 	}
+}
+
+func (n Variable) Name() string {
+	return "Variable"
+}
+
+func (n Variable) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Variable) Walk(v node.Visitor) {

@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n Include) Name() string {
-	return "Include"
-}
-
 type Include struct {
 	name string
 	expr node.Node
@@ -18,6 +14,14 @@ func NewInclude(expression node.Node) node.Node {
 		"Include",
 		expression,
 	}
+}
+
+func (n Include) Name() string {
+	return "Include"
+}
+
+func (n Include) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Include) Walk(v node.Visitor) {

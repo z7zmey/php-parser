@@ -2,33 +2,38 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type ClassMethod struct {
+	name       string
+	attributes map[string]interface{}
+	methodName node.Node
+	modifiers  []node.Node
+	params     []node.Node
+	returnType node.Node
+	stmts      []node.Node
+}
+
+func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node) node.Node {
+	return ClassMethod{
+		"ClassMethod",
+		map[string]interface{}{
+			"returnsRef": returnsRef,
+		},
+		methodName,
+		modifiers,
+		params,
+		returnType,
+		stmts,
+	}
+}
 
 func (n ClassMethod) Name() string {
 	return "ClassMethod"
 }
 
-type ClassMethod struct {
-	name        string
-	token       token.Token
-	modifiers   []node.Node
-	isReturnRef bool
-	params      []node.Node
-	returnType  node.Node
-	stmts       []node.Node
-}
-
-func NewClassMethod(token token.Token, modifiers []node.Node, isReturnRef bool, params []node.Node, returnType node.Node, stmts []node.Node) node.Node {
-	return ClassMethod{
-		"ClassMethod",
-		token,
-		modifiers,
-		isReturnRef,
-		params,
-		returnType,
-		stmts,
-	}
+func (n ClassMethod) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n ClassMethod) Walk(v node.Visitor) {
@@ -36,8 +41,10 @@ func (n ClassMethod) Walk(v node.Visitor) {
 		return
 	}
 
-	v.Scalar("token", n.token.Value)
-	v.Scalar("isReturnRef", n.isReturnRef)
+	if n.methodName != nil {
+		vv := v.GetChildrenVisitor("methodName")
+		n.methodName.Walk(vv)
+	}
 
 	if n.modifiers != nil {
 		vv := v.GetChildrenVisitor("modifiers")

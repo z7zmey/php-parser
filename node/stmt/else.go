@@ -2,25 +2,26 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Else struct {
+	name string
+	stmt node.Node
+}
+
+func NewElse(stmt node.Node) node.Node {
+	return Else{
+		"Else",
+		stmt,
+	}
+}
 
 func (n Else) Name() string {
 	return "Else"
 }
 
-type Else struct {
-	name  string
-	token token.Token
-	stmt  node.Node
-}
-
-func NewElse(token token.Token, stmt node.Node) node.Node {
-	return Else{
-		"Else",
-		token,
-		stmt,
-	}
+func (n Else) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Else) Walk(v node.Visitor) {

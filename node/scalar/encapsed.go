@@ -2,27 +2,26 @@ package scalar
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Encapsed struct {
+	name  string
+	parts []node.Node
+}
+
+func NewEncapsed(parts []node.Node) node.Node {
+	return Encapsed{
+		"Encapsed",
+		parts,
+	}
+}
 
 func (n Encapsed) Name() string {
 	return "Encapsed"
 }
 
-type Encapsed struct {
-	name       string
-	startToken token.Token
-	endToken   token.Token
-	parts      []node.Node
-}
-
-func NewEncapsed(startToken token.Token, parts []node.Node, endToken token.Token) node.Node {
-	return Encapsed{
-		"Encapsed",
-		startToken,
-		endToken,
-		parts,
-	}
+func (n Encapsed) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Encapsed) Walk(v node.Visitor) {

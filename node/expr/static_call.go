@@ -4,10 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-func (n StaticCall) Name() string {
-	return "StaticCall"
-}
-
 type StaticCall struct {
 	name      string
 	class     node.Node
@@ -22,6 +18,14 @@ func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.
 		call,
 		arguments,
 	}
+}
+
+func (n StaticCall) Name() string {
+	return "StaticCall"
+}
+
+func (n StaticCall) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n StaticCall) Walk(v node.Visitor) {

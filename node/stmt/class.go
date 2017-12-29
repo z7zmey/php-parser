@@ -2,16 +2,11 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
-
-func (n Class) Name() string {
-	return "Class"
-}
 
 type Class struct {
 	name       string
-	token      token.Token
+	className  node.Node
 	modifiers  []node.Node
 	args       []node.Node
 	extends    node.Node
@@ -19,10 +14,10 @@ type Class struct {
 	stmts      []node.Node
 }
 
-func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
+func NewClass(className node.Node, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
 	return Class{
 		"Class",
-		token,
+		className,
 		modifiers,
 		args,
 		extends,
@@ -31,12 +26,23 @@ func NewClass(token token.Token, modifiers []node.Node, args []node.Node, extend
 	}
 }
 
+func (n Class) Name() string {
+	return "Class"
+}
+
+func (n Class) Attributes() map[string]interface{} {
+	return nil
+}
+
 func (n Class) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
 
-	v.Scalar("token", n.token.Value)
+	if n.className != nil {
+		vv := v.GetChildrenVisitor("className")
+		n.className.Walk(vv)
+	}
 
 	if n.modifiers != nil {
 		vv := v.GetChildrenVisitor("modifiers")

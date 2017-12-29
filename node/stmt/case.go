@@ -2,27 +2,28 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 )
+
+type Case struct {
+	name  string
+	cond  node.Node
+	stmts []node.Node
+}
+
+func NewCase(cond node.Node, stmts []node.Node) node.Node {
+	return Case{
+		"Case",
+		cond,
+		stmts,
+	}
+}
 
 func (n Case) Name() string {
 	return "Case"
 }
 
-type Case struct {
-	name  string
-	token token.Token
-	cond  node.Node
-	stmts []node.Node
-}
-
-func NewCase(token token.Token, cond node.Node, stmts []node.Node) node.Node {
-	return Case{
-		"Case",
-		token,
-		cond,
-		stmts,
-	}
+func (n Case) Attributes() map[string]interface{} {
+	return nil
 }
 
 func (n Case) Walk(v node.Visitor) {
