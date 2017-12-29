@@ -12,6 +12,7 @@ func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
 	return LogicalAnd{
 		BinaryOp{
 			"BinaryLogicalAnd",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n LogicalAnd) Name() string {
 }
 
 func (n LogicalAnd) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n LogicalAnd) Walk(v node.Visitor) {

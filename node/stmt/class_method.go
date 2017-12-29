@@ -33,7 +33,7 @@ func (n ClassMethod) Name() string {
 }
 
 func (n ClassMethod) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ClassMethod) Walk(v node.Visitor) {

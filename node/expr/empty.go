@@ -5,13 +5,15 @@ import (
 )
 
 type Empty struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewEmpty(expression node.Node) node.Node {
 	return Empty{
 		"Empty",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n Empty) Name() string {
 }
 
 func (n Empty) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Empty) Walk(v node.Visitor) {

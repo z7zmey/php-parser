@@ -5,15 +5,17 @@ import (
 )
 
 type Ternary struct {
-	name      string
-	condition node.Node
-	ifTrue    node.Node
-	ifFalse   node.Node
+	name       string
+	attributes map[string]interface{}
+	condition  node.Node
+	ifTrue     node.Node
+	ifFalse    node.Node
 }
 
 func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.Node {
 	return Ternary{
 		"Ternary",
+		map[string]interface{}{},
 		condition,
 		ifTrue,
 		ifFalse,
@@ -25,7 +27,7 @@ func (n Ternary) Name() string {
 }
 
 func (n Ternary) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Ternary) Walk(v node.Visitor) {

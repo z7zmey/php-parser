@@ -12,6 +12,7 @@ func NewConcat(variable node.Node, expression node.Node) node.Node {
 	return Concat{
 		AssignOp{
 			"AssignConcat",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Concat) Name() string {
 }
 
 func (n Concat) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Concat) Walk(v node.Visitor) {

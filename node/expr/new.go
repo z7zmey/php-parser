@@ -5,14 +5,16 @@ import (
 )
 
 type New struct {
-	name      string
-	class     node.Node
-	arguments []node.Node
+	name       string
+	attributes map[string]interface{}
+	class      node.Node
+	arguments  []node.Node
 }
 
 func NewNew(class node.Node, arguments []node.Node) node.Node {
 	return New{
 		"New",
+		map[string]interface{}{},
 		class,
 		arguments,
 	}
@@ -23,7 +25,7 @@ func (n New) Name() string {
 }
 
 func (n New) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n New) Walk(v node.Visitor) {

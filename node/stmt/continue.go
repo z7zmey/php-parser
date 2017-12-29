@@ -5,13 +5,15 @@ import (
 )
 
 type Continue struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewContinue(expr node.Node) node.Node {
 	return Continue{
 		"Continue",
+		map[string]interface{}{},
 		expr,
 	}
 }
@@ -21,7 +23,7 @@ func (n Continue) Name() string {
 }
 
 func (n Continue) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Continue) Walk(v node.Visitor) {

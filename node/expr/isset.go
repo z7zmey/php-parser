@@ -5,13 +5,15 @@ import (
 )
 
 type Isset struct {
-	name      string
-	variables []node.Node
+	name       string
+	attributes map[string]interface{}
+	variables  []node.Node
 }
 
 func NewIsset(variables []node.Node) node.Node {
 	return Isset{
 		"Isset",
+		map[string]interface{}{},
 		variables,
 	}
 }
@@ -21,7 +23,7 @@ func (n Isset) Name() string {
 }
 
 func (n Isset) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Isset) Walk(v node.Visitor) {

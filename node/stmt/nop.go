@@ -5,12 +5,14 @@ import (
 )
 
 type Nop struct {
-	name string
+	name       string
+	attributes map[string]interface{}
 }
 
 func NewNop() node.Node {
 	return Nop{
 		"Nop",
+		map[string]interface{}{},
 	}
 }
 
@@ -19,7 +21,7 @@ func (n Nop) Name() string {
 }
 
 func (n Nop) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Nop) Walk(v node.Visitor) {

@@ -12,6 +12,7 @@ func NewLogicalXor(variable node.Node, expression node.Node) node.Node {
 	return LogicalXor{
 		BinaryOp{
 			"BinaryLogicalXor",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n LogicalXor) Name() string {
 }
 
 func (n LogicalXor) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n LogicalXor) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type PostInc struct {
-	name     string
-	variable node.Node
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
 }
 
 func NewPostInc(variable node.Node) node.Node {
 	return PostInc{
 		"PostInc",
+		map[string]interface{}{},
 		variable,
 	}
 }
@@ -21,7 +23,7 @@ func (n PostInc) Name() string {
 }
 
 func (n PostInc) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n PostInc) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type Else struct {
-	name string
-	stmt node.Node
+	name       string
+	attributes map[string]interface{}
+	stmt       node.Node
 }
 
 func NewElse(stmt node.Node) node.Node {
 	return Else{
 		"Else",
+		map[string]interface{}{},
 		stmt,
 	}
 }
@@ -21,7 +23,7 @@ func (n Else) Name() string {
 }
 
 func (n Else) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Else) Walk(v node.Visitor) {

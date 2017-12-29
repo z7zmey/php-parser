@@ -12,6 +12,7 @@ func NewCoalesce(variable node.Node, expression node.Node) node.Node {
 	return Coalesce{
 		BinaryOp{
 			"BinaryCoalesce",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Coalesce) Name() string {
 }
 
 func (n Coalesce) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Coalesce) Walk(v node.Visitor) {

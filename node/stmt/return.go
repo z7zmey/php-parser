@@ -5,13 +5,15 @@ import (
 )
 
 type Return struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewReturn(expr node.Node) node.Node {
 	return Return{
 		"Return",
+		map[string]interface{}{},
 		expr,
 	}
 }
@@ -21,7 +23,7 @@ func (n Return) Name() string {
 }
 
 func (n Return) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Return) Walk(v node.Visitor) {

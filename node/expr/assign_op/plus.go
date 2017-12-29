@@ -12,6 +12,7 @@ func NewPlus(variable node.Node, expression node.Node) node.Node {
 	return Plus{
 		AssignOp{
 			"AssignPlus",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Plus) Name() string {
 }
 
 func (n Plus) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Plus) Walk(v node.Visitor) {

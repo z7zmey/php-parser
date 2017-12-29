@@ -6,7 +6,7 @@ import (
 )
 
 func (n Switch) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Switch) Name() string {
@@ -14,15 +14,17 @@ func (n Switch) Name() string {
 }
 
 type Switch struct {
-	name  string
-	token token.Token
-	cond  node.Node
-	cases []node.Node
+	name       string
+	attributes map[string]interface{}
+	token      token.Token
+	cond       node.Node
+	cases      []node.Node
 }
 
 func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
 	return Switch{
 		"Switch",
+		map[string]interface{}{},
 		token,
 		cond,
 		cases,

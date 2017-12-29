@@ -6,6 +6,7 @@ import (
 
 type Interface struct {
 	name          string
+	attributes    map[string]interface{}
 	interfaceName node.Node
 	extends       []node.Node
 	stmts         []node.Node
@@ -14,6 +15,7 @@ type Interface struct {
 func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node) node.Node {
 	return Interface{
 		"Interface",
+		map[string]interface{}{},
 		interfaceName,
 		extends,
 		stmts,
@@ -25,7 +27,7 @@ func (n Interface) Name() string {
 }
 
 func (n Interface) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Interface) Walk(v node.Visitor) {

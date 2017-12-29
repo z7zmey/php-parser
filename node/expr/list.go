@@ -5,13 +5,15 @@ import (
 )
 
 type List struct {
-	name  string
-	items []node.Node
+	name       string
+	attributes map[string]interface{}
+	items      []node.Node
 }
 
 func NewList(items []node.Node) node.Node {
 	return List{
 		"List",
+		map[string]interface{}{},
 		items,
 	}
 }
@@ -21,7 +23,7 @@ func (n List) Name() string {
 }
 
 func (n List) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n List) Walk(v node.Visitor) {

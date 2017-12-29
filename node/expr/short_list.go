@@ -5,13 +5,15 @@ import (
 )
 
 type ShortList struct {
-	name  string
-	items []node.Node
+	name       string
+	attributes map[string]interface{}
+	items      []node.Node
 }
 
 func NewShortList(items []node.Node) node.Node {
 	return ShortList{
 		"ShortList",
+		map[string]interface{}{},
 		items,
 	}
 }
@@ -21,7 +23,7 @@ func (n ShortList) Name() string {
 }
 
 func (n ShortList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ShortList) Walk(v node.Visitor) {

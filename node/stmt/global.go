@@ -5,13 +5,15 @@ import (
 )
 
 type Global struct {
-	name string
-	vars []node.Node
+	name       string
+	attributes map[string]interface{}
+	vars       []node.Node
 }
 
 func NewGlobal(vars []node.Node) node.Node {
 	return Global{
 		"Global",
+		map[string]interface{}{},
 		vars,
 	}
 }
@@ -21,7 +23,7 @@ func (n Global) Name() string {
 }
 
 func (n Global) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Global) Walk(v node.Visitor) {

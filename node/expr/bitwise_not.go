@@ -5,13 +5,15 @@ import (
 )
 
 type BitwiseNot struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewBitwiseNot(expression node.Node) node.Node {
 	return BitwiseNot{
 		"BitwiseNot",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n BitwiseNot) Name() string {
 }
 
 func (n BitwiseNot) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n BitwiseNot) Walk(v node.Visitor) {

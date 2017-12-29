@@ -5,13 +5,15 @@ import (
 )
 
 type Expression struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewExpression(expr node.Node) node.Node {
 	return Expression{
 		"Expression",
+		map[string]interface{}{},
 		expr,
 	}
 }
@@ -21,7 +23,7 @@ func (n Expression) Name() string {
 }
 
 func (n Expression) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Expression) Walk(v node.Visitor) {

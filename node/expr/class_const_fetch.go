@@ -5,7 +5,7 @@ import (
 )
 
 func (n ClassConstFetch) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ClassConstFetch) Name() string {
@@ -14,6 +14,7 @@ func (n ClassConstFetch) Name() string {
 
 type ClassConstFetch struct {
 	name         string
+	attributes   map[string]interface{}
 	class        node.Node
 	constantName node.Node
 }
@@ -21,6 +22,7 @@ type ClassConstFetch struct {
 func NewClassConstFetch(class node.Node, constantName node.Node) node.Node {
 	return ClassConstFetch{
 		"ClassConstFetch",
+		map[string]interface{}{},
 		class,
 		constantName,
 	}

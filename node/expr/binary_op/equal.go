@@ -12,6 +12,7 @@ func NewEqual(variable node.Node, expression node.Node) node.Node {
 	return Equal{
 		BinaryOp{
 			"BinaryEqual",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Equal) Name() string {
 }
 
 func (n Equal) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Equal) Walk(v node.Visitor) {

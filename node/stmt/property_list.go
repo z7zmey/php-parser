@@ -6,6 +6,7 @@ import (
 
 type PropertyList struct {
 	name       string
+	attributes map[string]interface{}
 	modifiers  []node.Node
 	properties []node.Node
 }
@@ -13,6 +14,7 @@ type PropertyList struct {
 func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
 	return PropertyList{
 		"PropertyList",
+		map[string]interface{}{},
 		modifiers,
 		properties,
 	}
@@ -23,7 +25,7 @@ func (n PropertyList) Name() string {
 }
 
 func (n PropertyList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n PropertyList) Walk(v node.Visitor) {

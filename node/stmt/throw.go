@@ -5,13 +5,15 @@ import (
 )
 
 type Throw struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewThrow(expr node.Node) node.Node {
 	return Throw{
 		"Throw",
+		map[string]interface{}{},
 		expr,
 	}
 }
@@ -21,7 +23,7 @@ func (n Throw) Name() string {
 }
 
 func (n Throw) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Throw) Walk(v node.Visitor) {

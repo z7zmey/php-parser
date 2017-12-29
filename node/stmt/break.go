@@ -5,13 +5,15 @@ import (
 )
 
 type Break struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewBreak(expr node.Node) node.Node {
 	return Break{
 		"Break",
+		map[string]interface{}{},
 		expr,
 	}
 }
@@ -21,7 +23,7 @@ func (n Break) Name() string {
 }
 
 func (n Break) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Break) Walk(v node.Visitor) {

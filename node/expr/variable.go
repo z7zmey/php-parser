@@ -5,13 +5,15 @@ import (
 )
 
 type Variable struct {
-	name    string
-	varName node.Node
+	name       string
+	attributes map[string]interface{}
+	varName    node.Node
 }
 
 func NewVariable(varName node.Node) node.Node {
 	return Variable{
 		"Variable",
+		map[string]interface{}{},
 		varName,
 	}
 }
@@ -21,7 +23,7 @@ func (n Variable) Name() string {
 }
 
 func (n Variable) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Variable) Walk(v node.Visitor) {

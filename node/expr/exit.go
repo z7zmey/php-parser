@@ -25,7 +25,7 @@ func (n Exit) Name() string {
 }
 
 func (n Exit) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Exit) Walk(v node.Visitor) {

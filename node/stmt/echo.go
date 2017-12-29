@@ -5,13 +5,15 @@ import (
 )
 
 type Echo struct {
-	name  string
-	exprs []node.Node
+	name       string
+	attributes map[string]interface{}
+	exprs      []node.Node
 }
 
 func NewEcho(exprs []node.Node) node.Node {
 	return Echo{
 		"Echo",
+		map[string]interface{}{},
 		exprs,
 	}
 }
@@ -21,7 +23,7 @@ func (n Echo) Name() string {
 }
 
 func (n Echo) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Echo) Walk(v node.Visitor) {

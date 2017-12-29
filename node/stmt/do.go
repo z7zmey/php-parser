@@ -5,14 +5,16 @@ import (
 )
 
 type Do struct {
-	name string
-	stmt node.Node
-	cond node.Node
+	name       string
+	attributes map[string]interface{}
+	stmt       node.Node
+	cond       node.Node
 }
 
 func NewDo(stmt node.Node, cond node.Node) node.Node {
 	return Do{
 		"Do",
+		map[string]interface{}{},
 		stmt,
 		cond,
 	}
@@ -23,7 +25,7 @@ func (n Do) Name() string {
 }
 
 func (n Do) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Do) Walk(v node.Visitor) {

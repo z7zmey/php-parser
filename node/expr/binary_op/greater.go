@@ -12,6 +12,7 @@ func NewGreater(variable node.Node, expression node.Node) node.Node {
 	return Greater{
 		BinaryOp{
 			"BinaryGreater",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Greater) Name() string {
 }
 
 func (n Greater) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Greater) Walk(v node.Visitor) {

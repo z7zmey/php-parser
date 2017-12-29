@@ -6,6 +6,7 @@ import (
 
 type TraitUse struct {
 	name        string
+	attributes  map[string]interface{}
 	traits      []node.Node
 	adaptations []node.Node
 }
@@ -13,6 +14,7 @@ type TraitUse struct {
 func NewTraitUse(traits []node.Node, adaptations []node.Node) node.Node {
 	return TraitUse{
 		"TraitUse",
+		map[string]interface{}{},
 		traits,
 		adaptations,
 	}
@@ -23,7 +25,7 @@ func (n TraitUse) Name() string {
 }
 
 func (n TraitUse) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n TraitUse) Walk(v node.Visitor) {

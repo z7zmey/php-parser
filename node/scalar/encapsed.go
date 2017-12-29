@@ -5,13 +5,15 @@ import (
 )
 
 type Encapsed struct {
-	name  string
-	parts []node.Node
+	name       string
+	attributes map[string]interface{}
+	parts      []node.Node
 }
 
 func NewEncapsed(parts []node.Node) node.Node {
 	return Encapsed{
 		"Encapsed",
+		map[string]interface{}{},
 		parts,
 	}
 }
@@ -21,7 +23,7 @@ func (n Encapsed) Name() string {
 }
 
 func (n Encapsed) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Encapsed) Walk(v node.Visitor) {

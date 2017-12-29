@@ -12,6 +12,7 @@ func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
 	return BitwiseAnd{
 		BinaryOp{
 			"BinaryBitwiseAnd",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n BitwiseAnd) Name() string {
 }
 
 func (n BitwiseAnd) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n BitwiseAnd) Walk(v node.Visitor) {

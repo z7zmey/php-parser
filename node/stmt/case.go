@@ -5,14 +5,16 @@ import (
 )
 
 type Case struct {
-	name  string
-	cond  node.Node
-	stmts []node.Node
+	name       string
+	attributes map[string]interface{}
+	cond       node.Node
+	stmts      []node.Node
 }
 
 func NewCase(cond node.Node, stmts []node.Node) node.Node {
 	return Case{
 		"Case",
+		map[string]interface{}{},
 		cond,
 		stmts,
 	}
@@ -23,7 +25,7 @@ func (n Case) Name() string {
 }
 
 func (n Case) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Case) Walk(v node.Visitor) {

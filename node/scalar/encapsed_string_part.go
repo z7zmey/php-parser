@@ -23,7 +23,7 @@ func (n EncapsedStringPart) Name() string {
 }
 
 func (n EncapsedStringPart) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n EncapsedStringPart) Walk(v node.Visitor) {

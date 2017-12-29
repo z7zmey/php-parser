@@ -5,15 +5,17 @@ import (
 )
 
 type MethodCall struct {
-	name      string
-	variable  node.Node
-	method    node.Node
-	arguments []node.Node
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
+	method     node.Node
+	arguments  []node.Node
 }
 
 func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) node.Node {
 	return MethodCall{
 		"MethodCall",
+		map[string]interface{}{},
 		variable,
 		method,
 		arguments,
@@ -25,7 +27,7 @@ func (n MethodCall) Name() string {
 }
 
 func (n MethodCall) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n MethodCall) Walk(v node.Visitor) {

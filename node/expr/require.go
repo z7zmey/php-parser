@@ -5,13 +5,15 @@ import (
 )
 
 type Require struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewRequire(expression node.Node) node.Node {
 	return Require{
 		"Require",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n Require) Name() string {
 }
 
 func (n Require) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Require) Walk(v node.Visitor) {

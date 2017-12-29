@@ -12,6 +12,7 @@ func NewPow(variable node.Node, expression node.Node) node.Node {
 	return Pow{
 		BinaryOp{
 			"BinaryPow",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Pow) Name() string {
 }
 
 func (n Pow) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Pow) Walk(v node.Visitor) {

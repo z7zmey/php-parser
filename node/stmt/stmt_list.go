@@ -5,13 +5,15 @@ import (
 )
 
 type StmtList struct {
-	name  string
-	stmts []node.Node
+	name       string
+	attributes map[string]interface{}
+	stmts      []node.Node
 }
 
 func NewStmtList(stmts []node.Node) node.Node {
 	return StmtList{
 		"StmtList",
+		map[string]interface{}{},
 		stmts,
 	}
 }
@@ -21,7 +23,7 @@ func (n StmtList) Name() string {
 }
 
 func (n StmtList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n StmtList) Walk(v node.Visitor) {

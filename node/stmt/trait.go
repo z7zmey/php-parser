@@ -5,14 +5,16 @@ import (
 )
 
 type Trait struct {
-	name      string
-	traitName node.Node
-	stmts     []node.Node
+	name       string
+	attributes map[string]interface{}
+	traitName  node.Node
+	stmts      []node.Node
 }
 
 func NewTrait(traitName node.Node, stmts []node.Node) node.Node {
 	return Trait{
 		"Trait",
+		map[string]interface{}{},
 		traitName,
 		stmts,
 	}
@@ -23,7 +25,7 @@ func (n Trait) Name() string {
 }
 
 func (n Trait) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Trait) Walk(v node.Visitor) {

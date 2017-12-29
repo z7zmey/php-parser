@@ -5,14 +5,16 @@ import (
 )
 
 type TraitUsePrecedence struct {
-	name      string
-	ref       node.Node
-	insteadof node.Node
+	name       string
+	attributes map[string]interface{}
+	ref        node.Node
+	insteadof  node.Node
 }
 
 func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
 	return TraitUsePrecedence{
 		"TraitUsePrecedence",
+		map[string]interface{}{},
 		ref,
 		insteadof,
 	}
@@ -23,7 +25,7 @@ func (n TraitUsePrecedence) Name() string {
 }
 
 func (n TraitUsePrecedence) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n TraitUsePrecedence) Walk(v node.Visitor) {

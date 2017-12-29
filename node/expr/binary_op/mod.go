@@ -12,6 +12,7 @@ func NewMod(variable node.Node, expression node.Node) node.Node {
 	return Mod{
 		BinaryOp{
 			"BinaryMod",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Mod) Name() string {
 }
 
 func (n Mod) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Mod) Walk(v node.Visitor) {

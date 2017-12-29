@@ -6,6 +6,7 @@ import (
 
 type Class struct {
 	name       string
+	attributes map[string]interface{}
 	className  node.Node
 	modifiers  []node.Node
 	args       []node.Node
@@ -17,6 +18,7 @@ type Class struct {
 func NewClass(className node.Node, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node) node.Node {
 	return Class{
 		"Class",
+		map[string]interface{}{},
 		className,
 		modifiers,
 		args,
@@ -31,7 +33,7 @@ func (n Class) Name() string {
 }
 
 func (n Class) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Class) Walk(v node.Visitor) {

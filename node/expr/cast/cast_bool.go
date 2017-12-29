@@ -12,6 +12,7 @@ func NewCastBool(expr node.Node) node.Node {
 	return CastBool{
 		Cast{
 			"CastBool",
+			map[string]interface{}{},
 			expr,
 		},
 	}
@@ -22,7 +23,7 @@ func (n CastBool) Name() string {
 }
 
 func (n CastBool) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n CastBool) Walk(v node.Visitor) {

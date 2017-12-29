@@ -5,13 +5,15 @@ import (
 )
 
 type PreDec struct {
-	name     string
-	variable node.Node
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
 }
 
 func NewPreDec(variable node.Node) node.Node {
 	return PreDec{
 		"PreDec",
+		map[string]interface{}{},
 		variable,
 	}
 }
@@ -21,7 +23,7 @@ func (n PreDec) Name() string {
 }
 
 func (n PreDec) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n PreDec) Walk(v node.Visitor) {

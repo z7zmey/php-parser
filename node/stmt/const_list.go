@@ -5,13 +5,15 @@ import (
 )
 
 type ConstList struct {
-	name   string
-	consts []node.Node
+	name       string
+	attributes map[string]interface{}
+	consts     []node.Node
 }
 
 func NewConstList(consts []node.Node) node.Node {
 	return ConstList{
 		"ConstList",
+		map[string]interface{}{},
 		consts,
 	}
 }
@@ -21,7 +23,7 @@ func (n ConstList) Name() string {
 }
 
 func (n ConstList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ConstList) Walk(v node.Visitor) {

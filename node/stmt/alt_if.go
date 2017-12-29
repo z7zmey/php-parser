@@ -5,16 +5,18 @@ import (
 )
 
 type AltIf struct {
-	name   string
-	cond   node.Node
-	stmt   node.Node
-	elseIf []node.Node
-	_else  node.Node
+	name       string
+	attributes map[string]interface{}
+	cond       node.Node
+	stmt       node.Node
+	elseIf     []node.Node
+	_else      node.Node
 }
 
 func NewAltIf(cond node.Node, stmt node.Node) node.Node {
 	return AltIf{
 		"AltIf",
+		map[string]interface{}{},
 		cond,
 		stmt,
 		nil,
@@ -27,7 +29,7 @@ func (n AltIf) Name() string {
 }
 
 func (n AltIf) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n AltIf) AddElseIf(elseIf node.Node) node.Node {

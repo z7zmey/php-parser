@@ -5,13 +5,15 @@ import (
 )
 
 type RequireOnce struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewRequireOnce(expression node.Node) node.Node {
 	return RequireOnce{
 		"RequireOnce",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n RequireOnce) Name() string {
 }
 
 func (n RequireOnce) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n RequireOnce) Walk(v node.Visitor) {

@@ -12,6 +12,7 @@ func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
 	return BitwiseOr{
 		BinaryOp{
 			"BinaryBitwiseOr",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -19,7 +20,7 @@ func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
 }
 
 func (n BitwiseOr) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n BitwiseOr) Name() string {

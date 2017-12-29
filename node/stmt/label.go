@@ -5,13 +5,15 @@ import (
 )
 
 type Label struct {
-	name      string
-	labelName node.Node
+	name       string
+	attributes map[string]interface{}
+	labelName  node.Node
 }
 
 func NewLabel(labelName node.Node) node.Node {
 	return Label{
 		"Label",
+		map[string]interface{}{},
 		labelName,
 	}
 }
@@ -21,7 +23,7 @@ func (n Label) Name() string {
 }
 
 func (n Label) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Label) Walk(v node.Visitor) {

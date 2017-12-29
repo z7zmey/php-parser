@@ -5,13 +5,15 @@ import (
 )
 
 type ShortArray struct {
-	name  string
-	items []node.Node
+	name       string
+	attributes map[string]interface{}
+	items      []node.Node
 }
 
 func NewShortArray(items []node.Node) node.Node {
 	return ShortArray{
 		"ShortArray",
+		map[string]interface{}{},
 		items,
 	}
 }
@@ -21,7 +23,7 @@ func (n ShortArray) Name() string {
 }
 
 func (n ShortArray) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ShortArray) Walk(v node.Visitor) {

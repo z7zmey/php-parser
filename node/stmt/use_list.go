@@ -5,14 +5,16 @@ import (
 )
 
 type UseList struct {
-	name    string
-	useType node.Node
-	uses    []node.Node
+	name       string
+	attributes map[string]interface{}
+	useType    node.Node
+	uses       []node.Node
 }
 
 func NewUseList(useType node.Node, uses []node.Node) node.Node {
 	return UseList{
 		"UseList",
+		map[string]interface{}{},
 		useType,
 		uses,
 	}
@@ -23,7 +25,7 @@ func (n UseList) Name() string {
 }
 
 func (n UseList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n UseList) Walk(v node.Visitor) {

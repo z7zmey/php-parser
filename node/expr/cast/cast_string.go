@@ -12,6 +12,7 @@ func NewCastString(expr node.Node) node.Node {
 	return CastString{
 		Cast{
 			"CastString",
+			map[string]interface{}{},
 			expr,
 		},
 	}
@@ -22,7 +23,7 @@ func (n CastString) Name() string {
 }
 
 func (n CastString) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n CastString) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type NameNode struct {
-	name  string
-	parts []node.Node
+	name       string
+	attributes map[string]interface{}
+	parts      []node.Node
 }
 
 func NewName(parts []node.Node) node.Node {
 	return NameNode{
 		"Name",
+		map[string]interface{}{},
 		parts,
 	}
 }
@@ -21,7 +23,7 @@ func (n NameNode) Name() string {
 }
 
 func (n NameNode) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n NameNode) Walk(v node.Visitor) {

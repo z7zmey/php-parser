@@ -12,6 +12,7 @@ func NewFullyQualified(parts []node.Node) node.Node {
 	return FullyQualified{
 		NameNode{
 			"FullyQualifiedName",
+			map[string]interface{}{},
 			parts,
 		},
 	}
@@ -22,5 +23,5 @@ func (n FullyQualified) Name() string {
 }
 
 func (n FullyQualified) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }

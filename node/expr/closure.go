@@ -32,7 +32,7 @@ func (n Closure) Name() string {
 }
 
 func (n Closure) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Closure) Walk(v node.Visitor) {

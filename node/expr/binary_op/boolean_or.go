@@ -12,6 +12,7 @@ func NewBooleanOr(variable node.Node, expression node.Node) node.Node {
 	return BooleanOr{
 		BinaryOp{
 			"BinaryBooleanOr",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n BooleanOr) Name() string {
 }
 
 func (n BooleanOr) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n BooleanOr) Walk(v node.Visitor) {

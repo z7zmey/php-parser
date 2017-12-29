@@ -5,13 +5,15 @@ import (
 )
 
 type UnaryPlus struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewUnaryPlus(expression node.Node) node.Node {
 	return UnaryPlus{
 		"UnaryPlus",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n UnaryPlus) Name() string {
 }
 
 func (n UnaryPlus) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n UnaryPlus) Walk(v node.Visitor) {

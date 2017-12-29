@@ -12,6 +12,7 @@ func NewMul(variable node.Node, expression node.Node) node.Node {
 	return Mul{
 		BinaryOp{
 			"BinaryMul",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Mul) Name() string {
 }
 
 func (n Mul) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Mul) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type ErrorSuppress struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewErrorSuppress(expression node.Node) node.Node {
 	return ErrorSuppress{
 		"ErrorSuppress",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n ErrorSuppress) Name() string {
 }
 
 func (n ErrorSuppress) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ErrorSuppress) Walk(v node.Visitor) {

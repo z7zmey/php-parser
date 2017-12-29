@@ -5,7 +5,8 @@ import (
 )
 
 type BinaryOp struct {
-	name  string
-	left  node.Node
-	right node.Node
+	name       string
+	attributes map[string]interface{}
+	left       node.Node
+	right      node.Node
 }

@@ -12,6 +12,7 @@ func NewCastArray(expr node.Node) node.Node {
 	return CastArray{
 		Cast{
 			"CastArray",
+			map[string]interface{}{},
 			expr,
 		},
 	}
@@ -22,7 +23,7 @@ func (n CastArray) Name() string {
 }
 
 func (n CastArray) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n CastArray) Walk(v node.Visitor) {

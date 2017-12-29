@@ -12,6 +12,7 @@ func NewCastUnset(expr node.Node) node.Node {
 	return CastUnset{
 		Cast{
 			"CastUnset",
+			map[string]interface{}{},
 			expr,
 		},
 	}
@@ -22,7 +23,7 @@ func (n CastUnset) Name() string {
 }
 
 func (n CastUnset) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n CastUnset) Walk(v node.Visitor) {

@@ -5,14 +5,16 @@ import (
 )
 
 type InstanceOf struct {
-	name  string
-	expr  node.Node
-	class node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
+	class      node.Node
 }
 
 func NewInstanceOf(expr node.Node, class node.Node) node.Node {
 	return InstanceOf{
 		"InstanceOf",
+		map[string]interface{}{},
 		expr,
 		class,
 	}
@@ -23,7 +25,7 @@ func (n InstanceOf) Name() string {
 }
 
 func (n InstanceOf) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n InstanceOf) Walk(v node.Visitor) {

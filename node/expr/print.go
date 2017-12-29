@@ -5,13 +5,15 @@ import (
 )
 
 type Print struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewPrint(expression node.Node) node.Node {
 	return Print{
 		"Print",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n Print) Name() string {
 }
 
 func (n Print) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Print) Walk(v node.Visitor) {

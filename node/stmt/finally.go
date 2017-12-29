@@ -5,13 +5,15 @@ import (
 )
 
 type Finally struct {
-	name  string
-	stmts []node.Node
+	name       string
+	attributes map[string]interface{}
+	stmts      []node.Node
 }
 
 func NewFinally(stmts []node.Node) node.Node {
 	return Finally{
 		"Finally",
+		map[string]interface{}{},
 		stmts,
 	}
 }
@@ -21,7 +23,7 @@ func (n Finally) Name() string {
 }
 
 func (n Finally) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Finally) Walk(v node.Visitor) {

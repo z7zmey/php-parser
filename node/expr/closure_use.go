@@ -25,7 +25,7 @@ func (n ClusureUse) Name() string {
 }
 
 func (n ClusureUse) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ClusureUse) Walk(v node.Visitor) {

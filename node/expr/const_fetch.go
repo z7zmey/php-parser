@@ -5,13 +5,15 @@ import (
 )
 
 type ConstFetch struct {
-	name     string
-	constant node.Node
+	name       string
+	attributes map[string]interface{}
+	constant   node.Node
 }
 
 func NewConstFetch(constant node.Node) node.Node {
 	return ConstFetch{
 		"ConstFetch",
+		map[string]interface{}{},
 		constant,
 	}
 }
@@ -21,7 +23,7 @@ func (n ConstFetch) Name() string {
 }
 
 func (n ConstFetch) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ConstFetch) Walk(v node.Visitor) {

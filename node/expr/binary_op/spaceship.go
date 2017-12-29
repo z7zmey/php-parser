@@ -12,6 +12,7 @@ func NewSpaceship(variable node.Node, expression node.Node) node.Node {
 	return Spaceship{
 		BinaryOp{
 			"BinarySpaceship",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Spaceship) Name() string {
 }
 
 func (n Spaceship) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Spaceship) Walk(v node.Visitor) {

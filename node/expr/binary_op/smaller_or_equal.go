@@ -12,6 +12,7 @@ func NewSmallerOrEqual(variable node.Node, expression node.Node) node.Node {
 	return SmallerOrEqual{
 		BinaryOp{
 			"BinarySmallerOrEqual",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n SmallerOrEqual) Name() string {
 }
 
 func (n SmallerOrEqual) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n SmallerOrEqual) Walk(v node.Visitor) {

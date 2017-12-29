@@ -5,13 +5,15 @@ import (
 )
 
 type Eval struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewEval(expression node.Node) node.Node {
 	return Eval{
 		"Eval",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n Eval) Name() string {
 }
 
 func (n Eval) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Eval) Walk(v node.Visitor) {

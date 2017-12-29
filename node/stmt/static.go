@@ -5,13 +5,15 @@ import (
 )
 
 type Static struct {
-	name string
-	vars []node.Node
+	name       string
+	attributes map[string]interface{}
+	vars       []node.Node
 }
 
 func NewStatic(vars []node.Node) node.Node {
 	return Static{
 		"Static",
+		map[string]interface{}{},
 		vars,
 	}
 }
@@ -21,7 +23,7 @@ func (n Static) Name() string {
 }
 
 func (n Static) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Static) Walk(v node.Visitor) {

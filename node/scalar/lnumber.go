@@ -23,7 +23,7 @@ func (n Lnumber) Name() string {
 }
 
 func (n Lnumber) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Lnumber) Walk(v node.Visitor) {

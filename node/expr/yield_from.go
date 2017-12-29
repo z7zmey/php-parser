@@ -5,13 +5,15 @@ import (
 )
 
 type YieldFrom struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewYieldFrom(expression node.Node) node.Node {
 	return YieldFrom{
 		"YieldFrom",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n YieldFrom) Name() string {
 }
 
 func (n YieldFrom) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n YieldFrom) Walk(v node.Visitor) {

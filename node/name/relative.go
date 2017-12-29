@@ -12,6 +12,7 @@ func NewRelative(parts []node.Node) node.Node {
 	return Relative{
 		NameNode{
 			"RelativeName",
+			map[string]interface{}{},
 			parts,
 		},
 	}
@@ -22,5 +23,5 @@ func (n Relative) Name() string {
 }
 
 func (n Relative) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }

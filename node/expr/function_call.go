@@ -5,14 +5,16 @@ import (
 )
 
 type FunctionCall struct {
-	name      string
-	function  node.Node
-	arguments []node.Node
+	name       string
+	attributes map[string]interface{}
+	function   node.Node
+	arguments  []node.Node
 }
 
 func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
 	return FunctionCall{
 		"FunctionCall",
+		map[string]interface{}{},
 		function,
 		arguments,
 	}
@@ -23,7 +25,7 @@ func (n FunctionCall) Name() string {
 }
 
 func (n FunctionCall) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n FunctionCall) Walk(v node.Visitor) {

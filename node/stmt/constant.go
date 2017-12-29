@@ -6,6 +6,7 @@ import (
 
 type Constant struct {
 	name         string
+	attributes   map[string]interface{}
 	constantName node.Node
 	expr         node.Node
 }
@@ -13,6 +14,7 @@ type Constant struct {
 func NewConstant(constantName node.Node, expr node.Node) node.Node {
 	return Constant{
 		"Constant",
+		map[string]interface{}{},
 		constantName,
 		expr,
 	}
@@ -23,7 +25,7 @@ func (n Constant) Name() string {
 }
 
 func (n Constant) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Constant) Walk(v node.Visitor) {

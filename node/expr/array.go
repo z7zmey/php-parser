@@ -5,13 +5,15 @@ import (
 )
 
 type Array struct {
-	name  string
-	items []node.Node
+	name       string
+	attributes map[string]interface{}
+	items      []node.Node
 }
 
 func NewArray(items []node.Node) node.Node {
 	return Array{
 		"Array",
+		map[string]interface{}{},
 		items,
 	}
 }
@@ -21,7 +23,7 @@ func (n Array) Name() string {
 }
 
 func (n Array) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Array) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type PostDec struct {
-	name     string
-	variable node.Node
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
 }
 
 func NewPostDec(variable node.Node) node.Node {
 	return PostDec{
 		"PostDec",
+		map[string]interface{}{},
 		variable,
 	}
 }
@@ -21,7 +23,7 @@ func (n PostDec) Name() string {
 }
 
 func (n PostDec) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n PostDec) Walk(v node.Visitor) {

@@ -12,6 +12,7 @@ func NewBooleanAnd(variable node.Node, expression node.Node) node.Node {
 	return BooleanAnd{
 		BinaryOp{
 			"BinaryBooleanAnd",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n BooleanAnd) Name() string {
 }
 
 func (n BooleanAnd) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n BooleanAnd) Walk(v node.Visitor) {

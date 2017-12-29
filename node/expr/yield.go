@@ -5,14 +5,16 @@ import (
 )
 
 type Yield struct {
-	name  string
-	key   node.Node
-	value node.Node
+	name       string
+	attributes map[string]interface{}
+	key        node.Node
+	value      node.Node
 }
 
 func NewYield(key node.Node, value node.Node) node.Node {
 	return Yield{
 		"Yield",
+		map[string]interface{}{},
 		key,
 		value,
 	}
@@ -23,7 +25,7 @@ func (n Yield) Name() string {
 }
 
 func (n Yield) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Yield) Walk(v node.Visitor) {

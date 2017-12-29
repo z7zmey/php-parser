@@ -27,7 +27,7 @@ func (n ArrayItem) Name() string {
 }
 
 func (n ArrayItem) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ArrayItem) Walk(v node.Visitor) {

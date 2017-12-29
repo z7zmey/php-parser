@@ -5,14 +5,16 @@ import (
 )
 
 type ClassConstList struct {
-	name      string
-	modifiers []node.Node
-	consts    []node.Node
+	name       string
+	attributes map[string]interface{}
+	modifiers  []node.Node
+	consts     []node.Node
 }
 
 func NewClassConstList(modifiers []node.Node, consts []node.Node) node.Node {
 	return ClassConstList{
 		"ClassConstList",
+		map[string]interface{}{},
 		modifiers,
 		consts,
 	}
@@ -23,7 +25,7 @@ func (n ClassConstList) Name() string {
 }
 
 func (n ClassConstList) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ClassConstList) Walk(v node.Visitor) {

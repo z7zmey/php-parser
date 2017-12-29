@@ -12,6 +12,7 @@ func NewDiv(variable node.Node, expression node.Node) node.Node {
 	return Div{
 		BinaryOp{
 			"BinaryDiv",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n Div) Name() string {
 }
 
 func (n Div) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Div) Walk(v node.Visitor) {

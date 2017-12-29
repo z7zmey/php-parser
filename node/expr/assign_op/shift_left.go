@@ -12,6 +12,7 @@ func NewShiftLeft(variable node.Node, expression node.Node) node.Node {
 	return ShiftLeft{
 		AssignOp{
 			"AssignShiftLeft",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n ShiftLeft) Name() string {
 }
 
 func (n ShiftLeft) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n ShiftLeft) Walk(v node.Visitor) {

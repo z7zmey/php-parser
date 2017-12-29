@@ -23,7 +23,7 @@ func (n MagicConstant) Name() string {
 }
 
 func (n MagicConstant) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n MagicConstant) Walk(v node.Visitor) {

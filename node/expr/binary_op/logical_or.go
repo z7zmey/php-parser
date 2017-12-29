@@ -12,6 +12,7 @@ func NewLogicalOr(variable node.Node, expression node.Node) node.Node {
 	return LogicalOr{
 		BinaryOp{
 			"BinaryLogicalOr",
+			map[string]interface{}{},
 			variable,
 			expression,
 		},
@@ -23,7 +24,7 @@ func (n LogicalOr) Name() string {
 }
 
 func (n LogicalOr) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n LogicalOr) Walk(v node.Visitor) {

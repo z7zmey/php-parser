@@ -5,13 +5,15 @@ import (
 )
 
 type Default struct {
-	name  string
-	stmts []node.Node
+	name       string
+	attributes map[string]interface{}
+	stmts      []node.Node
 }
 
 func NewDefault(stmts []node.Node) node.Node {
 	return Default{
 		"Default",
+		map[string]interface{}{},
 		stmts,
 	}
 }
@@ -21,7 +23,7 @@ func (n Default) Name() string {
 }
 
 func (n Default) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Default) Walk(v node.Visitor) {

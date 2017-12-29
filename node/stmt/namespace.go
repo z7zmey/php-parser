@@ -6,6 +6,7 @@ import (
 
 type Namespace struct {
 	name          string
+	attributes    map[string]interface{}
 	namespaceName node.Node
 	stmts         []node.Node
 }
@@ -13,6 +14,7 @@ type Namespace struct {
 func NewNamespace(namespaceName node.Node, stmts []node.Node) node.Node {
 	return Namespace{
 		"Namespace",
+		map[string]interface{}{},
 		namespaceName,
 		stmts,
 	}
@@ -23,7 +25,7 @@ func (n Namespace) Name() string {
 }
 
 func (n Namespace) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Namespace) Walk(v node.Visitor) {

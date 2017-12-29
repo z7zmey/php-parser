@@ -5,14 +5,16 @@ import (
 )
 
 type Declare struct {
-	name   string
-	consts []node.Node
-	stmt   node.Node
+	name       string
+	attributes map[string]interface{}
+	consts     []node.Node
+	stmt       node.Node
 }
 
 func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
 	return Declare{
 		"Declare",
+		map[string]interface{}{},
 		consts,
 		stmt,
 	}
@@ -23,7 +25,7 @@ func (n Declare) Name() string {
 }
 
 func (n Declare) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Declare) Walk(v node.Visitor) {

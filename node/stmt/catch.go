@@ -5,15 +5,17 @@ import (
 )
 
 type Catch struct {
-	name     string
-	types    []node.Node
-	variable node.Node
-	stmts    []node.Node
+	name       string
+	attributes map[string]interface{}
+	types      []node.Node
+	variable   node.Node
+	stmts      []node.Node
 }
 
 func NewCatch(types []node.Node, variable node.Node, stmts []node.Node) node.Node {
 	return Catch{
 		"Catch",
+		map[string]interface{}{},
 		types,
 		variable,
 		stmts,
@@ -25,7 +27,7 @@ func (n Catch) Name() string {
 }
 
 func (n Catch) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Catch) Walk(v node.Visitor) {

@@ -5,13 +5,15 @@ import (
 )
 
 type IncludeOnce struct {
-	name string
-	expr node.Node
+	name       string
+	attributes map[string]interface{}
+	expr       node.Node
 }
 
 func NewIncludeOnce(expression node.Node) node.Node {
 	return IncludeOnce{
 		"IncludeOnce",
+		map[string]interface{}{},
 		expression,
 	}
 }
@@ -21,7 +23,7 @@ func (n IncludeOnce) Name() string {
 }
 
 func (n IncludeOnce) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n IncludeOnce) Walk(v node.Visitor) {

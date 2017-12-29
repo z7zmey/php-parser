@@ -5,14 +5,16 @@ import (
 )
 
 type Property struct {
-	name     string
-	variable node.Node
-	expr     node.Node
+	name       string
+	attributes map[string]interface{}
+	variable   node.Node
+	expr       node.Node
 }
 
 func NewProperty(variable node.Node, expr node.Node) node.Node {
 	return Property{
 		"Property",
+		map[string]interface{}{},
 		variable,
 		expr,
 	}
@@ -22,7 +24,7 @@ func (n Property) Name() string {
 }
 
 func (n Property) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Property) Walk(v node.Visitor) {

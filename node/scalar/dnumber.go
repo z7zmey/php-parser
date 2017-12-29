@@ -23,7 +23,7 @@ func (n Dnumber) Name() string {
 }
 
 func (n Dnumber) Attributes() map[string]interface{} {
-	return nil
+	return n.attributes
 }
 
 func (n Dnumber) Walk(v node.Visitor) {
