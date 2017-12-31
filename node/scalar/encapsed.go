@@ -7,7 +7,7 @@ import (
 type Encapsed struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	parts      []node.Node
 }
 

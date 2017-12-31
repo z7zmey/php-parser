@@ -3,7 +3,6 @@ package parser
 
 import (
     "io"
-    "fmt"
     "strings"
     "strconv"
     "github.com/z7zmey/php-parser/token"
@@ -32,14 +31,25 @@ type foreachVariable struct {
     byRef bool
 }
 
+type nodesWithEndToken struct {
+    nodes []node.Node
+    endToken token.Token
+}
+
+type boolWithToken struct {
+    value bool
+    token *token.Token
+}
+
 %}
 
 %union{
     node node.Node
     token token.Token
-    boolean bool
+    boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
+    nodesWithEndToken *nodesWithEndToken
 }
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
@@ -177,19 +187,36 @@ type foreachVariable struct {
 %token <token> T_PRIVATE
 %token <token> T_PROTECTED
 %token <token> T_PUBLIC
+%token <token> T_INC
+%token <token> T_DEC
+%token <token> T_YIELD_FROM
+%token <token> T_INT_CAST
+%token <token> T_DOUBLE_CAST
+%token <token> T_STRING_CAST
+%token <token> T_ARRAY_CAST
+%token <token> T_OBJECT_CAST
+%token <token> T_BOOL_CAST
+%token <token> T_UNSET_CAST
 %token <token> '"'
 %token <token> '`'
 %token <token> '{'
 %token <token> '}'
 %token <token> ';'
+%token <token> ':'
 %token <token> '('
 %token <token> ')'
 %token <token> '['
 %token <token> ']'
+%token <token> '?'
+%token <token> '&'
+%token <token> '-'
+%token <token> '+'
+%token <token> '!'
+%token <token> '~'
+%token <token> '@'
+%token <token> '$'
 
-%type <boolean> is_reference
-%type <boolean> is_variadic
-%type <boolean> returns_ref
+%type <boolWithToken> is_reference is_variadic returns_ref
 
 %type <token> reserved_non_modifiers
 %type <token> semi_reserved
@@ -225,14 +252,16 @@ type foreachVariable struct {
 %type <node> use_type
 %type <foreachVariable> foreach_variable
 
+%type <nodesWithEndToken> method_body switch_case_list trait_adaptations argument_list ctor_arguments
+
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
-%type <list> switch_case_list case_list trait_adaptation_list trait_adaptations unset_variables
+%type <list> case_list trait_adaptation_list unset_variables
 %type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
-%type <list> array_pair_list ctor_arguments argument_list non_empty_argument_list top_statement_list
+%type <list> array_pair_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
-%type <list> method_body interface_extends_list implements_list method_modifiers variable_modifiers
+%type <list> interface_extends_list implements_list method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers name_list class_modifiers
 
 %%
@@ -240,7 +269,7 @@ type foreachVariable struct {
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                  { rootnode = stmt.NewStmtList($1); }
+    top_statement_list                                  { rootnode = stmt.NewStmtList($1).SetPosition(NewNodeListPosition($1)) }
 ;
 
 reserved_non_modifiers:
@@ -269,14 +298,14 @@ top_statement_list:
 ;
 
 namespace_name:
-        T_STRING                                        { $$ = []node.Node{name.NewNamePart($1.Value)} }
-    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = append($1, name.NewNamePart($3.Value)) }
+        T_STRING                                        { $$ = []node.Node{name.NewNamePart($1.Value).SetPosition(NewTokenPosition($1))} }
+    |   namespace_name T_NS_SEPARATOR T_STRING          { $$ = append($1, name.NewNamePart($3.Value).SetPosition(NewTokenPosition($3))) }
 ;
 
 name:
-      namespace_name                                    { $$ = name.NewName($1) }
-    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = name.NewRelative($3) }
-    | T_NS_SEPARATOR namespace_name                     { $$ = name.NewFullyQualified($2) }
+      namespace_name                                    { $$ = name.NewName($1).SetPosition(NewNodeListPosition($1)) }
+    | T_NAMESPACE T_NS_SEPARATOR namespace_name         { $$ = name.NewRelative($3).SetPosition(NewTokenNodeListPosition($1, $3)) }
+    | T_NS_SEPARATOR namespace_name                     { $$ = name.NewFullyQualified($2).SetPosition(NewTokenNodeListPosition($1, $2)) }
 ;
 
 top_statement:
@@ -286,43 +315,49 @@ top_statement:
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
-    |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace(name.NewName($2), nil) }
+    |   T_NAMESPACE namespace_name ';'                  { $$ = stmt.NewNamespace(name.NewName($2).SetPosition(NewNodeListPosition($2)), nil).SetPosition(NewTokensPosition($1, $3)) }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
-                                                        { $$ = stmt.NewNamespace(name.NewName($2), $4) }
-    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace(nil, $3) }
+                                                        { $$ = stmt.NewNamespace(name.NewName($2).SetPosition(NewNodeListPosition($2)), $4).SetPosition(NewTokensPosition($1, $5)) }
+    |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace(nil, $3).SetPosition(NewTokensPosition($1, $4)) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2 }
     |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetUseType($2) }
-    |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList(nil, $2) }
+    |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList(nil, $2).SetPosition(NewTokensPosition($1, $3)) }
     |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($2, $3) }
-    |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($2) }
+    |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($2).SetPosition(NewTokensPosition($1, $3)) }
 ;
 
 use_type:
-        T_FUNCTION                                      { $$ = node.NewIdentifier($1) }
-    |   T_CONST                                         { $$ = node.NewIdentifier($1) }
+        T_FUNCTION                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_CONST                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
 ;
 
 group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                fmt.Println("group")
-                $$ = stmt.NewGroupUse(nil, name.NewName($1), $4)
+                name := name.NewName($1).SetPosition(NewNodeListPosition($1))
+                $$ = stmt.NewGroupUse(nil, name, $4).
+                    SetPosition(NewNodeListTokenPosition($1, $6))
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
-                $$ = stmt.NewGroupUse(nil, name.NewName($2), $5)
+                name := name.NewName($2).SetPosition(NewNodeListPosition($2))
+                $$ = stmt.NewGroupUse(nil, name, $5).
+                    SetPosition(NewTokensPosition($1, $7))
             }
 ;
 
 mixed_group_use_declaration:
         namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                fmt.Println("mixed")
-                $$ = stmt.NewGroupUse(nil, name.NewName($1), $4)
+                name := name.NewName($1).SetPosition(NewNodeListPosition($1))
+                $$ = stmt.NewGroupUse(nil, name, $4).
+                    SetPosition(NewNodeListTokenPosition($1, $6))
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
-                $$ = stmt.NewGroupUse(nil, name.NewName($2), $5)
+                name := name.NewName($2).SetPosition(NewNodeListPosition($2))
+                $$ = stmt.NewGroupUse(nil, name, $5).
+                    SetPosition(NewTokensPosition($1, $7))
             }
 ;
 
@@ -354,8 +389,8 @@ inline_use_declaration:
 ;
 
 unprefixed_use_declaration:
-        namespace_name                                  { $$ = stmt.NewUse(nil, name.NewName($1), nil) }
-    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1), node.NewIdentifier($3)) }
+        namespace_name                                  { $$ = stmt.NewUse(nil, name.NewName($1).SetPosition(NewNodeListPosition($1)), nil).SetPosition(NewNodeListPosition($1)) }
+    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1).SetPosition(NewNodeListPosition($1)), node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeListTokenPosition($1, $3)) }
 ;
 
 use_declaration:
@@ -379,44 +414,54 @@ inner_statement:
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
     |   interface_declaration_statement                 { $$ = $1; }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
+    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler().SetPosition(NewTokensPosition($1, $4)) }
 
 statement:
-    '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($2) }
+    '{' inner_statement_list '}'                        { $$ = stmt.NewStmtList($2).SetPosition(NewTokensPosition($1, $3)) }
     |   if_stmt                                         { $$ = $1; }
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
-                                                        { $$ = stmt.NewWhile($1, $3, $5) }
-    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($2, $5) }
+                                                        { $$ = stmt.NewWhile($1, $3, $5).SetPosition(NewTokenNodePosition($1, $5)) }
+    |   T_DO statement T_WHILE '(' expr ')' ';'         { $$ = stmt.NewDo($2, $5).SetPosition(NewTokensPosition($1, $7)) }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
-                                                        { $$ = stmt.NewFor($3, $5, $7, $9) }
-    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = stmt.NewSwitch($1, $3, $5) }
-    |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($2) }
-    |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($2) }
-    |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($2) }
-    |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($2) }
-    |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($2); }
-    |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($2) }
-    |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1.Value) }
-    |   expr ';'                                        { $$ = stmt.NewExpression($1); }
+                                                        { $$ = stmt.NewFor($3, $5, $7, $9).SetPosition(NewTokenNodePosition($1, $9)) }
+    |   T_SWITCH '(' expr ')' switch_case_list          { $$ = stmt.NewSwitch($1, $3, $5.nodes).SetPosition(NewTokensPosition($1, $5.endToken)) }
+    |   T_BREAK optional_expr ';'                       { $$ = stmt.NewBreak($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_CONTINUE optional_expr ';'                    { $$ = stmt.NewContinue($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_RETURN optional_expr ';'                      { $$ = stmt.NewReturn($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_GLOBAL global_var_list ';'                    { $$ = stmt.NewGlobal($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   expr ';'                                        { $$ = stmt.NewExpression($1).SetPosition(NewNodeTokenPosition($1, $2)) }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
-                                                        { $$ = stmt.NewUnset($3) }
+                                                        { $$ = stmt.NewUnset($3).SetPosition(NewTokensPosition($1, $6)) }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($3, nil, $5.node, $7, $5.byRef); }
+                                                        { $$ = stmt.NewForeach($3, nil, $5.node, $7, $5.byRef).SetPosition(NewTokenNodePosition($1, $7)) }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
-                                                        { $$ = stmt.NewForeach($3, $5, $7.node, $9, $7.byRef); }
-    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($3, $5) }
-    |   ';'                                             { $$ = stmt.NewNop() }
+                                                        { $$ = stmt.NewForeach($3, $5, $7.node, $9, $7.byRef).SetPosition(NewTokenNodePosition($1, $9)) }
+    |   T_DECLARE '(' const_list ')' declare_statement  { $$ = stmt.NewDeclare($3, $5).SetPosition(NewTokenNodePosition($1, $5)) }
+    |   ';'                                             { $$ = stmt.NewNop().SetPosition(NewTokenPosition($1)) }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
-                                                        { $$ = stmt.NewTry($3, $5, $6) }
-    |   T_THROW expr ';'                                { $$ = stmt.NewThrow($2) }
-    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto(node.NewIdentifier($2)) }
-    |   T_STRING ':'                                    { $$ = stmt.NewLabel(node.NewIdentifier($1)) }
+            {
+                if $6 == nil {
+                    $$ = stmt.NewTry($3, $5, $6).SetPosition(NewTokenNodeListPosition($1, $5))
+                } else {
+                    $$ = stmt.NewTry($3, $5, $6).SetPosition(NewTokenNodePosition($1, $6))
+                }
+            }
+    |   T_THROW expr ';'                                { $$ = stmt.NewThrow($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto(node.NewIdentifier($2).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_STRING ':'                                    { $$ = stmt.NewLabel(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokensPosition($1, $2)) }
 
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
-                                                        { $$ = append($1, stmt.NewCatch($4, expr.NewVariable(node.NewIdentifier($5)), $8)) }
+            {
+                identifier := node.NewIdentifier($5).SetPosition(NewTokenPosition($5))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($5))
+                $$ = append($1, stmt.NewCatch($4, variable, $8).SetPosition(NewTokensPosition($2, $9)))
+            }
 ;
 catch_name_list:
         name                                            { $$ = []node.Node{$1} }
@@ -425,7 +470,7 @@ catch_name_list:
 
 finally_statement:
         /* empty */                                     { $$ = nil }
-    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($3) }
+    |   T_FINALLY '{' inner_statement_list '}'          { $$ = stmt.NewFinally($3).SetPosition(NewTokensPosition($1, $4)) }
 ;
 
 unset_variables:
@@ -440,25 +485,35 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            $$ = stmt.NewFunction(node.NewIdentifier($3), $2, $5, $7, $9)
+            name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
+            $$ = stmt.NewFunction(name, $2.value, $5, $7, $9).
+                SetPosition(NewTokensPosition($1, $10))
         }
 ;
 
 is_reference:
-        /* empty */                                     { $$ = false }
-    |   '&'                                             { $$ = true }
+        /* empty */                                     { $$ = boolWithToken{false, nil} }
+    |   '&'                                             { $$ = boolWithToken{true, &$1} }
 ;
 
 is_variadic:
-        /* empty */                                     { $$ = false }
-    |   T_ELLIPSIS                                      { $$ = true }
+        /* empty */                                     { $$ = boolWithToken{false, nil} }
+    |   T_ELLIPSIS                                      { $$ = boolWithToken{true, &$1} }
 ;
 
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass(node.NewIdentifier($3), $1, nil, $4, $5, $7) }
+            {
+                name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
+                $$ = stmt.NewClass(name, $1, nil, $4, $5, $7).
+                    SetPosition(NewOptionalListTokensPosition($1, $2, $8))
+            }
     |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewClass(node.NewIdentifier($2), nil, nil, $3, $4, $6) }
+            {
+                name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+                $$ = stmt.NewClass(name, nil, nil, $3, $4, $6).
+                    SetPosition(NewTokensPosition($1, $7))
+            }
 ;
 
 class_modifiers:
@@ -467,17 +522,21 @@ class_modifiers:
 ;
 
 class_modifier:
-        T_ABSTRACT                                      { $$ = node.NewIdentifier($1) }
-    |   T_FINAL                                         { $$ = node.NewIdentifier($1) }
+        T_ABSTRACT                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait(node.NewIdentifier($2), $4) }
+    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait(node.NewIdentifier($2).SetPosition(NewTokenPosition($2)), $4).SetPosition(NewTokensPosition($1, $5)) }
 ;
 
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
-                                                        { $$ = stmt.NewInterface(node.NewIdentifier($2), $3, $5) }
+        {
+            name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            $$ = stmt.NewInterface(name, $3, $5).
+                SetPosition(NewTokensPosition($1, $6))
+        }
 ;
 
 extends_from:
@@ -498,41 +557,41 @@ implements_list:
 foreach_variable:
         variable                                        { $$ = foreachVariable{$1, false} }
     |   '&' variable                                    { $$ = foreachVariable{$2, true} }
-    |   T_LIST '(' array_pair_list ')'                  { $$ = foreachVariable{expr.NewList($3), false} }
-    |   '[' array_pair_list ']'                         { $$ = foreachVariable{expr.NewShortList($2), false} }
+    |   T_LIST '(' array_pair_list ')'                  { $$ = foreachVariable{expr.NewList($3).SetPosition(NewTokensPosition($1, $4)), false} }
+    |   '[' array_pair_list ']'                         { $$ = foreachVariable{expr.NewShortList($2).SetPosition(NewTokensPosition($1, $3)), false} }
 ;
 
 for_statement:
         statement                                       { $$ = $1; }
-    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = stmt.NewStmtList($2); }
+    |    ':' inner_statement_list T_ENDFOR ';'          { $$ = stmt.NewStmtList($2).SetPosition(NewTokensPosition($1, $4)) }
 ;
 
 foreach_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = stmt.NewStmtList($2); }
+    |   ':' inner_statement_list T_ENDFOREACH ';'       { $$ = stmt.NewStmtList($2).SetPosition(NewTokensPosition($1, $4)) }
 ;
 
 declare_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = stmt.NewStmtList($2); }
+    |   ':' inner_statement_list T_ENDDECLARE ';'       { $$ = stmt.NewStmtList($2).SetPosition(NewTokensPosition($1, $4)) }
 ;
 
 switch_case_list:
-        '{' case_list '}'                               { $$ = $2; }
-    |   '{' ';' case_list '}'                           { $$ = $3; }
-    |   ':' case_list T_ENDSWITCH ';'                   { $$ = $2; }
-    |   ':' ';' case_list T_ENDSWITCH ';'               { $$ = $3; }
+        '{' case_list '}'                               { $$ = &nodesWithEndToken{$2, $3} }
+    |   '{' ';' case_list '}'                           { $$ = &nodesWithEndToken{$3, $4} }
+    |   ':' case_list T_ENDSWITCH ';'                   { $$ = &nodesWithEndToken{$2, $4} }
+    |   ':' ';' case_list T_ENDSWITCH ';'               { $$ = &nodesWithEndToken{$3, $5} }
 ;
 
 case_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewCase($3, $5))
+                $$ = append($1, stmt.NewCase($3, $5).SetPosition(NewTokenNodeListPosition($2, $5)))
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
-                $$ = append($1, stmt.NewDefault($4))
+                $$ = append($1, stmt.NewDefault($4).SetPosition(NewTokenNodeListPosition($2, $4)))
             }
 ;
 
@@ -543,15 +602,15 @@ case_separator:
 
 while_statement:
         statement                                       { $$ = $1; }
-    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = stmt.NewStmtList($2); }
+    |   ':' inner_statement_list T_ENDWHILE ';'         { $$ = stmt.NewStmtList($2).SetPosition(NewTokensPosition($1, $4)) }
 ;
 
 if_stmt_without_else:
-        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($3, $5) }
+        T_IF '(' expr ')' statement                     { $$ = stmt.NewIf($3, $5).SetPosition(NewTokenNodePosition($1, $5)) }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
-                _elseIf := stmt.NewElseIf($4, $6)
-                $$ = $1.(stmt.If).AddElseIf(_elseIf)
+                _elseIf := stmt.NewElseIf($4, $6).SetPosition(NewTokenNodePosition($2, $6))
+                $$ = $1.(stmt.If).AddElseIf(_elseIf).SetPosition(NewNodesPosition($1, $6))
             }
 ;
 
@@ -559,29 +618,29 @@ if_stmt:
         if_stmt_without_else %prec T_NOELSE             { $$ = $1; }
     |   if_stmt_without_else T_ELSE statement
             {
-                _else := stmt.NewElse($3)
-                $$ = $1.(stmt.If).SetElse(_else)
+                _else := stmt.NewElse($3).SetPosition(NewTokenNodePosition($2, $3))
+                $$ = $1.(stmt.If).SetElse(_else).SetPosition(NewNodesPosition($1, $3))
             }
 ;
 
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = stmt.NewAltIf($3, stmt.NewStmtList($6))
+                $$ = stmt.NewAltIf($3, stmt.NewStmtList($6).SetPosition(NewNodeListPosition($6))).SetPosition(NewAltIfStartPosition($1))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                _elseIf := stmt.NewAltElseIf($4, stmt.NewStmtList($7))
+                _elseIf := stmt.NewAltElseIf($4, stmt.NewStmtList($7).SetPosition(NewNodeListPosition($7))).SetPosition(NewTokenNodeListPosition($2, $7))
                 $$ = $1.(stmt.AltIf).AddElseIf(_elseIf)
             }
 ;
 
 alt_if_stmt:
-        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1; }
+        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1.SetPosition(NewAltIfPosition($1.Position().StartLine, $3)) }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                _else := stmt.NewAltElse(stmt.NewStmtList($4))
-                $$ = $1.(stmt.AltIf).SetElse(_else)
+                _else := stmt.NewAltElse(stmt.NewStmtList($4).SetPosition(NewNodeListPosition($4))).SetPosition(NewTokenNodeListPosition($2, $4))
+                $$ = $1.(stmt.AltIf).SetElse(_else).SetPosition(NewAltIfPosition($1.Position().StartLine, $6))
             }
 ;
 
@@ -598,11 +657,31 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), nil, $2, $3)
+                identifier := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($4))
+                if $1 != nil {
+                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetPosition(NewNodeTokenPosition($1, $4))
+                } else if $2.value == true {
+                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetPosition(NewTokensPosition(*$2.token, $4))
+                } else if $3.value == true {
+                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetPosition(NewTokensPosition(*$3.token, $4))
+                } else {
+                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetPosition(NewTokenPosition($4))
+                }
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                $$ = node.NewParameter($1, expr.NewVariable(node.NewIdentifier($4)), $6, $2, $3)
+                identifier := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($4))
+                if $1 != nil {
+                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetPosition(NewNodesPosition($1, $6))
+                } else if $2.value == true {
+                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetPosition(NewTokenNodePosition(*$2.token, $6))
+                } else if $3.value == true {
+                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetPosition(NewTokenNodePosition(*$3.token, $6))
+                } else {
+                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetPosition(NewTokenNodePosition($4, $6))
+                }
             }
 ;
 
@@ -613,12 +692,12 @@ optional_type:
 
 type_expr:
         type                                            { $$ = $1; }
-    |   '?' type                                        { $$ = node.NewNullable($2) }
+    |   '?' type                                        { $$ = node.NewNullable($2).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
 
 type:
-        T_ARRAY                                         { $$ = node.NewIdentifier($1) }
-    |   T_CALLABLE                                      { $$ = node.NewIdentifier($1) }
+        T_ARRAY                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_CALLABLE                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
     |   name                                            { $$ = $1; }
 ;
 
@@ -628,8 +707,8 @@ return_type:
 ;
 
 argument_list:
-        '(' ')'                                         { $$ = []node.Node{} }
-    |   '(' non_empty_argument_list possible_comma ')'  { $$ = $2; }
+        '(' ')'                                         { $$ = &nodesWithEndToken{[]node.Node{}, $2} }
+    |   '(' non_empty_argument_list possible_comma ')'  { $$ = &nodesWithEndToken{$2, $4} }
 ;
 
 non_empty_argument_list:
@@ -638,8 +717,8 @@ non_empty_argument_list:
 ;
 
 argument:
-        expr                                            { $$ = node.NewArgument($1, false) }
-    |   T_ELLIPSIS expr                                 { $$ = node.NewArgument($2, true) }
+        expr                                            { $$ = node.NewArgument($1, false).SetPosition(NewNodePosition($1)) }
+    |   T_ELLIPSIS expr                                 { $$ = node.NewArgument($2, true).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
 
 global_var_list:
@@ -657,8 +736,18 @@ static_var_list:
 ;
 
 static_var:
-        T_VARIABLE                                      { $$ = stmt.NewStaticVar(expr.NewVariable(node.NewIdentifier($1)), nil) }
-    |   T_VARIABLE '=' expr                             { $$ = stmt.NewStaticVar(expr.NewVariable(node.NewIdentifier($1)), $3) }
+        T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+                $$ = stmt.NewStaticVar(variable, nil).SetPosition(NewTokenPosition($1))
+            }
+    |   T_VARIABLE '=' expr
+        {
+            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+            $$ = stmt.NewStaticVar(variable, $3).SetPosition(NewTokenNodePosition($1, $3))
+        }
 ;
 
 class_statement_list:
@@ -667,12 +756,13 @@ class_statement_list:
 ;
 
 class_statement:
-        variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2) }
-    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($1, $3); }
-    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($2, $3) }
+        variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2).SetPosition(NewNodeListTokenPosition($1, $3)) }
+    |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($1, $3).SetPosition(NewOptionalListTokensPosition($1, $2, $4)) }
+    |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($2, $3.nodes).SetPosition(NewTokensPosition($1, $3.endToken)) }
     |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod(node.NewIdentifier($4), $1, $3, $6, $8, $9)
+                $$ = stmt.NewClassMethod(node.NewIdentifier($4).SetPosition(NewTokenPosition($4)), $1, $3.value, $6, $8, $9.nodes).
+                    SetPosition(NewOptionalListTokensPosition($1, $2, $9.endToken))
             }
 ;
 
@@ -682,9 +772,9 @@ name_list:
 ;
 
 trait_adaptations:
-        ';'                                             { $$ = nil }
-    |   '{' '}'                                         { $$ = nil }
-    |   '{' trait_adaptation_list '}'                   { $$ = $2; }
+        ';'                                             { $$ = &nodesWithEndToken{nil, $1} }
+    |   '{' '}'                                         { $$ = &nodesWithEndToken{nil, $2} }
+    |   '{' trait_adaptation_list '}'                   { $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 trait_adaptation_list:
@@ -700,36 +790,37 @@ trait_adaptation:
 trait_precedence:
     absolute_trait_method_reference T_INSTEADOF name_list
         {
-            $$ = stmt.NewTraitUsePrecedence($1, name.NewName($3))
+            $$ = stmt.NewTraitUsePrecedence($1, name.NewName($3).SetPosition(NewNodeListPosition($3))).
+                SetPosition(NewNodeNodeListPosition($1, $3))
         }
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3)) }
+        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
     |   trait_method_reference T_AS reserved_non_modifiers
-                                                        { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3))  }
+                                                        { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3))  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = stmt.NewTraitUseAlias($1, $3, node.NewIdentifier($4)) }
-    |   trait_method_reference T_AS member_modifier     { $$ = stmt.NewTraitUseAlias($1, $3, nil) }
+                                                        { $$ = stmt.NewTraitUseAlias($1, $3, node.NewIdentifier($4).SetPosition(NewTokenPosition($4))).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   trait_method_reference T_AS member_modifier     { $$ = stmt.NewTraitUseAlias($1, $3, nil).SetPosition(NewNodesPosition($1, $3)) }
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, node.NewIdentifier($1)) }
+        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, node.NewIdentifier($3)) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
 ;
 
 method_body:
-        ';' /* abstract method */                       { $$ = nil }
-    |   '{' inner_statement_list '}'                    { $$ = $2 }
+        ';' /* abstract method */                       { $$ = &nodesWithEndToken{nil, $1} }
+    |   '{' inner_statement_list '}'                    { $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
-    |   T_VAR                                           { $$ = []node.Node{node.NewIdentifier($1)} }
+    |   T_VAR                                           { $$ = []node.Node{node.NewIdentifier($1).SetPosition(NewTokenPosition($1))} }
 ;
 
 method_modifiers:
@@ -743,12 +834,12 @@ non_empty_member_modifiers:
 ;
 
 member_modifier:
-        T_PUBLIC                                        { $$ = node.NewIdentifier($1) }
-    |   T_PROTECTED                                     { $$ = node.NewIdentifier($1) }
-    |   T_PRIVATE                                       { $$ = node.NewIdentifier($1) }
-    |   T_STATIC                                        { $$ = node.NewIdentifier($1) }
-    |   T_ABSTRACT                                      { $$ = node.NewIdentifier($1) }
-    |   T_FINAL                                         { $$ = node.NewIdentifier($1) }
+        T_PUBLIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_PROTECTED                                     { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_PRIVATE                                       { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_STATIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_ABSTRACT                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
 ;
 
 property_list:
@@ -757,8 +848,18 @@ property_list:
 ;
 
 property:
-        T_VARIABLE                                      { $$ = stmt.NewProperty(expr.NewVariable(node.NewIdentifier($1)), nil) }
-    |   T_VARIABLE '=' expr                             { $$ = stmt.NewProperty(expr.NewVariable(node.NewIdentifier($1)), $3) }
+        T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+                $$ = stmt.NewProperty(variable, nil).SetPosition(NewTokenPosition($1))
+            }
+    |   T_VARIABLE '=' expr
+        {
+            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+            $$ = stmt.NewProperty(variable, $3).SetPosition(NewTokenNodePosition($1, $3))
+        }
 ;
 
 class_const_list:
@@ -767,11 +868,11 @@ class_const_list:
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = stmt.NewConstant(node.NewIdentifier($1), $3) }
+    identifier '=' expr                                 { $$ = stmt.NewConstant(node.NewIdentifier($1).SetPosition(NewTokenPosition($1)), $3).SetPosition(NewTokenNodePosition($1, $3)) }
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = stmt.NewConstant(node.NewIdentifier($1), $3) }
+    T_STRING '=' expr                                   { $$ = stmt.NewConstant(node.NewIdentifier($1).SetPosition(NewTokenPosition($1)), $3).SetPosition(NewTokenNodePosition($1, $3)) }
 ;
 
 echo_expr_list:
@@ -795,111 +896,124 @@ non_empty_for_exprs:
 anonymous_class:
     T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
         {
-            { $$ = stmt.NewClass(nil, nil, $2, $3, $4, $6) }
+            if $2 != nil {
+                $$ = stmt.NewClass(nil, nil, $2.nodes, $3, $4, $6).SetPosition(NewTokensPosition($1, $7))
+            } else {
+                $$ = stmt.NewClass(nil, nil, nil, $3, $4, $6).SetPosition(NewTokensPosition($1, $7))
+            }
         }
 ;
 
 new_expr:
-        T_NEW class_name_reference ctor_arguments       { $$ = expr.NewNew($2, $3) }
+        T_NEW class_name_reference ctor_arguments
+            {
+                if $3 != nil {
+                    $$ = expr.NewNew($2, $3.nodes).SetPosition(NewTokensPosition($1, $3.endToken))
+                } else {
+                    $$ = expr.NewNew($2, nil).SetPosition(NewTokenNodePosition($1, $2))
+                }
+            }
     |   T_NEW anonymous_class                           { $$ = expr.NewNew($2, nil) }
 ;
 
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                list := expr.NewList($3)
-                $$ = assign_op.NewAssign(list, $6)
+                list := expr.NewList($3).SetPosition(NewTokensPosition($1, $4))
+                $$ = assign_op.NewAssign(list, $6).SetPosition(NewTokenNodePosition($1, $6))
             }
     |   '[' array_pair_list ']' '=' expr
         {
-            shortList := expr.NewShortList($2)
-            $$ = assign_op.NewAssign(shortList, $5)
+            shortList := expr.NewShortList($2).SetPosition(NewTokensPosition($1, $3))
+            $$ = assign_op.NewAssign(shortList, $5).SetPosition(NewTokenNodePosition($1, $5))
         }
-    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3) }
-    |   variable '=' '&' expr                           { $$ = assign_op.NewAssignRef($1, $4) }
-    |   T_CLONE expr                                    { $$ = expr.NewClone($2) }
-    |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3) }
-    |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3) }
-    |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3) }
-    |   variable T_POW_EQUAL expr                       { $$ = assign_op.NewPow($1, $3) }
-    |   variable T_DIV_EQUAL expr                       { $$ = assign_op.NewDiv($1, $3) }
-    |   variable T_CONCAT_EQUAL expr                    { $$ = assign_op.NewConcat($1, $3) }
-    |   variable T_MOD_EQUAL expr                       { $$ = assign_op.NewMod($1, $3) }
-    |   variable T_AND_EQUAL expr                       { $$ = assign_op.NewBitwiseAnd($1, $3) }
-    |   variable T_OR_EQUAL expr                        { $$ = assign_op.NewBitwiseOr($1, $3) }
-    |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3) }
-    |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3) }
-    |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3) }
-    |   variable T_INC                                  { $$ = expr.NewPostInc($1) }
-    |   T_INC variable                                  { $$ = expr.NewPreInc($2) }
-    |   variable T_DEC                                  { $$ = expr.NewPostDec($1) }
-    |   T_DEC variable                                  { $$ = expr.NewPreDec($2) }
-    |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3) }
-    |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3) }
-    |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3) }
-    |   expr T_LOGICAL_AND expr                         { $$ = binary_op.NewLogicalAnd($1, $3) }
-    |   expr T_LOGICAL_XOR expr                         { $$ = binary_op.NewLogicalXor($1, $3) }
-    |   expr '|' expr                                   { $$ = binary_op.NewBitwiseOr($1, $3) }
-    |   expr '&' expr                                   { $$ = binary_op.NewBitwiseAnd($1, $3) }
-    |   expr '^' expr                                   { $$ = binary_op.NewBitwiseXor($1, $3) }
-    |   expr '.' expr                                   { $$ = binary_op.NewConcat($1, $3) }
-    |   expr '+' expr                                   { $$ = binary_op.NewPlus($1, $3) }
-    |   expr '-' expr                                   { $$ = binary_op.NewMinus($1, $3) }
-    |   expr '*' expr                                   { $$ = binary_op.NewMul($1, $3) }
-    |   expr T_POW expr                                 { $$ = binary_op.NewPow($1, $3) }
-    |   expr '/' expr                                   { $$ = binary_op.NewDiv($1, $3) }
-    |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3) }
-    |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3) }
-    |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3) }
-    |   '+' expr %prec T_INC                            { $$ = expr.NewUnaryPlus($2) }
-    |   '-' expr %prec T_INC                            { $$ = expr.NewUnaryMinus($2) }
-    |   '!' expr                                        { $$ = expr.NewBooleanNot($2) }
-    |   '~' expr                                        { $$ = expr.NewBitwiseNot($2) }
-    |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3) }
-    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3) }
-    |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3) }
-    |   expr T_IS_NOT_EQUAL expr                        { $$ = binary_op.NewNotEqual($1, $3) }
-    |   expr '<' expr                                   { $$ = binary_op.NewSmaller($1, $3) }
-    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = binary_op.NewSmallerOrEqual($1, $3) }
-    |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3) }
-    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3) }
-    |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3) }
-    |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3) }
+    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable '=' '&' expr                           { $$ = assign_op.NewAssignRef($1, $4).SetPosition(NewNodesPosition($1, $4)) }
+    |   T_CLONE expr                                    { $$ = expr.NewClone($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_POW_EQUAL expr                       { $$ = assign_op.NewPow($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_DIV_EQUAL expr                       { $$ = assign_op.NewDiv($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_CONCAT_EQUAL expr                    { $$ = assign_op.NewConcat($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MOD_EQUAL expr                       { $$ = assign_op.NewMod($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_AND_EQUAL expr                       { $$ = assign_op.NewBitwiseAnd($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_OR_EQUAL expr                        { $$ = assign_op.NewBitwiseOr($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_INC                                  { $$ = expr.NewPostInc($1).SetPosition(NewNodeTokenPosition($1, $2)) }
+    |   T_INC variable                                  { $$ = expr.NewPreInc($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   variable T_DEC                                  { $$ = expr.NewPostDec($1).SetPosition(NewNodeTokenPosition($1, $2)) }
+    |   T_DEC variable                                  { $$ = expr.NewPreDec($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_AND expr                         { $$ = binary_op.NewLogicalAnd($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_XOR expr                         { $$ = binary_op.NewLogicalXor($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '|' expr                                   { $$ = binary_op.NewBitwiseOr($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '&' expr                                   { $$ = binary_op.NewBitwiseAnd($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '^' expr                                   { $$ = binary_op.NewBitwiseXor($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '.' expr                                   { $$ = binary_op.NewConcat($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '+' expr                                   { $$ = binary_op.NewPlus($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '-' expr                                   { $$ = binary_op.NewMinus($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '*' expr                                   { $$ = binary_op.NewMul($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_POW expr                                 { $$ = binary_op.NewPow($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '/' expr                                   { $$ = binary_op.NewDiv($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   '+' expr %prec T_INC                            { $$ = expr.NewUnaryPlus($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   '-' expr %prec T_INC                            { $$ = expr.NewUnaryMinus($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   '!' expr                                        { $$ = expr.NewBooleanNot($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   '~' expr                                        { $$ = expr.NewBitwiseNot($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_NOT_EQUAL expr                        { $$ = binary_op.NewNotEqual($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '<' expr                                   { $$ = binary_op.NewSmaller($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = binary_op.NewSmallerOrEqual($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3).SetPosition(NewNodesPosition($1, $3)) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
-    |   expr '?' expr ':' expr                          { $$ = expr.NewTernary($1, $3, $5) }
-    |   expr '?' ':' expr                               { $$ = expr.NewTernary($1, nil, $4) }
-    |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3) }
+    |   expr '?' expr ':' expr                          { $$ = expr.NewTernary($1, $3, $5).SetPosition(NewNodesPosition($1, $5)) }
+    |   expr '?' ':' expr                               { $$ = expr.NewTernary($1, nil, $4).SetPosition(NewNodesPosition($1, $4)) }
+    |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3).SetPosition(NewNodesPosition($1, $3)) }
     |   internal_functions_in_yacc                      { $$ = $1}
-    |   T_INT_CAST expr                                 { $$ = cast.NewCastInt($2) }
-    |   T_DOUBLE_CAST expr                              { $$ = cast.NewCastDouble($2) }
-    |   T_STRING_CAST expr                              { $$ = cast.NewCastString($2) }
-    |   T_ARRAY_CAST expr                               { $$ = cast.NewCastArray($2) }
-    |   T_OBJECT_CAST expr                              { $$ = cast.NewCastObject($2) }
-    |   T_BOOL_CAST expr                                { $$ = cast.NewCastBool($2) }
-    |   T_UNSET_CAST expr                               { $$ = cast.NewCastUnset($2) }
-    |   T_EXIT exit_expr                                { $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die")) }
-    |   '@' expr                                        { $$ = expr.NewErrorSuppress($2) }
+    |   T_INT_CAST expr                                 { $$ = cast.NewCastInt($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_DOUBLE_CAST expr                              { $$ = cast.NewCastDouble($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_STRING_CAST expr                              { $$ = cast.NewCastString($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_ARRAY_CAST expr                               { $$ = cast.NewCastArray($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_OBJECT_CAST expr                              { $$ = cast.NewCastObject($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_BOOL_CAST expr                                { $$ = cast.NewCastBool($2.SetPosition(NewTokenNodePosition($1, $2))) }
+    |   T_UNSET_CAST expr                               { $$ = cast.NewCastUnset($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_EXIT exit_expr                                { $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die")).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   '@' expr                                        { $$ = expr.NewErrorSuppress($2).SetPosition(NewTokenNodePosition($1, $2)) }
     |   scalar                                          { $$ = $1; }
-    |   '`' backticks_expr '`'                          { $$ = expr.NewShellExec($2) }
-    |   T_PRINT expr                                    { $$ = expr.NewPrint($2) }
-    |   T_YIELD                                         { $$ = expr.NewYield(nil, nil) }
-    |   T_YIELD expr                                    { $$ = expr.NewYield(nil, $2) }
-    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = expr.NewYield($2, $4) }
-    |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2) }
+    |   '`' backticks_expr '`'                          { $$ = expr.NewShellExec($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_PRINT expr                                    { $$ = expr.NewPrint($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_YIELD                                         { $$ = expr.NewYield(nil, nil).SetPosition(NewTokenPosition($1)) }
+    |   T_YIELD expr                                    { $$ = expr.NewYield(nil, $2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = expr.NewYield($2, $4).SetPosition(NewTokenNodePosition($1, $4)) }
+    |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2).SetPosition(NewTokenNodePosition($1, $2)) }
     |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, $7, $9, false, $2)
+                $$ = expr.NewClosure($4, $6, $7, $9, false, $2.value).
+                    SetPosition(NewTokensPosition($1, $10))
             }
     |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5, $7, $8, $10, true, $3)
+                $$ = expr.NewClosure($5, $7, $8, $10, true, $3.value).
+                    SetPosition(NewTokensPosition($1, $11))
             }
 ;
 
 returns_ref:
-        /* empty */                                     { $$ = false }
-    |   '&'                                             { $$ = true }
+        /* empty */                                     { $$ = boolWithToken{false, nil} }
+    |   '&'                                             { $$ = boolWithToken{true, &$1} }
 ;
 
 lexical_vars:
@@ -913,21 +1027,35 @@ lexical_var_list:
 ;
 
 lexical_var:
-        T_VARIABLE                                      { $$ = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier($1)), false) }
-    |   '&' T_VARIABLE                                  { $$ = expr.NewClusureUse(expr.NewVariable(node.NewIdentifier($2)), true) }
+        T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+                $$ = expr.NewClusureUse(variable, false).SetPosition(NewTokenPosition($1))
+            }
+    |   '&' T_VARIABLE
+        {
+            identifier := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($2))
+            $$ = expr.NewClusureUse(variable, true).SetPosition(NewTokensPosition($1, $2))
+        }
 ;
 
 function_call:
-        name argument_list                              { $$ = expr.NewFunctionCall($1, $2) }
+        name argument_list                              { $$ = expr.NewFunctionCall($1, $2.nodes).SetPosition(NewNodeTokenPosition($1, $2.endToken)) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = expr.NewStaticCall($1, $3, $4) }
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetPosition(NewNodeTokenPosition($1, $4.endToken))
+            }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
-                                                        { $$ = expr.NewStaticCall($1, $3, $4) }
-    |   callable_expr argument_list                     { $$ = expr.NewFunctionCall($1, $2) }
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetPosition(NewNodeTokenPosition($1, $4.endToken))
+            }
+    |   callable_expr argument_list                     { $$ = expr.NewFunctionCall($1, $2.nodes).SetPosition(NewNodeTokenPosition($1, $2.endToken)) }
 ;
 
 class_name:
-        T_STATIC                                        { $$ = node.NewIdentifier($1) }
+        T_STATIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
     |   name                                            { $$ = $1; }
 ;
 
@@ -953,37 +1081,37 @@ ctor_arguments:
 ;
 
 dereferencable_scalar:
-        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($3) }
-    |   '[' array_pair_list ']'                         { $$ = expr.NewShortArray($2) }
-    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1.Value) }
+        T_ARRAY '(' array_pair_list ')'                 { $$ = expr.NewArray($3).SetPosition(NewTokensPosition($1, $4)) }
+    |   '[' array_pair_list ']'                         { $$ = expr.NewShortArray($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_CONSTANT_ENCAPSED_STRING                      { $$ = scalar.NewString($1.Value).SetPosition(NewTokenPosition($1)) }
 ;
 
 scalar:
-        T_LNUMBER                                       { $$ = scalar.NewLnumber($1.Value) }
-    |   T_DNUMBER                                       { $$ = scalar.NewDnumber($1.Value) }
-    |   T_LINE                                          { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_FILE                                          { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_DIR                                           { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_TRAIT_C                                       { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_METHOD_C                                      { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_FUNC_C                                        { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_NS_C                                          { $$ = scalar.NewMagicConstant($1.Value) }
-    |   T_CLASS_C                                       { $$ = scalar.NewMagicConstant($1.Value) }
+        T_LNUMBER                                       { $$ = scalar.NewLnumber($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_DNUMBER                                       { $$ = scalar.NewDnumber($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_LINE                                          { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_FILE                                          { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_DIR                                           { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_TRAIT_C                                       { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_METHOD_C                                      { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_FUNC_C                                        { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_NS_C                                          { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_CLASS_C                                       { $$ = scalar.NewMagicConstant($1.Value).SetPosition(NewTokenPosition($1)) }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
-                                                        { $$ = scalar.NewString($2.Value) /* TODO: mark as Heredoc*/ }
+                                                        { $$ = scalar.NewString($2.Value).SetPosition(NewTokensPosition($1, $3)) /* TODO: mark as Heredoc*/ }
     |   T_START_HEREDOC T_END_HEREDOC
-                                                        { $$ = scalar.NewEncapsed(nil) }
-    |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($2) }
-    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($2) }
+                                                        { $$ = scalar.NewEncapsed(nil).SetPosition(NewTokensPosition($1, $2)) }
+    |   '"' encaps_list '"'                             { $$ = scalar.NewEncapsed($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC       { $$ = scalar.NewEncapsed($2).SetPosition(NewTokensPosition($1, $3)) }
     |   dereferencable_scalar                           { $$ = $1; }
     |   constant                                        { $$ = $1; }
 ;
 
 constant:
-        name                                            { $$ = expr.NewConstFetch($1) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3)) }
+        name                                            { $$ = expr.NewConstFetch($1).SetPosition(NewNodePosition($1)) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3)) }
+                                                        { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
 ;
 
 expr:
@@ -1014,52 +1142,60 @@ callable_expr:
 
 callable_variable:
     simple_variable                                     { $$ = $1; }
-    |   dereferencable '[' optional_expr ']'            { $$ = expr.NewArrayDimFetch($1, $3) }
-    |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3) }
-    |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3) }
+    |   dereferencable '[' optional_expr ']'            { $$ = expr.NewArrayDimFetch($1, $3).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3).SetPosition(NewNodeTokenPosition($1, $4)) }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = expr.NewMethodCall($1, $3, $4) }
+                                                        { $$ = expr.NewMethodCall($1, $3, $4.nodes).SetPosition(NewNodeTokenPosition($1, $4.endToken)) }
     |   function_call                                   { $$ = $1; }
 ;
 
 variable:
         callable_variable                               { $$ = $1; }
     |   static_member                                   { $$ = $1; }
-    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = expr.NewPropertyFetch($1, $3) }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = expr.NewPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3)) }
 ;
 
 simple_variable:
-        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
-    |   '$' '{' expr '}'                                { $$ = expr.NewVariable($3) }
-    |   '$' simple_variable                             { $$ = expr.NewVariable($2) }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
+    |   '$' '{' expr '}'                                { $$ = expr.NewVariable($3).SetPosition(NewTokensPosition($1, $4)) }
+    |   '$' simple_variable                             { $$ = expr.NewVariable($2).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
 
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3))
+            }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3))
+            }
 ;
 
 new_variable:
         simple_variable                                 { $$ = $1 }
-    |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3) }
-    |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3) }
-    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = expr.NewPropertyFetch($1, $3) }
+    |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = expr.NewPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3)) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3))
+            }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
-                                                        { $$ = expr.NewStaticPropertyFetch($1, $3) }
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetPosition(NewNodesPosition($1, $3))
+            }
 ;
 
 member_name:
-        identifier                                      { $$ = node.NewIdentifier($1) }
+        identifier                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
 
 property_name:
-        T_STRING                                        { $$ = node.NewIdentifier($1) }
+        T_STRING                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1087,73 +1223,95 @@ non_empty_array_pair_list:
 ;
 
 array_pair:
-        expr T_DOUBLE_ARROW expr                        { $$ = expr.NewArrayItem($1, $3, false) }
-    |   expr                                            { $$ = expr.NewArrayItem(nil, $1, false) }
-    |   expr T_DOUBLE_ARROW '&' variable                { $$ = expr.NewArrayItem($1, $4, true) }
-    |   '&' variable                                    { $$ = expr.NewArrayItem(nil, $2, true) }
+        expr T_DOUBLE_ARROW expr                        { $$ = expr.NewArrayItem($1, $3, false).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr                                            { $$ = expr.NewArrayItem(nil, $1, false).SetPosition(NewNodePosition($1)) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = expr.NewArrayItem($1, $4, true).SetPosition(NewNodesPosition($1, $4)) }
+    |   '&' variable                                    { $$ = expr.NewArrayItem(nil, $2, true).SetPosition(NewTokenNodePosition($1, $2)) }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
-                list := expr.NewList($5)
-                $$ = expr.NewArrayItem($1, list, false)
+                list := expr.NewList($5).SetPosition(NewTokensPosition($3, $6))
+                $$ = expr.NewArrayItem($1, list, false).
+                    SetPosition(NewNodeTokenPosition($1, $6))
             }
     |   T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
-                list := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, list, false)
+                list := expr.NewList($3).SetPosition(NewTokensPosition($1, $4))
+                $$ = expr.NewArrayItem(nil, list, false).
+                    SetPosition(NewTokensPosition($1, $4))
             }
 ;
 
 encaps_list:
         encaps_list encaps_var                          { $$ = append($1, $2) }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, scalar.NewEncapsedStringPart($2.Value)) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE           { $$ = append($1, scalar.NewEncapsedStringPart($2.Value).SetPosition(NewTokenPosition($2))) }
     |   encaps_var                                      { $$ = []node.Node{$1} }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value), $2} }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var            { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value).SetPosition(NewTokenPosition($1)), $2} }
 ;
 
 encaps_var:
-        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
-    |   T_VARIABLE '[' encaps_var_offset ']'            { $$ = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier($1)), $3) }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING           { $$ = expr.NewPropertyFetch(expr.NewVariable(node.NewIdentifier($1)), node.NewIdentifier($3)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = expr.NewVariable($2) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = expr.NewVariable(node.NewIdentifier($2)) }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
+    |   T_VARIABLE '[' encaps_var_offset ']'
+        {
+            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+            $$ = expr.NewArrayDimFetch(variable, $3).SetPosition(NewTokensPosition($1, $4))
+        }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
+        {
+            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+            $$ = expr.NewPropertyFetch(variable, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).
+                SetPosition(NewTokensPosition($1, $3))
+        }
+    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = expr.NewVariable($2).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = expr.NewVariable(node.NewIdentifier($2).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
-                                                        { $$ = expr.NewArrayDimFetch(expr.NewVariable(node.NewIdentifier($2)), $4) }
+            {
+                identifier := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+                variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($2))
+                $$ = expr.NewArrayDimFetch(variable, $4).SetPosition(NewTokensPosition($1, $6))
+            }
     |   T_CURLY_OPEN variable '}'                       { $$ = $2; }
 ;
 encaps_var_offset:
-        T_STRING                                        { $$ = scalar.NewString($1.Value) }
+        T_STRING                                        { $$ = scalar.NewString($1.Value).SetPosition(NewTokenPosition($1)) }
     |   T_NUM_STRING
         {
             // TODO: add option to handle 64 bit integer
             if _, err := strconv.Atoi($1.Value); err == nil {
-                $$ = scalar.NewLnumber($1.Value)
+                $$ = scalar.NewLnumber($1.Value).SetPosition(NewTokenPosition($1))
             } else {
-                $$ = scalar.NewString($1.Value)
+                $$ = scalar.NewString($1.Value).SetPosition(NewTokenPosition($1))
             }
         }
     |   '-' T_NUM_STRING
         {
             // TODO: add option to handle 64 bit integer
             if _, err := strconv.Atoi($2.Value); err == nil {
-                $$ = expr.NewUnaryMinus(scalar.NewLnumber($2.Value))
+                $$ = expr.NewUnaryMinus(scalar.NewLnumber($2.Value).SetPosition(NewTokensPosition($1, $2))).
+                    SetPosition(NewTokensPosition($1, $2))
             } else {
                 $2.Value = "-"+$2.Value
-                $$ = scalar.NewString($2.Value)
+                $$ = scalar.NewString($2.Value).SetPosition(NewTokensPosition($1, $2))
             }
         }
-    |   T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1)) }
+    |   T_VARIABLE
+        {
+            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            $$ = expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
+        }
 ;
 
 internal_functions_in_yacc:
-        T_ISSET '(' isset_variables possible_comma ')'  { $$ = expr.NewIsset($3) }
-    |   T_EMPTY '(' expr ')'                            { $$ = expr.NewEmpty($3) }
-    |   T_INCLUDE expr                                  { $$ = expr.NewInclude($2) }
-    |   T_INCLUDE_ONCE expr                             { $$ = expr.NewIncludeOnce($2) }
-    |   T_EVAL '(' expr ')'                             { $$ = expr.NewEval($3) }
-    |   T_REQUIRE expr                                  { $$ = expr.NewRequire($2) }
-    |   T_REQUIRE_ONCE expr                             { $$ = expr.NewRequireOnce($2) }
+        T_ISSET '(' isset_variables possible_comma ')'  { $$ = expr.NewIsset($3).SetPosition(NewTokensPosition($1, $5)) }
+    |   T_EMPTY '(' expr ')'                            { $$ = expr.NewEmpty($3).SetPosition(NewTokensPosition($1, $4)) }
+    |   T_INCLUDE expr                                  { $$ = expr.NewInclude($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_INCLUDE_ONCE expr                             { $$ = expr.NewIncludeOnce($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_EVAL '(' expr ')'                             { $$ = expr.NewEval($3).SetPosition(NewTokensPosition($1, $4)) }
+    |   T_REQUIRE expr                                  { $$ = expr.NewRequire($2).SetPosition(NewTokenNodePosition($1, $2)) }
+    |   T_REQUIRE_ONCE expr                             { $$ = expr.NewRequireOnce($2).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
 
 isset_variables:

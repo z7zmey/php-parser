@@ -13,6 +13,9 @@ type dumper struct {
 func (d dumper) EnterNode(n node.Node) bool {
 
 	fmt.Printf("%v%v", d.indent, n.Name())
+	if p := n.Position(); p != nil {
+		fmt.Printf(" %v", *p)
+	}
 	if a := n.Attributes(); len(a) > 0 {
 		fmt.Printf(" %v", a)
 	}

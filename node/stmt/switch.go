@@ -5,6 +5,30 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
+type Switch struct {
+	name       string
+	attributes map[string]interface{}
+	position   *node.Position
+	token      token.Token
+	cond       node.Node
+	cases      []node.Node
+}
+
+func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
+	return Switch{
+		"Switch",
+		map[string]interface{}{},
+		nil,
+		token,
+		cond,
+		cases,
+	}
+}
+
+func (n Switch) Name() string {
+	return "Switch"
+}
+
 func (n Switch) Attributes() map[string]interface{} {
 	return n.attributes
 }
@@ -24,30 +48,6 @@ func (n Switch) Position() *node.Position {
 func (n Switch) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
-}
-
-func (n Switch) Name() string {
-	return "Switch"
-}
-
-type Switch struct {
-	name       string
-	attributes map[string]interface{}
-	position *node.Position
-	token      token.Token
-	cond       node.Node
-	cases      []node.Node
-}
-
-func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
-	return Switch{
-		"Switch",
-		map[string]interface{}{},
-		nil,
-		token,
-		cond,
-		cases,
-	}
 }
 
 func (n Switch) Walk(v node.Visitor) {
