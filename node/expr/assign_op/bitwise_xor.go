@@ -23,6 +23,14 @@ func (n BitwiseXor) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n BitwiseXor) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n BitwiseXor) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n BitwiseXor) Name() string {
 	return "BitwiseXor"
 }

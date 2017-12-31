@@ -30,6 +30,14 @@ func (n ArrayItem) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ArrayItem) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ArrayItem) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ArrayItem) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

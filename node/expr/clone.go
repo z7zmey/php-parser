@@ -26,6 +26,14 @@ func (n Clone) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Clone) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Clone) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Clone) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

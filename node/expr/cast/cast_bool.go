@@ -26,6 +26,14 @@ func (n CastBool) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n CastBool) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n CastBool) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n CastBool) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

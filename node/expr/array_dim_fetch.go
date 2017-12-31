@@ -28,6 +28,14 @@ func (n ArrayDimFetch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ArrayDimFetch) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ArrayDimFetch) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ArrayDimFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

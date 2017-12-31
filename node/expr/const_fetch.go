@@ -26,6 +26,14 @@ func (n ConstFetch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ConstFetch) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ConstFetch) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ConstFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

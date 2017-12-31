@@ -23,6 +23,14 @@ func (n BitwiseOr) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n BitwiseOr) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n BitwiseOr) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n BitwiseOr) Name() string {
 	return "BitwiseOr"
 }

@@ -30,6 +30,14 @@ func (n GroupUse) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n GroupUse) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n GroupUse) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n GroupUse) SetUseType(useType node.Node) node.Node {
 	n.useType = useType
 	return n

@@ -30,6 +30,14 @@ func (n Ternary) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Ternary) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Ternary) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Ternary) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -26,6 +26,14 @@ func (n YieldFrom) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n YieldFrom) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n YieldFrom) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n YieldFrom) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

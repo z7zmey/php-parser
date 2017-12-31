@@ -27,6 +27,14 @@ func (n Concat) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Concat) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Concat) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Concat) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

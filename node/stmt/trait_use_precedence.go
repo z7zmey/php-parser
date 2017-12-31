@@ -28,6 +28,14 @@ func (n TraitUsePrecedence) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n TraitUsePrecedence) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n TraitUsePrecedence) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n TraitUsePrecedence) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

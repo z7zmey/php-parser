@@ -9,6 +9,14 @@ func (n Switch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Switch) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Switch) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Switch) Name() string {
 	return "Switch"
 }

@@ -26,6 +26,14 @@ func (n ConstList) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ConstList) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ConstList) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ConstList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

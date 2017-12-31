@@ -27,6 +27,14 @@ func (n Mod) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Mod) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Mod) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Mod) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

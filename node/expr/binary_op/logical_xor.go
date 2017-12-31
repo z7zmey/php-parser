@@ -27,6 +27,14 @@ func (n LogicalXor) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n LogicalXor) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n LogicalXor) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n LogicalXor) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

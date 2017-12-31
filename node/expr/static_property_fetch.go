@@ -28,6 +28,14 @@ func (n StaticPropertyFetch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n StaticPropertyFetch) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n StaticPropertyFetch) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n StaticPropertyFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

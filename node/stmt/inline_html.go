@@ -26,6 +26,14 @@ func (n InlineHtml) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n InlineHtml) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n InlineHtml) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n InlineHtml) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

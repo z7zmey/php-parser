@@ -27,6 +27,14 @@ func (n Div) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Div) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Div) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Div) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

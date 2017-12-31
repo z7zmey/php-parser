@@ -28,6 +28,14 @@ func (n New) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n New) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n New) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n New) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -28,6 +28,14 @@ func (n UseList) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n UseList) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n UseList) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n UseList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

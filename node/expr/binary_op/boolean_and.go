@@ -27,6 +27,14 @@ func (n BooleanAnd) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n BooleanAnd) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n BooleanAnd) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n BooleanAnd) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -32,6 +32,14 @@ func (n If) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n If) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n If) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n If) AddElseIf(elseIf node.Node) node.Node {
 	if n.elseIf == nil {
 		n.elseIf = make([]node.Node, 0)

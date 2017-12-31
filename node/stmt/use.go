@@ -30,6 +30,14 @@ func (n Use) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Use) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Use) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Use) SetUseType(useType node.Node) node.Node {
 	n.useType = useType
 	return n

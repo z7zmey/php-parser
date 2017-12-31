@@ -1,10 +1,10 @@
 package node
 
 type Argument struct {
-	name      string
-	arguments map[string]interface{}
-	expr      Node
-	variadic  bool
+	name       string
+	attributes map[string]interface{}
+	expr       Node
+	variadic   bool
 }
 
 func NewArgument(expression Node, variadic bool) Node {
@@ -23,7 +23,15 @@ func (n Argument) Name() string {
 }
 
 func (n Argument) Attributes() map[string]interface{} {
-	return n.arguments
+	return n.attributes
+}
+
+func (n Argument) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Argument) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
 }
 
 func (n Argument) Walk(v Visitor) {

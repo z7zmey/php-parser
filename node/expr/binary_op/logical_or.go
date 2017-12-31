@@ -27,6 +27,14 @@ func (n LogicalOr) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n LogicalOr) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n LogicalOr) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n LogicalOr) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -26,6 +26,14 @@ func (n RequireOnce) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n RequireOnce) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n RequireOnce) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n RequireOnce) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

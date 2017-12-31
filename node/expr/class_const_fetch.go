@@ -8,6 +8,14 @@ func (n ClassConstFetch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ClassConstFetch) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ClassConstFetch) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ClassConstFetch) Name() string {
 	return "ClassConstFetch"
 }

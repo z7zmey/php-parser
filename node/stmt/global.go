@@ -26,6 +26,14 @@ func (n Global) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Global) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Global) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Global) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

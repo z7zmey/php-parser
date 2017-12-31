@@ -26,6 +26,14 @@ func (n BitwiseNot) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n BitwiseNot) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n BitwiseNot) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n BitwiseNot) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

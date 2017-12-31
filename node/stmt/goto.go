@@ -26,6 +26,14 @@ func (n Goto) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n Goto) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n Goto) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n Goto) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

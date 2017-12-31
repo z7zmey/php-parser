@@ -26,6 +26,14 @@ func (n ShortList) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
+func (n ShortList) Attribute(key string) interface{} {
+	return n.attributes[key]
+}
+
+func (n ShortList) SetAttribute(key string, value interface{}) {
+	n.attributes[key] = value
+}
+
 func (n ShortList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
