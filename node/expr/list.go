@@ -7,6 +7,7 @@ import (
 type List struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	items      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewList(items []node.Node) node.Node {
 	return List{
 		"List",
 		map[string]interface{}{},
+		nil,
 		items,
 	}
 }
@@ -32,6 +34,15 @@ func (n List) Attribute(key string) interface{} {
 
 func (n List) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n List) Position() *node.Position {
+	return n.position
+}
+
+func (n List) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n List) Walk(v node.Visitor) {

@@ -8,6 +8,7 @@ import (
 type While struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	token      token.Token
 	cond       node.Node
 	stmt       node.Node
@@ -17,6 +18,7 @@ func NewWhile(token token.Token, cond node.Node, stmt node.Node) node.Node {
 	return While{
 		"While",
 		map[string]interface{}{},
+		nil,
 		token,
 		cond,
 		stmt,
@@ -37,6 +39,15 @@ func (n While) Attribute(key string) interface{} {
 
 func (n While) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n While) Position() *node.Position {
+	return n.position
+}
+
+func (n While) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n While) Walk(v node.Visitor) {

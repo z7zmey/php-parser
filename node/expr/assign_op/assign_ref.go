@@ -13,6 +13,7 @@ func NewAssignRef(variable node.Node, expression node.Node) node.Node {
 		AssignOp{
 			"AssignRef",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n AssignRef) Attribute(key string) interface{} {
 
 func (n AssignRef) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n AssignRef) Position() *node.Position {
+	return n.position
+}
+
+func (n AssignRef) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n AssignRef) Walk(v node.Visitor) {

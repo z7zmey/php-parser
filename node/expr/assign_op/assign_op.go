@@ -7,6 +7,7 @@ import (
 type AssignOp struct {
 	name       string
 	attributes map[string]interface{}
+	position   *node.Position
 	variable   node.Node
 	expression node.Node
 }

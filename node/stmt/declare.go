@@ -7,6 +7,7 @@ import (
 type Declare struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	consts     []node.Node
 	stmt       node.Node
 }
@@ -15,6 +16,7 @@ func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
 	return Declare{
 		"Declare",
 		map[string]interface{}{},
+		nil,
 		consts,
 		stmt,
 	}
@@ -34,6 +36,15 @@ func (n Declare) Attribute(key string) interface{} {
 
 func (n Declare) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Declare) Position() *node.Position {
+	return n.position
+}
+
+func (n Declare) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Declare) Walk(v node.Visitor) {

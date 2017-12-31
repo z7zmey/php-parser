@@ -7,6 +7,7 @@ import (
 type PreInc struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	variable   node.Node
 }
 
@@ -14,6 +15,7 @@ func NewPreInc(variable node.Node) node.Node {
 	return PreInc{
 		"PreInc",
 		map[string]interface{}{},
+		nil,
 		variable,
 	}
 }
@@ -32,6 +34,15 @@ func (n PreInc) Attribute(key string) interface{} {
 
 func (n PreInc) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n PreInc) Position() *node.Position {
+	return n.position
+}
+
+func (n PreInc) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n PreInc) Walk(v node.Visitor) {

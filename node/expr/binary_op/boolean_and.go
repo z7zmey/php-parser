@@ -13,6 +13,7 @@ func NewBooleanAnd(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryBooleanAnd",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n BooleanAnd) Attribute(key string) interface{} {
 
 func (n BooleanAnd) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n BooleanAnd) Position() *node.Position {
+	return n.position
+}
+
+func (n BooleanAnd) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n BooleanAnd) Walk(v node.Visitor) {

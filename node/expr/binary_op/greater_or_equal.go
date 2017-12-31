@@ -13,6 +13,7 @@ func NewGreaterOrEqual(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryGreaterOrEqual",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n GreaterOrEqual) Attribute(key string) interface{} {
 
 func (n GreaterOrEqual) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n GreaterOrEqual) Position() *node.Position {
+	return n.position
+}
+
+func (n GreaterOrEqual) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n GreaterOrEqual) Walk(v node.Visitor) {

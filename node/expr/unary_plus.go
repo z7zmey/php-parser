@@ -7,6 +7,7 @@ import (
 type UnaryPlus struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewUnaryPlus(expression node.Node) node.Node {
 	return UnaryPlus{
 		"UnaryPlus",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n UnaryPlus) Attribute(key string) interface{} {
 
 func (n UnaryPlus) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n UnaryPlus) Position() *node.Position {
+	return n.position
+}
+
+func (n UnaryPlus) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n UnaryPlus) Walk(v node.Visitor) {

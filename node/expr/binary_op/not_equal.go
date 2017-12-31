@@ -13,6 +13,7 @@ func NewNotEqual(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryNotEqual",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n NotEqual) Attribute(key string) interface{} {
 
 func (n NotEqual) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n NotEqual) Position() *node.Position {
+	return n.position
+}
+
+func (n NotEqual) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n NotEqual) Walk(v node.Visitor) {

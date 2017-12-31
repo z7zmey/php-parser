@@ -7,6 +7,7 @@ import (
 type Exit struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -16,6 +17,7 @@ func NewExit(expr node.Node, isDie bool) node.Node {
 		map[string]interface{}{
 			"isDie": isDie,
 		},
+		nil,
 		expr,
 	}
 }
@@ -34,6 +36,15 @@ func (n Exit) Attribute(key string) interface{} {
 
 func (n Exit) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Exit) Position() *node.Position {
+	return n.position
+}
+
+func (n Exit) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Exit) Walk(v node.Visitor) {

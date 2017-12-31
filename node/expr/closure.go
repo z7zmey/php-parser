@@ -7,6 +7,7 @@ import (
 type Closure struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	params     []node.Node
 	uses       []node.Node
 	returnType node.Node
@@ -20,6 +21,7 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 			"isReturnRef": isReturnRef,
 			"isStatic":    isStatic,
 		},
+		nil,
 		params,
 		uses,
 		returnType,
@@ -41,6 +43,15 @@ func (n Closure) Attribute(key string) interface{} {
 
 func (n Closure) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Closure) Position() *node.Position {
+	return n.position
+}
+
+func (n Closure) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Closure) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type Try struct {
 	name       string
 	attributes map[string]interface{}
+	position   *node.Position
 	stmts      []node.Node
 	catches    []node.Node
 	finally    node.Node
@@ -16,6 +17,7 @@ func NewTry(stmts []node.Node, catches []node.Node, finally node.Node) node.Node
 	return Try{
 		"Try",
 		map[string]interface{}{},
+		nil,
 		stmts,
 		catches,
 		finally,
@@ -36,6 +38,15 @@ func (n Try) Attribute(key string) interface{} {
 
 func (n Try) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Try) Position() *node.Position {
+	return n.position
+}
+
+func (n Try) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Try) Walk(v node.Visitor) {

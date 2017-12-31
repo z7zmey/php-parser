@@ -16,6 +16,15 @@ func (n ClassConstFetch) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
 }
 
+func (n ClassConstFetch) Position() *node.Position {
+	return n.position
+}
+
+func (n ClassConstFetch) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
+}
+
 func (n ClassConstFetch) Name() string {
 	return "ClassConstFetch"
 }
@@ -23,6 +32,7 @@ func (n ClassConstFetch) Name() string {
 type ClassConstFetch struct {
 	name         string
 	attributes   map[string]interface{}
+	position *node.Position
 	class        node.Node
 	constantName node.Node
 }
@@ -31,6 +41,7 @@ func NewClassConstFetch(class node.Node, constantName node.Node) node.Node {
 	return ClassConstFetch{
 		"ClassConstFetch",
 		map[string]interface{}{},
+		nil,
 		class,
 		constantName,
 	}

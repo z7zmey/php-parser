@@ -7,6 +7,7 @@ import (
 type FunctionCall struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	function   node.Node
 	arguments  []node.Node
 }
@@ -15,6 +16,7 @@ func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
 	return FunctionCall{
 		"FunctionCall",
 		map[string]interface{}{},
+		nil,
 		function,
 		arguments,
 	}
@@ -34,6 +36,15 @@ func (n FunctionCall) Attribute(key string) interface{} {
 
 func (n FunctionCall) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n FunctionCall) Position() *node.Position {
+	return n.position
+}
+
+func (n FunctionCall) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n FunctionCall) Walk(v node.Visitor) {

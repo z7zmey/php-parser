@@ -13,6 +13,7 @@ func NewFullyQualified(parts []node.Node) node.Node {
 		NameNode{
 			"FullyQualifiedName",
 			map[string]interface{}{},
+			nil,
 			parts,
 		},
 	}

@@ -7,6 +7,7 @@ import (
 type StaticCall struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	class      node.Node
 	call       node.Node
 	arguments  []node.Node
@@ -16,6 +17,7 @@ func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.
 	return StaticCall{
 		"StaticCall",
 		map[string]interface{}{},
+		nil,
 		class,
 		call,
 		arguments,
@@ -36,6 +38,15 @@ func (n StaticCall) Attribute(key string) interface{} {
 
 func (n StaticCall) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n StaticCall) Position() *node.Position {
+	return n.position
+}
+
+func (n StaticCall) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n StaticCall) Walk(v node.Visitor) {

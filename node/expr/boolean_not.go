@@ -7,6 +7,7 @@ import (
 type BooleanNot struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewBooleanNot(expression node.Node) node.Node {
 	return BooleanNot{
 		"BooleanNot",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n BooleanNot) Attribute(key string) interface{} {
 
 func (n BooleanNot) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n BooleanNot) Position() *node.Position {
+	return n.position
+}
+
+func (n BooleanNot) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n BooleanNot) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type Continue struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewContinue(expr node.Node) node.Node {
 	return Continue{
 		"Continue",
 		map[string]interface{}{},
+		nil,
 		expr,
 	}
 }
@@ -32,6 +34,15 @@ func (n Continue) Attribute(key string) interface{} {
 
 func (n Continue) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Continue) Position() *node.Position {
+	return n.position
+}
+
+func (n Continue) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Continue) Walk(v node.Visitor) {

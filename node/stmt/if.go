@@ -7,6 +7,7 @@ import (
 type If struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	cond       node.Node
 	stmt       node.Node
 	elseIf     []node.Node
@@ -17,6 +18,7 @@ func NewIf(cond node.Node, stmt node.Node) node.Node {
 	return If{
 		"If",
 		map[string]interface{}{},
+		nil,
 		cond,
 		stmt,
 		nil,
@@ -38,6 +40,15 @@ func (n If) Attribute(key string) interface{} {
 
 func (n If) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n If) Position() *node.Position {
+	return n.position
+}
+
+func (n If) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n If) AddElseIf(elseIf node.Node) node.Node {

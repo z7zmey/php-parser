@@ -7,6 +7,7 @@ import (
 type Dnumber struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 }
 
 func NewDnumber(value string) node.Node {
@@ -15,6 +16,7 @@ func NewDnumber(value string) node.Node {
 		map[string]interface{}{
 			"value": value,
 		},
+		nil,
 	}
 }
 
@@ -32,6 +34,15 @@ func (n Dnumber) Attribute(key string) interface{} {
 
 func (n Dnumber) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Dnumber) Position() *node.Position {
+	return n.position
+}
+
+func (n Dnumber) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Dnumber) Walk(v node.Visitor) {

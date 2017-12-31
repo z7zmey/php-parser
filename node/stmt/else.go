@@ -7,6 +7,7 @@ import (
 type Else struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	stmt       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewElse(stmt node.Node) node.Node {
 	return Else{
 		"Else",
 		map[string]interface{}{},
+		nil,
 		stmt,
 	}
 }
@@ -32,6 +34,15 @@ func (n Else) Attribute(key string) interface{} {
 
 func (n Else) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Else) Position() *node.Position {
+	return n.position
+}
+
+func (n Else) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Else) Walk(v node.Visitor) {

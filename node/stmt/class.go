@@ -7,6 +7,7 @@ import (
 type Class struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	className  node.Node
 	modifiers  []node.Node
 	args       []node.Node
@@ -19,6 +20,7 @@ func NewClass(className node.Node, modifiers []node.Node, args []node.Node, exte
 	return Class{
 		"Class",
 		map[string]interface{}{},
+		nil,
 		className,
 		modifiers,
 		args,
@@ -42,6 +44,15 @@ func (n Class) Attribute(key string) interface{} {
 
 func (n Class) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Class) Position() *node.Position {
+	return n.position
+}
+
+func (n Class) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Class) Walk(v node.Visitor) {

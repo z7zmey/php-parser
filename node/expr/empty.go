@@ -7,6 +7,7 @@ import (
 type Empty struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewEmpty(expression node.Node) node.Node {
 	return Empty{
 		"Empty",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n Empty) Attribute(key string) interface{} {
 
 func (n Empty) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Empty) Position() *node.Position {
+	return n.position
+}
+
+func (n Empty) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Empty) Walk(v node.Visitor) {

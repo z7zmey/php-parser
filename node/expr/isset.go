@@ -7,6 +7,7 @@ import (
 type Isset struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	variables  []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewIsset(variables []node.Node) node.Node {
 	return Isset{
 		"Isset",
 		map[string]interface{}{},
+		nil,
 		variables,
 	}
 }
@@ -32,6 +34,15 @@ func (n Isset) Attribute(key string) interface{} {
 
 func (n Isset) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Isset) Position() *node.Position {
+	return n.position
+}
+
+func (n Isset) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Isset) Walk(v node.Visitor) {

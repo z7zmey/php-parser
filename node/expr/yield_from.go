@@ -7,6 +7,7 @@ import (
 type YieldFrom struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewYieldFrom(expression node.Node) node.Node {
 	return YieldFrom{
 		"YieldFrom",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n YieldFrom) Attribute(key string) interface{} {
 
 func (n YieldFrom) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n YieldFrom) Position() *node.Position {
+	return n.position
+}
+
+func (n YieldFrom) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n YieldFrom) Walk(v node.Visitor) {

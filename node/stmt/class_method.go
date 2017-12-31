@@ -7,6 +7,7 @@ import (
 type ClassMethod struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	methodName node.Node
 	modifiers  []node.Node
 	params     []node.Node
@@ -20,6 +21,7 @@ func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool
 		map[string]interface{}{
 			"returnsRef": returnsRef,
 		},
+		nil,
 		methodName,
 		modifiers,
 		params,
@@ -42,6 +44,15 @@ func (n ClassMethod) Attribute(key string) interface{} {
 
 func (n ClassMethod) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ClassMethod) Position() *node.Position {
+	return n.position
+}
+
+func (n ClassMethod) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ClassMethod) Walk(v node.Visitor) {

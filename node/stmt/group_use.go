@@ -7,6 +7,7 @@ import (
 type GroupUse struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	useType    node.Node
 	prefix     node.Node
 	useList    []node.Node
@@ -16,6 +17,7 @@ func NewGroupUse(useType node.Node, prefix node.Node, useList []node.Node) node.
 	return GroupUse{
 		"GroupUse",
 		map[string]interface{}{},
+		nil,
 		useType,
 		prefix,
 		useList,
@@ -36,6 +38,15 @@ func (n GroupUse) Attribute(key string) interface{} {
 
 func (n GroupUse) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n GroupUse) Position() *node.Position {
+	return n.position
+}
+
+func (n GroupUse) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n GroupUse) SetUseType(useType node.Node) node.Node {

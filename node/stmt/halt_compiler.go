@@ -7,12 +7,14 @@ import (
 type HaltCompiler struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 }
 
 func NewHaltCompiler() node.Node {
 	return HaltCompiler{
 		"HaltCompiler",
 		map[string]interface{}{},
+		nil,
 	}
 }
 
@@ -30,6 +32,15 @@ func (n HaltCompiler) Attribute(key string) interface{} {
 
 func (n HaltCompiler) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n HaltCompiler) Position() *node.Position {
+	return n.position
+}
+
+func (n HaltCompiler) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n HaltCompiler) Walk(v node.Visitor) {

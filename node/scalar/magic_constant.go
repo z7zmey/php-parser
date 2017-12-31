@@ -7,6 +7,7 @@ import (
 type MagicConstant struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 }
 
 func NewMagicConstant(value string) node.Node {
@@ -15,6 +16,7 @@ func NewMagicConstant(value string) node.Node {
 		map[string]interface{}{
 			"value": value,
 		},
+		nil,
 	}
 }
 
@@ -32,6 +34,15 @@ func (n MagicConstant) Attribute(key string) interface{} {
 
 func (n MagicConstant) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n MagicConstant) Position() *node.Position {
+	return n.position
+}
+
+func (n MagicConstant) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n MagicConstant) Walk(v node.Visitor) {

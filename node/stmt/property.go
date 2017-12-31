@@ -7,6 +7,7 @@ import (
 type Property struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	variable   node.Node
 	expr       node.Node
 }
@@ -15,6 +16,7 @@ func NewProperty(variable node.Node, expr node.Node) node.Node {
 	return Property{
 		"Property",
 		map[string]interface{}{},
+		nil,
 		variable,
 		expr,
 	}
@@ -33,6 +35,15 @@ func (n Property) Attribute(key string) interface{} {
 
 func (n Property) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Property) Position() *node.Position {
+	return n.position
+}
+
+func (n Property) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Property) Walk(v node.Visitor) {

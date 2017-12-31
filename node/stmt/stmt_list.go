@@ -7,6 +7,7 @@ import (
 type StmtList struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	stmts      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewStmtList(stmts []node.Node) node.Node {
 	return StmtList{
 		"StmtList",
 		map[string]interface{}{},
+		nil,
 		stmts,
 	}
 }
@@ -32,6 +34,15 @@ func (n StmtList) Attribute(key string) interface{} {
 
 func (n StmtList) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n StmtList) Position() *node.Position {
+	return n.position
+}
+
+func (n StmtList) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n StmtList) Walk(v node.Visitor) {

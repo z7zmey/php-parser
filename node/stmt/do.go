@@ -7,6 +7,7 @@ import (
 type Do struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	stmt       node.Node
 	cond       node.Node
 }
@@ -15,6 +16,7 @@ func NewDo(stmt node.Node, cond node.Node) node.Node {
 	return Do{
 		"Do",
 		map[string]interface{}{},
+		nil,
 		stmt,
 		cond,
 	}
@@ -34,6 +36,15 @@ func (n Do) Attribute(key string) interface{} {
 
 func (n Do) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Do) Position() *node.Position {
+	return n.position
+}
+
+func (n Do) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Do) Walk(v node.Visitor) {

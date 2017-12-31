@@ -13,6 +13,7 @@ func NewBitwiseXor(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryBitwiseXor",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -29,6 +30,15 @@ func (n BitwiseXor) Attribute(key string) interface{} {
 
 func (n BitwiseXor) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n BitwiseXor) Position() *node.Position {
+	return n.position
+}
+
+func (n BitwiseXor) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n BitwiseXor) Name() string {

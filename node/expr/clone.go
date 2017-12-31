@@ -7,6 +7,7 @@ import (
 type Clone struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewClone(expression node.Node) node.Node {
 	return Clone{
 		"Clone",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n Clone) Attribute(key string) interface{} {
 
 func (n Clone) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Clone) Position() *node.Position {
+	return n.position
+}
+
+func (n Clone) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Clone) Walk(v node.Visitor) {

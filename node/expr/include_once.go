@@ -7,6 +7,7 @@ import (
 type IncludeOnce struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewIncludeOnce(expression node.Node) node.Node {
 	return IncludeOnce{
 		"IncludeOnce",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n IncludeOnce) Attribute(key string) interface{} {
 
 func (n IncludeOnce) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n IncludeOnce) Position() *node.Position {
+	return n.position
+}
+
+func (n IncludeOnce) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n IncludeOnce) Walk(v node.Visitor) {

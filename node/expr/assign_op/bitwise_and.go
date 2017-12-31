@@ -13,6 +13,7 @@ func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
 		AssignOp{
 			"AssignBitwiseAnd",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n BitwiseAnd) Attribute(key string) interface{} {
 
 func (n BitwiseAnd) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n BitwiseAnd) Position() *node.Position {
+	return n.position
+}
+
+func (n BitwiseAnd) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n BitwiseAnd) Walk(v node.Visitor) {

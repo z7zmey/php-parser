@@ -7,6 +7,7 @@ import (
 type NameNode struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	parts      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewName(parts []node.Node) node.Node {
 	return NameNode{
 		"Name",
 		map[string]interface{}{},
+		nil,
 		parts,
 	}
 }
@@ -32,6 +34,15 @@ func (n NameNode) Attribute(key string) interface{} {
 
 func (n NameNode) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n NameNode) Position() *node.Position {
+	return n.position
+}
+
+func (n NameNode) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n NameNode) Walk(v node.Visitor) {

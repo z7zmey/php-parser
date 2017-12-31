@@ -13,6 +13,7 @@ func NewMinus(variable node.Node, expression node.Node) node.Node {
 		AssignOp{
 			"AssignMinus",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Minus) Attribute(key string) interface{} {
 
 func (n Minus) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Minus) Position() *node.Position {
+	return n.position
+}
+
+func (n Minus) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Minus) Walk(v node.Visitor) {

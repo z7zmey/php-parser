@@ -13,6 +13,7 @@ func NewSmaller(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinarySmaller",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Smaller) Attribute(key string) interface{} {
 
 func (n Smaller) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Smaller) Position() *node.Position {
+	return n.position
+}
+
+func (n Smaller) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Smaller) Walk(v node.Visitor) {

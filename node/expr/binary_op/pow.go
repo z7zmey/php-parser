@@ -13,6 +13,7 @@ func NewPow(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryPow",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Pow) Attribute(key string) interface{} {
 
 func (n Pow) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Pow) Position() *node.Position {
+	return n.position
+}
+
+func (n Pow) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Pow) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type ShortArray struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	items      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewShortArray(items []node.Node) node.Node {
 	return ShortArray{
 		"ShortArray",
 		map[string]interface{}{},
+		nil,
 		items,
 	}
 }
@@ -32,6 +34,15 @@ func (n ShortArray) Attribute(key string) interface{} {
 
 func (n ShortArray) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ShortArray) Position() *node.Position {
+	return n.position
+}
+
+func (n ShortArray) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ShortArray) Walk(v node.Visitor) {

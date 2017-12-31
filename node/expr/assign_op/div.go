@@ -13,6 +13,7 @@ func NewDiv(variable node.Node, expression node.Node) node.Node {
 		AssignOp{
 			"AssignDiv",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Div) Attribute(key string) interface{} {
 
 func (n Div) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Div) Position() *node.Position {
+	return n.position
+}
+
+func (n Div) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Div) Walk(v node.Visitor) {

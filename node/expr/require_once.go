@@ -7,6 +7,7 @@ import (
 type RequireOnce struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewRequireOnce(expression node.Node) node.Node {
 	return RequireOnce{
 		"RequireOnce",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n RequireOnce) Attribute(key string) interface{} {
 
 func (n RequireOnce) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n RequireOnce) Position() *node.Position {
+	return n.position
+}
+
+func (n RequireOnce) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n RequireOnce) Walk(v node.Visitor) {

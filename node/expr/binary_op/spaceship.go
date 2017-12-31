@@ -13,6 +13,7 @@ func NewSpaceship(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinarySpaceship",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Spaceship) Attribute(key string) interface{} {
 
 func (n Spaceship) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Spaceship) Position() *node.Position {
+	return n.position
+}
+
+func (n Spaceship) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Spaceship) Walk(v node.Visitor) {

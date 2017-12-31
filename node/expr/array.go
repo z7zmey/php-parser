@@ -7,6 +7,7 @@ import (
 type Array struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	items      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewArray(items []node.Node) node.Node {
 	return Array{
 		"Array",
 		map[string]interface{}{},
+		nil,
 		items,
 	}
 }
@@ -32,6 +34,15 @@ func (n Array) Attribute(key string) interface{} {
 
 func (n Array) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Array) Position() *node.Position {
+	return n.position
+}
+
+func (n Array) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Array) Walk(v node.Visitor) {

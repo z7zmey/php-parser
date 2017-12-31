@@ -7,6 +7,7 @@ import (
 type Throw struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewThrow(expr node.Node) node.Node {
 	return Throw{
 		"Throw",
 		map[string]interface{}{},
+		nil,
 		expr,
 	}
 }
@@ -32,6 +34,15 @@ func (n Throw) Attribute(key string) interface{} {
 
 func (n Throw) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Throw) Position() *node.Position {
+	return n.position
+}
+
+func (n Throw) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Throw) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type TraitUseAlias struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	ref        node.Node
 	modifier   node.Node
 	alias      node.Node
@@ -16,6 +17,7 @@ func NewTraitUseAlias(ref node.Node, modifier node.Node, alias node.Node) node.N
 	return TraitUseAlias{
 		"TraitUseAlias",
 		map[string]interface{}{},
+		nil,
 		ref,
 		modifier,
 		alias,
@@ -36,6 +38,15 @@ func (n TraitUseAlias) Attribute(key string) interface{} {
 
 func (n TraitUseAlias) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n TraitUseAlias) Position() *node.Position {
+	return n.position
+}
+
+func (n TraitUseAlias) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n TraitUseAlias) Walk(v node.Visitor) {

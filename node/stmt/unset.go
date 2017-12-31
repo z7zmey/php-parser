@@ -7,6 +7,7 @@ import (
 type Unset struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	vars       []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewUnset(vars []node.Node) node.Node {
 	return Unset{
 		"Unset",
 		map[string]interface{}{},
+		nil,
 		vars,
 	}
 }
@@ -32,6 +34,15 @@ func (n Unset) Attribute(key string) interface{} {
 
 func (n Unset) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Unset) Position() *node.Position {
+	return n.position
+}
+
+func (n Unset) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Unset) Walk(v node.Visitor) {

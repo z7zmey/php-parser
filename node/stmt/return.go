@@ -7,6 +7,7 @@ import (
 type Return struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewReturn(expr node.Node) node.Node {
 	return Return{
 		"Return",
 		map[string]interface{}{},
+		nil,
 		expr,
 	}
 }
@@ -32,6 +34,15 @@ func (n Return) Attribute(key string) interface{} {
 
 func (n Return) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Return) Position() *node.Position {
+	return n.position
+}
+
+func (n Return) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Return) Walk(v node.Visitor) {

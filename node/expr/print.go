@@ -7,6 +7,7 @@ import (
 type Print struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewPrint(expression node.Node) node.Node {
 	return Print{
 		"Print",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n Print) Attribute(key string) interface{} {
 
 func (n Print) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Print) Position() *node.Position {
+	return n.position
+}
+
+func (n Print) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Print) Walk(v node.Visitor) {

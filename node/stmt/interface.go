@@ -7,6 +7,7 @@ import (
 type Interface struct {
 	name          string
 	attributes    map[string]interface{}
+	position *node.Position
 	interfaceName node.Node
 	extends       []node.Node
 	stmts         []node.Node
@@ -16,6 +17,7 @@ func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Nod
 	return Interface{
 		"Interface",
 		map[string]interface{}{},
+		nil,
 		interfaceName,
 		extends,
 		stmts,
@@ -36,6 +38,15 @@ func (n Interface) Attribute(key string) interface{} {
 
 func (n Interface) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Interface) Position() *node.Position {
+	return n.position
+}
+
+func (n Interface) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Interface) Walk(v node.Visitor) {

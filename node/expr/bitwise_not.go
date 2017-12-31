@@ -7,6 +7,7 @@ import (
 type BitwiseNot struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewBitwiseNot(expression node.Node) node.Node {
 	return BitwiseNot{
 		"BitwiseNot",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n BitwiseNot) Attribute(key string) interface{} {
 
 func (n BitwiseNot) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n BitwiseNot) Position() *node.Position {
+	return n.position
+}
+
+func (n BitwiseNot) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n BitwiseNot) Walk(v node.Visitor) {

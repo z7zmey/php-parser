@@ -7,6 +7,7 @@ import (
 type ShortList struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	items      []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewShortList(items []node.Node) node.Node {
 	return ShortList{
 		"ShortList",
 		map[string]interface{}{},
+		nil,
 		items,
 	}
 }
@@ -32,6 +34,15 @@ func (n ShortList) Attribute(key string) interface{} {
 
 func (n ShortList) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ShortList) Position() *node.Position {
+	return n.position
+}
+
+func (n ShortList) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ShortList) Walk(v node.Visitor) {

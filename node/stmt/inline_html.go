@@ -7,6 +7,7 @@ import (
 type InlineHtml struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 }
 
 func NewInlineHtml(value string) node.Node {
@@ -15,6 +16,7 @@ func NewInlineHtml(value string) node.Node {
 		map[string]interface{}{
 			"value": value,
 		},
+		nil,
 	}
 }
 
@@ -32,6 +34,15 @@ func (n InlineHtml) Attribute(key string) interface{} {
 
 func (n InlineHtml) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n InlineHtml) Position() *node.Position {
+	return n.position
+}
+
+func (n InlineHtml) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n InlineHtml) Walk(v node.Visitor) {

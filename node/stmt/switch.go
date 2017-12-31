@@ -17,6 +17,15 @@ func (n Switch) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
 }
 
+func (n Switch) Position() *node.Position {
+	return n.position
+}
+
+func (n Switch) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
+}
+
 func (n Switch) Name() string {
 	return "Switch"
 }
@@ -24,6 +33,7 @@ func (n Switch) Name() string {
 type Switch struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	token      token.Token
 	cond       node.Node
 	cases      []node.Node
@@ -33,6 +43,7 @@ func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
 	return Switch{
 		"Switch",
 		map[string]interface{}{},
+		nil,
 		token,
 		cond,
 		cases,

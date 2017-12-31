@@ -13,6 +13,7 @@ func NewLogicalXor(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryLogicalXor",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n LogicalXor) Attribute(key string) interface{} {
 
 func (n LogicalXor) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n LogicalXor) Position() *node.Position {
+	return n.position
+}
+
+func (n LogicalXor) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n LogicalXor) Walk(v node.Visitor) {

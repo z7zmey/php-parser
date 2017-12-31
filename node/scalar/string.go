@@ -7,15 +7,16 @@ import (
 type String struct {
 	name       string
 	attributes map[string]interface{}
+	position   *node.Position
 }
 
 func NewString(value string) node.Node {
 	return String{
 		"String",
-
 		map[string]interface{}{
 			"value": value,
 		},
+		nil,
 	}
 }
 
@@ -33,6 +34,15 @@ func (n String) Attribute(key string) interface{} {
 
 func (n String) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n String) Position() *node.Position {
+	return n.position
+}
+
+func (n String) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n String) Walk(v node.Visitor) {

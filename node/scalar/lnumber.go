@@ -7,6 +7,7 @@ import (
 type Lnumber struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 }
 
 func NewLnumber(value string) node.Node {
@@ -15,6 +16,7 @@ func NewLnumber(value string) node.Node {
 		map[string]interface{}{
 			"value": value,
 		},
+		nil,
 	}
 }
 
@@ -32,6 +34,15 @@ func (n Lnumber) Attribute(key string) interface{} {
 
 func (n Lnumber) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Lnumber) Position() *node.Position {
+	return n.position
+}
+
+func (n Lnumber) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Lnumber) Walk(v node.Visitor) {

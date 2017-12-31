@@ -13,6 +13,7 @@ func NewRelative(parts []node.Node) node.Node {
 		NameNode{
 			"RelativeName",
 			map[string]interface{}{},
+			nil,
 			parts,
 		},
 	}

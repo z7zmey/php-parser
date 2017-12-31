@@ -7,6 +7,7 @@ import (
 type Function struct {
 	name         string
 	attributes   map[string]interface{}
+	position *node.Position
 	functionName node.Node
 	params       []node.Node
 	returnType   node.Node
@@ -19,6 +20,7 @@ func NewFunction(functionName node.Node, returnsRef bool, params []node.Node, re
 		map[string]interface{}{
 			"returnsRef": returnsRef,
 		},
+		nil,
 		functionName,
 		params,
 		returnType,
@@ -40,6 +42,15 @@ func (n Function) Attribute(key string) interface{} {
 
 func (n Function) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Function) Position() *node.Position {
+	return n.position
+}
+
+func (n Function) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Function) Walk(v node.Visitor) {

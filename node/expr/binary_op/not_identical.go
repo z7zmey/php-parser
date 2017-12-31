@@ -13,6 +13,7 @@ func NewNotIdentical(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryNotIdentical",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n NotIdentical) Attribute(key string) interface{} {
 
 func (n NotIdentical) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n NotIdentical) Position() *node.Position {
+	return n.position
+}
+
+func (n NotIdentical) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n NotIdentical) Walk(v node.Visitor) {

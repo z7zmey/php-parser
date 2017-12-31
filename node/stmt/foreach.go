@@ -7,6 +7,7 @@ import (
 type Foreach struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 	key        node.Node
 	variable   node.Node
@@ -19,6 +20,7 @@ func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Nod
 		map[string]interface{}{
 			"byRef": byRef,
 		},
+		nil,
 		expr,
 		key,
 		variable,
@@ -40,6 +42,15 @@ func (n Foreach) Attribute(key string) interface{} {
 
 func (n Foreach) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Foreach) Position() *node.Position {
+	return n.position
+}
+
+func (n Foreach) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Foreach) Walk(v node.Visitor) {

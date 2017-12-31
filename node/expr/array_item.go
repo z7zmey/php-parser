@@ -7,6 +7,7 @@ import (
 type ArrayItem struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	key        node.Node
 	val        node.Node
 }
@@ -17,6 +18,7 @@ func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 		map[string]interface{}{
 			"byRef": byRef,
 		},
+		nil,
 		key,
 		val,
 	}
@@ -36,6 +38,15 @@ func (n ArrayItem) Attribute(key string) interface{} {
 
 func (n ArrayItem) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ArrayItem) Position() *node.Position {
+	return n.position
+}
+
+func (n ArrayItem) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ArrayItem) Walk(v node.Visitor) {

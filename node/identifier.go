@@ -7,6 +7,7 @@ import (
 type Identifier struct {
 	name       string
 	attributes map[string]interface{}
+	position   *Position
 }
 
 func NewIdentifier(token token.Token) Node {
@@ -15,6 +16,7 @@ func NewIdentifier(token token.Token) Node {
 		map[string]interface{}{
 			"value": token.Value,
 		},
+		nil,
 	}
 }
 
@@ -32,6 +34,15 @@ func (n Identifier) Attribute(key string) interface{} {
 
 func (n Identifier) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Identifier) Position() *Position {
+	return n.position
+}
+
+func (n Identifier) SetPosition(p *Position) Node {
+	n.position = p
+	return n
 }
 
 func (n Identifier) Walk(v Visitor) {

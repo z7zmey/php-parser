@@ -7,6 +7,7 @@ import (
 type Yield struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	key        node.Node
 	value      node.Node
 }
@@ -15,6 +16,7 @@ func NewYield(key node.Node, value node.Node) node.Node {
 	return Yield{
 		"Yield",
 		map[string]interface{}{},
+		nil,
 		key,
 		value,
 	}
@@ -34,6 +36,15 @@ func (n Yield) Attribute(key string) interface{} {
 
 func (n Yield) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Yield) Position() *node.Position {
+	return n.position
+}
+
+func (n Yield) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Yield) Walk(v node.Visitor) {

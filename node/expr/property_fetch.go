@@ -7,6 +7,7 @@ import (
 type PropertyFetch struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	variable   node.Node
 	property   node.Node
 }
@@ -15,6 +16,7 @@ func NewPropertyFetch(variable node.Node, property node.Node) node.Node {
 	return PropertyFetch{
 		"PropertyFetch",
 		map[string]interface{}{},
+		nil,
 		variable,
 		property,
 	}
@@ -34,6 +36,15 @@ func (n PropertyFetch) Attribute(key string) interface{} {
 
 func (n PropertyFetch) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n PropertyFetch) Position() *node.Position {
+	return n.position
+}
+
+func (n PropertyFetch) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n PropertyFetch) Walk(v node.Visitor) {

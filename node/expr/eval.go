@@ -7,6 +7,7 @@ import (
 type Eval struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewEval(expression node.Node) node.Node {
 	return Eval{
 		"Eval",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n Eval) Attribute(key string) interface{} {
 
 func (n Eval) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Eval) Position() *node.Position {
+	return n.position
+}
+
+func (n Eval) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Eval) Walk(v node.Visitor) {

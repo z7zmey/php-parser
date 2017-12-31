@@ -13,6 +13,7 @@ func NewMul(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryMul",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Mul) Attribute(key string) interface{} {
 
 func (n Mul) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Mul) Position() *node.Position {
+	return n.position
+}
+
+func (n Mul) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Mul) Walk(v node.Visitor) {

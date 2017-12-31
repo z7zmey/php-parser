@@ -13,6 +13,7 @@ func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryLogicalAnd",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n LogicalAnd) Attribute(key string) interface{} {
 
 func (n LogicalAnd) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n LogicalAnd) Position() *node.Position {
+	return n.position
+}
+
+func (n LogicalAnd) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n LogicalAnd) Walk(v node.Visitor) {

@@ -13,6 +13,7 @@ func NewAssign(variable node.Node, expression node.Node) node.Node {
 		AssignOp{
 			"Assign",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Assign) Attribute(key string) interface{} {
 
 func (n Assign) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Assign) Position() *node.Position {
+	return n.position
+}
+
+func (n Assign) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Assign) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type Namespace struct {
 	name          string
 	attributes    map[string]interface{}
+	position *node.Position
 	namespaceName node.Node
 	stmts         []node.Node
 }
@@ -15,6 +16,7 @@ func NewNamespace(namespaceName node.Node, stmts []node.Node) node.Node {
 	return Namespace{
 		"Namespace",
 		map[string]interface{}{},
+		nil,
 		namespaceName,
 		stmts,
 	}
@@ -34,6 +36,15 @@ func (n Namespace) Attribute(key string) interface{} {
 
 func (n Namespace) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Namespace) Position() *node.Position {
+	return n.position
+}
+
+func (n Namespace) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Namespace) Walk(v node.Visitor) {

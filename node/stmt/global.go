@@ -7,6 +7,7 @@ import (
 type Global struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	vars       []node.Node
 }
 
@@ -14,6 +15,7 @@ func NewGlobal(vars []node.Node) node.Node {
 	return Global{
 		"Global",
 		map[string]interface{}{},
+		nil,
 		vars,
 	}
 }
@@ -32,6 +34,15 @@ func (n Global) Attribute(key string) interface{} {
 
 func (n Global) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Global) Position() *node.Position {
+	return n.position
+}
+
+func (n Global) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Global) Walk(v node.Visitor) {

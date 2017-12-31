@@ -3,6 +3,7 @@ package node
 type Parameter struct {
 	name         string
 	attributes   map[string]interface{}
+	position     *Position
 	variableType Node
 	variable     Node
 	defaultValue Node
@@ -15,6 +16,7 @@ func NewParameter(variableType Node, variable Node, defaultValue Node, byRef boo
 			"byRef":    byRef,
 			"variadic": variadic,
 		},
+		nil,
 		variableType,
 		variable,
 		defaultValue,
@@ -35,6 +37,15 @@ func (n Parameter) Attribute(key string) interface{} {
 
 func (n Parameter) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Parameter) Position() *Position {
+	return n.position
+}
+
+func (n Parameter) SetPosition(p *Position) Node {
+	n.position = p
+	return n
 }
 
 func (n Parameter) Walk(v Visitor) {

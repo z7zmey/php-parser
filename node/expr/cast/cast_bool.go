@@ -13,6 +13,7 @@ func NewCastBool(expr node.Node) node.Node {
 		Cast{
 			"CastBool",
 			map[string]interface{}{},
+			nil,
 			expr,
 		},
 	}
@@ -32,6 +33,15 @@ func (n CastBool) Attribute(key string) interface{} {
 
 func (n CastBool) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n CastBool) Position() *node.Position {
+	return n.position
+}
+
+func (n CastBool) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n CastBool) Walk(v node.Visitor) {

@@ -7,6 +7,7 @@ import (
 type ErrorSuppress struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewErrorSuppress(expression node.Node) node.Node {
 	return ErrorSuppress{
 		"ErrorSuppress",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n ErrorSuppress) Attribute(key string) interface{} {
 
 func (n ErrorSuppress) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ErrorSuppress) Position() *node.Position {
+	return n.position
+}
+
+func (n ErrorSuppress) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ErrorSuppress) Walk(v node.Visitor) {

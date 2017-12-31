@@ -13,6 +13,7 @@ func NewIdentical(variable node.Node, expression node.Node) node.Node {
 		BinaryOp{
 			"BinaryIdentical",
 			map[string]interface{}{},
+			nil,
 			variable,
 			expression,
 		},
@@ -33,6 +34,15 @@ func (n Identical) Attribute(key string) interface{} {
 
 func (n Identical) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Identical) Position() *node.Position {
+	return n.position
+}
+
+func (n Identical) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Identical) Walk(v node.Visitor) {

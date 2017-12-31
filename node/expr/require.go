@@ -7,6 +7,7 @@ import (
 type Require struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	expr       node.Node
 }
 
@@ -14,6 +15,7 @@ func NewRequire(expression node.Node) node.Node {
 	return Require{
 		"Require",
 		map[string]interface{}{},
+		nil,
 		expression,
 	}
 }
@@ -32,6 +34,15 @@ func (n Require) Attribute(key string) interface{} {
 
 func (n Require) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Require) Position() *node.Position {
+	return n.position
+}
+
+func (n Require) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Require) Walk(v node.Visitor) {

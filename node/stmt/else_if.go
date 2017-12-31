@@ -7,6 +7,7 @@ import (
 type ElseIf struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	cond       node.Node
 	stmt       node.Node
 }
@@ -15,6 +16,7 @@ func NewElseIf(cond node.Node, stmt node.Node) node.Node {
 	return ElseIf{
 		"ElseIf",
 		map[string]interface{}{},
+		nil,
 		cond,
 		stmt,
 	}
@@ -34,6 +36,15 @@ func (n ElseIf) Attribute(key string) interface{} {
 
 func (n ElseIf) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n ElseIf) Position() *node.Position {
+	return n.position
+}
+
+func (n ElseIf) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n ElseIf) Walk(v node.Visitor) {

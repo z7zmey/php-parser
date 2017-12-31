@@ -7,6 +7,7 @@ import (
 type Variable struct {
 	name       string
 	attributes map[string]interface{}
+	position *node.Position
 	varName    node.Node
 }
 
@@ -14,6 +15,7 @@ func NewVariable(varName node.Node) node.Node {
 	return Variable{
 		"Variable",
 		map[string]interface{}{},
+		nil,
 		varName,
 	}
 }
@@ -32,6 +34,15 @@ func (n Variable) Attribute(key string) interface{} {
 
 func (n Variable) SetAttribute(key string, value interface{}) {
 	n.attributes[key] = value
+}
+
+func (n Variable) Position() *node.Position {
+	return n.position
+}
+
+func (n Variable) SetPosition(p *node.Position) node.Node {
+	n.position = p
+	return n
 }
 
 func (n Variable) Walk(v node.Visitor) {
