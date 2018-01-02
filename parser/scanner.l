@@ -11,6 +11,7 @@ import (
     "fmt"
     "bytes"
     "github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/comment"
 )
 
 const (
@@ -271,8 +272,10 @@ NEW_LINE        (\r|\n|\r\n)
     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)))
     if is_doc_comment {
         l.phpDocComment = string(l.TokenBytes(nil))
+        l.comments = append(l.comments, comment.NewDocComment(string(l.TokenBytes(nil))))
         // return T_DOC_COMMENT
     } else {
+        l.comments = append(l.comments, comment.NewPlainComment(string(l.TokenBytes(nil))))
         // return T_COMMENT
     }
 

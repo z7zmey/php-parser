@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/cznic/golex/lex"
+	"github.com/z7zmey/php-parser/comment"
 )
 
 // Allocate Character classes anywhere in [0x80, 0xFF].
@@ -21,6 +22,7 @@ type lexer struct {
 	stateStack    []int
 	lineNumber    int
 	phpDocComment string
+	comments      []comment.Comment
 }
 
 func rune2Class(r rune) int {
@@ -43,7 +45,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &lexer{lx, []int{0}, 1, ""}
+	return &lexer{lx, []int{0}, 1, "", []comment.Comment{}}
 }
 
 func (l *lexer) ungetN(n int) []byte {
