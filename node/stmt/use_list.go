@@ -7,7 +7,7 @@ import (
 type UseList struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	useType    node.Node
 	uses       []node.Node
 }
@@ -34,8 +34,9 @@ func (n UseList) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n UseList) SetAttribute(key string, value interface{}) {
+func (n UseList) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n UseList) Position() *node.Position {

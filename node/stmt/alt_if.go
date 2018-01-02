@@ -7,7 +7,7 @@ import (
 type AltIf struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	cond       node.Node
 	stmt       node.Node
 	elseIf     []node.Node
@@ -38,8 +38,9 @@ func (n AltIf) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n AltIf) SetAttribute(key string, value interface{}) {
+func (n AltIf) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n AltIf) Position() *node.Position {

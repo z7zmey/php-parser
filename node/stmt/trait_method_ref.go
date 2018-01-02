@@ -7,7 +7,7 @@ import (
 type TraitMethodRef struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	trait      node.Node
 	method     node.Node
 }
@@ -34,8 +34,9 @@ func (n TraitMethodRef) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n TraitMethodRef) SetAttribute(key string, value interface{}) {
+func (n TraitMethodRef) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n TraitMethodRef) Position() *node.Position {

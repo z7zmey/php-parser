@@ -7,7 +7,7 @@ import (
 type Goto struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	label      node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Goto) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Goto) SetAttribute(key string, value interface{}) {
+func (n Goto) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Goto) Position() *node.Position {

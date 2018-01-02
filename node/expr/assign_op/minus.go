@@ -32,8 +32,9 @@ func (n Minus) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Minus) SetAttribute(key string, value interface{}) {
+func (n Minus) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Minus) Position() *node.Position {

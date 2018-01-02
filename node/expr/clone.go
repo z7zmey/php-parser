@@ -7,7 +7,7 @@ import (
 type Clone struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	expr       node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Clone) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Clone) SetAttribute(key string, value interface{}) {
+func (n Clone) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Clone) Position() *node.Position {

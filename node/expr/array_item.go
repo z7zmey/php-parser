@@ -7,7 +7,7 @@ import (
 type ArrayItem struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	key        node.Node
 	val        node.Node
 }
@@ -36,8 +36,9 @@ func (n ArrayItem) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n ArrayItem) SetAttribute(key string, value interface{}) {
+func (n ArrayItem) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n ArrayItem) Position() *node.Position {

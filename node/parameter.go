@@ -35,8 +35,9 @@ func (n Parameter) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Parameter) SetAttribute(key string, value interface{}) {
+func (n Parameter) SetAttribute(key string, value interface{}) Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Parameter) Position() *Position {

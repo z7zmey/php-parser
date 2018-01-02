@@ -32,8 +32,9 @@ func (n LogicalOr) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n LogicalOr) SetAttribute(key string, value interface{}) {
+func (n LogicalOr) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n LogicalOr) Position() *node.Position {

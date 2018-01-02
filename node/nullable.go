@@ -28,8 +28,9 @@ func (n Nullable) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Nullable) SetAttribute(key string, value interface{}) {
+func (n Nullable) SetAttribute(key string, value interface{}) Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Nullable) Position() *Position {

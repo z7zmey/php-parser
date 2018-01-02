@@ -7,7 +7,7 @@ import (
 type TraitUsePrecedence struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	ref        node.Node
 	insteadof  node.Node
 }
@@ -34,8 +34,9 @@ func (n TraitUsePrecedence) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n TraitUsePrecedence) SetAttribute(key string, value interface{}) {
+func (n TraitUsePrecedence) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n TraitUsePrecedence) Position() *node.Position {

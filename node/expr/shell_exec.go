@@ -7,7 +7,7 @@ import (
 type ShellExec struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	parts      []node.Node
 }
 
@@ -32,8 +32,9 @@ func (n ShellExec) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n ShellExec) SetAttribute(key string, value interface{}) {
+func (n ShellExec) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n ShellExec) Position() *node.Position {

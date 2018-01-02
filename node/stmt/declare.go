@@ -7,7 +7,7 @@ import (
 type Declare struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	consts     []node.Node
 	stmt       node.Node
 }
@@ -34,8 +34,9 @@ func (n Declare) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Declare) SetAttribute(key string, value interface{}) {
+func (n Declare) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Declare) Position() *node.Position {

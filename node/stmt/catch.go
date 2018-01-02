@@ -7,7 +7,7 @@ import (
 type Catch struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	types      []node.Node
 	variable   node.Node
 	stmts      []node.Node
@@ -36,8 +36,9 @@ func (n Catch) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Catch) SetAttribute(key string, value interface{}) {
+func (n Catch) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Catch) Position() *node.Position {

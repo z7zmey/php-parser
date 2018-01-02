@@ -31,8 +31,9 @@ func (n CastString) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n CastString) SetAttribute(key string, value interface{}) {
+func (n CastString) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n CastString) Position() *node.Position {

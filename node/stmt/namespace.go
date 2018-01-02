@@ -7,7 +7,7 @@ import (
 type Namespace struct {
 	name          string
 	attributes    map[string]interface{}
-	position *node.Position
+	position      *node.Position
 	namespaceName node.Node
 	stmts         []node.Node
 }
@@ -34,8 +34,9 @@ func (n Namespace) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Namespace) SetAttribute(key string, value interface{}) {
+func (n Namespace) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Namespace) Position() *node.Position {

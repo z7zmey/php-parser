@@ -10,7 +10,7 @@ type Node interface {
 type Attributer interface {
 	Attributes() map[string]interface{}
 	Attribute(key string) interface{}
-	SetAttribute(key string, value interface{})
+	SetAttribute(key string, value interface{}) Node
 }
 
 type Positioner interface {

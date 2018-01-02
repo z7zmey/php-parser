@@ -7,7 +7,7 @@ import (
 type Array struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	items      []node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Array) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Array) SetAttribute(key string, value interface{}) {
+func (n Array) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Array) Position() *node.Position {

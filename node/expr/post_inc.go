@@ -7,7 +7,7 @@ import (
 type PostInc struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 }
 
@@ -32,8 +32,9 @@ func (n PostInc) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n PostInc) SetAttribute(key string, value interface{}) {
+func (n PostInc) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n PostInc) Position() *node.Position {

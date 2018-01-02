@@ -7,7 +7,7 @@ import (
 type NameNode struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	parts      []node.Node
 }
 
@@ -32,8 +32,9 @@ func (n NameNode) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n NameNode) SetAttribute(key string, value interface{}) {
+func (n NameNode) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n NameNode) Position() *node.Position {

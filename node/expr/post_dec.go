@@ -7,7 +7,7 @@ import (
 type PostDec struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 }
 
@@ -32,8 +32,9 @@ func (n PostDec) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n PostDec) SetAttribute(key string, value interface{}) {
+func (n PostDec) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n PostDec) Position() *node.Position {

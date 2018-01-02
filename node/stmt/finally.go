@@ -7,7 +7,7 @@ import (
 type Finally struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	stmts      []node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Finally) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Finally) SetAttribute(key string, value interface{}) {
+func (n Finally) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Finally) Position() *node.Position {

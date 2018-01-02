@@ -7,7 +7,7 @@ import (
 type MethodCall struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 	method     node.Node
 	arguments  []node.Node
@@ -36,8 +36,9 @@ func (n MethodCall) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n MethodCall) SetAttribute(key string, value interface{}) {
+func (n MethodCall) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n MethodCall) Position() *node.Position {

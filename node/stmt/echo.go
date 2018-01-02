@@ -7,7 +7,7 @@ import (
 type Echo struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	exprs      []node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Echo) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Echo) SetAttribute(key string, value interface{}) {
+func (n Echo) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Echo) Position() *node.Position {

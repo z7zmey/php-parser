@@ -7,7 +7,7 @@ import (
 type Exit struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	expr       node.Node
 }
 
@@ -34,8 +34,9 @@ func (n Exit) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Exit) SetAttribute(key string, value interface{}) {
+func (n Exit) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Exit) Position() *node.Position {

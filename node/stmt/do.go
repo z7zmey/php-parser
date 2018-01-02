@@ -7,7 +7,7 @@ import (
 type Do struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	stmt       node.Node
 	cond       node.Node
 }
@@ -34,8 +34,9 @@ func (n Do) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Do) SetAttribute(key string, value interface{}) {
+func (n Do) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Do) Position() *node.Position {

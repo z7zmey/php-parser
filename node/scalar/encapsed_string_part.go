@@ -7,7 +7,7 @@ import (
 type EncapsedStringPart struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 }
 
 func NewEncapsedStringPart(value string) node.Node {
@@ -32,8 +32,9 @@ func (n EncapsedStringPart) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n EncapsedStringPart) SetAttribute(key string, value interface{}) {
+func (n EncapsedStringPart) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n EncapsedStringPart) Position() *node.Position {

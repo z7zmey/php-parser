@@ -7,7 +7,7 @@ import (
 type AltElse struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	stmt       node.Node
 }
 
@@ -32,8 +32,9 @@ func (n AltElse) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n AltElse) SetAttribute(key string, value interface{}) {
+func (n AltElse) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n AltElse) Position() *node.Position {

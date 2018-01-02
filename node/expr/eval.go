@@ -7,7 +7,7 @@ import (
 type Eval struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	expr       node.Node
 }
 
@@ -32,8 +32,9 @@ func (n Eval) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Eval) SetAttribute(key string, value interface{}) {
+func (n Eval) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Eval) Position() *node.Position {

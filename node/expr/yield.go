@@ -7,7 +7,7 @@ import (
 type Yield struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	key        node.Node
 	value      node.Node
 }
@@ -34,8 +34,9 @@ func (n Yield) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Yield) SetAttribute(key string, value interface{}) {
+func (n Yield) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Yield) Position() *node.Position {

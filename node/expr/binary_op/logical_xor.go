@@ -32,8 +32,9 @@ func (n LogicalXor) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n LogicalXor) SetAttribute(key string, value interface{}) {
+func (n LogicalXor) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n LogicalXor) Position() *node.Position {

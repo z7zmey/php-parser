@@ -7,7 +7,7 @@ import (
 type ArrayDimFetch struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 	dim        node.Node
 }
@@ -34,8 +34,9 @@ func (n ArrayDimFetch) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n ArrayDimFetch) SetAttribute(key string, value interface{}) {
+func (n ArrayDimFetch) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n ArrayDimFetch) Position() *node.Position {

@@ -7,7 +7,7 @@ import (
 type Use struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	useType    node.Node
 	use        node.Node
 	alias      node.Node
@@ -36,8 +36,9 @@ func (n Use) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Use) SetAttribute(key string, value interface{}) {
+func (n Use) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Use) Position() *node.Position {

@@ -7,7 +7,7 @@ import (
 type Case struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	cond       node.Node
 	stmts      []node.Node
 }
@@ -34,8 +34,9 @@ func (n Case) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Case) SetAttribute(key string, value interface{}) {
+func (n Case) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Case) Position() *node.Position {

@@ -7,7 +7,7 @@ import (
 type Nop struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 }
 
 func NewNop() node.Node {
@@ -30,8 +30,9 @@ func (n Nop) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n Nop) SetAttribute(key string, value interface{}) {
+func (n Nop) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n Nop) Position() *node.Position {

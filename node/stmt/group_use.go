@@ -7,7 +7,7 @@ import (
 type GroupUse struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	useType    node.Node
 	prefix     node.Node
 	useList    []node.Node
@@ -36,8 +36,9 @@ func (n GroupUse) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n GroupUse) SetAttribute(key string, value interface{}) {
+func (n GroupUse) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n GroupUse) Position() *node.Position {

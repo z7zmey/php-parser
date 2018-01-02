@@ -32,8 +32,9 @@ func (n BitwiseAnd) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n BitwiseAnd) SetAttribute(key string, value interface{}) {
+func (n BitwiseAnd) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n BitwiseAnd) Position() *node.Position {

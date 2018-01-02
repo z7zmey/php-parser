@@ -7,7 +7,7 @@ import (
 type InstanceOf struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	expr       node.Node
 	class      node.Node
 }
@@ -34,8 +34,9 @@ func (n InstanceOf) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n InstanceOf) SetAttribute(key string, value interface{}) {
+func (n InstanceOf) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n InstanceOf) Position() *node.Position {

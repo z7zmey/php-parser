@@ -7,7 +7,7 @@ import (
 type ClassConstList struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	modifiers  []node.Node
 	consts     []node.Node
 }
@@ -34,8 +34,9 @@ func (n ClassConstList) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n ClassConstList) SetAttribute(key string, value interface{}) {
+func (n ClassConstList) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n ClassConstList) Position() *node.Position {

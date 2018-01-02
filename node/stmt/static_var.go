@@ -7,7 +7,7 @@ import (
 type StaticVar struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 	expr       node.Node
 }
@@ -34,8 +34,9 @@ func (n StaticVar) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n StaticVar) SetAttribute(key string, value interface{}) {
+func (n StaticVar) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n StaticVar) Position() *node.Position {

@@ -34,8 +34,9 @@ func (n ClassConstFetch) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n ClassConstFetch) SetAttribute(key string, value interface{}) {
+func (n ClassConstFetch) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
+	return n
 }
 
 func (n ClassConstFetch) Position() *node.Position {
