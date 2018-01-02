@@ -50,6 +50,7 @@ type boolWithToken struct {
     list []node.Node
     foreachVariable foreachVariable
     nodesWithEndToken *nodesWithEndToken
+    str string
 }
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
@@ -263,6 +264,8 @@ type boolWithToken struct {
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> interface_extends_list implements_list method_modifiers variable_modifiers
 %type <list> non_empty_member_modifiers name_list class_modifiers
+
+%type <str> backup_doc_comment
 
 %%
 
@@ -483,11 +486,11 @@ unset_variable:
 ;
 
 function_declaration_statement:
-    T_FUNCTION returns_ref T_STRING '(' parameter_list ')' return_type '{' inner_statement_list '}'
+    T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
             name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
-            $$ = stmt.NewFunction(name, $2.value, $5, $7, $9).
-                SetPosition(NewTokensPosition($1, $10))
+            $$ = stmt.NewFunction(name, $2.value, $6, $8, $10, $4).
+                SetPosition(NewTokensPosition($1, $11))
         }
 ;
 
@@ -502,17 +505,17 @@ is_variadic:
 ;
 
 class_declaration_statement:
-        class_modifiers T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
+        class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
                 name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
-                $$ = stmt.NewClass(name, $1, nil, $4, $5, $7).
-                    SetPosition(NewOptionalListTokensPosition($1, $2, $8))
+                $$ = stmt.NewClass(name, $1, nil, $4, $5, $8, $6).
+                    SetPosition(NewOptionalListTokensPosition($1, $2, $9))
             }
-    |   T_CLASS T_STRING extends_from implements_list '{' class_statement_list '}'
+    |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
                 name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
-                $$ = stmt.NewClass(name, nil, nil, $3, $4, $6).
-                    SetPosition(NewTokensPosition($1, $7))
+                $$ = stmt.NewClass(name, nil, nil, $3, $4, $7, $5).
+                    SetPosition(NewTokensPosition($1, $8))
             }
 ;
 
@@ -527,15 +530,20 @@ class_modifier:
 ;
 
 trait_declaration_statement:
-    T_TRAIT T_STRING '{' class_statement_list '}'       { $$ = stmt.NewTrait(node.NewIdentifier($2).SetPosition(NewTokenPosition($2)), $4).SetPosition(NewTokensPosition($1, $5)) }
+    T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
+        {
+            name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            $$ = stmt.NewTrait(name, $5, $3).
+                SetPosition(NewTokensPosition($1, $6))
+        }
 ;
 
 interface_declaration_statement:
-    T_INTERFACE T_STRING interface_extends_list '{' class_statement_list '}'
+    T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
         {
             name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
-            $$ = stmt.NewInterface(name, $3, $5).
-                SetPosition(NewTokensPosition($1, $6))
+            $$ = stmt.NewInterface(name, $3, $6, $4).
+                SetPosition(NewTokensPosition($1, $7))
         }
 ;
 
@@ -759,10 +767,11 @@ class_statement:
         variable_modifiers property_list ';'            { $$ = stmt.NewPropertyList($1, $2).SetPosition(NewNodeListTokenPosition($1, $3)) }
     |   method_modifiers T_CONST class_const_list ';'   { $$ = stmt.NewClassConstList($1, $3).SetPosition(NewOptionalListTokensPosition($1, $2, $4)) }
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($2, $3.nodes).SetPosition(NewTokensPosition($1, $3.endToken)) }
-    |   method_modifiers T_FUNCTION returns_ref identifier '(' parameter_list ')' return_type method_body
+    |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
-                $$ = stmt.NewClassMethod(node.NewIdentifier($4).SetPosition(NewTokenPosition($4)), $1, $3.value, $6, $8, $9.nodes).
-                    SetPosition(NewOptionalListTokensPosition($1, $2, $9.endToken))
+                name := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                $$ = stmt.NewClassMethod(name, $1, $3.value, $7, $9, $10.nodes, $5).
+                    SetPosition(NewOptionalListTokensPosition($1, $2, $10.endToken))
             }
 ;
 
@@ -848,17 +857,17 @@ property_list:
 ;
 
 property:
-        T_VARIABLE
+        T_VARIABLE backup_doc_comment
             {
                 identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
-                $$ = stmt.NewProperty(variable, nil).SetPosition(NewTokenPosition($1))
+                $$ = stmt.NewProperty(variable, nil, $2).SetPosition(NewTokenPosition($1))
             }
-    |   T_VARIABLE '=' expr
+    |   T_VARIABLE '=' expr backup_doc_comment
         {
             identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
-            $$ = stmt.NewProperty(variable, $3).SetPosition(NewTokenNodePosition($1, $3))
+            $$ = stmt.NewProperty(variable, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
         }
 ;
 
@@ -868,11 +877,19 @@ class_const_list:
 ;
 
 class_const_decl:
-    identifier '=' expr                                 { $$ = stmt.NewConstant(node.NewIdentifier($1).SetPosition(NewTokenPosition($1)), $3).SetPosition(NewTokenNodePosition($1, $3)) }
+    identifier '=' expr backup_doc_comment
+        {
+            name := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            $$ = stmt.NewConstant(name, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
+        }
 ;
 
 const_decl:
-    T_STRING '=' expr                                   { $$ = stmt.NewConstant(node.NewIdentifier($1).SetPosition(NewTokenPosition($1)), $3).SetPosition(NewTokenNodePosition($1, $3)) }
+    T_STRING '=' expr backup_doc_comment
+        {
+            name := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            $$ = stmt.NewConstant(name, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
+        }
 ;
 
 echo_expr_list:
@@ -894,12 +911,12 @@ non_empty_for_exprs:
 ;
 
 anonymous_class:
-    T_CLASS ctor_arguments extends_from implements_list '{' class_statement_list '}'
+    T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
         {
             if $2 != nil {
-                $$ = stmt.NewClass(nil, nil, $2.nodes, $3, $4, $6).SetPosition(NewTokensPosition($1, $7))
+                $$ = stmt.NewClass(nil, nil, $2.nodes, $3, $4, $7, $5).SetPosition(NewTokensPosition($1, $8))
             } else {
-                $$ = stmt.NewClass(nil, nil, nil, $3, $4, $6).SetPosition(NewTokensPosition($1, $7))
+                $$ = stmt.NewClass(nil, nil, nil, $3, $4, $7, $5).SetPosition(NewTokensPosition($1, $8))
             }
         }
 ;
@@ -999,16 +1016,20 @@ expr_without_variable:
     |   T_YIELD expr                                    { $$ = expr.NewYield(nil, $2).SetPosition(NewTokenNodePosition($1, $2)) }
     |   T_YIELD expr T_DOUBLE_ARROW expr                { $$ = expr.NewYield($2, $4).SetPosition(NewTokenNodePosition($1, $4)) }
     |   T_YIELD_FROM expr                               { $$ = expr.NewYieldFrom($2).SetPosition(NewTokenNodePosition($1, $2)) }
-    |   T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+    |   T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, $7, $9, false, $2.value).
-                    SetPosition(NewTokensPosition($1, $10))
-            }
-    |   T_STATIC T_FUNCTION returns_ref '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
-            {
-                $$ = expr.NewClosure($5, $7, $8, $10, true, $3.value).
+                $$ = expr.NewClosure($5, $7, $8, $10, false, $2.value, $3).
                     SetPosition(NewTokensPosition($1, $11))
             }
+    |   T_STATIC T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
+            {
+                $$ = expr.NewClosure($6, $8, $9, $11, true, $3.value, $4).
+                    SetPosition(NewTokensPosition($1, $12))
+            }
+;
+
+backup_doc_comment:
+	/* empty */ { $$ = yylex.(*lexer).phpDocComment; yylex.(*lexer).phpDocComment = "" }
 ;
 
 returns_ref:

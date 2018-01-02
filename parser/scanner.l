@@ -246,12 +246,40 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\>\>                                       lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_SR
 <PHP>\?\?                                       lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_COALESCE
 <PHP>(#|[/][/]).*{NEW_LINE}                     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]        lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_COMMENT; // TODO: handle ?>
-<PHP>[/][*][*][^*]*[*]+([^*/][^*]*[*]+)*[/]     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)));// return T_DOC_COMMENT; // TODO: handle ?>
+<PHP>([/][*])|([/][*][*])
+    tb := l.TokenBytes(nil)
+    is_doc_comment := false
+    if len(tb) > 2 {
+        is_doc_comment = true
+        l.phpDocComment = ""
+    }
+
+    for {
+        if c == -1 {
+            break; // TODO: Unterminated comment starting line %d
+        }
+
+        p := c
+        c = l.Next()
+
+        if rune(p) == '*' && rune(c) == '/' {
+            c = l.Next()
+            break;
+        }
+    }
+
+    lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)))
+    if is_doc_comment {
+        l.phpDocComment = string(l.TokenBytes(nil))
+        // return T_DOC_COMMENT
+    } else {
+        // return T_COMMENT
+    }
+
 <PHP>{OPERATORS}                                lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>\{                                         l.pushState(PHP); lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
-<PHP>\}                                         l.popState();     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>\}                                         l.popState();     lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return rune2Class(rune(l.TokenBytes(nil)[0])); l.phpDocComment = ""
 <PHP>\${VAR_NAME}                               lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_VARIABLE
 <PHP>{VAR_NAME}                                 lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil))); return T_STRING
 

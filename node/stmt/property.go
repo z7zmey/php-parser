@@ -7,15 +7,17 @@ import (
 type Property struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	variable   node.Node
 	expr       node.Node
 }
 
-func NewProperty(variable node.Node, expr node.Node) node.Node {
+func NewProperty(variable node.Node, expr node.Node, phpDocComment string) node.Node {
 	return Property{
 		"Property",
-		map[string]interface{}{},
+		map[string]interface{}{
+			"phpDocComment": phpDocComment,
+		},
 		nil,
 		variable,
 		expr,

@@ -7,16 +7,18 @@ import (
 type Interface struct {
 	name          string
 	attributes    map[string]interface{}
-	position *node.Position
+	position      *node.Position
 	interfaceName node.Node
 	extends       []node.Node
 	stmts         []node.Node
 }
 
-func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node) node.Node {
+func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return Interface{
 		"Interface",
-		map[string]interface{}{},
+		map[string]interface{}{
+			"phpDocComment": phpDocComment,
+		},
 		nil,
 		interfaceName,
 		extends,

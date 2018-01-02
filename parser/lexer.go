@@ -18,8 +18,9 @@ const (
 
 type lexer struct {
 	*lex.Lexer
-	stateStack []int
-	lineNumber int
+	stateStack    []int
+	lineNumber    int
+	phpDocComment string
 }
 
 func rune2Class(r rune) int {
@@ -42,7 +43,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &lexer{lx, []int{0}, 1}
+	return &lexer{lx, []int{0}, 1, ""}
 }
 
 func (l *lexer) ungetN(n int) []byte {

@@ -7,19 +7,20 @@ import (
 type Closure struct {
 	name       string
 	attributes map[string]interface{}
-	position *node.Position
+	position   *node.Position
 	params     []node.Node
 	uses       []node.Node
 	returnType node.Node
 	stmts      []node.Node
 }
 
-func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool) node.Node {
+func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
 	return Closure{
 		"Closure",
 		map[string]interface{}{
-			"isReturnRef": isReturnRef,
-			"isStatic":    isStatic,
+			"isReturnRef":   isReturnRef,
+			"isStatic":      isStatic,
+			"phpDocComment": phpDocComment,
 		},
 		nil,
 		params,

@@ -7,15 +7,17 @@ import (
 type Constant struct {
 	name         string
 	attributes   map[string]interface{}
-	position *node.Position
+	position     *node.Position
 	constantName node.Node
 	expr         node.Node
 }
 
-func NewConstant(constantName node.Node, expr node.Node) node.Node {
+func NewConstant(constantName node.Node, expr node.Node, phpDocComment string) node.Node {
 	return Constant{
 		"Constant",
-		map[string]interface{}{},
+		map[string]interface{}{
+			"phpDocComment": phpDocComment,
+		},
 		nil,
 		constantName,
 		expr,
