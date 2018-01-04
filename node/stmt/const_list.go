@@ -5,7 +5,6 @@ import (
 )
 
 type ConstList struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	consts     []node.Node
@@ -13,15 +12,10 @@ type ConstList struct {
 
 func NewConstList(consts []node.Node) node.Node {
 	return ConstList{
-		"ConstList",
 		map[string]interface{}{},
 		nil,
 		consts,
 	}
-}
-
-func (n ConstList) Name() string {
-	return "ConstList"
 }
 
 func (n ConstList) Attributes() map[string]interface{} {

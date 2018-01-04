@@ -5,7 +5,6 @@ import (
 )
 
 type Else struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmt       node.Node
@@ -13,15 +12,10 @@ type Else struct {
 
 func NewElse(stmt node.Node) node.Node {
 	return Else{
-		"Else",
 		map[string]interface{}{},
 		nil,
 		stmt,
 	}
-}
-
-func (n Else) Name() string {
-	return "Else"
 }
 
 func (n Else) Attributes() map[string]interface{} {

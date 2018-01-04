@@ -5,7 +5,6 @@ import (
 )
 
 type AltElseIf struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	cond       node.Node
@@ -14,16 +13,11 @@ type AltElseIf struct {
 
 func NewAltElseIf(cond node.Node, stmt node.Node) node.Node {
 	return AltElseIf{
-		"AltElseIf",
 		map[string]interface{}{},
 		nil,
 		cond,
 		stmt,
 	}
-}
-
-func (n AltElseIf) Name() string {
-	return "AltElseIf"
 }
 
 func (n AltElseIf) Attributes() map[string]interface{} {

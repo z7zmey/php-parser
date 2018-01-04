@@ -5,7 +5,6 @@ import (
 )
 
 type Unset struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	vars       []node.Node
@@ -13,15 +12,10 @@ type Unset struct {
 
 func NewUnset(vars []node.Node) node.Node {
 	return Unset{
-		"Unset",
 		map[string]interface{}{},
 		nil,
 		vars,
 	}
-}
-
-func (n Unset) Name() string {
-	return "Unset"
 }
 
 func (n Unset) Attributes() map[string]interface{} {

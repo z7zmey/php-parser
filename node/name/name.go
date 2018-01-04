@@ -4,49 +4,43 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
-type NameNode struct {
-	name       string
+type Name struct {
 	attributes map[string]interface{}
 	position   *node.Position
 	parts      []node.Node
 }
 
 func NewName(parts []node.Node) node.Node {
-	return NameNode{
-		"Name",
+	return Name{
 		map[string]interface{}{},
 		nil,
 		parts,
 	}
 }
 
-func (n NameNode) Name() string {
-	return "Name"
-}
-
-func (n NameNode) Attributes() map[string]interface{} {
+func (n Name) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n NameNode) Attribute(key string) interface{} {
+func (n Name) Attribute(key string) interface{} {
 	return n.attributes[key]
 }
 
-func (n NameNode) SetAttribute(key string, value interface{}) node.Node {
+func (n Name) SetAttribute(key string, value interface{}) node.Node {
 	n.attributes[key] = value
 	return n
 }
 
-func (n NameNode) Position() *node.Position {
+func (n Name) Position() *node.Position {
 	return n.position
 }
 
-func (n NameNode) SetPosition(p *node.Position) node.Node {
+func (n Name) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n NameNode) Walk(v node.Visitor) {
+func (n Name) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

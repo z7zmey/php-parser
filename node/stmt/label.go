@@ -5,7 +5,6 @@ import (
 )
 
 type Label struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	labelName  node.Node
@@ -13,15 +12,10 @@ type Label struct {
 
 func NewLabel(labelName node.Node) node.Node {
 	return Label{
-		"Label",
 		map[string]interface{}{},
 		nil,
 		labelName,
 	}
-}
-
-func (n Label) Name() string {
-	return "Label"
 }
 
 func (n Label) Attributes() map[string]interface{} {

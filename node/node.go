@@ -3,7 +3,6 @@ package node
 type Node interface {
 	Attributer
 	Positioner
-	Name() string
 	Walk(v Visitor)
 }
 

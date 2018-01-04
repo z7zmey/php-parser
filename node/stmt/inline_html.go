@@ -5,23 +5,17 @@ import (
 )
 
 type InlineHtml struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 }
 
 func NewInlineHtml(value string) node.Node {
 	return InlineHtml{
-		"InlineHtml",
 		map[string]interface{}{
 			"value": value,
 		},
 		nil,
 	}
-}
-
-func (n InlineHtml) Name() string {
-	return "InlineHtml"
 }
 
 func (n InlineHtml) Attributes() map[string]interface{} {

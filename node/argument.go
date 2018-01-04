@@ -1,7 +1,6 @@
 package node
 
 type Argument struct {
-	name       string
 	attributes map[string]interface{}
 	position   *Position
 	expr       Node
@@ -10,7 +9,6 @@ type Argument struct {
 
 func NewArgument(expression Node, variadic bool) Node {
 	return Argument{
-		"Argument",
 		map[string]interface{}{
 			"variadic": variadic,
 		},
@@ -18,10 +16,6 @@ func NewArgument(expression Node, variadic bool) Node {
 		expression,
 		variadic,
 	}
-}
-
-func (n Argument) Name() string {
-	return "Argument"
 }
 
 func (n Argument) Attributes() map[string]interface{} {

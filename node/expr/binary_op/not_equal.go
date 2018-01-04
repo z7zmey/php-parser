@@ -11,17 +11,12 @@ type NotEqual struct {
 func NewNotEqual(variable node.Node, expression node.Node) node.Node {
 	return NotEqual{
 		BinaryOp{
-			"BinaryNotEqual",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n NotEqual) Name() string {
-	return "NotEqual"
 }
 
 func (n NotEqual) Attributes() map[string]interface{} {

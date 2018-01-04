@@ -5,7 +5,6 @@ import (
 )
 
 type Class struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	className  node.Node
@@ -18,7 +17,6 @@ type Class struct {
 
 func NewClass(className node.Node, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return Class{
-		"Class",
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
@@ -30,10 +28,6 @@ func NewClass(className node.Node, modifiers []node.Node, args []node.Node, exte
 		implements,
 		stmts,
 	}
-}
-
-func (n Class) Name() string {
-	return "Class"
 }
 
 func (n Class) Attributes() map[string]interface{} {

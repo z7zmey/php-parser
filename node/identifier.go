@@ -5,23 +5,17 @@ import (
 )
 
 type Identifier struct {
-	name       string
 	attributes map[string]interface{}
 	position   *Position
 }
 
 func NewIdentifier(token token.Token) Node {
 	return Identifier{
-		"Identifier",
 		map[string]interface{}{
 			"value": token.Value,
 		},
 		nil,
 	}
-}
-
-func (n Identifier) Name() string {
-	return "Identifier"
 }
 
 func (n Identifier) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type Finally struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmts      []node.Node
@@ -13,15 +12,10 @@ type Finally struct {
 
 func NewFinally(stmts []node.Node) node.Node {
 	return Finally{
-		"Finally",
 		map[string]interface{}{},
 		nil,
 		stmts,
 	}
-}
-
-func (n Finally) Name() string {
-	return "Finally"
 }
 
 func (n Finally) Attributes() map[string]interface{} {

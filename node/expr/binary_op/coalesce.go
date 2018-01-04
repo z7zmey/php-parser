@@ -11,17 +11,12 @@ type Coalesce struct {
 func NewCoalesce(variable node.Node, expression node.Node) node.Node {
 	return Coalesce{
 		BinaryOp{
-			"BinaryCoalesce",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Coalesce) Name() string {
-	return "Coalesce"
 }
 
 func (n Coalesce) Attributes() map[string]interface{} {

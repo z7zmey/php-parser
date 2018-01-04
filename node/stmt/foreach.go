@@ -5,7 +5,6 @@ import (
 )
 
 type Foreach struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -16,7 +15,6 @@ type Foreach struct {
 
 func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
 	return Foreach{
-		"Foreach",
 		map[string]interface{}{
 			"byRef": byRef,
 		},
@@ -26,10 +24,6 @@ func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Nod
 		variable,
 		stmt,
 	}
-}
-
-func (n Foreach) Name() string {
-	return "Foreach"
 }
 
 func (n Foreach) Attributes() map[string]interface{} {

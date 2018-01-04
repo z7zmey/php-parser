@@ -5,7 +5,6 @@ import (
 )
 
 type Function struct {
-	name         string
 	attributes   map[string]interface{}
 	position     *node.Position
 	functionName node.Node
@@ -16,7 +15,6 @@ type Function struct {
 
 func NewFunction(functionName node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return Function{
-		"Function",
 		map[string]interface{}{
 			"returnsRef":    returnsRef,
 			"phpDocComment": phpDocComment,
@@ -27,10 +25,6 @@ func NewFunction(functionName node.Node, returnsRef bool, params []node.Node, re
 		returnType,
 		stmts,
 	}
-}
-
-func (n Function) Name() string {
-	return "Function"
 }
 
 func (n Function) Attributes() map[string]interface{} {

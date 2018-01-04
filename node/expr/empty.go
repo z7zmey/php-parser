@@ -5,7 +5,6 @@ import (
 )
 
 type Empty struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Empty struct {
 
 func NewEmpty(expression node.Node) node.Node {
 	return Empty{
-		"Empty",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Empty) Name() string {
-	return "Empty"
 }
 
 func (n Empty) Attributes() map[string]interface{} {

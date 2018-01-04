@@ -5,7 +5,6 @@ import (
 )
 
 type Use struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	useType    node.Node
@@ -15,17 +14,12 @@ type Use struct {
 
 func NewUse(useType node.Node, use node.Node, alias node.Node) node.Node {
 	return Use{
-		"Use",
 		map[string]interface{}{},
 		nil,
 		useType,
 		use,
 		alias,
 	}
-}
-
-func (n Use) Name() string {
-	return "Use"
 }
 
 func (n Use) Attributes() map[string]interface{} {

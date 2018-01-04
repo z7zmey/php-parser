@@ -11,16 +11,11 @@ type CastDouble struct {
 func NewCastDouble(expr node.Node) node.Node {
 	return CastDouble{
 		Cast{
-			"CastDouble",
 			map[string]interface{}{},
 			nil,
 			expr,
 		},
 	}
-}
-
-func (n CastDouble) Name() string {
-	return "CastDouble"
 }
 
 func (n CastDouble) Attributes() map[string]interface{} {

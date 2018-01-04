@@ -5,7 +5,6 @@ import (
 )
 
 type AltElse struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmt       node.Node
@@ -13,15 +12,10 @@ type AltElse struct {
 
 func NewAltElse(stmt node.Node) node.Node {
 	return AltElse{
-		"AltElse",
 		map[string]interface{}{},
 		nil,
 		stmt,
 	}
-}
-
-func (n AltElse) Name() string {
-	return "AltElse"
 }
 
 func (n AltElse) Attributes() map[string]interface{} {

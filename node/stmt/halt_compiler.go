@@ -5,21 +5,15 @@ import (
 )
 
 type HaltCompiler struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 }
 
 func NewHaltCompiler() node.Node {
 	return HaltCompiler{
-		"HaltCompiler",
 		map[string]interface{}{},
 		nil,
 	}
-}
-
-func (n HaltCompiler) Name() string {
-	return "HaltCompiler"
 }
 
 func (n HaltCompiler) Attributes() map[string]interface{} {

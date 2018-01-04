@@ -5,7 +5,6 @@ import (
 )
 
 type Encapsed struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	parts      []node.Node
@@ -13,15 +12,10 @@ type Encapsed struct {
 
 func NewEncapsed(parts []node.Node) node.Node {
 	return Encapsed{
-		"Encapsed",
 		map[string]interface{}{},
 		nil,
 		parts,
 	}
-}
-
-func (n Encapsed) Name() string {
-	return "Encapsed"
 }
 
 func (n Encapsed) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type New struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	class      node.Node
@@ -14,16 +13,11 @@ type New struct {
 
 func NewNew(class node.Node, arguments []node.Node) node.Node {
 	return New{
-		"New",
 		map[string]interface{}{},
 		nil,
 		class,
 		arguments,
 	}
-}
-
-func (n New) Name() string {
-	return "New"
 }
 
 func (n New) Attributes() map[string]interface{} {

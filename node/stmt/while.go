@@ -6,7 +6,6 @@ import (
 )
 
 type While struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	token      token.Token
@@ -16,17 +15,12 @@ type While struct {
 
 func NewWhile(token token.Token, cond node.Node, stmt node.Node) node.Node {
 	return While{
-		"While",
 		map[string]interface{}{},
 		nil,
 		token,
 		cond,
 		stmt,
 	}
-}
-
-func (n While) Name() string {
-	return "While"
 }
 
 func (n While) Attributes() map[string]interface{} {

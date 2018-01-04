@@ -5,7 +5,6 @@ import (
 )
 
 type TraitMethodRef struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	trait      node.Node
@@ -14,16 +13,11 @@ type TraitMethodRef struct {
 
 func NewTraitMethodRef(trait node.Node, method node.Node) node.Node {
 	return TraitMethodRef{
-		"TraitMethodRef",
 		map[string]interface{}{},
 		nil,
 		trait,
 		method,
 	}
-}
-
-func (n TraitMethodRef) Name() string {
-	return "TraitMethodRef"
 }
 
 func (n TraitMethodRef) Attributes() map[string]interface{} {

@@ -11,17 +11,12 @@ type Equal struct {
 func NewEqual(variable node.Node, expression node.Node) node.Node {
 	return Equal{
 		BinaryOp{
-			"BinaryEqual",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Equal) Name() string {
-	return "Equal"
 }
 
 func (n Equal) Attributes() map[string]interface{} {

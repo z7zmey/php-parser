@@ -5,7 +5,6 @@ import (
 )
 
 type UnaryPlus struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type UnaryPlus struct {
 
 func NewUnaryPlus(expression node.Node) node.Node {
 	return UnaryPlus{
-		"UnaryPlus",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n UnaryPlus) Name() string {
-	return "UnaryPlus"
 }
 
 func (n UnaryPlus) Attributes() map[string]interface{} {

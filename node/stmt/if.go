@@ -5,7 +5,6 @@ import (
 )
 
 type If struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	cond       node.Node
@@ -16,7 +15,6 @@ type If struct {
 
 func NewIf(cond node.Node, stmt node.Node) node.Node {
 	return If{
-		"If",
 		map[string]interface{}{},
 		nil,
 		cond,
@@ -24,10 +22,6 @@ func NewIf(cond node.Node, stmt node.Node) node.Node {
 		nil,
 		nil,
 	}
-}
-
-func (n If) Name() string {
-	return "If"
 }
 
 func (n If) Attributes() map[string]interface{} {

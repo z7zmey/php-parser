@@ -5,7 +5,6 @@ import (
 )
 
 type Goto struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	label      node.Node
@@ -13,15 +12,10 @@ type Goto struct {
 
 func NewGoto(label node.Node) node.Node {
 	return Goto{
-		"Goto",
 		map[string]interface{}{},
 		nil,
 		label,
 	}
-}
-
-func (n Goto) Name() string {
-	return "Goto"
 }
 
 func (n Goto) Attributes() map[string]interface{} {

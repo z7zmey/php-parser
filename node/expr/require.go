@@ -5,7 +5,6 @@ import (
 )
 
 type Require struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Require struct {
 
 func NewRequire(expression node.Node) node.Node {
 	return Require{
-		"Require",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Require) Name() string {
-	return "Require"
 }
 
 func (n Require) Attributes() map[string]interface{} {

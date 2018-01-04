@@ -11,17 +11,12 @@ type Div struct {
 func NewDiv(variable node.Node, expression node.Node) node.Node {
 	return Div{
 		AssignOp{
-			"AssignDiv",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Div) Name() string {
-	return "Div"
 }
 
 func (n Div) Attributes() map[string]interface{} {

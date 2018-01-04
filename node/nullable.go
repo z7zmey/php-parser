@@ -1,7 +1,6 @@
 package node
 
 type Nullable struct {
-	name       string
 	attributes map[string]interface{}
 	position   *Position
 	expr       Node
@@ -9,15 +8,10 @@ type Nullable struct {
 
 func NewNullable(expression Node) Node {
 	return Nullable{
-		"Nullable",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Nullable) Name() string {
-	return "Nullable"
 }
 
 func (n Nullable) Attributes() map[string]interface{} {

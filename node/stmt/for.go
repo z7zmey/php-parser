@@ -5,7 +5,6 @@ import (
 )
 
 type For struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	init       []node.Node
@@ -16,7 +15,6 @@ type For struct {
 
 func NewFor(init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
 	return For{
-		"For",
 		map[string]interface{}{},
 		nil,
 		init,
@@ -24,10 +22,6 @@ func NewFor(init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node
 		loop,
 		stmt,
 	}
-}
-
-func (n For) Name() string {
-	return "For"
 }
 
 func (n For) Attributes() map[string]interface{} {

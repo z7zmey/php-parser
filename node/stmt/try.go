@@ -5,7 +5,6 @@ import (
 )
 
 type Try struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmts      []node.Node
@@ -15,17 +14,12 @@ type Try struct {
 
 func NewTry(stmts []node.Node, catches []node.Node, finally node.Node) node.Node {
 	return Try{
-		"Try",
 		map[string]interface{}{},
 		nil,
 		stmts,
 		catches,
 		finally,
 	}
-}
-
-func (n Try) Name() string {
-	return "Try"
 }
 
 func (n Try) Attributes() map[string]interface{} {

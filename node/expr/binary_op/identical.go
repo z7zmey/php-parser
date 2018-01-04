@@ -11,17 +11,12 @@ type Identical struct {
 func NewIdentical(variable node.Node, expression node.Node) node.Node {
 	return Identical{
 		BinaryOp{
-			"BinaryIdentical",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Identical) Name() string {
-	return "Identical"
 }
 
 func (n Identical) Attributes() map[string]interface{} {

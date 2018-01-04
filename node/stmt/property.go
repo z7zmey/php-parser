@@ -5,7 +5,6 @@ import (
 )
 
 type Property struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -14,7 +13,6 @@ type Property struct {
 
 func NewProperty(variable node.Node, expr node.Node, phpDocComment string) node.Node {
 	return Property{
-		"Property",
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
@@ -23,10 +21,6 @@ func NewProperty(variable node.Node, expr node.Node, phpDocComment string) node.
 		expr,
 	}
 }
-func (n Property) Name() string {
-	return "Property"
-}
-
 func (n Property) Attributes() map[string]interface{} {
 	return n.attributes
 }

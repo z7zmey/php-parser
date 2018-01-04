@@ -5,7 +5,6 @@ import (
 )
 
 type Include struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Include struct {
 
 func NewInclude(expression node.Node) node.Node {
 	return Include{
-		"Include",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Include) Name() string {
-	return "Include"
 }
 
 func (n Include) Attributes() map[string]interface{} {

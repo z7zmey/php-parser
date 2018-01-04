@@ -5,7 +5,6 @@ import (
 )
 
 type ShortArray struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	items      []node.Node
@@ -13,15 +12,10 @@ type ShortArray struct {
 
 func NewShortArray(items []node.Node) node.Node {
 	return ShortArray{
-		"ShortArray",
 		map[string]interface{}{},
 		nil,
 		items,
 	}
-}
-
-func (n ShortArray) Name() string {
-	return "ShortArray"
 }
 
 func (n ShortArray) Attributes() map[string]interface{} {

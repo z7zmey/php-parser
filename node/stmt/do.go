@@ -5,7 +5,6 @@ import (
 )
 
 type Do struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmt       node.Node
@@ -14,16 +13,11 @@ type Do struct {
 
 func NewDo(stmt node.Node, cond node.Node) node.Node {
 	return Do{
-		"Do",
 		map[string]interface{}{},
 		nil,
 		stmt,
 		cond,
 	}
-}
-
-func (n Do) Name() string {
-	return "Do"
 }
 
 func (n Do) Attributes() map[string]interface{} {

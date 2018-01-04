@@ -11,17 +11,12 @@ type AssignRef struct {
 func NewAssignRef(variable node.Node, expression node.Node) node.Node {
 	return AssignRef{
 		AssignOp{
-			"AssignRef",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n AssignRef) Name() string {
-	return "AssignRef"
 }
 
 func (n AssignRef) Attributes() map[string]interface{} {

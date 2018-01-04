@@ -11,17 +11,12 @@ type Mul struct {
 func NewMul(variable node.Node, expression node.Node) node.Node {
 	return Mul{
 		AssignOp{
-			"AssignMul",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Mul) Name() string {
-	return "Mul"
 }
 
 func (n Mul) Attributes() map[string]interface{} {

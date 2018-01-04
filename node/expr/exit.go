@@ -5,7 +5,6 @@ import (
 )
 
 type Exit struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,17 +12,12 @@ type Exit struct {
 
 func NewExit(expr node.Node, isDie bool) node.Node {
 	return Exit{
-		"Exit",
 		map[string]interface{}{
 			"isDie": isDie,
 		},
 		nil,
 		expr,
 	}
-}
-
-func (n Exit) Name() string {
-	return "Exit"
 }
 
 func (n Exit) Attributes() map[string]interface{} {

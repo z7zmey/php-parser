@@ -11,16 +11,11 @@ type CastBool struct {
 func NewCastBool(expr node.Node) node.Node {
 	return CastBool{
 		Cast{
-			"CastBool",
 			map[string]interface{}{},
 			nil,
 			expr,
 		},
 	}
-}
-
-func (n CastBool) Name() string {
-	return "CastBool"
 }
 
 func (n CastBool) Attributes() map[string]interface{} {

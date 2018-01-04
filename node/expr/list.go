@@ -5,7 +5,6 @@ import (
 )
 
 type List struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	items      []node.Node
@@ -13,15 +12,10 @@ type List struct {
 
 func NewList(items []node.Node) node.Node {
 	return List{
-		"List",
 		map[string]interface{}{},
 		nil,
 		items,
 	}
-}
-
-func (n List) Name() string {
-	return "List"
 }
 
 func (n List) Attributes() map[string]interface{} {

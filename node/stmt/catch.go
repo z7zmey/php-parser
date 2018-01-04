@@ -5,7 +5,6 @@ import (
 )
 
 type Catch struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	types      []node.Node
@@ -15,17 +14,12 @@ type Catch struct {
 
 func NewCatch(types []node.Node, variable node.Node, stmts []node.Node) node.Node {
 	return Catch{
-		"Catch",
 		map[string]interface{}{},
 		nil,
 		types,
 		variable,
 		stmts,
 	}
-}
-
-func (n Catch) Name() string {
-	return "Catch"
 }
 
 func (n Catch) Attributes() map[string]interface{} {

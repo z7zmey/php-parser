@@ -5,7 +5,6 @@ import (
 )
 
 type Ternary struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	condition  node.Node
@@ -15,17 +14,12 @@ type Ternary struct {
 
 func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.Node {
 	return Ternary{
-		"Ternary",
 		map[string]interface{}{},
 		nil,
 		condition,
 		ifTrue,
 		ifFalse,
 	}
-}
-
-func (n Ternary) Name() string {
-	return "Ternary"
 }
 
 func (n Ternary) Attributes() map[string]interface{} {

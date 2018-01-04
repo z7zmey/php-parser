@@ -5,7 +5,6 @@ import (
 )
 
 type InstanceOf struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -14,16 +13,11 @@ type InstanceOf struct {
 
 func NewInstanceOf(expr node.Node, class node.Node) node.Node {
 	return InstanceOf{
-		"InstanceOf",
 		map[string]interface{}{},
 		nil,
 		expr,
 		class,
 	}
-}
-
-func (n InstanceOf) Name() string {
-	return "InstanceOf"
 }
 
 func (n InstanceOf) Attributes() map[string]interface{} {

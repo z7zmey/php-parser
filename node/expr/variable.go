@@ -5,7 +5,6 @@ import (
 )
 
 type Variable struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	varName    node.Node
@@ -13,15 +12,10 @@ type Variable struct {
 
 func NewVariable(varName node.Node) node.Node {
 	return Variable{
-		"Variable",
 		map[string]interface{}{},
 		nil,
 		varName,
 	}
-}
-
-func (n Variable) Name() string {
-	return "Variable"
 }
 
 func (n Variable) Attributes() map[string]interface{} {

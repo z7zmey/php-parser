@@ -5,7 +5,6 @@ import (
 )
 
 type ClassMethod struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	methodName node.Node
@@ -17,7 +16,6 @@ type ClassMethod struct {
 
 func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return ClassMethod{
-		"ClassMethod",
 		map[string]interface{}{
 			"returnsRef":    returnsRef,
 			"phpDocComment": phpDocComment,
@@ -29,10 +27,6 @@ func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool
 		returnType,
 		stmts,
 	}
-}
-
-func (n ClassMethod) Name() string {
-	return "ClassMethod"
 }
 
 func (n ClassMethod) Attributes() map[string]interface{} {

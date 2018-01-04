@@ -5,7 +5,6 @@ import (
 )
 
 type PreInc struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -13,15 +12,10 @@ type PreInc struct {
 
 func NewPreInc(variable node.Node) node.Node {
 	return PreInc{
-		"PreInc",
 		map[string]interface{}{},
 		nil,
 		variable,
 	}
-}
-
-func (n PreInc) Name() string {
-	return "PreInc"
 }
 
 func (n PreInc) Attributes() map[string]interface{} {

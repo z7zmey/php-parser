@@ -5,7 +5,6 @@ import (
 )
 
 type IncludeOnce struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type IncludeOnce struct {
 
 func NewIncludeOnce(expression node.Node) node.Node {
 	return IncludeOnce{
-		"IncludeOnce",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n IncludeOnce) Name() string {
-	return "IncludeOnce"
 }
 
 func (n IncludeOnce) Attributes() map[string]interface{} {

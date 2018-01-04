@@ -11,16 +11,11 @@ type CastUnset struct {
 func NewCastUnset(expr node.Node) node.Node {
 	return CastUnset{
 		Cast{
-			"CastUnset",
 			map[string]interface{}{},
 			nil,
 			expr,
 		},
 	}
-}
-
-func (n CastUnset) Name() string {
-	return "CastUnset"
 }
 
 func (n CastUnset) Attributes() map[string]interface{} {

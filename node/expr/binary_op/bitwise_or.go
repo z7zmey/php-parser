@@ -11,7 +11,6 @@ type BitwiseOr struct {
 func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
 	return BitwiseOr{
 		BinaryOp{
-			"BinaryBitwiseOr",
 			map[string]interface{}{},
 			nil,
 			variable,
@@ -40,10 +39,6 @@ func (n BitwiseOr) Position() *node.Position {
 func (n BitwiseOr) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
-}
-
-func (n BitwiseOr) Name() string {
-	return "BitwiseOr"
 }
 
 func (n BitwiseOr) Walk(v node.Visitor) {

@@ -11,17 +11,12 @@ type LogicalAnd struct {
 func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
 	return LogicalAnd{
 		BinaryOp{
-			"BinaryLogicalAnd",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n LogicalAnd) Name() string {
-	return "LogicalAnd"
 }
 
 func (n LogicalAnd) Attributes() map[string]interface{} {

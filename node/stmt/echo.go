@@ -5,7 +5,6 @@ import (
 )
 
 type Echo struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	exprs      []node.Node
@@ -13,15 +12,10 @@ type Echo struct {
 
 func NewEcho(exprs []node.Node) node.Node {
 	return Echo{
-		"Echo",
 		map[string]interface{}{},
 		nil,
 		exprs,
 	}
-}
-
-func (n Echo) Name() string {
-	return "Echo"
 }
 
 func (n Echo) Attributes() map[string]interface{} {

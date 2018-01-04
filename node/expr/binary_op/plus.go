@@ -11,17 +11,12 @@ type Plus struct {
 func NewPlus(variable node.Node, expression node.Node) node.Node {
 	return Plus{
 		BinaryOp{
-			"BinaryPlus",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Plus) Name() string {
-	return "Plus"
 }
 
 func (n Plus) Attributes() map[string]interface{} {

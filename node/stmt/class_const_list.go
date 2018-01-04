@@ -5,7 +5,6 @@ import (
 )
 
 type ClassConstList struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	modifiers  []node.Node
@@ -14,16 +13,11 @@ type ClassConstList struct {
 
 func NewClassConstList(modifiers []node.Node, consts []node.Node) node.Node {
 	return ClassConstList{
-		"ClassConstList",
 		map[string]interface{}{},
 		nil,
 		modifiers,
 		consts,
 	}
-}
-
-func (n ClassConstList) Name() string {
-	return "ClassConstList"
 }
 
 func (n ClassConstList) Attributes() map[string]interface{} {

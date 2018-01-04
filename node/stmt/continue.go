@@ -5,7 +5,6 @@ import (
 )
 
 type Continue struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Continue struct {
 
 func NewContinue(expr node.Node) node.Node {
 	return Continue{
-		"Continue",
 		map[string]interface{}{},
 		nil,
 		expr,
 	}
-}
-
-func (n Continue) Name() string {
-	return "Continue"
 }
 
 func (n Continue) Attributes() map[string]interface{} {

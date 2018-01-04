@@ -5,7 +5,6 @@ import (
 )
 
 type StaticVar struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -14,16 +13,11 @@ type StaticVar struct {
 
 func NewStaticVar(variable node.Node, expr node.Node) node.Node {
 	return StaticVar{
-		"StaticVar",
 		map[string]interface{}{},
 		nil,
 		variable,
 		expr,
 	}
-}
-
-func (n StaticVar) Name() string {
-	return "StaticVar"
 }
 
 func (n StaticVar) Attributes() map[string]interface{} {

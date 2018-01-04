@@ -5,21 +5,15 @@ import (
 )
 
 type Nop struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 }
 
 func NewNop() node.Node {
 	return Nop{
-		"Nop",
 		map[string]interface{}{},
 		nil,
 	}
-}
-
-func (n Nop) Name() string {
-	return "Nop"
 }
 
 func (n Nop) Attributes() map[string]interface{} {

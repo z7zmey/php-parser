@@ -5,7 +5,6 @@ import (
 )
 
 type Interface struct {
-	name          string
 	attributes    map[string]interface{}
 	position      *node.Position
 	interfaceName node.Node
@@ -15,7 +14,6 @@ type Interface struct {
 
 func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return Interface{
-		"Interface",
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
@@ -24,10 +22,6 @@ func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Nod
 		extends,
 		stmts,
 	}
-}
-
-func (n Interface) Name() string {
-	return "Interface"
 }
 
 func (n Interface) Attributes() map[string]interface{} {

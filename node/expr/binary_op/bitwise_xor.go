@@ -11,7 +11,6 @@ type BitwiseXor struct {
 func NewBitwiseXor(variable node.Node, expression node.Node) node.Node {
 	return BitwiseXor{
 		BinaryOp{
-			"BinaryBitwiseXor",
 			map[string]interface{}{},
 			nil,
 			variable,
@@ -40,10 +39,6 @@ func (n BitwiseXor) Position() *node.Position {
 func (n BitwiseXor) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
-}
-
-func (n BitwiseXor) Name() string {
-	return "BitwiseXor"
 }
 
 func (n BitwiseXor) Walk(v node.Visitor) {

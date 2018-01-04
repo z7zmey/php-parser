@@ -11,17 +11,12 @@ type Greater struct {
 func NewGreater(variable node.Node, expression node.Node) node.Node {
 	return Greater{
 		BinaryOp{
-			"BinaryGreater",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Greater) Name() string {
-	return "Greater"
 }
 
 func (n Greater) Attributes() map[string]interface{} {

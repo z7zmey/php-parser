@@ -11,17 +11,12 @@ type GreaterOrEqual struct {
 func NewGreaterOrEqual(variable node.Node, expression node.Node) node.Node {
 	return GreaterOrEqual{
 		BinaryOp{
-			"BinaryGreaterOrEqual",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n GreaterOrEqual) Name() string {
-	return "GreaterOrEqual"
 }
 
 func (n GreaterOrEqual) Attributes() map[string]interface{} {

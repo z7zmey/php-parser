@@ -5,7 +5,6 @@ import (
 )
 
 type Expression struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Expression struct {
 
 func NewExpression(expr node.Node) node.Node {
 	return Expression{
-		"Expression",
 		map[string]interface{}{},
 		nil,
 		expr,
 	}
-}
-
-func (n Expression) Name() string {
-	return "Expression"
 }
 
 func (n Expression) Attributes() map[string]interface{} {

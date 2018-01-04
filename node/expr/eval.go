@@ -5,7 +5,6 @@ import (
 )
 
 type Eval struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Eval struct {
 
 func NewEval(expression node.Node) node.Node {
 	return Eval{
-		"Eval",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Eval) Name() string {
-	return "Eval"
 }
 
 func (n Eval) Attributes() map[string]interface{} {

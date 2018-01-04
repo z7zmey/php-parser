@@ -5,7 +5,6 @@ import (
 )
 
 type PropertyFetch struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -14,16 +13,11 @@ type PropertyFetch struct {
 
 func NewPropertyFetch(variable node.Node, property node.Node) node.Node {
 	return PropertyFetch{
-		"PropertyFetch",
 		map[string]interface{}{},
 		nil,
 		variable,
 		property,
 	}
-}
-
-func (n PropertyFetch) Name() string {
-	return "PropertyFetch"
 }
 
 func (n PropertyFetch) Attributes() map[string]interface{} {

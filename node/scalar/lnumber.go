@@ -5,23 +5,17 @@ import (
 )
 
 type Lnumber struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 }
 
 func NewLnumber(value string) node.Node {
 	return Lnumber{
-		"Lnumber",
 		map[string]interface{}{
 			"value": value,
 		},
 		nil,
 	}
-}
-
-func (n Lnumber) Name() string {
-	return "Lnumber"
 }
 
 func (n Lnumber) Attributes() map[string]interface{} {

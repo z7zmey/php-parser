@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/z7zmey/php-parser/node"
 )
@@ -12,7 +13,7 @@ type dumper struct {
 
 func (d dumper) EnterNode(n node.Node) bool {
 
-	fmt.Printf("%v%v", d.indent, n.Name())
+	fmt.Printf("%v%v", d.indent, reflect.TypeOf(n))
 	if p := n.Position(); p != nil {
 		fmt.Printf(" %v", *p)
 	}

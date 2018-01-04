@@ -5,7 +5,6 @@ import (
 )
 
 type ShellExec struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	parts      []node.Node
@@ -13,15 +12,10 @@ type ShellExec struct {
 
 func NewShellExec(parts []node.Node) node.Node {
 	return ShellExec{
-		"ShellExec",
 		map[string]interface{}{},
 		nil,
 		parts,
 	}
-}
-
-func (n ShellExec) Name() string {
-	return "ShellExec"
 }
 
 func (n ShellExec) Attributes() map[string]interface{} {

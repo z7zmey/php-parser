@@ -5,7 +5,6 @@ import (
 )
 
 type Throw struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Throw struct {
 
 func NewThrow(expr node.Node) node.Node {
 	return Throw{
-		"Throw",
 		map[string]interface{}{},
 		nil,
 		expr,
 	}
-}
-
-func (n Throw) Name() string {
-	return "Throw"
 }
 
 func (n Throw) Attributes() map[string]interface{} {

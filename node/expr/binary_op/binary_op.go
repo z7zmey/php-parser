@@ -5,7 +5,6 @@ import (
 )
 
 type BinaryOp struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	left       node.Node

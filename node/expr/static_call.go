@@ -5,7 +5,6 @@ import (
 )
 
 type StaticCall struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	class      node.Node
@@ -15,17 +14,12 @@ type StaticCall struct {
 
 func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.Node {
 	return StaticCall{
-		"StaticCall",
 		map[string]interface{}{},
 		nil,
 		class,
 		call,
 		arguments,
 	}
-}
-
-func (n StaticCall) Name() string {
-	return "StaticCall"
 }
 
 func (n StaticCall) Attributes() map[string]interface{} {

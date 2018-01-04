@@ -5,7 +5,6 @@ import (
 )
 
 type GroupUse struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	useType    node.Node
@@ -15,17 +14,12 @@ type GroupUse struct {
 
 func NewGroupUse(useType node.Node, prefix node.Node, useList []node.Node) node.Node {
 	return GroupUse{
-		"GroupUse",
 		map[string]interface{}{},
 		nil,
 		useType,
 		prefix,
 		useList,
 	}
-}
-
-func (n GroupUse) Name() string {
-	return "GroupUse"
 }
 
 func (n GroupUse) Attributes() map[string]interface{} {

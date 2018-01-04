@@ -5,7 +5,6 @@ import (
 )
 
 type Global struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	vars       []node.Node
@@ -13,15 +12,10 @@ type Global struct {
 
 func NewGlobal(vars []node.Node) node.Node {
 	return Global{
-		"Global",
 		map[string]interface{}{},
 		nil,
 		vars,
 	}
-}
-
-func (n Global) Name() string {
-	return "Global"
 }
 
 func (n Global) Attributes() map[string]interface{} {

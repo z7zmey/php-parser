@@ -5,7 +5,6 @@ import (
 )
 
 type Default struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmts      []node.Node
@@ -13,15 +12,10 @@ type Default struct {
 
 func NewDefault(stmts []node.Node) node.Node {
 	return Default{
-		"Default",
 		map[string]interface{}{},
 		nil,
 		stmts,
 	}
-}
-
-func (n Default) Name() string {
-	return "Default"
 }
 
 func (n Default) Attributes() map[string]interface{} {

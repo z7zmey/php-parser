@@ -5,7 +5,6 @@ import (
 )
 
 type Closure struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	params     []node.Node
@@ -16,7 +15,6 @@ type Closure struct {
 
 func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
 	return Closure{
-		"Closure",
 		map[string]interface{}{
 			"isReturnRef":   isReturnRef,
 			"isStatic":      isStatic,
@@ -28,10 +26,6 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 		returnType,
 		stmts,
 	}
-}
-
-func (n Closure) Name() string {
-	return "Closure"
 }
 
 func (n Closure) Attributes() map[string]interface{} {

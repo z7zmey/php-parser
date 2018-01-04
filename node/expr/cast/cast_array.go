@@ -11,16 +11,11 @@ type CastArray struct {
 func NewCastArray(expr node.Node) node.Node {
 	return CastArray{
 		Cast{
-			"CastArray",
 			map[string]interface{}{},
 			nil,
 			expr,
 		},
 	}
-}
-
-func (n CastArray) Name() string {
-	return "CastArray"
 }
 
 func (n CastArray) Attributes() map[string]interface{} {

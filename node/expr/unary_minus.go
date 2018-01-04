@@ -5,7 +5,6 @@ import (
 )
 
 type UnaryMinus struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type UnaryMinus struct {
 
 func NewUnaryMinus(expression node.Node) node.Node {
 	return UnaryMinus{
-		"UnaryMinus",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n UnaryMinus) Name() string {
-	return "UnaryMinus"
 }
 
 func (n UnaryMinus) Attributes() map[string]interface{} {

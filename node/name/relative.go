@@ -5,22 +5,17 @@ import (
 )
 
 type Relative struct {
-	NameNode
+	Name
 }
 
 func NewRelative(parts []node.Node) node.Node {
 	return Relative{
-		NameNode{
-			"RelativeName",
+		Name{
 			map[string]interface{}{},
 			nil,
 			parts,
 		},
 	}
-}
-
-func (n Relative) Name() string {
-	return "Relative"
 }
 
 func (n Relative) Attributes() map[string]interface{} {

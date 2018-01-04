@@ -5,7 +5,6 @@ import (
 )
 
 type StaticPropertyFetch struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	class      node.Node
@@ -14,16 +13,11 @@ type StaticPropertyFetch struct {
 
 func NewStaticPropertyFetch(class node.Node, property node.Node) node.Node {
 	return StaticPropertyFetch{
-		"StaticPropertyFetch",
 		map[string]interface{}{},
 		nil,
 		class,
 		property,
 	}
-}
-
-func (n StaticPropertyFetch) Name() string {
-	return "StaticPropertyFetch"
 }
 
 func (n StaticPropertyFetch) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type PreDec struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -13,15 +12,10 @@ type PreDec struct {
 
 func NewPreDec(variable node.Node) node.Node {
 	return PreDec{
-		"PreDec",
 		map[string]interface{}{},
 		nil,
 		variable,
 	}
-}
-
-func (n PreDec) Name() string {
-	return "PreDec"
 }
 
 func (n PreDec) Attributes() map[string]interface{} {

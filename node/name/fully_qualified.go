@@ -5,22 +5,17 @@ import (
 )
 
 type FullyQualified struct {
-	NameNode
+	Name
 }
 
 func NewFullyQualified(parts []node.Node) node.Node {
 	return FullyQualified{
-		NameNode{
-			"FullyQualifiedName",
+		Name{
 			map[string]interface{}{},
 			nil,
 			parts,
 		},
 	}
-}
-
-func (n FullyQualified) Name() string {
-	return "FullyQualified"
 }
 
 func (n FullyQualified) Attributes() map[string]interface{} {

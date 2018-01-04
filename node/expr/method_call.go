@@ -5,7 +5,6 @@ import (
 )
 
 type MethodCall struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -15,17 +14,12 @@ type MethodCall struct {
 
 func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) node.Node {
 	return MethodCall{
-		"MethodCall",
 		map[string]interface{}{},
 		nil,
 		variable,
 		method,
 		arguments,
 	}
-}
-
-func (n MethodCall) Name() string {
-	return "MethodCall"
 }
 
 func (n MethodCall) Attributes() map[string]interface{} {

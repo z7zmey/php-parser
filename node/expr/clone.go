@@ -5,7 +5,6 @@ import (
 )
 
 type Clone struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Clone struct {
 
 func NewClone(expression node.Node) node.Node {
 	return Clone{
-		"Clone",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Clone) Name() string {
-	return "Clone"
 }
 
 func (n Clone) Attributes() map[string]interface{} {

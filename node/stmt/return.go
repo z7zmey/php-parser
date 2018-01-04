@@ -5,7 +5,6 @@ import (
 )
 
 type Return struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Return struct {
 
 func NewReturn(expr node.Node) node.Node {
 	return Return{
-		"Return",
 		map[string]interface{}{},
 		nil,
 		expr,
 	}
-}
-
-func (n Return) Name() string {
-	return "Return"
 }
 
 func (n Return) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type PostInc struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -13,15 +12,10 @@ type PostInc struct {
 
 func NewPostInc(variable node.Node) node.Node {
 	return PostInc{
-		"PostInc",
 		map[string]interface{}{},
 		nil,
 		variable,
 	}
-}
-
-func (n PostInc) Name() string {
-	return "PostInc"
 }
 
 func (n PostInc) Attributes() map[string]interface{} {

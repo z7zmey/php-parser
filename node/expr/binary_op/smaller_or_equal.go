@@ -11,17 +11,12 @@ type SmallerOrEqual struct {
 func NewSmallerOrEqual(variable node.Node, expression node.Node) node.Node {
 	return SmallerOrEqual{
 		BinaryOp{
-			"BinarySmallerOrEqual",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n SmallerOrEqual) Name() string {
-	return "SmallerOrEqual"
 }
 
 func (n SmallerOrEqual) Attributes() map[string]interface{} {

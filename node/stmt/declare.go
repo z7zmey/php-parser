@@ -5,7 +5,6 @@ import (
 )
 
 type Declare struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	consts     []node.Node
@@ -14,16 +13,11 @@ type Declare struct {
 
 func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
 	return Declare{
-		"Declare",
 		map[string]interface{}{},
 		nil,
 		consts,
 		stmt,
 	}
-}
-
-func (n Declare) Name() string {
-	return "Declare"
 }
 
 func (n Declare) Attributes() map[string]interface{} {

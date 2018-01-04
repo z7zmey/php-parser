@@ -11,17 +11,12 @@ type BitwiseAnd struct {
 func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
 	return BitwiseAnd{
 		BinaryOp{
-			"BinaryBitwiseAnd",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n BitwiseAnd) Name() string {
-	return "BitwiseAnd"
 }
 
 func (n BitwiseAnd) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type Print struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Print struct {
 
 func NewPrint(expression node.Node) node.Node {
 	return Print{
-		"Print",
 		map[string]interface{}{},
 		nil,
 		expression,
 	}
-}
-
-func (n Print) Name() string {
-	return "Print"
 }
 
 func (n Print) Attributes() map[string]interface{} {

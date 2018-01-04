@@ -11,17 +11,12 @@ type Concat struct {
 func NewConcat(variable node.Node, expression node.Node) node.Node {
 	return Concat{
 		BinaryOp{
-			"BinaryConcat",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Concat) Name() string {
-	return "Concat"
 }
 
 func (n Concat) Attributes() map[string]interface{} {

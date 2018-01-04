@@ -11,17 +11,12 @@ type Pow struct {
 func NewPow(variable node.Node, expression node.Node) node.Node {
 	return Pow{
 		BinaryOp{
-			"BinaryPow",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Pow) Name() string {
-	return "Pow"
 }
 
 func (n Pow) Attributes() map[string]interface{} {

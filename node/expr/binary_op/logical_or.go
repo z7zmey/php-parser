@@ -11,17 +11,12 @@ type LogicalOr struct {
 func NewLogicalOr(variable node.Node, expression node.Node) node.Node {
 	return LogicalOr{
 		BinaryOp{
-			"BinaryLogicalOr",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n LogicalOr) Name() string {
-	return "LogicalOr"
 }
 
 func (n LogicalOr) Attributes() map[string]interface{} {

@@ -5,7 +5,6 @@ import (
 )
 
 type StmtList struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	stmts      []node.Node
@@ -13,15 +12,10 @@ type StmtList struct {
 
 func NewStmtList(stmts []node.Node) node.Node {
 	return StmtList{
-		"StmtList",
 		map[string]interface{}{},
 		nil,
 		stmts,
 	}
-}
-
-func (n StmtList) Name() string {
-	return "StmtList"
 }
 
 func (n StmtList) Attributes() map[string]interface{} {

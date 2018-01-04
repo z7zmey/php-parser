@@ -11,17 +11,12 @@ type Minus struct {
 func NewMinus(variable node.Node, expression node.Node) node.Node {
 	return Minus{
 		BinaryOp{
-			"BinaryMinus",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Minus) Name() string {
-	return "Minus"
 }
 
 func (n Minus) Attributes() map[string]interface{} {

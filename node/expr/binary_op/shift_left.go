@@ -11,17 +11,12 @@ type ShiftLeft struct {
 func NewShiftLeft(variable node.Node, expression node.Node) node.Node {
 	return ShiftLeft{
 		BinaryOp{
-			"BinaryShiftLeft",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n ShiftLeft) Name() string {
-	return "ShiftLeft"
 }
 
 func (n ShiftLeft) Attributes() map[string]interface{} {

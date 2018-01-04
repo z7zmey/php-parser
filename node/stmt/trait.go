@@ -5,7 +5,6 @@ import (
 )
 
 type Trait struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	traitName  node.Node
@@ -14,7 +13,6 @@ type Trait struct {
 
 func NewTrait(traitName node.Node, stmts []node.Node, phpDocComment string) node.Node {
 	return Trait{
-		"Trait",
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
@@ -22,10 +20,6 @@ func NewTrait(traitName node.Node, stmts []node.Node, phpDocComment string) node
 		traitName,
 		stmts,
 	}
-}
-
-func (n Trait) Name() string {
-	return "Trait"
 }
 
 func (n Trait) Attributes() map[string]interface{} {

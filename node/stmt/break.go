@@ -5,7 +5,6 @@ import (
 )
 
 type Break struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
@@ -13,15 +12,10 @@ type Break struct {
 
 func NewBreak(expr node.Node) node.Node {
 	return Break{
-		"Break",
 		map[string]interface{}{},
 		nil,
 		expr,
 	}
-}
-
-func (n Break) Name() string {
-	return "Break"
 }
 
 func (n Break) Attributes() map[string]interface{} {

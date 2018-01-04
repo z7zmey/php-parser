@@ -5,7 +5,6 @@ import (
 )
 
 type Array struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	items      []node.Node
@@ -13,15 +12,10 @@ type Array struct {
 
 func NewArray(items []node.Node) node.Node {
 	return Array{
-		"Array",
 		map[string]interface{}{},
 		nil,
 		items,
 	}
-}
-
-func (n Array) Name() string {
-	return "Array"
 }
 
 func (n Array) Attributes() map[string]interface{} {

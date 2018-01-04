@@ -5,7 +5,6 @@ import (
 )
 
 type Yield struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	key        node.Node
@@ -14,16 +13,11 @@ type Yield struct {
 
 func NewYield(key node.Node, value node.Node) node.Node {
 	return Yield{
-		"Yield",
 		map[string]interface{}{},
 		nil,
 		key,
 		value,
 	}
-}
-
-func (n Yield) Name() string {
-	return "Yield"
 }
 
 func (n Yield) Attributes() map[string]interface{} {

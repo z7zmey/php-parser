@@ -5,7 +5,6 @@ import (
 )
 
 type ArrayItem struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	key        node.Node
@@ -14,7 +13,6 @@ type ArrayItem struct {
 
 func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 	return ArrayItem{
-		"ArrayItem",
 		map[string]interface{}{
 			"byRef": byRef,
 		},
@@ -22,10 +20,6 @@ func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
 		key,
 		val,
 	}
-}
-
-func (n ArrayItem) Name() string {
-	return "ArrayItem"
 }
 
 func (n ArrayItem) Attributes() map[string]interface{} {

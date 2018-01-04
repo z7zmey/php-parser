@@ -11,17 +11,12 @@ type Mod struct {
 func NewMod(variable node.Node, expression node.Node) node.Node {
 	return Mod{
 		BinaryOp{
-			"BinaryMod",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n Mod) Name() string {
-	return "Mod"
 }
 
 func (n Mod) Attributes() map[string]interface{} {

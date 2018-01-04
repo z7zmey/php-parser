@@ -11,17 +11,12 @@ type NotIdentical struct {
 func NewNotIdentical(variable node.Node, expression node.Node) node.Node {
 	return NotIdentical{
 		BinaryOp{
-			"BinaryNotIdentical",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n NotIdentical) Name() string {
-	return "NotIdentical"
 }
 
 func (n NotIdentical) Attributes() map[string]interface{} {

@@ -11,17 +11,12 @@ type LogicalXor struct {
 func NewLogicalXor(variable node.Node, expression node.Node) node.Node {
 	return LogicalXor{
 		BinaryOp{
-			"BinaryLogicalXor",
 			map[string]interface{}{},
 			nil,
 			variable,
 			expression,
 		},
 	}
-}
-
-func (n LogicalXor) Name() string {
-	return "LogicalXor"
 }
 
 func (n LogicalXor) Attributes() map[string]interface{} {

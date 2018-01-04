@@ -5,23 +5,17 @@ import (
 )
 
 type String struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 }
 
 func NewString(value string) node.Node {
 	return String{
-		"String",
 		map[string]interface{}{
 			"value": value,
 		},
 		nil,
 	}
-}
-
-func (n String) Name() string {
-	return "String"
 }
 
 func (n String) Attributes() map[string]interface{} {

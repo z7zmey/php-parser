@@ -5,7 +5,6 @@ import (
 )
 
 type ClusureUse struct {
-	name       string
 	attributes map[string]interface{}
 	position   *node.Position
 	variable   node.Node
@@ -13,17 +12,12 @@ type ClusureUse struct {
 
 func NewClusureUse(variable node.Node, byRef bool) node.Node {
 	return ClusureUse{
-		"ClusureUse",
 		map[string]interface{}{
 			"byRef": byRef,
 		},
 		nil,
 		variable,
 	}
-}
-
-func (n ClusureUse) Name() string {
-	return "ClusureUse"
 }
 
 func (n ClusureUse) Attributes() map[string]interface{} {
