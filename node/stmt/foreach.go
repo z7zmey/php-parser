@@ -30,15 +30,6 @@ func (n Foreach) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Foreach) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Foreach) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Foreach) Position() *node.Position {
 	return n.position
 }

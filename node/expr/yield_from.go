@@ -22,15 +22,6 @@ func (n YieldFrom) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n YieldFrom) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n YieldFrom) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n YieldFrom) Position() *node.Position {
 	return n.position
 }

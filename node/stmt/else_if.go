@@ -24,15 +24,6 @@ func (n ElseIf) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n ElseIf) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n ElseIf) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n ElseIf) Position() *node.Position {
 	return n.position
 }

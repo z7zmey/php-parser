@@ -22,15 +22,6 @@ func (n ShellExec) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n ShellExec) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n ShellExec) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n ShellExec) Position() *node.Position {
 	return n.position
 }

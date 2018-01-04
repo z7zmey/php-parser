@@ -22,15 +22,6 @@ func (n PostDec) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n PostDec) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n PostDec) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n PostDec) Position() *node.Position {
 	return n.position
 }

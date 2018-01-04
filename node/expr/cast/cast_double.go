@@ -22,15 +22,6 @@ func (n CastDouble) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n CastDouble) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n CastDouble) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n CastDouble) Position() *node.Position {
 	return n.position
 }

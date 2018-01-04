@@ -24,15 +24,6 @@ func (n Case) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Case) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Case) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Case) Position() *node.Position {
 	return n.position
 }

@@ -23,15 +23,6 @@ func (n BooleanOr) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n BooleanOr) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n BooleanOr) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n BooleanOr) Position() *node.Position {
 	return n.position
 }

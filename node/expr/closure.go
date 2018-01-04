@@ -32,15 +32,6 @@ func (n Closure) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Closure) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Closure) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Closure) Position() *node.Position {
 	return n.position
 }

@@ -22,15 +22,6 @@ func (n InlineHtml) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n InlineHtml) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n InlineHtml) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n InlineHtml) Position() *node.Position {
 	return n.position
 }

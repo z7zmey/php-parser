@@ -26,15 +26,6 @@ func (n StaticCall) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n StaticCall) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n StaticCall) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n StaticCall) Position() *node.Position {
 	return n.position
 }

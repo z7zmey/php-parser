@@ -26,15 +26,6 @@ func (n GroupUse) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n GroupUse) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n GroupUse) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n GroupUse) Position() *node.Position {
 	return n.position
 }

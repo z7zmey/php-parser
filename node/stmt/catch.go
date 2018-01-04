@@ -26,15 +26,6 @@ func (n Catch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Catch) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Catch) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Catch) Position() *node.Position {
 	return n.position
 }

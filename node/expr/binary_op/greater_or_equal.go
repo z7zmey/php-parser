@@ -23,15 +23,6 @@ func (n GreaterOrEqual) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n GreaterOrEqual) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n GreaterOrEqual) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n GreaterOrEqual) Position() *node.Position {
 	return n.position
 }

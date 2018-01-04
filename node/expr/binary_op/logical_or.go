@@ -23,15 +23,6 @@ func (n LogicalOr) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n LogicalOr) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n LogicalOr) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n LogicalOr) Position() *node.Position {
 	return n.position
 }

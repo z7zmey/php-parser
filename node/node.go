@@ -1,15 +1,9 @@
 package node
 
 type Node interface {
-	Attributer
 	Positioner
-	Walk(v Visitor)
-}
-
-type Attributer interface {
 	Attributes() map[string]interface{}
-	Attribute(key string) interface{}
-	SetAttribute(key string, value interface{}) Node
+	Walk(v Visitor)
 }
 
 type Positioner interface {

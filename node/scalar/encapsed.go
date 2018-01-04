@@ -22,15 +22,6 @@ func (n Encapsed) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Encapsed) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Encapsed) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Encapsed) Position() *node.Position {
 	return n.position
 }

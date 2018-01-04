@@ -23,15 +23,6 @@ func (n NotIdentical) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n NotIdentical) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n NotIdentical) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n NotIdentical) Position() *node.Position {
 	return n.position
 }

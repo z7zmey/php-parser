@@ -5,39 +5,38 @@ import (
 )
 
 type Function struct {
-	attributes   map[string]interface{}
-	position     *node.Position
-	functionName node.Node
-	params       []node.Node
-	returnType   node.Node
-	stmts        []node.Node
+	attributes    map[string]interface{}
+	position      *node.Position
+	ReturnsRef    bool
+	PhpDocComment string
+	FunctionName  node.Node
+	Params        []node.Node
+	ReturnType    node.Node
+	Stmts         []node.Node
 }
 
-func NewFunction(functionName node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
+func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Function{
 		map[string]interface{}{
-			"returnsRef":    returnsRef,
-			"phpDocComment": phpDocComment,
+			"ReturnsRef":    ReturnsRef,
+			"PhpDocComment": PhpDocComment,
 		},
 		nil,
-		functionName,
-		params,
-		returnType,
-		stmts,
+		ReturnsRef,
+		PhpDocComment,
+		FunctionName,
+		Params,
+		ReturnType,
+		Stmts,
 	}
 }
 
 func (n Function) Attributes() map[string]interface{} {
-	return n.attributes
-}
-
-func (n Function) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Function) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
+	// return n.attributes
+	return map[string]interface{}{
+		"ReturnsRef":    n.ReturnsRef,
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Function) Position() *node.Position {
@@ -54,26 +53,26 @@ func (n Function) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.functionName != nil {
-		vv := v.GetChildrenVisitor("functionName")
-		n.functionName.Walk(vv)
+	if n.FunctionName != nil {
+		vv := v.GetChildrenVisitor("FunctionName")
+		n.FunctionName.Walk(vv)
 	}
 
-	if n.params != nil {
-		vv := v.GetChildrenVisitor("params")
-		for _, nn := range n.params {
+	if n.Params != nil {
+		vv := v.GetChildrenVisitor("Params")
+		for _, nn := range n.Params {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.returnType != nil {
-		vv := v.GetChildrenVisitor("returnType")
-		n.returnType.Walk(vv)
+	if n.ReturnType != nil {
+		vv := v.GetChildrenVisitor("ReturnType")
+		n.ReturnType.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

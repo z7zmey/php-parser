@@ -22,15 +22,6 @@ func (n Clone) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Clone) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Clone) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Clone) Position() *node.Position {
 	return n.position
 }

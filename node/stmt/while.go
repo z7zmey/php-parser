@@ -27,15 +27,6 @@ func (n While) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n While) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n While) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n While) Position() *node.Position {
 	return n.position
 }

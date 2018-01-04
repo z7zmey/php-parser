@@ -24,15 +24,6 @@ func (n ArrayDimFetch) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n ArrayDimFetch) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n ArrayDimFetch) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n ArrayDimFetch) Position() *node.Position {
 	return n.position
 }

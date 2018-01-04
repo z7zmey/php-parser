@@ -23,15 +23,6 @@ func (n Concat) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Concat) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n Concat) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n Concat) Position() *node.Position {
 	return n.position
 }

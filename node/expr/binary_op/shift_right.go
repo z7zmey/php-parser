@@ -23,15 +23,6 @@ func (n ShiftRight) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n ShiftRight) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n ShiftRight) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n ShiftRight) Position() *node.Position {
 	return n.position
 }

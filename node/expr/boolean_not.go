@@ -22,15 +22,6 @@ func (n BooleanNot) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n BooleanNot) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n BooleanNot) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n BooleanNot) Position() *node.Position {
 	return n.position
 }

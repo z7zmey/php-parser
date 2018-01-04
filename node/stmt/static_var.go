@@ -24,15 +24,6 @@ func (n StaticVar) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n StaticVar) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n StaticVar) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n StaticVar) Position() *node.Position {
 	return n.position
 }

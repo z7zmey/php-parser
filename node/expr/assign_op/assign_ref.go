@@ -23,15 +23,6 @@ func (n AssignRef) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n AssignRef) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n AssignRef) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n AssignRef) Position() *node.Position {
 	return n.position
 }

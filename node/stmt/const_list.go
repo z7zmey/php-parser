@@ -22,15 +22,6 @@ func (n ConstList) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n ConstList) Attribute(key string) interface{} {
-	return n.attributes[key]
-}
-
-func (n ConstList) SetAttribute(key string, value interface{}) node.Node {
-	n.attributes[key] = value
-	return n
-}
-
 func (n ConstList) Position() *node.Position {
 	return n.position
 }
