@@ -330,8 +330,8 @@ top_statement:
 ;
 
 use_type:
-        T_FUNCTION                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_CONST                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_FUNCTION                                      { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_CONST                                         { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
 ;
 
 group_use_declaration:
@@ -393,7 +393,7 @@ inline_use_declaration:
 
 unprefixed_use_declaration:
         namespace_name                                  { $$ = stmt.NewUse(nil, name.NewName($1).SetPosition(NewNodeListPosition($1)), nil).SetPosition(NewNodeListPosition($1)) }
-    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1).SetPosition(NewNodeListPosition($1)), node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeListTokenPosition($1, $3)) }
+    |   namespace_name T_AS T_STRING                    { $$ = stmt.NewUse(nil, name.NewName($1).SetPosition(NewNodeListPosition($1)), node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeListTokenPosition($1, $3)) }
 ;
 
 use_declaration:
@@ -454,14 +454,14 @@ statement:
                 }
             }
     |   T_THROW expr ';'                                { $$ = stmt.NewThrow($2).SetPosition(NewTokensPosition($1, $3)) }
-    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto(node.NewIdentifier($2).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
-    |   T_STRING ':'                                    { $$ = stmt.NewLabel(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokensPosition($1, $2)) }
+    |   T_GOTO T_STRING ';'                             { $$ = stmt.NewGoto(node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_STRING ':'                                    { $$ = stmt.NewLabel(node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))).SetPosition(NewTokensPosition($1, $2)) }
 
 catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifier := node.NewIdentifier($5).SetPosition(NewTokenPosition($5))
+                identifier := node.NewIdentifier($5.Value).SetPosition(NewTokenPosition($5))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($5))
                 $$ = append($1, stmt.NewCatch($4, variable, $8).SetPosition(NewTokensPosition($2, $9)))
             }
@@ -488,7 +488,7 @@ unset_variable:
 function_declaration_statement:
     T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
         {
-            name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
+            name := node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))
             $$ = stmt.NewFunction(name, $2.value, $6, $8, $10, $4).
                 SetPosition(NewTokensPosition($1, $11))
         }
@@ -507,13 +507,13 @@ is_variadic:
 class_declaration_statement:
         class_modifiers T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                name := node.NewIdentifier($3).SetPosition(NewTokenPosition($3))
+                name := node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))
                 $$ = stmt.NewClass(name, $1, nil, $4, $5, $8, $6).
                     SetPosition(NewOptionalListTokensPosition($1, $2, $9))
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+                name := node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))
                 $$ = stmt.NewClass(name, nil, nil, $3, $4, $7, $5).
                     SetPosition(NewTokensPosition($1, $8))
             }
@@ -525,14 +525,14 @@ class_modifiers:
 ;
 
 class_modifier:
-        T_ABSTRACT                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_FINAL                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_ABSTRACT                                      { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
 ;
 
 trait_declaration_statement:
     T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
         {
-            name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            name := node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))
             $$ = stmt.NewTrait(name, $5, $3).
                 SetPosition(NewTokensPosition($1, $6))
         }
@@ -541,7 +541,7 @@ trait_declaration_statement:
 interface_declaration_statement:
     T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
         {
-            name := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            name := node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))
             $$ = stmt.NewInterface(name, $3, $6, $4).
                 SetPosition(NewTokensPosition($1, $7))
         }
@@ -665,7 +665,7 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                identifier := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                identifier := node.NewIdentifier($4.Value).SetPosition(NewTokenPosition($4))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($4))
                 if $1 != nil {
                     $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetPosition(NewNodeTokenPosition($1, $4))
@@ -679,7 +679,7 @@ parameter:
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                identifier := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                identifier := node.NewIdentifier($4.Value).SetPosition(NewTokenPosition($4))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($4))
                 if $1 != nil {
                     $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetPosition(NewNodesPosition($1, $6))
@@ -704,8 +704,8 @@ type_expr:
 ;
 
 type:
-        T_ARRAY                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_CALLABLE                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_ARRAY                                         { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_CALLABLE                                      { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
     |   name                                            { $$ = $1; }
 ;
 
@@ -746,13 +746,13 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
                 $$ = stmt.NewStaticVar(variable, nil).SetPosition(NewTokenPosition($1))
             }
     |   T_VARIABLE '=' expr
         {
-            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
             $$ = stmt.NewStaticVar(variable, $3).SetPosition(NewTokenNodePosition($1, $3))
         }
@@ -769,7 +769,7 @@ class_statement:
     |   T_USE name_list trait_adaptations               { $$ = stmt.NewTraitUse($2, $3.nodes).SetPosition(NewTokensPosition($1, $3.endToken)) }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
-                name := node.NewIdentifier($4).SetPosition(NewTokenPosition($4))
+                name := node.NewIdentifier($4.Value).SetPosition(NewTokenPosition($4))
                 $$ = stmt.NewClassMethod(name, $1, $3.value, $7, $9, $10.nodes, $5).
                     SetPosition(NewOptionalListTokensPosition($1, $2, $10.endToken))
             }
@@ -805,21 +805,21 @@ trait_precedence:
 ;
 
 trait_alias:
-        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
+        trait_method_reference T_AS T_STRING            { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
     |   trait_method_reference T_AS reserved_non_modifiers
-                                                        { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3))  }
+                                                        { $$ = stmt.NewTraitUseAlias($1, nil, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3))  }
     |   trait_method_reference T_AS member_modifier identifier
-                                                        { $$ = stmt.NewTraitUseAlias($1, $3, node.NewIdentifier($4).SetPosition(NewTokenPosition($4))).SetPosition(NewNodeTokenPosition($1, $4)) }
+                                                        { $$ = stmt.NewTraitUseAlias($1, $3, node.NewIdentifier($4.Value).SetPosition(NewTokenPosition($4))).SetPosition(NewNodeTokenPosition($1, $4)) }
     |   trait_method_reference T_AS member_modifier     { $$ = stmt.NewTraitUseAlias($1, $3, nil).SetPosition(NewNodesPosition($1, $3)) }
 ;
 
 trait_method_reference:
-        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
+        identifier                                      { $$ = stmt.NewTraitMethodRef(nil, node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
     |   absolute_trait_method_reference                 { $$ = $1; }
 ;
 
 absolute_trait_method_reference:
-    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
+    name T_PAAMAYIM_NEKUDOTAYIM identifier              { $$ = stmt.NewTraitMethodRef($1, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
 ;
 
 method_body:
@@ -829,7 +829,7 @@ method_body:
 
 variable_modifiers:
         non_empty_member_modifiers                      { $$ = $1; }
-    |   T_VAR                                           { $$ = []node.Node{node.NewIdentifier($1).SetPosition(NewTokenPosition($1))} }
+    |   T_VAR                                           { $$ = []node.Node{node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))} }
 ;
 
 method_modifiers:
@@ -843,12 +843,12 @@ non_empty_member_modifiers:
 ;
 
 member_modifier:
-        T_PUBLIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_PROTECTED                                     { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_PRIVATE                                       { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_STATIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_ABSTRACT                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
-    |   T_FINAL                                         { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_PUBLIC                                        { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_PROTECTED                                     { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_PRIVATE                                       { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_STATIC                                        { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_ABSTRACT                                      { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
+    |   T_FINAL                                         { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
 ;
 
 property_list:
@@ -859,13 +859,13 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
                 $$ = stmt.NewProperty(variable, nil, $2).SetPosition(NewTokenPosition($1))
             }
     |   T_VARIABLE '=' expr backup_doc_comment
         {
-            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
             $$ = stmt.NewProperty(variable, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
         }
@@ -879,7 +879,7 @@ class_const_list:
 class_const_decl:
     identifier '=' expr backup_doc_comment
         {
-            name := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            name := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             $$ = stmt.NewConstant(name, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
         }
 ;
@@ -887,7 +887,7 @@ class_const_decl:
 const_decl:
     T_STRING '=' expr backup_doc_comment
         {
-            name := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            name := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             $$ = stmt.NewConstant(name, $3, $4).SetPosition(NewTokenNodePosition($1, $3))
         }
 ;
@@ -1050,13 +1050,13 @@ lexical_var_list:
 lexical_var:
         T_VARIABLE
             {
-                identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+                identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
                 $$ = expr.NewClusureUse(variable, false).SetPosition(NewTokenPosition($1))
             }
     |   '&' T_VARIABLE
         {
-            identifier := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+            identifier := node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($2))
             $$ = expr.NewClusureUse(variable, true).SetPosition(NewTokensPosition($1, $2))
         }
@@ -1076,7 +1076,7 @@ function_call:
 ;
 
 class_name:
-        T_STATIC                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_STATIC                                        { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
     |   name                                            { $$ = $1; }
 ;
 
@@ -1130,9 +1130,9 @@ scalar:
 
 constant:
         name                                            { $$ = expr.NewConstFetch($1).SetPosition(NewNodePosition($1)) }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier    { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
-                                                        { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
+                                                        { $$ = expr.NewClassConstFetch($1, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).SetPosition(NewNodeTokenPosition($1, $3)) }
 ;
 
 expr:
@@ -1178,7 +1178,7 @@ variable:
 ;
 
 simple_variable:
-        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
     |   '$' '{' expr '}'                                { $$ = expr.NewVariable($3).SetPosition(NewTokensPosition($1, $4)) }
     |   '$' simple_variable                             { $$ = expr.NewVariable($2).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
@@ -1210,13 +1210,13 @@ new_variable:
 ;
 
 member_name:
-        identifier                                      { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        identifier                                      { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
 
 property_name:
-        T_STRING                                        { $$ = node.NewIdentifier($1).SetPosition(NewTokenPosition($1)) }
+        T_STRING                                        { $$ = node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1)) }
     |   '{' expr '}'                                    { $$ = $2; }
     |   simple_variable                                 { $$ = $1 }
 ;
@@ -1272,25 +1272,25 @@ encaps_list:
 ;
 
 encaps_var:
-        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
+        T_VARIABLE                                      { $$ = expr.NewVariable(node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))).SetPosition(NewTokenPosition($1)) }
     |   T_VARIABLE '[' encaps_var_offset ']'
         {
-            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
             $$ = expr.NewArrayDimFetch(variable, $3).SetPosition(NewTokensPosition($1, $4))
         }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
         {
-            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
-            $$ = expr.NewPropertyFetch(variable, node.NewIdentifier($3).SetPosition(NewTokenPosition($3))).
+            $$ = expr.NewPropertyFetch(variable, node.NewIdentifier($3.Value).SetPosition(NewTokenPosition($3))).
                 SetPosition(NewTokensPosition($1, $3))
         }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'             { $$ = expr.NewVariable($2).SetPosition(NewTokensPosition($1, $3)) }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = expr.NewVariable(node.NewIdentifier($2).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}' { $$ = expr.NewVariable(node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))).SetPosition(NewTokensPosition($1, $3)) }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifier := node.NewIdentifier($2).SetPosition(NewTokenPosition($2))
+                identifier := node.NewIdentifier($2.Value).SetPosition(NewTokenPosition($2))
                 variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition($2))
                 $$ = expr.NewArrayDimFetch(variable, $4).SetPosition(NewTokensPosition($1, $6))
             }
@@ -1320,7 +1320,7 @@ encaps_var_offset:
         }
     |   T_VARIABLE
         {
-            identifier := node.NewIdentifier($1).SetPosition(NewTokenPosition($1))
+            identifier := node.NewIdentifier($1.Value).SetPosition(NewTokenPosition($1))
             $$ = expr.NewVariable(identifier).SetPosition(NewTokenPosition($1))
         }
 ;

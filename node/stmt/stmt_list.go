@@ -5,21 +5,19 @@ import (
 )
 
 type StmtList struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Stmts      []node.Node
+	position *node.Position
+	Stmts    []node.Node
 }
 
 func NewStmtList(Stmts []node.Node) node.Node {
 	return StmtList{
-		map[string]interface{}{},
 		nil,
 		Stmts,
 	}
 }
 
 func (n StmtList) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n StmtList) Position() *node.Position {

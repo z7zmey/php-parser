@@ -5,21 +5,19 @@ import (
 )
 
 type Unset struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Vars       []node.Node
+	position *node.Position
+	Vars     []node.Node
 }
 
 func NewUnset(Vars []node.Node) node.Node {
 	return &Unset{
-		map[string]interface{}{},
 		nil,
 		Vars,
 	}
 }
 
 func (n Unset) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Unset) Position() *node.Position {

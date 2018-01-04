@@ -5,15 +5,13 @@ import (
 )
 
 type Case struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Cond       node.Node
-	Stmts      []node.Node
+	position *node.Position
+	Cond     node.Node
+	Stmts    []node.Node
 }
 
 func NewCase(Cond node.Node, Stmts []node.Node) node.Node {
 	return &Case{
-		map[string]interface{}{},
 		nil,
 		Cond,
 		Stmts,
@@ -21,7 +19,7 @@ func NewCase(Cond node.Node, Stmts []node.Node) node.Node {
 }
 
 func (n Case) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Case) Position() *node.Position {

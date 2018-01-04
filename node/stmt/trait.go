@@ -5,25 +5,25 @@ import (
 )
 
 type Trait struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	TraitName  node.Node
-	Stmts      []node.Node
+	position      *node.Position
+	PhpDocComment string
+	TraitName     node.Node
+	Stmts         []node.Node
 }
 
-func NewTrait(TraitName node.Node, Stmts []node.Node, phpDocComment string) node.Node {
+func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Trait{
-		map[string]interface{}{
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		PhpDocComment,
 		TraitName,
 		Stmts,
 	}
 }
 
 func (n Trait) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Trait) Position() *node.Position {

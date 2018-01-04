@@ -5,23 +5,23 @@ import (
 )
 
 type Exit struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
+	IsDie    bool
 }
 
-func NewExit(expr node.Node, isDie bool) node.Node {
+func NewExit(Expr node.Node, IsDie bool) node.Node {
 	return &Exit{
-		map[string]interface{}{
-			"isDie": isDie,
-		},
 		nil,
-		expr,
+		Expr,
+		IsDie,
 	}
 }
 
 func (n Exit) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"IsDie": n.IsDie,
+	}
 }
 
 func (n Exit) Position() *node.Position {
@@ -38,9 +38,9 @@ func (n Exit) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

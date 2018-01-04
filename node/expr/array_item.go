@@ -5,25 +5,25 @@ import (
 )
 
 type ArrayItem struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Key        node.Node
-	Val        node.Node
+	position *node.Position
+	ByRef    bool
+	Key      node.Node
+	Val      node.Node
 }
 
-func NewArrayItem(Key node.Node, Val node.Node, byRef bool) node.Node {
+func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) node.Node {
 	return &ArrayItem{
-		map[string]interface{}{
-			"byRef": byRef,
-		},
 		nil,
+		ByRef,
 		Key,
 		Val,
 	}
 }
 
 func (n ArrayItem) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"ByRef": n.ByRef,
+	}
 }
 
 func (n ArrayItem) Position() *node.Position {

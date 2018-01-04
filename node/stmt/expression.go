@@ -7,14 +7,14 @@ import (
 type Expression struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	expr       node.Node
+	Expr       node.Node
 }
 
-func NewExpression(expr node.Node) node.Node {
+func NewExpression(Expr node.Node) node.Node {
 	return &Expression{
 		map[string]interface{}{},
 		nil,
-		expr,
+		Expr,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Expression) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

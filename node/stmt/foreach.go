@@ -5,21 +5,19 @@ import (
 )
 
 type Foreach struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
-	Key        node.Node
-	Variable   node.Node
-	Stmt       node.Node
+	position *node.Position
+	ByRef    bool
+	Expr     node.Node
+	Key      node.Node
+	Variable node.Node
+	Stmt     node.Node
 }
 
-func NewForeach(expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, byRef bool) node.Node {
+func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) node.Node {
 	return &Foreach{
-		map[string]interface{}{
-			"byRef": byRef,
-		},
 		nil,
-		expr,
+		ByRef,
+		Expr,
 		Key,
 		Variable,
 		Stmt,
@@ -27,7 +25,9 @@ func NewForeach(expr node.Node, Key node.Node, Variable node.Node, Stmt node.Nod
 }
 
 func (n Foreach) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"ByRef": n.ByRef,
+	}
 }
 
 func (n Foreach) Position() *node.Position {
@@ -44,9 +44,9 @@ func (n Foreach) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	if n.Key != nil {

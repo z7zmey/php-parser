@@ -5,15 +5,13 @@ import (
 )
 
 type Declare struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Consts     []node.Node
-	Stmt       node.Node
+	position *node.Position
+	Consts   []node.Node
+	Stmt     node.Node
 }
 
 func NewDeclare(Consts []node.Node, Stmt node.Node) node.Node {
 	return &Declare{
-		map[string]interface{}{},
 		nil,
 		Consts,
 		Stmt,
@@ -21,7 +19,7 @@ func NewDeclare(Consts []node.Node, Stmt node.Node) node.Node {
 }
 
 func (n Declare) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Declare) Position() *node.Position {

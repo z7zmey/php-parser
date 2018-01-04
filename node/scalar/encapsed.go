@@ -5,21 +5,19 @@ import (
 )
 
 type Encapsed struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Parts      []node.Node
+	position *node.Position
+	Parts    []node.Node
 }
 
 func NewEncapsed(Parts []node.Node) node.Node {
 	return &Encapsed{
-		map[string]interface{}{},
 		nil,
 		Parts,
 	}
 }
 
 func (n Encapsed) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Encapsed) Position() *node.Position {

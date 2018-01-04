@@ -5,21 +5,19 @@ import (
 )
 
 type Static struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Vars       []node.Node
+	position *node.Position
+	Vars     []node.Node
 }
 
 func NewStatic(Vars []node.Node) node.Node {
 	return &Static{
-		map[string]interface{}{},
 		nil,
 		Vars,
 	}
 }
 
 func (n Static) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Static) Position() *node.Position {

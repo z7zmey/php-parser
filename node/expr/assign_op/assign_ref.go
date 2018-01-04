@@ -11,7 +11,6 @@ type AssignRef struct {
 func NewAssignRef(Variable node.Node, Expression node.Node) node.Node {
 	return &AssignRef{
 		AssignOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewAssignRef(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n AssignRef) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n AssignRef) Position() *node.Position {

@@ -11,7 +11,6 @@ type Plus struct {
 func NewPlus(Variable node.Node, Expression node.Node) node.Node {
 	return &Plus{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewPlus(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Plus) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Plus) Position() *node.Position {

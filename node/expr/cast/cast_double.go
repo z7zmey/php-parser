@@ -8,18 +8,17 @@ type CastDouble struct {
 	Cast
 }
 
-func NewCastDouble(expr node.Node) node.Node {
+func NewCastDouble(Expr node.Node) node.Node {
 	return &CastDouble{
 		Cast{
-			map[string]interface{}{},
 			nil,
-			expr,
+			Expr,
 		},
 	}
 }
 
 func (n CastDouble) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n CastDouble) Position() *node.Position {
@@ -36,9 +35,9 @@ func (n CastDouble) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

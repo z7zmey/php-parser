@@ -5,22 +5,22 @@ import (
 )
 
 type Closure struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Params     []node.Node
-	Uses       []node.Node
-	ReturnType node.Node
-	Stmts      []node.Node
+	position      *node.Position
+	ReturnsRef    bool
+	Static        bool
+	PhpDocComment string
+	Params        []node.Node
+	Uses          []node.Node
+	ReturnType    node.Node
+	Stmts         []node.Node
 }
 
-func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
+func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, Static bool, ReturnsRef bool, PhpDocComment string) node.Node {
 	return &Closure{
-		map[string]interface{}{
-			"isReturnRef":   isReturnRef,
-			"isStatic":      isStatic,
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		ReturnsRef,
+		Static,
+		PhpDocComment,
 		Params,
 		Uses,
 		ReturnType,
@@ -29,7 +29,11 @@ func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmt
 }
 
 func (n Closure) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"ReturnsRef":    n.ReturnsRef,
+		"Static":        n.Static,
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Closure) Position() *node.Position {

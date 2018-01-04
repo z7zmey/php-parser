@@ -5,15 +5,13 @@ import (
 )
 
 type ClassConstList struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Modifiers  []node.Node
-	Consts     []node.Node
+	position  *node.Position
+	Modifiers []node.Node
+	Consts    []node.Node
 }
 
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) node.Node {
 	return &ClassConstList{
-		map[string]interface{}{},
 		nil,
 		Modifiers,
 		Consts,
@@ -21,7 +19,7 @@ func NewClassConstList(Modifiers []node.Node, Consts []node.Node) node.Node {
 }
 
 func (n ClassConstList) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ClassConstList) Position() *node.Position {

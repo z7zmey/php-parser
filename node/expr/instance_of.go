@@ -5,23 +5,21 @@ import (
 )
 
 type InstanceOf struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
-	Class      node.Node
+	position *node.Position
+	Expr     node.Node
+	Class    node.Node
 }
 
-func NewInstanceOf(expr node.Node, Class node.Node) node.Node {
+func NewInstanceOf(Expr node.Node, Class node.Node) node.Node {
 	return &InstanceOf{
-		map[string]interface{}{},
 		nil,
-		expr,
+		Expr,
 		Class,
 	}
 }
 
 func (n InstanceOf) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n InstanceOf) Position() *node.Position {
@@ -38,9 +36,9 @@ func (n InstanceOf) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	if n.Class != nil {

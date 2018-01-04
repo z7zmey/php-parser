@@ -5,7 +5,6 @@ import (
 )
 
 type Function struct {
-	attributes    map[string]interface{}
 	position      *node.Position
 	ReturnsRef    bool
 	PhpDocComment string
@@ -17,10 +16,6 @@ type Function struct {
 
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Function{
-		map[string]interface{}{
-			"ReturnsRef":    ReturnsRef,
-			"PhpDocComment": PhpDocComment,
-		},
 		nil,
 		ReturnsRef,
 		PhpDocComment,

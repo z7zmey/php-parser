@@ -11,7 +11,6 @@ type Equal struct {
 func NewEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &Equal{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewEqual(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Equal) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Equal) Position() *node.Position {

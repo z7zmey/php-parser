@@ -5,22 +5,20 @@ import (
 )
 
 type Class struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	ClassName  node.Node
-	Modifiers  []node.Node
-	args       []node.Node
-	Extends    node.Node
-	Implements []node.Node
-	Stmts      []node.Node
+	position      *node.Position
+	PhpDocComment string
+	ClassName     node.Node
+	Modifiers     []node.Node
+	args          []node.Node
+	Extends       node.Node
+	Implements    []node.Node
+	Stmts         []node.Node
 }
 
-func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, phpDocComment string) node.Node {
+func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Class{
-		map[string]interface{}{
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		PhpDocComment,
 		ClassName,
 		Modifiers,
 		args,
@@ -31,7 +29,9 @@ func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Exte
 }
 
 func (n Class) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Class) Position() *node.Position {

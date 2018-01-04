@@ -11,7 +11,6 @@ type LogicalOr struct {
 func NewLogicalOr(Variable node.Node, Expression node.Node) node.Node {
 	return &LogicalOr{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewLogicalOr(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n LogicalOr) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n LogicalOr) Position() *node.Position {

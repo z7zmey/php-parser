@@ -5,21 +5,19 @@ import (
 )
 
 type PreDec struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
+	position *node.Position
+	Variable node.Node
 }
 
 func NewPreDec(Variable node.Node) node.Node {
 	return &PreDec{
-		map[string]interface{}{},
 		nil,
 		Variable,
 	}
 }
 
 func (n PreDec) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n PreDec) Position() *node.Position {

@@ -5,16 +5,14 @@ import (
 )
 
 type TraitUseAlias struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Ref        node.Node
-	Modifier   node.Node
-	Alias      node.Node
+	position *node.Position
+	Ref      node.Node
+	Modifier node.Node
+	Alias    node.Node
 }
 
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) node.Node {
 	return &TraitUseAlias{
-		map[string]interface{}{},
 		nil,
 		Ref,
 		Modifier,
@@ -23,7 +21,7 @@ func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) node.N
 }
 
 func (n TraitUseAlias) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n TraitUseAlias) Position() *node.Position {

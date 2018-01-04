@@ -11,7 +11,6 @@ type Identical struct {
 func NewIdentical(Variable node.Node, Expression node.Node) node.Node {
 	return &Identical{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewIdentical(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Identical) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Identical) Position() *node.Position {

@@ -11,7 +11,6 @@ type Mod struct {
 func NewMod(Variable node.Node, Expression node.Node) node.Node {
 	return &Mod{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewMod(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Mod) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Mod) Position() *node.Position {

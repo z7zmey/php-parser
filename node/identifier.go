@@ -1,34 +1,21 @@
 package node
 
-import (
-	"github.com/z7zmey/php-parser/token"
-)
-
 type Identifier struct {
-	attributes map[string]interface{}
-	position   *Position
+	position *Position
+	Value    string
 }
 
-func NewIdentifier(token token.Token) Node {
+func NewIdentifier(Value string) Node {
 	return &Identifier{
-		map[string]interface{}{
-			"Value": token.Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n Identifier) Attributes() map[string]interface{} {
-	return n.attributes
-}
-
-func (n Identifier) Attribute(Key string) interface{} {
-	return n.attributes[Key]
-}
-
-func (n Identifier) SetAttribute(Key string, Value interface{}) Node {
-	n.attributes[Key] = Value
-	return n
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n Identifier) Position() *Position {

@@ -5,16 +5,14 @@ import (
 )
 
 type Catch struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Types      []node.Node
-	Variable   node.Node
-	Stmts      []node.Node
+	position *node.Position
+	Types    []node.Node
+	Variable node.Node
+	Stmts    []node.Node
 }
 
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) node.Node {
 	return &Catch{
-		map[string]interface{}{},
 		nil,
 		Types,
 		Variable,
@@ -23,7 +21,7 @@ func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) node.Nod
 }
 
 func (n Catch) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Catch) Position() *node.Position {

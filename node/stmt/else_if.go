@@ -5,15 +5,13 @@ import (
 )
 
 type ElseIf struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Cond       node.Node
-	Stmt       node.Node
+	position *node.Position
+	Cond     node.Node
+	Stmt     node.Node
 }
 
 func NewElseIf(Cond node.Node, Stmt node.Node) node.Node {
 	return &ElseIf{
-		map[string]interface{}{},
 		nil,
 		Cond,
 		Stmt,
@@ -21,7 +19,7 @@ func NewElseIf(Cond node.Node, Stmt node.Node) node.Node {
 }
 
 func (n ElseIf) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ElseIf) Position() *node.Position {

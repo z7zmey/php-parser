@@ -5,21 +5,21 @@ import (
 )
 
 type EncapsedStringPart struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewEncapsedStringPart(Value string) node.Node {
 	return &EncapsedStringPart{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n EncapsedStringPart) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n EncapsedStringPart) Position() *node.Position {

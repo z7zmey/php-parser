@@ -11,7 +11,6 @@ type Minus struct {
 func NewMinus(Variable node.Node, Expression node.Node) node.Node {
 	return &Minus{
 		AssignOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewMinus(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Minus) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Minus) Position() *node.Position {

@@ -5,21 +5,19 @@ import (
 )
 
 type Label struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	LabelName  node.Node
+	position  *node.Position
+	LabelName node.Node
 }
 
 func NewLabel(LabelName node.Node) node.Node {
 	return &Label{
-		map[string]interface{}{},
 		nil,
 		LabelName,
 	}
 }
 
 func (n Label) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Label) Position() *node.Position {

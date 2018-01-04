@@ -11,7 +11,6 @@ type Concat struct {
 func NewConcat(Variable node.Node, Expression node.Node) node.Node {
 	return &Concat{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewConcat(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Concat) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Concat) Position() *node.Position {

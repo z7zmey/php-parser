@@ -11,13 +11,8 @@ type FullyQualified struct {
 func NewFullyQualified(Parts []node.Node) node.Node {
 	return &FullyQualified{
 		Name{
-			map[string]interface{}{},
 			nil,
 			Parts,
 		},
 	}
-}
-
-func (n FullyQualified) Attributes() map[string]interface{} {
-	return n.attributes
 }

@@ -5,21 +5,19 @@ import (
 )
 
 type ConstFetch struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Constant   node.Node
+	position *node.Position
+	Constant node.Node
 }
 
 func NewConstFetch(Constant node.Node) node.Node {
 	return &ConstFetch{
-		map[string]interface{}{},
 		nil,
 		Constant,
 	}
 }
 
 func (n ConstFetch) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ConstFetch) Position() *node.Position {

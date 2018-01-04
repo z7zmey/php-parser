@@ -5,21 +5,19 @@ import (
 )
 
 type ErrorSuppress struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }
 
 func NewErrorSuppress(Expression node.Node) node.Node {
 	return &ErrorSuppress{
-		map[string]interface{}{},
 		nil,
 		Expression,
 	}
 }
 
 func (n ErrorSuppress) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ErrorSuppress) Position() *node.Position {
@@ -36,9 +34,9 @@ func (n ErrorSuppress) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

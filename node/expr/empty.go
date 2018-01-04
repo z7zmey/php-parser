@@ -5,21 +5,19 @@ import (
 )
 
 type Empty struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }
 
 func NewEmpty(Expression node.Node) node.Node {
 	return &Empty{
-		map[string]interface{}{},
 		nil,
 		Expression,
 	}
 }
 
 func (n Empty) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Empty) Position() *node.Position {
@@ -36,9 +34,9 @@ func (n Empty) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

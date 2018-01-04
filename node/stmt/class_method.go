@@ -5,22 +5,21 @@ import (
 )
 
 type ClassMethod struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	MethodName node.Node
-	Modifiers  []node.Node
-	Params     []node.Node
-	ReturnType node.Node
-	Stmts      []node.Node
+	position      *node.Position
+	ReturnsRef    bool
+	PhpDocComment string
+	MethodName    node.Node
+	Modifiers     []node.Node
+	Params        []node.Node
+	ReturnType    node.Node
+	Stmts         []node.Node
 }
 
-func NewClassMethod(MethodName node.Node, Modifiers []node.Node, returnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, phpDocComment string) node.Node {
+func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &ClassMethod{
-		map[string]interface{}{
-			"returnsRef":    returnsRef,
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		ReturnsRef,
+		PhpDocComment,
 		MethodName,
 		Modifiers,
 		Params,
@@ -30,7 +29,10 @@ func NewClassMethod(MethodName node.Node, Modifiers []node.Node, returnsRef bool
 }
 
 func (n ClassMethod) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"ReturnsRef":    n.ReturnsRef,
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n ClassMethod) Position() *node.Position {

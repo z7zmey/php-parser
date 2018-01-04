@@ -5,21 +5,19 @@ import (
 )
 
 type ConstList struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Consts     []node.Node
+	position *node.Position
+	Consts   []node.Node
 }
 
 func NewConstList(Consts []node.Node) node.Node {
 	return &ConstList{
-		map[string]interface{}{},
 		nil,
 		Consts,
 	}
 }
 
 func (n ConstList) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ConstList) Position() *node.Position {

@@ -11,7 +11,6 @@ type Spaceship struct {
 func NewSpaceship(Variable node.Node, Expression node.Node) node.Node {
 	return &Spaceship{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewSpaceship(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Spaceship) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Spaceship) Position() *node.Position {

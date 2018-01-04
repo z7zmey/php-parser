@@ -5,21 +5,21 @@ import (
 )
 
 type String struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewString(Value string) node.Node {
 	return &String{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n String) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n String) Position() *node.Position {

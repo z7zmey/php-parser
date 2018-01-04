@@ -11,7 +11,6 @@ type LogicalAnd struct {
 func NewLogicalAnd(Variable node.Node, Expression node.Node) node.Node {
 	return &LogicalAnd{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewLogicalAnd(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n LogicalAnd) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n LogicalAnd) Position() *node.Position {

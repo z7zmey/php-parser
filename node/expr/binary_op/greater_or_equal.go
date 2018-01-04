@@ -11,7 +11,6 @@ type GreaterOrEqual struct {
 func NewGreaterOrEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &GreaterOrEqual{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewGreaterOrEqual(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n GreaterOrEqual) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n GreaterOrEqual) Position() *node.Position {

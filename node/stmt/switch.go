@@ -6,16 +6,14 @@ import (
 )
 
 type Switch struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	token      token.Token
-	Cond       node.Node
-	cases      []node.Node
+	position *node.Position
+	token    token.Token
+	Cond     node.Node
+	cases    []node.Node
 }
 
 func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) node.Node {
 	return &Switch{
-		map[string]interface{}{},
 		nil,
 		token,
 		Cond,
@@ -24,7 +22,7 @@ func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) node.Node {
 }
 
 func (n Switch) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Switch) Position() *node.Position {

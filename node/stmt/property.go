@@ -5,24 +5,24 @@ import (
 )
 
 type Property struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
-	expr       node.Node
+	position      *node.Position
+	PhpDocComment string
+	Variable      node.Node
+	Expr          node.Node
 }
 
-func NewProperty(Variable node.Node, expr node.Node, phpDocComment string) node.Node {
+func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) node.Node {
 	return &Property{
-		map[string]interface{}{
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		PhpDocComment,
 		Variable,
-		expr,
+		Expr,
 	}
 }
 func (n Property) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Property) Position() *node.Position {
@@ -44,9 +44,9 @@ func (n Property) Walk(v node.Visitor) {
 		n.Variable.Walk(vv)
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

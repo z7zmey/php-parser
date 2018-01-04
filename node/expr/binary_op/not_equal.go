@@ -11,7 +11,6 @@ type NotEqual struct {
 func NewNotEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &NotEqual{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewNotEqual(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n NotEqual) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n NotEqual) Position() *node.Position {

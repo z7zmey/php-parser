@@ -5,21 +5,19 @@ import (
 )
 
 type BitwiseNot struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }
 
 func NewBitwiseNot(Expression node.Node) node.Node {
 	return &BitwiseNot{
-		map[string]interface{}{},
 		nil,
 		Expression,
 	}
 }
 
 func (n BitwiseNot) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n BitwiseNot) Position() *node.Position {
@@ -36,9 +34,9 @@ func (n BitwiseNot) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

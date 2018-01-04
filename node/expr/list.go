@@ -5,21 +5,19 @@ import (
 )
 
 type List struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Items      []node.Node
+	position *node.Position
+	Items    []node.Node
 }
 
 func NewList(Items []node.Node) node.Node {
 	return &List{
-		map[string]interface{}{},
 		nil,
 		Items,
 	}
 }
 
 func (n List) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n List) Position() *node.Position {

@@ -11,7 +11,6 @@ type Mul struct {
 func NewMul(Variable node.Node, Expression node.Node) node.Node {
 	return &Mul{
 		AssignOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewMul(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Mul) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Mul) Position() *node.Position {

@@ -5,15 +5,13 @@ import (
 )
 
 type FunctionCall struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Function   node.Node
-	Arguments  []node.Node
+	position  *node.Position
+	Function  node.Node
+	Arguments []node.Node
 }
 
 func NewFunctionCall(Function node.Node, Arguments []node.Node) node.Node {
 	return &FunctionCall{
-		map[string]interface{}{},
 		nil,
 		Function,
 		Arguments,
@@ -21,7 +19,7 @@ func NewFunctionCall(Function node.Node, Arguments []node.Node) node.Node {
 }
 
 func (n FunctionCall) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n FunctionCall) Position() *node.Position {

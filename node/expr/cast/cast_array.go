@@ -8,18 +8,17 @@ type CastArray struct {
 	Cast
 }
 
-func NewCastArray(expr node.Node) node.Node {
+func NewCastArray(Expr node.Node) node.Node {
 	return &CastArray{
 		Cast{
-			map[string]interface{}{},
 			nil,
-			expr,
+			Expr,
 		},
 	}
 }
 
 func (n CastArray) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n CastArray) Position() *node.Position {
@@ -36,9 +35,9 @@ func (n CastArray) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

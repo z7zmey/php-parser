@@ -5,23 +5,23 @@ import (
 )
 
 type ClusureUse struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
+	position *node.Position
+	ByRef    bool
+	Variable node.Node
 }
 
-func NewClusureUse(Variable node.Node, byRef bool) node.Node {
+func NewClusureUse(Variable node.Node, ByRef bool) node.Node {
 	return &ClusureUse{
-		map[string]interface{}{
-			"byRef": byRef,
-		},
 		nil,
+		ByRef,
 		Variable,
 	}
 }
 
 func (n ClusureUse) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"ByRef": n.ByRef,
+	}
 }
 
 func (n ClusureUse) Position() *node.Position {

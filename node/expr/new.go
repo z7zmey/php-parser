@@ -5,15 +5,13 @@ import (
 )
 
 type New struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Class      node.Node
-	Arguments  []node.Node
+	position  *node.Position
+	Class     node.Node
+	Arguments []node.Node
 }
 
 func NewNew(Class node.Node, Arguments []node.Node) node.Node {
 	return &New{
-		map[string]interface{}{},
 		nil,
 		Class,
 		Arguments,
@@ -21,7 +19,7 @@ func NewNew(Class node.Node, Arguments []node.Node) node.Node {
 }
 
 func (n New) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n New) Position() *node.Position {

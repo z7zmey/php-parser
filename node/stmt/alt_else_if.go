@@ -5,15 +5,13 @@ import (
 )
 
 type AltElseIf struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Cond       node.Node
-	Stmt       node.Node
+	position *node.Position
+	Cond     node.Node
+	Stmt     node.Node
 }
 
 func NewAltElseIf(Cond node.Node, Stmt node.Node) node.Node {
 	return &AltElseIf{
-		map[string]interface{}{},
 		nil,
 		Cond,
 		Stmt,
@@ -21,7 +19,7 @@ func NewAltElseIf(Cond node.Node, Stmt node.Node) node.Node {
 }
 
 func (n AltElseIf) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n AltElseIf) Position() *node.Position {

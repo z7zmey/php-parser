@@ -11,7 +11,6 @@ type Pow struct {
 func NewPow(Variable node.Node, Expression node.Node) node.Node {
 	return &Pow{
 		AssignOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewPow(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Pow) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Pow) Position() *node.Position {

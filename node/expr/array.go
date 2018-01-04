@@ -5,21 +5,19 @@ import (
 )
 
 type Array struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Items      []node.Node
+	position *node.Position
+	Items    []node.Node
 }
 
 func NewArray(Items []node.Node) node.Node {
 	return &Array{
-		map[string]interface{}{},
 		nil,
 		Items,
 	}
 }
 
 func (n Array) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Array) Position() *node.Position {

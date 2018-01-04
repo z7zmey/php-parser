@@ -5,21 +5,19 @@ import (
 )
 
 type Finally struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Stmts      []node.Node
+	position *node.Position
+	Stmts    []node.Node
 }
 
 func NewFinally(Stmts []node.Node) node.Node {
 	return &Finally{
-		map[string]interface{}{},
 		nil,
 		Stmts,
 	}
 }
 
 func (n Finally) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Finally) Position() *node.Position {

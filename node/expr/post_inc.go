@@ -5,21 +5,19 @@ import (
 )
 
 type PostInc struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
+	position *node.Position
+	Variable node.Node
 }
 
 func NewPostInc(Variable node.Node) node.Node {
 	return &PostInc{
-		map[string]interface{}{},
 		nil,
 		Variable,
 	}
 }
 
 func (n PostInc) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n PostInc) Position() *node.Position {

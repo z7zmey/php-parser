@@ -5,15 +5,13 @@ import (
 )
 
 type ArrayDimFetch struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
-	Dim        node.Node
+	position *node.Position
+	Variable node.Node
+	Dim      node.Node
 }
 
 func NewArrayDimFetch(Variable node.Node, Dim node.Node) node.Node {
 	return &ArrayDimFetch{
-		map[string]interface{}{},
 		nil,
 		Variable,
 		Dim,
@@ -21,7 +19,7 @@ func NewArrayDimFetch(Variable node.Node, Dim node.Node) node.Node {
 }
 
 func (n ArrayDimFetch) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ArrayDimFetch) Position() *node.Position {

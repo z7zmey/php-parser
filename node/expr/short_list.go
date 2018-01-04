@@ -5,21 +5,19 @@ import (
 )
 
 type ShortList struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Items      []node.Node
+	position *node.Position
+	Items    []node.Node
 }
 
 func NewShortList(Items []node.Node) node.Node {
 	return &ShortList{
-		map[string]interface{}{},
 		nil,
 		Items,
 	}
 }
 
 func (n ShortList) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n ShortList) Position() *node.Position {

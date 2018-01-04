@@ -5,23 +5,21 @@ import (
 )
 
 type StaticVar struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
-	expr       node.Node
+	position *node.Position
+	Variable node.Node
+	Expr     node.Node
 }
 
-func NewStaticVar(Variable node.Node, expr node.Node) node.Node {
+func NewStaticVar(Variable node.Node, Expr node.Node) node.Node {
 	return &StaticVar{
-		map[string]interface{}{},
 		nil,
 		Variable,
-		expr,
+		Expr,
 	}
 }
 
 func (n StaticVar) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n StaticVar) Position() *node.Position {
@@ -43,9 +41,9 @@ func (n StaticVar) Walk(v node.Visitor) {
 		n.Variable.Walk(vv)
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

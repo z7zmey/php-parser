@@ -11,7 +11,6 @@ type BooleanOr struct {
 func NewBooleanOr(Variable node.Node, Expression node.Node) node.Node {
 	return &BooleanOr{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewBooleanOr(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n BooleanOr) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n BooleanOr) Position() *node.Position {

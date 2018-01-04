@@ -5,16 +5,14 @@ import (
 )
 
 type StaticCall struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Class      node.Node
-	Call       node.Node
-	Arguments  []node.Node
+	position  *node.Position
+	Class     node.Node
+	Call      node.Node
+	Arguments []node.Node
 }
 
 func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) node.Node {
 	return &StaticCall{
-		map[string]interface{}{},
 		nil,
 		Class,
 		Call,
@@ -23,7 +21,7 @@ func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) node.
 }
 
 func (n StaticCall) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n StaticCall) Position() *node.Position {

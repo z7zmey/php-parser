@@ -11,7 +11,6 @@ type SmallerOrEqual struct {
 func NewSmallerOrEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &SmallerOrEqual{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewSmallerOrEqual(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n SmallerOrEqual) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n SmallerOrEqual) Position() *node.Position {

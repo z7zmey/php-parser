@@ -5,25 +5,25 @@ import (
 )
 
 type Constant struct {
-	attributes   map[string]interface{}
-	position     *node.Position
-	ConstantName node.Node
-	expr         node.Node
+	position      *node.Position
+	PhpDocComment string
+	ConstantName  node.Node
+	Expr          node.Node
 }
 
-func NewConstant(ConstantName node.Node, expr node.Node, phpDocComment string) node.Node {
+func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) node.Node {
 	return &Constant{
-		map[string]interface{}{
-			"phpDocComment": phpDocComment,
-		},
 		nil,
+		PhpDocComment,
 		ConstantName,
-		expr,
+		Expr,
 	}
 }
 
 func (n Constant) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"PhpDocComment": n.PhpDocComment,
+	}
 }
 
 func (n Constant) Position() *node.Position {
@@ -45,9 +45,9 @@ func (n Constant) Walk(v node.Visitor) {
 		n.ConstantName.Walk(vv)
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

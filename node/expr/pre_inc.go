@@ -5,21 +5,19 @@ import (
 )
 
 type PreInc struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Variable   node.Node
+	position *node.Position
+	Variable node.Node
 }
 
 func NewPreInc(Variable node.Node) node.Node {
 	return &PreInc{
-		map[string]interface{}{},
 		nil,
 		Variable,
 	}
 }
 
 func (n PreInc) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n PreInc) Position() *node.Position {

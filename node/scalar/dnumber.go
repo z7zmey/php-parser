@@ -5,21 +5,21 @@ import (
 )
 
 type Dnumber struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewDnumber(Value string) node.Node {
 	return &Dnumber{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n Dnumber) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n Dnumber) Position() *node.Position {

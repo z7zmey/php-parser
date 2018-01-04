@@ -5,21 +5,21 @@ import (
 )
 
 type InlineHtml struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewInlineHtml(Value string) node.Node {
 	return &InlineHtml{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n InlineHtml) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n InlineHtml) Position() *node.Position {

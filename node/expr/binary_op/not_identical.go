@@ -11,7 +11,6 @@ type NotIdentical struct {
 func NewNotIdentical(Variable node.Node, Expression node.Node) node.Node {
 	return &NotIdentical{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewNotIdentical(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n NotIdentical) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n NotIdentical) Position() *node.Position {

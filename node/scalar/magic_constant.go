@@ -5,21 +5,21 @@ import (
 )
 
 type MagicConstant struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewMagicConstant(Value string) node.Node {
 	return &MagicConstant{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n MagicConstant) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n MagicConstant) Position() *node.Position {

@@ -5,21 +5,19 @@ import (
 )
 
 type Continue struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }
 
-func NewContinue(expr node.Node) node.Node {
+func NewContinue(Expr node.Node) node.Node {
 	return &Continue{
-		map[string]interface{}{},
 		nil,
-		expr,
+		Expr,
 	}
 }
 
 func (n Continue) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Continue) Position() *node.Position {
@@ -36,9 +34,9 @@ func (n Continue) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

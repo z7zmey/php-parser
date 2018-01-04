@@ -5,16 +5,14 @@ import (
 )
 
 type Try struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	Stmts      []node.Node
-	Catches    []node.Node
-	Finally    node.Node
+	position *node.Position
+	Stmts    []node.Node
+	Catches  []node.Node
+	Finally  node.Node
 }
 
 func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) node.Node {
 	return &Try{
-		map[string]interface{}{},
 		nil,
 		Stmts,
 		Catches,
@@ -23,7 +21,7 @@ func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) node.Node
 }
 
 func (n Try) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Try) Position() *node.Position {

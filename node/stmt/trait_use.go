@@ -5,7 +5,6 @@ import (
 )
 
 type TraitUse struct {
-	attributes  map[string]interface{}
 	position    *node.Position
 	Traits      []node.Node
 	Adaptations []node.Node
@@ -13,7 +12,6 @@ type TraitUse struct {
 
 func NewTraitUse(Traits []node.Node, Adaptations []node.Node) node.Node {
 	return &TraitUse{
-		map[string]interface{}{},
 		nil,
 		Traits,
 		Adaptations,
@@ -21,7 +19,7 @@ func NewTraitUse(Traits []node.Node, Adaptations []node.Node) node.Node {
 }
 
 func (n TraitUse) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n TraitUse) Position() *node.Position {

@@ -1,20 +1,19 @@
 package node
 
 type Parameter struct {
-	attributes   map[string]interface{}
 	position     *Position
+	ByRef        bool
+	Variadic     bool
 	VariableType Node
 	Variable     Node
 	DefaultValue Node
 }
 
-func NewParameter(VariableType Node, Variable Node, DefaultValue Node, byRef bool, variadic bool) Node {
+func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) Node {
 	return &Parameter{
-		map[string]interface{}{
-			"byRef":    byRef,
-			"variadic": variadic,
-		},
 		nil,
+		ByRef,
+		Variadic,
 		VariableType,
 		Variable,
 		DefaultValue,
@@ -22,16 +21,10 @@ func NewParameter(VariableType Node, Variable Node, DefaultValue Node, byRef boo
 }
 
 func (n Parameter) Attributes() map[string]interface{} {
-	return n.attributes
-}
-
-func (n Parameter) Attribute(Key string) interface{} {
-	return n.attributes[Key]
-}
-
-func (n Parameter) SetAttribute(Key string, Value interface{}) Node {
-	n.attributes[Key] = Value
-	return n
+	return map[string]interface{}{
+		"ByRef":    n.ByRef,
+		"Variadic": n.Variadic,
+	}
 }
 
 func (n Parameter) Position() *Position {

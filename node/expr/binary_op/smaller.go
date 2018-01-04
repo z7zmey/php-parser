@@ -11,7 +11,6 @@ type Smaller struct {
 func NewSmaller(Variable node.Node, Expression node.Node) node.Node {
 	return &Smaller{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewSmaller(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Smaller) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Smaller) Position() *node.Position {

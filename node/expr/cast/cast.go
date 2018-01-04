@@ -5,7 +5,6 @@ import (
 )
 
 type Cast struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }

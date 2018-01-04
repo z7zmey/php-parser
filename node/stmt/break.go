@@ -5,21 +5,19 @@ import (
 )
 
 type Break struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	expr       node.Node
+	position *node.Position
+	Expr     node.Node
 }
 
-func NewBreak(expr node.Node) node.Node {
+func NewBreak(Expr node.Node) node.Node {
 	return &Break{
-		map[string]interface{}{},
 		nil,
-		expr,
+		Expr,
 	}
 }
 
 func (n Break) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Break) Position() *node.Position {
@@ -36,9 +34,9 @@ func (n Break) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -11,7 +11,6 @@ type Div struct {
 func NewDiv(Variable node.Node, Expression node.Node) node.Node {
 	return &Div{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewDiv(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Div) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Div) Position() *node.Position {

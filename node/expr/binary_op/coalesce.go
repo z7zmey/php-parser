@@ -11,7 +11,6 @@ type Coalesce struct {
 func NewCoalesce(Variable node.Node, Expression node.Node) node.Node {
 	return &Coalesce{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewCoalesce(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n Coalesce) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Coalesce) Position() *node.Position {

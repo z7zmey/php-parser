@@ -1,34 +1,23 @@
 package node
 
 type Argument struct {
-	attributes map[string]interface{}
-	position   *Position
-	expr       Node
-	variadic   bool
+	position *Position
+	Variadic bool
+	Expr     Node
 }
 
-func NewArgument(Expression Node, variadic bool) Node {
+func NewArgument(Expression Node, Variadic bool) Node {
 	return &Argument{
-		map[string]interface{}{
-			"variadic": variadic,
-		},
 		nil,
+		Variadic,
 		Expression,
-		variadic,
 	}
 }
 
 func (n Argument) Attributes() map[string]interface{} {
-	return n.attributes
-}
-
-func (n Argument) Attribute(Key string) interface{} {
-	return n.attributes[Key]
-}
-
-func (n Argument) SetAttribute(Key string, Value interface{}) Node {
-	n.attributes[Key] = Value
-	return n
+	return map[string]interface{}{
+		"Variadic": n.Variadic,
+	}
 }
 
 func (n Argument) Position() *Position {
@@ -45,9 +34,9 @@ func (n Argument) Walk(v Visitor) {
 		return
 	}
 
-	if n.expr != nil {
-		vv := v.GetChildrenVisitor("expr")
-		n.expr.Walk(vv)
+	if n.Expr != nil {
+		vv := v.GetChildrenVisitor("Expr")
+		n.Expr.Walk(vv)
 	}
 
 	v.LeaveNode(n)

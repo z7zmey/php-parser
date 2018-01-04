@@ -11,7 +11,6 @@ type BooleanAnd struct {
 func NewBooleanAnd(Variable node.Node, Expression node.Node) node.Node {
 	return &BooleanAnd{
 		BinaryOp{
-			map[string]interface{}{},
 			nil,
 			Variable,
 			Expression,
@@ -20,7 +19,7 @@ func NewBooleanAnd(Variable node.Node, Expression node.Node) node.Node {
 }
 
 func (n BooleanAnd) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n BooleanAnd) Position() *node.Position {

@@ -5,21 +5,21 @@ import (
 )
 
 type NamePart struct {
-	attributes map[string]interface{}
-	position   *node.Position
+	position *node.Position
+	Value    string
 }
 
 func NewNamePart(Value string) node.Node {
 	return &NamePart{
-		map[string]interface{}{
-			"Value": Value,
-		},
 		nil,
+		Value,
 	}
 }
 
 func (n NamePart) Attributes() map[string]interface{} {
-	return n.attributes
+	return map[string]interface{}{
+		"Value": n.Value,
+	}
 }
 
 func (n NamePart) Position() *node.Position {
