@@ -9,7 +9,7 @@ type Mod struct {
 }
 
 func NewMod(variable node.Node, expression node.Node) node.Node {
-	return Mod{
+	return &Mod{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

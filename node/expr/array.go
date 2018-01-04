@@ -11,7 +11,7 @@ type Array struct {
 }
 
 func NewArray(items []node.Node) node.Node {
-	return Array{
+	return &Array{
 		map[string]interface{}{},
 		nil,
 		items,

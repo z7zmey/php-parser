@@ -11,7 +11,7 @@ type Empty struct {
 }
 
 func NewEmpty(expression node.Node) node.Node {
-	return Empty{
+	return &Empty{
 		map[string]interface{}{},
 		nil,
 		expression,

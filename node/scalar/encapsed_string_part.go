@@ -10,7 +10,7 @@ type EncapsedStringPart struct {
 }
 
 func NewEncapsedStringPart(value string) node.Node {
-	return EncapsedStringPart{
+	return &EncapsedStringPart{
 		map[string]interface{}{
 			"value": value,
 		},

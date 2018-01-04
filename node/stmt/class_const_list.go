@@ -12,7 +12,7 @@ type ClassConstList struct {
 }
 
 func NewClassConstList(modifiers []node.Node, consts []node.Node) node.Node {
-	return ClassConstList{
+	return &ClassConstList{
 		map[string]interface{}{},
 		nil,
 		modifiers,

@@ -9,7 +9,7 @@ type Pow struct {
 }
 
 func NewPow(variable node.Node, expression node.Node) node.Node {
-	return Pow{
+	return &Pow{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

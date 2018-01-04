@@ -13,7 +13,7 @@ type Catch struct {
 }
 
 func NewCatch(types []node.Node, variable node.Node, stmts []node.Node) node.Node {
-	return Catch{
+	return &Catch{
 		map[string]interface{}{},
 		nil,
 		types,

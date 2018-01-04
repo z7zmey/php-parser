@@ -9,7 +9,7 @@ type Assign struct {
 }
 
 func NewAssign(variable node.Node, expression node.Node) node.Node {
-	return Assign{
+	return &Assign{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

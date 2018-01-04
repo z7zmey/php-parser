@@ -12,7 +12,7 @@ type Case struct {
 }
 
 func NewCase(cond node.Node, stmts []node.Node) node.Node {
-	return Case{
+	return &Case{
 		map[string]interface{}{},
 		nil,
 		cond,

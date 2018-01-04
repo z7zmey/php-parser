@@ -9,7 +9,7 @@ type BooleanAnd struct {
 }
 
 func NewBooleanAnd(variable node.Node, expression node.Node) node.Node {
-	return BooleanAnd{
+	return &BooleanAnd{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

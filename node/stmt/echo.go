@@ -11,7 +11,7 @@ type Echo struct {
 }
 
 func NewEcho(exprs []node.Node) node.Node {
-	return Echo{
+	return &Echo{
 		map[string]interface{}{},
 		nil,
 		exprs,

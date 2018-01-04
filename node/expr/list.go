@@ -11,7 +11,7 @@ type List struct {
 }
 
 func NewList(items []node.Node) node.Node {
-	return List{
+	return &List{
 		map[string]interface{}{},
 		nil,
 		items,

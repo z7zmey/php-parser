@@ -10,7 +10,7 @@ type InlineHtml struct {
 }
 
 func NewInlineHtml(value string) node.Node {
-	return InlineHtml{
+	return &InlineHtml{
 		map[string]interface{}{
 			"value": value,
 		},

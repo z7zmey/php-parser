@@ -11,7 +11,7 @@ type Exit struct {
 }
 
 func NewExit(expr node.Node, isDie bool) node.Node {
-	return Exit{
+	return &Exit{
 		map[string]interface{}{
 			"isDie": isDie,
 		},

@@ -12,7 +12,7 @@ type UseList struct {
 }
 
 func NewUseList(useType node.Node, uses []node.Node) node.Node {
-	return UseList{
+	return &UseList{
 		map[string]interface{}{},
 		nil,
 		useType,

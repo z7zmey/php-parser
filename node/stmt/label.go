@@ -11,7 +11,7 @@ type Label struct {
 }
 
 func NewLabel(labelName node.Node) node.Node {
-	return Label{
+	return &Label{
 		map[string]interface{}{},
 		nil,
 		labelName,

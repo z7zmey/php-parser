@@ -15,7 +15,7 @@ type ClassMethod struct {
 }
 
 func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
-	return ClassMethod{
+	return &ClassMethod{
 		map[string]interface{}{
 			"returnsRef":    returnsRef,
 			"phpDocComment": phpDocComment,

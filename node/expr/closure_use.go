@@ -11,7 +11,7 @@ type ClusureUse struct {
 }
 
 func NewClusureUse(variable node.Node, byRef bool) node.Node {
-	return ClusureUse{
+	return &ClusureUse{
 		map[string]interface{}{
 			"byRef": byRef,
 		},

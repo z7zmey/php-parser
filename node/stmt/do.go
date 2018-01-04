@@ -12,7 +12,7 @@ type Do struct {
 }
 
 func NewDo(stmt node.Node, cond node.Node) node.Node {
-	return Do{
+	return &Do{
 		map[string]interface{}{},
 		nil,
 		stmt,

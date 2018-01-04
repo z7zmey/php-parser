@@ -12,7 +12,7 @@ type FunctionCall struct {
 }
 
 func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
-	return FunctionCall{
+	return &FunctionCall{
 		map[string]interface{}{},
 		nil,
 		function,

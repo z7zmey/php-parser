@@ -11,7 +11,7 @@ type UnaryPlus struct {
 }
 
 func NewUnaryPlus(expression node.Node) node.Node {
-	return UnaryPlus{
+	return &UnaryPlus{
 		map[string]interface{}{},
 		nil,
 		expression,

@@ -12,7 +12,7 @@ type AltElseIf struct {
 }
 
 func NewAltElseIf(cond node.Node, stmt node.Node) node.Node {
-	return AltElseIf{
+	return &AltElseIf{
 		map[string]interface{}{},
 		nil,
 		cond,

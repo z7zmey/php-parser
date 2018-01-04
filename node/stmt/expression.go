@@ -11,7 +11,7 @@ type Expression struct {
 }
 
 func NewExpression(expr node.Node) node.Node {
-	return Expression{
+	return &Expression{
 		map[string]interface{}{},
 		nil,
 		expr,

@@ -9,7 +9,7 @@ type Coalesce struct {
 }
 
 func NewCoalesce(variable node.Node, expression node.Node) node.Node {
-	return Coalesce{
+	return &Coalesce{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

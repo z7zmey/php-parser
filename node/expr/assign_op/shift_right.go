@@ -9,7 +9,7 @@ type ShiftRight struct {
 }
 
 func NewShiftRight(variable node.Node, expression node.Node) node.Node {
-	return ShiftRight{
+	return &ShiftRight{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

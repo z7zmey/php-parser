@@ -12,7 +12,7 @@ type Namespace struct {
 }
 
 func NewNamespace(namespaceName node.Node, stmts []node.Node) node.Node {
-	return Namespace{
+	return &Namespace{
 		map[string]interface{}{},
 		nil,
 		namespaceName,

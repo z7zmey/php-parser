@@ -9,7 +9,7 @@ type Parameter struct {
 }
 
 func NewParameter(variableType Node, variable Node, defaultValue Node, byRef bool, variadic bool) Node {
-	return Parameter{
+	return &Parameter{
 		map[string]interface{}{
 			"byRef":    byRef,
 			"variadic": variadic,

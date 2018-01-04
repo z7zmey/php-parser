@@ -11,7 +11,7 @@ type ErrorSuppress struct {
 }
 
 func NewErrorSuppress(expression node.Node) node.Node {
-	return ErrorSuppress{
+	return &ErrorSuppress{
 		map[string]interface{}{},
 		nil,
 		expression,

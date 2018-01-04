@@ -11,7 +11,7 @@ type Require struct {
 }
 
 func NewRequire(expression node.Node) node.Node {
-	return Require{
+	return &Require{
 		map[string]interface{}{},
 		nil,
 		expression,

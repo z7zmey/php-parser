@@ -11,7 +11,7 @@ type Return struct {
 }
 
 func NewReturn(expr node.Node) node.Node {
-	return Return{
+	return &Return{
 		map[string]interface{}{},
 		nil,
 		expr,

@@ -9,7 +9,7 @@ type Div struct {
 }
 
 func NewDiv(variable node.Node, expression node.Node) node.Node {
-	return Div{
+	return &Div{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

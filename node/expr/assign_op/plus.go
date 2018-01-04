@@ -9,7 +9,7 @@ type Plus struct {
 }
 
 func NewPlus(variable node.Node, expression node.Node) node.Node {
-	return Plus{
+	return &Plus{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

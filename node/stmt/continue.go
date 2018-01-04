@@ -11,7 +11,7 @@ type Continue struct {
 }
 
 func NewContinue(expr node.Node) node.Node {
-	return Continue{
+	return &Continue{
 		map[string]interface{}{},
 		nil,
 		expr,

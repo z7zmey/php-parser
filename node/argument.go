@@ -8,7 +8,7 @@ type Argument struct {
 }
 
 func NewArgument(expression Node, variadic bool) Node {
-	return Argument{
+	return &Argument{
 		map[string]interface{}{
 			"variadic": variadic,
 		},

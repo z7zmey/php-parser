@@ -11,7 +11,7 @@ type Static struct {
 }
 
 func NewStatic(vars []node.Node) node.Node {
-	return Static{
+	return &Static{
 		map[string]interface{}{},
 		nil,
 		vars,

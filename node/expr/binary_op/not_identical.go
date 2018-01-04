@@ -9,7 +9,7 @@ type NotIdentical struct {
 }
 
 func NewNotIdentical(variable node.Node, expression node.Node) node.Node {
-	return NotIdentical{
+	return &NotIdentical{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

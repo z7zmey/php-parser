@@ -14,7 +14,7 @@ type AltIf struct {
 }
 
 func NewAltIf(cond node.Node, stmt node.Node) node.Node {
-	return AltIf{
+	return &AltIf{
 		map[string]interface{}{},
 		nil,
 		cond,

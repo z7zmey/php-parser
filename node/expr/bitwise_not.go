@@ -11,7 +11,7 @@ type BitwiseNot struct {
 }
 
 func NewBitwiseNot(expression node.Node) node.Node {
-	return BitwiseNot{
+	return &BitwiseNot{
 		map[string]interface{}{},
 		nil,
 		expression,

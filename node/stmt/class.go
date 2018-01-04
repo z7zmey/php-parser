@@ -16,7 +16,7 @@ type Class struct {
 }
 
 func NewClass(className node.Node, modifiers []node.Node, args []node.Node, extends node.Node, implements []node.Node, stmts []node.Node, phpDocComment string) node.Node {
-	return Class{
+	return &Class{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},

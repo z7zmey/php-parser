@@ -9,7 +9,7 @@ type Smaller struct {
 }
 
 func NewSmaller(variable node.Node, expression node.Node) node.Node {
-	return Smaller{
+	return &Smaller{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

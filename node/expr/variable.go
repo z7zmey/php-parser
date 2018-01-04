@@ -11,7 +11,7 @@ type Variable struct {
 }
 
 func NewVariable(varName node.Node) node.Node {
-	return Variable{
+	return &Variable{
 		map[string]interface{}{},
 		nil,
 		varName,

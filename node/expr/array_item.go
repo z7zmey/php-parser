@@ -12,7 +12,7 @@ type ArrayItem struct {
 }
 
 func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
-	return ArrayItem{
+	return &ArrayItem{
 		map[string]interface{}{
 			"byRef": byRef,
 		},

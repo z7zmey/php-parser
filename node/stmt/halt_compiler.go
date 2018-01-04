@@ -10,7 +10,7 @@ type HaltCompiler struct {
 }
 
 func NewHaltCompiler() node.Node {
-	return HaltCompiler{
+	return &HaltCompiler{
 		map[string]interface{}{},
 		nil,
 	}

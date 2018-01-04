@@ -11,7 +11,7 @@ type BooleanNot struct {
 }
 
 func NewBooleanNot(expression node.Node) node.Node {
-	return BooleanNot{
+	return &BooleanNot{
 		map[string]interface{}{},
 		nil,
 		expression,

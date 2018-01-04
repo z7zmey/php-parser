@@ -11,7 +11,7 @@ type Break struct {
 }
 
 func NewBreak(expr node.Node) node.Node {
-	return Break{
+	return &Break{
 		map[string]interface{}{},
 		nil,
 		expr,

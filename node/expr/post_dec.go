@@ -11,7 +11,7 @@ type PostDec struct {
 }
 
 func NewPostDec(variable node.Node) node.Node {
-	return PostDec{
+	return &PostDec{
 		map[string]interface{}{},
 		nil,
 		variable,

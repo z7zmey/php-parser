@@ -10,7 +10,7 @@ type Dnumber struct {
 }
 
 func NewDnumber(value string) node.Node {
-	return Dnumber{
+	return &Dnumber{
 		map[string]interface{}{
 			"value": value,
 		},

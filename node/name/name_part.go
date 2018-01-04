@@ -10,7 +10,7 @@ type NamePart struct {
 }
 
 func NewNamePart(value string) node.Node {
-	return NamePart{
+	return &NamePart{
 		map[string]interface{}{
 			"value": value,
 		},

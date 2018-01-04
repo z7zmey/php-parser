@@ -11,7 +11,7 @@ type ShortArray struct {
 }
 
 func NewShortArray(items []node.Node) node.Node {
-	return ShortArray{
+	return &ShortArray{
 		map[string]interface{}{},
 		nil,
 		items,

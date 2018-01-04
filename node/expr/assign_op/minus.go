@@ -9,7 +9,7 @@ type Minus struct {
 }
 
 func NewMinus(variable node.Node, expression node.Node) node.Node {
-	return Minus{
+	return &Minus{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

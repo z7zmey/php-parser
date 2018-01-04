@@ -11,7 +11,7 @@ type ConstList struct {
 }
 
 func NewConstList(consts []node.Node) node.Node {
-	return ConstList{
+	return &ConstList{
 		map[string]interface{}{},
 		nil,
 		consts,

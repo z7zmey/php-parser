@@ -11,7 +11,7 @@ type Eval struct {
 }
 
 func NewEval(expression node.Node) node.Node {
-	return Eval{
+	return &Eval{
 		map[string]interface{}{},
 		nil,
 		expression,

@@ -12,7 +12,7 @@ type ElseIf struct {
 }
 
 func NewElseIf(cond node.Node, stmt node.Node) node.Node {
-	return ElseIf{
+	return &ElseIf{
 		map[string]interface{}{},
 		nil,
 		cond,

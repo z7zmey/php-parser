@@ -12,7 +12,7 @@ type StaticVar struct {
 }
 
 func NewStaticVar(variable node.Node, expr node.Node) node.Node {
-	return StaticVar{
+	return &StaticVar{
 		map[string]interface{}{},
 		nil,
 		variable,

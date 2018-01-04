@@ -11,7 +11,7 @@ type Isset struct {
 }
 
 func NewIsset(variables []node.Node) node.Node {
-	return Isset{
+	return &Isset{
 		map[string]interface{}{},
 		nil,
 		variables,

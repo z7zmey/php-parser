@@ -11,7 +11,7 @@ type RequireOnce struct {
 }
 
 func NewRequireOnce(expression node.Node) node.Node {
-	return RequireOnce{
+	return &RequireOnce{
 		map[string]interface{}{},
 		nil,
 		expression,

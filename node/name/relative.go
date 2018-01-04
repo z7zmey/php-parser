@@ -9,7 +9,7 @@ type Relative struct {
 }
 
 func NewRelative(parts []node.Node) node.Node {
-	return Relative{
+	return &Relative{
 		Name{
 			map[string]interface{}{},
 			nil,

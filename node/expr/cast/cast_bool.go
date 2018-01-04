@@ -9,7 +9,7 @@ type CastBool struct {
 }
 
 func NewCastBool(expr node.Node) node.Node {
-	return CastBool{
+	return &CastBool{
 		Cast{
 			map[string]interface{}{},
 			nil,

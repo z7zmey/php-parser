@@ -11,7 +11,7 @@ type Clone struct {
 }
 
 func NewClone(expression node.Node) node.Node {
-	return Clone{
+	return &Clone{
 		map[string]interface{}{},
 		nil,
 		expression,

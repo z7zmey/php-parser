@@ -11,7 +11,7 @@ type Goto struct {
 }
 
 func NewGoto(label node.Node) node.Node {
-	return Goto{
+	return &Goto{
 		map[string]interface{}{},
 		nil,
 		label,

@@ -9,7 +9,7 @@ type AssignRef struct {
 }
 
 func NewAssignRef(variable node.Node, expression node.Node) node.Node {
-	return AssignRef{
+	return &AssignRef{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

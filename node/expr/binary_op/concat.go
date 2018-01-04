@@ -9,7 +9,7 @@ type Concat struct {
 }
 
 func NewConcat(variable node.Node, expression node.Node) node.Node {
-	return Concat{
+	return &Concat{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

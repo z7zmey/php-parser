@@ -13,7 +13,7 @@ type Try struct {
 }
 
 func NewTry(stmts []node.Node, catches []node.Node, finally node.Node) node.Node {
-	return Try{
+	return &Try{
 		map[string]interface{}{},
 		nil,
 		stmts,

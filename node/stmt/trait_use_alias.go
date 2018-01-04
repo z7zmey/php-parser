@@ -13,7 +13,7 @@ type TraitUseAlias struct {
 }
 
 func NewTraitUseAlias(ref node.Node, modifier node.Node, alias node.Node) node.Node {
-	return TraitUseAlias{
+	return &TraitUseAlias{
 		map[string]interface{}{},
 		nil,
 		ref,

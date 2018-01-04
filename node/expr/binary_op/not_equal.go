@@ -9,7 +9,7 @@ type NotEqual struct {
 }
 
 func NewNotEqual(variable node.Node, expression node.Node) node.Node {
-	return NotEqual{
+	return &NotEqual{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

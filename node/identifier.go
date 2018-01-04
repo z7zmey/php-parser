@@ -10,7 +10,7 @@ type Identifier struct {
 }
 
 func NewIdentifier(token token.Token) Node {
-	return Identifier{
+	return &Identifier{
 		map[string]interface{}{
 			"value": token.Value,
 		},

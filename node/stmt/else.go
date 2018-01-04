@@ -11,7 +11,7 @@ type Else struct {
 }
 
 func NewElse(stmt node.Node) node.Node {
-	return Else{
+	return &Else{
 		map[string]interface{}{},
 		nil,
 		stmt,

@@ -9,7 +9,7 @@ type CastUnset struct {
 }
 
 func NewCastUnset(expr node.Node) node.Node {
-	return CastUnset{
+	return &CastUnset{
 		Cast{
 			map[string]interface{}{},
 			nil,

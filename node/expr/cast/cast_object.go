@@ -9,7 +9,7 @@ type CastObject struct {
 }
 
 func NewCastObject(expr node.Node) node.Node {
-	return CastObject{
+	return &CastObject{
 		Cast{
 			map[string]interface{}{},
 			nil,

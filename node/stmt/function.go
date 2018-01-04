@@ -14,7 +14,7 @@ type Function struct {
 }
 
 func NewFunction(functionName node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
-	return Function{
+	return &Function{
 		map[string]interface{}{
 			"returnsRef":    returnsRef,
 			"phpDocComment": phpDocComment,

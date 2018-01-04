@@ -11,7 +11,7 @@ type PreInc struct {
 }
 
 func NewPreInc(variable node.Node) node.Node {
-	return PreInc{
+	return &PreInc{
 		map[string]interface{}{},
 		nil,
 		variable,

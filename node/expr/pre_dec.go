@@ -11,7 +11,7 @@ type PreDec struct {
 }
 
 func NewPreDec(variable node.Node) node.Node {
-	return PreDec{
+	return &PreDec{
 		map[string]interface{}{},
 		nil,
 		variable,

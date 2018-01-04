@@ -11,7 +11,7 @@ type StmtList struct {
 }
 
 func NewStmtList(stmts []node.Node) node.Node {
-	return StmtList{
+	return &StmtList{
 		map[string]interface{}{},
 		nil,
 		stmts,

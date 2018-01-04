@@ -9,7 +9,7 @@ type SmallerOrEqual struct {
 }
 
 func NewSmallerOrEqual(variable node.Node, expression node.Node) node.Node {
-	return SmallerOrEqual{
+	return &SmallerOrEqual{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

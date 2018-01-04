@@ -11,7 +11,7 @@ type Print struct {
 }
 
 func NewPrint(expression node.Node) node.Node {
-	return Print{
+	return &Print{
 		map[string]interface{}{},
 		nil,
 		expression,

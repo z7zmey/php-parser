@@ -9,7 +9,7 @@ type BitwiseOr struct {
 }
 
 func NewBitwiseOr(variable node.Node, expression node.Node) node.Node {
-	return BitwiseOr{
+	return &BitwiseOr{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

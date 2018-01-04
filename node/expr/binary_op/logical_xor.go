@@ -9,7 +9,7 @@ type LogicalXor struct {
 }
 
 func NewLogicalXor(variable node.Node, expression node.Node) node.Node {
-	return LogicalXor{
+	return &LogicalXor{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

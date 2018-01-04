@@ -13,7 +13,7 @@ type MethodCall struct {
 }
 
 func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) node.Node {
-	return MethodCall{
+	return &MethodCall{
 		map[string]interface{}{},
 		nil,
 		variable,

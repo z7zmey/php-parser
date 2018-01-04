@@ -12,7 +12,7 @@ type Declare struct {
 }
 
 func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
-	return Declare{
+	return &Declare{
 		map[string]interface{}{},
 		nil,
 		consts,

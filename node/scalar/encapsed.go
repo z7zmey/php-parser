@@ -11,7 +11,7 @@ type Encapsed struct {
 }
 
 func NewEncapsed(parts []node.Node) node.Node {
-	return Encapsed{
+	return &Encapsed{
 		map[string]interface{}{},
 		nil,
 		parts,

@@ -13,7 +13,7 @@ type GroupUse struct {
 }
 
 func NewGroupUse(useType node.Node, prefix node.Node, useList []node.Node) node.Node {
-	return GroupUse{
+	return &GroupUse{
 		map[string]interface{}{},
 		nil,
 		useType,

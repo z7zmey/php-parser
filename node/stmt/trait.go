@@ -12,7 +12,7 @@ type Trait struct {
 }
 
 func NewTrait(traitName node.Node, stmts []node.Node, phpDocComment string) node.Node {
-	return Trait{
+	return &Trait{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},

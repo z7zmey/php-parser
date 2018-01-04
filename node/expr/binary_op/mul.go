@@ -9,7 +9,7 @@ type Mul struct {
 }
 
 func NewMul(variable node.Node, expression node.Node) node.Node {
-	return Mul{
+	return &Mul{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

@@ -12,7 +12,7 @@ type ClassConstFetch struct {
 }
 
 func NewClassConstFetch(class node.Node, constantName node.Node) node.Node {
-	return ClassConstFetch{
+	return &ClassConstFetch{
 		map[string]interface{}{},
 		nil,
 		class,

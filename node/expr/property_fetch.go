@@ -12,7 +12,7 @@ type PropertyFetch struct {
 }
 
 func NewPropertyFetch(variable node.Node, property node.Node) node.Node {
-	return PropertyFetch{
+	return &PropertyFetch{
 		map[string]interface{}{},
 		nil,
 		variable,

@@ -11,7 +11,7 @@ type Default struct {
 }
 
 func NewDefault(stmts []node.Node) node.Node {
-	return Default{
+	return &Default{
 		map[string]interface{}{},
 		nil,
 		stmts,

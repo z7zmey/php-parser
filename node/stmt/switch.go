@@ -14,7 +14,7 @@ type Switch struct {
 }
 
 func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
-	return Switch{
+	return &Switch{
 		map[string]interface{}{},
 		nil,
 		token,

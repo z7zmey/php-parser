@@ -14,7 +14,7 @@ type While struct {
 }
 
 func NewWhile(token token.Token, cond node.Node, stmt node.Node) node.Node {
-	return While{
+	return &While{
 		map[string]interface{}{},
 		nil,
 		token,

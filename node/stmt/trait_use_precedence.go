@@ -12,7 +12,7 @@ type TraitUsePrecedence struct {
 }
 
 func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
-	return TraitUsePrecedence{
+	return &TraitUsePrecedence{
 		map[string]interface{}{},
 		nil,
 		ref,

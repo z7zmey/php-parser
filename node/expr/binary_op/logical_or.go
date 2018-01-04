@@ -9,7 +9,7 @@ type LogicalOr struct {
 }
 
 func NewLogicalOr(variable node.Node, expression node.Node) node.Node {
-	return LogicalOr{
+	return &LogicalOr{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

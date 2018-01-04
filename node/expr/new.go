@@ -12,7 +12,7 @@ type New struct {
 }
 
 func NewNew(class node.Node, arguments []node.Node) node.Node {
-	return New{
+	return &New{
 		map[string]interface{}{},
 		nil,
 		class,

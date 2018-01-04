@@ -12,7 +12,7 @@ type InstanceOf struct {
 }
 
 func NewInstanceOf(expr node.Node, class node.Node) node.Node {
-	return InstanceOf{
+	return &InstanceOf{
 		map[string]interface{}{},
 		nil,
 		expr,

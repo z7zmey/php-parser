@@ -7,7 +7,7 @@ type Nullable struct {
 }
 
 func NewNullable(expression Node) Node {
-	return Nullable{
+	return &Nullable{
 		map[string]interface{}{},
 		nil,
 		expression,

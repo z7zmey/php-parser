@@ -9,7 +9,7 @@ type Equal struct {
 }
 
 func NewEqual(variable node.Node, expression node.Node) node.Node {
-	return Equal{
+	return &Equal{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

@@ -12,7 +12,7 @@ type PropertyList struct {
 }
 
 func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
-	return PropertyList{
+	return &PropertyList{
 		map[string]interface{}{},
 		nil,
 		modifiers,

@@ -14,7 +14,7 @@ type Foreach struct {
 }
 
 func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
-	return Foreach{
+	return &Foreach{
 		map[string]interface{}{
 			"byRef": byRef,
 		},

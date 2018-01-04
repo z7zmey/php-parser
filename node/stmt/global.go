@@ -11,7 +11,7 @@ type Global struct {
 }
 
 func NewGlobal(vars []node.Node) node.Node {
-	return Global{
+	return &Global{
 		map[string]interface{}{},
 		nil,
 		vars,

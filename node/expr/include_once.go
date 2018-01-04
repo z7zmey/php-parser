@@ -11,7 +11,7 @@ type IncludeOnce struct {
 }
 
 func NewIncludeOnce(expression node.Node) node.Node {
-	return IncludeOnce{
+	return &IncludeOnce{
 		map[string]interface{}{},
 		nil,
 		expression,

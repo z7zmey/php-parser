@@ -11,7 +11,7 @@ type PostInc struct {
 }
 
 func NewPostInc(variable node.Node) node.Node {
-	return PostInc{
+	return &PostInc{
 		map[string]interface{}{},
 		nil,
 		variable,

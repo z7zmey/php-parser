@@ -9,7 +9,7 @@ type Identical struct {
 }
 
 func NewIdentical(variable node.Node, expression node.Node) node.Node {
-	return Identical{
+	return &Identical{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

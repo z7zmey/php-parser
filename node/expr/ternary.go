@@ -13,7 +13,7 @@ type Ternary struct {
 }
 
 func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.Node {
-	return Ternary{
+	return &Ternary{
 		map[string]interface{}{},
 		nil,
 		condition,

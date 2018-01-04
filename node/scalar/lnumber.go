@@ -10,7 +10,7 @@ type Lnumber struct {
 }
 
 func NewLnumber(value string) node.Node {
-	return Lnumber{
+	return &Lnumber{
 		map[string]interface{}{
 			"value": value,
 		},

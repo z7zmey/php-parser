@@ -9,7 +9,7 @@ type LogicalAnd struct {
 }
 
 func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
-	return LogicalAnd{
+	return &LogicalAnd{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

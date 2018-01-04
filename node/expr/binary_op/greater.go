@@ -9,7 +9,7 @@ type Greater struct {
 }
 
 func NewGreater(variable node.Node, expression node.Node) node.Node {
-	return Greater{
+	return &Greater{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

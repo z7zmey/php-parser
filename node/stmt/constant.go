@@ -12,7 +12,7 @@ type Constant struct {
 }
 
 func NewConstant(constantName node.Node, expr node.Node, phpDocComment string) node.Node {
-	return Constant{
+	return &Constant{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},

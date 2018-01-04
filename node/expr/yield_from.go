@@ -11,7 +11,7 @@ type YieldFrom struct {
 }
 
 func NewYieldFrom(expression node.Node) node.Node {
-	return YieldFrom{
+	return &YieldFrom{
 		map[string]interface{}{},
 		nil,
 		expression,

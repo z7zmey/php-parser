@@ -9,7 +9,7 @@ type BitwiseAnd struct {
 }
 
 func NewBitwiseAnd(variable node.Node, expression node.Node) node.Node {
-	return BitwiseAnd{
+	return &BitwiseAnd{
 		AssignOp{
 			map[string]interface{}{},
 			nil,

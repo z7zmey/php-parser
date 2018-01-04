@@ -12,7 +12,7 @@ type Yield struct {
 }
 
 func NewYield(key node.Node, value node.Node) node.Node {
-	return Yield{
+	return &Yield{
 		map[string]interface{}{},
 		nil,
 		key,

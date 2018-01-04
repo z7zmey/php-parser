@@ -14,7 +14,7 @@ type Closure struct {
 }
 
 func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
-	return Closure{
+	return &Closure{
 		map[string]interface{}{
 			"isReturnRef":   isReturnRef,
 			"isStatic":      isStatic,

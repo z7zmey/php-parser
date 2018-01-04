@@ -11,7 +11,7 @@ type Finally struct {
 }
 
 func NewFinally(stmts []node.Node) node.Node {
-	return Finally{
+	return &Finally{
 		map[string]interface{}{},
 		nil,
 		stmts,

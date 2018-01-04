@@ -12,7 +12,7 @@ type Property struct {
 }
 
 func NewProperty(variable node.Node, expr node.Node, phpDocComment string) node.Node {
-	return Property{
+	return &Property{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},

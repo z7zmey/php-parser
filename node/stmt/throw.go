@@ -11,7 +11,7 @@ type Throw struct {
 }
 
 func NewThrow(expr node.Node) node.Node {
-	return Throw{
+	return &Throw{
 		map[string]interface{}{},
 		nil,
 		expr,

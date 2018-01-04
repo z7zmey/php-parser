@@ -11,7 +11,7 @@ type Name struct {
 }
 
 func NewName(parts []node.Node) node.Node {
-	return Name{
+	return &Name{
 		map[string]interface{}{},
 		nil,
 		parts,

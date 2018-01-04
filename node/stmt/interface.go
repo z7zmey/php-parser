@@ -13,7 +13,7 @@ type Interface struct {
 }
 
 func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node, phpDocComment string) node.Node {
-	return Interface{
+	return &Interface{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},

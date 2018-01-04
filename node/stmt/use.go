@@ -13,7 +13,7 @@ type Use struct {
 }
 
 func NewUse(useType node.Node, use node.Node, alias node.Node) node.Node {
-	return Use{
+	return &Use{
 		map[string]interface{}{},
 		nil,
 		useType,

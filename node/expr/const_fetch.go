@@ -11,7 +11,7 @@ type ConstFetch struct {
 }
 
 func NewConstFetch(constant node.Node) node.Node {
-	return ConstFetch{
+	return &ConstFetch{
 		map[string]interface{}{},
 		nil,
 		constant,

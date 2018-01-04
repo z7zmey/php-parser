@@ -9,7 +9,7 @@ type BooleanOr struct {
 }
 
 func NewBooleanOr(variable node.Node, expression node.Node) node.Node {
-	return BooleanOr{
+	return &BooleanOr{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

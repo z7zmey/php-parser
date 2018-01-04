@@ -10,7 +10,7 @@ type Nop struct {
 }
 
 func NewNop() node.Node {
-	return Nop{
+	return &Nop{
 		map[string]interface{}{},
 		nil,
 	}

@@ -11,7 +11,7 @@ type ShortList struct {
 }
 
 func NewShortList(items []node.Node) node.Node {
-	return ShortList{
+	return &ShortList{
 		map[string]interface{}{},
 		nil,
 		items,

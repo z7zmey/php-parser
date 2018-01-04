@@ -14,7 +14,7 @@ type For struct {
 }
 
 func NewFor(init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
-	return For{
+	return &For{
 		map[string]interface{}{},
 		nil,
 		init,

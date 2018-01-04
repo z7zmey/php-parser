@@ -9,7 +9,7 @@ type CastArray struct {
 }
 
 func NewCastArray(expr node.Node) node.Node {
-	return CastArray{
+	return &CastArray{
 		Cast{
 			map[string]interface{}{},
 			nil,

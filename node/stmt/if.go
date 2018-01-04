@@ -14,7 +14,7 @@ type If struct {
 }
 
 func NewIf(cond node.Node, stmt node.Node) node.Node {
-	return If{
+	return &If{
 		map[string]interface{}{},
 		nil,
 		cond,

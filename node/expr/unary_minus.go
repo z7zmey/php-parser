@@ -11,7 +11,7 @@ type UnaryMinus struct {
 }
 
 func NewUnaryMinus(expression node.Node) node.Node {
-	return UnaryMinus{
+	return &UnaryMinus{
 		map[string]interface{}{},
 		nil,
 		expression,

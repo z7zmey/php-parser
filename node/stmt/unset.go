@@ -11,7 +11,7 @@ type Unset struct {
 }
 
 func NewUnset(vars []node.Node) node.Node {
-	return Unset{
+	return &Unset{
 		map[string]interface{}{},
 		nil,
 		vars,

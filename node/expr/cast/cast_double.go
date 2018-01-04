@@ -9,7 +9,7 @@ type CastDouble struct {
 }
 
 func NewCastDouble(expr node.Node) node.Node {
-	return CastDouble{
+	return &CastDouble{
 		Cast{
 			map[string]interface{}{},
 			nil,

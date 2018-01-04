@@ -11,7 +11,7 @@ type AltElse struct {
 }
 
 func NewAltElse(stmt node.Node) node.Node {
-	return AltElse{
+	return &AltElse{
 		map[string]interface{}{},
 		nil,
 		stmt,

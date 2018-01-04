@@ -12,7 +12,7 @@ type ArrayDimFetch struct {
 }
 
 func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
-	return ArrayDimFetch{
+	return &ArrayDimFetch{
 		map[string]interface{}{},
 		nil,
 		variable,

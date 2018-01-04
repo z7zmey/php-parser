@@ -13,7 +13,7 @@ type StaticCall struct {
 }
 
 func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.Node {
-	return StaticCall{
+	return &StaticCall{
 		map[string]interface{}{},
 		nil,
 		class,

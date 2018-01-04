@@ -10,7 +10,7 @@ type String struct {
 }
 
 func NewString(value string) node.Node {
-	return String{
+	return &String{
 		map[string]interface{}{
 			"value": value,
 		},

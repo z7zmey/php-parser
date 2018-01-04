@@ -9,7 +9,7 @@ type BitwiseXor struct {
 }
 
 func NewBitwiseXor(variable node.Node, expression node.Node) node.Node {
-	return BitwiseXor{
+	return &BitwiseXor{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

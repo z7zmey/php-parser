@@ -12,7 +12,7 @@ type TraitUse struct {
 }
 
 func NewTraitUse(traits []node.Node, adaptations []node.Node) node.Node {
-	return TraitUse{
+	return &TraitUse{
 		map[string]interface{}{},
 		nil,
 		traits,

@@ -10,7 +10,7 @@ type MagicConstant struct {
 }
 
 func NewMagicConstant(value string) node.Node {
-	return MagicConstant{
+	return &MagicConstant{
 		map[string]interface{}{
 			"value": value,
 		},

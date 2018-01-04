@@ -12,7 +12,7 @@ type TraitMethodRef struct {
 }
 
 func NewTraitMethodRef(trait node.Node, method node.Node) node.Node {
-	return TraitMethodRef{
+	return &TraitMethodRef{
 		map[string]interface{}{},
 		nil,
 		trait,

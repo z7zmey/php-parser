@@ -9,7 +9,7 @@ type FullyQualified struct {
 }
 
 func NewFullyQualified(parts []node.Node) node.Node {
-	return FullyQualified{
+	return &FullyQualified{
 		Name{
 			map[string]interface{}{},
 			nil,

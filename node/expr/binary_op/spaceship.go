@@ -9,7 +9,7 @@ type Spaceship struct {
 }
 
 func NewSpaceship(variable node.Node, expression node.Node) node.Node {
-	return Spaceship{
+	return &Spaceship{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,

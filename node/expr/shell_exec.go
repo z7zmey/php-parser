@@ -11,7 +11,7 @@ type ShellExec struct {
 }
 
 func NewShellExec(parts []node.Node) node.Node {
-	return ShellExec{
+	return &ShellExec{
 		map[string]interface{}{},
 		nil,
 		parts,
