@@ -7,16 +7,16 @@ import (
 type New struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	class      node.Node
-	arguments  []node.Node
+	Class      node.Node
+	Arguments  []node.Node
 }
 
-func NewNew(class node.Node, arguments []node.Node) node.Node {
+func NewNew(Class node.Node, Arguments []node.Node) node.Node {
 	return &New{
 		map[string]interface{}{},
 		nil,
-		class,
-		arguments,
+		Class,
+		Arguments,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n New) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.class != nil {
-		vv := v.GetChildrenVisitor("class")
-		n.class.Walk(vv)
+	if n.Class != nil {
+		vv := v.GetChildrenVisitor("Class")
+		n.Class.Walk(vv)
 	}
 
-	if n.arguments != nil {
-		vv := v.GetChildrenVisitor("arguments")
-		for _, nn := range n.arguments {
+	if n.Arguments != nil {
+		vv := v.GetChildrenVisitor("Arguments")
+		for _, nn := range n.Arguments {
 			nn.Walk(vv)
 		}
 	}

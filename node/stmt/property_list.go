@@ -7,16 +7,16 @@ import (
 type PropertyList struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	modifiers  []node.Node
-	properties []node.Node
+	Modifiers  []node.Node
+	Properties []node.Node
 }
 
-func NewPropertyList(modifiers []node.Node, properties []node.Node) node.Node {
+func NewPropertyList(Modifiers []node.Node, Properties []node.Node) node.Node {
 	return &PropertyList{
 		map[string]interface{}{},
 		nil,
-		modifiers,
-		properties,
+		Modifiers,
+		Properties,
 	}
 }
 
@@ -38,16 +38,16 @@ func (n PropertyList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.modifiers != nil {
-		vv := v.GetChildrenVisitor("modifiers")
-		for _, nn := range n.modifiers {
+	if n.Modifiers != nil {
+		vv := v.GetChildrenVisitor("Modifiers")
+		for _, nn := range n.Modifiers {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.properties != nil {
-		vv := v.GetChildrenVisitor("properties")
-		for _, nn := range n.properties {
+	if n.Properties != nil {
+		vv := v.GetChildrenVisitor("Properties")
+		for _, nn := range n.Properties {
 			nn.Walk(vv)
 		}
 	}

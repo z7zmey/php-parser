@@ -7,16 +7,16 @@ import (
 type StaticPropertyFetch struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	class      node.Node
-	property   node.Node
+	Class      node.Node
+	Property   node.Node
 }
 
-func NewStaticPropertyFetch(class node.Node, property node.Node) node.Node {
+func NewStaticPropertyFetch(Class node.Node, Property node.Node) node.Node {
 	return &StaticPropertyFetch{
 		map[string]interface{}{},
 		nil,
-		class,
-		property,
+		Class,
+		Property,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n StaticPropertyFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.class != nil {
-		vv := v.GetChildrenVisitor("class")
-		n.class.Walk(vv)
+	if n.Class != nil {
+		vv := v.GetChildrenVisitor("Class")
+		n.Class.Walk(vv)
 	}
 
-	if n.property != nil {
-		vv := v.GetChildrenVisitor("property")
-		n.property.Walk(vv)
+	if n.Property != nil {
+		vv := v.GetChildrenVisitor("Property")
+		n.Property.Walk(vv)
 	}
 
 	v.LeaveNode(n)

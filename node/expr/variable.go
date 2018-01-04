@@ -7,14 +7,14 @@ import (
 type Variable struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	varName    node.Node
+	VarName    node.Node
 }
 
-func NewVariable(varName node.Node) node.Node {
+func NewVariable(VarName node.Node) node.Node {
 	return &Variable{
 		map[string]interface{}{},
 		nil,
-		varName,
+		VarName,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Variable) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.varName != nil {
-		vv := v.GetChildrenVisitor("varName")
-		n.varName.Walk(vv)
+	if n.VarName != nil {
+		vv := v.GetChildrenVisitor("VarName")
+		n.VarName.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,14 +7,14 @@ import (
 type ShortList struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	items      []node.Node
+	Items      []node.Node
 }
 
-func NewShortList(items []node.Node) node.Node {
+func NewShortList(Items []node.Node) node.Node {
 	return &ShortList{
 		map[string]interface{}{},
 		nil,
-		items,
+		Items,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n ShortList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.items != nil {
-		vv := v.GetChildrenVisitor("items")
-		for _, nn := range n.items {
+	if n.Items != nil {
+		vv := v.GetChildrenVisitor("Items")
+		for _, nn := range n.Items {
 			nn.Walk(vv)
 		}
 	}

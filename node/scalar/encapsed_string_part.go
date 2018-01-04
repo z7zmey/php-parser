@@ -9,10 +9,10 @@ type EncapsedStringPart struct {
 	position   *node.Position
 }
 
-func NewEncapsedStringPart(value string) node.Node {
+func NewEncapsedStringPart(Value string) node.Node {
 	return &EncapsedStringPart{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

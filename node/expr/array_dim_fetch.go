@@ -7,16 +7,16 @@ import (
 type ArrayDimFetch struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
-	dim        node.Node
+	Variable   node.Node
+	Dim        node.Node
 }
 
-func NewArrayDimFetch(variable node.Node, dim node.Node) node.Node {
+func NewArrayDimFetch(Variable node.Node, Dim node.Node) node.Node {
 	return &ArrayDimFetch{
 		map[string]interface{}{},
 		nil,
-		variable,
-		dim,
+		Variable,
+		Dim,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n ArrayDimFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.dim != nil {
-		vv := v.GetChildrenVisitor("dim")
-		n.dim.Walk(vv)
+	if n.Dim != nil {
+		vv := v.GetChildrenVisitor("Dim")
+		n.Dim.Walk(vv)
 	}
 
 	v.LeaveNode(n)

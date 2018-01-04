@@ -2,6 +2,6 @@ package node
 
 type Visitor interface {
 	EnterNode(node Node) bool
-	GetChildrenVisitor(key string) Visitor
+	GetChildrenVisitor(Key string) Visitor
 	LeaveNode(node Node)
 }

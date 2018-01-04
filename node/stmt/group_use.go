@@ -7,18 +7,18 @@ import (
 type GroupUse struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	useType    node.Node
-	prefix     node.Node
-	useList    []node.Node
+	UseType    node.Node
+	pRefix     node.Node
+	UseList    []node.Node
 }
 
-func NewGroupUse(useType node.Node, prefix node.Node, useList []node.Node) node.Node {
+func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) node.Node {
 	return &GroupUse{
 		map[string]interface{}{},
 		nil,
-		useType,
-		prefix,
-		useList,
+		UseType,
+		pRefix,
+		UseList,
 	}
 }
 
@@ -35,8 +35,8 @@ func (n GroupUse) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n GroupUse) SetUseType(useType node.Node) node.Node {
-	n.useType = useType
+func (n GroupUse) SetUseType(UseType node.Node) node.Node {
+	n.UseType = UseType
 	return n
 }
 
@@ -45,19 +45,19 @@ func (n GroupUse) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.useType != nil {
-		vv := v.GetChildrenVisitor("useType")
-		n.useType.Walk(vv)
+	if n.UseType != nil {
+		vv := v.GetChildrenVisitor("UseType")
+		n.UseType.Walk(vv)
 	}
 
-	if n.prefix != nil {
-		vv := v.GetChildrenVisitor("prefix")
-		n.prefix.Walk(vv)
+	if n.pRefix != nil {
+		vv := v.GetChildrenVisitor("pRefix")
+		n.pRefix.Walk(vv)
 	}
 
-	if n.useList != nil {
-		vv := v.GetChildrenVisitor("useList")
-		for _, nn := range n.useList {
+	if n.UseList != nil {
+		vv := v.GetChildrenVisitor("UseList")
+		for _, nn := range n.UseList {
 			nn.Walk(vv)
 		}
 	}

@@ -7,16 +7,16 @@ import (
 type ClassConstList struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	modifiers  []node.Node
-	consts     []node.Node
+	Modifiers  []node.Node
+	Consts     []node.Node
 }
 
-func NewClassConstList(modifiers []node.Node, consts []node.Node) node.Node {
+func NewClassConstList(Modifiers []node.Node, Consts []node.Node) node.Node {
 	return &ClassConstList{
 		map[string]interface{}{},
 		nil,
-		modifiers,
-		consts,
+		Modifiers,
+		Consts,
 	}
 }
 
@@ -38,16 +38,16 @@ func (n ClassConstList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.modifiers != nil {
-		vv := v.GetChildrenVisitor("modifiers")
-		for _, nn := range n.modifiers {
+	if n.Modifiers != nil {
+		vv := v.GetChildrenVisitor("Modifiers")
+		for _, nn := range n.Modifiers {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.consts != nil {
-		vv := v.GetChildrenVisitor("consts")
-		for _, nn := range n.consts {
+	if n.Consts != nil {
+		vv := v.GetChildrenVisitor("Consts")
+		for _, nn := range n.Consts {
 			nn.Walk(vv)
 		}
 	}

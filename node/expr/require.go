@@ -10,11 +10,11 @@ type Require struct {
 	expr       node.Node
 }
 
-func NewRequire(expression node.Node) node.Node {
+func NewRequire(Expression node.Node) node.Node {
 	return &Require{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

@@ -8,12 +8,12 @@ type FullyQualified struct {
 	Name
 }
 
-func NewFullyQualified(parts []node.Node) node.Node {
+func NewFullyQualified(Parts []node.Node) node.Node {
 	return &FullyQualified{
 		Name{
 			map[string]interface{}{},
 			nil,
-			parts,
+			Parts,
 		},
 	}
 }

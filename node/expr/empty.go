@@ -10,11 +10,11 @@ type Empty struct {
 	expr       node.Node
 }
 
-func NewEmpty(expression node.Node) node.Node {
+func NewEmpty(Expression node.Node) node.Node {
 	return &Empty{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

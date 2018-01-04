@@ -8,13 +8,13 @@ type LogicalAnd struct {
 	BinaryOp
 }
 
-func NewLogicalAnd(variable node.Node, expression node.Node) node.Node {
+func NewLogicalAnd(Variable node.Node, Expression node.Node) node.Node {
 	return &LogicalAnd{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,
-			variable,
-			expression,
+			Variable,
+			Expression,
 		},
 	}
 }
@@ -37,14 +37,14 @@ func (n LogicalAnd) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.left != nil {
-		vv := v.GetChildrenVisitor("left")
-		n.left.Walk(vv)
+	if n.Left != nil {
+		vv := v.GetChildrenVisitor("Left")
+		n.Left.Walk(vv)
 	}
 
-	if n.right != nil {
-		vv := v.GetChildrenVisitor("right")
-		n.right.Walk(vv)
+	if n.Right != nil {
+		vv := v.GetChildrenVisitor("Right")
+		n.Right.Walk(vv)
 	}
 
 	v.LeaveNode(n)

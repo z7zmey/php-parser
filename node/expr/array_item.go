@@ -7,18 +7,18 @@ import (
 type ArrayItem struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	key        node.Node
-	val        node.Node
+	Key        node.Node
+	Val        node.Node
 }
 
-func NewArrayItem(key node.Node, val node.Node, byRef bool) node.Node {
+func NewArrayItem(Key node.Node, Val node.Node, byRef bool) node.Node {
 	return &ArrayItem{
 		map[string]interface{}{
 			"byRef": byRef,
 		},
 		nil,
-		key,
-		val,
+		Key,
+		Val,
 	}
 }
 
@@ -40,14 +40,14 @@ func (n ArrayItem) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.key != nil {
-		vv := v.GetChildrenVisitor("key")
-		n.key.Walk(vv)
+	if n.Key != nil {
+		vv := v.GetChildrenVisitor("Key")
+		n.Key.Walk(vv)
 	}
 
-	if n.val != nil {
-		vv := v.GetChildrenVisitor("val")
-		n.val.Walk(vv)
+	if n.Val != nil {
+		vv := v.GetChildrenVisitor("Val")
+		n.Val.Walk(vv)
 	}
 
 	v.LeaveNode(n)

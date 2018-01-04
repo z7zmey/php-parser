@@ -7,14 +7,14 @@ import (
 type Static struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	vars       []node.Node
+	Vars       []node.Node
 }
 
-func NewStatic(vars []node.Node) node.Node {
+func NewStatic(Vars []node.Node) node.Node {
 	return &Static{
 		map[string]interface{}{},
 		nil,
-		vars,
+		Vars,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Static) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.vars != nil {
-		vv := v.GetChildrenVisitor("vars")
-		for _, nn := range n.vars {
+	if n.Vars != nil {
+		vv := v.GetChildrenVisitor("Vars")
+		for _, nn := range n.Vars {
 			nn.Walk(vv)
 		}
 	}

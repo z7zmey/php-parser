@@ -7,17 +7,17 @@ import (
 type Constant struct {
 	attributes   map[string]interface{}
 	position     *node.Position
-	constantName node.Node
+	ConstantName node.Node
 	expr         node.Node
 }
 
-func NewConstant(constantName node.Node, expr node.Node, phpDocComment string) node.Node {
+func NewConstant(ConstantName node.Node, expr node.Node, phpDocComment string) node.Node {
 	return &Constant{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		constantName,
+		ConstantName,
 		expr,
 	}
 }
@@ -40,9 +40,9 @@ func (n Constant) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.constantName != nil {
-		vv := v.GetChildrenVisitor("constantName")
-		n.constantName.Walk(vv)
+	if n.ConstantName != nil {
+		vv := v.GetChildrenVisitor("ConstantName")
+		n.ConstantName.Walk(vv)
 	}
 
 	if n.expr != nil {

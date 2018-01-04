@@ -7,14 +7,14 @@ import (
 type ConstFetch struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	constant   node.Node
+	Constant   node.Node
 }
 
-func NewConstFetch(constant node.Node) node.Node {
+func NewConstFetch(Constant node.Node) node.Node {
 	return &ConstFetch{
 		map[string]interface{}{},
 		nil,
-		constant,
+		Constant,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n ConstFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.constant != nil {
-		vv := v.GetChildrenVisitor("constant")
-		n.constant.Walk(vv)
+	if n.Constant != nil {
+		vv := v.GetChildrenVisitor("Constant")
+		n.Constant.Walk(vv)
 	}
 
 	v.LeaveNode(n)

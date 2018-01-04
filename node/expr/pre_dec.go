@@ -7,14 +7,14 @@ import (
 type PreDec struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
+	Variable   node.Node
 }
 
-func NewPreDec(variable node.Node) node.Node {
+func NewPreDec(Variable node.Node) node.Node {
 	return &PreDec{
 		map[string]interface{}{},
 		nil,
-		variable,
+		Variable,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n PreDec) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
 	v.LeaveNode(n)

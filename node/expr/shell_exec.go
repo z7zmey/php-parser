@@ -7,14 +7,14 @@ import (
 type ShellExec struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	parts      []node.Node
+	Parts      []node.Node
 }
 
-func NewShellExec(parts []node.Node) node.Node {
+func NewShellExec(Parts []node.Node) node.Node {
 	return &ShellExec{
 		map[string]interface{}{},
 		nil,
-		parts,
+		Parts,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n ShellExec) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.parts != nil {
-		vv := v.GetChildrenVisitor("parts")
-		for _, nn := range n.parts {
+	if n.Parts != nil {
+		vv := v.GetChildrenVisitor("Parts")
+		for _, nn := range n.Parts {
 			nn.Walk(vv)
 		}
 	}

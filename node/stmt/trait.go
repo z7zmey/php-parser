@@ -7,18 +7,18 @@ import (
 type Trait struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	traitName  node.Node
-	stmts      []node.Node
+	TraitName  node.Node
+	Stmts      []node.Node
 }
 
-func NewTrait(traitName node.Node, stmts []node.Node, phpDocComment string) node.Node {
+func NewTrait(TraitName node.Node, Stmts []node.Node, phpDocComment string) node.Node {
 	return &Trait{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		traitName,
-		stmts,
+		TraitName,
+		Stmts,
 	}
 }
 
@@ -40,14 +40,14 @@ func (n Trait) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.traitName != nil {
-		vv := v.GetChildrenVisitor("traitName")
-		n.traitName.Walk(vv)
+	if n.TraitName != nil {
+		vv := v.GetChildrenVisitor("TraitName")
+		n.TraitName.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

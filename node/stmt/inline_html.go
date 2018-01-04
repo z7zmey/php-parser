@@ -9,10 +9,10 @@ type InlineHtml struct {
 	position   *node.Position
 }
 
-func NewInlineHtml(value string) node.Node {
+func NewInlineHtml(Value string) node.Node {
 	return &InlineHtml{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

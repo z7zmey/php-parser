@@ -7,20 +7,20 @@ import (
 type For struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	init       []node.Node
-	cond       []node.Node
-	loop       []node.Node
-	stmt       node.Node
+	Init       []node.Node
+	Cond       []node.Node
+	Loop       []node.Node
+	Stmt       node.Node
 }
 
-func NewFor(init []node.Node, cond []node.Node, loop []node.Node, stmt node.Node) node.Node {
+func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) node.Node {
 	return &For{
 		map[string]interface{}{},
 		nil,
-		init,
-		cond,
-		loop,
-		stmt,
+		Init,
+		Cond,
+		Loop,
+		Stmt,
 	}
 }
 
@@ -42,30 +42,30 @@ func (n For) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.init != nil {
-		vv := v.GetChildrenVisitor("init")
-		for _, nn := range n.init {
+	if n.Init != nil {
+		vv := v.GetChildrenVisitor("Init")
+		for _, nn := range n.Init {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.cond != nil {
-		vv := v.GetChildrenVisitor("cond")
-		for _, nn := range n.cond {
+	if n.Cond != nil {
+		vv := v.GetChildrenVisitor("Cond")
+		for _, nn := range n.Cond {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.loop != nil {
-		vv := v.GetChildrenVisitor("loop")
-		for _, nn := range n.loop {
+	if n.Loop != nil {
+		vv := v.GetChildrenVisitor("Loop")
+		for _, nn := range n.Loop {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.stmt != nil {
-		vv := v.GetChildrenVisitor("stmt")
-		n.stmt.Walk(vv)
+	if n.Stmt != nil {
+		vv := v.GetChildrenVisitor("Stmt")
+		n.Stmt.Walk(vv)
 	}
 
 	v.LeaveNode(n)

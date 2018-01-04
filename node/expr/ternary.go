@@ -7,18 +7,18 @@ import (
 type Ternary struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	condition  node.Node
-	ifTrue     node.Node
-	ifFalse    node.Node
+	Condition  node.Node
+	IfTrue     node.Node
+	IfFalse    node.Node
 }
 
-func NewTernary(condition node.Node, ifTrue node.Node, ifFalse node.Node) node.Node {
+func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) node.Node {
 	return &Ternary{
 		map[string]interface{}{},
 		nil,
-		condition,
-		ifTrue,
-		ifFalse,
+		Condition,
+		IfTrue,
+		IfFalse,
 	}
 }
 
@@ -40,19 +40,19 @@ func (n Ternary) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.condition != nil {
-		vv := v.GetChildrenVisitor("condition")
-		n.condition.Walk(vv)
+	if n.Condition != nil {
+		vv := v.GetChildrenVisitor("Condition")
+		n.Condition.Walk(vv)
 	}
 
-	if n.ifTrue != nil {
-		vv := v.GetChildrenVisitor("ifTrue")
-		n.ifTrue.Walk(vv)
+	if n.IfTrue != nil {
+		vv := v.GetChildrenVisitor("IfTrue")
+		n.IfTrue.Walk(vv)
 	}
 
-	if n.ifFalse != nil {
-		vv := v.GetChildrenVisitor("ifFalse")
-		n.ifFalse.Walk(vv)
+	if n.IfFalse != nil {
+		vv := v.GetChildrenVisitor("IfFalse")
+		n.IfFalse.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,14 +7,14 @@ import (
 type Label struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	labelName  node.Node
+	LabelName  node.Node
 }
 
-func NewLabel(labelName node.Node) node.Node {
+func NewLabel(LabelName node.Node) node.Node {
 	return &Label{
 		map[string]interface{}{},
 		nil,
-		labelName,
+		LabelName,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Label) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.labelName != nil {
-		vv := v.GetChildrenVisitor("labelName")
-		n.labelName.Walk(vv)
+	if n.LabelName != nil {
+		vv := v.GetChildrenVisitor("LabelName")
+		n.LabelName.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,14 +7,14 @@ import (
 type Goto struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	label      node.Node
+	Label      node.Node
 }
 
-func NewGoto(label node.Node) node.Node {
+func NewGoto(Label node.Node) node.Node {
 	return &Goto{
 		map[string]interface{}{},
 		nil,
-		label,
+		Label,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Goto) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.label != nil {
-		vv := v.GetChildrenVisitor("label")
-		n.label.Walk(vv)
+	if n.Label != nil {
+		vv := v.GetChildrenVisitor("Label")
+		n.Label.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,17 +7,17 @@ import (
 type Property struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
+	Variable   node.Node
 	expr       node.Node
 }
 
-func NewProperty(variable node.Node, expr node.Node, phpDocComment string) node.Node {
+func NewProperty(Variable node.Node, expr node.Node, phpDocComment string) node.Node {
 	return &Property{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		variable,
+		Variable,
 		expr,
 	}
 }
@@ -39,9 +39,9 @@ func (n Property) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
 	if n.expr != nil {

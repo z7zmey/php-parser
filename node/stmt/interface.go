@@ -7,20 +7,20 @@ import (
 type Interface struct {
 	attributes    map[string]interface{}
 	position      *node.Position
-	interfaceName node.Node
-	extends       []node.Node
-	stmts         []node.Node
+	InterfaceName node.Node
+	Extends       []node.Node
+	Stmts         []node.Node
 }
 
-func NewInterface(interfaceName node.Node, extends []node.Node, stmts []node.Node, phpDocComment string) node.Node {
+func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, phpDocComment string) node.Node {
 	return &Interface{
 		map[string]interface{}{
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		interfaceName,
-		extends,
-		stmts,
+		InterfaceName,
+		Extends,
+		Stmts,
 	}
 }
 
@@ -42,21 +42,21 @@ func (n Interface) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.interfaceName != nil {
-		vv := v.GetChildrenVisitor("interfaceName")
-		n.interfaceName.Walk(vv)
+	if n.InterfaceName != nil {
+		vv := v.GetChildrenVisitor("InterfaceName")
+		n.InterfaceName.Walk(vv)
 	}
 
-	if n.extends != nil {
-		vv := v.GetChildrenVisitor("extends")
-		for _, nn := range n.extends {
+	if n.Extends != nil {
+		vv := v.GetChildrenVisitor("Extends")
+		for _, nn := range n.Extends {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

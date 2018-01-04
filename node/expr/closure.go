@@ -7,13 +7,13 @@ import (
 type Closure struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	params     []node.Node
-	uses       []node.Node
-	returnType node.Node
-	stmts      []node.Node
+	Params     []node.Node
+	Uses       []node.Node
+	ReturnType node.Node
+	Stmts      []node.Node
 }
 
-func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
+func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, isStatic bool, isReturnRef bool, phpDocComment string) node.Node {
 	return &Closure{
 		map[string]interface{}{
 			"isReturnRef":   isReturnRef,
@@ -21,10 +21,10 @@ func NewClosure(params []node.Node, uses []node.Node, returnType node.Node, stmt
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		params,
-		uses,
-		returnType,
-		stmts,
+		Params,
+		Uses,
+		ReturnType,
+		Stmts,
 	}
 }
 
@@ -46,28 +46,28 @@ func (n Closure) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.params != nil {
-		vv := v.GetChildrenVisitor("params")
-		for _, nn := range n.params {
+	if n.Params != nil {
+		vv := v.GetChildrenVisitor("Params")
+		for _, nn := range n.Params {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.uses != nil {
-		vv := v.GetChildrenVisitor("uses")
-		for _, nn := range n.uses {
+	if n.Uses != nil {
+		vv := v.GetChildrenVisitor("Uses")
+		for _, nn := range n.Uses {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.returnType != nil {
-		vv := v.GetChildrenVisitor("returnType")
-		n.returnType.Walk(vv)
+	if n.ReturnType != nil {
+		vv := v.GetChildrenVisitor("ReturnType")
+		n.ReturnType.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

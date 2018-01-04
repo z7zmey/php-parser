@@ -7,18 +7,18 @@ import (
 type StaticCall struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	class      node.Node
-	call       node.Node
-	arguments  []node.Node
+	Class      node.Node
+	Call       node.Node
+	Arguments  []node.Node
 }
 
-func NewStaticCall(class node.Node, call node.Node, arguments []node.Node) node.Node {
+func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) node.Node {
 	return &StaticCall{
 		map[string]interface{}{},
 		nil,
-		class,
-		call,
-		arguments,
+		Class,
+		Call,
+		Arguments,
 	}
 }
 
@@ -40,19 +40,19 @@ func (n StaticCall) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.class != nil {
-		vv := v.GetChildrenVisitor("class")
-		n.class.Walk(vv)
+	if n.Class != nil {
+		vv := v.GetChildrenVisitor("Class")
+		n.Class.Walk(vv)
 	}
 
-	if n.call != nil {
-		vv := v.GetChildrenVisitor("call")
-		n.call.Walk(vv)
+	if n.Call != nil {
+		vv := v.GetChildrenVisitor("Call")
+		n.Call.Walk(vv)
 	}
 
-	if n.arguments != nil {
-		vv := v.GetChildrenVisitor("arguments")
-		for _, nn := range n.arguments {
+	if n.Arguments != nil {
+		vv := v.GetChildrenVisitor("Arguments")
+		for _, nn := range n.Arguments {
 			nn.Walk(vv)
 		}
 	}

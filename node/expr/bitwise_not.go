@@ -10,11 +10,11 @@ type BitwiseNot struct {
 	expr       node.Node
 }
 
-func NewBitwiseNot(expression node.Node) node.Node {
+func NewBitwiseNot(Expression node.Node) node.Node {
 	return &BitwiseNot{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

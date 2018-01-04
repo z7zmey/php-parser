@@ -5,23 +5,21 @@ import (
 )
 
 type UseList struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	useType    node.Node
-	uses       []node.Node
+	position *node.Position
+	UseType  node.Node
+	Uses     []node.Node
 }
 
-func NewUseList(useType node.Node, uses []node.Node) node.Node {
+func NewUseList(UseType node.Node, Uses []node.Node) node.Node {
 	return &UseList{
-		map[string]interface{}{},
 		nil,
-		useType,
-		uses,
+		UseType,
+		Uses,
 	}
 }
 
 func (n UseList) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n UseList) Position() *node.Position {
@@ -38,14 +36,14 @@ func (n UseList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.useType != nil {
-		vv := v.GetChildrenVisitor("useType")
-		n.useType.Walk(vv)
+	if n.UseType != nil {
+		vv := v.GetChildrenVisitor("UseType")
+		n.UseType.Walk(vv)
 	}
 
-	if n.uses != nil {
-		vv := v.GetChildrenVisitor("uses")
-		for _, nn := range n.uses {
+	if n.Uses != nil {
+		vv := v.GetChildrenVisitor("Uses")
+		for _, nn := range n.Uses {
 			nn.Walk(vv)
 		}
 	}

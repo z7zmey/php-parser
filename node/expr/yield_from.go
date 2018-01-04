@@ -10,11 +10,11 @@ type YieldFrom struct {
 	expr       node.Node
 }
 
-func NewYieldFrom(expression node.Node) node.Node {
+func NewYieldFrom(Expression node.Node) node.Node {
 	return &YieldFrom{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

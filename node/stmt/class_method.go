@@ -7,25 +7,25 @@ import (
 type ClassMethod struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	methodName node.Node
-	modifiers  []node.Node
-	params     []node.Node
-	returnType node.Node
-	stmts      []node.Node
+	MethodName node.Node
+	Modifiers  []node.Node
+	Params     []node.Node
+	ReturnType node.Node
+	Stmts      []node.Node
 }
 
-func NewClassMethod(methodName node.Node, modifiers []node.Node, returnsRef bool, params []node.Node, returnType node.Node, stmts []node.Node, phpDocComment string) node.Node {
+func NewClassMethod(MethodName node.Node, Modifiers []node.Node, returnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, phpDocComment string) node.Node {
 	return &ClassMethod{
 		map[string]interface{}{
 			"returnsRef":    returnsRef,
 			"phpDocComment": phpDocComment,
 		},
 		nil,
-		methodName,
-		modifiers,
-		params,
-		returnType,
-		stmts,
+		MethodName,
+		Modifiers,
+		Params,
+		ReturnType,
+		Stmts,
 	}
 }
 
@@ -47,33 +47,33 @@ func (n ClassMethod) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.methodName != nil {
-		vv := v.GetChildrenVisitor("methodName")
-		n.methodName.Walk(vv)
+	if n.MethodName != nil {
+		vv := v.GetChildrenVisitor("MethodName")
+		n.MethodName.Walk(vv)
 	}
 
-	if n.modifiers != nil {
-		vv := v.GetChildrenVisitor("modifiers")
-		for _, nn := range n.modifiers {
+	if n.Modifiers != nil {
+		vv := v.GetChildrenVisitor("Modifiers")
+		for _, nn := range n.Modifiers {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.params != nil {
-		vv := v.GetChildrenVisitor("params")
-		for _, nn := range n.params {
+	if n.Params != nil {
+		vv := v.GetChildrenVisitor("Params")
+		for _, nn := range n.Params {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.returnType != nil {
-		vv := v.GetChildrenVisitor("returnType")
-		n.returnType.Walk(vv)
+	if n.ReturnType != nil {
+		vv := v.GetChildrenVisitor("ReturnType")
+		n.ReturnType.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

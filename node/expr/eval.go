@@ -10,11 +10,11 @@ type Eval struct {
 	expr       node.Node
 }
 
-func NewEval(expression node.Node) node.Node {
+func NewEval(Expression node.Node) node.Node {
 	return &Eval{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

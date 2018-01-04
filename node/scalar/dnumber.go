@@ -9,10 +9,10 @@ type Dnumber struct {
 	position   *node.Position
 }
 
-func NewDnumber(value string) node.Node {
+func NewDnumber(Value string) node.Node {
 	return &Dnumber{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

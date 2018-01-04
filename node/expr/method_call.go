@@ -7,18 +7,18 @@ import (
 type MethodCall struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
-	method     node.Node
-	arguments  []node.Node
+	Variable   node.Node
+	Method     node.Node
+	Arguments  []node.Node
 }
 
-func NewMethodCall(variable node.Node, method node.Node, arguments []node.Node) node.Node {
+func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) node.Node {
 	return &MethodCall{
 		map[string]interface{}{},
 		nil,
-		variable,
-		method,
-		arguments,
+		Variable,
+		Method,
+		Arguments,
 	}
 }
 
@@ -40,19 +40,19 @@ func (n MethodCall) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.method != nil {
-		vv := v.GetChildrenVisitor("method")
-		n.method.Walk(vv)
+	if n.Method != nil {
+		vv := v.GetChildrenVisitor("Method")
+		n.Method.Walk(vv)
 	}
 
-	if n.arguments != nil {
-		vv := v.GetChildrenVisitor("arguments")
-		for _, nn := range n.arguments {
+	if n.Arguments != nil {
+		vv := v.GetChildrenVisitor("Arguments")
+		for _, nn := range n.Arguments {
 			nn.Walk(vv)
 		}
 	}

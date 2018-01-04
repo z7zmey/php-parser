@@ -9,10 +9,10 @@ type NamePart struct {
 	position   *node.Position
 }
 
-func NewNamePart(value string) node.Node {
+func NewNamePart(Value string) node.Node {
 	return &NamePart{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

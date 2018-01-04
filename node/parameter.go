@@ -3,21 +3,21 @@ package node
 type Parameter struct {
 	attributes   map[string]interface{}
 	position     *Position
-	variableType Node
-	variable     Node
-	defaultValue Node
+	VariableType Node
+	Variable     Node
+	DefaultValue Node
 }
 
-func NewParameter(variableType Node, variable Node, defaultValue Node, byRef bool, variadic bool) Node {
+func NewParameter(VariableType Node, Variable Node, DefaultValue Node, byRef bool, variadic bool) Node {
 	return &Parameter{
 		map[string]interface{}{
 			"byRef":    byRef,
 			"variadic": variadic,
 		},
 		nil,
-		variableType,
-		variable,
-		defaultValue,
+		VariableType,
+		Variable,
+		DefaultValue,
 	}
 }
 
@@ -25,12 +25,12 @@ func (n Parameter) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Parameter) Attribute(key string) interface{} {
-	return n.attributes[key]
+func (n Parameter) Attribute(Key string) interface{} {
+	return n.attributes[Key]
 }
 
-func (n Parameter) SetAttribute(key string, value interface{}) Node {
-	n.attributes[key] = value
+func (n Parameter) SetAttribute(Key string, Value interface{}) Node {
+	n.attributes[Key] = Value
 	return n
 }
 
@@ -48,19 +48,19 @@ func (n Parameter) Walk(v Visitor) {
 		return
 	}
 
-	if n.variableType != nil {
-		vv := v.GetChildrenVisitor("variableType")
-		n.variableType.Walk(vv)
+	if n.VariableType != nil {
+		vv := v.GetChildrenVisitor("VariableType")
+		n.VariableType.Walk(vv)
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.defaultValue != nil {
-		vv := v.GetChildrenVisitor("defaultValue")
-		n.defaultValue.Walk(vv)
+	if n.DefaultValue != nil {
+		vv := v.GetChildrenVisitor("DefaultValue")
+		n.DefaultValue.Walk(vv)
 	}
 
 	v.LeaveNode(n)

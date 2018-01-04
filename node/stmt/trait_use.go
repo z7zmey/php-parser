@@ -7,16 +7,16 @@ import (
 type TraitUse struct {
 	attributes  map[string]interface{}
 	position    *node.Position
-	traits      []node.Node
-	adaptations []node.Node
+	Traits      []node.Node
+	Adaptations []node.Node
 }
 
-func NewTraitUse(traits []node.Node, adaptations []node.Node) node.Node {
+func NewTraitUse(Traits []node.Node, Adaptations []node.Node) node.Node {
 	return &TraitUse{
 		map[string]interface{}{},
 		nil,
-		traits,
-		adaptations,
+		Traits,
+		Adaptations,
 	}
 }
 
@@ -38,16 +38,16 @@ func (n TraitUse) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.traits != nil {
-		vv := v.GetChildrenVisitor("traits")
-		for _, nn := range n.traits {
+	if n.Traits != nil {
+		vv := v.GetChildrenVisitor("Traits")
+		for _, nn := range n.Traits {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.adaptations != nil {
-		vv := v.GetChildrenVisitor("adaptations")
-		for _, nn := range n.adaptations {
+	if n.Adaptations != nil {
+		vv := v.GetChildrenVisitor("Adaptations")
+		for _, nn := range n.Adaptations {
 			nn.Walk(vv)
 		}
 	}

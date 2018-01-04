@@ -10,11 +10,11 @@ type Print struct {
 	expr       node.Node
 }
 
-func NewPrint(expression node.Node) node.Node {
+func NewPrint(Expression node.Node) node.Node {
 	return &Print{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

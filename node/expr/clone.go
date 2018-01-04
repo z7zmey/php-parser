@@ -10,11 +10,11 @@ type Clone struct {
 	expr       node.Node
 }
 
-func NewClone(expression node.Node) node.Node {
+func NewClone(Expression node.Node) node.Node {
 	return &Clone{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

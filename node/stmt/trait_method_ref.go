@@ -7,16 +7,16 @@ import (
 type TraitMethodRef struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	trait      node.Node
-	method     node.Node
+	Trait      node.Node
+	Method     node.Node
 }
 
-func NewTraitMethodRef(trait node.Node, method node.Node) node.Node {
+func NewTraitMethodRef(Trait node.Node, Method node.Node) node.Node {
 	return &TraitMethodRef{
 		map[string]interface{}{},
 		nil,
-		trait,
-		method,
+		Trait,
+		Method,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n TraitMethodRef) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.trait != nil {
-		vv := v.GetChildrenVisitor("trait")
-		n.trait.Walk(vv)
+	if n.Trait != nil {
+		vv := v.GetChildrenVisitor("Trait")
+		n.Trait.Walk(vv)
 	}
 
-	if n.method != nil {
-		vv := v.GetChildrenVisitor("method")
-		n.method.Walk(vv)
+	if n.Method != nil {
+		vv := v.GetChildrenVisitor("Method")
+		n.Method.Walk(vv)
 	}
 
 	v.LeaveNode(n)

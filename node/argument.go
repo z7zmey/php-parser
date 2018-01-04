@@ -7,13 +7,13 @@ type Argument struct {
 	variadic   bool
 }
 
-func NewArgument(expression Node, variadic bool) Node {
+func NewArgument(Expression Node, variadic bool) Node {
 	return &Argument{
 		map[string]interface{}{
 			"variadic": variadic,
 		},
 		nil,
-		expression,
+		Expression,
 		variadic,
 	}
 }
@@ -22,12 +22,12 @@ func (n Argument) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Argument) Attribute(key string) interface{} {
-	return n.attributes[key]
+func (n Argument) Attribute(Key string) interface{} {
+	return n.attributes[Key]
 }
 
-func (n Argument) SetAttribute(key string, value interface{}) Node {
-	n.attributes[key] = value
+func (n Argument) SetAttribute(Key string, Value interface{}) Node {
+	n.attributes[Key] = Value
 	return n
 }
 

@@ -10,11 +10,11 @@ type ErrorSuppress struct {
 	expr       node.Node
 }
 
-func NewErrorSuppress(expression node.Node) node.Node {
+func NewErrorSuppress(Expression node.Node) node.Node {
 	return &ErrorSuppress{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

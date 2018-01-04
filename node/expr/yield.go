@@ -7,16 +7,16 @@ import (
 type Yield struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	key        node.Node
-	value      node.Node
+	Key        node.Node
+	Value      node.Node
 }
 
-func NewYield(key node.Node, value node.Node) node.Node {
+func NewYield(Key node.Node, Value node.Node) node.Node {
 	return &Yield{
 		map[string]interface{}{},
 		nil,
-		key,
-		value,
+		Key,
+		Value,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n Yield) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.key != nil {
-		vv := v.GetChildrenVisitor("key")
-		n.key.Walk(vv)
+	if n.Key != nil {
+		vv := v.GetChildrenVisitor("Key")
+		n.Key.Walk(vv)
 	}
 
-	if n.value != nil {
-		vv := v.GetChildrenVisitor("value")
-		n.value.Walk(vv)
+	if n.Value != nil {
+		vv := v.GetChildrenVisitor("Value")
+		n.Value.Walk(vv)
 	}
 
 	v.LeaveNode(n)

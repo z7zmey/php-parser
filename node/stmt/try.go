@@ -7,18 +7,18 @@ import (
 type Try struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	stmts      []node.Node
-	catches    []node.Node
-	finally    node.Node
+	Stmts      []node.Node
+	Catches    []node.Node
+	Finally    node.Node
 }
 
-func NewTry(stmts []node.Node, catches []node.Node, finally node.Node) node.Node {
+func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) node.Node {
 	return &Try{
 		map[string]interface{}{},
 		nil,
-		stmts,
-		catches,
-		finally,
+		Stmts,
+		Catches,
+		Finally,
 	}
 }
 
@@ -40,23 +40,23 @@ func (n Try) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.catches != nil {
-		vv := v.GetChildrenVisitor("catches")
-		for _, nn := range n.catches {
+	if n.Catches != nil {
+		vv := v.GetChildrenVisitor("Catches")
+		for _, nn := range n.Catches {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.finally != nil {
-		vv := v.GetChildrenVisitor("finally")
-		n.finally.Walk(vv)
+	if n.Finally != nil {
+		vv := v.GetChildrenVisitor("Finally")
+		n.Finally.Walk(vv)
 	}
 
 	v.LeaveNode(n)

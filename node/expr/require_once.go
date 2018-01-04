@@ -10,11 +10,11 @@ type RequireOnce struct {
 	expr       node.Node
 }
 
-func NewRequireOnce(expression node.Node) node.Node {
+func NewRequireOnce(Expression node.Node) node.Node {
 	return &RequireOnce{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

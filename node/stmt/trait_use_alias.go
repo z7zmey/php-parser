@@ -7,18 +7,18 @@ import (
 type TraitUseAlias struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	ref        node.Node
-	modifier   node.Node
-	alias      node.Node
+	Ref        node.Node
+	Modifier   node.Node
+	Alias      node.Node
 }
 
-func NewTraitUseAlias(ref node.Node, modifier node.Node, alias node.Node) node.Node {
+func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) node.Node {
 	return &TraitUseAlias{
 		map[string]interface{}{},
 		nil,
-		ref,
-		modifier,
-		alias,
+		Ref,
+		Modifier,
+		Alias,
 	}
 }
 
@@ -40,19 +40,19 @@ func (n TraitUseAlias) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.ref != nil {
-		vv := v.GetChildrenVisitor("ref")
-		n.ref.Walk(vv)
+	if n.Ref != nil {
+		vv := v.GetChildrenVisitor("Ref")
+		n.Ref.Walk(vv)
 	}
 
-	if n.modifier != nil {
-		vv := v.GetChildrenVisitor("modifier")
-		n.modifier.Walk(vv)
+	if n.Modifier != nil {
+		vv := v.GetChildrenVisitor("Modifier")
+		n.Modifier.Walk(vv)
 	}
 
-	if n.alias != nil {
-		vv := v.GetChildrenVisitor("alias")
-		n.alias.Walk(vv)
+	if n.Alias != nil {
+		vv := v.GetChildrenVisitor("Alias")
+		n.Alias.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,18 +7,18 @@ import (
 type AltIf struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	cond       node.Node
-	stmt       node.Node
-	elseIf     []node.Node
+	Cond       node.Node
+	Stmt       node.Node
+	ElseIf     []node.Node
 	_else      node.Node
 }
 
-func NewAltIf(cond node.Node, stmt node.Node) node.Node {
+func NewAltIf(Cond node.Node, Stmt node.Node) node.Node {
 	return &AltIf{
 		map[string]interface{}{},
 		nil,
-		cond,
-		stmt,
+		Cond,
+		Stmt,
 		nil,
 		nil,
 	}
@@ -37,12 +37,12 @@ func (n AltIf) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n AltIf) AddElseIf(elseIf node.Node) node.Node {
-	if n.elseIf == nil {
-		n.elseIf = make([]node.Node, 0)
+func (n AltIf) AddElseIf(ElseIf node.Node) node.Node {
+	if n.ElseIf == nil {
+		n.ElseIf = make([]node.Node, 0)
 	}
 
-	n.elseIf = append(n.elseIf, elseIf)
+	n.ElseIf = append(n.ElseIf, ElseIf)
 
 	return n
 }
@@ -58,19 +58,19 @@ func (n AltIf) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.cond != nil {
-		vv := v.GetChildrenVisitor("cond")
-		n.cond.Walk(vv)
+	if n.Cond != nil {
+		vv := v.GetChildrenVisitor("Cond")
+		n.Cond.Walk(vv)
 	}
 
-	if n.stmt != nil {
-		vv := v.GetChildrenVisitor("stmt")
-		n.stmt.Walk(vv)
+	if n.Stmt != nil {
+		vv := v.GetChildrenVisitor("Stmt")
+		n.Stmt.Walk(vv)
 	}
 
-	if n.elseIf != nil {
-		vv := v.GetChildrenVisitor("elseIf")
-		for _, nn := range n.elseIf {
+	if n.ElseIf != nil {
+		vv := v.GetChildrenVisitor("ElseIf")
+		for _, nn := range n.ElseIf {
 			nn.Walk(vv)
 		}
 	}

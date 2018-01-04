@@ -9,10 +9,10 @@ type Lnumber struct {
 	position   *node.Position
 }
 
-func NewLnumber(value string) node.Node {
+func NewLnumber(Value string) node.Node {
 	return &Lnumber{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

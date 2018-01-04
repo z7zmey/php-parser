@@ -7,14 +7,14 @@ import (
 type AltElse struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	stmt       node.Node
+	Stmt       node.Node
 }
 
-func NewAltElse(stmt node.Node) node.Node {
+func NewAltElse(Stmt node.Node) node.Node {
 	return &AltElse{
 		map[string]interface{}{},
 		nil,
-		stmt,
+		Stmt,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n AltElse) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.stmt != nil {
-		vv := v.GetChildrenVisitor("stmt")
-		n.stmt.Walk(vv)
+	if n.Stmt != nil {
+		vv := v.GetChildrenVisitor("Stmt")
+		n.Stmt.Walk(vv)
 	}
 
 	v.LeaveNode(n)

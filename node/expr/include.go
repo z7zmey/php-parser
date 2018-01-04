@@ -10,11 +10,11 @@ type Include struct {
 	expr       node.Node
 }
 
-func NewInclude(expression node.Node) node.Node {
+func NewInclude(Expression node.Node) node.Node {
 	return &Include{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

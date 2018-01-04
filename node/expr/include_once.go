@@ -10,11 +10,11 @@ type IncludeOnce struct {
 	expr       node.Node
 }
 
-func NewIncludeOnce(expression node.Node) node.Node {
+func NewIncludeOnce(Expression node.Node) node.Node {
 	return &IncludeOnce{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

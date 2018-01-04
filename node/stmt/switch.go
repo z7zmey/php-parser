@@ -9,16 +9,16 @@ type Switch struct {
 	attributes map[string]interface{}
 	position   *node.Position
 	token      token.Token
-	cond       node.Node
+	Cond       node.Node
 	cases      []node.Node
 }
 
-func NewSwitch(token token.Token, cond node.Node, cases []node.Node) node.Node {
+func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) node.Node {
 	return &Switch{
 		map[string]interface{}{},
 		nil,
 		token,
-		cond,
+		Cond,
 		cases,
 	}
 }
@@ -41,9 +41,9 @@ func (n Switch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.cond != nil {
-		vv := v.GetChildrenVisitor("cond")
-		n.cond.Walk(vv)
+	if n.Cond != nil {
+		vv := v.GetChildrenVisitor("Cond")
+		n.Cond.Walk(vv)
 	}
 
 	if n.cases != nil {

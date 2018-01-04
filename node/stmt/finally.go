@@ -7,14 +7,14 @@ import (
 type Finally struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	stmts      []node.Node
+	Stmts      []node.Node
 }
 
-func NewFinally(stmts []node.Node) node.Node {
+func NewFinally(Stmts []node.Node) node.Node {
 	return &Finally{
 		map[string]interface{}{},
 		nil,
-		stmts,
+		Stmts,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Finally) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

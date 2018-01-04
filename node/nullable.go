@@ -6,11 +6,11 @@ type Nullable struct {
 	expr       Node
 }
 
-func NewNullable(expression Node) Node {
+func NewNullable(Expression Node) Node {
 	return &Nullable{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 
@@ -18,12 +18,12 @@ func (n Nullable) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Nullable) Attribute(key string) interface{} {
-	return n.attributes[key]
+func (n Nullable) Attribute(Key string) interface{} {
+	return n.attributes[Key]
 }
 
-func (n Nullable) SetAttribute(key string, value interface{}) Node {
-	n.attributes[key] = value
+func (n Nullable) SetAttribute(Key string, Value interface{}) Node {
+	n.attributes[Key] = Value
 	return n
 }
 

@@ -10,11 +10,11 @@ type UnaryMinus struct {
 	expr       node.Node
 }
 
-func NewUnaryMinus(expression node.Node) node.Node {
+func NewUnaryMinus(Expression node.Node) node.Node {
 	return &UnaryMinus{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

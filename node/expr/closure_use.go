@@ -7,16 +7,16 @@ import (
 type ClusureUse struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
+	Variable   node.Node
 }
 
-func NewClusureUse(variable node.Node, byRef bool) node.Node {
+func NewClusureUse(Variable node.Node, byRef bool) node.Node {
 	return &ClusureUse{
 		map[string]interface{}{
 			"byRef": byRef,
 		},
 		nil,
-		variable,
+		Variable,
 	}
 }
 
@@ -38,9 +38,9 @@ func (n ClusureUse) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
 	v.LeaveNode(n)

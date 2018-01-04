@@ -7,14 +7,14 @@ import (
 type Isset struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variables  []node.Node
+	Variables  []node.Node
 }
 
-func NewIsset(variables []node.Node) node.Node {
+func NewIsset(Variables []node.Node) node.Node {
 	return &Isset{
 		map[string]interface{}{},
 		nil,
-		variables,
+		Variables,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Isset) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variables != nil {
-		vv := v.GetChildrenVisitor("variables")
-		for _, nn := range n.variables {
+	if n.Variables != nil {
+		vv := v.GetChildrenVisitor("Variables")
+		for _, nn := range n.Variables {
 			nn.Walk(vv)
 		}
 	}

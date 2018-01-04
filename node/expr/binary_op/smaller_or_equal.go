@@ -8,13 +8,13 @@ type SmallerOrEqual struct {
 	BinaryOp
 }
 
-func NewSmallerOrEqual(variable node.Node, expression node.Node) node.Node {
+func NewSmallerOrEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &SmallerOrEqual{
 		BinaryOp{
 			map[string]interface{}{},
 			nil,
-			variable,
-			expression,
+			Variable,
+			Expression,
 		},
 	}
 }
@@ -37,14 +37,14 @@ func (n SmallerOrEqual) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.left != nil {
-		vv := v.GetChildrenVisitor("left")
-		n.left.Walk(vv)
+	if n.Left != nil {
+		vv := v.GetChildrenVisitor("Left")
+		n.Left.Walk(vv)
 	}
 
-	if n.right != nil {
-		vv := v.GetChildrenVisitor("right")
-		n.right.Walk(vv)
+	if n.Right != nil {
+		vv := v.GetChildrenVisitor("Right")
+		n.Right.Walk(vv)
 	}
 
 	v.LeaveNode(n)

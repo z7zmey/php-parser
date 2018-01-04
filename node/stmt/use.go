@@ -5,25 +5,23 @@ import (
 )
 
 type Use struct {
-	attributes map[string]interface{}
-	position   *node.Position
-	useType    node.Node
-	use        node.Node
-	alias      node.Node
+	position *node.Position
+	UseType  node.Node
+	Use      node.Node
+	Alias    node.Node
 }
 
-func NewUse(useType node.Node, use node.Node, alias node.Node) node.Node {
+func NewUse(UseType node.Node, use node.Node, Alias node.Node) node.Node {
 	return &Use{
-		map[string]interface{}{},
 		nil,
-		useType,
+		UseType,
 		use,
-		alias,
+		Alias,
 	}
 }
 
 func (n Use) Attributes() map[string]interface{} {
-	return n.attributes
+	return nil
 }
 
 func (n Use) Position() *node.Position {
@@ -35,8 +33,8 @@ func (n Use) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n Use) SetUseType(useType node.Node) node.Node {
-	n.useType = useType
+func (n Use) SetUseType(UseType node.Node) node.Node {
+	n.UseType = UseType
 	return n
 }
 
@@ -45,19 +43,19 @@ func (n Use) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.useType != nil {
-		vv := v.GetChildrenVisitor("useType")
-		n.useType.Walk(vv)
+	if n.UseType != nil {
+		vv := v.GetChildrenVisitor("UseType")
+		n.UseType.Walk(vv)
 	}
 
-	if n.use != nil {
-		vv := v.GetChildrenVisitor("use")
-		n.use.Walk(vv)
+	if n.Use != nil {
+		vv := v.GetChildrenVisitor("Use")
+		n.Use.Walk(vv)
 	}
 
-	if n.alias != nil {
-		vv := v.GetChildrenVisitor("alias")
-		n.alias.Walk(vv)
+	if n.Alias != nil {
+		vv := v.GetChildrenVisitor("Alias")
+		n.Alias.Walk(vv)
 	}
 
 	v.LeaveNode(n)

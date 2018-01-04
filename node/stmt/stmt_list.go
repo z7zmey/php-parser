@@ -7,14 +7,14 @@ import (
 type StmtList struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	stmts      []node.Node
+	Stmts      []node.Node
 }
 
-func NewStmtList(stmts []node.Node) node.Node {
-	return &StmtList{
+func NewStmtList(Stmts []node.Node) node.Node {
+	return StmtList{
 		map[string]interface{}{},
 		nil,
-		stmts,
+		Stmts,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n StmtList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

@@ -10,11 +10,11 @@ type BooleanNot struct {
 	expr       node.Node
 }
 
-func NewBooleanNot(expression node.Node) node.Node {
+func NewBooleanNot(Expression node.Node) node.Node {
 	return &BooleanNot{
 		map[string]interface{}{},
 		nil,
-		expression,
+		Expression,
 	}
 }
 

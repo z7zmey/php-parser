@@ -9,10 +9,10 @@ type String struct {
 	position   *node.Position
 }
 
-func NewString(value string) node.Node {
+func NewString(Value string) node.Node {
 	return &String{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

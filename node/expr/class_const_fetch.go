@@ -7,16 +7,16 @@ import (
 type ClassConstFetch struct {
 	attributes   map[string]interface{}
 	position     *node.Position
-	class        node.Node
-	constantName node.Node
+	Class        node.Node
+	ConstantName node.Node
 }
 
-func NewClassConstFetch(class node.Node, constantName node.Node) node.Node {
+func NewClassConstFetch(Class node.Node, ConstantName node.Node) node.Node {
 	return &ClassConstFetch{
 		map[string]interface{}{},
 		nil,
-		class,
-		constantName,
+		Class,
+		ConstantName,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n ClassConstFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.constantName != nil {
-		vv := v.GetChildrenVisitor("constantName")
-		n.constantName.Walk(vv)
+	if n.ConstantName != nil {
+		vv := v.GetChildrenVisitor("ConstantName")
+		n.ConstantName.Walk(vv)
 	}
 
-	if n.class != nil {
-		vv := v.GetChildrenVisitor("class")
-		n.class.Walk(vv)
+	if n.Class != nil {
+		vv := v.GetChildrenVisitor("Class")
+		n.Class.Walk(vv)
 	}
 
 	v.LeaveNode(n)

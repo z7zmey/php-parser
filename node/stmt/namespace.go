@@ -7,16 +7,16 @@ import (
 type Namespace struct {
 	attributes    map[string]interface{}
 	position      *node.Position
-	namespaceName node.Node
-	stmts         []node.Node
+	NamespaceName node.Node
+	Stmts         []node.Node
 }
 
-func NewNamespace(namespaceName node.Node, stmts []node.Node) node.Node {
+func NewNamespace(NamespaceName node.Node, Stmts []node.Node) node.Node {
 	return &Namespace{
 		map[string]interface{}{},
 		nil,
-		namespaceName,
-		stmts,
+		NamespaceName,
+		Stmts,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n Namespace) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.namespaceName != nil {
-		vv := v.GetChildrenVisitor("namespaceName")
-		n.namespaceName.Walk(vv)
+	if n.NamespaceName != nil {
+		vv := v.GetChildrenVisitor("NamespaceName")
+		n.NamespaceName.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

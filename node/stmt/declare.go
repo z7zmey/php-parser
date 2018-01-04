@@ -7,16 +7,16 @@ import (
 type Declare struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	consts     []node.Node
-	stmt       node.Node
+	Consts     []node.Node
+	Stmt       node.Node
 }
 
-func NewDeclare(consts []node.Node, stmt node.Node) node.Node {
+func NewDeclare(Consts []node.Node, Stmt node.Node) node.Node {
 	return &Declare{
 		map[string]interface{}{},
 		nil,
-		consts,
-		stmt,
+		Consts,
+		Stmt,
 	}
 }
 
@@ -38,16 +38,16 @@ func (n Declare) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.consts != nil {
-		vv := v.GetChildrenVisitor("consts")
-		for _, nn := range n.consts {
+	if n.Consts != nil {
+		vv := v.GetChildrenVisitor("Consts")
+		for _, nn := range n.Consts {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.stmt != nil {
-		vv := v.GetChildrenVisitor("stmt")
-		n.stmt.Walk(vv)
+	if n.Stmt != nil {
+		vv := v.GetChildrenVisitor("Stmt")
+		n.Stmt.Walk(vv)
 	}
 
 	v.LeaveNode(n)

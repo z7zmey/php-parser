@@ -8,12 +8,12 @@ type Relative struct {
 	Name
 }
 
-func NewRelative(parts []node.Node) node.Node {
+func NewRelative(Parts []node.Node) node.Node {
 	return &Relative{
 		Name{
 			map[string]interface{}{},
 			nil,
-			parts,
+			Parts,
 		},
 	}
 }

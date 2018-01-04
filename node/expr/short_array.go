@@ -7,14 +7,14 @@ import (
 type ShortArray struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	items      []node.Node
+	Items      []node.Node
 }
 
-func NewShortArray(items []node.Node) node.Node {
+func NewShortArray(Items []node.Node) node.Node {
 	return &ShortArray{
 		map[string]interface{}{},
 		nil,
-		items,
+		Items,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n ShortArray) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.items != nil {
-		vv := v.GetChildrenVisitor("items")
-		for _, nn := range n.items {
+	if n.Items != nil {
+		vv := v.GetChildrenVisitor("Items")
+		for _, nn := range n.Items {
 			nn.Walk(vv)
 		}
 	}

@@ -7,16 +7,16 @@ import (
 type FunctionCall struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	function   node.Node
-	arguments  []node.Node
+	Function   node.Node
+	Arguments  []node.Node
 }
 
-func NewFunctionCall(function node.Node, arguments []node.Node) node.Node {
+func NewFunctionCall(Function node.Node, Arguments []node.Node) node.Node {
 	return &FunctionCall{
 		map[string]interface{}{},
 		nil,
-		function,
-		arguments,
+		Function,
+		Arguments,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n FunctionCall) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.function != nil {
-		vv := v.GetChildrenVisitor("function")
-		n.function.Walk(vv)
+	if n.Function != nil {
+		vv := v.GetChildrenVisitor("Function")
+		n.Function.Walk(vv)
 	}
 
-	if n.arguments != nil {
-		vv := v.GetChildrenVisitor("arguments")
-		for _, nn := range n.arguments {
+	if n.Arguments != nil {
+		vv := v.GetChildrenVisitor("Arguments")
+		for _, nn := range n.Arguments {
 			nn.Walk(vv)
 		}
 	}

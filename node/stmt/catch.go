@@ -7,18 +7,18 @@ import (
 type Catch struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	types      []node.Node
-	variable   node.Node
-	stmts      []node.Node
+	Types      []node.Node
+	Variable   node.Node
+	Stmts      []node.Node
 }
 
-func NewCatch(types []node.Node, variable node.Node, stmts []node.Node) node.Node {
+func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) node.Node {
 	return &Catch{
 		map[string]interface{}{},
 		nil,
-		types,
-		variable,
-		stmts,
+		Types,
+		Variable,
+		Stmts,
 	}
 }
 
@@ -40,16 +40,16 @@ func (n Catch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.types != nil {
-		vv := v.GetChildrenVisitor("types")
-		for _, nn := range n.types {
+	if n.Types != nil {
+		vv := v.GetChildrenVisitor("Types")
+		for _, nn := range n.Types {
 			nn.Walk(vv)
 		}
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

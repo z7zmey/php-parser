@@ -8,13 +8,13 @@ type Mul struct {
 	AssignOp
 }
 
-func NewMul(variable node.Node, expression node.Node) node.Node {
+func NewMul(Variable node.Node, Expression node.Node) node.Node {
 	return &Mul{
 		AssignOp{
 			map[string]interface{}{},
 			nil,
-			variable,
-			expression,
+			Variable,
+			Expression,
 		},
 	}
 }
@@ -37,14 +37,14 @@ func (n Mul) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.expression != nil {
-		vv := v.GetChildrenVisitor("expression")
-		n.expression.Walk(vv)
+	if n.Expression != nil {
+		vv := v.GetChildrenVisitor("Expression")
+		n.Expression.Walk(vv)
 	}
 
 	v.LeaveNode(n)

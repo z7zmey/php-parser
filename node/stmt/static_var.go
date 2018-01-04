@@ -7,15 +7,15 @@ import (
 type StaticVar struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
+	Variable   node.Node
 	expr       node.Node
 }
 
-func NewStaticVar(variable node.Node, expr node.Node) node.Node {
+func NewStaticVar(Variable node.Node, expr node.Node) node.Node {
 	return &StaticVar{
 		map[string]interface{}{},
 		nil,
-		variable,
+		Variable,
 		expr,
 	}
 }
@@ -38,9 +38,9 @@ func (n StaticVar) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
 	if n.expr != nil {

@@ -8,15 +8,15 @@ type InstanceOf struct {
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
-	class      node.Node
+	Class      node.Node
 }
 
-func NewInstanceOf(expr node.Node, class node.Node) node.Node {
+func NewInstanceOf(expr node.Node, Class node.Node) node.Node {
 	return &InstanceOf{
 		map[string]interface{}{},
 		nil,
 		expr,
-		class,
+		Class,
 	}
 }
 
@@ -43,9 +43,9 @@ func (n InstanceOf) Walk(v node.Visitor) {
 		n.expr.Walk(vv)
 	}
 
-	if n.class != nil {
-		vv := v.GetChildrenVisitor("class")
-		n.class.Walk(vv)
+	if n.Class != nil {
+		vv := v.GetChildrenVisitor("Class")
+		n.Class.Walk(vv)
 	}
 
 	v.LeaveNode(n)

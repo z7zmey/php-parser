@@ -7,14 +7,14 @@ import (
 type Default struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	stmts      []node.Node
+	Stmts      []node.Node
 }
 
-func NewDefault(stmts []node.Node) node.Node {
+func NewDefault(Stmts []node.Node) node.Node {
 	return &Default{
 		map[string]interface{}{},
 		nil,
-		stmts,
+		Stmts,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Default) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

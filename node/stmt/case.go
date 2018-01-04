@@ -7,16 +7,16 @@ import (
 type Case struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	cond       node.Node
-	stmts      []node.Node
+	Cond       node.Node
+	Stmts      []node.Node
 }
 
-func NewCase(cond node.Node, stmts []node.Node) node.Node {
+func NewCase(Cond node.Node, Stmts []node.Node) node.Node {
 	return &Case{
 		map[string]interface{}{},
 		nil,
-		cond,
-		stmts,
+		Cond,
+		Stmts,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n Case) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.cond != nil {
-		vv := v.GetChildrenVisitor("cond")
-		n.cond.Walk(vv)
+	if n.Cond != nil {
+		vv := v.GetChildrenVisitor("Cond")
+		n.Cond.Walk(vv)
 	}
 
-	if n.stmts != nil {
-		vv := v.GetChildrenVisitor("stmts")
-		for _, nn := range n.stmts {
+	if n.Stmts != nil {
+		vv := v.GetChildrenVisitor("Stmts")
+		for _, nn := range n.Stmts {
 			nn.Walk(vv)
 		}
 	}

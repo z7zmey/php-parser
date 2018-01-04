@@ -7,14 +7,14 @@ import (
 type Echo struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	exprs      []node.Node
+	Exprs      []node.Node
 }
 
-func NewEcho(exprs []node.Node) node.Node {
+func NewEcho(Exprs []node.Node) node.Node {
 	return &Echo{
 		map[string]interface{}{},
 		nil,
-		exprs,
+		Exprs,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n Echo) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.exprs != nil {
-		vv := v.GetChildrenVisitor("exprs")
-		for _, nn := range n.exprs {
+	if n.Exprs != nil {
+		vv := v.GetChildrenVisitor("Exprs")
+		for _, nn := range n.Exprs {
 			nn.Walk(vv)
 		}
 	}

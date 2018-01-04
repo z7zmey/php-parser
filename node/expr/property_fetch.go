@@ -7,16 +7,16 @@ import (
 type PropertyFetch struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	variable   node.Node
-	property   node.Node
+	Variable   node.Node
+	Property   node.Node
 }
 
-func NewPropertyFetch(variable node.Node, property node.Node) node.Node {
+func NewPropertyFetch(Variable node.Node, Property node.Node) node.Node {
 	return &PropertyFetch{
 		map[string]interface{}{},
 		nil,
-		variable,
-		property,
+		Variable,
+		Property,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n PropertyFetch) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.property != nil {
-		vv := v.GetChildrenVisitor("property")
-		n.property.Walk(vv)
+	if n.Property != nil {
+		vv := v.GetChildrenVisitor("Property")
+		n.Property.Walk(vv)
 	}
 
 	v.LeaveNode(n)

@@ -7,14 +7,14 @@ import (
 type ConstList struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	consts     []node.Node
+	Consts     []node.Node
 }
 
-func NewConstList(consts []node.Node) node.Node {
+func NewConstList(Consts []node.Node) node.Node {
 	return &ConstList{
 		map[string]interface{}{},
 		nil,
-		consts,
+		Consts,
 	}
 }
 
@@ -36,9 +36,9 @@ func (n ConstList) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.consts != nil {
-		vv := v.GetChildrenVisitor("consts")
-		for _, nn := range n.consts {
+	if n.Consts != nil {
+		vv := v.GetChildrenVisitor("Consts")
+		for _, nn := range n.Consts {
 			nn.Walk(vv)
 		}
 	}

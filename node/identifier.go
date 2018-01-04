@@ -12,7 +12,7 @@ type Identifier struct {
 func NewIdentifier(token token.Token) Node {
 	return &Identifier{
 		map[string]interface{}{
-			"value": token.Value,
+			"Value": token.Value,
 		},
 		nil,
 	}
@@ -22,12 +22,12 @@ func (n Identifier) Attributes() map[string]interface{} {
 	return n.attributes
 }
 
-func (n Identifier) Attribute(key string) interface{} {
-	return n.attributes[key]
+func (n Identifier) Attribute(Key string) interface{} {
+	return n.attributes[Key]
 }
 
-func (n Identifier) SetAttribute(key string, value interface{}) Node {
-	n.attributes[key] = value
+func (n Identifier) SetAttribute(Key string, Value interface{}) Node {
+	n.attributes[Key] = Value
 	return n
 }
 

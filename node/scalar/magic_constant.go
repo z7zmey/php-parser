@@ -9,10 +9,10 @@ type MagicConstant struct {
 	position   *node.Position
 }
 
-func NewMagicConstant(value string) node.Node {
+func NewMagicConstant(Value string) node.Node {
 	return &MagicConstant{
 		map[string]interface{}{
-			"value": value,
+			"Value": Value,
 		},
 		nil,
 	}

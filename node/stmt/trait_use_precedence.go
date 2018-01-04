@@ -7,16 +7,16 @@ import (
 type TraitUsePrecedence struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	ref        node.Node
-	insteadof  node.Node
+	Ref        node.Node
+	Insteadof  node.Node
 }
 
-func NewTraitUsePrecedence(ref node.Node, insteadof node.Node) node.Node {
+func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) node.Node {
 	return &TraitUsePrecedence{
 		map[string]interface{}{},
 		nil,
-		ref,
-		insteadof,
+		Ref,
+		Insteadof,
 	}
 }
 
@@ -38,14 +38,14 @@ func (n TraitUsePrecedence) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.ref != nil {
-		vv := v.GetChildrenVisitor("ref")
-		n.ref.Walk(vv)
+	if n.Ref != nil {
+		vv := v.GetChildrenVisitor("Ref")
+		n.Ref.Walk(vv)
 	}
 
-	if n.insteadof != nil {
-		vv := v.GetChildrenVisitor("insteadof")
-		n.insteadof.Walk(vv)
+	if n.Insteadof != nil {
+		vv := v.GetChildrenVisitor("Insteadof")
+		n.Insteadof.Walk(vv)
 	}
 
 	v.LeaveNode(n)

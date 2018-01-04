@@ -7,6 +7,6 @@ import (
 type BinaryOp struct {
 	attributes map[string]interface{}
 	position   *node.Position
-	left       node.Node
-	right      node.Node
+	Left       node.Node
+	Right      node.Node
 }

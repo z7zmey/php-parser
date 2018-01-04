@@ -8,13 +8,13 @@ type Mod struct {
 	AssignOp
 }
 
-func NewMod(variable node.Node, expression node.Node) node.Node {
+func NewMod(Variable node.Node, Expression node.Node) node.Node {
 	return &Mod{
 		AssignOp{
 			map[string]interface{}{},
 			nil,
-			variable,
-			expression,
+			Variable,
+			Expression,
 		},
 	}
 }
@@ -37,14 +37,14 @@ func (n Mod) Walk(v node.Visitor) {
 		return
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.expression != nil {
-		vv := v.GetChildrenVisitor("expression")
-		n.expression.Walk(vv)
+	if n.Expression != nil {
+		vv := v.GetChildrenVisitor("Expression")
+		n.Expression.Walk(vv)
 	}
 
 	v.LeaveNode(n)

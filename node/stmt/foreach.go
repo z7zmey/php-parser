@@ -8,21 +8,21 @@ type Foreach struct {
 	attributes map[string]interface{}
 	position   *node.Position
 	expr       node.Node
-	key        node.Node
-	variable   node.Node
-	stmt       node.Node
+	Key        node.Node
+	Variable   node.Node
+	Stmt       node.Node
 }
 
-func NewForeach(expr node.Node, key node.Node, variable node.Node, stmt node.Node, byRef bool) node.Node {
+func NewForeach(expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, byRef bool) node.Node {
 	return &Foreach{
 		map[string]interface{}{
 			"byRef": byRef,
 		},
 		nil,
 		expr,
-		key,
-		variable,
-		stmt,
+		Key,
+		Variable,
+		Stmt,
 	}
 }
 
@@ -49,19 +49,19 @@ func (n Foreach) Walk(v node.Visitor) {
 		n.expr.Walk(vv)
 	}
 
-	if n.key != nil {
-		vv := v.GetChildrenVisitor("key")
-		n.key.Walk(vv)
+	if n.Key != nil {
+		vv := v.GetChildrenVisitor("Key")
+		n.Key.Walk(vv)
 	}
 
-	if n.variable != nil {
-		vv := v.GetChildrenVisitor("variable")
-		n.variable.Walk(vv)
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
 	}
 
-	if n.stmt != nil {
-		vv := v.GetChildrenVisitor("stmt")
-		n.stmt.Walk(vv)
+	if n.Stmt != nil {
+		vv := v.GetChildrenVisitor("Stmt")
+		n.Stmt.Walk(vv)
 	}
 
 	v.LeaveNode(n)
