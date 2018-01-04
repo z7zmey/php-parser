@@ -12,9 +12,11 @@ A Parser for PHP written in Go
 - [x] PHP 7 syntax analyzer
 - [x] AST nodes
 - [x] AST visitor
-- [x] handling nodes line numbers
-- [ ] handling php doc comments
+- [x] AST dumper
+- [x] node position
+- [ ] handling comments
 - [ ] Tests
 - [ ] Documentation
 - [ ] PHP 5 syntax analyzer
 - [ ] Code flow graph
+- [ ] Pretty printer
