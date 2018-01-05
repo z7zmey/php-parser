@@ -1,5 +1,7 @@
 package node
 
+import "fmt"
+
 type Node interface {
 	Positioner
 	Attributes() map[string]interface{}
@@ -14,4 +16,10 @@ type Positioner interface {
 type Position struct {
 	StartLine int
 	EndLine   int
+	StartPos  int
+	EndPos    int
+}
+
+func (p Position) String() string {
+	return fmt.Sprintf("Pos{Line: %d-%d Pos: %d-%d}", p.StartLine, p.EndLine, p.StartPos, p.EndPos)
 }

@@ -634,21 +634,27 @@ if_stmt:
 alt_if_stmt_without_else:
         T_IF '(' expr ')' ':' inner_statement_list
             { 
-                $$ = stmt.NewAltIf($3, stmt.NewStmtList($6).SetPosition(NewNodeListPosition($6))).SetPosition(NewAltIfStartPosition($1))
+                stmts := stmt.NewStmtList($6).SetPosition(NewNodeListPosition($6))
+                $$ = stmt.NewAltIf($3, stmts).SetPosition(NewTokenNodeListPosition($1, $6))
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
-                _elseIf := stmt.NewAltElseIf($4, stmt.NewStmtList($7).SetPosition(NewNodeListPosition($7))).SetPosition(NewTokenNodeListPosition($2, $7))
+                stmts := stmt.NewStmtList($7).SetPosition(NewNodeListPosition($7))
+                _elseIf := stmt.NewAltElseIf($4, stmts).SetPosition(NewTokenNodeListPosition($2, $7))
                 $$ = $1.(stmt.AltIf).AddElseIf(_elseIf)
             }
 ;
 
 alt_if_stmt:
-        alt_if_stmt_without_else T_ENDIF ';'            { $$ = $1.SetPosition(NewAltIfPosition($1.Position().StartLine, $3)) }
+        alt_if_stmt_without_else T_ENDIF ';'
+            {
+                $$ = $1.SetPosition(NewNodeTokenPosition($1, $3))
+            }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
-                _else := stmt.NewAltElse(stmt.NewStmtList($4).SetPosition(NewNodeListPosition($4))).SetPosition(NewTokenNodeListPosition($2, $4))
-                $$ = $1.(stmt.AltIf).SetElse(_else).SetPosition(NewAltIfPosition($1.Position().StartLine, $6))
+                stmts := stmt.NewStmtList($4).SetPosition(NewNodeListPosition($4))
+                _else := stmt.NewAltElse(stmts).SetPosition(NewTokenNodeListPosition($2, $4))
+                $$ = $1.(stmt.AltIf).SetElse(_else).SetPosition(NewNodeTokenPosition($1, $6))
             }
 ;
 

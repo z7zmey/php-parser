@@ -10,10 +10,12 @@ type Token struct {
 	Value     string
 	StartLine int
 	EndLine   int
+	StartPos  int
+	EndPos    int
 }
 
-func NewToken(value []byte, startLine int, endLine int) Token {
-	return Token{string(value), startLine, endLine}
+func NewToken(value []byte, startLine int, endLine int, startPos int, endPos int) Token {
+	return Token{string(value), startLine, endLine, startPos, endPos}
 }
 
 func (t Token) String() string {

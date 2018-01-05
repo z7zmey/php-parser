@@ -87,7 +87,7 @@ func (l *lexer) getCurrentState() int {
 	return l.stateStack[len(l.stateStack)-1]
 }
 
-func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int) {
+func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int, int, int) {
 	startln := l.lineNumber
 
 	var prev byte
@@ -105,5 +105,5 @@ func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int) {
 		l.lineNumber++
 	}
 
-	return tokenBytes, startln, l.lineNumber
+	return tokenBytes, startln, l.lineNumber, int(l.First.Pos()), int(l.Prev.Pos())
 }

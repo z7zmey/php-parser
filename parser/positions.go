@@ -5,117 +5,178 @@ import (
 	"github.com/z7zmey/php-parser/token"
 )
 
-func getListPosStartLine(l []node.Node) int {
-	startLine := -1
+type startPos struct {
+	startLine int
+	startPos  int
+}
 
+type endPos struct {
+	endLine int
+	endPos  int
+}
+
+func getListStartPos(l []node.Node) startPos {
 	if l == nil {
-		return startLine
+		return startPos{-1, -1}
 	}
 
 	if len(l) == 0 {
-		return startLine
+		return startPos{-1, -1}
 	}
 
-	return getNodePosStartLine(l[0])
+	return getNodeStartPos(l[0])
 }
 
-func getNodePosStartLine(n node.Node) int {
-	startLine := -1
+func getNodeStartPos(n node.Node) startPos {
+	sl := -1
+	sp := -1
 
 	if n == nil {
-		return startLine
+		return startPos{-1, -1}
 	}
 
 	p := n.Position()
 	if p != nil {
-		startLine = p.StartLine
+		sl = p.StartLine
+		sp = p.StartPos
 	}
 
-	return startLine
+	return startPos{sl, sp}
 }
 
-func getListPosEndLine(l []node.Node) int {
-	endLine := -1
-
+func getListEndPos(l []node.Node) endPos {
 	if l == nil {
-		return endLine
+		return endPos{-1, -1}
 	}
 
 	if len(l) == 0 {
-		return endLine
+		return endPos{-1, -1}
 	}
 
-	return getNodePosEndLine(l[len(l)-1])
+	return getNodeEndPos(l[len(l)-1])
 }
 
-func getNodePosEndLine(n node.Node) int {
-	endLine := -1
+func getNodeEndPos(n node.Node) endPos {
+	el := -1
+	ep := -1
 
 	if n == nil {
-		return endLine
+		return endPos{-1, -1}
 	}
 
 	p := n.Position()
 	if p != nil {
-		endLine = p.EndLine
+		el = p.EndLine
+		ep = p.EndPos
 	}
 
-	return endLine
+	return endPos{el, ep}
 }
 
 func NewNodeListPosition(list []node.Node) *node.Position {
-	return &node.Position{getListPosStartLine(list), getListPosEndLine(list)}
+	return &node.Position{
+		getListStartPos(list).startLine,
+		getListEndPos(list).endLine,
+		getListStartPos(list).startPos,
+		getListEndPos(list).endPos,
+	}
 }
 
 func NewNodePosition(n node.Node) *node.Position {
-	return &node.Position{getNodePosStartLine(n), getNodePosEndLine(n)}
+	return &node.Position{
+		getNodeStartPos(n).startLine,
+		getNodeEndPos(n).endLine,
+		getNodeStartPos(n).startPos,
+		getNodeEndPos(n).endPos,
+	}
 }
 
 func NewTokenPosition(t token.Token) *node.Position {
-	return &node.Position{t.StartLine, t.EndLine}
+	return &node.Position{
+		t.StartLine,
+		t.EndLine,
+		t.StartPos,
+		t.EndPos,
+	}
 }
 
-func NewTokensPosition(startToken token.Token, EndToken token.Token) *node.Position {
-	return &node.Position{startToken.StartLine, EndToken.EndLine}
+func NewTokensPosition(startToken token.Token, endToken token.Token) *node.Position {
+	return &node.Position{
+		startToken.StartLine,
+		endToken.EndLine,
+		startToken.StartPos,
+		endToken.EndPos,
+	}
 }
 
 func NewTokenNodePosition(t token.Token, n node.Node) *node.Position {
-	return &node.Position{t.StartLine, getNodePosEndLine(n)}
+	return &node.Position{
+		t.StartLine,
+		getNodeEndPos(n).endLine,
+		t.StartPos,
+		getNodeEndPos(n).endPos,
+	}
 }
 
 func NewNodeTokenPosition(n node.Node, t token.Token) *node.Position {
-	return &node.Position{getNodePosStartLine(n), t.EndLine}
+	return &node.Position{
+		getNodeStartPos(n).startLine,
+		t.EndLine,
+		getNodeStartPos(n).startPos,
+		t.EndPos,
+	}
 }
 
 func NewNodesPosition(startNode node.Node, endNode node.Node) *node.Position {
-	return &node.Position{getNodePosStartLine(startNode), getNodePosEndLine(endNode)}
+	return &node.Position{
+		getNodeStartPos(startNode).startLine,
+		getNodeEndPos(endNode).endLine,
+		getNodeStartPos(startNode).startPos,
+		getNodeEndPos(endNode).endPos,
+	}
 }
 
 func NewNodeListTokenPosition(list []node.Node, t token.Token) *node.Position {
-	return &node.Position{getListPosStartLine(list), t.EndLine}
+	return &node.Position{
+		getListStartPos(list).startLine,
+		t.EndLine,
+		getListStartPos(list).startPos,
+		t.EndPos,
+	}
 }
 
 func NewTokenNodeListPosition(t token.Token, list []node.Node) *node.Position {
-	return &node.Position{t.StartLine, getListPosEndLine(list)}
+	return &node.Position{
+		t.StartLine,
+		getListEndPos(list).endLine,
+		t.StartPos,
+		getListEndPos(list).endPos,
+	}
 }
 
 func NewNodeNodeListPosition(n node.Node, list []node.Node) *node.Position {
-	return &node.Position{getNodePosStartLine(n), getListPosEndLine(list)}
+	return &node.Position{
+		getNodeStartPos(n).startLine,
+		getListEndPos(list).endLine,
+		getNodeStartPos(n).startPos,
+		getListEndPos(list).endPos,
+	}
 }
 
 func NewOptionalListTokensPosition(list []node.Node, t token.Token, endToken token.Token) *node.Position {
 	if list == nil {
-		return &node.Position{t.StartLine, endToken.EndLine}
+		return &node.Position{
+			t.StartLine,
+			endToken.EndLine,
+			t.StartPos,
+			endToken.EndPos,
+		}
 	} else {
-		return &node.Position{getListPosStartLine(list), endToken.EndLine}
+		return &node.Position{
+			getListStartPos(list).startLine,
+			endToken.EndLine,
+			getListStartPos(list).startPos,
+			endToken.EndPos,
+		}
 	}
-}
-
-// AltIf Positions
-
-func NewAltIfStartPosition(startToken token.Token) *node.Position {
-	return &node.Position{startToken.StartLine, -1}
-}
-func NewAltIfPosition(startLine int, EndToken token.Token) *node.Position {
-	return &node.Position{startLine, EndToken.EndLine}
 }
