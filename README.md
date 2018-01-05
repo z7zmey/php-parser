@@ -9,7 +9,7 @@ A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com
 
 ## Roadmap
 - [X] Lexer
-- [x] PHP 7 syntax analyzer
+- [x] PHP 7 syntax analyzer (completely)
 - [x] AST nodes
 - [x] AST visitor
 - [x] AST dumper
