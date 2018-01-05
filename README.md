@@ -5,7 +5,7 @@
   -->
 
 # PHP-Parser
-A Parser for PHP written in Go
+A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com/nikic/PHP-Parser)
 
 ## Roadmap
 - [X] Lexer
