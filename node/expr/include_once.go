@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type IncludeOnce struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Expr     node.Node
 }
 
 func NewIncludeOnce(Expression node.Node) node.Node {
 	return &IncludeOnce{
+		nil,
 		nil,
 		Expression,
 	}
@@ -26,6 +29,15 @@ func (n IncludeOnce) Position() *node.Position {
 
 func (n IncludeOnce) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n IncludeOnce) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n IncludeOnce) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

@@ -12,6 +12,7 @@ func NewRelative(Parts []node.Node) node.Node {
 	return &Relative{
 		Name{
 			nil,
+			nil,
 			Parts,
 		},
 	}

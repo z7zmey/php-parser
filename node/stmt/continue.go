@@ -1,16 +1,19 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Continue struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Expr     node.Node
 }
 
 func NewContinue(Expr node.Node) node.Node {
 	return &Continue{
+		nil,
 		nil,
 		Expr,
 	}
@@ -26,6 +29,15 @@ func (n Continue) Position() *node.Position {
 
 func (n Continue) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Continue) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Continue) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

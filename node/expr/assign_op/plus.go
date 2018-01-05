@@ -1,6 +1,7 @@
 package assign_op
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type Plus struct {
 func NewPlus(Variable node.Node, Expression node.Node) node.Node {
 	return &Plus{
 		AssignOp{
+			nil,
 			nil,
 			Variable,
 			Expression,
@@ -28,6 +30,15 @@ func (n Plus) Position() *node.Position {
 
 func (n Plus) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Plus) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Plus) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

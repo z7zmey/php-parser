@@ -22,6 +22,13 @@ func (d dumper) EnterNode(n node.Node) bool {
 	}
 	fmt.Println()
 
+	if c := n.Comments(); c != nil && len(*c) > 0 {
+		fmt.Printf("%vcomments:\n", d.indent+"  ")
+		for _, cc := range *c {
+			fmt.Printf("%v%q\n", d.indent+"    ", cc)
+		}
+	}
+
 	return true
 }
 

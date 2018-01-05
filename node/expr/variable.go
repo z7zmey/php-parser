@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Variable struct {
 	position *node.Position
+	comments *[]comment.Comment
 	VarName  node.Node
 }
 
 func NewVariable(VarName node.Node) node.Node {
 	return &Variable{
+		nil,
 		nil,
 		VarName,
 	}
@@ -26,6 +29,15 @@ func (n Variable) Position() *node.Position {
 
 func (n Variable) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Variable) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Variable) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

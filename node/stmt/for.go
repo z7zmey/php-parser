@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type For struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Init     []node.Node
 	Cond     []node.Node
 	Loop     []node.Node
@@ -14,6 +16,7 @@ type For struct {
 
 func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) node.Node {
 	return &For{
+		nil,
 		nil,
 		Init,
 		Cond,
@@ -32,6 +35,15 @@ func (n For) Position() *node.Position {
 
 func (n For) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n For) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n For) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

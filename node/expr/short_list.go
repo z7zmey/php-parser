@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ShortList struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Items    []node.Node
 }
 
 func NewShortList(Items []node.Node) node.Node {
 	return &ShortList{
+		nil,
 		nil,
 		Items,
 	}
@@ -26,6 +29,15 @@ func (n ShortList) Position() *node.Position {
 
 func (n ShortList) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n ShortList) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n ShortList) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

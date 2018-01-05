@@ -1,13 +1,17 @@
 package node
 
+import "github.com/z7zmey/php-parser/comment"
+
 type Argument struct {
 	position *Position
+	comments *[]comment.Comment
 	Variadic bool
 	Expr     Node
 }
 
 func NewArgument(Expression Node, Variadic bool) Node {
 	return &Argument{
+		nil,
 		nil,
 		Variadic,
 		Expression,
@@ -26,6 +30,15 @@ func (n Argument) Position() *Position {
 
 func (n Argument) SetPosition(p *Position) Node {
 	n.position = p
+	return n
+}
+
+func (n Argument) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Argument) SetComments(c []comment.Comment) Node {
+	n.comments = &c
 	return n
 }
 

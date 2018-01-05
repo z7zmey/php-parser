@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type CastBool struct {
 func NewCastBool(Expr node.Node) node.Node {
 	return &CastBool{
 		Cast{
+			nil,
 			nil,
 			Expr,
 		},
@@ -27,6 +29,15 @@ func (n CastBool) Position() *node.Position {
 
 func (n CastBool) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n CastBool) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n CastBool) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

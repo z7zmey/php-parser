@@ -1,6 +1,7 @@
 package cast
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type CastArray struct {
 func NewCastArray(Expr node.Node) node.Node {
 	return &CastArray{
 		Cast{
+			nil,
 			nil,
 			Expr,
 		},
@@ -27,6 +29,15 @@ func (n CastArray) Position() *node.Position {
 
 func (n CastArray) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n CastArray) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n CastArray) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

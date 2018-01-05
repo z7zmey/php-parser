@@ -1,17 +1,20 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ClassConstList struct {
 	position  *node.Position
+	comments  *[]comment.Comment
 	Modifiers []node.Node
 	Consts    []node.Node
 }
 
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) node.Node {
 	return &ClassConstList{
+		nil,
 		nil,
 		Modifiers,
 		Consts,
@@ -28,6 +31,15 @@ func (n ClassConstList) Position() *node.Position {
 
 func (n ClassConstList) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n ClassConstList) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n ClassConstList) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

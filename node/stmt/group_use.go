@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type GroupUse struct {
 	position *node.Position
+	comments *[]comment.Comment
 	UseType  node.Node
 	pRefix   node.Node
 	UseList  []node.Node
@@ -13,6 +15,7 @@ type GroupUse struct {
 
 func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) node.Node {
 	return &GroupUse{
+		nil,
 		nil,
 		UseType,
 		pRefix,
@@ -30,6 +33,15 @@ func (n GroupUse) Position() *node.Position {
 
 func (n GroupUse) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n GroupUse) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n GroupUse) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

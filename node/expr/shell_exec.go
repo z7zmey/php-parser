@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ShellExec struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Parts    []node.Node
 }
 
 func NewShellExec(Parts []node.Node) node.Node {
 	return &ShellExec{
+		nil,
 		nil,
 		Parts,
 	}
@@ -26,6 +29,15 @@ func (n ShellExec) Position() *node.Position {
 
 func (n ShellExec) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n ShellExec) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n ShellExec) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

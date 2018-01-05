@@ -14,7 +14,7 @@ A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com
 - [x] AST visitor
 - [x] AST dumper
 - [x] node position
-- [ ] handling comments
+- [x] handling comments
 - [ ] Tests
 - [ ] Documentation
 - [ ] PHP 5 syntax analyzer

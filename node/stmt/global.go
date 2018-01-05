@@ -1,16 +1,19 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Global struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Vars     []node.Node
 }
 
 func NewGlobal(Vars []node.Node) node.Node {
 	return &Global{
+		nil,
 		nil,
 		Vars,
 	}
@@ -26,6 +29,15 @@ func (n Global) Position() *node.Position {
 
 func (n Global) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Global) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Global) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

@@ -1,6 +1,7 @@
 package binary_op
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type BitwiseAnd struct {
 func NewBitwiseAnd(Variable node.Node, Expression node.Node) node.Node {
 	return &BitwiseAnd{
 		BinaryOp{
+			nil,
 			nil,
 			Variable,
 			Expression,
@@ -28,6 +30,15 @@ func (n BitwiseAnd) Position() *node.Position {
 
 func (n BitwiseAnd) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n BitwiseAnd) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n BitwiseAnd) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

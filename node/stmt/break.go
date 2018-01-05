@@ -1,16 +1,19 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Break struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Expr     node.Node
 }
 
 func NewBreak(Expr node.Node) node.Node {
 	return &Break{
+		nil,
 		nil,
 		Expr,
 	}
@@ -26,6 +29,15 @@ func (n Break) Position() *node.Position {
 
 func (n Break) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Break) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Break) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

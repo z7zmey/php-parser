@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Try struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Stmts    []node.Node
 	Catches  []node.Node
 	Finally  node.Node
@@ -13,6 +15,7 @@ type Try struct {
 
 func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) node.Node {
 	return &Try{
+		nil,
 		nil,
 		Stmts,
 		Catches,
@@ -30,6 +33,15 @@ func (n Try) Position() *node.Position {
 
 func (n Try) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Try) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Try) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

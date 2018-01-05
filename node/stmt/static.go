@@ -1,16 +1,19 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Static struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Vars     []node.Node
 }
 
 func NewStatic(Vars []node.Node) node.Node {
 	return &Static{
+		nil,
 		nil,
 		Vars,
 	}
@@ -26,6 +29,15 @@ func (n Static) Position() *node.Position {
 
 func (n Static) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Static) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Static) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

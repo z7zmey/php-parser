@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type AltIf struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Cond     node.Node
 	Stmt     node.Node
 	ElseIf   []node.Node
@@ -14,6 +16,7 @@ type AltIf struct {
 
 func NewAltIf(Cond node.Node, Stmt node.Node) node.Node {
 	return &AltIf{
+		nil,
 		nil,
 		Cond,
 		Stmt,
@@ -32,6 +35,15 @@ func (n AltIf) Position() *node.Position {
 
 func (n AltIf) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n AltIf) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n AltIf) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

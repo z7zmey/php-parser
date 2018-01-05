@@ -1,11 +1,13 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type MethodCall struct {
 	position  *node.Position
+	comments  *[]comment.Comment
 	Variable  node.Node
 	Method    node.Node
 	Arguments []node.Node
@@ -13,6 +15,7 @@ type MethodCall struct {
 
 func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) node.Node {
 	return &MethodCall{
+		nil,
 		nil,
 		Variable,
 		Method,
@@ -30,6 +33,15 @@ func (n MethodCall) Position() *node.Position {
 
 func (n MethodCall) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n MethodCall) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n MethodCall) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

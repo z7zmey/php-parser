@@ -1,11 +1,13 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Closure struct {
 	position      *node.Position
+	comments      *[]comment.Comment
 	ReturnsRef    bool
 	Static        bool
 	PhpDocComment string
@@ -17,6 +19,7 @@ type Closure struct {
 
 func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, Static bool, ReturnsRef bool, PhpDocComment string) node.Node {
 	return &Closure{
+		nil,
 		nil,
 		ReturnsRef,
 		Static,
@@ -42,6 +45,15 @@ func (n Closure) Position() *node.Position {
 
 func (n Closure) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Closure) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Closure) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

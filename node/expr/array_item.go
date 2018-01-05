@@ -1,11 +1,13 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ArrayItem struct {
 	position *node.Position
+	comments *[]comment.Comment
 	ByRef    bool
 	Key      node.Node
 	Val      node.Node
@@ -13,6 +15,7 @@ type ArrayItem struct {
 
 func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) node.Node {
 	return &ArrayItem{
+		nil,
 		nil,
 		ByRef,
 		Key,
@@ -32,6 +35,15 @@ func (n ArrayItem) Position() *node.Position {
 
 func (n ArrayItem) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n ArrayItem) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n ArrayItem) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type List struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Items    []node.Node
 }
 
 func NewList(Items []node.Node) node.Node {
 	return &List{
+		nil,
 		nil,
 		Items,
 	}
@@ -26,6 +29,15 @@ func (n List) Position() *node.Position {
 
 func (n List) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n List) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n List) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

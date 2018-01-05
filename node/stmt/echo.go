@@ -1,16 +1,19 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Echo struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Exprs    []node.Node
 }
 
 func NewEcho(Exprs []node.Node) node.Node {
 	return &Echo{
+		nil,
 		nil,
 		Exprs,
 	}
@@ -26,6 +29,15 @@ func (n Echo) Position() *node.Position {
 
 func (n Echo) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Echo) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Echo) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

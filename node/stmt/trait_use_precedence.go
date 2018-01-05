@@ -1,17 +1,20 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type TraitUsePrecedence struct {
 	position  *node.Position
+	comments  *[]comment.Comment
 	Ref       node.Node
 	Insteadof node.Node
 }
 
 func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) node.Node {
 	return &TraitUsePrecedence{
+		nil,
 		nil,
 		Ref,
 		Insteadof,
@@ -28,6 +31,15 @@ func (n TraitUsePrecedence) Position() *node.Position {
 
 func (n TraitUsePrecedence) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n TraitUsePrecedence) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n TraitUsePrecedence) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

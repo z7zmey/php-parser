@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type TraitUseAlias struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Ref      node.Node
 	Modifier node.Node
 	Alias    node.Node
@@ -13,6 +15,7 @@ type TraitUseAlias struct {
 
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) node.Node {
 	return &TraitUseAlias{
+		nil,
 		nil,
 		Ref,
 		Modifier,
@@ -30,6 +33,15 @@ func (n TraitUseAlias) Position() *node.Position {
 
 func (n TraitUseAlias) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n TraitUseAlias) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n TraitUseAlias) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

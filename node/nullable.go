@@ -1,12 +1,16 @@
 package node
 
+import "github.com/z7zmey/php-parser/comment"
+
 type Nullable struct {
 	position *Position
+	comments *[]comment.Comment
 	Expr     Node
 }
 
 func NewNullable(Expression Node) Node {
 	return &Nullable{
+		nil,
 		nil,
 		Expression,
 	}
@@ -22,6 +26,15 @@ func (n Nullable) Position() *Position {
 
 func (n Nullable) SetPosition(p *Position) Node {
 	n.position = p
+	return n
+}
+
+func (n Nullable) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Nullable) SetComments(c []comment.Comment) Node {
+	n.comments = &c
 	return n
 }
 

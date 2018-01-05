@@ -1,17 +1,20 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Declare struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Consts   []node.Node
 	Stmt     node.Node
 }
 
 func NewDeclare(Consts []node.Node, Stmt node.Node) node.Node {
 	return &Declare{
+		nil,
 		nil,
 		Consts,
 		Stmt,
@@ -28,6 +31,15 @@ func (n Declare) Position() *node.Position {
 
 func (n Declare) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Declare) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Declare) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

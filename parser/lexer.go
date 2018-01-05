@@ -8,6 +8,7 @@ import (
 
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
+	t "github.com/z7zmey/php-parser/token"
 )
 
 // Allocate Character classes anywhere in [0x80, 0xFF].
@@ -106,4 +107,8 @@ func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int, int, int) {
 	}
 
 	return tokenBytes, startln, l.lineNumber, int(l.First.Pos()), int(l.Prev.Pos())
+}
+
+func (l *lexer) newToken() t.Token {
+	return t.NewToken(l.handleNewLine(l.TokenBytes(nil))).SetComments(l.comments)
 }

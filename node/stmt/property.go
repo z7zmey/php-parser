@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Property struct {
 	position      *node.Position
+	comments      *[]comment.Comment
 	PhpDocComment string
 	Variable      node.Node
 	Expr          node.Node
@@ -13,6 +15,7 @@ type Property struct {
 
 func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) node.Node {
 	return &Property{
+		nil,
 		nil,
 		PhpDocComment,
 		Variable,
@@ -31,6 +34,15 @@ func (n Property) Position() *node.Position {
 
 func (n Property) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Property) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Property) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

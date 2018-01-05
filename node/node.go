@@ -1,11 +1,18 @@
 package node
 
 import "fmt"
+import "github.com/z7zmey/php-parser/comment"
 
 type Node interface {
 	Positioner
+	Commenter
 	Attributes() map[string]interface{}
 	Walk(v Visitor)
+}
+
+type Commenter interface {
+	Comments() *[]comment.Comment
+	SetComments([]comment.Comment) Node
 }
 
 type Positioner interface {

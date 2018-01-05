@@ -1,6 +1,7 @@
 package binary_op
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type NotEqual struct {
 func NewNotEqual(Variable node.Node, Expression node.Node) node.Node {
 	return &NotEqual{
 		BinaryOp{
+			nil,
 			nil,
 			Variable,
 			Expression,
@@ -28,6 +30,15 @@ func (n NotEqual) Position() *node.Position {
 
 func (n NotEqual) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n NotEqual) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n NotEqual) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

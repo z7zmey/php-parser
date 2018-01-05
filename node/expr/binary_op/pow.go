@@ -1,6 +1,7 @@
 package binary_op
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type Pow struct {
 func NewPow(Variable node.Node, Expression node.Node) node.Node {
 	return &Pow{
 		BinaryOp{
+			nil,
 			nil,
 			Variable,
 			Expression,
@@ -28,6 +30,15 @@ func (n Pow) Position() *node.Position {
 
 func (n Pow) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Pow) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Pow) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

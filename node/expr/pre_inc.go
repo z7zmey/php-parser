@@ -1,16 +1,19 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type PreInc struct {
 	position *node.Position
+	comments *[]comment.Comment
 	Variable node.Node
 }
 
 func NewPreInc(Variable node.Node) node.Node {
 	return &PreInc{
+		nil,
 		nil,
 		Variable,
 	}
@@ -26,6 +29,15 @@ func (n PreInc) Position() *node.Position {
 
 func (n PreInc) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n PreInc) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n PreInc) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

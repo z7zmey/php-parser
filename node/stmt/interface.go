@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Interface struct {
 	position      *node.Position
+	comments      *[]comment.Comment
 	PhpDocComment string
 	InterfaceName node.Node
 	Extends       []node.Node
@@ -14,6 +16,7 @@ type Interface struct {
 
 func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Interface{
+		nil,
 		nil,
 		PhpDocComment,
 		InterfaceName,
@@ -34,6 +37,15 @@ func (n Interface) Position() *node.Position {
 
 func (n Interface) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Interface) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Interface) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

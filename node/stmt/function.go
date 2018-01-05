@@ -1,11 +1,13 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Function struct {
 	position      *node.Position
+	comments      *[]comment.Comment
 	ReturnsRef    bool
 	PhpDocComment string
 	FunctionName  node.Node
@@ -16,6 +18,7 @@ type Function struct {
 
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
 	return &Function{
+		nil,
 		nil,
 		ReturnsRef,
 		PhpDocComment,
@@ -40,6 +43,15 @@ func (n Function) Position() *node.Position {
 
 func (n Function) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Function) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Function) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

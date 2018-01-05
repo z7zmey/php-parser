@@ -1,17 +1,20 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type FunctionCall struct {
 	position  *node.Position
+	comments  *[]comment.Comment
 	Function  node.Node
 	Arguments []node.Node
 }
 
 func NewFunctionCall(Function node.Node, Arguments []node.Node) node.Node {
 	return &FunctionCall{
+		nil,
 		nil,
 		Function,
 		Arguments,
@@ -28,6 +31,15 @@ func (n FunctionCall) Position() *node.Position {
 
 func (n FunctionCall) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n FunctionCall) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n FunctionCall) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 

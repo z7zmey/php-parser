@@ -1,6 +1,7 @@
 package binary_op
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -11,6 +12,7 @@ type Coalesce struct {
 func NewCoalesce(Variable node.Node, Expression node.Node) node.Node {
 	return &Coalesce{
 		BinaryOp{
+			nil,
 			nil,
 			Variable,
 			Expression,
@@ -28,6 +30,15 @@ func (n Coalesce) Position() *node.Position {
 
 func (n Coalesce) SetPosition(p *node.Position) node.Node {
 	n.position = p
+	return n
+}
+
+func (n Coalesce) Comments() *[]comment.Comment {
+	return n.comments
+}
+
+func (n Coalesce) SetComments(c []comment.Comment) node.Node {
+	n.comments = &c
 	return n
 }
 
