@@ -3,6 +3,7 @@
 # license that can be found in the LICENSE file.
 
 # blame: jnml, labs.nic.cz
+PHPFILE=example.php
 
 all: ./parser/parser.go ./parser/scanner.go
 	rm -f y.output
@@ -10,7 +11,7 @@ all: ./parser/parser.go ./parser/scanner.go
 	go build
 
 run: all
-	./php-parser example.php
+	./php-parser $(PHPFILE)
 
 test: all
 	go test ./test/...
