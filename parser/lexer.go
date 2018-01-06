@@ -106,7 +106,9 @@ func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int, int, int) {
 		l.lineNumber++
 	}
 
-	return tokenBytes, startln, l.lineNumber, int(l.First.Pos()), int(l.Prev.Pos())
+	startPos := int(l.First.Pos())
+	endPos := startPos + len(tokenBytes) - 1
+	return tokenBytes, startln, l.lineNumber, startPos, endPos
 }
 
 func (l *lexer) newToken() t.Token {
