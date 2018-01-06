@@ -32,7 +32,7 @@ const (
 var heredocLabel []byte
 
 func (l *lexer) Lex(lval *yySymType) int {
-	l.comments = []comment.Comment{}
+	l.comments = nil
 	c := l.Enter()
 
 yystate0:
@@ -8265,10 +8265,10 @@ yyrule126: // ([/][*])|([/][*][*])
 		lval.token = token.NewToken(l.handleNewLine(l.TokenBytes(nil)))
 		if is_doc_comment {
 			l.phpDocComment = string(l.TokenBytes(nil))
-			l.comments = append(l.comments, comment.NewDocComment(string(l.TokenBytes(nil))))
+			l.addComment(comment.NewDocComment(string(l.TokenBytes(nil))))
 			// return T_DOC_COMMENT
 		} else {
-			l.comments = append(l.comments, comment.NewPlainComment(string(l.TokenBytes(nil))))
+			l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil))))
 			// return T_COMMENT
 		}
 		goto yystate0

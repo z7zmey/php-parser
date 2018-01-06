@@ -36,8 +36,8 @@ func (n CastArray) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n CastArray) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n CastArray) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

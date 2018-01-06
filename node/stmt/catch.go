@@ -40,8 +40,8 @@ func (n Catch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Catch) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Catch) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

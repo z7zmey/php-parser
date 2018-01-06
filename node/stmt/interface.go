@@ -44,8 +44,8 @@ func (n Interface) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Interface) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Interface) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

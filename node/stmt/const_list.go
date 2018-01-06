@@ -36,8 +36,8 @@ func (n ConstList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ConstList) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ConstList) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

@@ -37,8 +37,8 @@ func (n BooleanOr) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BooleanOr) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n BooleanOr) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

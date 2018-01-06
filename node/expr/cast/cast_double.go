@@ -36,8 +36,8 @@ func (n CastDouble) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n CastDouble) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n CastDouble) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

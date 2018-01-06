@@ -38,8 +38,8 @@ func (n StaticPropertyFetch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StaticPropertyFetch) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n StaticPropertyFetch) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

@@ -36,8 +36,8 @@ func (n UnaryPlus) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n UnaryPlus) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n UnaryPlus) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

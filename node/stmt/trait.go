@@ -42,8 +42,8 @@ func (n Trait) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Trait) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Trait) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

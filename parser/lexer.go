@@ -23,7 +23,7 @@ type lexer struct {
 	stateStack    []int
 	lineNumber    int
 	phpDocComment string
-	comments      []comment.Comment
+	comments      *[]comment.Comment
 }
 
 func rune2Class(r rune) int {
@@ -46,7 +46,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &lexer{lx, []int{0}, 1, "", []comment.Comment{}}
+	return &lexer{lx, []int{0}, 1, "", nil}
 }
 
 func (l *lexer) ungetN(n int) []byte {
@@ -111,4 +111,12 @@ func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int, int, int) {
 
 func (l *lexer) newToken() t.Token {
 	return t.NewToken(l.handleNewLine(l.TokenBytes(nil))).SetComments(l.comments)
+}
+
+func (l *lexer) addComment(c comment.Comment) {
+	if l.comments == nil {
+		l.comments = &[]comment.Comment{c}
+	} else {
+		*l.comments = append(*l.comments, c)
+	}
 }

@@ -38,8 +38,8 @@ func (n ArrayDimFetch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ArrayDimFetch) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ArrayDimFetch) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

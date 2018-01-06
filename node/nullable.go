@@ -33,8 +33,8 @@ func (n Nullable) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Nullable) SetComments(c []comment.Comment) Node {
-	n.comments = &c
+func (n Nullable) SetComments(c *[]comment.Comment) Node {
+	n.comments = c
 	return n
 }
 

@@ -36,8 +36,8 @@ func (n StmtList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StmtList) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n StmtList) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

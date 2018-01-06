@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
@@ -180,14 +179,4 @@ func NewOptionalListTokensPosition(list []node.Node, t token.Token, endToken tok
 			endToken.EndPos,
 		}
 	}
-}
-
-func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
-	if len(list) == 0 {
-		return nil
-	}
-
-	node := list[0]
-
-	return *node.Comments()
 }

@@ -42,8 +42,8 @@ func (n If) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n If) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n If) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

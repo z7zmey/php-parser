@@ -38,8 +38,8 @@ func (n StaticVar) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StaticVar) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n StaticVar) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

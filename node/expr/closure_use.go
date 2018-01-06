@@ -40,8 +40,8 @@ func (n ClusureUse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ClusureUse) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ClusureUse) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

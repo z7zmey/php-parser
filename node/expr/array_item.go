@@ -42,8 +42,8 @@ func (n ArrayItem) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ArrayItem) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ArrayItem) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

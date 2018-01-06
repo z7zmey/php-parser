@@ -36,8 +36,8 @@ func (n PreInc) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n PreInc) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n PreInc) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

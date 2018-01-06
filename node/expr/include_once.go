@@ -36,8 +36,8 @@ func (n IncludeOnce) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n IncludeOnce) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n IncludeOnce) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

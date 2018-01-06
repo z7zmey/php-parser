@@ -37,8 +37,8 @@ func (n ShiftRight) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ShiftRight) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ShiftRight) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

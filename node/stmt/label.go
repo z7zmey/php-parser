@@ -36,8 +36,8 @@ func (n Label) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Label) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Label) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

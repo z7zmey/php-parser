@@ -14,6 +14,7 @@ import (
     "github.com/z7zmey/php-parser/node/expr/assign_op"
     "github.com/z7zmey/php-parser/node/expr/binary_op"
     "github.com/z7zmey/php-parser/node/expr/cast"
+    "github.com/z7zmey/php-parser/comment"
 )
 
 var rootnode = stmt.NewStmtList([]node.Node{})
@@ -24,6 +25,16 @@ func Parse(src io.Reader, fName string) node.Node {
     rootnode = stmt.NewStmtList([]node.Node{}) //reset
     yyParse(newLexer(src, fName))
     return rootnode
+}
+
+func ListGetFirstNodeComments(list []node.Node) *[]comment.Comment {
+	if len(list) == 0 {
+		return nil
+	}
+
+	node := list[0]
+
+	return node.Comments()
 }
 
 type foreachVariable struct {
@@ -460,7 +471,7 @@ statement:
     |   T_STATIC static_var_list ';'                    { $$ = stmt.NewStatic($2).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $3)) }
     |   T_ECHO echo_expr_list ';'                       { $$ = stmt.NewEcho($2).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $3)) }
     |   T_INLINE_HTML                                   { $$ = stmt.NewInlineHtml($1.Value).SetComments($1.Comments()).SetPosition(NewTokenPosition($1)) }
-    |   expr ';'                                        { $$ = stmt.NewExpression($1).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
+    |   expr ';'                                        { $$ = stmt.NewExpression($1).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
                                                         { $$ = stmt.NewUnset($3).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $6)) }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
@@ -711,7 +722,7 @@ parameter:
                 identifier := node.NewIdentifier($4.Value).SetComments($4.Comments()).SetPosition(NewTokenPosition($4))
                 variable := expr.NewVariable(identifier).SetComments($4.Comments()).SetPosition(NewTokenPosition($4))
                 if $1 != nil {
-                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4))
+                    $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4))
                 } else if $2.value == true {
                     $$ = node.NewParameter($1, variable, nil, $2.value, $3.value).SetComments($2.token.Comments()).SetPosition(NewTokensPosition(*$2.token, $4))
                 } else if $3.value == true {
@@ -725,7 +736,7 @@ parameter:
                 identifier := node.NewIdentifier($4.Value).SetComments($4.Comments()).SetPosition(NewTokenPosition($4))
                 variable := expr.NewVariable(identifier).SetComments($4.Comments()).SetPosition(NewTokenPosition($4))
                 if $1 != nil {
-                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $6))
+                    $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $6))
                 } else if $2.value == true {
                     $$ = node.NewParameter($1, variable, $6, $2.value, $3.value).SetComments($2.token.Comments()).SetPosition(NewTokenNodePosition(*$2.token, $6))
                 } else if $3.value == true {
@@ -768,7 +779,7 @@ non_empty_argument_list:
 ;
 
 argument:
-        expr                                            { $$ = node.NewArgument($1, false).SetComments(*$1.Comments()).SetPosition(NewNodePosition($1)) }
+        expr                                            { $$ = node.NewArgument($1, false).SetComments($1.Comments()).SetPosition(NewNodePosition($1)) }
     |   T_ELLIPSIS expr                                 { $$ = node.NewArgument($2, true).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
 ;
 
@@ -845,7 +856,7 @@ trait_precedence:
         {
             name := name.NewName($3).SetComments(ListGetFirstNodeComments($3)).SetPosition(NewNodeListPosition($3))
             $$ = stmt.NewTraitUsePrecedence($1, name).
-                SetComments(*$1.Comments()).
+                SetComments($1.Comments()).
                 SetPosition(NewNodeNodeListPosition($1, $3))
         }
 ;
@@ -855,26 +866,26 @@ trait_alias:
             {
                 alias := node.NewIdentifier($3.Value).SetComments($3.Comments()).SetPosition(NewTokenPosition($3))
                 $$ = stmt.NewTraitUseAlias($1, nil, alias).
-                    SetComments(*$1.Comments()).
+                    SetComments($1.Comments()).
                     SetPosition(NewNodeTokenPosition($1, $3))
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
                 alias := node.NewIdentifier($3.Value).SetComments($3.Comments()).SetPosition(NewTokenPosition($3))
                 $$ = stmt.NewTraitUseAlias($1, nil, alias).
-                    SetComments(*$1.Comments()).
+                    SetComments($1.Comments()).
                     SetPosition(NewNodeTokenPosition($1, $3))
             }
     |   trait_method_reference T_AS member_modifier identifier
         {
             alias := node.NewIdentifier($4.Value).SetComments($4.Comments()).SetPosition(NewTokenPosition($4))
             $$ = stmt.NewTraitUseAlias($1, $3, alias).
-                SetComments(*$1.Comments()).
+                SetComments($1.Comments()).
                 SetPosition(NewNodeTokenPosition($1, $4))
         }
     |   trait_method_reference T_AS member_modifier
         {
-            $$ = stmt.NewTraitUseAlias($1, $3, nil).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3))
+            $$ = stmt.NewTraitUseAlias($1, $3, nil).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3))
         }
 ;
 
@@ -891,7 +902,7 @@ absolute_trait_method_reference:
     name T_PAAMAYIM_NEKUDOTAYIM identifier
         {
             target := node.NewIdentifier($3.Value).SetComments($3.Comments()).SetPosition(NewTokenPosition($3))
-            $$ = stmt.NewTraitMethodRef($1, target).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
+            $$ = stmt.NewTraitMethodRef($1, target).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
         }
 ;
 
@@ -1017,61 +1028,61 @@ expr_without_variable:
             shortList := expr.NewShortList($2).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $3))
             $$ = assign_op.NewAssign(shortList, $5).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $5))
         }
-    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable '=' '&' expr                           { $$ = assign_op.NewAssignRef($1, $4).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
+    |   variable '=' expr                               { $$ = assign_op.NewAssign($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable '=' '&' expr                           { $$ = assign_op.NewAssignRef($1, $4).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
     |   T_CLONE expr                                    { $$ = expr.NewClone($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
-    |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_POW_EQUAL expr                       { $$ = assign_op.NewPow($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_DIV_EQUAL expr                       { $$ = assign_op.NewDiv($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_CONCAT_EQUAL expr                    { $$ = assign_op.NewConcat($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_MOD_EQUAL expr                       { $$ = assign_op.NewMod($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_AND_EQUAL expr                       { $$ = assign_op.NewBitwiseAnd($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_OR_EQUAL expr                        { $$ = assign_op.NewBitwiseOr($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   variable T_INC                                  { $$ = expr.NewPostInc($1).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
+    |   variable T_PLUS_EQUAL expr                      { $$ = assign_op.NewPlus($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MINUS_EQUAL expr                     { $$ = assign_op.NewMinus($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MUL_EQUAL expr                       { $$ = assign_op.NewMul($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_POW_EQUAL expr                       { $$ = assign_op.NewPow($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_DIV_EQUAL expr                       { $$ = assign_op.NewDiv($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_CONCAT_EQUAL expr                    { $$ = assign_op.NewConcat($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_MOD_EQUAL expr                       { $$ = assign_op.NewMod($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_AND_EQUAL expr                       { $$ = assign_op.NewBitwiseAnd($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_OR_EQUAL expr                        { $$ = assign_op.NewBitwiseOr($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_XOR_EQUAL expr                       { $$ = assign_op.NewBitwiseXor($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_SL_EQUAL expr                        { $$ = assign_op.NewShiftLeft($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_SR_EQUAL expr                        { $$ = assign_op.NewShiftRight($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   variable T_INC                                  { $$ = expr.NewPostInc($1).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
     |   T_INC variable                                  { $$ = expr.NewPreInc($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
-    |   variable T_DEC                                  { $$ = expr.NewPostDec($1).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
+    |   variable T_DEC                                  { $$ = expr.NewPostDec($1).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $2)) }
     |   T_DEC variable                                  { $$ = expr.NewPreDec($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
-    |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_LOGICAL_AND expr                         { $$ = binary_op.NewLogicalAnd($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_LOGICAL_XOR expr                         { $$ = binary_op.NewLogicalXor($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '|' expr                                   { $$ = binary_op.NewBitwiseOr($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '&' expr                                   { $$ = binary_op.NewBitwiseAnd($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '^' expr                                   { $$ = binary_op.NewBitwiseXor($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '.' expr                                   { $$ = binary_op.NewConcat($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '+' expr                                   { $$ = binary_op.NewPlus($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '-' expr                                   { $$ = binary_op.NewMinus($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '*' expr                                   { $$ = binary_op.NewMul($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_POW expr                                 { $$ = binary_op.NewPow($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '/' expr                                   { $$ = binary_op.NewDiv($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_BOOLEAN_OR expr                          { $$ = binary_op.NewBooleanOr($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_BOOLEAN_AND expr                         { $$ = binary_op.NewBooleanAnd($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_OR expr                          { $$ = binary_op.NewLogicalOr($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_AND expr                         { $$ = binary_op.NewLogicalAnd($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_LOGICAL_XOR expr                         { $$ = binary_op.NewLogicalXor($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '|' expr                                   { $$ = binary_op.NewBitwiseOr($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '&' expr                                   { $$ = binary_op.NewBitwiseAnd($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '^' expr                                   { $$ = binary_op.NewBitwiseXor($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '.' expr                                   { $$ = binary_op.NewConcat($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '+' expr                                   { $$ = binary_op.NewPlus($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '-' expr                                   { $$ = binary_op.NewMinus($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '*' expr                                   { $$ = binary_op.NewMul($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_POW expr                                 { $$ = binary_op.NewPow($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '/' expr                                   { $$ = binary_op.NewDiv($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '%' expr                                   { $$ = binary_op.NewMod($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SL expr                                  { $$ = binary_op.NewShiftLeft($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SR expr                                  { $$ = binary_op.NewShiftRight($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
     |   '+' expr %prec T_INC                            { $$ = expr.NewUnaryPlus($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
     |   '-' expr %prec T_INC                            { $$ = expr.NewUnaryMinus($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
     |   '!' expr                                        { $$ = expr.NewBooleanNot($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
     |   '~' expr                                        { $$ = expr.NewBitwiseNot($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
-    |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_IS_NOT_EQUAL expr                        { $$ = binary_op.NewNotEqual($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '<' expr                                   { $$ = binary_op.NewSmaller($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = binary_op.NewSmallerOrEqual($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_IDENTICAL expr                        { $$ = binary_op.NewIdentical($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_NOT_IDENTICAL expr                    { $$ = binary_op.NewNotIdentical($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_EQUAL expr                            { $$ = binary_op.NewEqual($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_NOT_EQUAL expr                        { $$ = binary_op.NewNotEqual($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '<' expr                                   { $$ = binary_op.NewSmaller($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_SMALLER_OR_EQUAL expr                 { $$ = binary_op.NewSmallerOrEqual($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '>' expr                                   { $$ = binary_op.NewGreater($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_IS_GREATER_OR_EQUAL expr                 { $$ = binary_op.NewGreaterOrEqual($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_SPACESHIP expr                           { $$ = binary_op.NewSpaceship($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr T_INSTANCEOF class_name_reference          { $$ = expr.NewInstanceOf($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
     |   '(' expr ')'                                    { $$ = $2; }
     |   new_expr                                        { $$ = $1; }
-    |   expr '?' expr ':' expr                          { $$ = expr.NewTernary($1, $3, $5).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $5)) }
-    |   expr '?' ':' expr                               { $$ = expr.NewTernary($1, nil, $4).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
-    |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr '?' expr ':' expr                          { $$ = expr.NewTernary($1, $3, $5).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $5)) }
+    |   expr '?' ':' expr                               { $$ = expr.NewTernary($1, nil, $4).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
+    |   expr T_COALESCE expr                            { $$ = binary_op.NewCoalesce($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
     |   internal_functions_in_yacc                      { $$ = $1}
     |   T_INT_CAST expr                                 { $$ = cast.NewCastInt($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
     |   T_DOUBLE_CAST expr                              { $$ = cast.NewCastDouble($2).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
@@ -1140,19 +1151,19 @@ lexical_var:
 function_call:
         name argument_list
             {
-                $$ = expr.NewFunctionCall($1, $2.nodes).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $2.endToken))
+                $$ = expr.NewFunctionCall($1, $2.nodes).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $2.endToken))
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken))
+                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken))
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken))
+                $$ = expr.NewStaticCall($1, $3, $4.nodes).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken))
             }
     |   callable_expr argument_list
         {
-            $$ = expr.NewFunctionCall($1, $2.nodes).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $2.endToken))
+            $$ = expr.NewFunctionCall($1, $2.nodes).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $2.endToken))
         }
 ;
 
@@ -1210,16 +1221,16 @@ scalar:
 ;
 
 constant:
-        name                                            { $$ = expr.NewConstFetch($1).SetComments(*$1.Comments()).SetPosition(NewNodePosition($1)) }
+        name                                            { $$ = expr.NewConstFetch($1).SetComments($1.Comments()).SetPosition(NewNodePosition($1)) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
         {
             target := node.NewIdentifier($3.Value).SetComments($3.Comments()).SetPosition(NewTokenPosition($3))
-            $$ = expr.NewClassConstFetch($1, target).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
+            $$ = expr.NewClassConstFetch($1, target).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
         }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
         {
             target := node.NewIdentifier($3.Value).SetComments($3.Comments()).SetPosition(NewTokenPosition($3))
-            $$ = expr.NewClassConstFetch($1, target).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
+            $$ = expr.NewClassConstFetch($1, target).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $3))
         }
 ;
 
@@ -1251,18 +1262,18 @@ callable_expr:
 
 callable_variable:
     simple_variable                                     { $$ = $1; }
-    |   dereferencable '[' optional_expr ']'            { $$ = expr.NewArrayDimFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
-    |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
-    |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   dereferencable '[' optional_expr ']'            { $$ = expr.NewArrayDimFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   constant '[' optional_expr ']'                  { $$ = expr.NewArrayDimFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   dereferencable '{' expr '}'                     { $$ = expr.NewArrayDimFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
-                                                        { $$ = expr.NewMethodCall($1, $3, $4.nodes).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken)) }
+                                                        { $$ = expr.NewMethodCall($1, $3, $4.nodes).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4.endToken)) }
     |   function_call                                   { $$ = $1; }
 ;
 
 variable:
         callable_variable                               { $$ = $1; }
     |   static_member                                   { $$ = $1; }
-    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = expr.NewPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   dereferencable T_OBJECT_OPERATOR property_name  { $$ = expr.NewPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
 ;
 
 simple_variable:
@@ -1274,26 +1285,26 @@ simple_variable:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3))
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3))
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3))
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3))
             }
 ;
 
 new_variable:
         simple_variable                                 { $$ = $1 }
-    |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
-    |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
-    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = expr.NewPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   new_variable '[' optional_expr ']'              { $$ = expr.NewArrayDimFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   new_variable '{' expr '}'                       { $$ = expr.NewArrayDimFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodeTokenPosition($1, $4)) }
+    |   new_variable T_OBJECT_OPERATOR property_name    { $$ = expr.NewPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3))
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3))
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3))
+                $$ = expr.NewStaticPropertyFetch($1, $3).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3))
             }
 ;
 
@@ -1332,16 +1343,16 @@ non_empty_array_pair_list:
 ;
 
 array_pair:
-        expr T_DOUBLE_ARROW expr                        { $$ = expr.NewArrayItem($1, $3, false).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
-    |   expr                                            { $$ = expr.NewArrayItem(nil, $1, false).SetComments(*$1.Comments()).SetPosition(NewNodePosition($1)) }
-    |   expr T_DOUBLE_ARROW '&' variable                { $$ = expr.NewArrayItem($1, $4, true).SetComments(*$1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
+        expr T_DOUBLE_ARROW expr                        { $$ = expr.NewArrayItem($1, $3, false).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $3)) }
+    |   expr                                            { $$ = expr.NewArrayItem(nil, $1, false).SetComments($1.Comments()).SetPosition(NewNodePosition($1)) }
+    |   expr T_DOUBLE_ARROW '&' variable                { $$ = expr.NewArrayItem($1, $4, true).SetComments($1.Comments()).SetPosition(NewNodesPosition($1, $4)) }
     |   '&' variable                                    { $$ = expr.NewArrayItem(nil, $2, true).SetComments($1.Comments()).SetPosition(NewTokenNodePosition($1, $2)) }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
                 list := expr.NewList($5).SetComments($3.Comments()).SetPosition(NewTokensPosition($3, $6))
                 $$ = expr.NewArrayItem($1, list, false).
-                    SetComments(*$1.Comments()).
+                    SetComments($1.Comments()).
                     SetPosition(NewNodeTokenPosition($1, $6))
             }
     |   T_LIST '(' array_pair_list ')'

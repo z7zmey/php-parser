@@ -37,8 +37,8 @@ func (n Concat) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Concat) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Concat) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

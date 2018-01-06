@@ -40,8 +40,8 @@ func (n GroupUse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n GroupUse) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n GroupUse) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

@@ -36,8 +36,8 @@ func (n ShortList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ShortList) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n ShortList) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

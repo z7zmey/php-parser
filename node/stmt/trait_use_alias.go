@@ -40,8 +40,8 @@ func (n TraitUseAlias) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n TraitUseAlias) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n TraitUseAlias) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

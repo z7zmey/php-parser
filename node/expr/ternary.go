@@ -40,8 +40,8 @@ func (n Ternary) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Ternary) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Ternary) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

@@ -37,8 +37,8 @@ func (n Coalesce) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Coalesce) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Coalesce) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

@@ -34,8 +34,8 @@ func (n HaltCompiler) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n HaltCompiler) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n HaltCompiler) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

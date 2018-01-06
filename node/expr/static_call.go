@@ -40,8 +40,8 @@ func (n StaticCall) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StaticCall) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n StaticCall) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

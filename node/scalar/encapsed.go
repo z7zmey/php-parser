@@ -36,8 +36,8 @@ func (n Encapsed) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Encapsed) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Encapsed) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 

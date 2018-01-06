@@ -50,8 +50,8 @@ func (n Class) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Class) SetComments(c []comment.Comment) node.Node {
-	n.comments = &c
+func (n Class) SetComments(c *[]comment.Comment) node.Node {
+	n.comments = c
 	return n
 }
 
