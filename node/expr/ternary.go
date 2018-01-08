@@ -23,29 +23,29 @@ func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Terna
 	}
 }
 
-func (n Ternary) Attributes() map[string]interface{} {
+func (n *Ternary) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Ternary) Position() *node.Position {
+func (n *Ternary) Position() *node.Position {
 	return n.position
 }
 
-func (n Ternary) SetPosition(p *node.Position) node.Node {
+func (n *Ternary) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Ternary) Comments() *[]comment.Comment {
+func (n *Ternary) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Ternary) SetComments(c *[]comment.Comment) node.Node {
+func (n *Ternary) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Ternary) Walk(v node.Visitor) {
+func (n *Ternary) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

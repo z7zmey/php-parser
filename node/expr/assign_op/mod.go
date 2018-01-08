@@ -20,29 +20,29 @@ func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	}
 }
 
-func (n Mod) Attributes() map[string]interface{} {
+func (n *Mod) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Mod) Position() *node.Position {
+func (n *Mod) Position() *node.Position {
 	return n.position
 }
 
-func (n Mod) SetPosition(p *node.Position) node.Node {
+func (n *Mod) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Mod) Comments() *[]comment.Comment {
+func (n *Mod) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Mod) SetComments(c *[]comment.Comment) node.Node {
+func (n *Mod) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Mod) Walk(v node.Visitor) {
+func (n *Mod) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

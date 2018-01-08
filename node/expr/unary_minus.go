@@ -19,29 +19,29 @@ func NewUnaryMinus(Expression node.Node) *UnaryMinus {
 	}
 }
 
-func (n UnaryMinus) Attributes() map[string]interface{} {
+func (n *UnaryMinus) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n UnaryMinus) Position() *node.Position {
+func (n *UnaryMinus) Position() *node.Position {
 	return n.position
 }
 
-func (n UnaryMinus) SetPosition(p *node.Position) node.Node {
+func (n *UnaryMinus) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n UnaryMinus) Comments() *[]comment.Comment {
+func (n *UnaryMinus) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n UnaryMinus) SetComments(c *[]comment.Comment) node.Node {
+func (n *UnaryMinus) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n UnaryMinus) Walk(v node.Visitor) {
+func (n *UnaryMinus) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

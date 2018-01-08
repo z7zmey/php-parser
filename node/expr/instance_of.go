@@ -21,29 +21,29 @@ func NewInstanceOf(Expr node.Node, Class node.Node) *InstanceOf {
 	}
 }
 
-func (n InstanceOf) Attributes() map[string]interface{} {
+func (n *InstanceOf) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n InstanceOf) Position() *node.Position {
+func (n *InstanceOf) Position() *node.Position {
 	return n.position
 }
 
-func (n InstanceOf) SetPosition(p *node.Position) node.Node {
+func (n *InstanceOf) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n InstanceOf) Comments() *[]comment.Comment {
+func (n *InstanceOf) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n InstanceOf) SetComments(c *[]comment.Comment) node.Node {
+func (n *InstanceOf) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n InstanceOf) Walk(v node.Visitor) {
+func (n *InstanceOf) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

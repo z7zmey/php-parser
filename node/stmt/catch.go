@@ -23,29 +23,29 @@ func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	}
 }
 
-func (n Catch) Attributes() map[string]interface{} {
+func (n *Catch) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Catch) Position() *node.Position {
+func (n *Catch) Position() *node.Position {
 	return n.position
 }
 
-func (n Catch) SetPosition(p *node.Position) node.Node {
+func (n *Catch) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Catch) Comments() *[]comment.Comment {
+func (n *Catch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Catch) SetComments(c *[]comment.Comment) node.Node {
+func (n *Catch) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Catch) Walk(v node.Visitor) {
+func (n *Catch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

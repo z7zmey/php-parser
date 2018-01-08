@@ -25,29 +25,29 @@ func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node
 	}
 }
 
-func (n For) Attributes() map[string]interface{} {
+func (n *For) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n For) Position() *node.Position {
+func (n *For) Position() *node.Position {
 	return n.position
 }
 
-func (n For) SetPosition(p *node.Position) node.Node {
+func (n *For) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n For) Comments() *[]comment.Comment {
+func (n *For) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n For) SetComments(c *[]comment.Comment) node.Node {
+func (n *For) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n For) Walk(v node.Visitor) {
+func (n *For) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

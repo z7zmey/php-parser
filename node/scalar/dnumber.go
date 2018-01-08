@@ -19,31 +19,31 @@ func NewDnumber(Value string) *Dnumber {
 	}
 }
 
-func (n Dnumber) Attributes() map[string]interface{} {
+func (n *Dnumber) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n Dnumber) Position() *node.Position {
+func (n *Dnumber) Position() *node.Position {
 	return n.position
 }
 
-func (n Dnumber) SetPosition(p *node.Position) node.Node {
+func (n *Dnumber) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Dnumber) Comments() *[]comment.Comment {
+func (n *Dnumber) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Dnumber) SetComments(c *[]comment.Comment) node.Node {
+func (n *Dnumber) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Dnumber) Walk(v node.Visitor) {
+func (n *Dnumber) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

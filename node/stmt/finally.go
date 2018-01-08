@@ -19,29 +19,29 @@ func NewFinally(Stmts []node.Node) *Finally {
 	}
 }
 
-func (n Finally) Attributes() map[string]interface{} {
+func (n *Finally) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Finally) Position() *node.Position {
+func (n *Finally) Position() *node.Position {
 	return n.position
 }
 
-func (n Finally) SetPosition(p *node.Position) node.Node {
+func (n *Finally) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Finally) Comments() *[]comment.Comment {
+func (n *Finally) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Finally) SetComments(c *[]comment.Comment) node.Node {
+func (n *Finally) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Finally) Walk(v node.Visitor) {
+func (n *Finally) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

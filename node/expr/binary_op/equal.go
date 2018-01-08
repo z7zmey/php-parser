@@ -20,29 +20,29 @@ func NewEqual(Variable node.Node, Expression node.Node) *Equal {
 	}
 }
 
-func (n Equal) Attributes() map[string]interface{} {
+func (n *Equal) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Equal) Position() *node.Position {
+func (n *Equal) Position() *node.Position {
 	return n.position
 }
 
-func (n Equal) SetPosition(p *node.Position) node.Node {
+func (n *Equal) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Equal) Comments() *[]comment.Comment {
+func (n *Equal) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Equal) SetComments(c *[]comment.Comment) node.Node {
+func (n *Equal) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Equal) Walk(v node.Visitor) {
+func (n *Equal) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

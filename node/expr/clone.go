@@ -19,29 +19,29 @@ func NewClone(Expression node.Node) *Clone {
 	}
 }
 
-func (n Clone) Attributes() map[string]interface{} {
+func (n *Clone) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Clone) Position() *node.Position {
+func (n *Clone) Position() *node.Position {
 	return n.position
 }
 
-func (n Clone) SetPosition(p *node.Position) node.Node {
+func (n *Clone) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Clone) Comments() *[]comment.Comment {
+func (n *Clone) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Clone) SetComments(c *[]comment.Comment) node.Node {
+func (n *Clone) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Clone) Walk(v node.Visitor) {
+func (n *Clone) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -21,29 +21,29 @@ func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	}
 }
 
-func (n ElseIf) Attributes() map[string]interface{} {
+func (n *ElseIf) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ElseIf) Position() *node.Position {
+func (n *ElseIf) Position() *node.Position {
 	return n.position
 }
 
-func (n ElseIf) SetPosition(p *node.Position) node.Node {
+func (n *ElseIf) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ElseIf) Comments() *[]comment.Comment {
+func (n *ElseIf) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ElseIf) SetComments(c *[]comment.Comment) node.Node {
+func (n *ElseIf) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ElseIf) Walk(v node.Visitor) {
+func (n *ElseIf) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

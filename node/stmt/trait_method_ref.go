@@ -21,29 +21,29 @@ func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	}
 }
 
-func (n TraitMethodRef) Attributes() map[string]interface{} {
+func (n *TraitMethodRef) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n TraitMethodRef) Position() *node.Position {
+func (n *TraitMethodRef) Position() *node.Position {
 	return n.position
 }
 
-func (n TraitMethodRef) SetPosition(p *node.Position) node.Node {
+func (n *TraitMethodRef) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n TraitMethodRef) Comments() *[]comment.Comment {
+func (n *TraitMethodRef) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n TraitMethodRef) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitMethodRef) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n TraitMethodRef) Walk(v node.Visitor) {
+func (n *TraitMethodRef) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

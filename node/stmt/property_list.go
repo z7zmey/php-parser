@@ -21,29 +21,29 @@ func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyLis
 	}
 }
 
-func (n PropertyList) Attributes() map[string]interface{} {
+func (n *PropertyList) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n PropertyList) Position() *node.Position {
+func (n *PropertyList) Position() *node.Position {
 	return n.position
 }
 
-func (n PropertyList) SetPosition(p *node.Position) node.Node {
+func (n *PropertyList) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n PropertyList) Comments() *[]comment.Comment {
+func (n *PropertyList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n PropertyList) SetComments(c *[]comment.Comment) node.Node {
+func (n *PropertyList) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n PropertyList) Walk(v node.Visitor) {
+func (n *PropertyList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewGlobal(Vars []node.Node) *Global {
 	}
 }
 
-func (n Global) Attributes() map[string]interface{} {
+func (n *Global) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Global) Position() *node.Position {
+func (n *Global) Position() *node.Position {
 	return n.position
 }
 
-func (n Global) SetPosition(p *node.Position) node.Node {
+func (n *Global) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Global) Comments() *[]comment.Comment {
+func (n *Global) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Global) SetComments(c *[]comment.Comment) node.Node {
+func (n *Global) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Global) Walk(v node.Visitor) {
+func (n *Global) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

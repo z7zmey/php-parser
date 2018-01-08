@@ -19,29 +19,29 @@ func NewInclude(Expression node.Node) *Include {
 	}
 }
 
-func (n Include) Attributes() map[string]interface{} {
+func (n *Include) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Include) Position() *node.Position {
+func (n *Include) Position() *node.Position {
 	return n.position
 }
 
-func (n Include) SetPosition(p *node.Position) node.Node {
+func (n *Include) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Include) Comments() *[]comment.Comment {
+func (n *Include) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Include) SetComments(c *[]comment.Comment) node.Node {
+func (n *Include) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Include) Walk(v node.Visitor) {
+func (n *Include) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

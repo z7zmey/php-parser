@@ -19,31 +19,31 @@ func NewString(Value string) *String {
 	}
 }
 
-func (n String) Attributes() map[string]interface{} {
+func (n *String) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n String) Position() *node.Position {
+func (n *String) Position() *node.Position {
 	return n.position
 }
 
-func (n String) SetPosition(p *node.Position) node.Node {
+func (n *String) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n String) Comments() *[]comment.Comment {
+func (n *String) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n String) SetComments(c *[]comment.Comment) node.Node {
+func (n *String) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n String) Walk(v node.Visitor) {
+func (n *String) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

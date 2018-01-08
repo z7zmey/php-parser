@@ -19,31 +19,31 @@ func NewEncapsedStringPart(Value string) *EncapsedStringPart {
 	}
 }
 
-func (n EncapsedStringPart) Attributes() map[string]interface{} {
+func (n *EncapsedStringPart) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n EncapsedStringPart) Position() *node.Position {
+func (n *EncapsedStringPart) Position() *node.Position {
 	return n.position
 }
 
-func (n EncapsedStringPart) SetPosition(p *node.Position) node.Node {
+func (n *EncapsedStringPart) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n EncapsedStringPart) Comments() *[]comment.Comment {
+func (n *EncapsedStringPart) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n EncapsedStringPart) SetComments(c *[]comment.Comment) node.Node {
+func (n *EncapsedStringPart) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n EncapsedStringPart) Walk(v node.Visitor) {
+func (n *EncapsedStringPart) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

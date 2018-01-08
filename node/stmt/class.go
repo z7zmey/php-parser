@@ -31,31 +31,31 @@ func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Exte
 	}
 }
 
-func (n Class) Attributes() map[string]interface{} {
+func (n *Class) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
-func (n Class) Position() *node.Position {
+func (n *Class) Position() *node.Position {
 	return n.position
 }
 
-func (n Class) SetPosition(p *node.Position) node.Node {
+func (n *Class) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Class) Comments() *[]comment.Comment {
+func (n *Class) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Class) SetComments(c *[]comment.Comment) node.Node {
+func (n *Class) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Class) Walk(v node.Visitor) {
+func (n *Class) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

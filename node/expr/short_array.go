@@ -19,29 +19,29 @@ func NewShortArray(Items []node.Node) *ShortArray {
 	}
 }
 
-func (n ShortArray) Attributes() map[string]interface{} {
+func (n *ShortArray) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ShortArray) Position() *node.Position {
+func (n *ShortArray) Position() *node.Position {
 	return n.position
 }
 
-func (n ShortArray) SetPosition(p *node.Position) node.Node {
+func (n *ShortArray) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ShortArray) Comments() *[]comment.Comment {
+func (n *ShortArray) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ShortArray) SetComments(c *[]comment.Comment) node.Node {
+func (n *ShortArray) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ShortArray) Walk(v node.Visitor) {
+func (n *ShortArray) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewGreaterOrEqual(Variable node.Node, Expression node.Node) *GreaterOrEqual
 	}
 }
 
-func (n GreaterOrEqual) Attributes() map[string]interface{} {
+func (n *GreaterOrEqual) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n GreaterOrEqual) Position() *node.Position {
+func (n *GreaterOrEqual) Position() *node.Position {
 	return n.position
 }
 
-func (n GreaterOrEqual) SetPosition(p *node.Position) node.Node {
+func (n *GreaterOrEqual) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n GreaterOrEqual) Comments() *[]comment.Comment {
+func (n *GreaterOrEqual) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n GreaterOrEqual) SetComments(c *[]comment.Comment) node.Node {
+func (n *GreaterOrEqual) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n GreaterOrEqual) Walk(v node.Visitor) {
+func (n *GreaterOrEqual) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

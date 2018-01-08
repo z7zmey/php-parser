@@ -23,31 +23,31 @@ func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Tra
 	}
 }
 
-func (n Trait) Attributes() map[string]interface{} {
+func (n *Trait) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
-func (n Trait) Position() *node.Position {
+func (n *Trait) Position() *node.Position {
 	return n.position
 }
 
-func (n Trait) SetPosition(p *node.Position) node.Node {
+func (n *Trait) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Trait) Comments() *[]comment.Comment {
+func (n *Trait) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Trait) SetComments(c *[]comment.Comment) node.Node {
+func (n *Trait) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Trait) Walk(v node.Visitor) {
+func (n *Trait) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

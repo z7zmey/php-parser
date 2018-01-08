@@ -19,29 +19,29 @@ func NewEval(Expression node.Node) *Eval {
 	}
 }
 
-func (n Eval) Attributes() map[string]interface{} {
+func (n *Eval) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Eval) Position() *node.Position {
+func (n *Eval) Position() *node.Position {
 	return n.position
 }
 
-func (n Eval) SetPosition(p *node.Position) node.Node {
+func (n *Eval) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Eval) Comments() *[]comment.Comment {
+func (n *Eval) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Eval) SetComments(c *[]comment.Comment) node.Node {
+func (n *Eval) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Eval) Walk(v node.Visitor) {
+func (n *Eval) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

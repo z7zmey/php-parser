@@ -19,29 +19,29 @@ func NewBreak(Expr node.Node) *Break {
 	}
 }
 
-func (n Break) Attributes() map[string]interface{} {
+func (n *Break) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Break) Position() *node.Position {
+func (n *Break) Position() *node.Position {
 	return n.position
 }
 
-func (n Break) SetPosition(p *node.Position) node.Node {
+func (n *Break) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Break) Comments() *[]comment.Comment {
+func (n *Break) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Break) SetComments(c *[]comment.Comment) node.Node {
+func (n *Break) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Break) Walk(v node.Visitor) {
+func (n *Break) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

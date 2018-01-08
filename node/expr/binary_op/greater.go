@@ -20,29 +20,29 @@ func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	}
 }
 
-func (n Greater) Attributes() map[string]interface{} {
+func (n *Greater) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Greater) Position() *node.Position {
+func (n *Greater) Position() *node.Position {
 	return n.position
 }
 
-func (n Greater) SetPosition(p *node.Position) node.Node {
+func (n *Greater) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Greater) Comments() *[]comment.Comment {
+func (n *Greater) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Greater) SetComments(c *[]comment.Comment) node.Node {
+func (n *Greater) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Greater) Walk(v node.Visitor) {
+func (n *Greater) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

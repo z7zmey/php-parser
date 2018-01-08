@@ -23,29 +23,29 @@ func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) *Trait
 	}
 }
 
-func (n TraitUseAlias) Attributes() map[string]interface{} {
+func (n *TraitUseAlias) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n TraitUseAlias) Position() *node.Position {
+func (n *TraitUseAlias) Position() *node.Position {
 	return n.position
 }
 
-func (n TraitUseAlias) SetPosition(p *node.Position) node.Node {
+func (n *TraitUseAlias) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n TraitUseAlias) Comments() *[]comment.Comment {
+func (n *TraitUseAlias) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n TraitUseAlias) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUseAlias) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n TraitUseAlias) Walk(v node.Visitor) {
+func (n *TraitUseAlias) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

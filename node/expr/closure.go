@@ -31,7 +31,7 @@ func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmt
 	}
 }
 
-func (n Closure) Attributes() map[string]interface{} {
+func (n *Closure) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ReturnsRef":    n.ReturnsRef,
 		"Static":        n.Static,
@@ -39,25 +39,25 @@ func (n Closure) Attributes() map[string]interface{} {
 	}
 }
 
-func (n Closure) Position() *node.Position {
+func (n *Closure) Position() *node.Position {
 	return n.position
 }
 
-func (n Closure) SetPosition(p *node.Position) node.Node {
+func (n *Closure) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Closure) Comments() *[]comment.Comment {
+func (n *Closure) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Closure) SetComments(c *[]comment.Comment) node.Node {
+func (n *Closure) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Closure) Walk(v node.Visitor) {
+func (n *Closure) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

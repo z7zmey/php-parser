@@ -19,29 +19,29 @@ func NewContinue(Expr node.Node) *Continue {
 	}
 }
 
-func (n Continue) Attributes() map[string]interface{} {
+func (n *Continue) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Continue) Position() *node.Position {
+func (n *Continue) Position() *node.Position {
 	return n.position
 }
 
-func (n Continue) SetPosition(p *node.Position) node.Node {
+func (n *Continue) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Continue) Comments() *[]comment.Comment {
+func (n *Continue) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Continue) SetComments(c *[]comment.Comment) node.Node {
+func (n *Continue) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Continue) Walk(v node.Visitor) {
+func (n *Continue) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

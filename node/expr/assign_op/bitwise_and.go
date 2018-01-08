@@ -20,29 +20,29 @@ func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	}
 }
 
-func (n BitwiseAnd) Attributes() map[string]interface{} {
+func (n *BitwiseAnd) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BitwiseAnd) Position() *node.Position {
+func (n *BitwiseAnd) Position() *node.Position {
 	return n.position
 }
 
-func (n BitwiseAnd) SetPosition(p *node.Position) node.Node {
+func (n *BitwiseAnd) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BitwiseAnd) Comments() *[]comment.Comment {
+func (n *BitwiseAnd) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BitwiseAnd) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseAnd) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BitwiseAnd) Walk(v node.Visitor) {
+func (n *BitwiseAnd) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

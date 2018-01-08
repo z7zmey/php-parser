@@ -19,29 +19,29 @@ func NewGoto(Label node.Node) *Goto {
 	}
 }
 
-func (n Goto) Attributes() map[string]interface{} {
+func (n *Goto) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Goto) Position() *node.Position {
+func (n *Goto) Position() *node.Position {
 	return n.position
 }
 
-func (n Goto) SetPosition(p *node.Position) node.Node {
+func (n *Goto) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Goto) Comments() *[]comment.Comment {
+func (n *Goto) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Goto) SetComments(c *[]comment.Comment) node.Node {
+func (n *Goto) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Goto) Walk(v node.Visitor) {
+func (n *Goto) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

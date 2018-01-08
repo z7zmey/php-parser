@@ -19,29 +19,29 @@ func NewCastObject(Expr node.Node) *CastObject {
 	}
 }
 
-func (n CastObject) Attributes() map[string]interface{} {
+func (n *CastObject) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n CastObject) Position() *node.Position {
+func (n *CastObject) Position() *node.Position {
 	return n.position
 }
 
-func (n CastObject) SetPosition(p *node.Position) node.Node {
+func (n *CastObject) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n CastObject) Comments() *[]comment.Comment {
+func (n *CastObject) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n CastObject) SetComments(c *[]comment.Comment) node.Node {
+func (n *CastObject) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n CastObject) Walk(v node.Visitor) {
+func (n *CastObject) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

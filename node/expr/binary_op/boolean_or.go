@@ -20,29 +20,29 @@ func NewBooleanOr(Variable node.Node, Expression node.Node) *BooleanOr {
 	}
 }
 
-func (n BooleanOr) Attributes() map[string]interface{} {
+func (n *BooleanOr) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BooleanOr) Position() *node.Position {
+func (n *BooleanOr) Position() *node.Position {
 	return n.position
 }
 
-func (n BooleanOr) SetPosition(p *node.Position) node.Node {
+func (n *BooleanOr) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BooleanOr) Comments() *[]comment.Comment {
+func (n *BooleanOr) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BooleanOr) SetComments(c *[]comment.Comment) node.Node {
+func (n *BooleanOr) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BooleanOr) Walk(v node.Visitor) {
+func (n *BooleanOr) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

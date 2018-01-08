@@ -19,29 +19,29 @@ func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	}
 }
 
-func (n ErrorSuppress) Attributes() map[string]interface{} {
+func (n *ErrorSuppress) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ErrorSuppress) Position() *node.Position {
+func (n *ErrorSuppress) Position() *node.Position {
 	return n.position
 }
 
-func (n ErrorSuppress) SetPosition(p *node.Position) node.Node {
+func (n *ErrorSuppress) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ErrorSuppress) Comments() *[]comment.Comment {
+func (n *ErrorSuppress) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ErrorSuppress) SetComments(c *[]comment.Comment) node.Node {
+func (n *ErrorSuppress) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ErrorSuppress) Walk(v node.Visitor) {
+func (n *ErrorSuppress) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

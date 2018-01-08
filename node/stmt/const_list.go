@@ -19,29 +19,29 @@ func NewConstList(Consts []node.Node) *ConstList {
 	}
 }
 
-func (n ConstList) Attributes() map[string]interface{} {
+func (n *ConstList) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ConstList) Position() *node.Position {
+func (n *ConstList) Position() *node.Position {
 	return n.position
 }
 
-func (n ConstList) SetPosition(p *node.Position) node.Node {
+func (n *ConstList) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ConstList) Comments() *[]comment.Comment {
+func (n *ConstList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ConstList) SetComments(c *[]comment.Comment) node.Node {
+func (n *ConstList) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ConstList) Walk(v node.Visitor) {
+func (n *ConstList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

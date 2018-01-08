@@ -19,29 +19,29 @@ func NewShortList(Items []node.Node) *ShortList {
 	}
 }
 
-func (n ShortList) Attributes() map[string]interface{} {
+func (n *ShortList) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ShortList) Position() *node.Position {
+func (n *ShortList) Position() *node.Position {
 	return n.position
 }
 
-func (n ShortList) SetPosition(p *node.Position) node.Node {
+func (n *ShortList) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ShortList) Comments() *[]comment.Comment {
+func (n *ShortList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ShortList) SetComments(c *[]comment.Comment) node.Node {
+func (n *ShortList) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ShortList) Walk(v node.Visitor) {
+func (n *ShortList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

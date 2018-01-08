@@ -21,29 +21,29 @@ func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	}
 }
 
-func (n Do) Attributes() map[string]interface{} {
+func (n *Do) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Do) Position() *node.Position {
+func (n *Do) Position() *node.Position {
 	return n.position
 }
 
-func (n Do) SetPosition(p *node.Position) node.Node {
+func (n *Do) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Do) Comments() *[]comment.Comment {
+func (n *Do) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Do) SetComments(c *[]comment.Comment) node.Node {
+func (n *Do) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Do) Walk(v node.Visitor) {
+func (n *Do) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

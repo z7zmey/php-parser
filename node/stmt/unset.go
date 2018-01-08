@@ -19,29 +19,29 @@ func NewUnset(Vars []node.Node) *Unset {
 	}
 }
 
-func (n Unset) Attributes() map[string]interface{} {
+func (n *Unset) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Unset) Position() *node.Position {
+func (n *Unset) Position() *node.Position {
 	return n.position
 }
 
-func (n Unset) SetPosition(p *node.Position) node.Node {
+func (n *Unset) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Unset) Comments() *[]comment.Comment {
+func (n *Unset) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Unset) SetComments(c *[]comment.Comment) node.Node {
+func (n *Unset) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Unset) Walk(v node.Visitor) {
+func (n *Unset) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

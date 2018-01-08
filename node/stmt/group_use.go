@@ -23,34 +23,34 @@ func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) *Grou
 	}
 }
 
-func (n GroupUse) Attributes() map[string]interface{} {
+func (n *GroupUse) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n GroupUse) Position() *node.Position {
+func (n *GroupUse) Position() *node.Position {
 	return n.position
 }
 
-func (n GroupUse) SetPosition(p *node.Position) node.Node {
+func (n *GroupUse) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n GroupUse) Comments() *[]comment.Comment {
+func (n *GroupUse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n GroupUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *GroupUse) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n GroupUse) SetUseType(UseType node.Node) node.Node {
+func (n *GroupUse) SetUseType(UseType node.Node) node.Node {
 	n.UseType = UseType
 	return n
 }
 
-func (n GroupUse) Walk(v node.Visitor) {
+func (n *GroupUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewBooleanNot(Expression node.Node) *BooleanNot {
 	}
 }
 
-func (n BooleanNot) Attributes() map[string]interface{} {
+func (n *BooleanNot) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BooleanNot) Position() *node.Position {
+func (n *BooleanNot) Position() *node.Position {
 	return n.position
 }
 
-func (n BooleanNot) SetPosition(p *node.Position) node.Node {
+func (n *BooleanNot) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BooleanNot) Comments() *[]comment.Comment {
+func (n *BooleanNot) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BooleanNot) SetComments(c *[]comment.Comment) node.Node {
+func (n *BooleanNot) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BooleanNot) Walk(v node.Visitor) {
+func (n *BooleanNot) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

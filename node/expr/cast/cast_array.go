@@ -19,29 +19,29 @@ func NewCastArray(Expr node.Node) *CastArray {
 	}
 }
 
-func (n CastArray) Attributes() map[string]interface{} {
+func (n *CastArray) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n CastArray) Position() *node.Position {
+func (n *CastArray) Position() *node.Position {
 	return n.position
 }
 
-func (n CastArray) SetPosition(p *node.Position) node.Node {
+func (n *CastArray) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n CastArray) Comments() *[]comment.Comment {
+func (n *CastArray) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n CastArray) SetComments(c *[]comment.Comment) node.Node {
+func (n *CastArray) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n CastArray) Walk(v node.Visitor) {
+func (n *CastArray) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

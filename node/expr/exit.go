@@ -21,31 +21,31 @@ func NewExit(Expr node.Node, IsDie bool) *Exit {
 	}
 }
 
-func (n Exit) Attributes() map[string]interface{} {
+func (n *Exit) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"IsDie": n.IsDie,
 	}
 }
 
-func (n Exit) Position() *node.Position {
+func (n *Exit) Position() *node.Position {
 	return n.position
 }
 
-func (n Exit) SetPosition(p *node.Position) node.Node {
+func (n *Exit) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Exit) Comments() *[]comment.Comment {
+func (n *Exit) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Exit) SetComments(c *[]comment.Comment) node.Node {
+func (n *Exit) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Exit) Walk(v node.Visitor) {
+func (n *Exit) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

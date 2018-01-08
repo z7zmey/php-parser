@@ -19,29 +19,29 @@ func NewConstFetch(Constant node.Node) *ConstFetch {
 	}
 }
 
-func (n ConstFetch) Attributes() map[string]interface{} {
+func (n *ConstFetch) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ConstFetch) Position() *node.Position {
+func (n *ConstFetch) Position() *node.Position {
 	return n.position
 }
 
-func (n ConstFetch) SetPosition(p *node.Position) node.Node {
+func (n *ConstFetch) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ConstFetch) Comments() *[]comment.Comment {
+func (n *ConstFetch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ConstFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *ConstFetch) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ConstFetch) Walk(v node.Visitor) {
+func (n *ConstFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

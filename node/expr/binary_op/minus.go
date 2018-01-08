@@ -20,29 +20,29 @@ func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 	}
 }
 
-func (n Minus) Attributes() map[string]interface{} {
+func (n *Minus) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Minus) Position() *node.Position {
+func (n *Minus) Position() *node.Position {
 	return n.position
 }
 
-func (n Minus) SetPosition(p *node.Position) node.Node {
+func (n *Minus) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Minus) Comments() *[]comment.Comment {
+func (n *Minus) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Minus) SetComments(c *[]comment.Comment) node.Node {
+func (n *Minus) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Minus) Walk(v node.Visitor) {
+func (n *Minus) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewDefault(Stmts []node.Node) *Default {
 	}
 }
 
-func (n Default) Attributes() map[string]interface{} {
+func (n *Default) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Default) Position() *node.Position {
+func (n *Default) Position() *node.Position {
 	return n.position
 }
 
-func (n Default) SetPosition(p *node.Position) node.Node {
+func (n *Default) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Default) Comments() *[]comment.Comment {
+func (n *Default) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Default) SetComments(c *[]comment.Comment) node.Node {
+func (n *Default) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Default) Walk(v node.Visitor) {
+func (n *Default) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

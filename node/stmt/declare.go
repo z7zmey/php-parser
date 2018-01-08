@@ -21,29 +21,29 @@ func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	}
 }
 
-func (n Declare) Attributes() map[string]interface{} {
+func (n *Declare) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Declare) Position() *node.Position {
+func (n *Declare) Position() *node.Position {
 	return n.position
 }
 
-func (n Declare) SetPosition(p *node.Position) node.Node {
+func (n *Declare) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Declare) Comments() *[]comment.Comment {
+func (n *Declare) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Declare) SetComments(c *[]comment.Comment) node.Node {
+func (n *Declare) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Declare) Walk(v node.Visitor) {
+func (n *Declare) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	}
 }
 
-func (n LogicalAnd) Attributes() map[string]interface{} {
+func (n *LogicalAnd) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n LogicalAnd) Position() *node.Position {
+func (n *LogicalAnd) Position() *node.Position {
 	return n.position
 }
 
-func (n LogicalAnd) SetPosition(p *node.Position) node.Node {
+func (n *LogicalAnd) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n LogicalAnd) Comments() *[]comment.Comment {
+func (n *LogicalAnd) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n LogicalAnd) SetComments(c *[]comment.Comment) node.Node {
+func (n *LogicalAnd) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n LogicalAnd) Walk(v node.Visitor) {
+func (n *LogicalAnd) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

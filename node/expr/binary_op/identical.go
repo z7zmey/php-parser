@@ -20,29 +20,29 @@ func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	}
 }
 
-func (n Identical) Attributes() map[string]interface{} {
+func (n *Identical) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Identical) Position() *node.Position {
+func (n *Identical) Position() *node.Position {
 	return n.position
 }
 
-func (n Identical) SetPosition(p *node.Position) node.Node {
+func (n *Identical) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Identical) Comments() *[]comment.Comment {
+func (n *Identical) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Identical) SetComments(c *[]comment.Comment) node.Node {
+func (n *Identical) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Identical) Walk(v node.Visitor) {
+func (n *Identical) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	}
 }
 
-func (n Spaceship) Attributes() map[string]interface{} {
+func (n *Spaceship) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Spaceship) Position() *node.Position {
+func (n *Spaceship) Position() *node.Position {
 	return n.position
 }
 
-func (n Spaceship) SetPosition(p *node.Position) node.Node {
+func (n *Spaceship) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Spaceship) Comments() *[]comment.Comment {
+func (n *Spaceship) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Spaceship) SetComments(c *[]comment.Comment) node.Node {
+func (n *Spaceship) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Spaceship) Walk(v node.Visitor) {
+func (n *Spaceship) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

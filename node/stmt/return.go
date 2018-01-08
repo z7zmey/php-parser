@@ -19,29 +19,29 @@ func NewReturn(Expr node.Node) *Return {
 	}
 }
 
-func (n Return) Attributes() map[string]interface{} {
+func (n *Return) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Return) Position() *node.Position {
+func (n *Return) Position() *node.Position {
 	return n.position
 }
 
-func (n Return) SetPosition(p *node.Position) node.Node {
+func (n *Return) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Return) Comments() *[]comment.Comment {
+func (n *Return) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Return) SetComments(c *[]comment.Comment) node.Node {
+func (n *Return) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Return) Walk(v node.Visitor) {
+func (n *Return) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewEcho(Exprs []node.Node) *Echo {
 	}
 }
 
-func (n Echo) Attributes() map[string]interface{} {
+func (n *Echo) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Echo) Position() *node.Position {
+func (n *Echo) Position() *node.Position {
 	return n.position
 }
 
-func (n Echo) SetPosition(p *node.Position) node.Node {
+func (n *Echo) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Echo) Comments() *[]comment.Comment {
+func (n *Echo) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Echo) SetComments(c *[]comment.Comment) node.Node {
+func (n *Echo) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Echo) Walk(v node.Visitor) {
+func (n *Echo) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

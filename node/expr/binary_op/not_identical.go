@@ -20,29 +20,29 @@ func NewNotIdentical(Variable node.Node, Expression node.Node) *NotIdentical {
 	}
 }
 
-func (n NotIdentical) Attributes() map[string]interface{} {
+func (n *NotIdentical) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n NotIdentical) Position() *node.Position {
+func (n *NotIdentical) Position() *node.Position {
 	return n.position
 }
 
-func (n NotIdentical) SetPosition(p *node.Position) node.Node {
+func (n *NotIdentical) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n NotIdentical) Comments() *[]comment.Comment {
+func (n *NotIdentical) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n NotIdentical) SetComments(c *[]comment.Comment) node.Node {
+func (n *NotIdentical) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n NotIdentical) Walk(v node.Visitor) {
+func (n *NotIdentical) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewIsset(Variables []node.Node) *Isset {
 	}
 }
 
-func (n Isset) Attributes() map[string]interface{} {
+func (n *Isset) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Isset) Position() *node.Position {
+func (n *Isset) Position() *node.Position {
 	return n.position
 }
 
-func (n Isset) SetPosition(p *node.Position) node.Node {
+func (n *Isset) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Isset) Comments() *[]comment.Comment {
+func (n *Isset) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Isset) SetComments(c *[]comment.Comment) node.Node {
+func (n *Isset) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Isset) Walk(v node.Visitor) {
+func (n *Isset) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

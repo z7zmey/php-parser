@@ -22,31 +22,31 @@ func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Prop
 		Expr,
 	}
 }
-func (n Property) Attributes() map[string]interface{} {
+func (n *Property) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
-func (n Property) Position() *node.Position {
+func (n *Property) Position() *node.Position {
 	return n.position
 }
 
-func (n Property) SetPosition(p *node.Position) node.Node {
+func (n *Property) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Property) Comments() *[]comment.Comment {
+func (n *Property) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Property) SetComments(c *[]comment.Comment) node.Node {
+func (n *Property) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Property) Walk(v node.Visitor) {
+func (n *Property) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -25,29 +25,29 @@ func NewIf(Cond node.Node, Stmt node.Node) *If {
 	}
 }
 
-func (n If) Attributes() map[string]interface{} {
+func (n *If) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n If) Position() *node.Position {
+func (n *If) Position() *node.Position {
 	return n.position
 }
 
-func (n If) SetPosition(p *node.Position) node.Node {
+func (n *If) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n If) Comments() *[]comment.Comment {
+func (n *If) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n If) SetComments(c *[]comment.Comment) node.Node {
+func (n *If) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n If) AddElseIf(ElseIf node.Node) node.Node {
+func (n *If) AddElseIf(ElseIf node.Node) node.Node {
 	if n.ElseIf == nil {
 		n.ElseIf = make([]node.Node, 0)
 	}
@@ -57,13 +57,13 @@ func (n If) AddElseIf(ElseIf node.Node) node.Node {
 	return n
 }
 
-func (n If) SetElse(_else node.Node) node.Node {
+func (n *If) SetElse(_else node.Node) node.Node {
 	n._else = _else
 
 	return n
 }
 
-func (n If) Walk(v node.Visitor) {
+func (n *If) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

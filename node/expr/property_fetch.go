@@ -21,29 +21,29 @@ func NewPropertyFetch(Variable node.Node, Property node.Node) *PropertyFetch {
 	}
 }
 
-func (n PropertyFetch) Attributes() map[string]interface{} {
+func (n *PropertyFetch) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n PropertyFetch) Position() *node.Position {
+func (n *PropertyFetch) Position() *node.Position {
 	return n.position
 }
 
-func (n PropertyFetch) SetPosition(p *node.Position) node.Node {
+func (n *PropertyFetch) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n PropertyFetch) Comments() *[]comment.Comment {
+func (n *PropertyFetch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n PropertyFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *PropertyFetch) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n PropertyFetch) Walk(v node.Visitor) {
+func (n *PropertyFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

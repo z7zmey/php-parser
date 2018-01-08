@@ -21,31 +21,31 @@ func NewClusureUse(Variable node.Node, ByRef bool) *ClusureUse {
 	}
 }
 
-func (n ClusureUse) Attributes() map[string]interface{} {
+func (n *ClusureUse) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
 }
 
-func (n ClusureUse) Position() *node.Position {
+func (n *ClusureUse) Position() *node.Position {
 	return n.position
 }
 
-func (n ClusureUse) SetPosition(p *node.Position) node.Node {
+func (n *ClusureUse) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ClusureUse) Comments() *[]comment.Comment {
+func (n *ClusureUse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ClusureUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClusureUse) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ClusureUse) Walk(v node.Visitor) {
+func (n *ClusureUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

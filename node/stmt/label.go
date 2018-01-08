@@ -19,29 +19,29 @@ func NewLabel(LabelName node.Node) *Label {
 	}
 }
 
-func (n Label) Attributes() map[string]interface{} {
+func (n *Label) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Label) Position() *node.Position {
+func (n *Label) Position() *node.Position {
 	return n.position
 }
 
-func (n Label) SetPosition(p *node.Position) node.Node {
+func (n *Label) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Label) Comments() *[]comment.Comment {
+func (n *Label) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Label) SetComments(c *[]comment.Comment) node.Node {
+func (n *Label) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Label) Walk(v node.Visitor) {
+func (n *Label) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

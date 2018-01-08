@@ -23,34 +23,34 @@ func NewUse(UseType node.Node, use node.Node, Alias node.Node) *Use {
 	}
 }
 
-func (n Use) Attributes() map[string]interface{} {
+func (n *Use) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Use) Position() *node.Position {
+func (n *Use) Position() *node.Position {
 	return n.position
 }
 
-func (n Use) SetPosition(p *node.Position) node.Node {
+func (n *Use) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Use) Comments() *[]comment.Comment {
+func (n *Use) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Use) SetComments(c *[]comment.Comment) node.Node {
+func (n *Use) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Use) SetUseType(UseType node.Node) node.Node {
+func (n *Use) SetUseType(UseType node.Node) node.Node {
 	n.UseType = UseType
 	return n
 }
 
-func (n Use) Walk(v node.Visitor) {
+func (n *Use) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

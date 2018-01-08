@@ -19,29 +19,29 @@ func NewPreInc(Variable node.Node) *PreInc {
 	}
 }
 
-func (n PreInc) Attributes() map[string]interface{} {
+func (n *PreInc) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n PreInc) Position() *node.Position {
+func (n *PreInc) Position() *node.Position {
 	return n.position
 }
 
-func (n PreInc) SetPosition(p *node.Position) node.Node {
+func (n *PreInc) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n PreInc) Comments() *[]comment.Comment {
+func (n *PreInc) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n PreInc) SetComments(c *[]comment.Comment) node.Node {
+func (n *PreInc) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n PreInc) Walk(v node.Visitor) {
+func (n *PreInc) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

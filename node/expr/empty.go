@@ -19,29 +19,29 @@ func NewEmpty(Expression node.Node) *Empty {
 	}
 }
 
-func (n Empty) Attributes() map[string]interface{} {
+func (n *Empty) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Empty) Position() *node.Position {
+func (n *Empty) Position() *node.Position {
 	return n.position
 }
 
-func (n Empty) SetPosition(p *node.Position) node.Node {
+func (n *Empty) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Empty) Comments() *[]comment.Comment {
+func (n *Empty) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Empty) SetComments(c *[]comment.Comment) node.Node {
+func (n *Empty) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Empty) Walk(v node.Visitor) {
+func (n *Empty) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewBitwiseNot(Expression node.Node) *BitwiseNot {
 	}
 }
 
-func (n BitwiseNot) Attributes() map[string]interface{} {
+func (n *BitwiseNot) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BitwiseNot) Position() *node.Position {
+func (n *BitwiseNot) Position() *node.Position {
 	return n.position
 }
 
-func (n BitwiseNot) SetPosition(p *node.Position) node.Node {
+func (n *BitwiseNot) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BitwiseNot) Comments() *[]comment.Comment {
+func (n *BitwiseNot) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BitwiseNot) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseNot) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BitwiseNot) Walk(v node.Visitor) {
+func (n *BitwiseNot) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,31 +19,31 @@ func NewMagicConstant(Value string) *MagicConstant {
 	}
 }
 
-func (n MagicConstant) Attributes() map[string]interface{} {
+func (n *MagicConstant) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n MagicConstant) Position() *node.Position {
+func (n *MagicConstant) Position() *node.Position {
 	return n.position
 }
 
-func (n MagicConstant) SetPosition(p *node.Position) node.Node {
+func (n *MagicConstant) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n MagicConstant) Comments() *[]comment.Comment {
+func (n *MagicConstant) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n MagicConstant) SetComments(c *[]comment.Comment) node.Node {
+func (n *MagicConstant) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n MagicConstant) Walk(v node.Visitor) {
+func (n *MagicConstant) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

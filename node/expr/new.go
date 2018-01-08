@@ -21,29 +21,29 @@ func NewNew(Class node.Node, Arguments []node.Node) *New {
 	}
 }
 
-func (n New) Attributes() map[string]interface{} {
+func (n *New) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n New) Position() *node.Position {
+func (n *New) Position() *node.Position {
 	return n.position
 }
 
-func (n New) SetPosition(p *node.Position) node.Node {
+func (n *New) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n New) Comments() *[]comment.Comment {
+func (n *New) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n New) SetComments(c *[]comment.Comment) node.Node {
+func (n *New) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n New) Walk(v node.Visitor) {
+func (n *New) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

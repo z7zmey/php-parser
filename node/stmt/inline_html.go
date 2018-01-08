@@ -19,31 +19,31 @@ func NewInlineHtml(Value string) *InlineHtml {
 	}
 }
 
-func (n InlineHtml) Attributes() map[string]interface{} {
+func (n *InlineHtml) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n InlineHtml) Position() *node.Position {
+func (n *InlineHtml) Position() *node.Position {
 	return n.position
 }
 
-func (n InlineHtml) SetPosition(p *node.Position) node.Node {
+func (n *InlineHtml) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n InlineHtml) Comments() *[]comment.Comment {
+func (n *InlineHtml) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n InlineHtml) SetComments(c *[]comment.Comment) node.Node {
+func (n *InlineHtml) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n InlineHtml) Walk(v node.Visitor) {
+func (n *InlineHtml) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

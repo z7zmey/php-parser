@@ -21,29 +21,29 @@ func NewTraitUse(Traits []node.Node, Adaptations []node.Node) *TraitUse {
 	}
 }
 
-func (n TraitUse) Attributes() map[string]interface{} {
+func (n *TraitUse) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n TraitUse) Position() *node.Position {
+func (n *TraitUse) Position() *node.Position {
 	return n.position
 }
 
-func (n TraitUse) SetPosition(p *node.Position) node.Node {
+func (n *TraitUse) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n TraitUse) Comments() *[]comment.Comment {
+func (n *TraitUse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n TraitUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUse) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n TraitUse) Walk(v node.Visitor) {
+func (n *TraitUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

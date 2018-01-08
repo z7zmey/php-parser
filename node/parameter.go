@@ -24,32 +24,32 @@ func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef boo
 	}
 }
 
-func (n Parameter) Attributes() map[string]interface{} {
+func (n *Parameter) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef":    n.ByRef,
 		"Variadic": n.Variadic,
 	}
 }
 
-func (n Parameter) Position() *Position {
+func (n *Parameter) Position() *Position {
 	return n.position
 }
 
-func (n Parameter) SetPosition(p *Position) Node {
+func (n *Parameter) SetPosition(p *Position) Node {
 	n.position = p
 	return n
 }
 
-func (n Parameter) Comments() *[]comment.Comment {
+func (n *Parameter) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Parameter) SetComments(c *[]comment.Comment) Node {
+func (n *Parameter) SetComments(c *[]comment.Comment) Node {
 	n.comments = c
 	return n
 }
 
-func (n Parameter) Walk(v Visitor) {
+func (n *Parameter) Walk(v Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

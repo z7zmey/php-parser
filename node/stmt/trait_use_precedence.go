@@ -21,29 +21,29 @@ func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) *TraitUsePreceden
 	}
 }
 
-func (n TraitUsePrecedence) Attributes() map[string]interface{} {
+func (n *TraitUsePrecedence) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n TraitUsePrecedence) Position() *node.Position {
+func (n *TraitUsePrecedence) Position() *node.Position {
 	return n.position
 }
 
-func (n TraitUsePrecedence) SetPosition(p *node.Position) node.Node {
+func (n *TraitUsePrecedence) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n TraitUsePrecedence) Comments() *[]comment.Comment {
+func (n *TraitUsePrecedence) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n TraitUsePrecedence) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUsePrecedence) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n TraitUsePrecedence) Walk(v node.Visitor) {
+func (n *TraitUsePrecedence) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	}
 }
 
-func (n Concat) Attributes() map[string]interface{} {
+func (n *Concat) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Concat) Position() *node.Position {
+func (n *Concat) Position() *node.Position {
 	return n.position
 }
 
-func (n Concat) SetPosition(p *node.Position) node.Node {
+func (n *Concat) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Concat) Comments() *[]comment.Comment {
+func (n *Concat) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Concat) SetComments(c *[]comment.Comment) node.Node {
+func (n *Concat) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Concat) Walk(v node.Visitor) {
+func (n *Concat) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

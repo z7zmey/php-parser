@@ -19,29 +19,29 @@ func NewRequireOnce(Expression node.Node) *RequireOnce {
 	}
 }
 
-func (n RequireOnce) Attributes() map[string]interface{} {
+func (n *RequireOnce) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n RequireOnce) Position() *node.Position {
+func (n *RequireOnce) Position() *node.Position {
 	return n.position
 }
 
-func (n RequireOnce) SetPosition(p *node.Position) node.Node {
+func (n *RequireOnce) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n RequireOnce) Comments() *[]comment.Comment {
+func (n *RequireOnce) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n RequireOnce) SetComments(c *[]comment.Comment) node.Node {
+func (n *RequireOnce) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n RequireOnce) Walk(v node.Visitor) {
+func (n *RequireOnce) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

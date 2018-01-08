@@ -283,7 +283,11 @@ type boolWithToken struct {
 /////////////////////////////////////////////////////////////////////////
 
 start:
-    top_statement_list                                  { rootnode = stmt.NewStmtList($1).SetPosition(NewNodeListPosition($1)) }
+    top_statement_list
+        {
+            rootnode = stmt.NewStmtList($1)
+            rootnode.SetPosition(NewNodeListPosition($1))
+        }
 ;
 
 reserved_non_modifiers:
@@ -345,7 +349,7 @@ top_statement:
         }
     |   T_NAMESPACE '{' top_statement_list '}'          { $$ = stmt.NewNamespace(nil, $3).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $4)) }
     |   T_USE mixed_group_use_declaration ';'           { $$ = $2 }
-    |   T_USE use_type group_use_declaration ';'        { $$ = $3.(stmt.GroupUse).SetUseType($2) }
+    |   T_USE use_type group_use_declaration ';'        { $$ = $3.(*stmt.GroupUse).SetUseType($2) }
     |   T_USE use_declarations ';'                      { $$ = stmt.NewUseList(nil, $2).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $3)) }
     |   T_USE use_type use_declarations ';'             { $$ = stmt.NewUseList($2, $3) }
     |   T_CONST const_list ';'                          { $$ = stmt.NewConstList($2).SetComments($1.Comments()).SetPosition(NewTokensPosition($1, $3)) }
@@ -414,7 +418,7 @@ use_declarations:
 
 inline_use_declaration:
         unprefixed_use_declaration                      { $$ = $1; }
-    |   use_type unprefixed_use_declaration             { $$ = $2.(stmt.Use).SetUseType($1) }
+    |   use_type unprefixed_use_declaration             { $$ = $2.(*stmt.Use).SetUseType($1) }
 ;
 
 unprefixed_use_declaration:
@@ -666,7 +670,7 @@ if_stmt_without_else:
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
                 _elseIf := stmt.NewElseIf($4, $6).SetComments($2.Comments()).SetPosition(NewTokenNodePosition($2, $6))
-                $$ = $1.(stmt.If).AddElseIf(_elseIf).SetPosition(NewNodesPosition($1, $6))
+                $$ = $1.(*stmt.If).AddElseIf(_elseIf).SetPosition(NewNodesPosition($1, $6))
             }
 ;
 
@@ -675,7 +679,7 @@ if_stmt:
     |   if_stmt_without_else T_ELSE statement
             {
                 _else := stmt.NewElse($3).SetComments($2.Comments()).SetPosition(NewTokenNodePosition($2, $3))
-                $$ = $1.(stmt.If).SetElse(_else).SetPosition(NewNodesPosition($1, $3))
+                $$ = $1.(*stmt.If).SetElse(_else).SetPosition(NewNodesPosition($1, $3))
             }
 ;
 
@@ -689,7 +693,7 @@ alt_if_stmt_without_else:
             {
                 stmts := stmt.NewStmtList($7).SetComments($6.Comments()).SetPosition(NewNodeListPosition($7))
                 _elseIf := stmt.NewAltElseIf($4, stmts).SetComments($2.Comments()).SetPosition(NewTokenNodeListPosition($2, $7))
-                $$ = $1.(stmt.AltIf).AddElseIf(_elseIf)
+                $$ = $1.(*stmt.AltIf).AddElseIf(_elseIf)
             }
 ;
 
@@ -702,7 +706,7 @@ alt_if_stmt:
             {
                 stmts := stmt.NewStmtList($4).SetComments($3.Comments()).SetPosition(NewNodeListPosition($4))
                 _else := stmt.NewAltElse(stmts).SetComments($2.Comments()).SetPosition(NewTokenNodeListPosition($2, $4))
-                $$ = $1.(stmt.AltIf).SetElse(_else).SetPosition(NewNodeTokenPosition($1, $6))
+                $$ = $1.(*stmt.AltIf).SetElse(_else).SetPosition(NewNodeTokenPosition($1, $6))
             }
 ;
 

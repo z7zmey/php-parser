@@ -19,29 +19,29 @@ func NewStatic(Vars []node.Node) *Static {
 	}
 }
 
-func (n Static) Attributes() map[string]interface{} {
+func (n *Static) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Static) Position() *node.Position {
+func (n *Static) Position() *node.Position {
 	return n.position
 }
 
-func (n Static) SetPosition(p *node.Position) node.Node {
+func (n *Static) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Static) Comments() *[]comment.Comment {
+func (n *Static) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Static) SetComments(c *[]comment.Comment) node.Node {
+func (n *Static) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Static) Walk(v node.Visitor) {
+func (n *Static) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

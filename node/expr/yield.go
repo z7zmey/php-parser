@@ -21,29 +21,29 @@ func NewYield(Key node.Node, Value node.Node) *Yield {
 	}
 }
 
-func (n Yield) Attributes() map[string]interface{} {
+func (n *Yield) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Yield) Position() *node.Position {
+func (n *Yield) Position() *node.Position {
 	return n.position
 }
 
-func (n Yield) SetPosition(p *node.Position) node.Node {
+func (n *Yield) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Yield) Comments() *[]comment.Comment {
+func (n *Yield) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Yield) SetComments(c *[]comment.Comment) node.Node {
+func (n *Yield) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Yield) Walk(v node.Visitor) {
+func (n *Yield) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	}
 }
 
-func (n LogicalOr) Attributes() map[string]interface{} {
+func (n *LogicalOr) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n LogicalOr) Position() *node.Position {
+func (n *LogicalOr) Position() *node.Position {
 	return n.position
 }
 
-func (n LogicalOr) SetPosition(p *node.Position) node.Node {
+func (n *LogicalOr) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n LogicalOr) Comments() *[]comment.Comment {
+func (n *LogicalOr) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n LogicalOr) SetComments(c *[]comment.Comment) node.Node {
+func (n *LogicalOr) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n LogicalOr) Walk(v node.Visitor) {
+func (n *LogicalOr) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

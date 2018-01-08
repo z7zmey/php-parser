@@ -20,29 +20,29 @@ func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	}
 }
 
-func (n Div) Attributes() map[string]interface{} {
+func (n *Div) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Div) Position() *node.Position {
+func (n *Div) Position() *node.Position {
 	return n.position
 }
 
-func (n Div) SetPosition(p *node.Position) node.Node {
+func (n *Div) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Div) Comments() *[]comment.Comment {
+func (n *Div) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Div) SetComments(c *[]comment.Comment) node.Node {
+func (n *Div) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Div) Walk(v node.Visitor) {
+func (n *Div) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

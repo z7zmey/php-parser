@@ -20,29 +20,29 @@ func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	}
 }
 
-func (n BitwiseOr) Attributes() map[string]interface{} {
+func (n *BitwiseOr) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BitwiseOr) Position() *node.Position {
+func (n *BitwiseOr) Position() *node.Position {
 	return n.position
 }
 
-func (n BitwiseOr) SetPosition(p *node.Position) node.Node {
+func (n *BitwiseOr) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BitwiseOr) Comments() *[]comment.Comment {
+func (n *BitwiseOr) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BitwiseOr) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseOr) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BitwiseOr) Walk(v node.Visitor) {
+func (n *BitwiseOr) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

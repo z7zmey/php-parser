@@ -29,7 +29,7 @@ func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, Re
 	}
 }
 
-func (n Function) Attributes() map[string]interface{} {
+func (n *Function) Attributes() map[string]interface{} {
 	// return n.attributes
 	return map[string]interface{}{
 		"ReturnsRef":    n.ReturnsRef,
@@ -37,25 +37,25 @@ func (n Function) Attributes() map[string]interface{} {
 	}
 }
 
-func (n Function) Position() *node.Position {
+func (n *Function) Position() *node.Position {
 	return n.position
 }
 
-func (n Function) SetPosition(p *node.Position) node.Node {
+func (n *Function) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Function) Comments() *[]comment.Comment {
+func (n *Function) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Function) SetComments(c *[]comment.Comment) node.Node {
+func (n *Function) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Function) Walk(v node.Visitor) {
+func (n *Function) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

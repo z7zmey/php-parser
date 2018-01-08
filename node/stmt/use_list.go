@@ -21,29 +21,29 @@ func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 	}
 }
 
-func (n UseList) Attributes() map[string]interface{} {
+func (n *UseList) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n UseList) Position() *node.Position {
+func (n *UseList) Position() *node.Position {
 	return n.position
 }
 
-func (n UseList) SetPosition(p *node.Position) node.Node {
+func (n *UseList) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n UseList) Comments() *[]comment.Comment {
+func (n *UseList) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n UseList) SetComments(c *[]comment.Comment) node.Node {
+func (n *UseList) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n UseList) Walk(v node.Visitor) {
+func (n *UseList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -23,31 +23,31 @@ func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
 	}
 }
 
-func (n ArrayItem) Attributes() map[string]interface{} {
+func (n *ArrayItem) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
 }
 
-func (n ArrayItem) Position() *node.Position {
+func (n *ArrayItem) Position() *node.Position {
 	return n.position
 }
 
-func (n ArrayItem) SetPosition(p *node.Position) node.Node {
+func (n *ArrayItem) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ArrayItem) Comments() *[]comment.Comment {
+func (n *ArrayItem) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ArrayItem) SetComments(c *[]comment.Comment) node.Node {
+func (n *ArrayItem) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ArrayItem) Walk(v node.Visitor) {
+func (n *ArrayItem) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

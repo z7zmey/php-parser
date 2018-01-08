@@ -19,29 +19,29 @@ func NewArray(Items []node.Node) *Array {
 	}
 }
 
-func (n Array) Attributes() map[string]interface{} {
+func (n *Array) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Array) Position() *node.Position {
+func (n *Array) Position() *node.Position {
 	return n.position
 }
 
-func (n Array) SetPosition(p *node.Position) node.Node {
+func (n *Array) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Array) Comments() *[]comment.Comment {
+func (n *Array) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Array) SetComments(c *[]comment.Comment) node.Node {
+func (n *Array) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Array) Walk(v node.Visitor) {
+func (n *Array) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

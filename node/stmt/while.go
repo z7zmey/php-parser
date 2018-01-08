@@ -24,29 +24,29 @@ func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
 	}
 }
 
-func (n While) Attributes() map[string]interface{} {
+func (n *While) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n While) Position() *node.Position {
+func (n *While) Position() *node.Position {
 	return n.position
 }
 
-func (n While) SetPosition(p *node.Position) node.Node {
+func (n *While) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n While) Comments() *[]comment.Comment {
+func (n *While) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n While) SetComments(c *[]comment.Comment) node.Node {
+func (n *While) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n While) Walk(v node.Visitor) {
+func (n *While) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -21,29 +21,29 @@ func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticProperty
 	}
 }
 
-func (n StaticPropertyFetch) Attributes() map[string]interface{} {
+func (n *StaticPropertyFetch) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n StaticPropertyFetch) Position() *node.Position {
+func (n *StaticPropertyFetch) Position() *node.Position {
 	return n.position
 }
 
-func (n StaticPropertyFetch) SetPosition(p *node.Position) node.Node {
+func (n *StaticPropertyFetch) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n StaticPropertyFetch) Comments() *[]comment.Comment {
+func (n *StaticPropertyFetch) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StaticPropertyFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *StaticPropertyFetch) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n StaticPropertyFetch) Walk(v node.Visitor) {
+func (n *StaticPropertyFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

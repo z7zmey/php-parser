@@ -23,29 +23,29 @@ func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) 
 	}
 }
 
-func (n MethodCall) Attributes() map[string]interface{} {
+func (n *MethodCall) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n MethodCall) Position() *node.Position {
+func (n *MethodCall) Position() *node.Position {
 	return n.position
 }
 
-func (n MethodCall) SetPosition(p *node.Position) node.Node {
+func (n *MethodCall) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n MethodCall) Comments() *[]comment.Comment {
+func (n *MethodCall) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n MethodCall) SetComments(c *[]comment.Comment) node.Node {
+func (n *MethodCall) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n MethodCall) Walk(v node.Visitor) {
+func (n *MethodCall) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

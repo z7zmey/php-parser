@@ -20,29 +20,29 @@ func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	}
 }
 
-func (n Pow) Attributes() map[string]interface{} {
+func (n *Pow) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Pow) Position() *node.Position {
+func (n *Pow) Position() *node.Position {
 	return n.position
 }
 
-func (n Pow) SetPosition(p *node.Position) node.Node {
+func (n *Pow) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Pow) Comments() *[]comment.Comment {
+func (n *Pow) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Pow) SetComments(c *[]comment.Comment) node.Node {
+func (n *Pow) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Pow) Walk(v node.Visitor) {
+func (n *Pow) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

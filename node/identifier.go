@@ -16,31 +16,31 @@ func NewIdentifier(Value string) *Identifier {
 	}
 }
 
-func (n Identifier) Attributes() map[string]interface{} {
+func (n *Identifier) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n Identifier) Position() *Position {
+func (n *Identifier) Position() *Position {
 	return n.position
 }
 
-func (n Identifier) SetPosition(p *Position) Node {
+func (n *Identifier) SetPosition(p *Position) Node {
 	n.position = p
 	return n
 }
 
-func (n Identifier) Comments() *[]comment.Comment {
+func (n *Identifier) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Identifier) SetComments(c *[]comment.Comment) Node {
+func (n *Identifier) SetComments(c *[]comment.Comment) Node {
 	n.comments = c
 	return n
 }
 
-func (n Identifier) Walk(v Visitor) {
+func (n *Identifier) Walk(v Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

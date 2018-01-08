@@ -23,29 +23,29 @@ func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) *Try {
 	}
 }
 
-func (n Try) Attributes() map[string]interface{} {
+func (n *Try) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Try) Position() *node.Position {
+func (n *Try) Position() *node.Position {
 	return n.position
 }
 
-func (n Try) SetPosition(p *node.Position) node.Node {
+func (n *Try) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Try) Comments() *[]comment.Comment {
+func (n *Try) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Try) SetComments(c *[]comment.Comment) node.Node {
+func (n *Try) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Try) Walk(v node.Visitor) {
+func (n *Try) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

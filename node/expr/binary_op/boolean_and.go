@@ -20,29 +20,29 @@ func NewBooleanAnd(Variable node.Node, Expression node.Node) *BooleanAnd {
 	}
 }
 
-func (n BooleanAnd) Attributes() map[string]interface{} {
+func (n *BooleanAnd) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BooleanAnd) Position() *node.Position {
+func (n *BooleanAnd) Position() *node.Position {
 	return n.position
 }
 
-func (n BooleanAnd) SetPosition(p *node.Position) node.Node {
+func (n *BooleanAnd) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BooleanAnd) Comments() *[]comment.Comment {
+func (n *BooleanAnd) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BooleanAnd) SetComments(c *[]comment.Comment) node.Node {
+func (n *BooleanAnd) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BooleanAnd) Walk(v node.Visitor) {
+func (n *BooleanAnd) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

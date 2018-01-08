@@ -25,31 +25,31 @@ func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Nod
 	}
 }
 
-func (n Interface) Attributes() map[string]interface{} {
+func (n *Interface) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
-func (n Interface) Position() *node.Position {
+func (n *Interface) Position() *node.Position {
 	return n.position
 }
 
-func (n Interface) SetPosition(p *node.Position) node.Node {
+func (n *Interface) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Interface) Comments() *[]comment.Comment {
+func (n *Interface) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Interface) SetComments(c *[]comment.Comment) node.Node {
+func (n *Interface) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Interface) Walk(v node.Visitor) {
+func (n *Interface) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -20,29 +20,29 @@ func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
 	}
 }
 
-func (n AssignRef) Attributes() map[string]interface{} {
+func (n *AssignRef) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n AssignRef) Position() *node.Position {
+func (n *AssignRef) Position() *node.Position {
 	return n.position
 }
 
-func (n AssignRef) SetPosition(p *node.Position) node.Node {
+func (n *AssignRef) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n AssignRef) Comments() *[]comment.Comment {
+func (n *AssignRef) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n AssignRef) SetComments(c *[]comment.Comment) node.Node {
+func (n *AssignRef) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n AssignRef) Walk(v node.Visitor) {
+func (n *AssignRef) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

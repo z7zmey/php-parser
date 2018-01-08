@@ -19,31 +19,31 @@ func NewNamePart(Value string) *NamePart {
 	}
 }
 
-func (n NamePart) Attributes() map[string]interface{} {
+func (n *NamePart) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
 }
 
-func (n NamePart) Position() *node.Position {
+func (n *NamePart) Position() *node.Position {
 	return n.position
 }
 
-func (n NamePart) SetPosition(p *node.Position) node.Node {
+func (n *NamePart) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n NamePart) Comments() *[]comment.Comment {
+func (n *NamePart) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n NamePart) SetComments(c *[]comment.Comment) node.Node {
+func (n *NamePart) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n NamePart) Walk(v node.Visitor) {
+func (n *NamePart) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

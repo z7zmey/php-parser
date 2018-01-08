@@ -19,29 +19,29 @@ func NewExpression(Expr node.Node) *Expression {
 	}
 }
 
-func (n Expression) Attributes() map[string]interface{} {
+func (n *Expression) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Expression) Position() *node.Position {
+func (n *Expression) Position() *node.Position {
 	return n.position
 }
 
-func (n Expression) SetPosition(p *node.Position) node.Node {
+func (n *Expression) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Expression) Comments() *[]comment.Comment {
+func (n *Expression) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Expression) SetComments(c *[]comment.Comment) node.Node {
+func (n *Expression) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Expression) Walk(v node.Visitor) {
+func (n *Expression) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

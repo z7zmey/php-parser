@@ -20,29 +20,29 @@ func NewCoalesce(Variable node.Node, Expression node.Node) *Coalesce {
 	}
 }
 
-func (n Coalesce) Attributes() map[string]interface{} {
+func (n *Coalesce) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Coalesce) Position() *node.Position {
+func (n *Coalesce) Position() *node.Position {
 	return n.position
 }
 
-func (n Coalesce) SetPosition(p *node.Position) node.Node {
+func (n *Coalesce) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Coalesce) Comments() *[]comment.Comment {
+func (n *Coalesce) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Coalesce) SetComments(c *[]comment.Comment) node.Node {
+func (n *Coalesce) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Coalesce) Walk(v node.Visitor) {
+func (n *Coalesce) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

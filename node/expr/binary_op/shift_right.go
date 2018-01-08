@@ -20,29 +20,29 @@ func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	}
 }
 
-func (n ShiftRight) Attributes() map[string]interface{} {
+func (n *ShiftRight) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n ShiftRight) Position() *node.Position {
+func (n *ShiftRight) Position() *node.Position {
 	return n.position
 }
 
-func (n ShiftRight) SetPosition(p *node.Position) node.Node {
+func (n *ShiftRight) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ShiftRight) Comments() *[]comment.Comment {
+func (n *ShiftRight) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ShiftRight) SetComments(c *[]comment.Comment) node.Node {
+func (n *ShiftRight) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ShiftRight) Walk(v node.Visitor) {
+func (n *ShiftRight) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

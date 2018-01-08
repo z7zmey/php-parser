@@ -31,32 +31,32 @@ func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool
 	}
 }
 
-func (n ClassMethod) Attributes() map[string]interface{} {
+func (n *ClassMethod) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ReturnsRef":    n.ReturnsRef,
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
-func (n ClassMethod) Position() *node.Position {
+func (n *ClassMethod) Position() *node.Position {
 	return n.position
 }
 
-func (n ClassMethod) SetPosition(p *node.Position) node.Node {
+func (n *ClassMethod) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n ClassMethod) Comments() *[]comment.Comment {
+func (n *ClassMethod) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n ClassMethod) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClassMethod) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n ClassMethod) Walk(v node.Visitor) {
+func (n *ClassMethod) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

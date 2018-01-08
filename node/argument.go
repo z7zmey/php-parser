@@ -18,31 +18,31 @@ func NewArgument(Expression Node, Variadic bool) *Argument {
 	}
 }
 
-func (n Argument) Attributes() map[string]interface{} {
+func (n *Argument) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Variadic": n.Variadic,
 	}
 }
 
-func (n Argument) Position() *Position {
+func (n *Argument) Position() *Position {
 	return n.position
 }
 
-func (n Argument) SetPosition(p *Position) Node {
+func (n *Argument) SetPosition(p *Position) Node {
 	n.position = p
 	return n
 }
 
-func (n Argument) Comments() *[]comment.Comment {
+func (n *Argument) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Argument) SetComments(c *[]comment.Comment) Node {
+func (n *Argument) SetComments(c *[]comment.Comment) Node {
 	n.comments = c
 	return n
 }
 
-func (n Argument) Walk(v Visitor) {
+func (n *Argument) Walk(v Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

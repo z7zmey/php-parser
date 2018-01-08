@@ -19,29 +19,29 @@ func NewAltElse(Stmt node.Node) *AltElse {
 	}
 }
 
-func (n AltElse) Attributes() map[string]interface{} {
+func (n *AltElse) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n AltElse) Position() *node.Position {
+func (n *AltElse) Position() *node.Position {
 	return n.position
 }
 
-func (n AltElse) SetPosition(p *node.Position) node.Node {
+func (n *AltElse) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n AltElse) Comments() *[]comment.Comment {
+func (n *AltElse) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n AltElse) SetComments(c *[]comment.Comment) node.Node {
+func (n *AltElse) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n AltElse) Walk(v node.Visitor) {
+func (n *AltElse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -19,29 +19,29 @@ func NewName(Parts []node.Node) *Name {
 	}
 }
 
-func (n Name) Attributes() map[string]interface{} {
+func (n *Name) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Name) Position() *node.Position {
+func (n *Name) Position() *node.Position {
 	return n.position
 }
 
-func (n Name) SetPosition(p *node.Position) node.Node {
+func (n *Name) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Name) Comments() *[]comment.Comment {
+func (n *Name) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Name) SetComments(c *[]comment.Comment) node.Node {
+func (n *Name) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Name) Walk(v node.Visitor) {
+func (n *Name) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

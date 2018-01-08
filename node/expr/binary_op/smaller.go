@@ -20,29 +20,29 @@ func NewSmaller(Variable node.Node, Expression node.Node) *Smaller {
 	}
 }
 
-func (n Smaller) Attributes() map[string]interface{} {
+func (n *Smaller) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Smaller) Position() *node.Position {
+func (n *Smaller) Position() *node.Position {
 	return n.position
 }
 
-func (n Smaller) SetPosition(p *node.Position) node.Node {
+func (n *Smaller) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Smaller) Comments() *[]comment.Comment {
+func (n *Smaller) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Smaller) SetComments(c *[]comment.Comment) node.Node {
+func (n *Smaller) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Smaller) Walk(v node.Visitor) {
+func (n *Smaller) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

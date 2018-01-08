@@ -21,29 +21,29 @@ func NewStaticVar(Variable node.Node, Expr node.Node) *StaticVar {
 	}
 }
 
-func (n StaticVar) Attributes() map[string]interface{} {
+func (n *StaticVar) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n StaticVar) Position() *node.Position {
+func (n *StaticVar) Position() *node.Position {
 	return n.position
 }
 
-func (n StaticVar) SetPosition(p *node.Position) node.Node {
+func (n *StaticVar) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n StaticVar) Comments() *[]comment.Comment {
+func (n *StaticVar) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n StaticVar) SetComments(c *[]comment.Comment) node.Node {
+func (n *StaticVar) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n StaticVar) Walk(v node.Visitor) {
+func (n *StaticVar) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

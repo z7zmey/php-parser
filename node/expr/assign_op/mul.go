@@ -20,29 +20,29 @@ func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	}
 }
 
-func (n Mul) Attributes() map[string]interface{} {
+func (n *Mul) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Mul) Position() *node.Position {
+func (n *Mul) Position() *node.Position {
 	return n.position
 }
 
-func (n Mul) SetPosition(p *node.Position) node.Node {
+func (n *Mul) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Mul) Comments() *[]comment.Comment {
+func (n *Mul) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Mul) SetComments(c *[]comment.Comment) node.Node {
+func (n *Mul) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Mul) Walk(v node.Visitor) {
+func (n *Mul) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

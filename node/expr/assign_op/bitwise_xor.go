@@ -20,29 +20,29 @@ func NewBitwiseXor(Variable node.Node, Expression node.Node) *BitwiseXor {
 	}
 }
 
-func (n BitwiseXor) Attributes() map[string]interface{} {
+func (n *BitwiseXor) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n BitwiseXor) Position() *node.Position {
+func (n *BitwiseXor) Position() *node.Position {
 	return n.position
 }
 
-func (n BitwiseXor) SetPosition(p *node.Position) node.Node {
+func (n *BitwiseXor) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n BitwiseXor) Comments() *[]comment.Comment {
+func (n *BitwiseXor) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n BitwiseXor) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseXor) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n BitwiseXor) Walk(v node.Visitor) {
+func (n *BitwiseXor) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

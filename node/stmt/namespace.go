@@ -21,29 +21,29 @@ func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	}
 }
 
-func (n Namespace) Attributes() map[string]interface{} {
+func (n *Namespace) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Namespace) Position() *node.Position {
+func (n *Namespace) Position() *node.Position {
 	return n.position
 }
 
-func (n Namespace) SetPosition(p *node.Position) node.Node {
+func (n *Namespace) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Namespace) Comments() *[]comment.Comment {
+func (n *Namespace) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Namespace) SetComments(c *[]comment.Comment) node.Node {
+func (n *Namespace) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Namespace) Walk(v node.Visitor) {
+func (n *Namespace) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

@@ -27,31 +27,31 @@ func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Nod
 	}
 }
 
-func (n Foreach) Attributes() map[string]interface{} {
+func (n *Foreach) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
 }
 
-func (n Foreach) Position() *node.Position {
+func (n *Foreach) Position() *node.Position {
 	return n.position
 }
 
-func (n Foreach) SetPosition(p *node.Position) node.Node {
+func (n *Foreach) SetPosition(p *node.Position) node.Node {
 	n.position = p
 	return n
 }
 
-func (n Foreach) Comments() *[]comment.Comment {
+func (n *Foreach) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Foreach) SetComments(c *[]comment.Comment) node.Node {
+func (n *Foreach) SetComments(c *[]comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
 
-func (n Foreach) Walk(v node.Visitor) {
+func (n *Foreach) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

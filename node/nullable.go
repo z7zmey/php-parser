@@ -16,29 +16,29 @@ func NewNullable(Expression Node) *Nullable {
 	}
 }
 
-func (n Nullable) Attributes() map[string]interface{} {
+func (n *Nullable) Attributes() map[string]interface{} {
 	return nil
 }
 
-func (n Nullable) Position() *Position {
+func (n *Nullable) Position() *Position {
 	return n.position
 }
 
-func (n Nullable) SetPosition(p *Position) Node {
+func (n *Nullable) SetPosition(p *Position) Node {
 	n.position = p
 	return n
 }
 
-func (n Nullable) Comments() *[]comment.Comment {
+func (n *Nullable) Comments() *[]comment.Comment {
 	return n.comments
 }
 
-func (n Nullable) SetComments(c *[]comment.Comment) Node {
+func (n *Nullable) SetComments(c *[]comment.Comment) Node {
 	n.comments = c
 	return n
 }
 
-func (n Nullable) Walk(v Visitor) {
+func (n *Nullable) Walk(v Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
