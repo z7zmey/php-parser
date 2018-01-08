@@ -7,7 +7,7 @@ import (
 
 type PropertyList struct {
 	position   *node.Position
-	comments   *[]comment.Comment
+	comments   []comment.Comment
 	Modifiers  []node.Node
 	Properties []node.Node
 }
@@ -34,11 +34,11 @@ func (n *PropertyList) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *PropertyList) Comments() *[]comment.Comment {
+func (n *PropertyList) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *PropertyList) SetComments(c *[]comment.Comment) node.Node {
+func (n *PropertyList) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

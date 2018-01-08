@@ -7,7 +7,7 @@ import (
 
 type Echo struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Exprs    []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Echo) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Echo) Comments() *[]comment.Comment {
+func (n *Echo) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Echo) SetComments(c *[]comment.Comment) node.Node {
+func (n *Echo) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

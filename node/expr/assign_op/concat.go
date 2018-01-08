@@ -33,11 +33,11 @@ func (n *Concat) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Concat) Comments() *[]comment.Comment {
+func (n *Concat) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Concat) SetComments(c *[]comment.Comment) node.Node {
+func (n *Concat) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

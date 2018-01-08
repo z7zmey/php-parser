@@ -7,7 +7,7 @@ import (
 
 type AssignOp struct {
 	position   *node.Position
-	comments   *[]comment.Comment
+	comments   []comment.Comment
 	Variable   node.Node
 	Expression node.Node
 }

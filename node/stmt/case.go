@@ -7,7 +7,7 @@ import (
 
 type Case struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Cond     node.Node
 	Stmts    []node.Node
 }
@@ -34,11 +34,11 @@ func (n *Case) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Case) Comments() *[]comment.Comment {
+func (n *Case) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Case) SetComments(c *[]comment.Comment) node.Node {
+func (n *Case) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

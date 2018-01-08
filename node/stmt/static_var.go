@@ -7,7 +7,7 @@ import (
 
 type StaticVar struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Variable node.Node
 	Expr     node.Node
 }
@@ -34,11 +34,11 @@ func (n *StaticVar) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *StaticVar) Comments() *[]comment.Comment {
+func (n *StaticVar) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *StaticVar) SetComments(c *[]comment.Comment) node.Node {
+func (n *StaticVar) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

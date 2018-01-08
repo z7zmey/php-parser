@@ -33,11 +33,11 @@ func (n *LogicalOr) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *LogicalOr) Comments() *[]comment.Comment {
+func (n *LogicalOr) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *LogicalOr) SetComments(c *[]comment.Comment) node.Node {
+func (n *LogicalOr) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

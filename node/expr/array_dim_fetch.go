@@ -7,7 +7,7 @@ import (
 
 type ArrayDimFetch struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Variable node.Node
 	Dim      node.Node
 }
@@ -34,11 +34,11 @@ func (n *ArrayDimFetch) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ArrayDimFetch) Comments() *[]comment.Comment {
+func (n *ArrayDimFetch) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ArrayDimFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *ArrayDimFetch) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

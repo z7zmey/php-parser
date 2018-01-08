@@ -7,7 +7,7 @@ import (
 
 type Function struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	ReturnsRef    bool
 	PhpDocComment string
 	FunctionName  node.Node
@@ -46,11 +46,11 @@ func (n *Function) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Function) Comments() *[]comment.Comment {
+func (n *Function) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Function) SetComments(c *[]comment.Comment) node.Node {
+func (n *Function) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

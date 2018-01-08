@@ -7,7 +7,7 @@ import (
 
 type ShellExec struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Parts    []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *ShellExec) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ShellExec) Comments() *[]comment.Comment {
+func (n *ShellExec) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ShellExec) SetComments(c *[]comment.Comment) node.Node {
+func (n *ShellExec) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

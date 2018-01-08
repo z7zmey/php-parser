@@ -7,7 +7,7 @@ import (
 
 type Interface struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	PhpDocComment string
 	InterfaceName node.Node
 	Extends       []node.Node
@@ -40,11 +40,11 @@ func (n *Interface) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Interface) Comments() *[]comment.Comment {
+func (n *Interface) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Interface) SetComments(c *[]comment.Comment) node.Node {
+func (n *Interface) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

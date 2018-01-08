@@ -7,7 +7,7 @@ import (
 
 type PreInc struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Variable node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *PreInc) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *PreInc) Comments() *[]comment.Comment {
+func (n *PreInc) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *PreInc) SetComments(c *[]comment.Comment) node.Node {
+func (n *PreInc) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

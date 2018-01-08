@@ -7,7 +7,7 @@ import (
 
 type AltIf struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Cond     node.Node
 	Stmt     node.Node
 	ElseIf   []node.Node
@@ -38,11 +38,11 @@ func (n *AltIf) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *AltIf) Comments() *[]comment.Comment {
+func (n *AltIf) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *AltIf) SetComments(c *[]comment.Comment) node.Node {
+func (n *AltIf) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

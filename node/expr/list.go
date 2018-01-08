@@ -7,7 +7,7 @@ import (
 
 type List struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Items    []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *List) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *List) Comments() *[]comment.Comment {
+func (n *List) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *List) SetComments(c *[]comment.Comment) node.Node {
+func (n *List) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type ErrorSuppress struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *ErrorSuppress) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ErrorSuppress) Comments() *[]comment.Comment {
+func (n *ErrorSuppress) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ErrorSuppress) SetComments(c *[]comment.Comment) node.Node {
+func (n *ErrorSuppress) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

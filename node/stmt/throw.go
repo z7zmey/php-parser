@@ -7,7 +7,7 @@ import (
 
 type Throw struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Throw) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Throw) Comments() *[]comment.Comment {
+func (n *Throw) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Throw) SetComments(c *[]comment.Comment) node.Node {
+func (n *Throw) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

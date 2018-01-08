@@ -33,11 +33,11 @@ func (n *LogicalXor) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *LogicalXor) Comments() *[]comment.Comment {
+func (n *LogicalXor) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *LogicalXor) SetComments(c *[]comment.Comment) node.Node {
+func (n *LogicalXor) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

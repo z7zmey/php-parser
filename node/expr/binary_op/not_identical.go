@@ -33,11 +33,11 @@ func (n *NotIdentical) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *NotIdentical) Comments() *[]comment.Comment {
+func (n *NotIdentical) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *NotIdentical) SetComments(c *[]comment.Comment) node.Node {
+func (n *NotIdentical) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

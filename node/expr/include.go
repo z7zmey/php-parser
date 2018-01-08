@@ -7,7 +7,7 @@ import (
 
 type Include struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Include) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Include) Comments() *[]comment.Comment {
+func (n *Include) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Include) SetComments(c *[]comment.Comment) node.Node {
+func (n *Include) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

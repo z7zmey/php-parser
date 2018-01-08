@@ -33,11 +33,11 @@ func (n *BitwiseOr) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *BitwiseOr) Comments() *[]comment.Comment {
+func (n *BitwiseOr) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *BitwiseOr) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseOr) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

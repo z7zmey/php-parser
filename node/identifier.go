@@ -4,7 +4,7 @@ import "github.com/z7zmey/php-parser/comment"
 
 type Identifier struct {
 	position *Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Value    string
 }
 
@@ -31,11 +31,11 @@ func (n *Identifier) SetPosition(p *Position) Node {
 	return n
 }
 
-func (n *Identifier) Comments() *[]comment.Comment {
+func (n *Identifier) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Identifier) SetComments(c *[]comment.Comment) Node {
+func (n *Identifier) SetComments(c []comment.Comment) Node {
 	n.comments = c
 	return n
 }

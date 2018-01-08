@@ -7,7 +7,7 @@ import (
 
 type EncapsedStringPart struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Value    string
 }
 
@@ -34,11 +34,11 @@ func (n *EncapsedStringPart) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *EncapsedStringPart) Comments() *[]comment.Comment {
+func (n *EncapsedStringPart) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *EncapsedStringPart) SetComments(c *[]comment.Comment) node.Node {
+func (n *EncapsedStringPart) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

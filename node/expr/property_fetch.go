@@ -7,7 +7,7 @@ import (
 
 type PropertyFetch struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Variable node.Node
 	Property node.Node
 }
@@ -34,11 +34,11 @@ func (n *PropertyFetch) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *PropertyFetch) Comments() *[]comment.Comment {
+func (n *PropertyFetch) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *PropertyFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *PropertyFetch) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

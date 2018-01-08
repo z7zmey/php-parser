@@ -11,8 +11,8 @@ type Node interface {
 }
 
 type Commenter interface {
-	Comments() *[]comment.Comment
-	SetComments(*[]comment.Comment) Node
+	Comments() []comment.Comment
+	SetComments([]comment.Comment) Node
 }
 
 type Positioner interface {

@@ -27,7 +27,7 @@ func Parse(src io.Reader, fName string) node.Node {
     return rootnode
 }
 
-func ListGetFirstNodeComments(list []node.Node) *[]comment.Comment {
+func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
 	if len(list) == 0 {
 		return nil
 	}

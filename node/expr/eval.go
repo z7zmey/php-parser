@@ -7,7 +7,7 @@ import (
 
 type Eval struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Eval) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Eval) Comments() *[]comment.Comment {
+func (n *Eval) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Eval) SetComments(c *[]comment.Comment) node.Node {
+func (n *Eval) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

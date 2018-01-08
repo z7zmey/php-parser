@@ -7,7 +7,7 @@ import (
 
 type RequireOnce struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *RequireOnce) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *RequireOnce) Comments() *[]comment.Comment {
+func (n *RequireOnce) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *RequireOnce) SetComments(c *[]comment.Comment) node.Node {
+func (n *RequireOnce) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

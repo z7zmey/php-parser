@@ -7,7 +7,7 @@ import (
 
 type TraitUsePrecedence struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	Ref       node.Node
 	Insteadof node.Node
 }
@@ -34,11 +34,11 @@ func (n *TraitUsePrecedence) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *TraitUsePrecedence) Comments() *[]comment.Comment {
+func (n *TraitUsePrecedence) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *TraitUsePrecedence) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUsePrecedence) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

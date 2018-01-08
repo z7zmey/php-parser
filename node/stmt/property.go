@@ -7,7 +7,7 @@ import (
 
 type Property struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	PhpDocComment string
 	Variable      node.Node
 	Expr          node.Node
@@ -37,11 +37,11 @@ func (n *Property) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Property) Comments() *[]comment.Comment {
+func (n *Property) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Property) SetComments(c *[]comment.Comment) node.Node {
+func (n *Property) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type Else struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Stmt     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Else) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Else) Comments() *[]comment.Comment {
+func (n *Else) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Else) SetComments(c *[]comment.Comment) node.Node {
+func (n *Else) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

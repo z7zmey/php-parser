@@ -7,7 +7,7 @@ import (
 
 type Namespace struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	NamespaceName node.Node
 	Stmts         []node.Node
 }
@@ -34,11 +34,11 @@ func (n *Namespace) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Namespace) Comments() *[]comment.Comment {
+func (n *Namespace) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Namespace) SetComments(c *[]comment.Comment) node.Node {
+func (n *Namespace) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

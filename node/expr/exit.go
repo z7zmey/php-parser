@@ -7,7 +7,7 @@ import (
 
 type Exit struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 	IsDie    bool
 }
@@ -36,11 +36,11 @@ func (n *Exit) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Exit) Comments() *[]comment.Comment {
+func (n *Exit) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Exit) SetComments(c *[]comment.Comment) node.Node {
+func (n *Exit) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

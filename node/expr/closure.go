@@ -7,7 +7,7 @@ import (
 
 type Closure struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	ReturnsRef    bool
 	Static        bool
 	PhpDocComment string
@@ -48,11 +48,11 @@ func (n *Closure) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Closure) Comments() *[]comment.Comment {
+func (n *Closure) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Closure) SetComments(c *[]comment.Comment) node.Node {
+func (n *Closure) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

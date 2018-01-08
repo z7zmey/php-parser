@@ -22,7 +22,7 @@ type lexer struct {
 	*lex.Lexer
 	stateStack    []int
 	phpDocComment string
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 }
 
 func rune2Class(r rune) int {
@@ -101,9 +101,5 @@ func (l *lexer) newToken(tokenBytes []byte) t.Token {
 }
 
 func (l *lexer) addComment(c comment.Comment) {
-	if l.comments == nil {
-		l.comments = &[]comment.Comment{c}
-	} else {
-		*l.comments = append(*l.comments, c)
-	}
+	l.comments = append(l.comments, c)
 }

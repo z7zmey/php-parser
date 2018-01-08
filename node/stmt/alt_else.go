@@ -7,7 +7,7 @@ import (
 
 type AltElse struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Stmt     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *AltElse) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *AltElse) Comments() *[]comment.Comment {
+func (n *AltElse) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *AltElse) SetComments(c *[]comment.Comment) node.Node {
+func (n *AltElse) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

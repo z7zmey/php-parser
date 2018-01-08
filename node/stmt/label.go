@@ -7,7 +7,7 @@ import (
 
 type Label struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	LabelName node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Label) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Label) Comments() *[]comment.Comment {
+func (n *Label) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Label) SetComments(c *[]comment.Comment) node.Node {
+func (n *Label) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

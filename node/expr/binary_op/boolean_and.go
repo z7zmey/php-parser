@@ -33,11 +33,11 @@ func (n *BooleanAnd) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *BooleanAnd) Comments() *[]comment.Comment {
+func (n *BooleanAnd) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *BooleanAnd) SetComments(c *[]comment.Comment) node.Node {
+func (n *BooleanAnd) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

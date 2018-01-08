@@ -7,7 +7,7 @@ import (
 
 type UseList struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	UseType  node.Node
 	Uses     []node.Node
 }
@@ -34,11 +34,11 @@ func (n *UseList) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *UseList) Comments() *[]comment.Comment {
+func (n *UseList) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *UseList) SetComments(c *[]comment.Comment) node.Node {
+func (n *UseList) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

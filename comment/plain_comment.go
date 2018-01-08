@@ -4,7 +4,7 @@ type PlainComment struct {
 	value string
 }
 
-func NewPlainComment(value string) Comment {
+func NewPlainComment(value string) *PlainComment {
 	return &PlainComment{
 		value,
 	}

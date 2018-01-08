@@ -33,11 +33,11 @@ func (n *Div) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Div) Comments() *[]comment.Comment {
+func (n *Div) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Div) SetComments(c *[]comment.Comment) node.Node {
+func (n *Div) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

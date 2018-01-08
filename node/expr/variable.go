@@ -7,7 +7,7 @@ import (
 
 type Variable struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	VarName  node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Variable) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Variable) Comments() *[]comment.Comment {
+func (n *Variable) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Variable) SetComments(c *[]comment.Comment) node.Node {
+func (n *Variable) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

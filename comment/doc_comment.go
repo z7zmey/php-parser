@@ -4,7 +4,7 @@ type DocComment struct {
 	value string
 }
 
-func NewDocComment(value string) Comment {
+func NewDocComment(value string) *DocComment {
 	return &DocComment{
 		value,
 	}

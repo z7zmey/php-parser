@@ -7,7 +7,7 @@ import (
 
 type ShortList struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Items    []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *ShortList) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ShortList) Comments() *[]comment.Comment {
+func (n *ShortList) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ShortList) SetComments(c *[]comment.Comment) node.Node {
+func (n *ShortList) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type TraitUseAlias struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Ref      node.Node
 	Modifier node.Node
 	Alias    node.Node
@@ -36,11 +36,11 @@ func (n *TraitUseAlias) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *TraitUseAlias) Comments() *[]comment.Comment {
+func (n *TraitUseAlias) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *TraitUseAlias) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUseAlias) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

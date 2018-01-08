@@ -7,7 +7,7 @@ import (
 
 type BitwiseNot struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *BitwiseNot) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *BitwiseNot) Comments() *[]comment.Comment {
+func (n *BitwiseNot) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *BitwiseNot) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseNot) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

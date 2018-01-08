@@ -7,7 +7,7 @@ import (
 
 type PostDec struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Variable node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *PostDec) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *PostDec) Comments() *[]comment.Comment {
+func (n *PostDec) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *PostDec) SetComments(c *[]comment.Comment) node.Node {
+func (n *PostDec) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

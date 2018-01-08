@@ -7,7 +7,7 @@ import (
 
 type Expression struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Expression) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Expression) Comments() *[]comment.Comment {
+func (n *Expression) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Expression) SetComments(c *[]comment.Comment) node.Node {
+func (n *Expression) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

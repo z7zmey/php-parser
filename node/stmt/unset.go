@@ -7,7 +7,7 @@ import (
 
 type Unset struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Vars     []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Unset) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Unset) Comments() *[]comment.Comment {
+func (n *Unset) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Unset) SetComments(c *[]comment.Comment) node.Node {
+func (n *Unset) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

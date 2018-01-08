@@ -33,11 +33,11 @@ func (n *BitwiseXor) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *BitwiseXor) Comments() *[]comment.Comment {
+func (n *BitwiseXor) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *BitwiseXor) SetComments(c *[]comment.Comment) node.Node {
+func (n *BitwiseXor) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

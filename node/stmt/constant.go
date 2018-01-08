@@ -7,7 +7,7 @@ import (
 
 type Constant struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	PhpDocComment string
 	ConstantName  node.Node
 	Expr          node.Node
@@ -38,11 +38,11 @@ func (n *Constant) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Constant) Comments() *[]comment.Comment {
+func (n *Constant) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Constant) SetComments(c *[]comment.Comment) node.Node {
+func (n *Constant) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

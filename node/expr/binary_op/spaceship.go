@@ -33,11 +33,11 @@ func (n *Spaceship) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Spaceship) Comments() *[]comment.Comment {
+func (n *Spaceship) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Spaceship) SetComments(c *[]comment.Comment) node.Node {
+func (n *Spaceship) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

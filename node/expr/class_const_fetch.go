@@ -7,7 +7,7 @@ import (
 
 type ClassConstFetch struct {
 	position     *node.Position
-	comments     *[]comment.Comment
+	comments     []comment.Comment
 	Class        node.Node
 	ConstantName node.Node
 }
@@ -34,11 +34,11 @@ func (n *ClassConstFetch) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ClassConstFetch) Comments() *[]comment.Comment {
+func (n *ClassConstFetch) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ClassConstFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClassConstFetch) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

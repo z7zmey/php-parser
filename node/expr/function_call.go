@@ -7,7 +7,7 @@ import (
 
 type FunctionCall struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	Function  node.Node
 	Arguments []node.Node
 }
@@ -34,11 +34,11 @@ func (n *FunctionCall) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *FunctionCall) Comments() *[]comment.Comment {
+func (n *FunctionCall) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *FunctionCall) SetComments(c *[]comment.Comment) node.Node {
+func (n *FunctionCall) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

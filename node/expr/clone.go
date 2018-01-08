@@ -7,7 +7,7 @@ import (
 
 type Clone struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Clone) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Clone) Comments() *[]comment.Comment {
+func (n *Clone) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Clone) SetComments(c *[]comment.Comment) node.Node {
+func (n *Clone) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

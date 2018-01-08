@@ -7,7 +7,7 @@ import (
 
 type ClassMethod struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	ReturnsRef    bool
 	PhpDocComment string
 	MethodName    node.Node
@@ -47,11 +47,11 @@ func (n *ClassMethod) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ClassMethod) Comments() *[]comment.Comment {
+func (n *ClassMethod) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ClassMethod) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClassMethod) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

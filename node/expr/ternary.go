@@ -7,7 +7,7 @@ import (
 
 type Ternary struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	Condition node.Node
 	IfTrue    node.Node
 	IfFalse   node.Node
@@ -36,11 +36,11 @@ func (n *Ternary) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Ternary) Comments() *[]comment.Comment {
+func (n *Ternary) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Ternary) SetComments(c *[]comment.Comment) node.Node {
+func (n *Ternary) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

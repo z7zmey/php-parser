@@ -7,7 +7,7 @@ import (
 
 type StaticPropertyFetch struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Class    node.Node
 	Property node.Node
 }
@@ -34,11 +34,11 @@ func (n *StaticPropertyFetch) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *StaticPropertyFetch) Comments() *[]comment.Comment {
+func (n *StaticPropertyFetch) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *StaticPropertyFetch) SetComments(c *[]comment.Comment) node.Node {
+func (n *StaticPropertyFetch) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

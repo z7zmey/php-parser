@@ -7,7 +7,7 @@ import (
 
 type YieldFrom struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *YieldFrom) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *YieldFrom) Comments() *[]comment.Comment {
+func (n *YieldFrom) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *YieldFrom) SetComments(c *[]comment.Comment) node.Node {
+func (n *YieldFrom) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

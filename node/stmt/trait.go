@@ -7,7 +7,7 @@ import (
 
 type Trait struct {
 	position      *node.Position
-	comments      *[]comment.Comment
+	comments      []comment.Comment
 	PhpDocComment string
 	TraitName     node.Node
 	Stmts         []node.Node
@@ -38,11 +38,11 @@ func (n *Trait) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Trait) Comments() *[]comment.Comment {
+func (n *Trait) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Trait) SetComments(c *[]comment.Comment) node.Node {
+func (n *Trait) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

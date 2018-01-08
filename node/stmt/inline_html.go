@@ -7,7 +7,7 @@ import (
 
 type InlineHtml struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Value    string
 }
 
@@ -34,11 +34,11 @@ func (n *InlineHtml) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *InlineHtml) Comments() *[]comment.Comment {
+func (n *InlineHtml) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *InlineHtml) SetComments(c *[]comment.Comment) node.Node {
+func (n *InlineHtml) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

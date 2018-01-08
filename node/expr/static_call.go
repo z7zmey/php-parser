@@ -7,7 +7,7 @@ import (
 
 type StaticCall struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	Class     node.Node
 	Call      node.Node
 	Arguments []node.Node
@@ -36,11 +36,11 @@ func (n *StaticCall) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *StaticCall) Comments() *[]comment.Comment {
+func (n *StaticCall) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *StaticCall) SetComments(c *[]comment.Comment) node.Node {
+func (n *StaticCall) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

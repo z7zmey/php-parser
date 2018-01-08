@@ -7,7 +7,7 @@ import (
 
 type Global struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Vars     []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Global) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Global) Comments() *[]comment.Comment {
+func (n *Global) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Global) SetComments(c *[]comment.Comment) node.Node {
+func (n *Global) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

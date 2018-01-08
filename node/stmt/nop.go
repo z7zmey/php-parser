@@ -7,7 +7,7 @@ import (
 
 type Nop struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 }
 
 func NewNop() *Nop {
@@ -30,11 +30,11 @@ func (n *Nop) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Nop) Comments() *[]comment.Comment {
+func (n *Nop) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Nop) SetComments(c *[]comment.Comment) node.Node {
+func (n *Nop) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

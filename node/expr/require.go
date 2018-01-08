@@ -7,7 +7,7 @@ import (
 
 type Require struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Require) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Require) Comments() *[]comment.Comment {
+func (n *Require) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Require) SetComments(c *[]comment.Comment) node.Node {
+func (n *Require) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

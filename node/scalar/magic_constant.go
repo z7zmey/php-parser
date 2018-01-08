@@ -7,7 +7,7 @@ import (
 
 type MagicConstant struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Value    string
 }
 
@@ -34,11 +34,11 @@ func (n *MagicConstant) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *MagicConstant) Comments() *[]comment.Comment {
+func (n *MagicConstant) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *MagicConstant) SetComments(c *[]comment.Comment) node.Node {
+func (n *MagicConstant) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type Use struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	UseType  node.Node
 	Use      node.Node
 	Alias    node.Node
@@ -36,11 +36,11 @@ func (n *Use) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Use) Comments() *[]comment.Comment {
+func (n *Use) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Use) SetComments(c *[]comment.Comment) node.Node {
+func (n *Use) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

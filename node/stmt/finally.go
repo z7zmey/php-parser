@@ -7,7 +7,7 @@ import (
 
 type Finally struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Stmts    []node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Finally) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Finally) Comments() *[]comment.Comment {
+func (n *Finally) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Finally) SetComments(c *[]comment.Comment) node.Node {
+func (n *Finally) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

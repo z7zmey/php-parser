@@ -8,7 +8,7 @@ import (
 
 type While struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Token    token.Token
 	Cond     node.Node
 	Stmt     node.Node
@@ -37,11 +37,11 @@ func (n *While) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *While) Comments() *[]comment.Comment {
+func (n *While) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *While) SetComments(c *[]comment.Comment) node.Node {
+func (n *While) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

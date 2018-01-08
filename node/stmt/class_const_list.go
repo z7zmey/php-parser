@@ -7,7 +7,7 @@ import (
 
 type ClassConstList struct {
 	position  *node.Position
-	comments  *[]comment.Comment
+	comments  []comment.Comment
 	Modifiers []node.Node
 	Consts    []node.Node
 }
@@ -34,11 +34,11 @@ func (n *ClassConstList) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ClassConstList) Comments() *[]comment.Comment {
+func (n *ClassConstList) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ClassConstList) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClassConstList) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

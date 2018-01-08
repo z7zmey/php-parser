@@ -7,7 +7,7 @@ import (
 
 type GroupUse struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	UseType  node.Node
 	pRefix   node.Node
 	UseList  []node.Node
@@ -36,11 +36,11 @@ func (n *GroupUse) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *GroupUse) Comments() *[]comment.Comment {
+func (n *GroupUse) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *GroupUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *GroupUse) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type Declare struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Consts   []node.Node
 	Stmt     node.Node
 }
@@ -34,11 +34,11 @@ func (n *Declare) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Declare) Comments() *[]comment.Comment {
+func (n *Declare) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Declare) SetComments(c *[]comment.Comment) node.Node {
+func (n *Declare) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

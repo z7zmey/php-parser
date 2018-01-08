@@ -33,11 +33,11 @@ func (n *AssignRef) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *AssignRef) Comments() *[]comment.Comment {
+func (n *AssignRef) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *AssignRef) SetComments(c *[]comment.Comment) node.Node {
+func (n *AssignRef) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

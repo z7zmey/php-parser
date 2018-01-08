@@ -7,7 +7,7 @@ import (
 
 type Goto struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Label    node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *Goto) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Goto) Comments() *[]comment.Comment {
+func (n *Goto) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Goto) SetComments(c *[]comment.Comment) node.Node {
+func (n *Goto) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

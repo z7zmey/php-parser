@@ -7,7 +7,7 @@ import (
 
 type Foreach struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	ByRef    bool
 	Expr     node.Node
 	Key      node.Node
@@ -42,11 +42,11 @@ func (n *Foreach) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Foreach) Comments() *[]comment.Comment {
+func (n *Foreach) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Foreach) SetComments(c *[]comment.Comment) node.Node {
+func (n *Foreach) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

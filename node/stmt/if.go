@@ -7,7 +7,7 @@ import (
 
 type If struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Cond     node.Node
 	Stmt     node.Node
 	ElseIf   []node.Node
@@ -38,11 +38,11 @@ func (n *If) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *If) Comments() *[]comment.Comment {
+func (n *If) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *If) SetComments(c *[]comment.Comment) node.Node {
+func (n *If) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

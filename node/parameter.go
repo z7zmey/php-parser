@@ -4,7 +4,7 @@ import "github.com/z7zmey/php-parser/comment"
 
 type Parameter struct {
 	position     *Position
-	comments     *[]comment.Comment
+	comments     []comment.Comment
 	ByRef        bool
 	Variadic     bool
 	VariableType Node
@@ -40,11 +40,11 @@ func (n *Parameter) SetPosition(p *Position) Node {
 	return n
 }
 
-func (n *Parameter) Comments() *[]comment.Comment {
+func (n *Parameter) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Parameter) SetComments(c *[]comment.Comment) Node {
+func (n *Parameter) SetComments(c []comment.Comment) Node {
 	n.comments = c
 	return n
 }

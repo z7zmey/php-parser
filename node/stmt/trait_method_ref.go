@@ -7,7 +7,7 @@ import (
 
 type TraitMethodRef struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Trait    node.Node
 	Method   node.Node
 }
@@ -34,11 +34,11 @@ func (n *TraitMethodRef) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *TraitMethodRef) Comments() *[]comment.Comment {
+func (n *TraitMethodRef) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *TraitMethodRef) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitMethodRef) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type Catch struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Types    []node.Node
 	Variable node.Node
 	Stmts    []node.Node
@@ -36,11 +36,11 @@ func (n *Catch) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Catch) Comments() *[]comment.Comment {
+func (n *Catch) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Catch) SetComments(c *[]comment.Comment) node.Node {
+func (n *Catch) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

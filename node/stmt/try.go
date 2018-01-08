@@ -7,7 +7,7 @@ import (
 
 type Try struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Stmts    []node.Node
 	Catches  []node.Node
 	Finally  node.Node
@@ -36,11 +36,11 @@ func (n *Try) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *Try) Comments() *[]comment.Comment {
+func (n *Try) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *Try) SetComments(c *[]comment.Comment) node.Node {
+func (n *Try) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

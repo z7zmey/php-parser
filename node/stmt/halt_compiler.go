@@ -7,7 +7,7 @@ import (
 
 type HaltCompiler struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 }
 
 func NewHaltCompiler() *HaltCompiler {
@@ -30,11 +30,11 @@ func (n *HaltCompiler) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *HaltCompiler) Comments() *[]comment.Comment {
+func (n *HaltCompiler) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *HaltCompiler) SetComments(c *[]comment.Comment) node.Node {
+func (n *HaltCompiler) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

@@ -7,7 +7,7 @@ import (
 
 type ArrayItem struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	ByRef    bool
 	Key      node.Node
 	Val      node.Node
@@ -38,11 +38,11 @@ func (n *ArrayItem) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ArrayItem) Comments() *[]comment.Comment {
+func (n *ArrayItem) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ArrayItem) SetComments(c *[]comment.Comment) node.Node {
+func (n *ArrayItem) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

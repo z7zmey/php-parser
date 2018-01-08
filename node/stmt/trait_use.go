@@ -7,7 +7,7 @@ import (
 
 type TraitUse struct {
 	position    *node.Position
-	comments    *[]comment.Comment
+	comments    []comment.Comment
 	Traits      []node.Node
 	Adaptations []node.Node
 }
@@ -34,11 +34,11 @@ func (n *TraitUse) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *TraitUse) Comments() *[]comment.Comment {
+func (n *TraitUse) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *TraitUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *TraitUse) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

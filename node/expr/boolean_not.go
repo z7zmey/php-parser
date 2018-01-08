@@ -7,7 +7,7 @@ import (
 
 type BooleanNot struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *BooleanNot) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *BooleanNot) Comments() *[]comment.Comment {
+func (n *BooleanNot) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *BooleanNot) SetComments(c *[]comment.Comment) node.Node {
+func (n *BooleanNot) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

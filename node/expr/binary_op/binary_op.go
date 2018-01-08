@@ -7,7 +7,7 @@ import (
 
 type BinaryOp struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Left     node.Node
 	Right    node.Node
 }

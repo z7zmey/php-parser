@@ -7,7 +7,7 @@ import (
 
 type UnaryPlus struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }
 
@@ -32,11 +32,11 @@ func (n *UnaryPlus) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *UnaryPlus) Comments() *[]comment.Comment {
+func (n *UnaryPlus) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *UnaryPlus) SetComments(c *[]comment.Comment) node.Node {
+func (n *UnaryPlus) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

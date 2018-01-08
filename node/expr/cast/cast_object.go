@@ -32,11 +32,11 @@ func (n *CastObject) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *CastObject) Comments() *[]comment.Comment {
+func (n *CastObject) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *CastObject) SetComments(c *[]comment.Comment) node.Node {
+func (n *CastObject) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }

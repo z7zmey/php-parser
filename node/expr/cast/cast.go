@@ -7,6 +7,6 @@ import (
 
 type Cast struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	Expr     node.Node
 }

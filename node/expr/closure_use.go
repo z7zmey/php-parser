@@ -7,7 +7,7 @@ import (
 
 type ClusureUse struct {
 	position *node.Position
-	comments *[]comment.Comment
+	comments []comment.Comment
 	ByRef    bool
 	Variable node.Node
 }
@@ -36,11 +36,11 @@ func (n *ClusureUse) SetPosition(p *node.Position) node.Node {
 	return n
 }
 
-func (n *ClusureUse) Comments() *[]comment.Comment {
+func (n *ClusureUse) Comments() []comment.Comment {
 	return n.comments
 }
 
-func (n *ClusureUse) SetComments(c *[]comment.Comment) node.Node {
+func (n *ClusureUse) SetComments(c []comment.Comment) node.Node {
 	n.comments = c
 	return n
 }
