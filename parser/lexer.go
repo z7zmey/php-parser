@@ -21,7 +21,6 @@ const (
 type lexer struct {
 	*lex.Lexer
 	stateStack    []int
-	lineNumber    int
 	phpDocComment string
 	comments      *[]comment.Comment
 }
@@ -46,7 +45,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &lexer{lx, []int{0}, 1, "", nil}
+	return &lexer{lx, []int{0}, "", nil}
 }
 
 func (l *lexer) ungetN(n int) []byte {
@@ -88,31 +87,17 @@ func (l *lexer) getCurrentState() int {
 	return l.stateStack[len(l.stateStack)-1]
 }
 
-func (l *lexer) handleNewLine(tokenBytes []byte) ([]byte, int, int, int, int) {
-	startln := l.lineNumber
+func (l *lexer) newToken(tokenBytes []byte) t.Token {
+	tokenBytesEnd := len(tokenBytes) - 1
 
-	var prev byte
-
-	for _, b := range tokenBytes {
-		if b == '\n' || prev == '\r' {
-			l.lineNumber++
-		}
-
-		prev = b
-	}
-
-	// handle last \r
-	if prev == '\r' {
-		l.lineNumber++
-	}
+	startLine := l.File.Line(l.First.Pos())
+	lastChar := l.Token()[tokenBytesEnd]
+	endLine := l.File.Line(lastChar.Pos())
 
 	startPos := int(l.First.Pos())
-	endPos := startPos + len(tokenBytes) - 1
-	return tokenBytes, startln, l.lineNumber, startPos, endPos
-}
+	endPos := startPos + tokenBytesEnd
 
-func (l *lexer) newToken() t.Token {
-	return t.NewToken(l.handleNewLine(l.TokenBytes(nil))).SetComments(l.comments)
+	return t.NewToken(tokenBytes, startLine, endLine, startPos, endPos).SetComments(l.comments)
 }
 
 func (l *lexer) addComment(c comment.Comment) {
