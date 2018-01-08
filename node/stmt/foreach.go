@@ -1,13 +1,11 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Foreach struct {
 	position *node.Position
-	comments []comment.Comment
 	ByRef    bool
 	Expr     node.Node
 	Key      node.Node
@@ -17,7 +15,6 @@ type Foreach struct {
 
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
 	return &Foreach{
-		nil,
 		nil,
 		ByRef,
 		Expr,
@@ -39,15 +36,6 @@ func (n *Foreach) Position() *node.Position {
 
 func (n *Foreach) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Foreach) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Foreach) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

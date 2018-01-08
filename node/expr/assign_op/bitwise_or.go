@@ -1,7 +1,6 @@
 package assign_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type BitwiseOr struct {
 func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	return &BitwiseOr{
 		AssignOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *BitwiseOr) Position() *node.Position {
 
 func (n *BitwiseOr) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *BitwiseOr) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *BitwiseOr) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

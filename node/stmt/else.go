@@ -1,19 +1,16 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Else struct {
 	position *node.Position
-	comments []comment.Comment
 	Stmt     node.Node
 }
 
 func NewElse(Stmt node.Node) *Else {
 	return &Else{
-		nil,
 		nil,
 		Stmt,
 	}
@@ -29,15 +26,6 @@ func (n *Else) Position() *node.Position {
 
 func (n *Else) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Else) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Else) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

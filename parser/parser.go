@@ -21,13 +21,15 @@ import (
 )
 
 var rootnode node.Node
+var comments comment.Comments
 
-func Parse(src io.Reader, fName string) node.Node {
+func Parse(src io.Reader, fName string) (node.Node, comment.Comments) {
 	yyDebug = 0
 	yyErrorVerbose = true
 	rootnode = stmt.NewStmtList([]node.Node{}) //reset
+	comments = comment.Comments{}
 	yyParse(newLexer(src, fName))
-	return rootnode
+	return rootnode, comments
 }
 
 func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
@@ -37,7 +39,7 @@ func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
 
 	node := list[0]
 
-	return node.Comments()
+	return comments[node]
 }
 
 type foreachVariable struct {
@@ -55,7 +57,7 @@ type boolWithToken struct {
 	token *token.Token
 }
 
-//line parser/parser.y:57
+//line parser/parser.y:59
 type yySymType struct {
 	yys               int
 	node              node.Node
@@ -379,7 +381,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser/parser.y:1471
+//line parser/parser.y:2327
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -2088,2809 +2090,3120 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:287
+		//line parser/parser.y:289
 		{
 			rootnode = stmt.NewStmtList(yyDollar[1].list)
 			rootnode.SetPosition(NewNodeListPosition(yyDollar[1].list))
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:294
+		//line parser/parser.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:295
+		//line parser/parser.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:296
+		//line parser/parser.y:298
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:297
+		//line parser/parser.y:299
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:298
+		//line parser/parser.y:300
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:299
+		//line parser/parser.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:300
+		//line parser/parser.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:304
+		//line parser/parser.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:305
+		//line parser/parser.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:309
+		//line parser/parser.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:310
+		//line parser/parser.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:314
+		//line parser/parser.y:316
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:315
+		//line parser/parser.y:317
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:319
+		//line parser/parser.y:322
 		{
-			yyVAL.list = []node.Node{name.NewNamePart(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))}
+			namePart := name.NewNamePart(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.list = []node.Node{namePart}
+			comments.AddComments(namePart, yyDollar[1].token.Comments())
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:320
+		//line parser/parser.y:328
 		{
-			yyVAL.list = append(yyDollar[1].list, name.NewNamePart(yyDollar[3].token.Value).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewTokenPosition(yyDollar[3].token)))
+			namePart := name.NewNamePart(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.list = append(yyDollar[1].list, namePart)
+			comments.AddComments(namePart, yyDollar[3].token.Comments())
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:324
+		//line parser/parser.y:337
 		{
-			yyVAL.node = name.NewName(yyDollar[1].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			yyVAL.node = name.NewName(yyDollar[1].list).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:325
+		//line parser/parser.y:342
 		{
-			yyVAL.node = name.NewRelative(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
+			yyVAL.node = name.NewRelative(yyDollar[3].list).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:326
+		//line parser/parser.y:347
 		{
-			yyVAL.node = name.NewFullyQualified(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.node = name.NewFullyQualified(yyDollar[2].list).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:330
+		//line parser/parser.y:354
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:331
+		//line parser/parser.y:355
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:332
+		//line parser/parser.y:356
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:333
+		//line parser/parser.y:357
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:334
+		//line parser/parser.y:358
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 90:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:335
+		//line parser/parser.y:359
 		{
 			yyVAL.node = stmt.NewHaltCompiler()
 		}
 	case 91:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:337
+		//line parser/parser.y:361
 		{
-			name := name.NewName(yyDollar[2].list).SetComments(ListGetFirstNodeComments(yyDollar[2].list)).SetPosition(NewNodeListPosition(yyDollar[2].list))
+			name := name.NewName(yyDollar[2].list).SetPosition(NewNodeListPosition(yyDollar[2].list))
 			yyVAL.node = stmt.NewNamespace(name, nil).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[2].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 92:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:344
+		//line parser/parser.y:370
 		{
-			name := name.NewName(yyDollar[2].list).SetComments(ListGetFirstNodeComments(yyDollar[2].list)).SetPosition(NewNodeListPosition(yyDollar[2].list))
+			name := name.NewName(yyDollar[2].list).SetPosition(NewNodeListPosition(yyDollar[2].list))
 			yyVAL.node = stmt.NewNamespace(name, yyDollar[4].list).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[2].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 93:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:350
+		//line parser/parser.y:379
 		{
-			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 94:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:351
+		//line parser/parser.y:383
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 95:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:352
+		//line parser/parser.y:384
 		{
 			yyVAL.node = yyDollar[3].node.(*stmt.GroupUse).SetUseType(yyDollar[2].node)
 		}
 	case 96:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:353
+		//line parser/parser.y:386
 		{
-			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 97:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:354
+		//line parser/parser.y:390
 		{
 			yyVAL.node = stmt.NewUseList(yyDollar[2].node, yyDollar[3].list)
 		}
 	case 98:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:355
+		//line parser/parser.y:392
 		{
-			yyVAL.node = stmt.NewConstList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewConstList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 99:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:359
+		//line parser/parser.y:400
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:360
+		//line parser/parser.y:405
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 101:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:365
+		//line parser/parser.y:413
 		{
-			name := name.NewName(yyDollar[1].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			name := name.NewName(yyDollar[1].list).SetPosition(NewNodeListPosition(yyDollar[1].list))
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list).
-				SetComments(ListGetFirstNodeComments(yyDollar[1].list)).
 				SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[6].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[1].list))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 102:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:372
+		//line parser/parser.y:422
 		{
-			name := name.NewName(yyDollar[2].list).SetComments(ListGetFirstNodeComments(yyDollar[2].list)).SetPosition(NewNodeListPosition(yyDollar[2].list))
+			name := name.NewName(yyDollar[2].list).SetPosition(NewNodeListPosition(yyDollar[2].list))
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[2].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 103:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:382
+		//line parser/parser.y:434
 		{
-			name := name.NewName(yyDollar[1].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			name := name.NewName(yyDollar[1].list).SetPosition(NewNodeListPosition(yyDollar[1].list))
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list).
-				SetComments(ListGetFirstNodeComments(yyDollar[1].list)).
 				SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[6].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[1].list))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 104:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:389
+		//line parser/parser.y:443
 		{
-			name := name.NewName(yyDollar[2].list).SetComments(ListGetFirstNodeComments(yyDollar[2].list)).SetPosition(NewNodeListPosition(yyDollar[2].list))
+			name := name.NewName(yyDollar[2].list).SetPosition(NewNodeListPosition(yyDollar[2].list))
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[2].list))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 107:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:404
+		//line parser/parser.y:460
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 108:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:405
+		//line parser/parser.y:461
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 109:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:410
+		//line parser/parser.y:466
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 110:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:411
+		//line parser/parser.y:467
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 111:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:415
+		//line parser/parser.y:471
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 112:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:416
+		//line parser/parser.y:472
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:420
+		//line parser/parser.y:476
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 114:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:421
+		//line parser/parser.y:477
 		{
 			yyVAL.node = yyDollar[2].node.(*stmt.Use).SetUseType(yyDollar[1].node)
 		}
 	case 115:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:426
+		//line parser/parser.y:482
 		{
-			name := name.NewName(yyDollar[1].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node = stmt.NewUse(nil, name, nil).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			name := name.NewName(yyDollar[1].list).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			yyVAL.node = stmt.NewUse(nil, name, nil).SetPosition(NewNodeListPosition(yyDollar[1].list))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[1].list))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 116:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:431
+		//line parser/parser.y:490
 		{
-			name := name.NewName(yyDollar[1].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListPosition(yyDollar[1].list))
-			alias := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
-			yyVAL.node = stmt.NewUse(nil, name, alias).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			name := name.NewName(yyDollar[1].list).SetPosition(NewNodeListPosition(yyDollar[1].list))
+			alias := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.node = stmt.NewUse(nil, name, alias).SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[1].list))
+			comments.AddComments(alias, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 117:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:439
+		//line parser/parser.y:502
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 118:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:440
+		//line parser/parser.y:503
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 119:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:444
+		//line parser/parser.y:507
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 120:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:445
+		//line parser/parser.y:508
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 121:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:449
+		//line parser/parser.y:512
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 122:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:450
+		//line parser/parser.y:513
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 123:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:454
+		//line parser/parser.y:517
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:455
+		//line parser/parser.y:518
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:456
+		//line parser/parser.y:519
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:457
+		//line parser/parser.y:520
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:458
+		//line parser/parser.y:521
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 128:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:459
+		//line parser/parser.y:523
 		{
-			yyVAL.node = stmt.NewHaltCompiler().SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewHaltCompiler().SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 129:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:462
+		//line parser/parser.y:530
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 130:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:463
+		//line parser/parser.y:534
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 131:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:464
+		//line parser/parser.y:535
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 132:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:466
+		//line parser/parser.y:537
 		{
-			yyVAL.node = stmt.NewWhile(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			yyVAL.node = stmt.NewWhile(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 133:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:467
+		//line parser/parser.y:542
 		{
-			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[5].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[5].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 134:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:469
+		//line parser/parser.y:547
 		{
-			yyVAL.node = stmt.NewFor(yyDollar[3].list, yyDollar[5].list, yyDollar[7].list, yyDollar[9].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
+			yyVAL.node = stmt.NewFor(yyDollar[3].list, yyDollar[5].list, yyDollar[7].list, yyDollar[9].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 135:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:470
+		//line parser/parser.y:552
 		{
-			yyVAL.node = stmt.NewSwitch(yyDollar[1].token, yyDollar[3].node, yyDollar[5].nodesWithEndToken.nodes).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[5].nodesWithEndToken.endToken))
+			yyVAL.node = stmt.NewSwitch(yyDollar[1].token, yyDollar[3].node, yyDollar[5].nodesWithEndToken.nodes).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[5].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 136:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:471
+		//line parser/parser.y:557
 		{
-			yyVAL.node = stmt.NewBreak(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewBreak(yyDollar[2].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 137:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:472
+		//line parser/parser.y:562
 		{
-			yyVAL.node = stmt.NewContinue(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewContinue(yyDollar[2].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:473
+		//line parser/parser.y:567
 		{
-			yyVAL.node = stmt.NewReturn(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewReturn(yyDollar[2].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:474
+		//line parser/parser.y:572
 		{
-			yyVAL.node = stmt.NewGlobal(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewGlobal(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:475
+		//line parser/parser.y:577
 		{
-			yyVAL.node = stmt.NewStatic(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewStatic(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:476
+		//line parser/parser.y:582
 		{
-			yyVAL.node = stmt.NewEcho(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewEcho(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 142:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:477
+		//line parser/parser.y:587
 		{
-			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 143:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:478
+		//line parser/parser.y:592
 		{
-			yyVAL.node = stmt.NewExpression(yyDollar[1].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yyVAL.node = stmt.NewExpression(yyDollar[1].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 144:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:480
+		//line parser/parser.y:597
 		{
-			yyVAL.node = stmt.NewUnset(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			yyVAL.node = stmt.NewUnset(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 145:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:482
+		//line parser/parser.y:602
 		{
-			yyVAL.node = stmt.NewForeach(yyDollar[3].node, nil, yyDollar[5].foreachVariable.node, yyDollar[7].node, yyDollar[5].foreachVariable.byRef).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node))
+			yyVAL.node = stmt.NewForeach(yyDollar[3].node, nil, yyDollar[5].foreachVariable.node, yyDollar[7].node, yyDollar[5].foreachVariable.byRef).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 146:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:484
+		//line parser/parser.y:607
 		{
-			yyVAL.node = stmt.NewForeach(yyDollar[3].node, yyDollar[5].node, yyDollar[7].foreachVariable.node, yyDollar[9].node, yyDollar[7].foreachVariable.byRef).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
+			yyVAL.node = stmt.NewForeach(yyDollar[3].node, yyDollar[5].node, yyDollar[7].foreachVariable.node, yyDollar[9].node, yyDollar[7].foreachVariable.byRef).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 147:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:485
+		//line parser/parser.y:612
 		{
-			yyVAL.node = stmt.NewDeclare(yyDollar[3].list, yyDollar[5].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			yyVAL.node = stmt.NewDeclare(yyDollar[3].list, yyDollar[5].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 148:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:486
+		//line parser/parser.y:617
 		{
-			yyVAL.node = stmt.NewNop().SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewNop().SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 149:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:488
+		//line parser/parser.y:622
 		{
 			if yyDollar[6].node == nil {
-				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[5].list))
+				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[5].list))
 			} else {
-				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
 			}
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 150:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:495
+		//line parser/parser.y:632
 		{
-			yyVAL.node = stmt.NewThrow(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = stmt.NewThrow(yyDollar[2].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 151:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:497
+		//line parser/parser.y:637
 		{
-			label := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			yyVAL.node = stmt.NewGoto(label).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			label := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
+			yyVAL.node = stmt.NewGoto(label).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+
+			comments.AddComments(label, yyDollar[2].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 152:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:502
+		//line parser/parser.y:645
 		{
-			label := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewLabel(label).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			label := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewLabel(label).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+
+			comments.AddComments(label, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 153:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:508
+		//line parser/parser.y:654
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 154:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:510
+		//line parser/parser.y:656
 		{
-			identifier := node.NewIdentifier(yyDollar[5].token.Value).SetComments(yyDollar[5].token.Comments()).SetPosition(NewTokenPosition(yyDollar[5].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[5].token.Comments()).SetPosition(NewTokenPosition(yyDollar[5].token))
-			yyVAL.list = append(yyDollar[1].list, stmt.NewCatch(yyDollar[4].list, variable, yyDollar[8].list).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokensPosition(yyDollar[2].token, yyDollar[9].token)))
+			identifier := node.NewIdentifier(yyDollar[5].token.Value).SetPosition(NewTokenPosition(yyDollar[5].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[5].token))
+			catch := stmt.NewCatch(yyDollar[4].list, variable, yyDollar[8].list).SetPosition(NewTokensPosition(yyDollar[2].token, yyDollar[9].token))
+			yyVAL.list = append(yyDollar[1].list, catch)
+
+			comments.AddComments(identifier, yyDollar[5].token.Comments())
+			comments.AddComments(variable, yyDollar[5].token.Comments())
+			comments.AddComments(catch, yyDollar[2].token.Comments())
 		}
 	case 155:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:517
+		//line parser/parser.y:668
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 156:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:518
+		//line parser/parser.y:669
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 157:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:522
+		//line parser/parser.y:673
 		{
 			yyVAL.node = nil
 		}
 	case 158:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:523
+		//line parser/parser.y:675
 		{
-			yyVAL.node = stmt.NewFinally(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewFinally(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 159:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:527
+		//line parser/parser.y:682
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 160:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:528
+		//line parser/parser.y:683
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:532
+		//line parser/parser.y:687
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 162:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line parser/parser.y:537
+		//line parser/parser.y:692
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
+			name := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
 			yyVAL.node = stmt.NewFunction(name, yyDollar[2].boolWithToken.value, yyDollar[6].list, yyDollar[8].node, yyDollar[10].list, yyDollar[4].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[11].token))
+
+			comments.AddComments(name, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 163:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:546
+		//line parser/parser.y:703
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 164:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:547
+		//line parser/parser.y:704
 		{
 			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:551
+		//line parser/parser.y:708
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:552
+		//line parser/parser.y:709
 		{
 			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
 		}
 	case 167:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/parser.y:557
+		//line parser/parser.y:714
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
+			name := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
 			yyVAL.node = stmt.NewClass(name, yyDollar[1].list, nil, yyDollar[4].node, yyDollar[5].list, yyDollar[8].list, yyDollar[6].str).
-				SetComments(yyDollar[2].token.Comments()).
 				SetPosition(NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[9].token))
+
+			comments.AddComments(name, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 168:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line parser/parser.y:564
+		//line parser/parser.y:723
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
+			name := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
 			yyVAL.node = stmt.NewClass(name, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+
+			comments.AddComments(name, yyDollar[2].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 169:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:573
+		//line parser/parser.y:734
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 170:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:574
+		//line parser/parser.y:735
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:578
+		//line parser/parser.y:740
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 172:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:579
+		//line parser/parser.y:745
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 173:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:584
+		//line parser/parser.y:753
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
+			name := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
 			yyVAL.node = stmt.NewTrait(name, yyDollar[5].list, yyDollar[3].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+
+			comments.AddComments(name, yyDollar[2].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 174:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:594
+		//line parser/parser.y:765
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
+			name := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
 			yyVAL.node = stmt.NewInterface(name, yyDollar[3].list, yyDollar[6].list, yyDollar[4].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+
+			comments.AddComments(name, yyDollar[2].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 175:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:603
+		//line parser/parser.y:776
 		{
 			yyVAL.node = nil
 		}
 	case 176:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:604
+		//line parser/parser.y:777
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:608
+		//line parser/parser.y:781
 		{
 			yyVAL.list = nil
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:609
+		//line parser/parser.y:782
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:613
+		//line parser/parser.y:786
 		{
 			yyVAL.list = nil
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:614
+		//line parser/parser.y:787
 		{
 			yyVAL.list = yyDollar[2].list
 		}
 	case 181:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:618
+		//line parser/parser.y:791
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[1].node, false}
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:619
+		//line parser/parser.y:792
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[2].node, true}
 		}
 	case 183:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:620
+		//line parser/parser.y:794
 		{
-			yyVAL.foreachVariable = foreachVariable{expr.NewList(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token)), false}
+			list := expr.NewList(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.foreachVariable = foreachVariable{list, false}
+			comments.AddComments(list, yyDollar[1].token.Comments())
 		}
 	case 184:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:621
+		//line parser/parser.y:800
 		{
-			yyVAL.foreachVariable = foreachVariable{expr.NewShortList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token)), false}
+			list := expr.NewShortList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.foreachVariable = foreachVariable{list, false}
+			comments.AddComments(list, yyDollar[1].token.Comments())
 		}
 	case 185:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:625
+		//line parser/parser.y:808
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 186:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:626
+		//line parser/parser.y:810
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:630
+		//line parser/parser.y:817
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:631
+		//line parser/parser.y:819
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:635
+		//line parser/parser.y:826
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:636
+		//line parser/parser.y:828
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 191:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:640
+		//line parser/parser.y:835
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:641
+		//line parser/parser.y:836
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[3].list, yyDollar[4].token}
 		}
 	case 193:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:642
+		//line parser/parser.y:837
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[4].token}
 		}
 	case 194:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:643
+		//line parser/parser.y:838
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[3].list, yyDollar[5].token}
 		}
 	case 195:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:647
+		//line parser/parser.y:842
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:649
+		//line parser/parser.y:844
 		{
-			yyVAL.list = append(yyDollar[1].list, stmt.NewCase(yyDollar[3].node, yyDollar[5].list).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list)))
+			_case := stmt.NewCase(yyDollar[3].node, yyDollar[5].list).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list))
+			yyVAL.list = append(yyDollar[1].list, _case)
+			comments.AddComments(_case, yyDollar[2].token.Comments())
 		}
 	case 197:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:653
+		//line parser/parser.y:850
 		{
-			yyVAL.list = append(yyDollar[1].list, stmt.NewDefault(yyDollar[4].list).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list)))
+			_default := stmt.NewDefault(yyDollar[4].list).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
+			yyVAL.list = append(yyDollar[1].list, _default)
+			comments.AddComments(_default, yyDollar[2].token.Comments())
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:664
+		//line parser/parser.y:863
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 201:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:665
+		//line parser/parser.y:865
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewStmtList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 202:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:669
+		//line parser/parser.y:873
 		{
-			yyVAL.node = stmt.NewIf(yyDollar[3].node, yyDollar[5].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			yyVAL.node = stmt.NewIf(yyDollar[3].node, yyDollar[5].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 203:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:671
+		//line parser/parser.y:878
 		{
-			_elseIf := stmt.NewElseIf(yyDollar[4].node, yyDollar[6].node).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node))
+			_elseIf := stmt.NewElseIf(yyDollar[4].node, yyDollar[6].node).SetPosition(NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node))
 			yyVAL.node = yyDollar[1].node.(*stmt.If).AddElseIf(_elseIf).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+
+			comments.AddComments(_elseIf, yyDollar[2].token.Comments())
 		}
 	case 204:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:678
+		//line parser/parser.y:887
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 205:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:680
+		//line parser/parser.y:889
 		{
-			_else := stmt.NewElse(yyDollar[3].node).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node))
+			_else := stmt.NewElse(yyDollar[3].node).SetPosition(NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node))
 			yyVAL.node = yyDollar[1].node.(*stmt.If).SetElse(_else).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+
+			comments.AddComments(yyVAL.node, yyDollar[2].token.Comments())
 		}
 	case 206:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:688
+		//line parser/parser.y:899
 		{
-			stmts := stmt.NewStmtList(yyDollar[6].list).SetComments(yyDollar[5].token.Comments()).SetPosition(NewNodeListPosition(yyDollar[6].list))
-			yyVAL.node = stmt.NewAltIf(yyDollar[3].node, stmts).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[6].list))
+			stmts := stmt.NewStmtList(yyDollar[6].list).SetPosition(NewNodeListPosition(yyDollar[6].list))
+			yyVAL.node = stmt.NewAltIf(yyDollar[3].node, stmts).SetPosition(NewTokenNodeListPosition(yyDollar[1].token, yyDollar[6].list))
+
+			comments.AddComments(stmts, yyDollar[5].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 207:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/parser.y:693
+		//line parser/parser.y:907
 		{
-			stmts := stmt.NewStmtList(yyDollar[7].list).SetComments(yyDollar[6].token.Comments()).SetPosition(NewNodeListPosition(yyDollar[7].list))
-			_elseIf := stmt.NewAltElseIf(yyDollar[4].node, stmts).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[7].list))
+			stmts := stmt.NewStmtList(yyDollar[7].list).SetPosition(NewNodeListPosition(yyDollar[7].list))
+			_elseIf := stmt.NewAltElseIf(yyDollar[4].node, stmts).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[7].list))
 			yyVAL.node = yyDollar[1].node.(*stmt.AltIf).AddElseIf(_elseIf)
+
+			comments.AddComments(stmts, yyDollar[6].token.Comments())
+			comments.AddComments(_elseIf, yyDollar[2].token.Comments())
 		}
 	case 208:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:702
+		//line parser/parser.y:919
 		{
 			yyVAL.node = yyDollar[1].node.SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
 		}
 	case 209:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:706
+		//line parser/parser.y:923
 		{
-			stmts := stmt.NewStmtList(yyDollar[4].list).SetComments(yyDollar[3].token.Comments()).SetPosition(NewNodeListPosition(yyDollar[4].list))
-			_else := stmt.NewAltElse(stmts).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
+			stmts := stmt.NewStmtList(yyDollar[4].list).SetPosition(NewNodeListPosition(yyDollar[4].list))
+			_else := stmt.NewAltElse(stmts).SetPosition(NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
 			yyVAL.node = yyDollar[1].node.(*stmt.AltIf).SetElse(_else).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token))
+
+			comments.AddComments(stmts, yyDollar[3].token.Comments())
+			comments.AddComments(_else, yyDollar[2].token.Comments())
 		}
 	case 210:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:714
+		//line parser/parser.y:934
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 211:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:715
+		//line parser/parser.y:935
 		{
 			yyVAL.list = nil
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:719
+		//line parser/parser.y:939
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 213:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:720
+		//line parser/parser.y:940
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 214:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:725
+		//line parser/parser.y:945
 		{
-			identifier := node.NewIdentifier(yyDollar[4].token.Value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
+			identifier := node.NewIdentifier(yyDollar[4].token.Value).SetPosition(NewTokenPosition(yyDollar[4].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[4].token))
+
+			comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
+
 			if yyDollar[1].node != nil {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+				comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[2].boolWithToken.token.Comments()).SetPosition(NewTokensPosition(*yyDollar[2].boolWithToken.token, yyDollar[4].token))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokensPosition(*yyDollar[2].boolWithToken.token, yyDollar[4].token))
+				comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[3].boolWithToken.token.Comments()).SetPosition(NewTokensPosition(*yyDollar[3].boolWithToken.token, yyDollar[4].token))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokensPosition(*yyDollar[3].boolWithToken.token, yyDollar[4].token))
+				comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokenPosition(yyDollar[4].token))
+				comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
 			}
 		}
 	case 215:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:739
+		//line parser/parser.y:967
 		{
-			identifier := node.NewIdentifier(yyDollar[4].token.Value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
+			identifier := node.NewIdentifier(yyDollar[4].token.Value).SetPosition(NewTokenPosition(yyDollar[4].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[4].token))
+
+			comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
+
 			if yyDollar[1].node != nil {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+				comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[2].boolWithToken.token.Comments()).SetPosition(NewTokenNodePosition(*yyDollar[2].boolWithToken.token, yyDollar[6].node))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokenNodePosition(*yyDollar[2].boolWithToken.token, yyDollar[6].node))
+				comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[3].boolWithToken.token.Comments()).SetPosition(NewTokenNodePosition(*yyDollar[3].boolWithToken.token, yyDollar[6].node))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokenNodePosition(*yyDollar[3].boolWithToken.token, yyDollar[6].node))
+				comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
-				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))
+				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value).SetPosition(NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))
+				comments.AddComments(yyVAL.node, yyDollar[4].token.Comments())
 			}
 		}
 	case 216:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:755
+		//line parser/parser.y:991
 		{
 			yyVAL.node = nil
 		}
 	case 217:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:756
+		//line parser/parser.y:992
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 218:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:760
+		//line parser/parser.y:996
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 219:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:761
+		//line parser/parser.y:998
 		{
-			yyVAL.node = node.NewNullable(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = node.NewNullable(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:765
+		//line parser/parser.y:1006
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 221:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:766
+		//line parser/parser.y:1011
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:767
+		//line parser/parser.y:1015
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 223:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:771
+		//line parser/parser.y:1019
 		{
 			yyVAL.node = nil
 		}
 	case 224:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:772
+		//line parser/parser.y:1020
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 225:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:776
+		//line parser/parser.y:1024
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{[]node.Node{}, yyDollar[2].token}
 		}
 	case 226:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:777
+		//line parser/parser.y:1025
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[4].token}
 		}
 	case 227:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:781
+		//line parser/parser.y:1029
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 228:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:782
+		//line parser/parser.y:1030
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:786
+		//line parser/parser.y:1035
 		{
-			yyVAL.node = node.NewArgument(yyDollar[1].node, false).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodePosition(yyDollar[1].node))
+			yyVAL.node = node.NewArgument(yyDollar[1].node, false).SetPosition(NewNodePosition(yyDollar[1].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 230:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:787
+		//line parser/parser.y:1040
 		{
-			yyVAL.node = node.NewArgument(yyDollar[2].node, true).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = node.NewArgument(yyDollar[2].node, true).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 231:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:791
+		//line parser/parser.y:1047
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 232:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:792
+		//line parser/parser.y:1048
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 233:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:796
+		//line parser/parser.y:1052
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 234:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:800
+		//line parser/parser.y:1056
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:801
+		//line parser/parser.y:1057
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 236:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:806
+		//line parser/parser.y:1062
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewStaticVar(variable, nil).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewStaticVar(variable, nil).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 237:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:812
+		//line parser/parser.y:1072
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewStaticVar(variable, yyDollar[3].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewStaticVar(variable, yyDollar[3].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 238:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:820
+		//line parser/parser.y:1084
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 239:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:821
+		//line parser/parser.y:1085
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 240:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:825
+		//line parser/parser.y:1090
 		{
-			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list).SetPosition(NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 241:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:826
+		//line parser/parser.y:1095
 		{
-			yyVAL.node = stmt.NewClassConstList(yyDollar[1].list, yyDollar[3].list).SetComments(ListGetFirstNodeComments(yyDollar[1].list)).SetPosition(NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[4].token))
+			yyVAL.node = stmt.NewClassConstList(yyDollar[1].list, yyDollar[3].list).SetPosition(NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:827
+		//line parser/parser.y:1100
 		{
-			yyVAL.node = stmt.NewTraitUse(yyDollar[2].list, yyDollar[3].nodesWithEndToken.nodes).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].nodesWithEndToken.endToken))
+			yyVAL.node = stmt.NewTraitUse(yyDollar[2].list, yyDollar[3].nodesWithEndToken.nodes).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 243:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line parser/parser.y:829
+		//line parser/parser.y:1105
 		{
-			name := node.NewIdentifier(yyDollar[4].token.Value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
+			name := node.NewIdentifier(yyDollar[4].token.Value).SetPosition(NewTokenPosition(yyDollar[4].token))
 			yyVAL.node = stmt.NewClassMethod(name, yyDollar[1].list, yyDollar[3].boolWithToken.value, yyDollar[7].list, yyDollar[9].node, yyDollar[10].nodesWithEndToken.nodes, yyDollar[5].str).
-				SetComments(ListGetFirstNodeComments(yyDollar[1].list)).
 				SetPosition(NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[10].nodesWithEndToken.endToken))
+
+			comments.AddComments(name, yyDollar[4].token.Comments())
+			comments.AddComments(yyVAL.node, ListGetFirstNodeComments(yyDollar[1].list))
 		}
 	case 244:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:838
+		//line parser/parser.y:1116
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 245:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:839
+		//line parser/parser.y:1117
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:843
+		//line parser/parser.y:1121
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[1].token}
 		}
 	case 247:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:844
+		//line parser/parser.y:1122
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[2].token}
 		}
 	case 248:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:845
+		//line parser/parser.y:1123
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 249:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:849
+		//line parser/parser.y:1127
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 250:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:850
+		//line parser/parser.y:1128
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 251:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:854
+		//line parser/parser.y:1132
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:855
+		//line parser/parser.y:1133
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 253:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:860
+		//line parser/parser.y:1138
 		{
-			name := name.NewName(yyDollar[3].list).SetComments(ListGetFirstNodeComments(yyDollar[3].list)).SetPosition(NewNodeListPosition(yyDollar[3].list))
+			name := name.NewName(yyDollar[3].list).SetPosition(NewNodeListPosition(yyDollar[3].list))
 			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, name).
-				SetComments(yyDollar[1].node.Comments()).
 				SetPosition(NewNodeNodeListPosition(yyDollar[1].node, yyDollar[3].list))
+
+			comments.AddComments(name, ListGetFirstNodeComments(yyDollar[3].list))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 254:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:870
+		//line parser/parser.y:1150
 		{
-			alias := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
+			alias := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias).
-				SetComments(yyDollar[1].node.Comments()).
 				SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+
+			comments.AddComments(alias, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:877
+		//line parser/parser.y:1159
 		{
-			alias := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
+			alias := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias).
-				SetComments(yyDollar[1].node.Comments()).
 				SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+
+			comments.AddComments(alias, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 256:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:884
+		//line parser/parser.y:1168
 		{
-			alias := node.NewIdentifier(yyDollar[4].token.Value).SetComments(yyDollar[4].token.Comments()).SetPosition(NewTokenPosition(yyDollar[4].token))
+			alias := node.NewIdentifier(yyDollar[4].token.Value).SetPosition(NewTokenPosition(yyDollar[4].token))
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, alias).
-				SetComments(yyDollar[1].node.Comments()).
 				SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+
+			comments.AddComments(alias, yyDollar[4].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:891
+		//line parser/parser.y:1177
 		{
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 258:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:898
+		//line parser/parser.y:1185
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewTraitMethodRef(nil, name).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			name := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewTraitMethodRef(nil, name).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(name, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 259:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:902
+		//line parser/parser.y:1192
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 260:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:907
+		//line parser/parser.y:1197
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
-			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			target := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+
+			comments.AddComments(target, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:914
+		//line parser/parser.y:1207
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[1].token}
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:915
+		//line parser/parser.y:1208
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:919
+		//line parser/parser.y:1212
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 264:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:920
+		//line parser/parser.y:1214
 		{
-			yyVAL.list = []node.Node{node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))}
+			modifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.list = []node.Node{modifier}
+			comments.AddComments(modifier, yyDollar[1].token.Comments())
 		}
 	case 265:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:924
+		//line parser/parser.y:1222
 		{
 			yyVAL.list = nil
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:925
+		//line parser/parser.y:1223
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 267:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:929
+		//line parser/parser.y:1227
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 268:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:930
+		//line parser/parser.y:1228
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:934
+		//line parser/parser.y:1233
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 270:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:935
+		//line parser/parser.y:1238
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:936
+		//line parser/parser.y:1243
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:937
+		//line parser/parser.y:1248
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:938
+		//line parser/parser.y:1253
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:939
+		//line parser/parser.y:1258
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 275:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:943
+		//line parser/parser.y:1265
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:944
+		//line parser/parser.y:1266
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 277:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:949
+		//line parser/parser.y:1271
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewProperty(variable, nil, yyDollar[2].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewProperty(variable, nil, yyDollar[2].str).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 278:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:955
+		//line parser/parser.y:1281
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewProperty(variable, yyDollar[3].node, yyDollar[4].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewProperty(variable, yyDollar[3].node, yyDollar[4].str).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 279:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:963
+		//line parser/parser.y:1293
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 280:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:964
+		//line parser/parser.y:1294
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 281:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:969
+		//line parser/parser.y:1299
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			name := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+
+			comments.AddComments(name, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 282:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:977
+		//line parser/parser.y:1310
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			name := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+
+			comments.AddComments(name, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 283:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:984
+		//line parser/parser.y:1320
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 284:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:985
+		//line parser/parser.y:1321
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 285:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:989
+		//line parser/parser.y:1325
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 286:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:993
+		//line parser/parser.y:1329
 		{
 			yyVAL.list = nil
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:994
+		//line parser/parser.y:1330
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 288:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:997
+		//line parser/parser.y:1333
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:998
+		//line parser/parser.y:1334
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 290:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line parser/parser.y:1003
+		//line parser/parser.y:1339
 		{
 			if yyDollar[2].nodesWithEndToken != nil {
-				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].nodesWithEndToken.nodes, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].nodesWithEndToken.nodes, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
 			} else {
-				yyVAL.node = stmt.NewClass(nil, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+				yyVAL.node = stmt.NewClass(nil, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
 			}
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 291:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1014
+		//line parser/parser.y:1352
 		{
 			if yyDollar[3].nodesWithEndToken != nil {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].nodesWithEndToken.nodes).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].nodesWithEndToken.endToken))
+				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].nodesWithEndToken.nodes).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].nodesWithEndToken.endToken))
 			} else {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, nil).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+				yyVAL.node = expr.NewNew(yyDollar[2].node, nil).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			}
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 292:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1021
+		//line parser/parser.y:1361
 		{
 			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 		}
 	case 293:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:1026
+		//line parser/parser.y:1366
 		{
-			list := expr.NewList(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+			list := expr.NewList(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+
+			comments.AddComments(list, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 294:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:1031
+		//line parser/parser.y:1374
 		{
-			shortList := expr.NewShortList(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			shortList := expr.NewShortList(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+
+			comments.AddComments(shortList, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 295:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1035
+		//line parser/parser.y:1382
 		{
-			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 296:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1036
+		//line parser/parser.y:1387
 		{
-			yyVAL.node = assign_op.NewAssignRef(yyDollar[1].node, yyDollar[4].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yyVAL.node = assign_op.NewAssignRef(yyDollar[1].node, yyDollar[4].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 297:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1037
+		//line parser/parser.y:1392
 		{
-			yyVAL.node = expr.NewClone(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewClone(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 298:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1038
+		//line parser/parser.y:1397
 		{
-			yyVAL.node = assign_op.NewPlus(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewPlus(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 299:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1039
+		//line parser/parser.y:1402
 		{
-			yyVAL.node = assign_op.NewMinus(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewMinus(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1040
+		//line parser/parser.y:1407
 		{
-			yyVAL.node = assign_op.NewMul(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewMul(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1041
+		//line parser/parser.y:1412
 		{
-			yyVAL.node = assign_op.NewPow(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewPow(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1042
+		//line parser/parser.y:1417
 		{
-			yyVAL.node = assign_op.NewDiv(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewDiv(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1043
+		//line parser/parser.y:1422
 		{
-			yyVAL.node = assign_op.NewConcat(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewConcat(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1044
+		//line parser/parser.y:1427
 		{
-			yyVAL.node = assign_op.NewMod(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewMod(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1045
+		//line parser/parser.y:1432
 		{
-			yyVAL.node = assign_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1046
+		//line parser/parser.y:1437
 		{
-			yyVAL.node = assign_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1047
+		//line parser/parser.y:1442
 		{
-			yyVAL.node = assign_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1048
+		//line parser/parser.y:1447
 		{
-			yyVAL.node = assign_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1049
+		//line parser/parser.y:1452
 		{
-			yyVAL.node = assign_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = assign_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 310:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1050
+		//line parser/parser.y:1457
 		{
-			yyVAL.node = expr.NewPostInc(yyDollar[1].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yyVAL.node = expr.NewPostInc(yyDollar[1].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 311:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1051
+		//line parser/parser.y:1462
 		{
-			yyVAL.node = expr.NewPreInc(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewPreInc(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1052
+		//line parser/parser.y:1467
 		{
-			yyVAL.node = expr.NewPostDec(yyDollar[1].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yyVAL.node = expr.NewPostDec(yyDollar[1].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1053
+		//line parser/parser.y:1472
 		{
-			yyVAL.node = expr.NewPreDec(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewPreDec(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 314:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1054
+		//line parser/parser.y:1477
 		{
-			yyVAL.node = binary_op.NewBooleanOr(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewBooleanOr(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 315:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1055
+		//line parser/parser.y:1482
 		{
-			yyVAL.node = binary_op.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1056
+		//line parser/parser.y:1487
 		{
-			yyVAL.node = binary_op.NewLogicalOr(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewLogicalOr(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1057
+		//line parser/parser.y:1492
 		{
-			yyVAL.node = binary_op.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1058
+		//line parser/parser.y:1497
 		{
-			yyVAL.node = binary_op.NewLogicalXor(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewLogicalXor(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1059
+		//line parser/parser.y:1502
 		{
-			yyVAL.node = binary_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1060
+		//line parser/parser.y:1507
 		{
-			yyVAL.node = binary_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1061
+		//line parser/parser.y:1512
 		{
-			yyVAL.node = binary_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1062
+		//line parser/parser.y:1517
 		{
-			yyVAL.node = binary_op.NewConcat(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewConcat(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1063
+		//line parser/parser.y:1522
 		{
-			yyVAL.node = binary_op.NewPlus(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewPlus(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1064
+		//line parser/parser.y:1527
 		{
-			yyVAL.node = binary_op.NewMinus(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewMinus(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1065
+		//line parser/parser.y:1532
 		{
-			yyVAL.node = binary_op.NewMul(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewMul(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1066
+		//line parser/parser.y:1537
 		{
-			yyVAL.node = binary_op.NewPow(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewPow(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1067
+		//line parser/parser.y:1542
 		{
-			yyVAL.node = binary_op.NewDiv(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewDiv(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1068
+		//line parser/parser.y:1547
 		{
-			yyVAL.node = binary_op.NewMod(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewMod(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1069
+		//line parser/parser.y:1552
 		{
-			yyVAL.node = binary_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1070
+		//line parser/parser.y:1557
 		{
-			yyVAL.node = binary_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 331:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1071
+		//line parser/parser.y:1562
 		{
-			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 332:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1072
+		//line parser/parser.y:1567
 		{
-			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1073
+		//line parser/parser.y:1572
 		{
-			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1074
+		//line parser/parser.y:1577
 		{
-			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 335:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1075
+		//line parser/parser.y:1582
 		{
-			yyVAL.node = binary_op.NewIdentical(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewIdentical(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 336:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1076
+		//line parser/parser.y:1587
 		{
-			yyVAL.node = binary_op.NewNotIdentical(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewNotIdentical(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1077
+		//line parser/parser.y:1592
 		{
-			yyVAL.node = binary_op.NewEqual(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewEqual(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1078
+		//line parser/parser.y:1597
 		{
-			yyVAL.node = binary_op.NewNotEqual(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewNotEqual(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1079
+		//line parser/parser.y:1602
 		{
-			yyVAL.node = binary_op.NewSmaller(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewSmaller(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1080
+		//line parser/parser.y:1607
 		{
-			yyVAL.node = binary_op.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1081
+		//line parser/parser.y:1612
 		{
-			yyVAL.node = binary_op.NewGreater(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewGreater(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1082
+		//line parser/parser.y:1617
 		{
-			yyVAL.node = binary_op.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1083
+		//line parser/parser.y:1622
 		{
-			yyVAL.node = binary_op.NewSpaceship(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewSpaceship(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1084
+		//line parser/parser.y:1627
 		{
-			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1085
+		//line parser/parser.y:1631
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 346:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1086
+		//line parser/parser.y:1632
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 347:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:1087
+		//line parser/parser.y:1634
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 348:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1088
+		//line parser/parser.y:1639
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 349:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1089
+		//line parser/parser.y:1644
 		{
-			yyVAL.node = binary_op.NewCoalesce(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = binary_op.NewCoalesce(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 350:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1090
+		//line parser/parser.y:1648
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 351:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1091
+		//line parser/parser.y:1650
 		{
-			yyVAL.node = cast.NewCastInt(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastInt(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 352:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1092
+		//line parser/parser.y:1655
 		{
-			yyVAL.node = cast.NewCastDouble(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastDouble(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1093
+		//line parser/parser.y:1660
 		{
-			yyVAL.node = cast.NewCastString(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastString(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1094
+		//line parser/parser.y:1665
 		{
-			yyVAL.node = cast.NewCastArray(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastArray(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1095
+		//line parser/parser.y:1670
 		{
-			yyVAL.node = cast.NewCastObject(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastObject(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1096
+		//line parser/parser.y:1675
 		{
-			yyVAL.node = cast.NewCastBool(yyDollar[2].node.SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)))
+			yyVAL.node = cast.NewCastBool(yyDollar[2].node.SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1097
+		//line parser/parser.y:1680
 		{
-			yyVAL.node = cast.NewCastUnset(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = cast.NewCastUnset(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1098
+		//line parser/parser.y:1685
 		{
-			yyVAL.node = expr.NewExit(yyDollar[2].node, strings.EqualFold(yyDollar[1].token.Value, "die")).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewExit(yyDollar[2].node, strings.EqualFold(yyDollar[1].token.Value, "die")).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1099
+		//line parser/parser.y:1690
 		{
-			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 360:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1100
+		//line parser/parser.y:1694
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 361:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1101
+		//line parser/parser.y:1696
 		{
-			yyVAL.node = expr.NewShellExec(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = expr.NewShellExec(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 362:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1102
+		//line parser/parser.y:1701
 		{
-			yyVAL.node = expr.NewPrint(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewPrint(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 363:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1103
+		//line parser/parser.y:1706
 		{
-			yyVAL.node = expr.NewYield(nil, nil).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewYield(nil, nil).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1104
+		//line parser/parser.y:1711
 		{
-			yyVAL.node = expr.NewYield(nil, yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewYield(nil, yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 365:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1105
+		//line parser/parser.y:1716
 		{
-			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1106
+		//line parser/parser.y:1721
 		{
-			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 367:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line parser/parser.y:1108
+		//line parser/parser.y:1726
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].list, yyDollar[8].node, yyDollar[10].list, false, yyDollar[2].boolWithToken.value, yyDollar[3].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[11].token))
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 368:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line parser/parser.y:1114
+		//line parser/parser.y:1733
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[6].list, yyDollar[8].list, yyDollar[9].node, yyDollar[11].list, true, yyDollar[3].boolWithToken.value, yyDollar[4].str).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[12].token))
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 369:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1122
+		//line parser/parser.y:1742
 		{
 			yyVAL.str = yylex.(*lexer).phpDocComment
 			yylex.(*lexer).phpDocComment = ""
 		}
 	case 370:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1126
+		//line parser/parser.y:1746
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 371:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1127
+		//line parser/parser.y:1747
 		{
 			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1131
+		//line parser/parser.y:1751
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 373:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1132
+		//line parser/parser.y:1752
 		{
 			yyVAL.list = yyDollar[3].list
 		}
 	case 374:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1136
+		//line parser/parser.y:1756
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 375:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1137
+		//line parser/parser.y:1757
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 376:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1142
+		//line parser/parser.y:1762
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewClusureUse(variable, false).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewClusureUse(variable, false).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 377:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1148
+		//line parser/parser.y:1772
 		{
-			identifier := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			yyVAL.node = expr.NewClusureUse(variable, true).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			identifier := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[2].token))
+			yyVAL.node = expr.NewClusureUse(variable, true).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+
+			comments.AddComments(identifier, yyDollar[2].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 378:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1157
+		//line parser/parser.y:1785
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 379:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1161
+		//line parser/parser.y:1790
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 380:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1165
+		//line parser/parser.y:1795
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 381:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1169
+		//line parser/parser.y:1800
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 382:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1175
+		//line parser/parser.y:1808
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 383:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1176
+		//line parser/parser.y:1812
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1180
+		//line parser/parser.y:1816
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1181
+		//line parser/parser.y:1817
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 386:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1185
+		//line parser/parser.y:1821
 		{
 			yyVAL.node = nil
 		}
 	case 387:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1186
+		//line parser/parser.y:1822
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1190
+		//line parser/parser.y:1826
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 389:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1191
+		//line parser/parser.y:1827
 		{
 			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token.Value)}
 		}
 	case 390:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1192
+		//line parser/parser.y:1828
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 391:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1196
+		//line parser/parser.y:1832
 		{
 			yyVAL.nodesWithEndToken = nil
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1197
+		//line parser/parser.y:1833
 		{
 			yyVAL.nodesWithEndToken = yyDollar[1].nodesWithEndToken
 		}
 	case 393:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1201
+		//line parser/parser.y:1838
 		{
-			yyVAL.node = expr.NewArray(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = expr.NewArray(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 394:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1202
+		//line parser/parser.y:1843
 		{
-			yyVAL.node = expr.NewShortArray(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = expr.NewShortArray(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 395:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1203
+		//line parser/parser.y:1848
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 396:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1207
+		//line parser/parser.y:1856
 		{
-			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1208
+		//line parser/parser.y:1861
 		{
-			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1209
+		//line parser/parser.y:1866
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1210
+		//line parser/parser.y:1871
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1211
+		//line parser/parser.y:1876
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1212
+		//line parser/parser.y:1881
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1213
+		//line parser/parser.y:1886
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1214
+		//line parser/parser.y:1891
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1215
+		//line parser/parser.y:1896
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1216
+		//line parser/parser.y:1901
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 406:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1218
+		//line parser/parser.y:1906
 		{
-			yyVAL.node = scalar.NewString(yyDollar[2].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token)) /* TODO: mark as Heredoc*/
+			yyVAL.node = scalar.NewString(yyDollar[2].token.Value).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token)) /* TODO: mark as Heredoc*/
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 407:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1220
+		//line parser/parser.y:1910
 		{
-			yyVAL.node = scalar.NewEncapsed(nil).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = scalar.NewEncapsed(nil).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1221
+		//line parser/parser.y:1915
 		{
-			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 409:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1222
+		//line parser/parser.y:1920
 		{
-			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 410:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1223
+		//line parser/parser.y:1924
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 411:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1224
+		//line parser/parser.y:1925
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1228
+		//line parser/parser.y:1930
 		{
-			yyVAL.node = expr.NewConstFetch(yyDollar[1].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodePosition(yyDollar[1].node))
+			yyVAL.node = expr.NewConstFetch(yyDollar[1].node).SetPosition(NewNodePosition(yyDollar[1].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 413:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1230
+		//line parser/parser.y:1935
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			target := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+
+			comments.AddComments(target, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 414:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1235
+		//line parser/parser.y:1943
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			target := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+
+			comments.AddComments(target, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 415:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1242
+		//line parser/parser.y:1953
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 416:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1243
+		//line parser/parser.y:1954
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 417:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1247
+		//line parser/parser.y:1958
 		{
 			yyVAL.node = nil
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1248
+		//line parser/parser.y:1959
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 419:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1252
+		//line parser/parser.y:1963
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1256
+		//line parser/parser.y:1967
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 421:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1257
+		//line parser/parser.y:1968
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1258
+		//line parser/parser.y:1969
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 423:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1262
+		//line parser/parser.y:1973
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 424:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1263
+		//line parser/parser.y:1974
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1264
+		//line parser/parser.y:1975
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 426:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1268
+		//line parser/parser.y:1979
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 427:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1269
+		//line parser/parser.y:1981
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 428:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1270
+		//line parser/parser.y:1986
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1271
+		//line parser/parser.y:1991
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1273
+		//line parser/parser.y:1996
 		{
-			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 431:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1274
+		//line parser/parser.y:2000
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 432:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1278
+		//line parser/parser.y:2004
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1279
+		//line parser/parser.y:2005
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 434:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1280
+		//line parser/parser.y:2007
 		{
-			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1284
+		//line parser/parser.y:2015
 		{
-			yyVAL.node = expr.NewVariable(node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			name := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewVariable(name).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(name, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 436:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1285
+		//line parser/parser.y:2023
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[3].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = expr.NewVariable(yyDollar[3].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 437:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1286
+		//line parser/parser.y:2028
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewVariable(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 438:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1291
+		//line parser/parser.y:2036
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 439:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1295
+		//line parser/parser.y:2041
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 440:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1301
+		//line parser/parser.y:2048
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 441:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1302
+		//line parser/parser.y:2050
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 442:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1303
+		//line parser/parser.y:2055
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 443:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1304
+		//line parser/parser.y:2060
 		{
-			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 444:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1306
+		//line parser/parser.y:2065
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1310
+		//line parser/parser.y:2070
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 446:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1316
+		//line parser/parser.y:2078
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1317
+		//line parser/parser.y:2082
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1318
+		//line parser/parser.y:2083
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 449:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1322
+		//line parser/parser.y:2088
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 450:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1323
+		//line parser/parser.y:2092
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1324
+		//line parser/parser.y:2093
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 452:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1329
+		//line parser/parser.y:2098
 		{
 			if yyDollar[1].list[len(yyDollar[1].list)-1] == nil {
 				yyVAL.list = yyDollar[1].list[:len(yyDollar[1].list)-1]
@@ -4900,244 +5213,291 @@ yydefault:
 		}
 	case 453:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.y:1339
+		//line parser/parser.y:2108
 		{
 			yyVAL.node = nil
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1340
+		//line parser/parser.y:2109
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 455:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1345
+		//line parser/parser.y:2114
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1346
+		//line parser/parser.y:2115
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1350
+		//line parser/parser.y:2120
 		{
-			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1351
+		//line parser/parser.y:2125
 		{
-			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node, false).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodePosition(yyDollar[1].node))
+			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node, false).SetPosition(NewNodePosition(yyDollar[1].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 459:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1352
+		//line parser/parser.y:2130
 		{
-			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[4].node, true).SetComments(yyDollar[1].node.Comments()).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[4].node, true).SetPosition(NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 460:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1353
+		//line parser/parser.y:2135
 		{
-			yyVAL.node = expr.NewArrayItem(nil, yyDollar[2].node, true).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewArrayItem(nil, yyDollar[2].node, true).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 461:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:1355
+		//line parser/parser.y:2140
 		{
 			// TODO: Cannot use list() as standalone expression
-			list := expr.NewList(yyDollar[5].list).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokensPosition(yyDollar[3].token, yyDollar[6].token))
+			list := expr.NewList(yyDollar[5].list).SetPosition(NewTokensPosition(yyDollar[3].token, yyDollar[6].token))
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, list, false).
-				SetComments(yyDollar[1].node.Comments()).
 				SetPosition(NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token))
+
+			comments.AddComments(list, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
 	case 462:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1363
+		//line parser/parser.y:2150
 		{
 			// TODO: Cannot use list() as standalone expression
-			list := expr.NewList(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			list := expr.NewList(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
 			yyVAL.node = expr.NewArrayItem(nil, list, false).
-				SetComments(yyDollar[1].token.Comments()).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+
+			comments.AddComments(list, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 463:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1373
+		//line parser/parser.y:2162
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 464:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1374
+		//line parser/parser.y:2164
 		{
-			yyVAL.list = append(yyDollar[1].list, scalar.NewEncapsedStringPart(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token)))
+			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
+			yyVAL.list = append(yyDollar[1].list, encapsed)
+			comments.AddComments(encapsed, yyDollar[2].token.Comments())
 		}
 	case 465:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1375
+		//line parser/parser.y:2169
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1376
+		//line parser/parser.y:2171
 		{
-			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token)), yyDollar[2].node}
+			encapsed := scalar.NewEncapsedStringPart(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.list = []node.Node{encapsed, yyDollar[2].node}
+			comments.AddComments(encapsed, yyDollar[1].token.Comments())
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1381
+		//line parser/parser.y:2180
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewVariable(name).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			name := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewVariable(name).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(name, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 468:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1386
+		//line parser/parser.y:2188
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[3].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[3].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 469:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1392
+		//line parser/parser.y:2198
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewPropertyFetch(variable, node.NewIdentifier(yyDollar[3].token.Value).SetComments(yyDollar[3].token.Comments()).SetPosition(NewTokenPosition(yyDollar[3].token))).
-				SetComments(yyDollar[1].token.Comments()).
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+			fetch := node.NewIdentifier(yyDollar[3].token.Value).SetPosition(NewTokenPosition(yyDollar[3].token))
+			yyVAL.node = expr.NewPropertyFetch(variable, fetch).
 				SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(fetch, yyDollar[3].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 470:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1400
+		//line parser/parser.y:2211
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = expr.NewVariable(yyDollar[2].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1404
+		//line parser/parser.y:2216
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			yyVAL.node = expr.NewVariable(name).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			name := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
+			yyVAL.node = expr.NewVariable(name).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+
+			comments.AddComments(name, yyDollar[2].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 472:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/parser.y:1409
+		//line parser/parser.y:2224
 		{
-			identifier := node.NewIdentifier(yyDollar[2].token.Value).SetComments(yyDollar[2].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			variable := expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[2].token))
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[4].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			identifier := node.NewIdentifier(yyDollar[2].token.Value).SetPosition(NewTokenPosition(yyDollar[2].token))
+			variable := expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[2].token))
+			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[4].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+
+			comments.AddComments(identifier, yyDollar[2].token.Comments())
+			comments.AddComments(variable, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1414
+		//line parser/parser.y:2234
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 474:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1418
+		//line parser/parser.y:2238
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 475:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1422
+		//line parser/parser.y:2243
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
-				yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+				yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
 			} else {
-				yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+				yyVAL.node = scalar.NewString(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
 			}
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 476:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1431
+		//line parser/parser.y:2253
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[2].token.Value); err == nil {
-				lnumber := scalar.NewLnumber(yyDollar[2].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+				lnumber := scalar.NewLnumber(yyDollar[2].token.Value).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 				yyVAL.node = expr.NewUnaryMinus(lnumber).
-					SetComments(yyDollar[1].token.Comments()).
 					SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+
+				comments.AddComments(lnumber, yyDollar[1].token.Comments())
 			} else {
 				yyDollar[2].token.Value = "-" + yyDollar[2].token.Value
-				yyVAL.node = scalar.NewString(yyDollar[2].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+				yyVAL.node = scalar.NewString(yyDollar[2].token.Value).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 			}
+
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1444
+		//line parser/parser.y:2269
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewVariable(identifier).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenPosition(yyDollar[1].token))
+			identifier := node.NewIdentifier(yyDollar[1].token.Value).SetPosition(NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = expr.NewVariable(identifier).SetPosition(NewTokenPosition(yyDollar[1].token))
+
+			comments.AddComments(identifier, yyDollar[1].token.Comments())
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 478:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/parser.y:1451
+		//line parser/parser.y:2280
 		{
-			yyVAL.node = expr.NewIsset(yyDollar[3].list).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			yyVAL.node = expr.NewIsset(yyDollar[3].list).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 479:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1452
+		//line parser/parser.y:2285
 		{
-			yyVAL.node = expr.NewEmpty(yyDollar[3].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = expr.NewEmpty(yyDollar[3].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 480:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1453
+		//line parser/parser.y:2290
 		{
-			yyVAL.node = expr.NewInclude(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewInclude(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 481:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1454
+		//line parser/parser.y:2295
 		{
-			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 482:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/parser.y:1455
+		//line parser/parser.y:2300
 		{
-			yyVAL.node = expr.NewEval(yyDollar[3].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = expr.NewEval(yyDollar[3].node).SetPosition(NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1456
+		//line parser/parser.y:2305
 		{
-			yyVAL.node = expr.NewRequire(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewRequire(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 484:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.y:1457
+		//line parser/parser.y:2310
 		{
-			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node).SetComments(yyDollar[1].token.Comments()).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node).SetPosition(NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 485:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1461
+		//line parser/parser.y:2317
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 486:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.y:1462
+		//line parser/parser.y:2318
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.y:1466
+		//line parser/parser.y:2322
 		{
 			yyVAL.node = yyDollar[1].node
 		}

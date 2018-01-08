@@ -1,20 +1,17 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ElseIf struct {
 	position *node.Position
-	comments []comment.Comment
 	Cond     node.Node
 	Stmt     node.Node
 }
 
 func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	return &ElseIf{
-		nil,
 		nil,
 		Cond,
 		Stmt,
@@ -31,15 +28,6 @@ func (n *ElseIf) Position() *node.Position {
 
 func (n *ElseIf) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *ElseIf) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *ElseIf) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

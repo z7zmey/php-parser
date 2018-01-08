@@ -1,19 +1,16 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Finally struct {
 	position *node.Position
-	comments []comment.Comment
 	Stmts    []node.Node
 }
 
 func NewFinally(Stmts []node.Node) *Finally {
 	return &Finally{
-		nil,
 		nil,
 		Stmts,
 	}
@@ -29,15 +26,6 @@ func (n *Finally) Position() *node.Position {
 
 func (n *Finally) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Finally) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Finally) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

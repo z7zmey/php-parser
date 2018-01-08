@@ -1,19 +1,16 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type YieldFrom struct {
 	position *node.Position
-	comments []comment.Comment
 	Expr     node.Node
 }
 
 func NewYieldFrom(Expression node.Node) *YieldFrom {
 	return &YieldFrom{
-		nil,
 		nil,
 		Expression,
 	}
@@ -29,15 +26,6 @@ func (n *YieldFrom) Position() *node.Position {
 
 func (n *YieldFrom) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *YieldFrom) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *YieldFrom) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

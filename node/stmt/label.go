@@ -1,19 +1,16 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Label struct {
 	position  *node.Position
-	comments  []comment.Comment
 	LabelName node.Node
 }
 
 func NewLabel(LabelName node.Node) *Label {
 	return &Label{
-		nil,
 		nil,
 		LabelName,
 	}
@@ -29,15 +26,6 @@ func (n *Label) Position() *node.Position {
 
 func (n *Label) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Label) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Label) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

@@ -1,20 +1,17 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type TraitMethodRef struct {
 	position *node.Position
-	comments []comment.Comment
 	Trait    node.Node
 	Method   node.Node
 }
 
 func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	return &TraitMethodRef{
-		nil,
 		nil,
 		Trait,
 		Method,
@@ -31,15 +28,6 @@ func (n *TraitMethodRef) Position() *node.Position {
 
 func (n *TraitMethodRef) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *TraitMethodRef) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *TraitMethodRef) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

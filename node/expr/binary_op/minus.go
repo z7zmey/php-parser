@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Minus struct {
 func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 	return &Minus{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Minus) Position() *node.Position {
 
 func (n *Minus) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Minus) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Minus) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

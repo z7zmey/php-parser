@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Div struct {
 func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Div) Position() *node.Position {
 
 func (n *Div) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Div) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Div) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

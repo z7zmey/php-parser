@@ -1,19 +1,16 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Lnumber struct {
 	position *node.Position
-	comments []comment.Comment
 	Value    string
 }
 
 func NewLnumber(Value string) *Lnumber {
 	return &Lnumber{
-		nil,
 		nil,
 		Value,
 	}
@@ -31,15 +28,6 @@ func (n *Lnumber) Position() *node.Position {
 
 func (n *Lnumber) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Lnumber) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Lnumber) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

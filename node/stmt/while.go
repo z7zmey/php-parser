@@ -1,14 +1,12 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
 
 type While struct {
 	position *node.Position
-	comments []comment.Comment
 	Token    token.Token
 	Cond     node.Node
 	Stmt     node.Node
@@ -16,7 +14,6 @@ type While struct {
 
 func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
 	return &While{
-		nil,
 		nil,
 		Token,
 		Cond,
@@ -34,15 +31,6 @@ func (n *While) Position() *node.Position {
 
 func (n *While) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *While) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *While) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

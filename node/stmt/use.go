@@ -1,13 +1,11 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Use struct {
 	position *node.Position
-	comments []comment.Comment
 	UseType  node.Node
 	Use      node.Node
 	Alias    node.Node
@@ -15,7 +13,6 @@ type Use struct {
 
 func NewUse(UseType node.Node, use node.Node, Alias node.Node) *Use {
 	return &Use{
-		nil,
 		nil,
 		UseType,
 		use,
@@ -33,15 +30,6 @@ func (n *Use) Position() *node.Position {
 
 func (n *Use) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Use) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Use) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

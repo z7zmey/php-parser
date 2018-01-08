@@ -1,19 +1,16 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ShortArray struct {
 	position *node.Position
-	comments []comment.Comment
 	Items    []node.Node
 }
 
 func NewShortArray(Items []node.Node) *ShortArray {
 	return &ShortArray{
-		nil,
 		nil,
 		Items,
 	}
@@ -29,15 +26,6 @@ func (n *ShortArray) Position() *node.Position {
 
 func (n *ShortArray) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *ShortArray) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *ShortArray) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

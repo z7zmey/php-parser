@@ -1,19 +1,16 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Isset struct {
 	position  *node.Position
-	comments  []comment.Comment
 	Variables []node.Node
 }
 
 func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
-		nil,
 		nil,
 		Variables,
 	}
@@ -29,15 +26,6 @@ func (n *Isset) Position() *node.Position {
 
 func (n *Isset) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Isset) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Isset) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

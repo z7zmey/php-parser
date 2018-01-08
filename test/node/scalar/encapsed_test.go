@@ -25,7 +25,7 @@ func TestSimpleVar(t *testing.T) {
 	expr := stmt.NewExpression(encapsed).SetPosition(&node.Position{1, 1, 4, 15})
 	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 15})
 
-	actual := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -50,7 +50,7 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 	expr := stmt.NewExpression(encapsed).SetPosition(&node.Position{1, 1, 4, 22})
 	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 22})
 
-	actual := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -70,7 +70,7 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 	expr := stmt.NewExpression(encapsed).SetPosition(&node.Position{1, 1, 4, 17})
 	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 17})
 
-	actual := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -95,7 +95,7 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 	expr := stmt.NewExpression(encapsed).SetPosition(&node.Position{1, 1, 4, 20})
 	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 20})
 
-	actual := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -120,7 +120,7 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 	expr := stmt.NewExpression(encapsed).SetPosition(&node.Position{1, 1, 4, 24})
 	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 24})
 
-	actual := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)

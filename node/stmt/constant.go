@@ -1,13 +1,11 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Constant struct {
 	position      *node.Position
-	comments      []comment.Comment
 	PhpDocComment string
 	ConstantName  node.Node
 	Expr          node.Node
@@ -15,7 +13,6 @@ type Constant struct {
 
 func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
-		nil,
 		nil,
 		PhpDocComment,
 		ConstantName,
@@ -35,15 +32,6 @@ func (n *Constant) Position() *node.Position {
 
 func (n *Constant) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Constant) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Constant) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

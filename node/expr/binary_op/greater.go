@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Greater struct {
 func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	return &Greater{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Greater) Position() *node.Position {
 
 func (n *Greater) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Greater) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Greater) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

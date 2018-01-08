@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type LogicalXor struct {
 func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *LogicalXor) Position() *node.Position {
 
 func (n *LogicalXor) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *LogicalXor) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *LogicalXor) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

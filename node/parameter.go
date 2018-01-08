@@ -1,10 +1,7 @@
 package node
 
-import "github.com/z7zmey/php-parser/comment"
-
 type Parameter struct {
 	position     *Position
-	comments     []comment.Comment
 	ByRef        bool
 	Variadic     bool
 	VariableType Node
@@ -14,7 +11,6 @@ type Parameter struct {
 
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
-		nil,
 		nil,
 		ByRef,
 		Variadic,
@@ -37,15 +33,6 @@ func (n *Parameter) Position() *Position {
 
 func (n *Parameter) SetPosition(p *Position) Node {
 	n.position = p
-	return n
-}
-
-func (n *Parameter) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Parameter) SetComments(c []comment.Comment) Node {
-	n.comments = c
 	return n
 }
 

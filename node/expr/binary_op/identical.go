@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Identical struct {
 func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	return &Identical{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Identical) Position() *node.Position {
 
 func (n *Identical) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Identical) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Identical) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

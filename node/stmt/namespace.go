@@ -1,20 +1,17 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Namespace struct {
 	position      *node.Position
-	comments      []comment.Comment
 	NamespaceName node.Node
 	Stmts         []node.Node
 }
 
 func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	return &Namespace{
-		nil,
 		nil,
 		NamespaceName,
 		Stmts,
@@ -31,15 +28,6 @@ func (n *Namespace) Position() *node.Position {
 
 func (n *Namespace) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Namespace) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Namespace) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

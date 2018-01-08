@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type dumper struct {
-	indent string
+	indent   string
+	comments comment.Comments
 }
 
 func (d dumper) EnterNode(n node.Node) bool {
@@ -22,7 +24,7 @@ func (d dumper) EnterNode(n node.Node) bool {
 	}
 	fmt.Println()
 
-	if c := n.Comments(); c != nil && len(c) > 0 {
+	if c := d.comments[n]; len(c) > 0 {
 		fmt.Printf("%vcomments:\n", d.indent+"  ")
 		for _, cc := range c {
 			fmt.Printf("%v%q\n", d.indent+"    ", cc)
@@ -34,7 +36,7 @@ func (d dumper) EnterNode(n node.Node) bool {
 
 func (d dumper) GetChildrenVisitor(key string) node.Visitor {
 	fmt.Printf("%v%q:\n", d.indent+"  ", key)
-	return dumper{d.indent + "    "}
+	return dumper{d.indent + "    ", d.comments}
 }
 
 func (d dumper) LeaveNode(n node.Node) {

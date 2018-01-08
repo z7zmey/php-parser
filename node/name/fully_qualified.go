@@ -12,7 +12,6 @@ func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
 		Name{
 			nil,
-			nil,
 			Parts,
 		},
 	}

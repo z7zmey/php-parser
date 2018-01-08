@@ -1,19 +1,16 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type MagicConstant struct {
 	position *node.Position
-	comments []comment.Comment
 	Value    string
 }
 
 func NewMagicConstant(Value string) *MagicConstant {
 	return &MagicConstant{
-		nil,
 		nil,
 		Value,
 	}
@@ -31,15 +28,6 @@ func (n *MagicConstant) Position() *node.Position {
 
 func (n *MagicConstant) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *MagicConstant) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *MagicConstant) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

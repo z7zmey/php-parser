@@ -1,19 +1,16 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Expression struct {
 	position *node.Position
-	comments []comment.Comment
 	Expr     node.Node
 }
 
 func NewExpression(Expr node.Node) *Expression {
 	return &Expression{
-		nil,
 		nil,
 		Expr,
 	}
@@ -29,15 +26,6 @@ func (n *Expression) Position() *node.Position {
 
 func (n *Expression) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Expression) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Expression) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

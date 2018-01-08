@@ -1,13 +1,11 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ClassMethod struct {
 	position      *node.Position
-	comments      []comment.Comment
 	ReturnsRef    bool
 	PhpDocComment string
 	MethodName    node.Node
@@ -19,7 +17,6 @@ type ClassMethod struct {
 
 func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *ClassMethod {
 	return &ClassMethod{
-		nil,
 		nil,
 		ReturnsRef,
 		PhpDocComment,
@@ -44,15 +41,6 @@ func (n *ClassMethod) Position() *node.Position {
 
 func (n *ClassMethod) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *ClassMethod) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *ClassMethod) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

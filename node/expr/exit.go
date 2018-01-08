@@ -1,20 +1,17 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type Exit struct {
 	position *node.Position
-	comments []comment.Comment
 	Expr     node.Node
 	IsDie    bool
 }
 
 func NewExit(Expr node.Node, IsDie bool) *Exit {
 	return &Exit{
-		nil,
 		nil,
 		Expr,
 		IsDie,
@@ -33,15 +30,6 @@ func (n *Exit) Position() *node.Position {
 
 func (n *Exit) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Exit) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Exit) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

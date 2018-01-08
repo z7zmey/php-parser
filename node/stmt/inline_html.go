@@ -1,19 +1,16 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type InlineHtml struct {
 	position *node.Position
-	comments []comment.Comment
 	Value    string
 }
 
 func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
-		nil,
 		nil,
 		Value,
 	}
@@ -31,15 +28,6 @@ func (n *InlineHtml) Position() *node.Position {
 
 func (n *InlineHtml) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *InlineHtml) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *InlineHtml) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

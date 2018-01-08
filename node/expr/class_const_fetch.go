@@ -1,20 +1,17 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type ClassConstFetch struct {
 	position     *node.Position
-	comments     []comment.Comment
 	Class        node.Node
 	ConstantName node.Node
 }
 
 func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
-		nil,
 		nil,
 		Class,
 		ConstantName,
@@ -31,15 +28,6 @@ func (n *ClassConstFetch) Position() *node.Position {
 
 func (n *ClassConstFetch) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *ClassConstFetch) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *ClassConstFetch) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

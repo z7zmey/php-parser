@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Smaller struct {
 func NewSmaller(Variable node.Node, Expression node.Node) *Smaller {
 	return &Smaller{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Smaller) Position() *node.Position {
 
 func (n *Smaller) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Smaller) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Smaller) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type Spaceship struct {
 func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	return &Spaceship{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *Spaceship) Position() *node.Position {
 
 func (n *Spaceship) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *Spaceship) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *Spaceship) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 

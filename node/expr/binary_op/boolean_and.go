@@ -1,7 +1,6 @@
 package binary_op
 
 import (
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
@@ -12,7 +11,6 @@ type BooleanAnd struct {
 func NewBooleanAnd(Variable node.Node, Expression node.Node) *BooleanAnd {
 	return &BooleanAnd{
 		BinaryOp{
-			nil,
 			nil,
 			Variable,
 			Expression,
@@ -30,15 +28,6 @@ func (n *BooleanAnd) Position() *node.Position {
 
 func (n *BooleanAnd) SetPosition(p *node.Position) node.Node {
 	n.position = p
-	return n
-}
-
-func (n *BooleanAnd) Comments() []comment.Comment {
-	return n.comments
-}
-
-func (n *BooleanAnd) SetComments(c []comment.Comment) node.Node {
-	n.comments = c
 	return n
 }
 
