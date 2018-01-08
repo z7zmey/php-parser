@@ -12,7 +12,7 @@ type Namespace struct {
 	Stmts         []node.Node
 }
 
-func NewNamespace(NamespaceName node.Node, Stmts []node.Node) node.Node {
+func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	return &Namespace{
 		nil,
 		nil,

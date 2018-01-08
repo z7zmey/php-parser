@@ -11,7 +11,7 @@ type ShortArray struct {
 	Items    []node.Node
 }
 
-func NewShortArray(Items []node.Node) node.Node {
+func NewShortArray(Items []node.Node) *ShortArray {
 	return &ShortArray{
 		nil,
 		nil,

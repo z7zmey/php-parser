@@ -11,7 +11,7 @@ type ShellExec struct {
 	Parts    []node.Node
 }
 
-func NewShellExec(Parts []node.Node) node.Node {
+func NewShellExec(Parts []node.Node) *ShellExec {
 	return &ShellExec{
 		nil,
 		nil,

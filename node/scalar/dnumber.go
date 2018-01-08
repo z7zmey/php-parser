@@ -11,7 +11,7 @@ type Dnumber struct {
 	Value    string
 }
 
-func NewDnumber(Value string) node.Node {
+func NewDnumber(Value string) *Dnumber {
 	return &Dnumber{
 		nil,
 		nil,

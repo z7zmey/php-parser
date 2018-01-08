@@ -11,7 +11,7 @@ type MagicConstant struct {
 	Value    string
 }
 
-func NewMagicConstant(Value string) node.Node {
+func NewMagicConstant(Value string) *MagicConstant {
 	return &MagicConstant{
 		nil,
 		nil,

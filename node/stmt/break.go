@@ -11,7 +11,7 @@ type Break struct {
 	Expr     node.Node
 }
 
-func NewBreak(Expr node.Node) node.Node {
+func NewBreak(Expr node.Node) *Break {
 	return &Break{
 		nil,
 		nil,

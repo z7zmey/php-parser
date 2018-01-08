@@ -11,7 +11,7 @@ type InlineHtml struct {
 	Value    string
 }
 
-func NewInlineHtml(Value string) node.Node {
+func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
 		nil,
 		nil,

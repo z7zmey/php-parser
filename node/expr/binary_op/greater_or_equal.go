@@ -9,7 +9,7 @@ type GreaterOrEqual struct {
 	BinaryOp
 }
 
-func NewGreaterOrEqual(Variable node.Node, Expression node.Node) node.Node {
+func NewGreaterOrEqual(Variable node.Node, Expression node.Node) *GreaterOrEqual {
 	return &GreaterOrEqual{
 		BinaryOp{
 			nil,

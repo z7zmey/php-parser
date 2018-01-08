@@ -9,7 +9,7 @@ type LogicalXor struct {
 	BinaryOp
 }
 
-func NewLogicalXor(Variable node.Node, Expression node.Node) node.Node {
+func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
 		BinaryOp{
 			nil,

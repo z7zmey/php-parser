@@ -9,7 +9,7 @@ type LogicalOr struct {
 	BinaryOp
 }
 
-func NewLogicalOr(Variable node.Node, Expression node.Node) node.Node {
+func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	return &LogicalOr{
 		BinaryOp{
 			nil,

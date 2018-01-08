@@ -9,7 +9,7 @@ type Div struct {
 	AssignOp
 }
 
-func NewDiv(Variable node.Node, Expression node.Node) node.Node {
+func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
 		AssignOp{
 			nil,

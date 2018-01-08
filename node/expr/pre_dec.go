@@ -11,7 +11,7 @@ type PreDec struct {
 	Variable node.Node
 }
 
-func NewPreDec(Variable node.Node) node.Node {
+func NewPreDec(Variable node.Node) *PreDec {
 	return &PreDec{
 		nil,
 		nil,

@@ -11,7 +11,7 @@ type Print struct {
 	Expr     node.Node
 }
 
-func NewPrint(Expression node.Node) node.Node {
+func NewPrint(Expression node.Node) *Print {
 	return &Print{
 		nil,
 		nil,

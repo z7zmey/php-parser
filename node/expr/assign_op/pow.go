@@ -9,7 +9,7 @@ type Pow struct {
 	AssignOp
 }
 
-func NewPow(Variable node.Node, Expression node.Node) node.Node {
+func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
 		AssignOp{
 			nil,

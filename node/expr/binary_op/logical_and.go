@@ -9,7 +9,7 @@ type LogicalAnd struct {
 	BinaryOp
 }
 
-func NewLogicalAnd(Variable node.Node, Expression node.Node) node.Node {
+func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	return &LogicalAnd{
 		BinaryOp{
 			nil,

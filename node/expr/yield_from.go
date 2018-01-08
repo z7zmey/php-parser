@@ -11,7 +11,7 @@ type YieldFrom struct {
 	Expr     node.Node
 }
 
-func NewYieldFrom(Expression node.Node) node.Node {
+func NewYieldFrom(Expression node.Node) *YieldFrom {
 	return &YieldFrom{
 		nil,
 		nil,

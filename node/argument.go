@@ -9,7 +9,7 @@ type Argument struct {
 	Expr     Node
 }
 
-func NewArgument(Expression Node, Variadic bool) Node {
+func NewArgument(Expression Node, Variadic bool) *Argument {
 	return &Argument{
 		nil,
 		nil,

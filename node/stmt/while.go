@@ -14,7 +14,7 @@ type While struct {
 	Stmt     node.Node
 }
 
-func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) node.Node {
+func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
 	return &While{
 		nil,
 		nil,

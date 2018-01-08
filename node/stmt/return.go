@@ -11,7 +11,7 @@ type Return struct {
 	Expr     node.Node
 }
 
-func NewReturn(Expr node.Node) node.Node {
+func NewReturn(Expr node.Node) *Return {
 	return &Return{
 		nil,
 		nil,

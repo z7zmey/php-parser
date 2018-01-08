@@ -11,7 +11,7 @@ type PostDec struct {
 	Variable node.Node
 }
 
-func NewPostDec(Variable node.Node) node.Node {
+func NewPostDec(Variable node.Node) *PostDec {
 	return &PostDec{
 		nil,
 		nil,

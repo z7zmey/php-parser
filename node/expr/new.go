@@ -12,7 +12,7 @@ type New struct {
 	Arguments []node.Node
 }
 
-func NewNew(Class node.Node, Arguments []node.Node) node.Node {
+func NewNew(Class node.Node, Arguments []node.Node) *New {
 	return &New{
 		nil,
 		nil,

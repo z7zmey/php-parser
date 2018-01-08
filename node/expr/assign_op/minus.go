@@ -9,7 +9,7 @@ type Minus struct {
 	AssignOp
 }
 
-func NewMinus(Variable node.Node, Expression node.Node) node.Node {
+func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 	return &Minus{
 		AssignOp{
 			nil,

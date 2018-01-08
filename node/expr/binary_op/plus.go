@@ -9,7 +9,7 @@ type Plus struct {
 	BinaryOp
 }
 
-func NewPlus(Variable node.Node, Expression node.Node) node.Node {
+func NewPlus(Variable node.Node, Expression node.Node) *Plus {
 	return &Plus{
 		BinaryOp{
 			nil,

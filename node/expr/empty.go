@@ -11,7 +11,7 @@ type Empty struct {
 	Expr     node.Node
 }
 
-func NewEmpty(Expression node.Node) node.Node {
+func NewEmpty(Expression node.Node) *Empty {
 	return &Empty{
 		nil,
 		nil,

@@ -13,7 +13,7 @@ type StaticCall struct {
 	Arguments []node.Node
 }
 
-func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) node.Node {
+func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) *StaticCall {
 	return &StaticCall{
 		nil,
 		nil,

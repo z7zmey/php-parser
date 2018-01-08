@@ -9,7 +9,7 @@ type ShiftLeft struct {
 	AssignOp
 }
 
-func NewShiftLeft(Variable node.Node, Expression node.Node) node.Node {
+func NewShiftLeft(Variable node.Node, Expression node.Node) *ShiftLeft {
 	return &ShiftLeft{
 		AssignOp{
 			nil,

@@ -13,7 +13,7 @@ type Ternary struct {
 	IfFalse   node.Node
 }
 
-func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) node.Node {
+func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
 		nil,
 		nil,

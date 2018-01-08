@@ -9,7 +9,7 @@ type Mul struct {
 	BinaryOp
 }
 
-func NewMul(Variable node.Node, Expression node.Node) node.Node {
+func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	return &Mul{
 		BinaryOp{
 			nil,

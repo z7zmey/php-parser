@@ -9,7 +9,7 @@ type CastUnset struct {
 	Cast
 }
 
-func NewCastUnset(Expr node.Node) node.Node {
+func NewCastUnset(Expr node.Node) *CastUnset {
 	return &CastUnset{
 		Cast{
 			nil,

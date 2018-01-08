@@ -9,7 +9,7 @@ type Concat struct {
 	BinaryOp
 }
 
-func NewConcat(Variable node.Node, Expression node.Node) node.Node {
+func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
 		BinaryOp{
 			nil,

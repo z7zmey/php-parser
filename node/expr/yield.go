@@ -12,7 +12,7 @@ type Yield struct {
 	Value    node.Node
 }
 
-func NewYield(Key node.Node, Value node.Node) node.Node {
+func NewYield(Key node.Node, Value node.Node) *Yield {
 	return &Yield{
 		nil,
 		nil,

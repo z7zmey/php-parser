@@ -14,7 +14,7 @@ type For struct {
 	Stmt     node.Node
 }
 
-func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) node.Node {
+func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *For {
 	return &For{
 		nil,
 		nil,

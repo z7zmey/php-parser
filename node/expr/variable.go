@@ -11,7 +11,7 @@ type Variable struct {
 	VarName  node.Node
 }
 
-func NewVariable(VarName node.Node) node.Node {
+func NewVariable(VarName node.Node) *Variable {
 	return &Variable{
 		nil,
 		nil,

@@ -12,7 +12,7 @@ type ClassConstList struct {
 	Consts    []node.Node
 }
 
-func NewClassConstList(Modifiers []node.Node, Consts []node.Node) node.Node {
+func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstList {
 	return &ClassConstList{
 		nil,
 		nil,

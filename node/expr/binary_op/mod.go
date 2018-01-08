@@ -9,7 +9,7 @@ type Mod struct {
 	BinaryOp
 }
 
-func NewMod(Variable node.Node, Expression node.Node) node.Node {
+func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
 		BinaryOp{
 			nil,

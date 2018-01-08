@@ -12,7 +12,7 @@ type ClusureUse struct {
 	Variable node.Node
 }
 
-func NewClusureUse(Variable node.Node, ByRef bool) node.Node {
+func NewClusureUse(Variable node.Node, ByRef bool) *ClusureUse {
 	return &ClusureUse{
 		nil,
 		nil,

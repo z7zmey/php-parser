@@ -11,7 +11,7 @@ type Name struct {
 	Parts    []node.Node
 }
 
-func NewName(Parts []node.Node) node.Node {
+func NewName(Parts []node.Node) *Name {
 	return &Name{
 		nil,
 		nil,

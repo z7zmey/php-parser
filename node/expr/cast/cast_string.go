@@ -9,7 +9,7 @@ type CastString struct {
 	Cast
 }
 
-func NewCastString(Expr node.Node) node.Node {
+func NewCastString(Expr node.Node) *CastString {
 	return &CastString{
 		Cast{
 			nil,

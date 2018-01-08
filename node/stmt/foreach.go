@@ -15,7 +15,7 @@ type Foreach struct {
 	Stmt     node.Node
 }
 
-func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) node.Node {
+func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
 	return &Foreach{
 		nil,
 		nil,

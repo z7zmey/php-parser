@@ -11,7 +11,7 @@ type Goto struct {
 	Label    node.Node
 }
 
-func NewGoto(Label node.Node) node.Node {
+func NewGoto(Label node.Node) *Goto {
 	return &Goto{
 		nil,
 		nil,

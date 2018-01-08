@@ -9,7 +9,7 @@ type ShiftRight struct {
 	BinaryOp
 }
 
-func NewShiftRight(Variable node.Node, Expression node.Node) node.Node {
+func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	return &ShiftRight{
 		BinaryOp{
 			nil,

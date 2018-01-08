@@ -9,7 +9,7 @@ type Assign struct {
 	AssignOp
 }
 
-func NewAssign(Variable node.Node, Expression node.Node) node.Node {
+func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 	return &Assign{
 		AssignOp{
 			nil,

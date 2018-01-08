@@ -13,7 +13,7 @@ type MethodCall struct {
 	Arguments []node.Node
 }
 
-func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) node.Node {
+func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) *MethodCall {
 	return &MethodCall{
 		nil,
 		nil,

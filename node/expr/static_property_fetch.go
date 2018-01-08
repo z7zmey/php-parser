@@ -12,7 +12,7 @@ type StaticPropertyFetch struct {
 	Property node.Node
 }
 
-func NewStaticPropertyFetch(Class node.Node, Property node.Node) node.Node {
+func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
 		nil,
 		nil,

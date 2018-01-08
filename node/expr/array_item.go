@@ -13,7 +13,7 @@ type ArrayItem struct {
 	Val      node.Node
 }
 
-func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) node.Node {
+func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
 	return &ArrayItem{
 		nil,
 		nil,

@@ -9,7 +9,7 @@ type CastInt struct {
 	Cast
 }
 
-func NewCastInt(Expr node.Node) node.Node {
+func NewCastInt(Expr node.Node) *CastInt {
 	return &CastInt{
 		Cast{
 			nil,

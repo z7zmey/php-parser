@@ -9,7 +9,7 @@ type Greater struct {
 	BinaryOp
 }
 
-func NewGreater(Variable node.Node, Expression node.Node) node.Node {
+func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	return &Greater{
 		BinaryOp{
 			nil,

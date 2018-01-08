@@ -12,7 +12,7 @@ type TraitUse struct {
 	Adaptations []node.Node
 }
 
-func NewTraitUse(Traits []node.Node, Adaptations []node.Node) node.Node {
+func NewTraitUse(Traits []node.Node, Adaptations []node.Node) *TraitUse {
 	return &TraitUse{
 		nil,
 		nil,

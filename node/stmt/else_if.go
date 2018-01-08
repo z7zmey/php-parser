@@ -12,7 +12,7 @@ type ElseIf struct {
 	Stmt     node.Node
 }
 
-func NewElseIf(Cond node.Node, Stmt node.Node) node.Node {
+func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	return &ElseIf{
 		nil,
 		nil,

@@ -12,7 +12,7 @@ type Declare struct {
 	Stmt     node.Node
 }
 
-func NewDeclare(Consts []node.Node, Stmt node.Node) node.Node {
+func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	return &Declare{
 		nil,
 		nil,

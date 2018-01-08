@@ -12,7 +12,7 @@ type ArrayDimFetch struct {
 	Dim      node.Node
 }
 
-func NewArrayDimFetch(Variable node.Node, Dim node.Node) node.Node {
+func NewArrayDimFetch(Variable node.Node, Dim node.Node) *ArrayDimFetch {
 	return &ArrayDimFetch{
 		nil,
 		nil,

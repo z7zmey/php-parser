@@ -11,7 +11,7 @@ type Lnumber struct {
 	Value    string
 }
 
-func NewLnumber(Value string) node.Node {
+func NewLnumber(Value string) *Lnumber {
 	return &Lnumber{
 		nil,
 		nil,

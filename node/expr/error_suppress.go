@@ -11,7 +11,7 @@ type ErrorSuppress struct {
 	Expr     node.Node
 }
 
-func NewErrorSuppress(Expression node.Node) node.Node {
+func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	return &ErrorSuppress{
 		nil,
 		nil,

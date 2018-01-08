@@ -9,7 +9,7 @@ type CastArray struct {
 	Cast
 }
 
-func NewCastArray(Expr node.Node) node.Node {
+func NewCastArray(Expr node.Node) *CastArray {
 	return &CastArray{
 		Cast{
 			nil,

@@ -11,7 +11,7 @@ type List struct {
 	Items    []node.Node
 }
 
-func NewList(Items []node.Node) node.Node {
+func NewList(Items []node.Node) *List {
 	return &List{
 		nil,
 		nil,

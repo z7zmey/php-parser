@@ -11,7 +11,7 @@ type ShortList struct {
 	Items    []node.Node
 }
 
-func NewShortList(Items []node.Node) node.Node {
+func NewShortList(Items []node.Node) *ShortList {
 	return &ShortList{
 		nil,
 		nil,

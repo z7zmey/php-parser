@@ -9,7 +9,7 @@ type Concat struct {
 	AssignOp
 }
 
-func NewConcat(Variable node.Node, Expression node.Node) node.Node {
+func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
 		AssignOp{
 			nil,

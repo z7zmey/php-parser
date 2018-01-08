@@ -11,7 +11,7 @@ type ConstFetch struct {
 	Constant node.Node
 }
 
-func NewConstFetch(Constant node.Node) node.Node {
+func NewConstFetch(Constant node.Node) *ConstFetch {
 	return &ConstFetch{
 		nil,
 		nil,

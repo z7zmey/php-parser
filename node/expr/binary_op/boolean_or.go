@@ -9,7 +9,7 @@ type BooleanOr struct {
 	BinaryOp
 }
 
-func NewBooleanOr(Variable node.Node, Expression node.Node) node.Node {
+func NewBooleanOr(Variable node.Node, Expression node.Node) *BooleanOr {
 	return &BooleanOr{
 		BinaryOp{
 			nil,

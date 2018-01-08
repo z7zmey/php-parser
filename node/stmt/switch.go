@@ -14,7 +14,7 @@ type Switch struct {
 	cases    []node.Node
 }
 
-func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) node.Node {
+func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) *Switch {
 	return &Switch{
 		nil,
 		nil,

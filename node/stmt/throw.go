@@ -11,7 +11,7 @@ type Throw struct {
 	Expr     node.Node
 }
 
-func NewThrow(Expr node.Node) node.Node {
+func NewThrow(Expr node.Node) *Throw {
 	return &Throw{
 		nil,
 		nil,

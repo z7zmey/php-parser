@@ -11,7 +11,7 @@ type Require struct {
 	Expr     node.Node
 }
 
-func NewRequire(Expression node.Node) node.Node {
+func NewRequire(Expression node.Node) *Require {
 	return &Require{
 		nil,
 		nil,

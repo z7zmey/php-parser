@@ -11,7 +11,7 @@ type Static struct {
 	Vars     []node.Node
 }
 
-func NewStatic(Vars []node.Node) node.Node {
+func NewStatic(Vars []node.Node) *Static {
 	return &Static{
 		nil,
 		nil,

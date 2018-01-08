@@ -9,7 +9,7 @@ type AssignRef struct {
 	AssignOp
 }
 
-func NewAssignRef(Variable node.Node, Expression node.Node) node.Node {
+func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
 	return &AssignRef{
 		AssignOp{
 			nil,

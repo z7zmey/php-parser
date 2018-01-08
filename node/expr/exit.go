@@ -12,7 +12,7 @@ type Exit struct {
 	IsDie    bool
 }
 
-func NewExit(Expr node.Node, IsDie bool) node.Node {
+func NewExit(Expr node.Node, IsDie bool) *Exit {
 	return &Exit{
 		nil,
 		nil,

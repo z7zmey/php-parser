@@ -9,7 +9,7 @@ type NotIdentical struct {
 	BinaryOp
 }
 
-func NewNotIdentical(Variable node.Node, Expression node.Node) node.Node {
+func NewNotIdentical(Variable node.Node, Expression node.Node) *NotIdentical {
 	return &NotIdentical{
 		BinaryOp{
 			nil,

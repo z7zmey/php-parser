@@ -12,7 +12,7 @@ type PropertyList struct {
 	Properties []node.Node
 }
 
-func NewPropertyList(Modifiers []node.Node, Properties []node.Node) node.Node {
+func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
 		nil,
 		nil,

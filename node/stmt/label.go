@@ -11,7 +11,7 @@ type Label struct {
 	LabelName node.Node
 }
 
-func NewLabel(LabelName node.Node) node.Node {
+func NewLabel(LabelName node.Node) *Label {
 	return &Label{
 		nil,
 		nil,

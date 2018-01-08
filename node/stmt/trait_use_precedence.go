@@ -12,7 +12,7 @@ type TraitUsePrecedence struct {
 	Insteadof node.Node
 }
 
-func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) node.Node {
+func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) *TraitUsePrecedence {
 	return &TraitUsePrecedence{
 		nil,
 		nil,

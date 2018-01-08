@@ -14,7 +14,7 @@ type AltIf struct {
 	_else    node.Node
 }
 
-func NewAltIf(Cond node.Node, Stmt node.Node) node.Node {
+func NewAltIf(Cond node.Node, Stmt node.Node) *AltIf {
 	return &AltIf{
 		nil,
 		nil,

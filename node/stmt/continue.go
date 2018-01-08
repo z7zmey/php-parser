@@ -11,7 +11,7 @@ type Continue struct {
 	Expr     node.Node
 }
 
-func NewContinue(Expr node.Node) node.Node {
+func NewContinue(Expr node.Node) *Continue {
 	return &Continue{
 		nil,
 		nil,

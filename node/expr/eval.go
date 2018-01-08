@@ -11,7 +11,7 @@ type Eval struct {
 	Expr     node.Node
 }
 
-func NewEval(Expression node.Node) node.Node {
+func NewEval(Expression node.Node) *Eval {
 	return &Eval{
 		nil,
 		nil,

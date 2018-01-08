@@ -13,7 +13,7 @@ type Try struct {
 	Finally  node.Node
 }
 
-func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) node.Node {
+func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) *Try {
 	return &Try{
 		nil,
 		nil,

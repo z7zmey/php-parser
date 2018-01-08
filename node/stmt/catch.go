@@ -13,7 +13,7 @@ type Catch struct {
 	Stmts    []node.Node
 }
 
-func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) node.Node {
+func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
 		nil,
 		nil,

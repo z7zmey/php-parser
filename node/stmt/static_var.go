@@ -12,7 +12,7 @@ type StaticVar struct {
 	Expr     node.Node
 }
 
-func NewStaticVar(Variable node.Node, Expr node.Node) node.Node {
+func NewStaticVar(Variable node.Node, Expr node.Node) *StaticVar {
 	return &StaticVar{
 		nil,
 		nil,

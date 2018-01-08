@@ -10,7 +10,7 @@ type HaltCompiler struct {
 	comments *[]comment.Comment
 }
 
-func NewHaltCompiler() node.Node {
+func NewHaltCompiler() *HaltCompiler {
 	return &HaltCompiler{
 		nil,
 		nil,

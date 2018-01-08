@@ -9,7 +9,7 @@ type Coalesce struct {
 	BinaryOp
 }
 
-func NewCoalesce(Variable node.Node, Expression node.Node) node.Node {
+func NewCoalesce(Variable node.Node, Expression node.Node) *Coalesce {
 	return &Coalesce{
 		BinaryOp{
 			nil,

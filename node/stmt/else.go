@@ -11,7 +11,7 @@ type Else struct {
 	Stmt     node.Node
 }
 
-func NewElse(Stmt node.Node) node.Node {
+func NewElse(Stmt node.Node) *Else {
 	return &Else{
 		nil,
 		nil,

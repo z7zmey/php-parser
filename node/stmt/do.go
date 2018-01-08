@@ -12,7 +12,7 @@ type Do struct {
 	Cond     node.Node
 }
 
-func NewDo(Stmt node.Node, Cond node.Node) node.Node {
+func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	return &Do{
 		nil,
 		nil,

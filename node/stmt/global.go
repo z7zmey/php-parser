@@ -11,7 +11,7 @@ type Global struct {
 	Vars     []node.Node
 }
 
-func NewGlobal(Vars []node.Node) node.Node {
+func NewGlobal(Vars []node.Node) *Global {
 	return &Global{
 		nil,
 		nil,

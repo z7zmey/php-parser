@@ -8,7 +8,7 @@ type Nullable struct {
 	Expr     Node
 }
 
-func NewNullable(Expression Node) Node {
+func NewNullable(Expression Node) *Nullable {
 	return &Nullable{
 		nil,
 		nil,

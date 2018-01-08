@@ -17,7 +17,7 @@ import (
     "github.com/z7zmey/php-parser/comment"
 )
 
-var rootnode = stmt.NewStmtList([]node.Node{})
+var rootnode node.Node
 
 func Parse(src io.Reader, fName string) node.Node {
     yyDebug        = 0

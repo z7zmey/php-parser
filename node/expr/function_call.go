@@ -12,7 +12,7 @@ type FunctionCall struct {
 	Arguments []node.Node
 }
 
-func NewFunctionCall(Function node.Node, Arguments []node.Node) node.Node {
+func NewFunctionCall(Function node.Node, Arguments []node.Node) *FunctionCall {
 	return &FunctionCall{
 		nil,
 		nil,

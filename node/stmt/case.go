@@ -12,7 +12,7 @@ type Case struct {
 	Stmts    []node.Node
 }
 
-func NewCase(Cond node.Node, Stmts []node.Node) node.Node {
+func NewCase(Cond node.Node, Stmts []node.Node) *Case {
 	return &Case{
 		nil,
 		nil,

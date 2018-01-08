@@ -13,7 +13,7 @@ type Property struct {
 	Expr          node.Node
 }
 
-func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) node.Node {
+func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Property {
 	return &Property{
 		nil,
 		nil,

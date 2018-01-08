@@ -13,7 +13,7 @@ type GroupUse struct {
 	UseList  []node.Node
 }
 
-func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) node.Node {
+func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) *GroupUse {
 	return &GroupUse{
 		nil,
 		nil,

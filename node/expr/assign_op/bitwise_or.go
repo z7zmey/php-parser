@@ -9,7 +9,7 @@ type BitwiseOr struct {
 	AssignOp
 }
 
-func NewBitwiseOr(Variable node.Node, Expression node.Node) node.Node {
+func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	return &BitwiseOr{
 		AssignOp{
 			nil,

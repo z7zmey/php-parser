@@ -11,7 +11,7 @@ type Default struct {
 	Stmts    []node.Node
 }
 
-func NewDefault(Stmts []node.Node) node.Node {
+func NewDefault(Stmts []node.Node) *Default {
 	return &Default{
 		nil,
 		nil,

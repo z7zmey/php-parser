@@ -11,7 +11,7 @@ type PreInc struct {
 	Variable node.Node
 }
 
-func NewPreInc(Variable node.Node) node.Node {
+func NewPreInc(Variable node.Node) *PreInc {
 	return &PreInc{
 		nil,
 		nil,

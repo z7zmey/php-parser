@@ -11,7 +11,7 @@ type EncapsedStringPart struct {
 	Value    string
 }
 
-func NewEncapsedStringPart(Value string) node.Node {
+func NewEncapsedStringPart(Value string) *EncapsedStringPart {
 	return &EncapsedStringPart{
 		nil,
 		nil,

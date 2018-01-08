@@ -12,7 +12,7 @@ type TraitMethodRef struct {
 	Method   node.Node
 }
 
-func NewTraitMethodRef(Trait node.Node, Method node.Node) node.Node {
+func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	return &TraitMethodRef{
 		nil,
 		nil,

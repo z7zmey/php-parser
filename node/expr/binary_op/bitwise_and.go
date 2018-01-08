@@ -9,7 +9,7 @@ type BitwiseAnd struct {
 	BinaryOp
 }
 
-func NewBitwiseAnd(Variable node.Node, Expression node.Node) node.Node {
+func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	return &BitwiseAnd{
 		BinaryOp{
 			nil,

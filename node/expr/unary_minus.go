@@ -11,7 +11,7 @@ type UnaryMinus struct {
 	Expr     node.Node
 }
 
-func NewUnaryMinus(Expression node.Node) node.Node {
+func NewUnaryMinus(Expression node.Node) *UnaryMinus {
 	return &UnaryMinus{
 		nil,
 		nil,

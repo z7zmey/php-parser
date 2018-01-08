@@ -11,7 +11,7 @@ type RequireOnce struct {
 	Expr     node.Node
 }
 
-func NewRequireOnce(Expression node.Node) node.Node {
+func NewRequireOnce(Expression node.Node) *RequireOnce {
 	return &RequireOnce{
 		nil,
 		nil,

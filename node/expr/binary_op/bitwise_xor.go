@@ -9,7 +9,7 @@ type BitwiseXor struct {
 	BinaryOp
 }
 
-func NewBitwiseXor(Variable node.Node, Expression node.Node) node.Node {
+func NewBitwiseXor(Variable node.Node, Expression node.Node) *BitwiseXor {
 	return &BitwiseXor{
 		BinaryOp{
 			nil,

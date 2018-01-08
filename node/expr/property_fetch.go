@@ -12,7 +12,7 @@ type PropertyFetch struct {
 	Property node.Node
 }
 
-func NewPropertyFetch(Variable node.Node, Property node.Node) node.Node {
+func NewPropertyFetch(Variable node.Node, Property node.Node) *PropertyFetch {
 	return &PropertyFetch{
 		nil,
 		nil,

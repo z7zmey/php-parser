@@ -12,7 +12,7 @@ type ClassConstFetch struct {
 	ConstantName node.Node
 }
 
-func NewClassConstFetch(Class node.Node, ConstantName node.Node) node.Node {
+func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
 		nil,
 		nil,

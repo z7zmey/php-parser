@@ -12,7 +12,7 @@ type AltElseIf struct {
 	Stmt     node.Node
 }
 
-func NewAltElseIf(Cond node.Node, Stmt node.Node) node.Node {
+func NewAltElseIf(Cond node.Node, Stmt node.Node) *AltElseIf {
 	return &AltElseIf{
 		nil,
 		nil,

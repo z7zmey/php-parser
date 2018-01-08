@@ -11,7 +11,7 @@ type Include struct {
 	Expr     node.Node
 }
 
-func NewInclude(Expression node.Node) node.Node {
+func NewInclude(Expression node.Node) *Include {
 	return &Include{
 		nil,
 		nil,

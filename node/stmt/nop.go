@@ -10,7 +10,7 @@ type Nop struct {
 	comments *[]comment.Comment
 }
 
-func NewNop() node.Node {
+func NewNop() *Nop {
 	return &Nop{
 		nil,
 		nil,

@@ -9,7 +9,7 @@ type Div struct {
 	BinaryOp
 }
 
-func NewDiv(Variable node.Node, Expression node.Node) node.Node {
+func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
 		BinaryOp{
 			nil,

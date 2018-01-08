@@ -11,7 +11,7 @@ type Echo struct {
 	Exprs    []node.Node
 }
 
-func NewEcho(Exprs []node.Node) node.Node {
+func NewEcho(Exprs []node.Node) *Echo {
 	return &Echo{
 		nil,
 		nil,

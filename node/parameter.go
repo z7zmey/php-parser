@@ -12,7 +12,7 @@ type Parameter struct {
 	DefaultValue Node
 }
 
-func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) Node {
+func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
 		nil,
 		nil,

@@ -9,7 +9,7 @@ type Spaceship struct {
 	BinaryOp
 }
 
-func NewSpaceship(Variable node.Node, Expression node.Node) node.Node {
+func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	return &Spaceship{
 		BinaryOp{
 			nil,

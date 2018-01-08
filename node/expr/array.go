@@ -11,7 +11,7 @@ type Array struct {
 	Items    []node.Node
 }
 
-func NewArray(Items []node.Node) node.Node {
+func NewArray(Items []node.Node) *Array {
 	return &Array{
 		nil,
 		nil,

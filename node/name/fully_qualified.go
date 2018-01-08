@@ -8,7 +8,7 @@ type FullyQualified struct {
 	Name
 }
 
-func NewFullyQualified(Parts []node.Node) node.Node {
+func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
 		Name{
 			nil,

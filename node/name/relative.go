@@ -8,7 +8,7 @@ type Relative struct {
 	Name
 }
 
-func NewRelative(Parts []node.Node) node.Node {
+func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
 		Name{
 			nil,

@@ -11,7 +11,7 @@ type Unset struct {
 	Vars     []node.Node
 }
 
-func NewUnset(Vars []node.Node) node.Node {
+func NewUnset(Vars []node.Node) *Unset {
 	return &Unset{
 		nil,
 		nil,

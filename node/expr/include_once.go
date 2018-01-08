@@ -11,7 +11,7 @@ type IncludeOnce struct {
 	Expr     node.Node
 }
 
-func NewIncludeOnce(Expression node.Node) node.Node {
+func NewIncludeOnce(Expression node.Node) *IncludeOnce {
 	return &IncludeOnce{
 		nil,
 		nil,

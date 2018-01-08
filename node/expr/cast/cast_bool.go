@@ -9,7 +9,7 @@ type CastBool struct {
 	Cast
 }
 
-func NewCastBool(Expr node.Node) node.Node {
+func NewCastBool(Expr node.Node) *CastBool {
 	return &CastBool{
 		Cast{
 			nil,

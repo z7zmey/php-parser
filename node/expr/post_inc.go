@@ -11,7 +11,7 @@ type PostInc struct {
 	Variable node.Node
 }
 
-func NewPostInc(Variable node.Node) node.Node {
+func NewPostInc(Variable node.Node) *PostInc {
 	return &PostInc{
 		nil,
 		nil,

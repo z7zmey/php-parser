@@ -11,7 +11,7 @@ type String struct {
 	Value    string
 }
 
-func NewString(Value string) node.Node {
+func NewString(Value string) *String {
 	return &String{
 		nil,
 		nil,

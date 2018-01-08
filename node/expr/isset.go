@@ -11,7 +11,7 @@ type Isset struct {
 	Variables []node.Node
 }
 
-func NewIsset(Variables []node.Node) node.Node {
+func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
 		nil,
 		nil,

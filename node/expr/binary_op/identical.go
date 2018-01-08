@@ -9,7 +9,7 @@ type Identical struct {
 	BinaryOp
 }
 
-func NewIdentical(Variable node.Node, Expression node.Node) node.Node {
+func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	return &Identical{
 		BinaryOp{
 			nil,

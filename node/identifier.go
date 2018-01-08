@@ -8,7 +8,7 @@ type Identifier struct {
 	Value    string
 }
 
-func NewIdentifier(Value string) Node {
+func NewIdentifier(Value string) *Identifier {
 	return &Identifier{
 		nil,
 		nil,

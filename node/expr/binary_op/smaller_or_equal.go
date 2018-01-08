@@ -9,7 +9,7 @@ type SmallerOrEqual struct {
 	BinaryOp
 }
 
-func NewSmallerOrEqual(Variable node.Node, Expression node.Node) node.Node {
+func NewSmallerOrEqual(Variable node.Node, Expression node.Node) *SmallerOrEqual {
 	return &SmallerOrEqual{
 		BinaryOp{
 			nil,

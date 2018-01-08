@@ -11,7 +11,7 @@ type Encapsed struct {
 	Parts    []node.Node
 }
 
-func NewEncapsed(Parts []node.Node) node.Node {
+func NewEncapsed(Parts []node.Node) *Encapsed {
 	return &Encapsed{
 		nil,
 		nil,

@@ -11,7 +11,7 @@ type BooleanNot struct {
 	Expr     node.Node
 }
 
-func NewBooleanNot(Expression node.Node) node.Node {
+func NewBooleanNot(Expression node.Node) *BooleanNot {
 	return &BooleanNot{
 		nil,
 		nil,

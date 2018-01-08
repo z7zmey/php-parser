@@ -12,7 +12,7 @@ type InstanceOf struct {
 	Class    node.Node
 }
 
-func NewInstanceOf(Expr node.Node, Class node.Node) node.Node {
+func NewInstanceOf(Expr node.Node, Class node.Node) *InstanceOf {
 	return &InstanceOf{
 		nil,
 		nil,

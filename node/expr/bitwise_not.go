@@ -11,7 +11,7 @@ type BitwiseNot struct {
 	Expr     node.Node
 }
 
-func NewBitwiseNot(Expression node.Node) node.Node {
+func NewBitwiseNot(Expression node.Node) *BitwiseNot {
 	return &BitwiseNot{
 		nil,
 		nil,

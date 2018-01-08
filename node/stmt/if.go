@@ -14,7 +14,7 @@ type If struct {
 	_else    node.Node
 }
 
-func NewIf(Cond node.Node, Stmt node.Node) node.Node {
+func NewIf(Cond node.Node, Stmt node.Node) *If {
 	return &If{
 		nil,
 		nil,

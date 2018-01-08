@@ -13,7 +13,7 @@ type Trait struct {
 	Stmts         []node.Node
 }
 
-func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
+func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Trait {
 	return &Trait{
 		nil,
 		nil,

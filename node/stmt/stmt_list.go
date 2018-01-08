@@ -11,7 +11,7 @@ type StmtList struct {
 	Stmts    []node.Node
 }
 
-func NewStmtList(Stmts []node.Node) node.Node {
+func NewStmtList(Stmts []node.Node) *StmtList {
 	return &StmtList{
 		nil,
 		nil,

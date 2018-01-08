@@ -14,7 +14,7 @@ type Interface struct {
 	Stmts         []node.Node
 }
 
-func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) node.Node {
+func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) *Interface {
 	return &Interface{
 		nil,
 		nil,

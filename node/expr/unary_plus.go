@@ -11,7 +11,7 @@ type UnaryPlus struct {
 	Expr     node.Node
 }
 
-func NewUnaryPlus(Expression node.Node) node.Node {
+func NewUnaryPlus(Expression node.Node) *UnaryPlus {
 	return &UnaryPlus{
 		nil,
 		nil,

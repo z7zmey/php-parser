@@ -9,7 +9,7 @@ type Equal struct {
 	BinaryOp
 }
 
-func NewEqual(Variable node.Node, Expression node.Node) node.Node {
+func NewEqual(Variable node.Node, Expression node.Node) *Equal {
 	return &Equal{
 		BinaryOp{
 			nil,

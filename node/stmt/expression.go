@@ -11,7 +11,7 @@ type Expression struct {
 	Expr     node.Node
 }
 
-func NewExpression(Expr node.Node) node.Node {
+func NewExpression(Expr node.Node) *Expression {
 	return &Expression{
 		nil,
 		nil,

@@ -12,7 +12,7 @@ type UseList struct {
 	Uses     []node.Node
 }
 
-func NewUseList(UseType node.Node, Uses []node.Node) node.Node {
+func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 	return &UseList{
 		nil,
 		nil,

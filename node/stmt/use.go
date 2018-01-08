@@ -13,7 +13,7 @@ type Use struct {
 	Alias    node.Node
 }
 
-func NewUse(UseType node.Node, use node.Node, Alias node.Node) node.Node {
+func NewUse(UseType node.Node, use node.Node, Alias node.Node) *Use {
 	return &Use{
 		nil,
 		nil,

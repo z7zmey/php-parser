@@ -11,7 +11,7 @@ type ConstList struct {
 	Consts   []node.Node
 }
 
-func NewConstList(Consts []node.Node) node.Node {
+func NewConstList(Consts []node.Node) *ConstList {
 	return &ConstList{
 		nil,
 		nil,

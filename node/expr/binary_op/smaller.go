@@ -9,7 +9,7 @@ type Smaller struct {
 	BinaryOp
 }
 
-func NewSmaller(Variable node.Node, Expression node.Node) node.Node {
+func NewSmaller(Variable node.Node, Expression node.Node) *Smaller {
 	return &Smaller{
 		BinaryOp{
 			nil,

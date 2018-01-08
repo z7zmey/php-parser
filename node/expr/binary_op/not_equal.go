@@ -9,7 +9,7 @@ type NotEqual struct {
 	BinaryOp
 }
 
-func NewNotEqual(Variable node.Node, Expression node.Node) node.Node {
+func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	return &NotEqual{
 		BinaryOp{
 			nil,

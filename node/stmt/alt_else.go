@@ -11,7 +11,7 @@ type AltElse struct {
 	Stmt     node.Node
 }
 
-func NewAltElse(Stmt node.Node) node.Node {
+func NewAltElse(Stmt node.Node) *AltElse {
 	return &AltElse{
 		nil,
 		nil,

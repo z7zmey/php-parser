@@ -11,7 +11,7 @@ type NamePart struct {
 	Value    string
 }
 
-func NewNamePart(Value string) node.Node {
+func NewNamePart(Value string) *NamePart {
 	return &NamePart{
 		nil,
 		nil,

@@ -11,7 +11,7 @@ type Clone struct {
 	Expr     node.Node
 }
 
-func NewClone(Expression node.Node) node.Node {
+func NewClone(Expression node.Node) *Clone {
 	return &Clone{
 		nil,
 		nil,

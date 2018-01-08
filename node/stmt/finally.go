@@ -11,7 +11,7 @@ type Finally struct {
 	Stmts    []node.Node
 }
 
-func NewFinally(Stmts []node.Node) node.Node {
+func NewFinally(Stmts []node.Node) *Finally {
 	return &Finally{
 		nil,
 		nil,

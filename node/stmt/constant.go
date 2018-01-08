@@ -13,7 +13,7 @@ type Constant struct {
 	Expr          node.Node
 }
 
-func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) node.Node {
+func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
 		nil,
 		nil,
