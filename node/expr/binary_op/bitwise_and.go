@@ -11,7 +11,6 @@ type BitwiseAnd struct {
 func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	return &BitwiseAnd{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 
 func (n *BitwiseAnd) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *BitwiseAnd) Position() *node.Position {
-	return n.position
-}
-
-func (n *BitwiseAnd) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *BitwiseAnd) Walk(v node.Visitor) {

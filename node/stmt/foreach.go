@@ -5,7 +5,6 @@ import (
 )
 
 type Foreach struct {
-	position *node.Position
 	ByRef    bool
 	Expr     node.Node
 	Key      node.Node
@@ -15,7 +14,6 @@ type Foreach struct {
 
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
 	return &Foreach{
-		nil,
 		ByRef,
 		Expr,
 		Key,
@@ -28,15 +26,6 @@ func (n *Foreach) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
-}
-
-func (n *Foreach) Position() *node.Position {
-	return n.position
-}
-
-func (n *Foreach) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Foreach) Walk(v node.Visitor) {

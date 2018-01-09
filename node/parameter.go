@@ -1,7 +1,6 @@
 package node
 
 type Parameter struct {
-	position     *Position
 	ByRef        bool
 	Variadic     bool
 	VariableType Node
@@ -11,7 +10,6 @@ type Parameter struct {
 
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
-		nil,
 		ByRef,
 		Variadic,
 		VariableType,
@@ -25,15 +23,6 @@ func (n *Parameter) Attributes() map[string]interface{} {
 		"ByRef":    n.ByRef,
 		"Variadic": n.Variadic,
 	}
-}
-
-func (n *Parameter) Position() *Position {
-	return n.position
-}
-
-func (n *Parameter) SetPosition(p *Position) Node {
-	n.position = p
-	return n
 }
 
 func (n *Parameter) Walk(v Visitor) {

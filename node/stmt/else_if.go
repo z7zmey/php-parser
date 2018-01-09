@@ -5,14 +5,12 @@ import (
 )
 
 type ElseIf struct {
-	position *node.Position
-	Cond     node.Node
-	Stmt     node.Node
+	Cond node.Node
+	Stmt node.Node
 }
 
 func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	return &ElseIf{
-		nil,
 		Cond,
 		Stmt,
 	}
@@ -20,15 +18,6 @@ func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 
 func (n *ElseIf) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *ElseIf) Position() *node.Position {
-	return n.position
-}
-
-func (n *ElseIf) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *ElseIf) Walk(v node.Visitor) {

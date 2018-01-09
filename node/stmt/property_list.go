@@ -5,14 +5,12 @@ import (
 )
 
 type PropertyList struct {
-	position   *node.Position
 	Modifiers  []node.Node
 	Properties []node.Node
 }
 
 func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
-		nil,
 		Modifiers,
 		Properties,
 	}
@@ -20,15 +18,6 @@ func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyLis
 
 func (n *PropertyList) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *PropertyList) Position() *node.Position {
-	return n.position
-}
-
-func (n *PropertyList) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *PropertyList) Walk(v node.Visitor) {

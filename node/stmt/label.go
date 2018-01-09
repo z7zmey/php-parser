@@ -5,28 +5,17 @@ import (
 )
 
 type Label struct {
-	position  *node.Position
 	LabelName node.Node
 }
 
 func NewLabel(LabelName node.Node) *Label {
 	return &Label{
-		nil,
 		LabelName,
 	}
 }
 
 func (n *Label) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Label) Position() *node.Position {
-	return n.position
-}
-
-func (n *Label) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Label) Walk(v node.Visitor) {

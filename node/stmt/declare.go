@@ -5,14 +5,12 @@ import (
 )
 
 type Declare struct {
-	position *node.Position
-	Consts   []node.Node
-	Stmt     node.Node
+	Consts []node.Node
+	Stmt   node.Node
 }
 
 func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	return &Declare{
-		nil,
 		Consts,
 		Stmt,
 	}
@@ -20,15 +18,6 @@ func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 
 func (n *Declare) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Declare) Position() *node.Position {
-	return n.position
-}
-
-func (n *Declare) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Declare) Walk(v node.Visitor) {

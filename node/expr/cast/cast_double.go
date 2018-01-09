@@ -11,7 +11,6 @@ type CastDouble struct {
 func NewCastDouble(Expr node.Node) *CastDouble {
 	return &CastDouble{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastDouble(Expr node.Node) *CastDouble {
 
 func (n *CastDouble) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastDouble) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastDouble) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastDouble) Walk(v node.Visitor) {

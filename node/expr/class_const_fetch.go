@@ -5,14 +5,12 @@ import (
 )
 
 type ClassConstFetch struct {
-	position     *node.Position
 	Class        node.Node
 	ConstantName node.Node
 }
 
 func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
-		nil,
 		Class,
 		ConstantName,
 	}
@@ -20,15 +18,6 @@ func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetc
 
 func (n *ClassConstFetch) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *ClassConstFetch) Position() *node.Position {
-	return n.position
-}
-
-func (n *ClassConstFetch) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *ClassConstFetch) Walk(v node.Visitor) {

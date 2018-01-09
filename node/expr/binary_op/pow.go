@@ -11,7 +11,6 @@ type Pow struct {
 func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewPow(Variable node.Node, Expression node.Node) *Pow {
 
 func (n *Pow) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Pow) Position() *node.Position {
-	return n.position
-}
-
-func (n *Pow) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Pow) Walk(v node.Visitor) {

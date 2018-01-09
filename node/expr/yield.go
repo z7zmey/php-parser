@@ -5,14 +5,12 @@ import (
 )
 
 type Yield struct {
-	position *node.Position
-	Key      node.Node
-	Value    node.Node
+	Key   node.Node
+	Value node.Node
 }
 
 func NewYield(Key node.Node, Value node.Node) *Yield {
 	return &Yield{
-		nil,
 		Key,
 		Value,
 	}
@@ -20,15 +18,6 @@ func NewYield(Key node.Node, Value node.Node) *Yield {
 
 func (n *Yield) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Yield) Position() *node.Position {
-	return n.position
-}
-
-func (n *Yield) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Yield) Walk(v node.Visitor) {

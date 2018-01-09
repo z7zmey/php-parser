@@ -5,28 +5,17 @@ import (
 )
 
 type Goto struct {
-	position *node.Position
-	Label    node.Node
+	Label node.Node
 }
 
 func NewGoto(Label node.Node) *Goto {
 	return &Goto{
-		nil,
 		Label,
 	}
 }
 
 func (n *Goto) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Goto) Position() *node.Position {
-	return n.position
-}
-
-func (n *Goto) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Goto) Walk(v node.Visitor) {

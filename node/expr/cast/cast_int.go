@@ -11,7 +11,6 @@ type CastInt struct {
 func NewCastInt(Expr node.Node) *CastInt {
 	return &CastInt{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastInt(Expr node.Node) *CastInt {
 
 func (n *CastInt) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastInt) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastInt) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastInt) Walk(v node.Visitor) {

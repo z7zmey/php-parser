@@ -5,7 +5,6 @@ import (
 )
 
 type AssignOp struct {
-	position   *node.Position
 	Variable   node.Node
 	Expression node.Node
 }

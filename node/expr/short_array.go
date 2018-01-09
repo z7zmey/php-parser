@@ -5,28 +5,17 @@ import (
 )
 
 type ShortArray struct {
-	position *node.Position
-	Items    []node.Node
+	Items []node.Node
 }
 
 func NewShortArray(Items []node.Node) *ShortArray {
 	return &ShortArray{
-		nil,
 		Items,
 	}
 }
 
 func (n *ShortArray) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *ShortArray) Position() *node.Position {
-	return n.position
-}
-
-func (n *ShortArray) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *ShortArray) Walk(v node.Visitor) {

@@ -5,28 +5,17 @@ import (
 )
 
 type Include struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewInclude(Expression node.Node) *Include {
 	return &Include{
-		nil,
 		Expression,
 	}
 }
 
 func (n *Include) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Include) Position() *node.Position {
-	return n.position
-}
-
-func (n *Include) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Include) Walk(v node.Visitor) {

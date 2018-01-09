@@ -5,14 +5,12 @@ import (
 )
 
 type StaticPropertyFetch struct {
-	position *node.Position
 	Class    node.Node
 	Property node.Node
 }
 
 func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
-		nil,
 		Class,
 		Property,
 	}
@@ -20,15 +18,6 @@ func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticProperty
 
 func (n *StaticPropertyFetch) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *StaticPropertyFetch) Position() *node.Position {
-	return n.position
-}
-
-func (n *StaticPropertyFetch) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *StaticPropertyFetch) Walk(v node.Visitor) {

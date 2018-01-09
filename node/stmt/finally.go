@@ -5,28 +5,17 @@ import (
 )
 
 type Finally struct {
-	position *node.Position
-	Stmts    []node.Node
+	Stmts []node.Node
 }
 
 func NewFinally(Stmts []node.Node) *Finally {
 	return &Finally{
-		nil,
 		Stmts,
 	}
 }
 
 func (n *Finally) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Finally) Position() *node.Position {
-	return n.position
-}
-
-func (n *Finally) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Finally) Walk(v node.Visitor) {

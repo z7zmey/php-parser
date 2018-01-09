@@ -11,7 +11,6 @@ type Div struct {
 func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
 		AssignOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewDiv(Variable node.Node, Expression node.Node) *Div {
 
 func (n *Div) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Div) Position() *node.Position {
-	return n.position
-}
-
-func (n *Div) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Div) Walk(v node.Visitor) {

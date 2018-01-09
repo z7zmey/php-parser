@@ -5,28 +5,17 @@ import (
 )
 
 type ErrorSuppress struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	return &ErrorSuppress{
-		nil,
 		Expression,
 	}
 }
 
 func (n *ErrorSuppress) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *ErrorSuppress) Position() *node.Position {
-	return n.position
-}
-
-func (n *ErrorSuppress) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *ErrorSuppress) Walk(v node.Visitor) {

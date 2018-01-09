@@ -4,19 +4,22 @@ import (
 	"fmt"
 	"reflect"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 )
 
 type dumper struct {
-	indent   string
-	comments comment.Comments
+	indent    string
+	comments  comment.Comments
+	positions position.Positions
 }
 
 func (d dumper) EnterNode(n node.Node) bool {
 
 	fmt.Printf("%v%v", d.indent, reflect.TypeOf(n))
-	if p := n.Position(); p != nil {
+	if p := d.positions[n]; p != nil {
 		fmt.Printf(" %v", *p)
 	}
 	if a := n.Attributes(); len(a) > 0 {
@@ -36,7 +39,7 @@ func (d dumper) EnterNode(n node.Node) bool {
 
 func (d dumper) GetChildrenVisitor(key string) node.Visitor {
 	fmt.Printf("%v%q:\n", d.indent+"  ", key)
-	return dumper{d.indent + "    ", d.comments}
+	return dumper{d.indent + "    ", d.comments, d.positions}
 }
 
 func (d dumper) LeaveNode(n node.Node) {

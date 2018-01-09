@@ -5,7 +5,6 @@ import (
 )
 
 type Ternary struct {
-	position  *node.Position
 	Condition node.Node
 	IfTrue    node.Node
 	IfFalse   node.Node
@@ -13,7 +12,6 @@ type Ternary struct {
 
 func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
-		nil,
 		Condition,
 		IfTrue,
 		IfFalse,
@@ -22,15 +20,6 @@ func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Terna
 
 func (n *Ternary) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Ternary) Position() *node.Position {
-	return n.position
-}
-
-func (n *Ternary) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Ternary) Walk(v node.Visitor) {

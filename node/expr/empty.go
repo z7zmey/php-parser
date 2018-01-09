@@ -5,28 +5,17 @@ import (
 )
 
 type Empty struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewEmpty(Expression node.Node) *Empty {
 	return &Empty{
-		nil,
 		Expression,
 	}
 }
 
 func (n *Empty) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Empty) Position() *node.Position {
-	return n.position
-}
-
-func (n *Empty) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Empty) Walk(v node.Visitor) {

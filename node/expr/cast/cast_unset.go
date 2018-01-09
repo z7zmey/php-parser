@@ -11,7 +11,6 @@ type CastUnset struct {
 func NewCastUnset(Expr node.Node) *CastUnset {
 	return &CastUnset{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastUnset(Expr node.Node) *CastUnset {
 
 func (n *CastUnset) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastUnset) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastUnset) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastUnset) Walk(v node.Visitor) {

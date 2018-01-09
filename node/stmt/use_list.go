@@ -5,14 +5,12 @@ import (
 )
 
 type UseList struct {
-	position *node.Position
-	UseType  node.Node
-	Uses     []node.Node
+	UseType node.Node
+	Uses    []node.Node
 }
 
 func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 	return &UseList{
-		nil,
 		UseType,
 		Uses,
 	}
@@ -20,15 +18,6 @@ func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 
 func (n *UseList) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *UseList) Position() *node.Position {
-	return n.position
-}
-
-func (n *UseList) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *UseList) Walk(v node.Visitor) {

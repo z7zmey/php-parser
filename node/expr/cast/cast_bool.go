@@ -11,7 +11,6 @@ type CastBool struct {
 func NewCastBool(Expr node.Node) *CastBool {
 	return &CastBool{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastBool(Expr node.Node) *CastBool {
 
 func (n *CastBool) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastBool) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastBool) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastBool) Walk(v node.Visitor) {

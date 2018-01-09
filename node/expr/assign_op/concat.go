@@ -11,7 +11,6 @@ type Concat struct {
 func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
 		AssignOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 
 func (n *Concat) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Concat) Position() *node.Position {
-	return n.position
-}
-
-func (n *Concat) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Concat) Walk(v node.Visitor) {

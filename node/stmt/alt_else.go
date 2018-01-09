@@ -5,28 +5,17 @@ import (
 )
 
 type AltElse struct {
-	position *node.Position
-	Stmt     node.Node
+	Stmt node.Node
 }
 
 func NewAltElse(Stmt node.Node) *AltElse {
 	return &AltElse{
-		nil,
 		Stmt,
 	}
 }
 
 func (n *AltElse) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *AltElse) Position() *node.Position {
-	return n.position
-}
-
-func (n *AltElse) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *AltElse) Walk(v node.Visitor) {

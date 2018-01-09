@@ -5,7 +5,6 @@ import (
 )
 
 type Class struct {
-	position      *node.Position
 	PhpDocComment string
 	ClassName     node.Node
 	Modifiers     []node.Node
@@ -17,7 +16,6 @@ type Class struct {
 
 func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
-		nil,
 		PhpDocComment,
 		ClassName,
 		Modifiers,
@@ -32,15 +30,6 @@ func (n *Class) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Class) Position() *node.Position {
-	return n.position
-}
-
-func (n *Class) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Class) Walk(v node.Visitor) {

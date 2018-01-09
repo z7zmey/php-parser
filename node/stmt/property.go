@@ -5,7 +5,6 @@ import (
 )
 
 type Property struct {
-	position      *node.Position
 	PhpDocComment string
 	Variable      node.Node
 	Expr          node.Node
@@ -13,7 +12,6 @@ type Property struct {
 
 func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Property {
 	return &Property{
-		nil,
 		PhpDocComment,
 		Variable,
 		Expr,
@@ -23,15 +21,6 @@ func (n *Property) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Property) Position() *node.Position {
-	return n.position
-}
-
-func (n *Property) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Property) Walk(v node.Visitor) {

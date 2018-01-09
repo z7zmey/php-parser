@@ -5,7 +5,6 @@ import (
 )
 
 type Interface struct {
-	position      *node.Position
 	PhpDocComment string
 	InterfaceName node.Node
 	Extends       []node.Node
@@ -14,7 +13,6 @@ type Interface struct {
 
 func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) *Interface {
 	return &Interface{
-		nil,
 		PhpDocComment,
 		InterfaceName,
 		Extends,
@@ -26,15 +24,6 @@ func (n *Interface) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Interface) Position() *node.Position {
-	return n.position
-}
-
-func (n *Interface) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Interface) Walk(v node.Visitor) {

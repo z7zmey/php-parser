@@ -11,7 +11,6 @@ type Minus struct {
 func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 	return &Minus{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 
 func (n *Minus) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Minus) Position() *node.Position {
-	return n.position
-}
-
-func (n *Minus) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Minus) Walk(v node.Visitor) {

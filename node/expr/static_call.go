@@ -5,7 +5,6 @@ import (
 )
 
 type StaticCall struct {
-	position  *node.Position
 	Class     node.Node
 	Call      node.Node
 	Arguments []node.Node
@@ -13,7 +12,6 @@ type StaticCall struct {
 
 func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) *StaticCall {
 	return &StaticCall{
-		nil,
 		Class,
 		Call,
 		Arguments,
@@ -22,15 +20,6 @@ func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) *Stat
 
 func (n *StaticCall) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *StaticCall) Position() *node.Position {
-	return n.position
-}
-
-func (n *StaticCall) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *StaticCall) Walk(v node.Visitor) {

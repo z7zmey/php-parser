@@ -5,26 +5,14 @@ import (
 )
 
 type HaltCompiler struct {
-	position *node.Position
 }
 
 func NewHaltCompiler() *HaltCompiler {
-	return &HaltCompiler{
-		nil,
-	}
+	return &HaltCompiler{}
 }
 
 func (n *HaltCompiler) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *HaltCompiler) Position() *node.Position {
-	return n.position
-}
-
-func (n *HaltCompiler) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *HaltCompiler) Walk(v node.Visitor) {

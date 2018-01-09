@@ -5,28 +5,17 @@ import (
 )
 
 type Echo struct {
-	position *node.Position
-	Exprs    []node.Node
+	Exprs []node.Node
 }
 
 func NewEcho(Exprs []node.Node) *Echo {
 	return &Echo{
-		nil,
 		Exprs,
 	}
 }
 
 func (n *Echo) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Echo) Position() *node.Position {
-	return n.position
-}
-
-func (n *Echo) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Echo) Walk(v node.Visitor) {

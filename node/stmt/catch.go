@@ -5,7 +5,6 @@ import (
 )
 
 type Catch struct {
-	position *node.Position
 	Types    []node.Node
 	Variable node.Node
 	Stmts    []node.Node
@@ -13,7 +12,6 @@ type Catch struct {
 
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
-		nil,
 		Types,
 		Variable,
 		Stmts,
@@ -22,15 +20,6 @@ func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 
 func (n *Catch) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Catch) Position() *node.Position {
-	return n.position
-}
-
-func (n *Catch) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Catch) Walk(v node.Visitor) {

@@ -5,14 +5,12 @@ import (
 )
 
 type Do struct {
-	position *node.Position
-	Stmt     node.Node
-	Cond     node.Node
+	Stmt node.Node
+	Cond node.Node
 }
 
 func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	return &Do{
-		nil,
 		Stmt,
 		Cond,
 	}
@@ -20,15 +18,6 @@ func NewDo(Stmt node.Node, Cond node.Node) *Do {
 
 func (n *Do) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Do) Position() *node.Position {
-	return n.position
-}
-
-func (n *Do) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Do) Walk(v node.Visitor) {

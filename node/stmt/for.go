@@ -5,16 +5,14 @@ import (
 )
 
 type For struct {
-	position *node.Position
-	Init     []node.Node
-	Cond     []node.Node
-	Loop     []node.Node
-	Stmt     node.Node
+	Init []node.Node
+	Cond []node.Node
+	Loop []node.Node
+	Stmt node.Node
 }
 
 func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *For {
 	return &For{
-		nil,
 		Init,
 		Cond,
 		Loop,
@@ -24,15 +22,6 @@ func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node
 
 func (n *For) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *For) Position() *node.Position {
-	return n.position
-}
-
-func (n *For) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *For) Walk(v node.Visitor) {

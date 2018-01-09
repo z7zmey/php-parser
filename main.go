@@ -19,9 +19,9 @@ func main() {
 		fmt.Printf("==> %s\n", real)
 
 		src, _ := os.Open(string(real))
-		rootnode, comments := parser.Parse(src, real)
+		rootnode, comments, positions := parser.Parse(src, real)
 
-		rootnode.Walk(dumper{"  | ", comments})
+		rootnode.Walk(dumper{"  | ", comments, positions})
 	}
 }
 

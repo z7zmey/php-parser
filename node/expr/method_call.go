@@ -5,7 +5,6 @@ import (
 )
 
 type MethodCall struct {
-	position  *node.Position
 	Variable  node.Node
 	Method    node.Node
 	Arguments []node.Node
@@ -13,7 +12,6 @@ type MethodCall struct {
 
 func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) *MethodCall {
 	return &MethodCall{
-		nil,
 		Variable,
 		Method,
 		Arguments,
@@ -22,15 +20,6 @@ func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) 
 
 func (n *MethodCall) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *MethodCall) Position() *node.Position {
-	return n.position
-}
-
-func (n *MethodCall) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *MethodCall) Walk(v node.Visitor) {

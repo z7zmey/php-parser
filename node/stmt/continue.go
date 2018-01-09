@@ -5,28 +5,17 @@ import (
 )
 
 type Continue struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewContinue(Expr node.Node) *Continue {
 	return &Continue{
-		nil,
 		Expr,
 	}
 }
 
 func (n *Continue) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Continue) Position() *node.Position {
-	return n.position
-}
-
-func (n *Continue) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Continue) Walk(v node.Visitor) {

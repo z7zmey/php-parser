@@ -5,28 +5,17 @@ import (
 )
 
 type RequireOnce struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewRequireOnce(Expression node.Node) *RequireOnce {
 	return &RequireOnce{
-		nil,
 		Expression,
 	}
 }
 
 func (n *RequireOnce) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *RequireOnce) Position() *node.Position {
-	return n.position
-}
-
-func (n *RequireOnce) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *RequireOnce) Walk(v node.Visitor) {

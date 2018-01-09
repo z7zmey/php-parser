@@ -5,7 +5,6 @@ import (
 )
 
 type Closure struct {
-	position      *node.Position
 	ReturnsRef    bool
 	Static        bool
 	PhpDocComment string
@@ -17,7 +16,6 @@ type Closure struct {
 
 func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, Static bool, ReturnsRef bool, PhpDocComment string) *Closure {
 	return &Closure{
-		nil,
 		ReturnsRef,
 		Static,
 		PhpDocComment,
@@ -34,15 +32,6 @@ func (n *Closure) Attributes() map[string]interface{} {
 		"Static":        n.Static,
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Closure) Position() *node.Position {
-	return n.position
-}
-
-func (n *Closure) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Closure) Walk(v node.Visitor) {

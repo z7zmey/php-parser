@@ -11,7 +11,6 @@ type CastArray struct {
 func NewCastArray(Expr node.Node) *CastArray {
 	return &CastArray{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastArray(Expr node.Node) *CastArray {
 
 func (n *CastArray) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastArray) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastArray) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastArray) Walk(v node.Visitor) {

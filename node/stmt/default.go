@@ -5,28 +5,17 @@ import (
 )
 
 type Default struct {
-	position *node.Position
-	Stmts    []node.Node
+	Stmts []node.Node
 }
 
 func NewDefault(Stmts []node.Node) *Default {
 	return &Default{
-		nil,
 		Stmts,
 	}
 }
 
 func (n *Default) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Default) Position() *node.Position {
-	return n.position
-}
-
-func (n *Default) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Default) Walk(v node.Visitor) {

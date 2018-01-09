@@ -5,28 +5,17 @@ import (
 )
 
 type Encapsed struct {
-	position *node.Position
-	Parts    []node.Node
+	Parts []node.Node
 }
 
 func NewEncapsed(Parts []node.Node) *Encapsed {
 	return &Encapsed{
-		nil,
 		Parts,
 	}
 }
 
 func (n *Encapsed) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Encapsed) Position() *node.Position {
-	return n.position
-}
-
-func (n *Encapsed) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Encapsed) Walk(v node.Visitor) {

@@ -11,7 +11,6 @@ type LogicalXor struct {
 func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 
 func (n *LogicalXor) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *LogicalXor) Position() *node.Position {
-	return n.position
-}
-
-func (n *LogicalXor) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *LogicalXor) Walk(v node.Visitor) {

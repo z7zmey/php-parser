@@ -5,15 +5,13 @@ import (
 )
 
 type ArrayItem struct {
-	position *node.Position
-	ByRef    bool
-	Key      node.Node
-	Val      node.Node
+	ByRef bool
+	Key   node.Node
+	Val   node.Node
 }
 
 func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
 	return &ArrayItem{
-		nil,
 		ByRef,
 		Key,
 		Val,
@@ -24,15 +22,6 @@ func (n *ArrayItem) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
-}
-
-func (n *ArrayItem) Position() *node.Position {
-	return n.position
-}
-
-func (n *ArrayItem) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *ArrayItem) Walk(v node.Visitor) {

@@ -5,14 +5,12 @@ import (
 )
 
 type Namespace struct {
-	position      *node.Position
 	NamespaceName node.Node
 	Stmts         []node.Node
 }
 
 func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	return &Namespace{
-		nil,
 		NamespaceName,
 		Stmts,
 	}
@@ -20,15 +18,6 @@ func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 
 func (n *Namespace) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Namespace) Position() *node.Position {
-	return n.position
-}
-
-func (n *Namespace) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Namespace) Walk(v node.Visitor) {

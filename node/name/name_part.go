@@ -5,13 +5,11 @@ import (
 )
 
 type NamePart struct {
-	position *node.Position
-	Value    string
+	Value string
 }
 
 func NewNamePart(Value string) *NamePart {
 	return &NamePart{
-		nil,
 		Value,
 	}
 }
@@ -20,15 +18,6 @@ func (n *NamePart) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Value": n.Value,
 	}
-}
-
-func (n *NamePart) Position() *node.Position {
-	return n.position
-}
-
-func (n *NamePart) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *NamePart) Walk(v node.Visitor) {

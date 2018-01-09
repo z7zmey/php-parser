@@ -11,7 +11,6 @@ type FullyQualified struct {
 func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
 		Name{
-			nil,
 			Parts,
 		},
 	}

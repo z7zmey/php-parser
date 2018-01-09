@@ -5,16 +5,14 @@ import (
 )
 
 type If struct {
-	position *node.Position
-	Cond     node.Node
-	Stmt     node.Node
-	ElseIf   []node.Node
-	_else    node.Node
+	Cond   node.Node
+	Stmt   node.Node
+	ElseIf []node.Node
+	_else  node.Node
 }
 
 func NewIf(Cond node.Node, Stmt node.Node) *If {
 	return &If{
-		nil,
 		Cond,
 		Stmt,
 		nil,
@@ -24,15 +22,6 @@ func NewIf(Cond node.Node, Stmt node.Node) *If {
 
 func (n *If) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *If) Position() *node.Position {
-	return n.position
-}
-
-func (n *If) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *If) AddElseIf(ElseIf node.Node) node.Node {

@@ -5,26 +5,14 @@ import (
 )
 
 type Nop struct {
-	position *node.Position
 }
 
 func NewNop() *Nop {
-	return &Nop{
-		nil,
-	}
+	return &Nop{}
 }
 
 func (n *Nop) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Nop) Position() *node.Position {
-	return n.position
-}
-
-func (n *Nop) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Nop) Walk(v node.Visitor) {

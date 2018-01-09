@@ -11,7 +11,6 @@ type Assign struct {
 func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 	return &Assign{
 		AssignOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 
 func (n *Assign) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Assign) Position() *node.Position {
-	return n.position
-}
-
-func (n *Assign) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Assign) Walk(v node.Visitor) {

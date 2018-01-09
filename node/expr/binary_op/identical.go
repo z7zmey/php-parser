@@ -11,7 +11,6 @@ type Identical struct {
 func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	return &Identical{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 
 func (n *Identical) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Identical) Position() *node.Position {
-	return n.position
-}
-
-func (n *Identical) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Identical) Walk(v node.Visitor) {

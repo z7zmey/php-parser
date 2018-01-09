@@ -11,7 +11,6 @@ type CastObject struct {
 func NewCastObject(Expr node.Node) *CastObject {
 	return &CastObject{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastObject(Expr node.Node) *CastObject {
 
 func (n *CastObject) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastObject) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastObject) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastObject) Walk(v node.Visitor) {

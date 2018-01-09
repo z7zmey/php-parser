@@ -5,7 +5,6 @@ import (
 )
 
 type Trait struct {
-	position      *node.Position
 	PhpDocComment string
 	TraitName     node.Node
 	Stmts         []node.Node
@@ -13,7 +12,6 @@ type Trait struct {
 
 func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Trait {
 	return &Trait{
-		nil,
 		PhpDocComment,
 		TraitName,
 		Stmts,
@@ -24,15 +22,6 @@ func (n *Trait) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Trait) Position() *node.Position {
-	return n.position
-}
-
-func (n *Trait) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Trait) Walk(v node.Visitor) {

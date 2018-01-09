@@ -1,14 +1,12 @@
 package node
 
 type Argument struct {
-	position *Position
 	Variadic bool
 	Expr     Node
 }
 
 func NewArgument(Expression Node, Variadic bool) *Argument {
 	return &Argument{
-		nil,
 		Variadic,
 		Expression,
 	}
@@ -18,15 +16,6 @@ func (n *Argument) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Variadic": n.Variadic,
 	}
-}
-
-func (n *Argument) Position() *Position {
-	return n.position
-}
-
-func (n *Argument) SetPosition(p *Position) Node {
-	n.position = p
-	return n
 }
 
 func (n *Argument) Walk(v Visitor) {

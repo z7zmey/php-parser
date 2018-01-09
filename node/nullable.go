@@ -1,28 +1,17 @@
 package node
 
 type Nullable struct {
-	position *Position
-	Expr     Node
+	Expr Node
 }
 
 func NewNullable(Expression Node) *Nullable {
 	return &Nullable{
-		nil,
 		Expression,
 	}
 }
 
 func (n *Nullable) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Nullable) Position() *Position {
-	return n.position
-}
-
-func (n *Nullable) SetPosition(p *Position) Node {
-	n.position = p
-	return n
 }
 
 func (n *Nullable) Walk(v Visitor) {

@@ -5,28 +5,17 @@ import (
 )
 
 type Break struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewBreak(Expr node.Node) *Break {
 	return &Break{
-		nil,
 		Expr,
 	}
 }
 
 func (n *Break) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Break) Position() *node.Position {
-	return n.position
-}
-
-func (n *Break) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Break) Walk(v node.Visitor) {

@@ -5,28 +5,17 @@ import (
 )
 
 type Variable struct {
-	position *node.Position
-	VarName  node.Node
+	VarName node.Node
 }
 
 func NewVariable(VarName node.Node) *Variable {
 	return &Variable{
-		nil,
 		VarName,
 	}
 }
 
 func (n *Variable) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Variable) Position() *node.Position {
-	return n.position
-}
-
-func (n *Variable) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Variable) Walk(v node.Visitor) {

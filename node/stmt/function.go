@@ -5,7 +5,6 @@ import (
 )
 
 type Function struct {
-	position      *node.Position
 	ReturnsRef    bool
 	PhpDocComment string
 	FunctionName  node.Node
@@ -16,7 +15,6 @@ type Function struct {
 
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *Function {
 	return &Function{
-		nil,
 		ReturnsRef,
 		PhpDocComment,
 		FunctionName,
@@ -32,15 +30,6 @@ func (n *Function) Attributes() map[string]interface{} {
 		"ReturnsRef":    n.ReturnsRef,
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Function) Position() *node.Position {
-	return n.position
-}
-
-func (n *Function) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Function) Walk(v node.Visitor) {

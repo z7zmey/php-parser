@@ -5,7 +5,6 @@ import (
 )
 
 type Constant struct {
-	position      *node.Position
 	PhpDocComment string
 	ConstantName  node.Node
 	Expr          node.Node
@@ -13,7 +12,6 @@ type Constant struct {
 
 func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
-		nil,
 		PhpDocComment,
 		ConstantName,
 		Expr,
@@ -24,15 +22,6 @@ func (n *Constant) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
-}
-
-func (n *Constant) Position() *node.Position {
-	return n.position
-}
-
-func (n *Constant) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Constant) Walk(v node.Visitor) {

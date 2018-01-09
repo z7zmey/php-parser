@@ -11,7 +11,6 @@ type Greater struct {
 func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	return &Greater{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 
 func (n *Greater) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Greater) Position() *node.Position {
-	return n.position
-}
-
-func (n *Greater) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Greater) Walk(v node.Visitor) {

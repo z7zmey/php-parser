@@ -5,28 +5,17 @@ import (
 )
 
 type UnaryMinus struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewUnaryMinus(Expression node.Node) *UnaryMinus {
 	return &UnaryMinus{
-		nil,
 		Expression,
 	}
 }
 
 func (n *UnaryMinus) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *UnaryMinus) Position() *node.Position {
-	return n.position
-}
-
-func (n *UnaryMinus) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *UnaryMinus) Walk(v node.Visitor) {

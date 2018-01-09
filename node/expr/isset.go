@@ -5,28 +5,17 @@ import (
 )
 
 type Isset struct {
-	position  *node.Position
 	Variables []node.Node
 }
 
 func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
-		nil,
 		Variables,
 	}
 }
 
 func (n *Isset) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Isset) Position() *node.Position {
-	return n.position
-}
-
-func (n *Isset) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Isset) Walk(v node.Visitor) {

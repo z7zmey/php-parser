@@ -11,7 +11,6 @@ type Mod struct {
 func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
 		AssignOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewMod(Variable node.Node, Expression node.Node) *Mod {
 
 func (n *Mod) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Mod) Position() *node.Position {
-	return n.position
-}
-
-func (n *Mod) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Mod) Walk(v node.Visitor) {

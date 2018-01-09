@@ -11,7 +11,6 @@ type Mul struct {
 func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	return &Mul{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewMul(Variable node.Node, Expression node.Node) *Mul {
 
 func (n *Mul) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Mul) Position() *node.Position {
-	return n.position
-}
-
-func (n *Mul) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Mul) Walk(v node.Visitor) {

@@ -6,15 +6,13 @@ import (
 )
 
 type While struct {
-	position *node.Position
-	Token    token.Token
-	Cond     node.Node
-	Stmt     node.Node
+	Token token.Token
+	Cond  node.Node
+	Stmt  node.Node
 }
 
 func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
 	return &While{
-		nil,
 		Token,
 		Cond,
 		Stmt,
@@ -23,15 +21,6 @@ func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
 
 func (n *While) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *While) Position() *node.Position {
-	return n.position
-}
-
-func (n *While) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *While) Walk(v node.Visitor) {

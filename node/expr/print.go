@@ -5,28 +5,17 @@ import (
 )
 
 type Print struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }
 
 func NewPrint(Expression node.Node) *Print {
 	return &Print{
-		nil,
 		Expression,
 	}
 }
 
 func (n *Print) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *Print) Position() *node.Position {
-	return n.position
-}
-
-func (n *Print) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *Print) Walk(v node.Visitor) {

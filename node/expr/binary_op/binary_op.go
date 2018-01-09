@@ -5,7 +5,6 @@ import (
 )
 
 type BinaryOp struct {
-	position *node.Position
-	Left     node.Node
-	Right    node.Node
+	Left  node.Node
+	Right node.Node
 }

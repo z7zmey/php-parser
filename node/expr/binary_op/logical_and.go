@@ -11,7 +11,6 @@ type LogicalAnd struct {
 func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	return &LogicalAnd{
 		BinaryOp{
-			nil,
 			Variable,
 			Expression,
 		},
@@ -20,15 +19,6 @@ func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 
 func (n *LogicalAnd) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *LogicalAnd) Position() *node.Position {
-	return n.position
-}
-
-func (n *LogicalAnd) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *LogicalAnd) Walk(v node.Visitor) {

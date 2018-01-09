@@ -5,6 +5,5 @@ import (
 )
 
 type Cast struct {
-	position *node.Position
-	Expr     node.Node
+	Expr node.Node
 }

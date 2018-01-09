@@ -11,7 +11,6 @@ type Relative struct {
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
 		Name{
-			nil,
 			Parts,
 		},
 	}

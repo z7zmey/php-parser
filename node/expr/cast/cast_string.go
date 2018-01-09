@@ -11,7 +11,6 @@ type CastString struct {
 func NewCastString(Expr node.Node) *CastString {
 	return &CastString{
 		Cast{
-			nil,
 			Expr,
 		},
 	}
@@ -19,15 +18,6 @@ func NewCastString(Expr node.Node) *CastString {
 
 func (n *CastString) Attributes() map[string]interface{} {
 	return nil
-}
-
-func (n *CastString) Position() *node.Position {
-	return n.position
-}
-
-func (n *CastString) SetPosition(p *node.Position) node.Node {
-	n.position = p
-	return n
 }
 
 func (n *CastString) Walk(v node.Visitor) {

@@ -14,11 +14,15 @@ import (
 func TestDoubleQuotedScalarString(t *testing.T) {
 	src := `<? "test";`
 
-	str := scalar.NewString("\"test\"").SetPosition(&node.Position{1, 1, 4, 9})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 1, 4, 10})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 10})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"test\""},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -27,11 +31,15 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 	src := `<? "\$test";`
 
-	str := scalar.NewString("\"\\$test\"").SetPosition(&node.Position{1, 1, 4, 11})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 1, 4, 12})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 12})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"\\$test\""},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -43,11 +51,15 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 	test
 	";`
 
-	str := scalar.NewString("\"\n\ttest\n\t\"").SetPosition(&node.Position{1, 3, 4, 13})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 3, 4, 14})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 3, 4, 14})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"\n\ttest\n\t\""},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -57,11 +69,15 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 func TestSingleQuotedScalarString(t *testing.T) {
 	src := `<? '$test';`
 
-	str := scalar.NewString("'$test'").SetPosition(&node.Position{1, 1, 4, 10})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 1, 4, 11})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 1, 4, 11})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "'$test'"},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -73,11 +89,15 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 	$test
 	';`
 
-	str := scalar.NewString("'\n\t$test\n\t'").SetPosition(&node.Position{1, 3, 4, 14})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 3, 4, 15})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 3, 4, 15})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "'\n\t$test\n\t'"},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -90,11 +110,15 @@ func TestPlainHeredocScalarString(t *testing.T) {
 CAD;
 `
 
-	str := scalar.NewString("\thello\n").SetPosition(&node.Position{1, 3, 4, 20})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 3, 4, 21})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 3, 4, 21})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\thello\n"},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -107,11 +131,15 @@ func TestHeredocScalarString(t *testing.T) {
 CAD;
 `
 
-	str := scalar.NewString("\thello\n").SetPosition(&node.Position{1, 3, 4, 22})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 3, 4, 23})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 3, 4, 23})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\thello\n"},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -124,11 +152,15 @@ func TestNowdocScalarString(t *testing.T) {
 CAD;
 `
 
-	str := scalar.NewString("\thello $world\n").SetPosition(&node.Position{1, 3, 4, 29})
-	expr := stmt.NewExpression(str).SetPosition(&node.Position{1, 3, 4, 30})
-	expected := stmt.NewStmtList([]node.Node{expr}).SetPosition(&node.Position{1, 3, 4, 30})
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\thello $world\n"},
+			},
+		},
+	}
 
-	actual, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
