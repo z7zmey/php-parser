@@ -5,6 +5,9 @@
   -->
 
 # PHP-Parser
+
+[![Exago](https://api.exago.io:443/badge/tests/github.com/z7zmey/php-parser)](https://exago.io/project/github.com/z7zmey/php-parser)
+
 A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com/nikic/PHP-Parser)
 
 Library uses [cznic/golex](https://github.com/cznic/golex) and [goyacc](https://godoc.org/golang.org/x/tools/cmd/goyacc)
@@ -12,6 +15,7 @@ Library uses [cznic/golex](https://github.com/cznic/golex) and [goyacc](https://
 ## Features:
 - Fully support PHP7 syntax (PHP5 in future)
 - Abstract syntax tree representation
+- Traversing AST
 
 ## Roadmap
 - [X] Lexer
