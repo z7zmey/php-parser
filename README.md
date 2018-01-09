@@ -10,8 +10,6 @@
 
 A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com/nikic/PHP-Parser)
 
-Library uses [cznic/golex](https://github.com/cznic/golex) and [goyacc](https://godoc.org/golang.org/x/tools/cmd/goyacc)
-
 ## Features:
 - Fully support PHP7 syntax (PHP5 in future)
 - Abstract syntax tree representation
