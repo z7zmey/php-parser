@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/parser"
@@ -16,12 +17,21 @@ func main() {
 	for _, path := range flag.Args() {
 		real, err := realpath.Realpath(path)
 		checkErr(err)
-		fmt.Printf("==> %s\n", real)
 
-		src, _ := os.Open(string(real))
-		rootnode, comments, positions := parser.Parse(src, real)
+		err = filepath.Walk(real, func(path string, f os.FileInfo, err error) error {
+			if !f.IsDir() && filepath.Ext(path) == ".php" {
+				fmt.Printf("==> %s\n", path)
 
-		rootnode.Walk(dumper{"  | ", comments, positions})
+				src, _ := os.Open(string(path))
+				parser.Parse(src, path)
+				nodes, comments, positions := parser.Parse(src, path)
+
+				visitor := dumper{"  | ", comments, positions}
+				nodes.Walk(visitor)
+			}
+			return nil
+		})
+		checkErr(err)
 	}
 }
 
