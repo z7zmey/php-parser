@@ -23,7 +23,6 @@ func main() {
 				fmt.Printf("==> %s\n", path)
 
 				src, _ := os.Open(string(path))
-				parser.Parse(src, path)
 				nodes, comments, positions := parser.Parse(src, path)
 
 				visitor := dumper{"  | ", comments, positions}
