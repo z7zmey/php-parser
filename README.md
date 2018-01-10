@@ -2,6 +2,7 @@
   Title: PHP Parser
   Description: A Parser for PHP written in Go.
   Author: Slizov Vadim
+  Keywords: go golang php php-parser ast
   -->
 
 # PHP-Parser
