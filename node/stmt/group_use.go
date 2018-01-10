@@ -45,7 +45,9 @@ func (n *GroupUse) Walk(v node.Visitor) {
 	if n.UseList != nil {
 		vv := v.GetChildrenVisitor("UseList")
 		for _, nn := range n.UseList {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

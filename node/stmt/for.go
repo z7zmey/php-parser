@@ -32,21 +32,27 @@ func (n *For) Walk(v node.Visitor) {
 	if n.Init != nil {
 		vv := v.GetChildrenVisitor("Init")
 		for _, nn := range n.Init {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Cond != nil {
 		vv := v.GetChildrenVisitor("Cond")
 		for _, nn := range n.Cond {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Loop != nil {
 		vv := v.GetChildrenVisitor("Loop")
 		for _, nn := range n.Loop {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

@@ -26,7 +26,9 @@ func (n *Global) Walk(v node.Visitor) {
 	if n.Vars != nil {
 		vv := v.GetChildrenVisitor("Vars")
 		for _, nn := range n.Vars {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

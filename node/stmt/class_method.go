@@ -46,14 +46,18 @@ func (n *ClassMethod) Walk(v node.Visitor) {
 	if n.Modifiers != nil {
 		vv := v.GetChildrenVisitor("Modifiers")
 		for _, nn := range n.Modifiers {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Params != nil {
 		vv := v.GetChildrenVisitor("Params")
 		for _, nn := range n.Params {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
@@ -65,7 +69,9 @@ func (n *ClassMethod) Walk(v node.Visitor) {
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

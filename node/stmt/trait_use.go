@@ -28,14 +28,18 @@ func (n *TraitUse) Walk(v node.Visitor) {
 	if n.Traits != nil {
 		vv := v.GetChildrenVisitor("Traits")
 		for _, nn := range n.Traits {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Adaptations != nil {
 		vv := v.GetChildrenVisitor("Adaptations")
 		for _, nn := range n.Adaptations {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

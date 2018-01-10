@@ -2,6 +2,7 @@ package parser
 
 import (
 	"bufio"
+	"bytes"
 	"go/token"
 	"io"
 	"unicode"
@@ -15,6 +16,7 @@ import (
 const (
 	classUnicodeLeter = iota + 0x80
 	classUnicodeDigit
+	classUnicodeGraphic
 	classOther
 )
 
@@ -35,6 +37,9 @@ func rune2Class(r rune) int {
 	if unicode.IsDigit(r) {
 		return classUnicodeDigit
 	}
+	if unicode.IsGraphic(r) {
+		return classUnicodeGraphic
+	}
 	// return classOther
 	return -1
 }
@@ -48,7 +53,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	return &lexer{lx, []int{0}, "", nil}
 }
 
-func (l *lexer) ungetN(n int) []byte {
+func (l *lexer) ungetChars(n int) []lex.Char {
 	l.Unget(l.Lookahead())
 
 	chars := l.Token()
@@ -58,7 +63,7 @@ func (l *lexer) ungetN(n int) []byte {
 		l.Unget(char)
 	}
 
-	buf := l.TokenBytes(nil)
+	buf := l.Token()
 	buf = buf[:len(buf)-n]
 
 	return buf
@@ -87,19 +92,28 @@ func (l *lexer) getCurrentState() int {
 	return l.stateStack[len(l.stateStack)-1]
 }
 
-func (l *lexer) newToken(tokenBytes []byte) t.Token {
-	tokenBytesEnd := len(tokenBytes) - 1
+func (l *lexer) newToken(chars []lex.Char) t.Token {
+	firstChar := chars[0]
+	lastChar := chars[len(chars)-1]
 
-	startLine := l.File.Line(l.First.Pos())
-	lastChar := l.Token()[tokenBytesEnd]
+	startLine := l.File.Line(firstChar.Pos())
 	endLine := l.File.Line(lastChar.Pos())
+	startPos := int(firstChar.Pos())
+	endPos := int(lastChar.Pos())
 
-	startPos := int(l.First.Pos())
-	endPos := startPos + tokenBytesEnd
-
-	return t.NewToken(tokenBytes, startLine, endLine, startPos, endPos).SetComments(l.comments)
+	return t.NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.comments)
 }
 
 func (l *lexer) addComment(c comment.Comment) {
 	l.comments = append(l.comments, c)
+}
+
+func (l *lexer) charsToBytes(chars []lex.Char) []byte {
+	bytesBuf := bytes.Buffer{}
+
+	for _, c := range chars {
+		bytesBuf.WriteRune(c.Rune)
+	}
+
+	return bytesBuf.Bytes()
 }

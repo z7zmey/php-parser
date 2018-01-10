@@ -30,14 +30,18 @@ func (n *Try) Walk(v node.Visitor) {
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Catches != nil {
 		vv := v.GetChildrenVisitor("Catches")
 		for _, nn := range n.Catches {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

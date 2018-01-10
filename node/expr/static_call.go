@@ -40,7 +40,9 @@ func (n *StaticCall) Walk(v node.Visitor) {
 	if n.Arguments != nil {
 		vv := v.GetChildrenVisitor("Arguments")
 		for _, nn := range n.Arguments {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

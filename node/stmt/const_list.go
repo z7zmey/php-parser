@@ -26,7 +26,9 @@ func (n *ConstList) Walk(v node.Visitor) {
 	if n.Consts != nil {
 		vv := v.GetChildrenVisitor("Consts")
 		for _, nn := range n.Consts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

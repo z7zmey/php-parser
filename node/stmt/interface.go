@@ -39,14 +39,18 @@ func (n *Interface) Walk(v node.Visitor) {
 	if n.Extends != nil {
 		vv := v.GetChildrenVisitor("Extends")
 		for _, nn := range n.Extends {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

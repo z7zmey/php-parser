@@ -28,14 +28,18 @@ func (n *PropertyList) Walk(v node.Visitor) {
 	if n.Modifiers != nil {
 		vv := v.GetChildrenVisitor("Modifiers")
 		for _, nn := range n.Modifiers {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Properties != nil {
 		vv := v.GetChildrenVisitor("Properties")
 		for _, nn := range n.Properties {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

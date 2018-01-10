@@ -26,7 +26,9 @@ func (n *ShortArray) Walk(v node.Visitor) {
 	if n.Items != nil {
 		vv := v.GetChildrenVisitor("Items")
 		for _, nn := range n.Items {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

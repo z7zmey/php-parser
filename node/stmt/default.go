@@ -26,7 +26,9 @@ func (n *Default) Walk(v node.Visitor) {
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

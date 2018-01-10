@@ -26,7 +26,9 @@ func (n *Isset) Walk(v node.Visitor) {
 	if n.Variables != nil {
 		vv := v.GetChildrenVisitor("Variables")
 		for _, nn := range n.Variables {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

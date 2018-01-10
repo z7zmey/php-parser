@@ -28,14 +28,18 @@ func (n *ClassConstList) Walk(v node.Visitor) {
 	if n.Modifiers != nil {
 		vv := v.GetChildrenVisitor("Modifiers")
 		for _, nn := range n.Modifiers {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Consts != nil {
 		vv := v.GetChildrenVisitor("Consts")
 		for _, nn := range n.Consts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

@@ -45,14 +45,18 @@ func (n *Class) Walk(v node.Visitor) {
 	if n.Modifiers != nil {
 		vv := v.GetChildrenVisitor("Modifiers")
 		for _, nn := range n.Modifiers {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.args != nil {
 		vv := v.GetChildrenVisitor("args")
 		for _, nn := range n.args {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
@@ -64,14 +68,18 @@ func (n *Class) Walk(v node.Visitor) {
 	if n.Implements != nil {
 		vv := v.GetChildrenVisitor("Implements")
 		for _, nn := range n.Implements {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

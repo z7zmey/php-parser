@@ -36,7 +36,9 @@ func (n *Switch) Walk(v node.Visitor) {
 	if n.cases != nil {
 		vv := v.GetChildrenVisitor("cases")
 		for _, nn := range n.cases {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

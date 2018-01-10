@@ -26,7 +26,9 @@ func (n *Echo) Walk(v node.Visitor) {
 	if n.Exprs != nil {
 		vv := v.GetChildrenVisitor("Exprs")
 		for _, nn := range n.Exprs {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

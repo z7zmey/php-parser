@@ -26,7 +26,9 @@ func (n *ShellExec) Walk(v node.Visitor) {
 	if n.Parts != nil {
 		vv := v.GetChildrenVisitor("Parts")
 		for _, nn := range n.Parts {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 

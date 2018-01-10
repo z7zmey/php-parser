@@ -58,7 +58,9 @@ func (n *If) Walk(v node.Visitor) {
 	if n.ElseIf != nil {
 		vv := v.GetChildrenVisitor("ElseIf")
 		for _, nn := range n.ElseIf {
-			nn.Walk(vv)
+			if nn != nil {
+				nn.Walk(vv)
+			}
 		}
 	}
 
