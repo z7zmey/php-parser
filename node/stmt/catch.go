@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Catch node
 type Catch struct {
 	Types    []node.Node
 	Variable node.Node
 	Stmts    []node.Node
 }
 
+// NewCatch node constuctor
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
 		Types,
@@ -18,10 +20,13 @@ func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Catch) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Catch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

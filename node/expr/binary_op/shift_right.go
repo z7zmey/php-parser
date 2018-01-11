@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// ShiftRight node
 type ShiftRight struct {
 	BinaryOp
 }
 
+// NewShiftRight node constuctor
 func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	return &ShiftRight{
 		BinaryOp{
@@ -17,10 +19,13 @@ func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *ShiftRight) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *ShiftRight) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

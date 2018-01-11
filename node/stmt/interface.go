@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Interface node
 type Interface struct {
 	PhpDocComment string
 	InterfaceName node.Node
@@ -11,6 +12,7 @@ type Interface struct {
 	Stmts         []node.Node
 }
 
+// NewInterface node constuctor
 func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) *Interface {
 	return &Interface{
 		PhpDocComment,
@@ -20,12 +22,15 @@ func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Nod
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Interface) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Interface) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

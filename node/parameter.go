@@ -1,5 +1,6 @@
 package node
 
+// Parameter node
 type Parameter struct {
 	ByRef        bool
 	Variadic     bool
@@ -8,6 +9,7 @@ type Parameter struct {
 	DefaultValue Node
 }
 
+// NewParameter node constuctor
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
 		ByRef,
@@ -18,6 +20,7 @@ func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef boo
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Parameter) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef":    n.ByRef,
@@ -25,6 +28,8 @@ func (n *Parameter) Attributes() map[string]interface{} {
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Parameter) Walk(v Visitor) {
 	if v.EnterNode(n) == false {
 		return

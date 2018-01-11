@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// NotEqual node
 type NotEqual struct {
 	BinaryOp
 }
 
+// NewNotEqual node constuctor
 func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	return &NotEqual{
 		BinaryOp{
@@ -17,10 +19,13 @@ func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *NotEqual) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *NotEqual) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

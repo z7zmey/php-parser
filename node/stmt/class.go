@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Class node
 type Class struct {
 	PhpDocComment string
 	ClassName     node.Node
@@ -14,6 +15,7 @@ type Class struct {
 	Stmts         []node.Node
 }
 
+// NewClass node constuctor
 func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
 		PhpDocComment,
@@ -26,12 +28,15 @@ func NewClass(ClassName node.Node, Modifiers []node.Node, args []node.Node, Exte
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Class) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Class) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

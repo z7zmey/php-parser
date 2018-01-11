@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Do node
 type Do struct {
 	Stmt node.Node
 	Cond node.Node
 }
 
+// NewDo node constuctor
 func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	return &Do{
 		Stmt,
@@ -16,10 +18,13 @@ func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Do) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Do) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

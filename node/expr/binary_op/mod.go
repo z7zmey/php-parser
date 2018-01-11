@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Mod node
 type Mod struct {
 	BinaryOp
 }
 
+// NewMod node constuctor
 func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
 		BinaryOp{
@@ -17,10 +19,13 @@ func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Mod) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Mod) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

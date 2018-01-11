@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// ClassMethod node
 type ClassMethod struct {
 	ReturnsRef    bool
 	PhpDocComment string
@@ -14,6 +15,7 @@ type ClassMethod struct {
 	Stmts         []node.Node
 }
 
+// NewClassMethod node constuctor
 func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *ClassMethod {
 	return &ClassMethod{
 		ReturnsRef,
@@ -26,6 +28,7 @@ func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *ClassMethod) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ReturnsRef":    n.ReturnsRef,
@@ -33,6 +36,8 @@ func (n *ClassMethod) Attributes() map[string]interface{} {
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *ClassMethod) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

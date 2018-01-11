@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// GroupUse node
 type GroupUse struct {
 	UseType node.Node
 	pRefix  node.Node
 	UseList []node.Node
 }
 
+// NewGroupUse node constuctor
 func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) *GroupUse {
 	return &GroupUse{
 		UseType,
@@ -18,6 +20,7 @@ func NewGroupUse(UseType node.Node, pRefix node.Node, UseList []node.Node) *Grou
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *GroupUse) Attributes() map[string]interface{} {
 	return nil
 }
@@ -27,6 +30,8 @@ func (n *GroupUse) SetUseType(UseType node.Node) node.Node {
 	return n
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *GroupUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

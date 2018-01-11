@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Function node
 type Function struct {
 	ReturnsRef    bool
 	PhpDocComment string
@@ -13,6 +14,7 @@ type Function struct {
 	Stmts         []node.Node
 }
 
+// NewFunction node constuctor
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *Function {
 	return &Function{
 		ReturnsRef,
@@ -24,6 +26,7 @@ func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, Re
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Function) Attributes() map[string]interface{} {
 	// return n.attributes
 	return map[string]interface{}{
@@ -32,6 +35,8 @@ func (n *Function) Attributes() map[string]interface{} {
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Function) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

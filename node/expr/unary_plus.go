@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// UnaryPlus node
 type UnaryPlus struct {
 	Expr node.Node
 }
 
+// NewUnaryPlus node constuctor
 func NewUnaryPlus(Expression node.Node) *UnaryPlus {
 	return &UnaryPlus{
 		Expression,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *UnaryPlus) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *UnaryPlus) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

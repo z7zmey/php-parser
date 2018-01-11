@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Trait node
 type Trait struct {
 	PhpDocComment string
 	TraitName     node.Node
 	Stmts         []node.Node
 }
 
+// NewTrait node constuctor
 func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Trait {
 	return &Trait{
 		PhpDocComment,
@@ -18,12 +20,15 @@ func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Tra
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Trait) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Trait) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

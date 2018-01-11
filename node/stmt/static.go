@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Static node
 type Static struct {
 	Vars []node.Node
 }
 
+// NewStatic node constuctor
 func NewStatic(Vars []node.Node) *Static {
 	return &Static{
 		Vars,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Static) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Static) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

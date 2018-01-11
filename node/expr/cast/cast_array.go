@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// CastArray node
 type CastArray struct {
 	Cast
 }
 
+// NewCastArray node constuctor
 func NewCastArray(Expr node.Node) *CastArray {
 	return &CastArray{
 		Cast{
@@ -16,10 +18,13 @@ func NewCastArray(Expr node.Node) *CastArray {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *CastArray) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *CastArray) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

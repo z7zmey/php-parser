@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Echo node
 type Echo struct {
 	Exprs []node.Node
 }
 
+// NewEcho node constuctor
 func NewEcho(Exprs []node.Node) *Echo {
 	return &Echo{
 		Exprs,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Echo) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Echo) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

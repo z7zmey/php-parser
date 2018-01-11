@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Encapsed node
 type Encapsed struct {
 	Parts []node.Node
 }
 
+// NewEncapsed node constuctor
 func NewEncapsed(Parts []node.Node) *Encapsed {
 	return &Encapsed{
 		Parts,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Encapsed) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Encapsed) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

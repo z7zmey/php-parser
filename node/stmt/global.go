@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Global node
 type Global struct {
 	Vars []node.Node
 }
 
+// NewGlobal node constuctor
 func NewGlobal(Vars []node.Node) *Global {
 	return &Global{
 		Vars,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Global) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Global) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

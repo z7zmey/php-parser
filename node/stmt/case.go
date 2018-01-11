@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Case node
 type Case struct {
 	Cond  node.Node
 	Stmts []node.Node
 }
 
+// NewCase node constuctor
 func NewCase(Cond node.Node, Stmts []node.Node) *Case {
 	return &Case{
 		Cond,
@@ -16,10 +18,13 @@ func NewCase(Cond node.Node, Stmts []node.Node) *Case {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Case) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Case) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

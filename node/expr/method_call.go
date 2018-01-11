@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// MethodCall node
 type MethodCall struct {
 	Variable  node.Node
 	Method    node.Node
 	Arguments []node.Node
 }
 
+// NewMethodCall node constuctor
 func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) *MethodCall {
 	return &MethodCall{
 		Variable,
@@ -18,10 +20,13 @@ func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) 
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *MethodCall) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *MethodCall) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

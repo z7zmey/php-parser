@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Plus node
 type Plus struct {
 	AssignOp
 }
 
+// NewPlus node constuctor
 func NewPlus(Variable node.Node, Expression node.Node) *Plus {
 	return &Plus{
 		AssignOp{
@@ -17,10 +19,13 @@ func NewPlus(Variable node.Node, Expression node.Node) *Plus {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Plus) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Plus) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

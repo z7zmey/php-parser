@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// TraitUse node
 type TraitUse struct {
 	Traits      []node.Node
 	Adaptations []node.Node
 }
 
+// NewTraitUse node constuctor
 func NewTraitUse(Traits []node.Node, Adaptations []node.Node) *TraitUse {
 	return &TraitUse{
 		Traits,
@@ -16,10 +18,13 @@ func NewTraitUse(Traits []node.Node, Adaptations []node.Node) *TraitUse {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *TraitUse) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *TraitUse) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

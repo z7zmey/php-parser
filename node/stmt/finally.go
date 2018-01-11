@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Finally node
 type Finally struct {
 	Stmts []node.Node
 }
 
+// NewFinally node constuctor
 func NewFinally(Stmts []node.Node) *Finally {
 	return &Finally{
 		Stmts,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Finally) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Finally) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

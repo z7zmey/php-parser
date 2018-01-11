@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// PostDec node
 type PostDec struct {
 	Variable node.Node
 }
 
+// NewPostDec node constuctor
 func NewPostDec(Variable node.Node) *PostDec {
 	return &PostDec{
 		Variable,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *PostDec) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *PostDec) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// StaticPropertyFetch node
 type StaticPropertyFetch struct {
 	Class    node.Node
 	Property node.Node
 }
 
+// NewStaticPropertyFetch node constuctor
 func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
 		Class,
@@ -16,10 +18,13 @@ func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticProperty
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *StaticPropertyFetch) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *StaticPropertyFetch) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

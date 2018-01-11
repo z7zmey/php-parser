@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Pow node
 type Pow struct {
 	AssignOp
 }
 
+// NewPow node constuctor
 func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
 		AssignOp{
@@ -17,10 +19,13 @@ func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Pow) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Pow) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

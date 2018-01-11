@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// ShellExec node
 type ShellExec struct {
 	Parts []node.Node
 }
 
+// NewShellExec node constuctor
 func NewShellExec(Parts []node.Node) *ShellExec {
 	return &ShellExec{
 		Parts,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *ShellExec) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *ShellExec) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

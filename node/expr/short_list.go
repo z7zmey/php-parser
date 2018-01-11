@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// ShortList node
 type ShortList struct {
 	Items []node.Node
 }
 
+// NewShortList node constuctor
 func NewShortList(Items []node.Node) *ShortList {
 	return &ShortList{
 		Items,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *ShortList) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *ShortList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

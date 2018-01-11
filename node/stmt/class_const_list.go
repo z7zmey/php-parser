@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// ClassConstList node
 type ClassConstList struct {
 	Modifiers []node.Node
 	Consts    []node.Node
 }
 
+// NewClassConstList node constuctor
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstList {
 	return &ClassConstList{
 		Modifiers,
@@ -16,10 +18,13 @@ func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstLis
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *ClassConstList) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *ClassConstList) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

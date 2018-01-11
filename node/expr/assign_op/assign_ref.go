@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// AssignRef node
 type AssignRef struct {
 	AssignOp
 }
 
+// NewAssignRef node constuctor
 func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
 	return &AssignRef{
 		AssignOp{
@@ -17,10 +19,13 @@ func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *AssignRef) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *AssignRef) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

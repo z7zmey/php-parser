@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Closure node
 type Closure struct {
 	ReturnsRef    bool
 	Static        bool
@@ -14,6 +15,7 @@ type Closure struct {
 	Stmts         []node.Node
 }
 
+// NewClosure node constuctor
 func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmts []node.Node, Static bool, ReturnsRef bool, PhpDocComment string) *Closure {
 	return &Closure{
 		ReturnsRef,
@@ -26,6 +28,7 @@ func NewClosure(Params []node.Node, Uses []node.Node, ReturnType node.Node, Stmt
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Closure) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ReturnsRef":    n.ReturnsRef,
@@ -34,6 +37,8 @@ func (n *Closure) Attributes() map[string]interface{} {
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Closure) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

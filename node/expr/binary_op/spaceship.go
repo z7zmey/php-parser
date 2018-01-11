@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Spaceship node
 type Spaceship struct {
 	BinaryOp
 }
 
+// NewSpaceship node constuctor
 func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	return &Spaceship{
 		BinaryOp{
@@ -17,10 +19,13 @@ func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Spaceship) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Spaceship) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

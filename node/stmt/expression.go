@@ -4,20 +4,25 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Expression node
 type Expression struct {
 	Expr node.Node
 }
 
+// NewExpression node constuctor
 func NewExpression(Expr node.Node) *Expression {
 	return &Expression{
 		Expr,
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Expression) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Expression) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

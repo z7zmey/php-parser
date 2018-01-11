@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Declare node
 type Declare struct {
 	Consts []node.Node
 	Stmt   node.Node
 }
 
+// NewDeclare node constuctor
 func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	return &Declare{
 		Consts,
@@ -16,10 +18,13 @@ func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Declare) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Declare) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

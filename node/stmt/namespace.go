@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Namespace node
 type Namespace struct {
 	NamespaceName node.Node
 	Stmts         []node.Node
 }
 
+// NewNamespace node constuctor
 func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	return &Namespace{
 		NamespaceName,
@@ -16,10 +18,13 @@ func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Namespace) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Namespace) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Ternary node
 type Ternary struct {
 	Condition node.Node
 	IfTrue    node.Node
 	IfFalse   node.Node
 }
 
+// NewTernary node constuctor
 func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
 		Condition,
@@ -18,10 +20,13 @@ func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Terna
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Ternary) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Ternary) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

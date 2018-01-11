@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Property node
 type Property struct {
 	PhpDocComment string
 	Variable      node.Node
 	Expr          node.Node
 }
 
+// NewProperty node constuctor
 func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Property {
 	return &Property{
 		PhpDocComment,
@@ -17,12 +19,16 @@ func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Prop
 		Expr,
 	}
 }
+
+// Attributes returns node attributes as map
 func (n *Property) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Property) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

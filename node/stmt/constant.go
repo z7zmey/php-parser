@@ -4,12 +4,14 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Constant node
 type Constant struct {
 	PhpDocComment string
 	ConstantName  node.Node
 	Expr          node.Node
 }
 
+// NewConstant node constuctor
 func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
 		PhpDocComment,
@@ -18,12 +20,15 @@ func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Constant) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"PhpDocComment": n.PhpDocComment,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Constant) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

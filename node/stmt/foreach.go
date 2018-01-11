@@ -4,6 +4,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Foreach node
 type Foreach struct {
 	ByRef    bool
 	Expr     node.Node
@@ -12,6 +13,7 @@ type Foreach struct {
 	Stmt     node.Node
 }
 
+// NewForeach node constuctor
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
 	return &Foreach{
 		ByRef,
@@ -22,12 +24,15 @@ func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Nod
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Foreach) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Foreach) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

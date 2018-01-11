@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Mul node
 type Mul struct {
 	AssignOp
 }
 
+// NewMul node constuctor
 func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	return &Mul{
 		AssignOp{
@@ -17,10 +19,13 @@ func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *Mul) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *Mul) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

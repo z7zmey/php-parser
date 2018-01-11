@@ -4,11 +4,13 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// AltElseIf node
 type AltElseIf struct {
 	Cond node.Node
 	Stmt node.Node
 }
 
+// NewAltElseIf node constuctor
 func NewAltElseIf(Cond node.Node, Stmt node.Node) *AltElseIf {
 	return &AltElseIf{
 		Cond,
@@ -16,10 +18,13 @@ func NewAltElseIf(Cond node.Node, Stmt node.Node) *AltElseIf {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *AltElseIf) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *AltElseIf) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return

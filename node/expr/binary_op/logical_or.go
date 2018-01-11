@@ -4,10 +4,12 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// LogicalOr node
 type LogicalOr struct {
 	BinaryOp
 }
 
+// NewLogicalOr node constuctor
 func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	return &LogicalOr{
 		BinaryOp{
@@ -17,10 +19,13 @@ func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	}
 }
 
+// Attributes returns node attributes as map
 func (n *LogicalOr) Attributes() map[string]interface{} {
 	return nil
 }
 
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
 func (n *LogicalOr) Walk(v node.Visitor) {
 	if v.EnterNode(n) == false {
 		return
