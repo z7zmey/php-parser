@@ -4,14 +4,6 @@ import (
 	"github.com/z7zmey/php-parser/comment"
 )
 
-type TokenInterface interface {
-	GetValue() string
-	GetStartLine() int
-	GetEndLine() int
-	Comments() []comment.Comment
-	SetComments(comments []comment.Comment) Token
-}
-
 type Token struct {
 	Value     string
 	StartLine int
