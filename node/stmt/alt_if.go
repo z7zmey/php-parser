@@ -9,7 +9,7 @@ type AltIf struct {
 	Cond   node.Node
 	Stmt   node.Node
 	ElseIf []node.Node
-	_else  node.Node
+	Else   node.Node
 }
 
 // NewAltIf node constuctor
@@ -37,8 +37,8 @@ func (n *AltIf) AddElseIf(ElseIf node.Node) node.Node {
 	return n
 }
 
-func (n *AltIf) SetElse(_else node.Node) node.Node {
-	n._else = _else
+func (n *AltIf) SetElse(Else node.Node) node.Node {
+	n.Else = Else
 
 	return n
 }
@@ -69,9 +69,9 @@ func (n *AltIf) Walk(v node.Visitor) {
 		}
 	}
 
-	if n._else != nil {
+	if n.Else != nil {
 		vv := v.GetChildrenVisitor("else")
-		n._else.Walk(vv)
+		n.Else.Walk(vv)
 	}
 
 	v.LeaveNode(n)
