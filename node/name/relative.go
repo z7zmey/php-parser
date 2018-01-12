@@ -6,14 +6,36 @@ import (
 
 // Relative node
 type Relative struct {
-	Name
+	Parts []node.Node
 }
 
 // NewRelative node constuctor
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
-		Name{
-			Parts,
-		},
+		Parts,
 	}
+}
+
+// Attributes returns node attributes as map
+func (n *Relative) Attributes() map[string]interface{} {
+	return nil
+}
+
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
+func (n *Relative) Walk(v node.Visitor) {
+	if v.EnterNode(n) == false {
+		return
+	}
+
+	if n.Parts != nil {
+		vv := v.GetChildrenVisitor("Parts")
+		for _, nn := range n.Parts {
+			if nn != nil {
+				nn.Walk(vv)
+			}
+		}
+	}
+
+	v.LeaveNode(n)
 }

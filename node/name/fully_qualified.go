@@ -6,14 +6,36 @@ import (
 
 // FullyQualified node
 type FullyQualified struct {
-	Name
+	Parts []node.Node
 }
 
 // NewFullyQualified node constuctor
 func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
-		Name{
-			Parts,
-		},
+		Parts,
 	}
+}
+
+// Attributes returns node attributes as map
+func (n *FullyQualified) Attributes() map[string]interface{} {
+	return nil
+}
+
+// Walk traverses nodes
+// Walk is invoked recursively until v.EnterNode returns true
+func (n *FullyQualified) Walk(v node.Visitor) {
+	if v.EnterNode(n) == false {
+		return
+	}
+
+	if n.Parts != nil {
+		vv := v.GetChildrenVisitor("Parts")
+		for _, nn := range n.Parts {
+			if nn != nil {
+				nn.Walk(vv)
+			}
+		}
+	}
+
+	v.LeaveNode(n)
 }
