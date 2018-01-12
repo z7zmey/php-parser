@@ -33,7 +33,7 @@ func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
 	nodes, comments, positions := parser.Parse(src, "example.php")
 
-	visitor := visitor.Dumper{"  | ", comments, positions}
+	visitor := visitor.Dumper{"", comments, positions}
 	nodes.Walk(visitor)
 }
 
