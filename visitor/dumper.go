@@ -10,12 +10,15 @@ import (
 	"github.com/z7zmey/php-parser/node"
 )
 
+// Dumper prints ast hierarchy to stdout
+// Also prints comments and positions attached to nodes
 type Dumper struct {
 	Indent    string
 	Comments  comment.Comments
 	Positions position.Positions
 }
 
+// EnterNode is invoked at every node in heirerchy
 func (d Dumper) EnterNode(n node.Node) bool {
 
 	fmt.Printf("%v%v", d.Indent, reflect.TypeOf(n))
@@ -37,11 +40,13 @@ func (d Dumper) EnterNode(n node.Node) bool {
 	return true
 }
 
+// GetChildrenVisitor is invoked at every node parameter that contains children nodes
 func (d Dumper) GetChildrenVisitor(key string) node.Visitor {
 	fmt.Printf("%v%q:\n", d.Indent+"  ", key)
 	return Dumper{d.Indent + "    ", d.Comments, d.Positions}
 }
 
+// LeaveNode is invoked after node process
 func (d Dumper) LeaveNode(n node.Node) {
 	// do nothing
 }
