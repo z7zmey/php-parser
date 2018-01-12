@@ -1,4 +1,4 @@
-package test
+package scalar_test
 
 import (
 	"bytes"
