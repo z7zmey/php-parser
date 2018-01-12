@@ -18,6 +18,27 @@ A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com
 - Abstract syntax tree representation
 - Traversing AST
 
+## Example
+```Golang
+package main
+
+import (
+	"bytes"
+
+	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/visitor"
+)
+
+func main() {
+	src := `<? echo "Hello world";`
+	nodes, comments, positions := parser.Parse(bytes.NewBufferString(src), "example.php")
+
+	visitor := visitor.Dumper{"  | ", comments, positions}
+	nodes.Walk(visitor)
+}
+
+```
+
 ## Roadmap
 - [X] Lexer
 - [x] PHP 7 syntax analyzer (completely)
