@@ -30,8 +30,8 @@ import (
 )
 
 func main() {
-	src := `<? echo "Hello world";`
-	nodes, comments, positions := parser.Parse(bytes.NewBufferString(src), "example.php")
+	src := bytes.NewBufferString(`<? echo "Hello world";`)
+	nodes, comments, positions := parser.Parse(src, "example.php")
 
 	visitor := visitor.Dumper{"  | ", comments, positions}
 	nodes.Walk(visitor)
