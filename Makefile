@@ -14,7 +14,7 @@ run: all
 	./php-parser $(PHPFILE)
 
 test: all
-	go test ./test/...
+	go test ./... --cover
 
 ./parser/scanner.go: ./parser/scanner.l
 	golex -o $@ $<
