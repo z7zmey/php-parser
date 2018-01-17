@@ -31,7 +31,7 @@ import (
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions := parser.Parse(src, "example.php")
+	nodes, comments, positions := parser.ParsePhp7(src, "example.php")
 
 	visitor := Dumper{"", comments, positions}
 	nodes.Walk(visitor)

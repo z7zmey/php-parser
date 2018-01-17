@@ -1,6 +1,6 @@
 PHPFILE=example.php
 
-all: ./parser/parser.go ./parser/scanner.go
+all: ./parser/php7.go ./parser/scanner.go
 	rm -f y.output
 	gofmt -l -s -w *.go
 	go build
@@ -14,5 +14,5 @@ test: all
 ./parser/scanner.go: ./parser/scanner.l
 	golex -o $@ $<
 
-./parser/parser.go: ./parser/parser.y
+./parser/php7.go: ./parser/php7.y
 	goyacc -o $@ $<

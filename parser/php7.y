@@ -23,7 +23,7 @@ var comments comment.Comments
 var positions position.Positions
 var positionBuilder position.Builder
 
-func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
+func ParsePhp7(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
     yyDebug        = 0
     yyErrorVerbose = true
     rootnode = stmt.NewStmtList([]node.Node{}) //reset
