@@ -5,6 +5,10 @@ import __yyfmt__ "fmt"
 
 //line parser/parser.y:2
 import (
+	"io"
+	"strconv"
+	"strings"
+
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -16,9 +20,6 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/token"
-	"io"
-	"strconv"
-	"strings"
 )
 
 var rootnode node.Node

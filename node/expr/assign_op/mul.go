@@ -2,6 +2,7 @@ package assign_op
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Mul node
@@ -26,7 +27,7 @@ func (n *Mul) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Mul) Walk(v node.Visitor) {
+func (n *Mul) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

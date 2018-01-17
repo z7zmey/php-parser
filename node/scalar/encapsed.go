@@ -2,6 +2,7 @@ package scalar
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Encapsed node
@@ -23,7 +24,7 @@ func (n *Encapsed) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Encapsed) Walk(v node.Visitor) {
+func (n *Encapsed) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

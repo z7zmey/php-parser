@@ -1,14 +1,24 @@
-package visitor
+package main
 
 import (
 	"fmt"
 	"reflect"
 
+	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/comment"
-	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
+
+func isWalkerImplementsNodeInterface(w walker.Walker) bool {
+	switch w.(type) {
+	case node.Node:
+		return true
+	default:
+		return false
+	}
+}
 
 // Dumper prints ast hierarchy to stdout
 // Also prints comments and positions attached to nodes
@@ -19,7 +29,12 @@ type Dumper struct {
 }
 
 // EnterNode is invoked at every node in heirerchy
-func (d Dumper) EnterNode(n node.Node) bool {
+func (d Dumper) EnterNode(w walker.Walker) bool {
+	if !isWalkerImplementsNodeInterface(w) {
+		return false
+	}
+
+	n := w.(node.Node)
 
 	fmt.Printf("%v%v", d.Indent, reflect.TypeOf(n))
 	if p := d.Positions[n]; p != nil {
@@ -41,12 +56,12 @@ func (d Dumper) EnterNode(n node.Node) bool {
 }
 
 // GetChildrenVisitor is invoked at every node parameter that contains children nodes
-func (d Dumper) GetChildrenVisitor(key string) node.Visitor {
+func (d Dumper) GetChildrenVisitor(key string) walker.Visitor {
 	fmt.Printf("%v%q:\n", d.Indent+"  ", key)
 	return Dumper{d.Indent + "    ", d.Comments, d.Positions}
 }
 
 // LeaveNode is invoked after node process
-func (d Dumper) LeaveNode(n node.Node) {
+func (d Dumper) LeaveNode(n walker.Walker) {
 	// do nothing
 }

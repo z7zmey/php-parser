@@ -1,5 +1,7 @@
 package node
 
+import "github.com/z7zmey/php-parser/walker"
+
 // Argument node
 type Argument struct {
 	Variadic bool // if ... before variable
@@ -23,7 +25,7 @@ func (n *Argument) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Argument) Walk(v Visitor) {
+func (n *Argument) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

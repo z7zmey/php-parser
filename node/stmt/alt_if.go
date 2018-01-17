@@ -2,6 +2,7 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltIf node
@@ -45,7 +46,7 @@ func (n *AltIf) SetElse(Else node.Node) node.Node {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *AltIf) Walk(v node.Visitor) {
+func (n *AltIf) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

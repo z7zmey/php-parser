@@ -2,6 +2,7 @@ package binary_op
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Concat node
@@ -26,7 +27,7 @@ func (n *Concat) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Concat) Walk(v node.Visitor) {
+func (n *Concat) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

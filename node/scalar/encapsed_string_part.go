@@ -1,8 +1,6 @@
 package scalar
 
-import (
-	"github.com/z7zmey/php-parser/node"
-)
+import "github.com/z7zmey/php-parser/walker"
 
 // EncapsedStringPart node
 type EncapsedStringPart struct {
@@ -25,7 +23,7 @@ func (n *EncapsedStringPart) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *EncapsedStringPart) Walk(v node.Visitor) {
+func (n *EncapsedStringPart) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

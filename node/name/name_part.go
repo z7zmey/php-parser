@@ -1,8 +1,6 @@
 package name
 
-import (
-	"github.com/z7zmey/php-parser/node"
-)
+import "github.com/z7zmey/php-parser/walker"
 
 // NamePart node
 type NamePart struct {
@@ -25,7 +23,7 @@ func (n *NamePart) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *NamePart) Walk(v node.Visitor) {
+func (n *NamePart) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

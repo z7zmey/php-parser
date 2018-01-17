@@ -2,6 +2,7 @@ package binary_op
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Spaceship node
@@ -26,7 +27,7 @@ func (n *Spaceship) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Spaceship) Walk(v node.Visitor) {
+func (n *Spaceship) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

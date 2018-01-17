@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClusureUse node
@@ -27,7 +28,7 @@ func (n *ClusureUse) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *ClusureUse) Walk(v node.Visitor) {
+func (n *ClusureUse) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

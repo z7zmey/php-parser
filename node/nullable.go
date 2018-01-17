@@ -1,5 +1,7 @@
 package node
 
+import "github.com/z7zmey/php-parser/walker"
+
 // Nullable node
 type Nullable struct {
 	Expr Node
@@ -19,7 +21,7 @@ func (n *Nullable) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Nullable) Walk(v Visitor) {
+func (n *Nullable) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

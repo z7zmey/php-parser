@@ -2,6 +2,7 @@ package binary_op
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // ShiftRight node
@@ -26,7 +27,7 @@ func (n *ShiftRight) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *ShiftRight) Walk(v node.Visitor) {
+func (n *ShiftRight) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

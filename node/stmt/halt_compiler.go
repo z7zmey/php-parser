@@ -1,8 +1,6 @@
 package stmt
 
-import (
-	"github.com/z7zmey/php-parser/node"
-)
+import "github.com/z7zmey/php-parser/walker"
 
 // HaltCompiler node
 type HaltCompiler struct {
@@ -20,7 +18,7 @@ func (n *HaltCompiler) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *HaltCompiler) Walk(v node.Visitor) {
+func (n *HaltCompiler) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

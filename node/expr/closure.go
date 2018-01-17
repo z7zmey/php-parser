@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Closure node
@@ -39,7 +40,7 @@ func (n *Closure) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Closure) Walk(v node.Visitor) {
+func (n *Closure) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

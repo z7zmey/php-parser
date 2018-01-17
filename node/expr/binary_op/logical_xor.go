@@ -2,6 +2,7 @@ package binary_op
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // LogicalXor node
@@ -26,7 +27,7 @@ func (n *LogicalXor) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *LogicalXor) Walk(v node.Visitor) {
+func (n *LogicalXor) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

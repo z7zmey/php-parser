@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // PostInc node
@@ -23,7 +24,7 @@ func (n *PostInc) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *PostInc) Walk(v node.Visitor) {
+func (n *PostInc) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

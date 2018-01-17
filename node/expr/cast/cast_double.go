@@ -2,6 +2,7 @@ package cast
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // CastDouble node
@@ -25,7 +26,7 @@ func (n *CastDouble) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *CastDouble) Walk(v node.Visitor) {
+func (n *CastDouble) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

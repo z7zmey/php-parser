@@ -1,8 +1,6 @@
 package stmt
 
-import (
-	"github.com/z7zmey/php-parser/node"
-)
+import "github.com/z7zmey/php-parser/walker"
 
 // InlineHtml node
 type InlineHtml struct {
@@ -25,7 +23,7 @@ func (n *InlineHtml) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *InlineHtml) Walk(v node.Visitor) {
+func (n *InlineHtml) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

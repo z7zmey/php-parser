@@ -11,6 +11,7 @@ package parser
 import (
 	"bytes"
 	"fmt"
+
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
 )

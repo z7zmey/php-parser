@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // UnaryMinus node
@@ -23,7 +24,7 @@ func (n *UnaryMinus) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *UnaryMinus) Walk(v node.Visitor) {
+func (n *UnaryMinus) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

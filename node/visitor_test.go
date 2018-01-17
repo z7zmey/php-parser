@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/walker"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -50,12 +51,12 @@ type visitorMock struct {
 	visitedKeys   []string
 }
 
-func (v *visitorMock) EnterNode(n node.Node) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) node.Visitor {
+func (v *visitorMock) EnterNode(n walker.Walker) bool { return v.visitChildren }
+func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
 	v.visitedKeys = append(v.visitedKeys, key)
 	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n node.Node) {}
+func (v *visitorMock) LeaveNode(n walker.Walker) {}
 
 func TestNameVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {

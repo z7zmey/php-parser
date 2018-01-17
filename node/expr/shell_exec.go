@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // ShellExec node
@@ -23,7 +24,7 @@ func (n *ShellExec) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *ShellExec) Walk(v node.Visitor) {
+func (n *ShellExec) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

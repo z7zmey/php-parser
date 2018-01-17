@@ -2,6 +2,7 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // Catch node
@@ -27,7 +28,7 @@ func (n *Catch) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *Catch) Walk(v node.Visitor) {
+func (n *Catch) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

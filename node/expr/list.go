@@ -2,6 +2,7 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/walker"
 )
 
 // List node
@@ -23,7 +24,7 @@ func (n *List) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *List) Walk(v node.Visitor) {
+func (n *List) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}
