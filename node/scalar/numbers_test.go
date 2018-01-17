@@ -36,7 +36,7 @@ func TestLNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -52,7 +52,7 @@ func TestDNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -68,7 +68,7 @@ func TestFloat(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -84,7 +84,7 @@ func TestBinaryLNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -100,7 +100,7 @@ func TestBinaryDNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -116,7 +116,7 @@ func TestHLNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -132,7 +132,7 @@ func TestHDNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
