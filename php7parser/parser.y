@@ -1,5 +1,5 @@
 %{
-package parser
+package php7parser
 
 import (
     "io"
@@ -50,7 +50,7 @@ func newLexer(src io.Reader, fName string) *lexer {
 	return &lexer{scanner.Lexer{lx, []int{0}, "", nil}}
 }
 
-func ParsePhp7(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
+func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
     yyDebug        = 0
     yyErrorVerbose = true
     rootnode = stmt.NewStmtList([]node.Node{}) //reset
