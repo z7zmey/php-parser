@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/yookoala/realpath"
-	php7parser "github.com/z7zmey/php-parser/php7parser"
+	"github.com/z7zmey/php-parser/php5"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 				fmt.Printf("==> %s\n", path)
 
 				src, _ := os.Open(string(path))
-				nodes, comments, positions := php7parser.Parse(src, path)
+				nodes, comments, positions := php5.Parse(src, path)
 
 				visitor := Dumper{
 					Indent:    "  | ",

@@ -1,14 +1,9 @@
 %{
-package php7parser
+package php5
 
 import (
-    "io"
     "strings"
     "strconv"
-    "bufio"
-    goToken "go/token"
-    
-    "github.com/cznic/golex/lex"
 
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
@@ -19,72 +14,7 @@ import (
     "github.com/z7zmey/php-parser/node/expr/assign_op"
     "github.com/z7zmey/php-parser/node/expr/binary_op"
     "github.com/z7zmey/php-parser/node/expr/cast"
-    "github.com/z7zmey/php-parser/comment"
-    "github.com/z7zmey/php-parser/position"
-    "github.com/z7zmey/php-parser/scanner"
 )
-
-var rootnode node.Node
-var comments comment.Comments
-var positions position.Positions
-var positionBuilder position.Builder
-
-type lexer struct {
-    scanner.Lexer
-}
-
-func (l *lexer) Lex(lval *yySymType) int {
-    return l.Lexer.Lex(lval)
-}
-
-func (lval *yySymType) Token(t token.Token) {
-    lval.token = t
-}
-
-func newLexer(src io.Reader, fName string) *lexer {
-	file := goToken.NewFileSet().AddFile(fName, -1, 1<<31-1)
-	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(scanner.Rune2Class))
-	if err != nil {
-		panic(err)
-	}
-	return &lexer{scanner.Lexer{lx, []int{0}, "", nil}}
-}
-
-func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
-    yyDebug        = 0
-    yyErrorVerbose = true
-    rootnode = stmt.NewStmtList([]node.Node{}) //reset
-    comments = comment.Comments{}
-    positions = position.Positions{}
-    positionBuilder = position.Builder{&positions}
-    yyParse(newLexer(src, fName))
-    return rootnode, comments, positions
-}
-
-func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
-	if len(list) == 0 {
-		return nil
-	}
-
-	node := list[0]
-
-	return comments[node]
-}
-
-type foreachVariable struct {
-    node  node.Node
-    byRef bool
-}
-
-type nodesWithEndToken struct {
-    nodes []node.Node
-    endToken token.Token
-}
-
-type boolWithToken struct {
-    value bool
-    token *token.Token
-}
 
 %}
 
