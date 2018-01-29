@@ -7,7 +7,7 @@ import (
 
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
-//    "github.com/z7zmey/php-parser/node/scalar"
+    "github.com/z7zmey/php-parser/node/scalar"
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
 //    "github.com/z7zmey/php-parser/node/expr"
@@ -191,7 +191,7 @@ import (
 %left T_ENDIF 
 %right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
-%type <node> top_statement use_declaration use_function_declaration use_const_declaration
+%type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 
@@ -1137,26 +1137,69 @@ backticks_expr:
     |	encaps_list	{  }
 ;
 
-
 ctor_arguments:
         /* empty */	{  }
     |	function_call_parameter_list 	{  }
 ;
 
-
 common_scalar:
-        T_LNUMBER 					{  }
-    |	T_DNUMBER 					{  }
-    |	T_CONSTANT_ENCAPSED_STRING	{  }
-    |	T_LINE 						{  }
-    |	T_FILE 						{  }
-    |	T_DIR   					{  }
-    |	T_TRAIT_C					{  }
-    |	T_METHOD_C					{  }
-    |	T_FUNC_C					{  }
-    |	T_NS_C						{  }
-    |	T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC {  }
-    |	T_START_HEREDOC T_END_HEREDOC {  }
+        T_LNUMBER
+            {
+                $$ = scalar.NewLnumber($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DNUMBER
+            {
+                $$ = scalar.NewDnumber($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CONSTANT_ENCAPSED_STRING                              { $$ = nil }
+    |   T_LINE
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FILE
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DIR
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_TRAIT_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_METHOD_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FUNC_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NS_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC { $$ = nil }
+    |   T_START_HEREDOC T_END_HEREDOC                           { $$ = nil }
 ;
 
 static_class_constant:
@@ -1169,15 +1212,15 @@ static_scalar: /* compile-time evaluated scalars */
 
 static_scalar_value:
         common_scalar	{  }
-    |	static_class_name_scalar	{  }
-    |	namespace_name 		{  }
-    |	T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-    |	T_NS_SEPARATOR namespace_name {  }
-    |	T_ARRAY '(' static_array_pair_list ')' {  }
-    |	'[' static_array_pair_list ']' {  }
-    |	static_class_constant {  }
-    |	T_CLASS_C			{  }
-    |	static_operation {  }
+    |   static_class_name_scalar	{  }
+    |   namespace_name 		{  }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
+    |   T_NS_SEPARATOR namespace_name {  }
+    |   T_ARRAY '(' static_array_pair_list ')' {  }
+    |   '[' static_array_pair_list ']' {  }
+    |   static_class_constant {  }
+    |   T_CLASS_C			{  }
+    |   static_operation {  }
 ;
 
 static_operation:

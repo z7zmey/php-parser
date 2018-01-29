@@ -9,9 +9,10 @@ import (
 	//    "strconv"
 
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token" //    "github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/name"
-	"github.com/z7zmey/php-parser/node/stmt" //    "github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/node/stmt"
+	"github.com/z7zmey/php-parser/token" //    "github.com/z7zmey/php-parser/node/expr"
 //    "github.com/z7zmey/php-parser/node/expr/assign_op"
 //    "github.com/z7zmey/php-parser/node/expr/binary_op"
 //    "github.com/z7zmey/php-parser/node/expr/cast"
@@ -341,7 +342,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php5/php5.y:1472
+//line php5/php5.y:1515
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -1357,25 +1358,25 @@ var yyPact = [...]int{
 }
 var yyPgo = [...]int{
 
-	0, 1389, 49, 45, 37, 51, 0, 1387, 1367, 1364,
-	1363, 25, 1360, 1358, 1357, 3, 2, 1357, 1353, 22,
-	1351, 1350, 1345, 1343, 1342, 1341, 1339, 1338, 1336, 1334,
-	1332, 1330, 1313, 18, 1312, 1309, 1292, 1288, 1287, 1285,
-	1472, 39, 1310, 46, 1284, 1283, 1282, 1281, 1279, 28,
-	30, 1275, 11, 1274, 1273, 1272, 1271, 1269, 1266, 1265,
-	1264, 1263, 1262, 13, 1260, 1259, 1258, 1257, 1256, 1255,
-	1, 1254, 1253, 36, 1250, 1249, 12, 1248, 20, 1247,
-	4, 1245, 1244, 1204, 1201, 27, 1200, 1199, 1198, 29,
-	1197, 15, 42, 21, 1194, 1193, 1192, 1191, 1190, 34,
-	1189, 53, 1188, 35, 61, 47, 66, 1187, 1185, 1184,
-	1181, 1180, 1177, 1175, 1173, 1172, 1171, 1170, 1169, 1168,
-	8, 1167, 1166, 1151, 1150, 1122, 1121, 6, 1119, 1118,
-	1117, 16, 24, 1116, 309, 1115, 1114, 1113, 1112, 804,
-	43, 1111, 26, 1110, 1104, 833, 1103, 1102, 1100, 1097,
-	1096, 1095, 1094, 1093, 1091, 1087, 1086, 1085, 1084, 1076,
-	1074, 1073, 17, 1071, 1070, 52, 1069, 1066, 1065, 1064,
-	1063, 504, 60, 1062, 32, 1061, 1196, 1059, 1058, 1057,
-	1054, 33, 1053, 14, 1052, 1051, 1050, 668, 598, 1049,
+	0, 1389, 49, 45, 37, 598, 51, 0, 1387, 1367,
+	1364, 1363, 25, 1360, 1358, 1357, 3, 2, 1357, 1353,
+	22, 1351, 1350, 1345, 1343, 1342, 1341, 1339, 1338, 1336,
+	1334, 1332, 1330, 1313, 18, 1312, 1309, 1292, 1288, 1287,
+	1285, 1472, 39, 1310, 46, 1284, 1283, 1282, 1281, 1279,
+	28, 30, 1275, 11, 1274, 1273, 1272, 1271, 1269, 1266,
+	1265, 1264, 1263, 1262, 13, 1260, 1259, 1258, 1257, 1256,
+	1255, 1, 1254, 1253, 36, 1250, 1249, 12, 1248, 20,
+	1247, 4, 1245, 1244, 1204, 1201, 27, 1200, 1199, 1198,
+	29, 1197, 15, 42, 21, 1194, 1193, 1192, 1191, 1190,
+	34, 1189, 53, 1188, 35, 61, 47, 66, 1187, 1185,
+	1184, 1181, 1180, 1177, 1175, 1173, 1172, 1171, 1170, 1169,
+	1168, 8, 1167, 1166, 1151, 1150, 1122, 1121, 6, 1119,
+	1118, 1117, 16, 24, 1116, 309, 1115, 1114, 1113, 1112,
+	804, 43, 1111, 26, 1110, 1104, 833, 1103, 1102, 1100,
+	1097, 1096, 1095, 1094, 1093, 1091, 1087, 1086, 1085, 1084,
+	1076, 1074, 1073, 17, 1071, 1070, 52, 1069, 1066, 1065,
+	1064, 1063, 504, 60, 1062, 32, 1061, 1196, 1059, 1058,
+	1057, 1054, 33, 1053, 14, 1052, 1051, 1050, 668, 1049,
 	106, 1047, 41, 1041, 1037, 1036, 1035, 31, 1034, 1033,
 	1031, 7, 1030, 1029, 1028, 1027, 1025, 5, 19, 1024,
 	1022, 1019, 1010, 1009, 57, 1001, 1000, 50, 999, 998,
@@ -1383,64 +1384,64 @@ var yyPgo = [...]int{
 }
 var yyR1 = [...]int{
 
-	0, 10, 5, 5, 6, 6, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 7, 7, 2,
-	2, 2, 2, 8, 8, 3, 3, 3, 3, 9,
-	9, 4, 4, 4, 4, 14, 14, 16, 16, 17,
-	17, 17, 17, 11, 11, 18, 20, 21, 18, 24,
-	25, 18, 28, 29, 18, 31, 32, 18, 34, 35,
-	36, 18, 38, 18, 18, 18, 18, 18, 18, 18,
-	18, 18, 18, 18, 18, 18, 18, 18, 48, 51,
-	18, 53, 54, 18, 55, 18, 18, 58, 60, 18,
-	18, 18, 59, 62, 64, 65, 66, 59, 61, 68,
-	61, 67, 67, 69, 69, 71, 72, 70, 47, 47,
-	73, 12, 13, 76, 76, 77, 77, 79, 74, 83,
-	75, 87, 75, 81, 81, 81, 81, 82, 82, 86,
-	88, 88, 84, 84, 89, 89, 50, 50, 49, 49,
-	90, 49, 37, 37, 52, 52, 57, 57, 56, 56,
-	39, 39, 39, 39, 92, 94, 92, 95, 92, 93,
-	93, 30, 30, 22, 96, 22, 26, 97, 26, 23,
-	23, 27, 27, 80, 80, 98, 98, 99, 99, 100,
-	100, 100, 100, 101, 101, 101, 102, 102, 103, 103,
-	103, 103, 44, 44, 105, 105, 105, 45, 45, 45,
-	45, 85, 85, 109, 107, 107, 107, 114, 107, 112,
-	116, 116, 117, 117, 118, 118, 119, 119, 120, 120,
-	121, 124, 124, 125, 125, 123, 122, 122, 126, 126,
-	115, 115, 108, 108, 113, 113, 128, 128, 127, 127,
-	127, 127, 127, 127, 110, 110, 110, 110, 111, 111,
-	46, 46, 33, 33, 130, 129, 129, 131, 131, 133,
-	133, 136, 135, 135, 135, 137, 138, 137, 141, 139,
-	143, 41, 41, 41, 144, 41, 41, 41, 41, 41,
-	41, 41, 41, 41, 41, 41, 41, 41, 41, 41,
-	41, 41, 41, 146, 41, 147, 41, 148, 41, 149,
-	41, 41, 41, 41, 41, 41, 41, 41, 41, 41,
-	41, 41, 41, 41, 41, 41, 41, 41, 41, 41,
-	41, 41, 41, 41, 41, 41, 41, 41, 41, 150,
-	41, 151, 152, 41, 153, 41, 41, 41, 41, 41,
-	41, 41, 41, 41, 41, 156, 41, 41, 41, 41,
-	41, 41, 41, 161, 41, 163, 41, 43, 43, 43,
-	43, 158, 158, 158, 158, 159, 159, 78, 162, 162,
-	166, 166, 166, 166, 168, 167, 169, 167, 170, 167,
-	173, 167, 175, 167, 177, 167, 178, 167, 179, 167,
-	171, 171, 171, 171, 63, 63, 63, 140, 140, 182,
-	184, 180, 180, 185, 185, 186, 155, 155, 155, 160,
-	160, 160, 142, 142, 188, 188, 188, 188, 188, 188,
-	188, 188, 188, 188, 188, 188, 189, 15, 190, 190,
+	0, 11, 6, 6, 7, 7, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1, 8, 8, 2,
+	2, 2, 2, 9, 9, 3, 3, 3, 3, 10,
+	10, 4, 4, 4, 4, 15, 15, 17, 17, 18,
+	18, 18, 18, 12, 12, 19, 21, 22, 19, 25,
+	26, 19, 29, 30, 19, 32, 33, 19, 35, 36,
+	37, 19, 39, 19, 19, 19, 19, 19, 19, 19,
+	19, 19, 19, 19, 19, 19, 19, 19, 49, 52,
+	19, 54, 55, 19, 56, 19, 19, 59, 61, 19,
+	19, 19, 60, 63, 65, 66, 67, 60, 62, 69,
+	62, 68, 68, 70, 70, 72, 73, 71, 48, 48,
+	74, 13, 14, 77, 77, 78, 78, 80, 75, 84,
+	76, 88, 76, 82, 82, 82, 82, 83, 83, 87,
+	89, 89, 85, 85, 90, 90, 51, 51, 50, 50,
+	91, 50, 38, 38, 53, 53, 58, 58, 57, 57,
+	40, 40, 40, 40, 93, 95, 93, 96, 93, 94,
+	94, 31, 31, 23, 97, 23, 27, 98, 27, 24,
+	24, 28, 28, 81, 81, 99, 99, 100, 100, 101,
+	101, 101, 101, 102, 102, 102, 103, 103, 104, 104,
+	104, 104, 45, 45, 106, 106, 106, 46, 46, 46,
+	46, 86, 86, 110, 108, 108, 108, 115, 108, 113,
+	117, 117, 118, 118, 119, 119, 120, 120, 121, 121,
+	122, 125, 125, 126, 126, 124, 123, 123, 127, 127,
+	116, 116, 109, 109, 114, 114, 129, 129, 128, 128,
+	128, 128, 128, 128, 111, 111, 111, 111, 112, 112,
+	47, 47, 34, 34, 131, 130, 130, 132, 132, 134,
+	134, 137, 136, 136, 136, 138, 139, 138, 142, 140,
+	144, 42, 42, 42, 145, 42, 42, 42, 42, 42,
+	42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
+	42, 42, 42, 147, 42, 148, 42, 149, 42, 150,
+	42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
+	42, 42, 42, 42, 42, 42, 42, 42, 42, 42,
+	42, 42, 42, 42, 42, 42, 42, 42, 42, 151,
+	42, 152, 153, 42, 154, 42, 42, 42, 42, 42,
+	42, 42, 42, 42, 42, 157, 42, 42, 42, 42,
+	42, 42, 42, 162, 42, 164, 42, 44, 44, 44,
+	44, 159, 159, 159, 159, 160, 160, 79, 163, 163,
+	167, 167, 167, 167, 169, 168, 170, 168, 171, 168,
+	174, 168, 176, 168, 178, 168, 179, 168, 180, 168,
+	172, 172, 172, 172, 64, 64, 64, 141, 141, 183,
+	185, 181, 181, 186, 186, 187, 156, 156, 156, 161,
+	161, 161, 143, 143, 5, 5, 5, 5, 5, 5,
+	5, 5, 5, 5, 5, 5, 189, 16, 190, 190,
 	190, 190, 190, 190, 190, 190, 190, 190, 193, 193,
 	193, 193, 193, 193, 193, 193, 193, 193, 193, 193,
 	193, 193, 193, 193, 193, 193, 193, 193, 193, 193,
 	193, 193, 193, 193, 193, 193, 193, 193, 193, 193,
-	193, 164, 164, 164, 164, 157, 157, 157, 157, 157,
-	157, 157, 192, 192, 197, 197, 196, 196, 196, 196,
-	40, 40, 19, 19, 106, 104, 145, 199, 200, 42,
-	42, 202, 202, 203, 132, 204, 204, 206, 205, 201,
-	201, 201, 174, 174, 209, 209, 176, 210, 211, 210,
-	198, 198, 198, 181, 181, 181, 207, 207, 207, 212,
-	212, 134, 134, 183, 183, 213, 213, 213, 172, 172,
-	208, 208, 91, 91, 214, 215, 214, 214, 165, 165,
-	216, 216, 216, 216, 216, 216, 216, 216, 187, 187,
-	187, 187, 217, 218, 217, 217, 217, 217, 217, 219,
-	219, 219, 154, 154, 154, 154, 154, 154, 154, 154,
+	193, 165, 165, 165, 165, 158, 158, 158, 158, 158,
+	158, 158, 192, 192, 197, 197, 196, 196, 196, 196,
+	41, 41, 20, 20, 107, 105, 146, 199, 200, 43,
+	43, 202, 202, 203, 133, 204, 204, 206, 205, 201,
+	201, 201, 175, 175, 209, 209, 177, 210, 211, 210,
+	198, 198, 198, 182, 182, 182, 207, 207, 207, 212,
+	212, 135, 135, 184, 184, 213, 213, 213, 173, 173,
+	208, 208, 92, 92, 214, 215, 214, 214, 166, 166,
+	216, 216, 216, 216, 216, 216, 216, 216, 188, 188,
+	188, 188, 217, 218, 217, 217, 217, 217, 217, 219,
+	219, 219, 155, 155, 155, 155, 155, 155, 155, 155,
 	220, 222, 220, 221, 221, 194, 194, 191, 195,
 }
 var yyR2 = [...]int{
@@ -1507,115 +1508,115 @@ var yyR2 = [...]int{
 }
 var yyChk = [...]int{
 
-	-1000, -10, -5, -1, -11, -12, -13, 51, 79, 44,
-	-14, -18, 10, -74, -75, 38, 119, 7, 21, 20,
-	23, 30, 34, 35, 39, -43, 46, 98, 19, 14,
-	-40, 48, 25, 27, 121, 40, 43, 36, -78, -81,
-	-86, 97, -106, -41, 37, 52, 99, 53, 100, 54,
-	-42, 59, 92, -145, 104, 105, 130, 129, 131, 132,
-	-19, -139, 123, -154, 107, 108, 109, 110, 111, 112,
-	113, 6, 133, -157, -158, -159, 118, 96, -198, 91,
-	49, 50, 4, 5, 84, 85, 86, 11, -164, -195,
-	-188, 117, 74, 62, 18, 60, 125, -181, -210, -167,
-	-194, -6, 82, -171, 8, 9, 66, 67, 81, 63,
-	64, 65, 80, -207, -208, -209, -176, -174, -212, 134,
-	12, 123, -6, 119, 82, 10, -7, 37, 38, -2,
-	-6, 82, 121, 135, 122, 10, -16, -19, 123, -28,
-	-31, 123, -19, 121, -40, 97, -78, 98, 79, 121,
-	-40, 121, -41, -42, -40, 121, -44, -105, 12, 134,
-	-45, -78, 12, -46, -40, 121, 149, 150, 87, 89,
+	-1000, -11, -6, -1, -12, -13, -14, 51, 79, 44,
+	-15, -19, 10, -75, -76, 38, 119, 7, 21, 20,
+	23, 30, 34, 35, 39, -44, 46, 98, 19, 14,
+	-41, 48, 25, 27, 121, 40, 43, 36, -79, -82,
+	-87, 97, -107, -42, 37, 52, 99, 53, 100, 54,
+	-43, 59, 92, -146, 104, 105, 130, 129, 131, 132,
+	-20, -140, 123, -155, 107, 108, 109, 110, 111, 112,
+	113, 6, 133, -158, -159, -160, 118, 96, -198, 91,
+	49, 50, 4, 5, 84, 85, 86, 11, -165, -195,
+	-5, 117, 74, 62, 18, 60, 125, -182, -210, -168,
+	-194, -7, 82, -172, 8, 9, 66, 67, 81, 63,
+	64, 65, 80, -207, -208, -209, -177, -175, -212, 134,
+	12, 123, -7, 119, 82, 10, -8, 37, 38, -2,
+	-7, 82, 121, 135, 122, 10, -17, -20, 123, -29,
+	-32, 123, -20, 121, -41, 97, -79, 98, 79, 121,
+	-41, 121, -42, -43, -41, 121, -45, -106, 12, 134,
+	-46, -79, 12, -47, -41, 121, 149, 150, 87, 89,
 	88, 151, 128, 152, 163, 130, 129, 164, 167, 165,
 	166, 161, 162, 155, 156, 153, 154, 157, 158, 159,
-	160, 90, 127, 123, 123, -55, -58, -40, 10, -76,
-	128, 10, 10, -41, -42, -40, 52, 52, 136, 137,
+	160, 90, 127, 123, 123, -56, -59, -41, 10, -77,
+	128, 10, 10, -42, -43, -41, 52, 52, 136, 137,
 	138, 139, 148, 140, 141, 142, 143, 144, 145, 146,
-	147, 123, -40, 104, 105, -145, -42, -6, 79, 82,
-	-171, -176, 98, -145, -40, -40, -40, -40, -139, -40,
-	-43, -40, -40, -40, -40, -40, -40, -40, -155, 123,
-	-19, -156, 125, 125, -160, 17, -187, -217, 12, 76,
-	77, -40, 57, -140, -171, -180, -6, 79, 82, -181,
-	-207, -208, -176, 123, 123, -40, -40, 123, -40, -40,
-	125, -187, 17, 17, 75, -187, 125, 123, -165, -216,
-	-40, 128, 125, -211, 82, -168, -6, 78, 125, 119,
-	-207, 134, 78, -179, 119, 124, 121, 119, -5, -6,
-	121, 135, -8, -3, -6, 82, -9, -4, -6, 82,
-	29, -6, 10, 136, 120, -20, 122, -19, -11, -33,
-	-129, -40, -38, 121, -76, 121, 121, 121, 121, 135,
-	-106, 119, -42, 121, 135, -76, 136, 121, 135, -146,
-	-147, -148, -149, -40, -40, -40, -40, -40, -40, -40,
-	-40, -40, -40, -40, -40, -40, -40, -40, -40, -40,
-	-40, -40, -40, -40, -140, -151, 122, -47, -73, -42,
-	-42, -41, 123, 119, 121, 121, 10, -161, -82, 55,
-	-87, 58, -40, 128, -40, -40, -40, -40, -40, -40,
-	-40, -40, -40, -40, -40, -40, -143, 82, -6, 78,
-	78, 124, 124, 124, 124, -40, -134, -40, -134, 118,
-	-217, -217, 17, 125, 57, -40, 11, -42, -199, -141,
-	78, 82, -6, 57, -207, 78, -220, -221, -42, -41,
-	-42, -41, -40, -134, 117, 75, 75, -134, -165, 126,
-	-197, 135, 58, -104, -42, -134, 125, 10, -101, 123,
-	-170, -172, -174, 10, 52, 119, -207, -208, -134, -40,
-	-172, -174, 10, -101, -40, 121, -5, 120, -169, -2,
-	121, 135, 29, -6, 121, 135, 29, -6, 10, 29,
-	136, -15, -190, -188, -191, -6, 79, 82, 60, 125,
-	-189, 62, -193, 18, 74, -171, 131, 132, 130, 129,
-	123, -11, -24, -29, 21, 121, 135, -39, 119, 122,
-	-105, -40, 12, -163, -15, -40, -40, -40, -40, -40,
-	-40, -153, 124, 135, 29, 29, -56, 10, -16, -79,
-	123, -83, -63, -6, 79, 82, -88, 55, -41, -42,
-	-42, 91, -91, -214, -42, 59, -6, 10, -150, 126,
-	126, -218, 10, 120, 125, 120, -183, -213, -174, -172,
-	-142, -101, -174, -6, -182, -174, 124, 135, 124, 124,
-	124, 126, 126, 124, -40, 128, -40, 128, 126, -134,
-	124, -102, -43, -103, -41, -42, 128, 83, -101, -173,
-	-175, -40, -207, 126, 120, -177, -178, 120, 120, -101,
-	-3, 10, 29, -4, 10, 29, 10, -15, 125, 130,
+	147, 123, -41, 104, 105, -146, -43, -7, 79, 82,
+	-172, -177, 98, -146, -41, -41, -41, -41, -140, -41,
+	-44, -41, -41, -41, -41, -41, -41, -41, -156, 123,
+	-20, -157, 125, 125, -161, 17, -188, -217, 12, 76,
+	77, -41, 57, -141, -172, -181, -7, 79, 82, -182,
+	-207, -208, -177, 123, 123, -41, -41, 123, -41, -41,
+	125, -188, 17, 17, 75, -188, 125, 123, -166, -216,
+	-41, 128, 125, -211, 82, -169, -7, 78, 125, 119,
+	-207, 134, 78, -180, 119, 124, 121, 119, -6, -7,
+	121, 135, -9, -3, -7, 82, -10, -4, -7, 82,
+	29, -7, 10, 136, 120, -21, 122, -20, -12, -34,
+	-130, -41, -39, 121, -77, 121, 121, 121, 121, 135,
+	-107, 119, -43, 121, 135, -77, 136, 121, 135, -147,
+	-148, -149, -150, -41, -41, -41, -41, -41, -41, -41,
+	-41, -41, -41, -41, -41, -41, -41, -41, -41, -41,
+	-41, -41, -41, -41, -141, -152, 122, -48, -74, -43,
+	-43, -42, 123, 119, 121, 121, 10, -162, -83, 55,
+	-88, 58, -41, 128, -41, -41, -41, -41, -41, -41,
+	-41, -41, -41, -41, -41, -41, -144, 82, -7, 78,
+	78, 124, 124, 124, 124, -41, -135, -41, -135, 118,
+	-217, -217, 17, 125, 57, -41, 11, -43, -199, -142,
+	78, 82, -7, 57, -207, 78, -220, -221, -43, -42,
+	-43, -42, -41, -135, 117, 75, 75, -135, -166, 126,
+	-197, 135, 58, -105, -43, -135, 125, 10, -102, 123,
+	-171, -173, -175, 10, 52, 119, -207, -208, -135, -41,
+	-173, -175, 10, -102, -41, 121, -6, 120, -170, -2,
+	121, 135, 29, -7, 121, 135, 29, -7, 10, 29,
+	136, -16, -190, -5, -191, -7, 79, 82, 60, 125,
+	-189, 62, -193, 18, 74, -172, 131, 132, 130, 129,
+	123, -12, -25, -30, 21, 121, 135, -40, 119, 122,
+	-106, -41, 12, -164, -16, -41, -41, -41, -41, -41,
+	-41, -154, 124, 135, 29, 29, -57, 10, -17, -80,
+	123, -84, -64, -7, 79, 82, -89, 55, -42, -43,
+	-43, 91, -92, -214, -43, 59, -7, 10, -151, 126,
+	126, -218, 10, 120, 125, 120, -184, -213, -175, -173,
+	-143, -102, -175, -7, -183, -175, 124, 135, 124, 124,
+	124, 126, 126, 124, -41, 128, -41, 128, 126, -135,
+	124, -103, -44, -104, -42, -43, 128, 83, -102, -174,
+	-176, -41, -207, 126, 120, -178, -179, 120, 120, -102,
+	-3, 10, 29, -4, 10, 29, 10, -16, 125, 130,
 	129, 164, 167, 165, 166, 151, 128, 152, 161, 162,
 	163, 88, 89, 87, 150, 149, 155, 156, 153, 154,
-	157, 159, 158, 160, 127, 82, -6, 123, -192, -196,
-	-190, 17, 78, -190, -190, -190, -190, -190, -21, -16,
-	-30, -11, 122, -32, -34, -130, -92, 121, -92, 121,
-	120, 136, 123, 122, -40, 121, -73, -48, -53, 124,
-	135, 136, 120, 123, -80, -98, -99, -100, 60, 61,
-	-63, -84, 56, 82, -6, 119, -89, -63, -140, 124,
-	135, 123, -137, -138, -219, 10, 13, 12, -40, -200,
-	125, 119, -183, -222, 58, -104, -104, 126, 124, 135,
-	124, -104, -40, -101, -101, 120, -101, -101, 10, 10,
+	157, 159, 158, 160, 127, 82, -7, 123, -192, -196,
+	-190, 17, 78, -190, -190, -190, -190, -190, -22, -17,
+	-31, -12, 122, -33, -35, -131, -93, 121, -93, 121,
+	120, 136, 123, 122, -41, 121, -74, -49, -54, 124,
+	135, 136, 120, 123, -81, -99, -100, -101, 60, 61,
+	-64, -85, 56, 82, -7, 119, -90, -64, -141, 124,
+	135, 123, -138, -139, -219, 10, 13, 12, -41, -200,
+	125, 119, -184, -222, 58, -105, -105, 126, 124, 135,
+	124, -105, -41, -102, -102, 120, -102, -102, 10, 10,
 	-190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
 	-190, -190, -190, -190, -190, -190, -190, -190, -190, -190,
-	-190, -190, -190, -190, -190, -190, 122, -190, -6, -192,
-	126, -197, 135, 58, 10, 52, 124, -22, -25, -16,
-	-19, -33, -40, 120, 32, 33, -92, 31, -92, -15,
-	-80, -152, -49, -42, 128, 59, -49, -57, -11, 122,
-	10, -15, -59, 41, -80, 124, 135, -76, 119, -89,
-	-6, -85, 135, -144, 136, -214, -215, -135, -133, -131,
-	125, -132, 57, 126, 126, -201, -205, -204, -206, -134,
-	-40, -184, -221, -40, 128, -103, 126, -190, 122, 124,
-	-190, -190, -23, 93, 94, -26, 22, 121, 121, -40,
-	-93, 122, 121, 120, 121, 31, 124, -40, -50, 58,
-	-42, 123, -50, -16, 136, -60, 123, 124, -162, 44,
-	-99, -77, 83, -85, 120, -107, -108, -111, -112, -113,
-	-128, 47, 38, 44, -127, 103, 102, 101, 98, 99,
-	100, -63, -142, -40, -91, 125, -136, -132, -134, -183,
-	120, -202, 125, 125, -101, 126, 120, -185, -104, -190,
-	58, -19, -11, -27, 93, 94, 121, -35, -93, -95,
-	121, -162, 124, -49, -90, 124, 28, -15, -61, 42,
-	-62, 119, 119, 123, 12, 120, -109, 121, 135, -78,
-	-127, 10, -116, -63, 124, -134, -131, 126, -203, -132,
-	-134, -134, -186, 57, -190, -96, 95, -19, 122, -33,
-	-94, -16, 119, -51, -91, -54, 121, -68, -63, -16,
-	-16, -166, 12, 128, 136, -110, 12, 10, -76, 136,
-	-117, 135, 121, 119, 126, -201, 126, 126, -183, -11,
-	121, 122, -16, 124, -16, -16, -52, -11, 122, 124,
-	-52, 119, -64, 120, 120, 124, 135, 12, -15, 121,
-	135, 136, 136, 10, -15, -63, -118, -119, -120, -121,
-	-122, -123, -125, -63, 10, -97, -36, 120, -16, -16,
-	12, 12, 128, 12, -15, -15, -114, 120, -120, 121,
-	121, 45, 29, 78, -16, -37, -11, 122, 26, 120,
-	124, 12, 136, 123, -124, -63, -126, -127, 10, -16,
-	121, -65, -15, -80, 135, 10, 24, 119, 124, -63,
-	121, -16, -115, 121, 119, 120, -16, -66, 120, -67,
-	-69, -70, 41, -70, 123, -63, -71, 12, 124, -72,
-	119, -16, 120,
+	-190, -190, -190, -190, -190, -190, 122, -190, -7, -192,
+	126, -197, 135, 58, 10, 52, 124, -23, -26, -17,
+	-20, -34, -41, 120, 32, 33, -93, 31, -93, -16,
+	-81, -153, -50, -43, 128, 59, -50, -58, -12, 122,
+	10, -16, -60, 41, -81, 124, 135, -77, 119, -90,
+	-7, -86, 135, -145, 136, -214, -215, -136, -134, -132,
+	125, -133, 57, 126, 126, -201, -205, -204, -206, -135,
+	-41, -185, -221, -41, 128, -104, 126, -190, 122, 124,
+	-190, -190, -24, 93, 94, -27, 22, 121, 121, -41,
+	-94, 122, 121, 120, 121, 31, 124, -41, -51, 58,
+	-43, 123, -51, -17, 136, -61, 123, 124, -163, 44,
+	-100, -78, 83, -86, 120, -108, -109, -112, -113, -114,
+	-129, 47, 38, 44, -128, 103, 102, 101, 98, 99,
+	100, -64, -143, -41, -92, 125, -137, -133, -135, -184,
+	120, -202, 125, 125, -102, 126, 120, -186, -105, -190,
+	58, -20, -12, -28, 93, 94, 121, -36, -94, -96,
+	121, -163, 124, -50, -91, 124, 28, -16, -62, 42,
+	-63, 119, 119, 123, 12, 120, -110, 121, 135, -79,
+	-128, 10, -117, -64, 124, -135, -132, 126, -203, -133,
+	-135, -135, -187, 57, -190, -97, 95, -20, 122, -34,
+	-95, -17, 119, -52, -92, -55, 121, -69, -64, -17,
+	-17, -167, 12, 128, 136, -111, 12, 10, -77, 136,
+	-118, 135, 121, 119, 126, -201, 126, 126, -184, -12,
+	121, 122, -17, 124, -17, -17, -53, -12, 122, 124,
+	-53, 119, -65, 120, 120, 124, 135, 12, -16, 121,
+	135, 136, 136, 10, -16, -64, -119, -120, -121, -122,
+	-123, -124, -126, -64, 10, -98, -37, 120, -17, -17,
+	12, 12, 128, 12, -16, -16, -115, 120, -121, 121,
+	121, 45, 29, 78, -17, -38, -12, 122, 26, 120,
+	124, 12, 136, 123, -125, -64, -127, -128, 10, -17,
+	121, -66, -16, -81, 135, 10, 24, 119, 124, -64,
+	121, -17, -116, 121, 119, 120, -17, -67, 120, -68,
+	-70, -71, 41, -71, 123, -64, -72, 12, 124, -73,
+	119, -17, 120,
 }
 var yyDef = [...]int{
 
@@ -4038,867 +4039,897 @@ yydefault:
 		}
 	case 412:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1142
+		//line php5/php5.y:1141
 		{
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1143
+		//line php5/php5.y:1142
 		{
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1148
+		//line php5/php5.y:1147
 		{
+			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 415:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1149
+		//line php5/php5.y:1153
 		{
+			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 416:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1150
+		//line php5/php5.y:1158
 		{
+			yyVAL.node = nil
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1151
+		//line php5/php5.y:1160
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1152
+		//line php5/php5.y:1166
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 419:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1153
+		//line php5/php5.y:1172
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1154
+		//line php5/php5.y:1178
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1155
+		//line php5/php5.y:1184
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1156
+		//line php5/php5.y:1190
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 423:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1157
+		//line php5/php5.y:1196
 		{
+			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
+			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
+			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
 	case 424:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1158
+		//line php5/php5.y:1201
 		{
+			yyVAL.node = nil
 		}
 	case 425:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1159
-		{
-		}
-	case 426:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1163
-		{
-		}
-	case 427:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1167
-		{
-		}
-	case 428:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1171
-		{
-		}
-	case 429:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1172
-		{
-		}
-	case 430:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1173
-		{
-		}
-	case 431:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1174
-		{
-		}
-	case 432:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1175
-		{
-		}
-	case 433:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1176
-		{
-		}
-	case 434:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1177
-		{
-		}
-	case 435:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1178
-		{
-		}
-	case 436:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1179
-		{
-		}
-	case 437:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1180
-		{
-		}
-	case 438:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1184
-		{
-		}
-	case 439:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1185
-		{
-		}
-	case 440:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1186
-		{
-		}
-	case 441:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1187
-		{
-		}
-	case 442:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1188
-		{
-		}
-	case 443:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1189
-		{
-		}
-	case 444:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1190
-		{
-		}
-	case 445:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1191
-		{
-		}
-	case 446:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1192
-		{
-		}
-	case 447:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1193
-		{
-		}
-	case 448:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1194
-		{
-		}
-	case 449:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1195
-		{
-		}
-	case 450:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1196
-		{
-		}
-	case 451:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1197
-		{
-		}
-	case 452:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1198
-		{
-		}
-	case 453:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1199
-		{
-		}
-	case 454:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1200
-		{
-		}
-	case 455:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1201
-		{
-		}
-	case 456:
-		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1202
 		{
+			yyVAL.node = nil
 		}
-	case 457:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1203
-		{
-		}
-	case 458:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1204
-		{
-		}
-	case 459:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1205
-		{
-		}
-	case 460:
+	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1206
 		{
 		}
-	case 461:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1207
-		{
-		}
-	case 462:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1208
-		{
-		}
-	case 463:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1209
-		{
-		}
-	case 464:
-		yyDollar = yyS[yypt-3 : yypt+1]
+	case 427:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1210
 		{
 		}
-	case 465:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1211
-		{
-		}
-	case 466:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1212
-		{
-		}
-	case 467:
-		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php5/php5.y:1213
-		{
-		}
-	case 468:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 428:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1214
 		{
 		}
-	case 469:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 429:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1215
 		{
 		}
-	case 470:
-		yyDollar = yyS[yypt-3 : yypt+1]
+	case 430:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1216
 		{
 		}
-	case 471:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 431:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1217
+		{
+		}
+	case 432:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1218
+		{
+		}
+	case 433:
+		yyDollar = yyS[yypt-4 : yypt+1]
+		//line php5/php5.y:1219
+		{
+		}
+	case 434:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1220
 		{
 		}
-	case 472:
+	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1221
 		{
 		}
-	case 473:
-		yyDollar = yyS[yypt-3 : yypt+1]
+	case 436:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1222
 		{
 		}
-	case 474:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 437:
+		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1223
 		{
 		}
-	case 475:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 438:
+		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php5/php5.y:1227
 		{
 		}
-	case 476:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 439:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1228
 		{
 		}
-	case 477:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 440:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1229
 		{
 		}
-	case 478:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 441:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1230
 		{
 		}
-	case 479:
+	case 442:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1231
 		{
 		}
-	case 480:
+	case 443:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1232
 		{
 		}
-	case 481:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 444:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1233
 		{
 		}
-	case 482:
-		yyDollar = yyS[yypt-0 : yypt+1]
+	case 445:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1234
+		{
+		}
+	case 446:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1235
+		{
+		}
+	case 447:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1236
+		{
+		}
+	case 448:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1237
 		{
 		}
-	case 483:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 449:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1238
 		{
 		}
-	case 486:
-		yyDollar = yyS[yypt-5 : yypt+1]
+	case 450:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1239
+		{
+		}
+	case 451:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1240
+		{
+		}
+	case 452:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1241
+		{
+		}
+	case 453:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1242
+		{
+		}
+	case 454:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1243
+		{
+		}
+	case 455:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1244
+		{
+		}
+	case 456:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1245
+		{
+		}
+	case 457:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1246
+		{
+		}
+	case 458:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1247
 		{
 		}
-	case 487:
+	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1248
 		{
 		}
-	case 488:
+	case 460:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1249
 		{
 		}
-	case 489:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 461:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1250
 		{
 		}
-	case 490:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 462:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1251
+		{
+		}
+	case 463:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1252
+		{
+		}
+	case 464:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1253
+		{
+		}
+	case 465:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1254
 		{
 		}
-	case 491:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 466:
+		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php5/php5.y:1255
 		{
 		}
-	case 492:
+	case 467:
+		yyDollar = yyS[yypt-5 : yypt+1]
+		//line php5/php5.y:1256
+		{
+		}
+	case 468:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1257
+		{
+		}
+	case 469:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1258
+		{
+		}
+	case 470:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1259
 		{
 		}
-	case 493:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1260
+	case 471:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1263
 		{
 		}
-	case 494:
+	case 472:
 		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1264
+		{
+		}
+	case 473:
+		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php5/php5.y:1265
 		{
 		}
-	case 495:
+	case 474:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1266
+		{
+		}
+	case 475:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:1270
 		{
 		}
+	case 476:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1271
+		{
+		}
+	case 477:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1272
+		{
+		}
+	case 478:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1273
+		{
+		}
+	case 479:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1274
+		{
+		}
+	case 480:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1275
+		{
+		}
+	case 481:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1276
+		{
+		}
+	case 482:
+		yyDollar = yyS[yypt-0 : yypt+1]
+		//line php5/php5.y:1280
+		{
+		}
+	case 483:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line php5/php5.y:1281
+		{
+		}
+	case 486:
+		yyDollar = yyS[yypt-5 : yypt+1]
+		//line php5/php5.y:1290
+		{
+		}
+	case 487:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1291
+		{
+		}
+	case 488:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1292
+		{
+		}
+	case 489:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1293
+		{
+		}
+	case 490:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1297
+		{
+		}
+	case 491:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1298
+		{
+		}
+	case 492:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1302
+		{
+		}
+	case 493:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line php5/php5.y:1303
+		{
+		}
+	case 494:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1308
+		{
+		}
+	case 495:
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line php5/php5.y:1313
+		{
+		}
 	case 496:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1274
+		//line php5/php5.y:1317
 		{
 		}
 	case 497:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1278
+		//line php5/php5.y:1321
 		{
 		}
 	case 498:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1279
+		//line php5/php5.y:1322
 		{
 		}
 	case 499:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php5/php5.y:1280
+		//line php5/php5.y:1323
 		{
 		}
 	case 500:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1281
+		//line php5/php5.y:1324
 		{
 		}
 	case 501:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1285
+		//line php5/php5.y:1328
 		{
 		}
 	case 502:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1286
+		//line php5/php5.y:1329
 		{
 		}
 	case 503:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1291
+		//line php5/php5.y:1334
 		{
 		}
 	case 504:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1291
+		//line php5/php5.y:1334
 		{
 		}
 	case 505:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1295
+		//line php5/php5.y:1338
 		{
 		}
 	case 506:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1296
+		//line php5/php5.y:1339
 		{
 		}
 	case 507:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1300
+		//line php5/php5.y:1343
 		{
 		}
 	case 508:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1301
+		//line php5/php5.y:1344
 		{
 		}
 	case 509:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1305
+		//line php5/php5.y:1348
 		{
 		}
 	case 510:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1306
+		//line php5/php5.y:1349
 		{
 		}
 	case 511:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1307
+		//line php5/php5.y:1350
 		{
 		}
 	case 512:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1311
+		//line php5/php5.y:1354
 		{
 		}
 	case 513:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1312
+		//line php5/php5.y:1355
 		{
 		}
 	case 514:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1316
+		//line php5/php5.y:1359
 		{
 		}
 	case 515:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1317
+		//line php5/php5.y:1360
 		{
 		}
 	case 516:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1322
+		//line php5/php5.y:1365
 		{
 		}
 	case 517:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1326
+		//line php5/php5.y:1369
 		{
 		}
 	case 518:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1327
+		//line php5/php5.y:1370
 		{
 		}
 	case 519:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php5/php5.y:1328
+		//line php5/php5.y:1371
 		{
 		}
 	case 520:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1332
+		//line php5/php5.y:1375
 		{
 		}
 	case 521:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1333
+		//line php5/php5.y:1376
 		{
 		}
 	case 522:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1334
+		//line php5/php5.y:1377
 		{
 		}
 	case 523:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1339
+		//line php5/php5.y:1382
 		{
 		}
 	case 524:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1340
+		//line php5/php5.y:1383
 		{
 		}
 	case 525:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1341
+		//line php5/php5.y:1384
 		{
 		}
 	case 526:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1345
+		//line php5/php5.y:1388
 		{
 		}
 	case 527:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1346
+		//line php5/php5.y:1389
 		{
 		}
 	case 528:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1347
+		//line php5/php5.y:1390
 		{
 		}
 	case 529:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1352
+		//line php5/php5.y:1395
 		{
 		}
 	case 530:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1353
+		//line php5/php5.y:1396
 		{
 		}
 	case 531:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1357
+		//line php5/php5.y:1400
 		{
 		}
 	case 532:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1358
+		//line php5/php5.y:1401
 		{
 		}
 	case 533:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1363
+		//line php5/php5.y:1406
 		{
 		}
 	case 534:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1364
+		//line php5/php5.y:1407
 		{
 		}
 	case 535:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1368
+		//line php5/php5.y:1411
 		{
 		}
 	case 536:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1369
+		//line php5/php5.y:1412
 		{
 		}
 	case 537:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1370
+		//line php5/php5.y:1413
 		{
 		}
 	case 538:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1374
+		//line php5/php5.y:1417
 		{
 		}
 	case 539:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1375
+		//line php5/php5.y:1418
 		{
 		}
 	case 540:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1379
+		//line php5/php5.y:1422
 		{
 		}
 	case 541:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1380
+		//line php5/php5.y:1423
 		{
 		}
 	case 544:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1390
+		//line php5/php5.y:1433
 		{
 		}
 	case 545:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1391
+		//line php5/php5.y:1434
 		{
 		}
 	case 546:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php5/php5.y:1391
+		//line php5/php5.y:1434
 		{
 		}
 	case 547:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1392
+		//line php5/php5.y:1435
 		{
 		}
 	case 548:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php5/php5.y:1397
+		//line php5/php5.y:1440
 		{
 		}
 	case 549:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1398
+		//line php5/php5.y:1441
 		{
 		}
 	case 550:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php5/php5.y:1402
+		//line php5/php5.y:1445
 		{
 		}
 	case 551:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1403
+		//line php5/php5.y:1446
 		{
 		}
 	case 552:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1404
+		//line php5/php5.y:1447
 		{
 		}
 	case 553:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1405
+		//line php5/php5.y:1448
 		{
 		}
 	case 554:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php5/php5.y:1406
+		//line php5/php5.y:1449
 		{
 		}
 	case 555:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1407
+		//line php5/php5.y:1450
 		{
 		}
 	case 556:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1408
+		//line php5/php5.y:1451
 		{
 		}
 	case 557:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1409
+		//line php5/php5.y:1452
 		{
 		}
 	case 558:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1413
+		//line php5/php5.y:1456
 		{
 		}
 	case 559:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1414
+		//line php5/php5.y:1457
 		{
 		}
 	case 560:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1415
+		//line php5/php5.y:1458
 		{
 		}
 	case 561:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1416
+		//line php5/php5.y:1459
 		{
 		}
 	case 562:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1422
+		//line php5/php5.y:1465
 		{
 		}
 	case 563:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1423
+		//line php5/php5.y:1466
 		{
 		}
 	case 564:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php5/php5.y:1423
+		//line php5/php5.y:1466
 		{
 		}
 	case 565:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1424
+		//line php5/php5.y:1467
 		{
 		}
 	case 566:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1425
+		//line php5/php5.y:1468
 		{
 		}
 	case 567:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php5/php5.y:1426
+		//line php5/php5.y:1469
 		{
 		}
 	case 568:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1427
+		//line php5/php5.y:1470
 		{
 		}
 	case 569:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1432
+		//line php5/php5.y:1475
 		{
 		}
 	case 570:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1433
+		//line php5/php5.y:1476
 		{
 		}
 	case 571:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1434
+		//line php5/php5.y:1477
 		{
 		}
 	case 572:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1439
+		//line php5/php5.y:1482
 		{
 		}
 	case 573:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1440
+		//line php5/php5.y:1483
 		{
 		}
 	case 574:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1441
+		//line php5/php5.y:1484
 		{
 		}
 	case 575:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1442
+		//line php5/php5.y:1485
 		{
 		}
 	case 576:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1443
+		//line php5/php5.y:1486
 		{
 		}
 	case 577:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1444
+		//line php5/php5.y:1487
 		{
 		}
 	case 578:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1445
+		//line php5/php5.y:1488
 		{
 		}
 	case 579:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1446
+		//line php5/php5.y:1489
 		{
 		}
 	case 580:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1450
+		//line php5/php5.y:1493
 		{
 		}
 	case 581:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:1451
+		//line php5/php5.y:1494
 		{
 		}
 	case 582:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:1451
+		//line php5/php5.y:1494
 		{
 		}
 	case 583:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1455
+		//line php5/php5.y:1498
 		{
 		}
 	case 584:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:1456
+		//line php5/php5.y:1499
 		{
 		}
 	case 585:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1460
+		//line php5/php5.y:1503
 		{
 		}
 	case 586:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1461
+		//line php5/php5.y:1504
 		{
 		}
 	case 587:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1465
+		//line php5/php5.y:1508
 		{
 		}
 	case 588:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:1469
+		//line php5/php5.y:1512
 		{
 		}
 	}
