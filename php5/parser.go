@@ -1,6 +1,7 @@
 package php5
 
 import (
+	"github.com/z7zmey/php-parser/node/expr"
 	"io"
 
 	"github.com/z7zmey/php-parser/comment"
@@ -49,4 +50,9 @@ type nodesWithEndToken struct {
 type boolWithToken struct {
     value bool
     token *token.Token
+}
+
+type simpleIndirectReference struct {
+    all []*expr.Variable
+    last *expr.Variable
 }

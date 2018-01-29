@@ -2,6 +2,7 @@
 package php5
 
 import (
+//    "fmt"
 //    "strings"
 //    "strconv"
 
@@ -25,6 +26,7 @@ import (
     list []node.Node
 //    foreachVariable foreachVariable
 //    nodesWithEndToken *nodesWithEndToken
+    simpleIndirectReference simpleIndirectReference
 //    str string
 }
 
@@ -193,8 +195,14 @@ import (
 
 %type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
+%type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
+%type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
+%type <node> inner_statement statement
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
+%type <list> inner_statement_list
+
+%type <simpleIndirectReference> simple_indirect_reference
 
 %%
 
@@ -228,7 +236,7 @@ namespace_name:
 ;
 
 top_statement:
-        statement                                       { $$ = nil }
+        statement                                       { $$ = $1 }
     |   function_declaration_statement                  { $$ = nil }
     |   class_declaration_statement                     { $$ = nil }
     |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
@@ -467,26 +475,26 @@ constant_declaration:
 ;
 
 inner_statement_list:
-        inner_statement_list  {  }
-    |   /* empty */
+        inner_statement_list inner_statement    { $$ = append($1, $2) }
+    |   /* empty */                             { $$ = []node.Node{} }
 ;
 
 
 inner_statement:
-        statement
-    |   function_declaration_statement
-    |   class_declaration_statement
-    |   T_HALT_COMPILER '(' ')' ';'   {  }
+        statement                       { $$ = $1 }
+    |   function_declaration_statement  { $$ = nil }
+    |   class_declaration_statement     {  }
+    |   T_HALT_COMPILER '(' ')' ';'     {  }
 ;
 
 
 statement:
-        unticked_statement {  }
+        unticked_statement { $$ = $1 }
     |   T_STRING ':' {  }
 ;
 
 unticked_statement:
-        '{' inner_statement_list '}'
+        '{' inner_statement_list '}' {  }
     |   T_IF parenthesis_expr {  } statement {  } elseif_list else_single {  }
     |   T_IF parenthesis_expr ':' {  } inner_statement_list {  } new_elseif_list new_else_single T_ENDIF ';' {  }
     |   T_WHILE {  } parenthesis_expr {  } while_statement {  }
@@ -508,26 +516,18 @@ unticked_statement:
     |   T_RETURN ';'                        {  }
     |   T_RETURN expr_without_variable ';'  {  }
     |   T_RETURN variable ';'               {  }
-    |   yield_expr ';' {  }
-    |   T_GLOBAL global_var_list ';'
-    |   T_STATIC static_var_list ';'
-    |   T_ECHO echo_expr_list ';'
-    |   T_INLINE_HTML           {  }
-    |   expr ';'                {  }
-    |   T_UNSET '(' unset_variables ')' ';'
-    |   T_FOREACH '(' variable T_AS
-        {  }
-        foreach_variable foreach_optional_arg ')' {  }
-        foreach_statement {  }
-    |   T_FOREACH '(' expr_without_variable T_AS
-        {  }
-        foreach_variable foreach_optional_arg ')' {  }
-        foreach_statement {  }
+    |   yield_expr ';'                      {  }
+    |   T_GLOBAL global_var_list ';'        {  }
+    |   T_STATIC static_var_list ';'        {  }
+    |   T_ECHO echo_expr_list ';'           {  }
+    |   T_INLINE_HTML                       {  }
+    |   expr ';'                            { $$ = $1 }
+    |   T_UNSET '(' unset_variables ')' ';' {  }
+    |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
+    |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
     |   T_DECLARE {  } '(' declare_list ')' declare_statement {  }
-    |   ';'     /* empty statement */
-    |   T_TRY {  } '{' inner_statement_list '}'
-        catch_statement {  }
-        finally_statement {  }
+    |   ';'     /* empty statement */       {  }
+    |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement {  }
     |   T_THROW expr ';' {  }
     |   T_GOTO T_STRING ';' {  }
 ;
@@ -950,7 +950,7 @@ new_expr:
 ;
 
 expr_without_variable:
-        T_LIST '(' assignment_list ')' '=' expr {  }
+        T_LIST '(' assignment_list ')' '=' expr { $$ = nil }
     |   variable '=' expr       {  }
     |   variable '=' '&' variable {  }
     |   variable '=' '&' T_NEW class_name_reference {  } ctor_arguments {  }
@@ -1324,7 +1324,7 @@ non_empty_static_array_pair_list:
 ;
 
 expr:
-        r_variable                  {  }
+        r_variable                  { $$ = $1 }
     |   expr_without_variable       {  }
 ;
 
@@ -1335,23 +1335,32 @@ parenthesis_expr:
 
 
 r_variable:
-    variable {  }
+        variable
+            {
+                $$ = $1
+            }
 ;
 
 
 w_variable:
-    variable    {  }
+        variable
+            {
+                $$ = $1
+            }
 ;
 
 rw_variable:
-    variable    {  }
+        variable
+            {
+                $$ = $1
+            }
 ;
 
 variable:
-        base_variable_with_function_calls T_OBJECT_OPERATOR {  }
-            object_property { } method_or_not variable_properties
+        base_variable_with_function_calls T_OBJECT_OPERATOR object_property method_or_not variable_properties
             {  }
-    |   base_variable_with_function_calls {  }
+    |   base_variable_with_function_calls
+            { $$ = $1 }
 ;
 
 variable_properties:
@@ -1399,27 +1408,45 @@ variable_class_name:
 ;
 
 array_function_dereference:
-        array_function_dereference '[' dim_offset ']' {  }
-    |   function_call {  }
-        '[' dim_offset ']' {  }
+        array_function_dereference '[' dim_offset ']'   {  }
+    |   function_call '[' dim_offset ']'                {  }
 ;
 
 base_variable_with_function_calls:
-        base_variable               {  }
-    |   array_function_dereference  {  }
-    |   function_call {  }
+        base_variable               { $$ = $1 }
+    |   array_function_dereference  { $$ = $1 }
+    |   function_call               { $$ = $1 }
 ;
 
 
 base_variable:
-        reference_variable {  }
-    |   simple_indirect_reference reference_variable {  }
-    |   static_member {  }
+        reference_variable                              { $$ = $1 }
+    |   simple_indirect_reference reference_variable
+            {
+                $1.last.SetVarName($2)
+
+                for _, n := range($1.all) {
+                    positions[n] =  positionBuilder.NewNodesPosition(n, $2)
+                }
+
+                $$ = $1.all[0]
+            }
+    |   static_member                                   {  }
 ;
 
 reference_variable:
-        reference_variable '[' dim_offset ']'   { $$ = nil }
-    |   reference_variable '{' expr '}'         { $$ = nil }
+        reference_variable '[' dim_offset ']'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   reference_variable '{' expr '}'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
     |   compound_variable                       { $$ = $1 }
 ;
 
@@ -1442,8 +1469,8 @@ compound_variable:
 ;
 
 dim_offset:
-        /* empty */     {  }
-    |   expr            {  }
+        /* empty */     { $$ = nil }
+    |   expr            { $$ = $1 }
 ;
 
 
@@ -1464,8 +1491,26 @@ variable_name:
 ;
 
 simple_indirect_reference:
-        '$' {  }
-    |   simple_indirect_reference '$' {  }
+        '$'
+            {
+                n := expr.NewVariable(nil)
+                positions.AddPosition(n, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(n, $1.Comments())
+
+                $$ = simpleIndirectReference{[]*expr.Variable{n}, n}
+            }
+    |   simple_indirect_reference '$'
+            {
+                n := expr.NewVariable(nil)
+                positions.AddPosition(n, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(n, $2.Comments())
+
+                $1.last.SetVarName(n)
+
+                $1.all = append($1.all, n)
+                $1.last = n
+                $$ = $1
+            }
 ;
 
 assignment_list:
