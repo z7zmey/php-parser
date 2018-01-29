@@ -28,40 +28,6 @@ import (
     str string
 }
 
-%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
-%left ','
-%left T_LOGICAL_OR
-%left T_LOGICAL_XOR
-%left T_LOGICAL_AND
-%right T_PRINT
-%right T_YIELD
-%right T_DOUBLE_ARROW
-%right T_YIELD_FROM
-%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL
-%left '?' ':'
-%right T_COALESCE
-%left T_BOOLEAN_OR
-%left T_BOOLEAN_AND
-%left '|'
-%left '^'
-%left '&'
-%nonassoc T_IS_EQUAL T_IS_NOT_EQUAL T_IS_IDENTICAL T_IS_NOT_IDENTICAL T_SPACESHIP
-%nonassoc '<' T_IS_SMALLER_OR_EQUAL '>' T_IS_GREATER_OR_EQUAL
-%left T_SL T_SR
-%left '+' '-' '.'
-%left '*' '/' '%'
-%right '!'
-%nonassoc T_INSTANCEOF
-%right '~' T_INC T_DEC T_INT_CAST T_DOUBLE_CAST T_STRING_CAST T_ARRAY_CAST T_OBJECT_CAST T_BOOL_CAST T_UNSET_CAST '@'
-%right T_POW
-%right '['
-%nonassoc T_NEW T_CLONE
-%left T_NOELSE
-%left T_ELSEIF
-%left T_ELSE
-%left T_ENDIF
-%right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
-
 %type <token> $unk
 %token <token> T_INCLUDE
 %token <token> T_INCLUDE_ONCE
@@ -173,6 +139,9 @@ import (
 %token <token> T_OBJECT_CAST
 %token <token> T_BOOL_CAST
 %token <token> T_UNSET_CAST
+%token <token> T_COALESCE
+%token <token> T_SPACESHIP
+%token <token> T_NOELSE
 %token <token> '"'
 %token <token> '`'
 %token <token> '{'
@@ -191,6 +160,40 @@ import (
 %token <token> '~'
 %token <token> '@'
 %token <token> '$'
+
+%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
+%left ','
+%left T_LOGICAL_OR
+%left T_LOGICAL_XOR
+%left T_LOGICAL_AND
+%right T_PRINT
+%right T_YIELD
+%right T_DOUBLE_ARROW
+%right T_YIELD_FROM
+%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL
+%left '?' ':'
+%right T_COALESCE
+%left T_BOOLEAN_OR
+%left T_BOOLEAN_AND
+%left '|'
+%left '^'
+%left '&'
+%nonassoc T_IS_EQUAL T_IS_NOT_EQUAL T_IS_IDENTICAL T_IS_NOT_IDENTICAL T_SPACESHIP
+%nonassoc '<' T_IS_SMALLER_OR_EQUAL '>' T_IS_GREATER_OR_EQUAL
+%left T_SL T_SR
+%left '+' '-' '.'
+%left '*' '/' '%'
+%right '!'
+%nonassoc T_INSTANCEOF
+%right '~' T_INC T_DEC T_INT_CAST T_DOUBLE_CAST T_STRING_CAST T_ARRAY_CAST T_OBJECT_CAST T_BOOL_CAST T_UNSET_CAST '@'
+%right T_POW
+%right '['
+%nonassoc T_NEW T_CLONE
+%left T_NOELSE
+%left T_ELSEIF
+%left T_ELSE
+%left T_ENDIF
+%right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
 %type <boolWithToken> is_reference is_variadic returns_ref
 
