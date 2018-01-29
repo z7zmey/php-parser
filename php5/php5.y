@@ -10,7 +10,7 @@ import (
     "github.com/z7zmey/php-parser/node/scalar"
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
-//    "github.com/z7zmey/php-parser/node/expr"
+    "github.com/z7zmey/php-parser/node/expr"
 //    "github.com/z7zmey/php-parser/node/expr/assign_op"
 //    "github.com/z7zmey/php-parser/node/expr/binary_op"
 //    "github.com/z7zmey/php-parser/node/expr/cast"
@@ -192,6 +192,7 @@ import (
 %right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
 %type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
+%type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 
@@ -1087,10 +1088,30 @@ function_call:
 ;
 
 class_name:
-        T_STATIC {  }
-    |	namespace_name {  }
-    |	T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-    |	T_NS_SEPARATOR namespace_name {  }
+        T_STATIC
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   namespace_name 
+            {
+                $$ = name.NewName($1)
+                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewRelative($3)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewFullyQualified($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 fully_qualified_class_name:
@@ -1203,7 +1224,16 @@ common_scalar:
 ;
 
 static_class_constant:
-        class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING {  }
+        class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewClassConstFetch($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+
+                comments.AddComments(target, $3.Comments())
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 static_scalar: /* compile-time evaluated scalars */
@@ -1362,7 +1392,10 @@ static_member:
 ;
 
 variable_class_name:
-        reference_variable {  }
+        reference_variable
+            {
+                $$ = $1
+            }
 ;
 
 array_function_dereference:
@@ -1385,15 +1418,27 @@ base_variable:
 ;
 
 reference_variable:
-        reference_variable '[' dim_offset ']'	{  }
-    |	reference_variable '{' expr '}'		{  }
-    |	compound_variable			{  }
+        reference_variable '[' dim_offset ']'   { $$ = nil }
+    |   reference_variable '{' expr '}'         { $$ = nil }
+    |   compound_variable                       { $$ = $1 }
 ;
 
 
 compound_variable:
-        T_VARIABLE			{  }
-    |	'$' '{' expr '}'	{  }
+        T_VARIABLE
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewVariable(name)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                
+                comments.AddComments(name, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '$' '{' expr '}'
+            {
+                $$ = nil
+            }
 ;
 
 dim_offset:
