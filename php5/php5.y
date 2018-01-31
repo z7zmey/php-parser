@@ -197,10 +197,10 @@ import (
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
-%type <node> inner_statement statement
+%type <node> inner_statement statement global_var static_scalar
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list
+%type <list> inner_statement_list global_var_list static_var_list
 
 %type <simpleIndirectReference> simple_indirect_reference
 
@@ -773,23 +773,106 @@ function_call_parameter:
 ;
 
 global_var_list:
-        global_var_list ',' global_var  {  }
-    |   global_var                      {  }
+        global_var_list ',' global_var  { $$ = append($1, $3) }
+    |   global_var                      { $$ = []node.Node{$1} }
 ;
 
 
 global_var:
-        T_VARIABLE          {  }
-    |   '$' r_variable      {  }
-    |   '$' '{' expr '}'    {  }
+        T_VARIABLE
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewVariable(name)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                
+                comments.AddComments(name, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '$' r_variable
+            {
+                $$ = expr.NewVariable($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '$' '{' expr '}'
+            {
+                $$ = expr.NewVariable($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
 static_var_list:
-        static_var_list ',' T_VARIABLE {  }
-    |   static_var_list ',' T_VARIABLE '=' static_scalar {  }
-    |   T_VARIABLE  {  }
-    |   T_VARIABLE '=' static_scalar {  }
+        static_var_list ',' T_VARIABLE
+            {
+                identifier := node.NewIdentifier($3.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                
+                staticVar := stmt.NewStaticVar(variable, nil)
+                positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($3))
+
+                $$ = append($1, staticVar)
+
+                comments.AddComments(identifier, $3.Comments())
+                comments.AddComments(variable, $3.Comments())
+                comments.AddComments(staticVar, $3.Comments())
+            }
+    |   static_var_list ',' T_VARIABLE '=' static_scalar
+            {
+                identifier := node.NewIdentifier($3.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                
+                staticVar := stmt.NewStaticVar(variable, $5)
+                positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($3, $5))
+
+                $$ = append($1, staticVar)
+
+                comments.AddComments(identifier, $3.Comments())
+                comments.AddComments(variable, $3.Comments())
+                comments.AddComments(staticVar, $3.Comments())
+            }
+    |   T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                
+                staticVar := stmt.NewStaticVar(variable, nil)
+                positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($1))
+
+                $$ = []node.Node{staticVar}
+
+                comments.AddComments(identifier, $1.Comments())
+                comments.AddComments(variable, $1.Comments())
+                comments.AddComments(staticVar, $1.Comments())
+            }
+    |   T_VARIABLE '=' static_scalar
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                
+                staticVar := stmt.NewStaticVar(variable, $3)
+                positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($1, $3))
+
+                $$ = []node.Node{staticVar}
+
+                comments.AddComments(identifier, $1.Comments())
+                comments.AddComments(variable, $1.Comments())
+                comments.AddComments(staticVar, $1.Comments())
+            }
 
 ;
 
@@ -1464,7 +1547,9 @@ compound_variable:
             }
     |   '$' '{' expr '}'
             {
-                $$ = nil
+                $$ = expr.NewVariable($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
             }
 ;
 
