@@ -4,7 +4,7 @@ package php5
 import (
 //    "fmt"
 //    "strings"
-//    "strconv"
+    "strconv"
 
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
@@ -197,10 +197,11 @@ import (
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
-%type <node> inner_statement statement global_var static_scalar
+%type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
+%type <node> encaps_var encaps_var encaps_var_offset general_constant
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list global_var_list static_var_list
+%type <list> inner_statement_list global_var_list static_var_list encaps_list
 
 %type <simpleIndirectReference> simple_indirect_reference
 
@@ -1302,8 +1303,18 @@ common_scalar:
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
-    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC { $$ = nil }
-    |   T_START_HEREDOC T_END_HEREDOC                           { $$ = nil }
+    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
+            {
+                $$ = scalar.NewString($2.Value)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))/* TODO: mark as Heredoc*/
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_START_HEREDOC T_END_HEREDOC
+            {
+                $$ = scalar.NewEncapsed(nil)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 static_class_constant:
@@ -1380,13 +1391,40 @@ general_constant:
 ;
 
 scalar:
-        T_STRING_VARNAME {  }
-    |   general_constant {  }
-    |   class_name_scalar {  }
-    |   common_scalar {  }
-    |   '"' encaps_list '"' {  }
-    |   T_START_HEREDOC encaps_list T_END_HEREDOC {  }
-    |   T_CLASS_C {  }
+        T_STRING_VARNAME
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewVariable(name)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+
+                comments.AddComments(name, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   general_constant
+            { $$ = $1 }
+    |   class_name_scalar
+            { $$ = $1 }
+    |   common_scalar
+            { $$ = $1 }
+    |   '"' encaps_list '"'
+            {
+                $$ = scalar.NewEncapsed($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_START_HEREDOC encaps_list T_END_HEREDOC
+            {
+                $$ = scalar.NewEncapsed($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CLASS_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 static_array_pair_list:
@@ -1628,28 +1666,119 @@ non_empty_array_pair_list:
 ;
 
 encaps_list:
-        encaps_list encaps_var { }
-    |   encaps_list T_ENCAPSED_AND_WHITESPACE   { }
-    |   encaps_var { }
-    |   T_ENCAPSED_AND_WHITESPACE encaps_var    { }
+        encaps_list encaps_var
+            { $$ = append($1, $2) }
+    |   encaps_list T_ENCAPSED_AND_WHITESPACE
+            {
+                encapsed := scalar.NewEncapsedStringPart($2.Value)
+                positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($2))
+                $$ = append($1, encapsed)
+                comments.AddComments(encapsed, $2.Comments())
+            }
+    |   encaps_var
+            { $$ = []node.Node{$1} }
+    |   T_ENCAPSED_AND_WHITESPACE encaps_var
+            {
+                encapsed := scalar.NewEncapsedStringPart($1.Value)
+                positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($1))
+                $$ = []node.Node{encapsed, $2}
+                comments.AddComments(encapsed, $1.Comments())
+            }
 ;
-
-
 
 encaps_var:
-        T_VARIABLE {  }
-    |   T_VARIABLE '[' {  } encaps_var_offset ']'   {  }
-    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING {  }
-    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}' {  }
-    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}' {  }
-    |   T_CURLY_OPEN variable '}' {  }
+        T_VARIABLE
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewVariable(name)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+
+                comments.AddComments(name, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_VARIABLE '[' encaps_var_offset ']'
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewArrayDimFetch(variable, $3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+
+                comments.AddComments(identifier, $1.Comments())
+                comments.AddComments(variable, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                fetch := node.NewIdentifier($3.Value)
+                positions.AddPosition(fetch, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewPropertyFetch(variable, fetch)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                
+                comments.AddComments(identifier, $1.Comments())
+                comments.AddComments(variable, $1.Comments())
+                comments.AddComments(fetch, $3.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
+            {
+                $$ = expr.NewVariable($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
+            {
+                identifier := node.NewIdentifier($2.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
+                $$ = expr.NewArrayDimFetch(variable, $4)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
+
+
+                comments.AddComments(identifier, $2.Comments())
+                comments.AddComments(variable, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CURLY_OPEN variable '}'
+            { $$ = $2; }
 ;
 
-
 encaps_var_offset:
-        T_STRING        {  }
-    |   T_NUM_STRING    {  }
-    |   T_VARIABLE      {  }
+        T_STRING
+            {
+                $$ = scalar.NewString($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NUM_STRING
+            {
+                // TODO: add option to handle 64 bit integer
+                if _, err := strconv.Atoi($1.Value); err == nil {
+                    $$ = scalar.NewLnumber($1.Value)
+                    positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                } else {
+                    $$ = scalar.NewString($1.Value)
+                    positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                }
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                $$ = expr.NewVariable(identifier)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+
+                comments.AddComments(identifier, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
@@ -1675,16 +1804,52 @@ isset_variable:
 ;
 
 class_constant:
-        class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING {  }
+        class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewClassConstFetch($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+
+                comments.AddComments(target, $3.Comments())
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewClassConstFetch($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+
+                comments.AddComments(target, $3.Comments())
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 static_class_name_scalar:
-    class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS {  }
+        class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewClassConstFetch($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+
+                comments.AddComments(target, $3.Comments())
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 class_name_scalar:
-    class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS {  }
+        class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                $$ = expr.NewClassConstFetch($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+
+                comments.AddComments(target, $3.Comments())
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 %%
