@@ -56,3 +56,11 @@ type simpleIndirectReference struct {
     all []*expr.Variable
     last *expr.Variable
 }
+
+const arrayFetchType = 0
+const propertyFetchType = 1
+
+type objectProperty struct {
+    node node.Node
+    fetchType int
+}

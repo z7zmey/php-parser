@@ -25,8 +25,9 @@ import (
 //    boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
-//    nodesWithEndToken *nodesWithEndToken
+    nodesWithEndToken *nodesWithEndToken
     simpleIndirectReference simpleIndirectReference
+    objectPropertyList []objectProperty
 //    str string
 }
 
@@ -199,7 +200,7 @@ import (
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
-%type <node> variable_name
+%type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -207,6 +208,8 @@ import (
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable
+%type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
+%type <nodesWithEndToken> ctor_arguments function_call_parameter_list
 
 %%
 
@@ -766,7 +769,8 @@ optional_class_type:
 
 
 function_call_parameter_list:
-        '(' ')' {  }
+        '(' ')'
+            { $$ = &nodesWithEndToken{[]node.Node{}, $2} }
     |   '(' non_empty_function_call_parameter_list ')'  {  }
     |   '(' yield_expr ')'  {  }
 ;
@@ -1041,7 +1045,18 @@ instance_call:
 ;
 
 new_expr:
-        T_NEW class_name_reference {  } ctor_arguments {  }
+        T_NEW class_name_reference ctor_arguments
+            {
+                if $3 != nil {
+                    $$ = expr.NewNew($2, $3.nodes)
+                    positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
+                } else {
+                    $$ = expr.NewNew($2, nil)
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                }
+
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 expr_without_variable:
@@ -1106,7 +1121,8 @@ expr_without_variable:
     |   expr T_IS_GREATER_OR_EQUAL expr {  }
     |   expr T_INSTANCEOF class_name_reference {  }
     |   parenthesis_expr    {  }
-    |   new_expr        {  }
+    |   new_expr
+            { $$ = $1 }
     |   '(' new_expr ')' {  } instance_call {  }
     |   expr '?' {  }
         expr ':' {  }
@@ -1123,7 +1139,7 @@ expr_without_variable:
     |   T_UNSET_CAST expr   {  }
     |   T_EXIT exit_expr    {  }
     |   '@' {  } expr {  }
-    |   scalar              {  }
+    |   scalar              { $$ = $1 }
     |   combined_scalar_offset {  }
     |   combined_scalar {  }
     |   '`' backticks_expr '`' {  }
@@ -1227,27 +1243,60 @@ fully_qualified_class_name:
 
 
 class_name_reference:
-        class_name                      {  }
-    |   dynamic_class_name_reference    {  }
+        class_name
+            { $$ = $1 }
+    |   dynamic_class_name_reference
+            { $$ = $1 }
 ;
 
 
 dynamic_class_name_reference:
-        base_variable T_OBJECT_OPERATOR {  }
-            object_property {  } dynamic_class_name_variable_properties
-            {  }
-    |   base_variable {  }
+        base_variable T_OBJECT_OPERATOR object_property dynamic_class_name_variable_properties
+            {
+                $$ = $1
+
+                for _, f := range($3) {
+                    switch (f.fetchType) {
+                        case arrayFetchType:
+                            $$ = expr.NewArrayDimFetch($$, f.node)
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
+                            comments.AddComments($$, comments[$1])
+                        case propertyFetchType:
+                            $$ = expr.NewPropertyFetch($$, f.node)
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
+                            comments.AddComments($$, comments[$1])
+                    }
+                }
+
+                for _, f := range($4) {
+                    switch (f.fetchType) {
+                        case arrayFetchType:
+                            $$ = expr.NewArrayDimFetch($$, f.node)
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
+                            comments.AddComments($$, comments[$1])
+                        case propertyFetchType:
+                            $$ = expr.NewPropertyFetch($$, f.node)
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
+                            comments.AddComments($$, comments[$1])
+                    }
+                }
+            }
+    |   base_variable 
+            { $$ = $1 }
 ;
 
 
 dynamic_class_name_variable_properties:
         dynamic_class_name_variable_properties dynamic_class_name_variable_property
+            { $$ = append($1, $2...) }
     |   /* empty */
+            { $$ = []objectProperty{} }
 ;
 
 
 dynamic_class_name_variable_property:
-        T_OBJECT_OPERATOR object_property {  }
+        T_OBJECT_OPERATOR object_property
+            { $$ = $2 }
 ;
 
 exit_expr:
@@ -1263,8 +1312,10 @@ backticks_expr:
 ;
 
 ctor_arguments:
-        /* empty */ {  }
-    |   function_call_parameter_list    {  }
+        /* empty */
+            { $$ = nil }
+    |   function_call_parameter_list
+            { $$ = $1 }
 ;
 
 common_scalar:
@@ -1280,7 +1331,12 @@ common_scalar:
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
-    |   T_CONSTANT_ENCAPSED_STRING                              { $$ = nil }
+    |   T_CONSTANT_ENCAPSED_STRING
+            {
+                $$ = scalar.NewString($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
     |   T_LINE
             {
                 $$ = scalar.NewMagicConstant($1.Value)
@@ -1466,7 +1522,7 @@ non_empty_static_array_pair_list:
 
 expr:
         r_variable                  { $$ = $1 }
-    |   expr_without_variable       {  }
+    |   expr_without_variable       { $$ = $1 }
 ;
 
 parenthesis_expr:
@@ -1618,14 +1674,31 @@ dim_offset:
 
 
 object_property:
-        object_dim_list {  }
-    |   variable_without_objects {  }
+        object_dim_list 
+            { $$ = $1 }
+    |   variable_without_objects
+            {
+                op := objectProperty{$1, propertyFetchType}
+                $$ = []objectProperty{op}
+            }
 ;
 
 object_dim_list:
-        object_dim_list '[' dim_offset ']'  {  }
-    |   object_dim_list '{' expr '}'        {  }
-    |   variable_name { }
+        object_dim_list '[' dim_offset ']'
+            {
+                op := objectProperty{$3, arrayFetchType}
+                $$ = append($1, op)
+            }
+    |   object_dim_list '{' expr '}'
+            {
+                op := objectProperty{$3, arrayFetchType}
+                $$ = append($1, op)
+            }
+    |   variable_name
+            {
+                op := objectProperty{$1, propertyFetchType}
+                $$ = []objectProperty{op}
+            }
 ;
 
 variable_name:
