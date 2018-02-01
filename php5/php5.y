@@ -198,10 +198,11 @@ import (
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
-%type <node> encaps_var encaps_var encaps_var_offset general_constant
+%type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
-%type <list> inner_statement_list global_var_list static_var_list encaps_list
+%type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
+%type <list> array_pair_list
 
 %type <simpleIndirectReference> simple_indirect_reference
 
@@ -1650,19 +1651,77 @@ assignment_list_element:
 
 
 array_pair_list:
-        /* empty */ {  }
-    |   non_empty_array_pair_list possible_comma    {  }
+        /* empty */
+            { $$ = nil }
+    |   non_empty_array_pair_list possible_comma
+            { $$ = $1 }
 ;
 
 non_empty_array_pair_list:
-        non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr  {  }
-    |   non_empty_array_pair_list ',' expr          {  }
-    |   expr T_DOUBLE_ARROW expr    {  }
-    |   expr                {  }
-    |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable {  }
-    |   non_empty_array_pair_list ',' '&' w_variable {  }
-    |   expr T_DOUBLE_ARROW '&' w_variable  {  }
-    |   '&' w_variable          {  }
+        non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
+            {
+                arrayItem := expr.NewArrayItem($3, $5, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
+                comments.AddComments(arrayItem, comments[$3])
+
+                $$ = append($1, arrayItem)
+            }
+    |   non_empty_array_pair_list ',' expr
+            {
+                arrayItem := expr.NewArrayItem(nil, $3, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
+                comments.AddComments(arrayItem, comments[$3])
+
+                $$ = append($1, arrayItem)
+            }
+    |   expr T_DOUBLE_ARROW expr
+            {
+                arrayItem := expr.NewArrayItem($1, $3, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments(arrayItem, comments[$1])
+
+                $$ = []node.Node{arrayItem}
+            }
+    |   expr
+            {
+                arrayItem := expr.NewArrayItem(nil, $1, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
+                comments.AddComments(arrayItem, comments[$1])
+
+                $$ = []node.Node{arrayItem}
+            }
+    |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
+            {
+                arrayItem := expr.NewArrayItem($3, $6, true)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $6))
+                comments.AddComments(arrayItem, comments[$3])
+
+                $$ = append($1, arrayItem)
+            }
+    |   non_empty_array_pair_list ',' '&' w_variable
+            {
+                arrayItem := expr.NewArrayItem(nil, $4, true)
+                positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($3, $4))
+                comments.AddComments(arrayItem, $3.Comments())
+
+                $$ = append($1, arrayItem)
+            }
+    |   expr T_DOUBLE_ARROW '&' w_variable
+            {
+                arrayItem := expr.NewArrayItem($1, $4, true)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $4))
+                comments.AddComments(arrayItem, comments[$1])
+
+                $$ = []node.Node{arrayItem}
+            }
+    |   '&' w_variable
+            {
+                arrayItem := expr.NewArrayItem(nil, $2, true)
+                positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments(arrayItem, $1.Comments())
+
+                $$ = []node.Node{arrayItem}
+            }
 ;
 
 encaps_list:
@@ -1781,26 +1840,67 @@ encaps_var_offset:
             }
 ;
 
-
 internal_functions_in_yacc:
-        T_ISSET '(' isset_variables ')' {  }
-    |   T_EMPTY '(' variable ')'    {  }
-    |   T_EMPTY '(' expr_without_variable ')' {  }
-    |   T_INCLUDE expr          {  }
-    |   T_INCLUDE_ONCE expr     {  }
-    |   T_EVAL '(' expr ')'     {  }
-    |   T_REQUIRE expr          {  }
-    |   T_REQUIRE_ONCE expr     {  }
+    T_ISSET '(' isset_variables ')'
+        {
+            $$ = expr.NewIsset($3)
+            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_EMPTY '(' variable ')'
+        {
+            $$ = expr.NewEmpty($3)
+            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_EMPTY '(' expr_without_variable ')'
+        {
+            $$ = expr.NewEmpty($3)
+            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_INCLUDE expr
+        {
+            $$ = expr.NewInclude($2)
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_INCLUDE_ONCE expr
+        {
+            $$ = expr.NewIncludeOnce($2)
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_EVAL '(' expr ')'
+        {
+            $$ = expr.NewEval($3)
+            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_REQUIRE expr
+        {
+            $$ = expr.NewRequire($2)
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+            comments.AddComments($$, $1.Comments())
+        }
+    |   T_REQUIRE_ONCE expr
+        {
+            $$ = expr.NewRequireOnce($2)
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+            comments.AddComments($$, $1.Comments())
+        }
 ;
 
 isset_variables:
-        isset_variable          {  }
-    |   isset_variables ',' {  } isset_variable {  }
+        isset_variable
+            { $$ = []node.Node{$1} }
+    |   isset_variables ',' isset_variable
+            { $$ = append($1, $3) }
 ;
 
 isset_variable:
-        variable                {  }
-    |   expr_without_variable   {  }
+        variable                { $$ = $1 }
+    |   expr_without_variable   { $$ = $1 }
 ;
 
 class_constant:
