@@ -200,7 +200,8 @@ import (
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
-%type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference
+%type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
+%type <node> function_call
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -1189,22 +1190,14 @@ lexical_var_list:
 ;
 
 function_call:
-        namespace_name {  }
-        function_call_parameter_list {  }
-    |   T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-        function_call_parameter_list {  }
-    |   T_NS_SEPARATOR namespace_name {  }
-        function_call_parameter_list {  }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name {  }
-        function_call_parameter_list {  }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects {  }
-        function_call_parameter_list {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name {  }
-        function_call_parameter_list {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects {  }
-        function_call_parameter_list {  }
-    |   variable_without_objects {  }
-        function_call_parameter_list {  }
+        namespace_name function_call_parameter_list {  }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list {  }
+    |   T_NS_SEPARATOR namespace_name function_call_parameter_list {  }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list {  }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list {  }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list {  }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list {  }
+    |   variable_without_objects function_call_parameter_list {  }
 ;
 
 class_name:
@@ -1240,15 +1233,12 @@ fully_qualified_class_name:
     |   T_NS_SEPARATOR namespace_name {  }
 ;
 
-
-
 class_name_reference:
         class_name
             { $$ = $1 }
     |   dynamic_class_name_reference
             { $$ = $1 }
 ;
-
 
 dynamic_class_name_reference:
         base_variable T_OBJECT_OPERATOR object_property dynamic_class_name_variable_properties
@@ -1587,37 +1577,8 @@ method_or_not:
 ;
 
 variable_without_objects:
-        reference_variable {  }
-    |   simple_indirect_reference reference_variable {  }
-;
-
-static_member:
-        class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects {  }
-
-;
-
-variable_class_name:
         reference_variable
-            {
-                $$ = $1
-            }
-;
-
-array_function_dereference:
-        array_function_dereference '[' dim_offset ']'   {  }
-    |   function_call '[' dim_offset ']'                {  }
-;
-
-base_variable_with_function_calls:
-        base_variable               { $$ = $1 }
-    |   array_function_dereference  { $$ = $1 }
-    |   function_call               { $$ = $1 }
-;
-
-
-base_variable:
-        reference_variable                              { $$ = $1 }
+            { $$ = $1 }
     |   simple_indirect_reference reference_variable
             {
                 $1.last.SetVarName($2)
@@ -1628,7 +1589,58 @@ base_variable:
 
                 $$ = $1.all[0]
             }
-    |   static_member                                   {  }
+;
+
+static_member:
+        class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
+            {
+                $$ = expr.NewStaticPropertyFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+
+;
+
+variable_class_name:
+        reference_variable
+            { $$ = $1 }
+;
+
+array_function_dereference:
+        array_function_dereference '[' dim_offset ']'
+            {  }
+    |   function_call '[' dim_offset ']'
+            {  }
+;
+
+base_variable_with_function_calls:
+        base_variable               { $$ = $1 }
+    |   array_function_dereference  { $$ = $1 }
+    |   function_call               { $$ = $1 }
+;
+
+
+base_variable:
+        reference_variable
+            { $$ = $1 }
+    |   simple_indirect_reference reference_variable
+            {
+                $1.last.SetVarName($2)
+
+                for _, n := range($1.all) {
+                    positions[n] =  positionBuilder.NewNodesPosition(n, $2)
+                }
+
+                $$ = $1.all[0]
+            }
+    |   static_member
+            { $$ = $1 }
 ;
 
 reference_variable:
@@ -1644,7 +1656,8 @@ reference_variable:
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
-    |   compound_variable                       { $$ = $1 }
+    |   compound_variable
+            { $$ = $1 }
 ;
 
 
