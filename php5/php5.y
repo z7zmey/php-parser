@@ -12,7 +12,7 @@ import (
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
     "github.com/z7zmey/php-parser/node/expr"
-//    "github.com/z7zmey/php-parser/node/expr/assign_op"
+    "github.com/z7zmey/php-parser/node/expr/assign_op"
 //    "github.com/z7zmey/php-parser/node/expr/binary_op"
 //    "github.com/z7zmey/php-parser/node/expr/cast"
 )
@@ -24,7 +24,7 @@ import (
     token token.Token
 //    boolWithToken boolWithToken
     list []node.Node
-//    foreachVariable foreachVariable
+    foreachVariable foreachVariable
 //    nodesWithEndToken *nodesWithEndToken
     simpleIndirectReference simpleIndirectReference
 //    str string
@@ -198,13 +198,15 @@ import (
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
-%type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc
+%type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
+%type <node> variable_name
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list
+%type <list> array_pair_list assignment_list
 
 %type <simpleIndirectReference> simple_indirect_reference
+%type <foreachVariable> foreach_variable
 
 %%
 
@@ -647,9 +649,17 @@ foreach_optional_arg:
 ;
 
 foreach_variable:
-        variable            {  }
-    |   '&' variable        {  }
-    |   T_LIST '(' {  } assignment_list ')' {  }
+        variable
+            { $$ = foreachVariable{$1, false} }
+    |   '&' variable
+            { $$ = foreachVariable{$2, true} }
+    |   T_LIST '(' assignment_list ')'
+            {
+                list := expr.NewList($3)
+                positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
+                $$ = foreachVariable{list, false}
+                comments.AddComments(list, $1.Comments())
+            }
 ;
 
 for_statement:
@@ -1035,7 +1045,16 @@ new_expr:
 ;
 
 expr_without_variable:
-        T_LIST '(' assignment_list ')' '=' expr { $$ = nil }
+        T_LIST '(' assignment_list ')' '=' expr
+            {
+                list := expr.NewList($3)
+                positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
+                $$ = assign_op.NewAssign(list, $6)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
+
+                comments.AddComments(list, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
     |   variable '=' expr       {  }
     |   variable '=' '&' variable {  }
     |   variable '=' '&' T_NEW class_name_reference {  } ctor_arguments {  }
@@ -1610,8 +1629,14 @@ object_dim_list:
 ;
 
 variable_name:
-        T_STRING        {  }
-    |   '{' expr '}'    {  }
+        T_STRING
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '{' expr '}'
+            { $$ = $2 }
 ;
 
 simple_indirect_reference:
@@ -1639,14 +1664,23 @@ simple_indirect_reference:
 
 assignment_list:
         assignment_list ',' assignment_list_element
+            { $$ = append($1, $3) }
     |   assignment_list_element
+            { $$ = []node.Node{$1} }
 ;
 
 
 assignment_list_element:
-        variable                                {  }
-    |   T_LIST '(' {  } assignment_list ')' {  }
-    |   /* empty */                         {  }
+        variable
+            { $$ = $1 }
+    |   T_LIST '(' assignment_list ')'
+            {
+                $$ = expr.NewList($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   /* empty */
+            { $$ = nil }
 ;
 
 
