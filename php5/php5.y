@@ -203,7 +203,8 @@ import (
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
-%type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant
+%type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
+%type <node> exit_expr yield_expr
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -1404,9 +1405,12 @@ dynamic_class_name_variable_property:
 ;
 
 exit_expr:
-        /* empty */ {  }
-    |   '(' ')'     {  }
-    |   parenthesis_expr    {  }
+        /* empty */
+            { $$ = nil }
+    |   '(' ')'
+            { $$ = nil }
+    |   parenthesis_expr
+            { $$ = $1 }
 ;
 
 backticks_expr:
@@ -1641,13 +1645,17 @@ non_empty_static_array_pair_list:
 ;
 
 expr:
-        r_variable                  { $$ = $1 }
-    |   expr_without_variable       { $$ = $1 }
+        r_variable
+            { $$ = $1 }
+    |   expr_without_variable
+            { $$ = $1 }
 ;
 
 parenthesis_expr:
-        '(' expr ')'        {  }
-    |   '(' yield_expr ')'  {  }
+        '(' expr ')'
+            { $$ = $2 }
+    |   '(' yield_expr ')'
+            { $$ = $2 }
 ;
 
 
