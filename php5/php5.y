@@ -194,6 +194,8 @@ import (
 %left T_ENDIF 
 %right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
+%type <token> function
+
 %type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
@@ -201,11 +203,11 @@ import (
 %type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
-%type <node> function_call
+%type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list assignment_list
+%type <list> array_pair_list assignment_list lexical_var_list lexical_vars
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable
@@ -1162,31 +1164,128 @@ yield_expr:
 ;
 
 combined_scalar_offset:
-        combined_scalar '[' dim_offset ']' {  }
-    |   combined_scalar_offset '[' dim_offset ']' {  }
-    |   T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']' {  }
-    |   general_constant '[' dim_offset ']' {  }
+        combined_scalar '[' dim_offset ']'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   combined_scalar_offset '[' dim_offset ']'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'
+            {
+                str := scalar.NewString($1.Value)
+                positions.AddPosition(str, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(str, $1.Comments())
+
+                $$ = expr.NewArrayDimFetch(str, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(str, $4))
+                comments.AddComments($$, comments[str])
+            }
+    |   general_constant '[' dim_offset ']'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 combined_scalar:
-        T_ARRAY '(' array_pair_list ')' {  }
-    |   '[' array_pair_list ']' {  }
+        T_ARRAY '(' array_pair_list ')'
+            {
+                $$ = expr.NewArray($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '[' array_pair_list ']'
+            {
+                $$ = expr.NewShortArray($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 function:
-    T_FUNCTION {  }
+    T_FUNCTION
+        { $$ = $1 }
 ;
 
 lexical_vars:
         /* empty */
+            { $$ = []node.Node{} }
     |   T_USE '(' lexical_var_list ')'
+            { $$ = $3; }
 ;
 
 lexical_var_list:
-        lexical_var_list ',' T_VARIABLE         {  }
-    |   lexical_var_list ',' '&' T_VARIABLE     {  }
-    |   T_VARIABLE                              {  }
-    |   '&' T_VARIABLE                          {  }
+        lexical_var_list ',' T_VARIABLE
+            {
+                identifier := node.NewIdentifier($3.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(identifier, $3.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(variable, $3.Comments())
+                
+                use := expr.NewClusureUse(variable, false)
+                positions.AddPosition(use, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(use, $3.Comments())
+                
+                $$ = append($1, use)
+            }
+    |   lexical_var_list ',' '&' T_VARIABLE
+            {
+                identifier := node.NewIdentifier($4.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(identifier, $4.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(variable, $3.Comments())
+
+                use := expr.NewClusureUse(variable, true)
+                positions.AddPosition(use, positionBuilder.NewTokensPosition($3, $4))
+                comments.AddComments(use, $3.Comments())
+
+                $$ = append($1, use)
+            }
+    |   T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(identifier, $1.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(variable, $1.Comments())
+                
+                use := expr.NewClusureUse(variable, false)
+                positions.AddPosition(use, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(use, $1.Comments())
+                
+                $$ = []node.Node{use}
+            }
+    |   '&' T_VARIABLE
+            {
+                identifier := node.NewIdentifier($2.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(identifier, $2.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(variable, $1.Comments())
+
+                use := expr.NewClusureUse(variable, true)
+                positions.AddPosition(use, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments(use, $1.Comments())
+
+                $$ = []node.Node{use}
+            }
 ;
 
 function_call:
@@ -1228,9 +1327,24 @@ class_name:
 ;
 
 fully_qualified_class_name:
-        namespace_name {  }
-    |   T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-    |   T_NS_SEPARATOR namespace_name {  }
+        namespace_name
+            {
+                $$ = name.NewName($1)
+                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewRelative($3)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewFullyQualified($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 class_name_reference:
@@ -1450,10 +1564,26 @@ static_operation:
 ;
 
 general_constant:
-        class_constant {  }
-    |   namespace_name  {  }
-    |   T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-    |   T_NS_SEPARATOR namespace_name {  }
+        class_constant
+            { $$ = $1 }
+    |   namespace_name
+            {
+                $$ = name.NewName($1)
+                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewRelative($3)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewFullyQualified($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 scalar:
