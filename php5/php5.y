@@ -204,7 +204,7 @@ import (
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
-%type <node> exit_expr yield_expr
+%type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -247,10 +247,18 @@ namespace_name:
 ;
 
 top_statement:
-        statement                                       { $$ = $1 }
-    |   function_declaration_statement                  { $$ = nil }
-    |   class_declaration_statement                     { $$ = nil }
-    |   T_HALT_COMPILER '(' ')' ';'                     { $$ = stmt.NewHaltCompiler() }
+        statement
+            { $$ = $1 }
+    |   function_declaration_statement
+            { $$ = $1 }
+    |   class_declaration_statement
+            { $$ = $1 }
+    |   T_HALT_COMPILER '(' ')' ';'
+            {
+                $$ = stmt.NewHaltCompiler()
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
     |   T_NAMESPACE namespace_name ';'
             {
                 name := name.NewName($2)
@@ -303,12 +311,15 @@ top_statement:
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
-    |   constant_declaration ';'                        { $$ = nil }
+    |   constant_declaration ';'
+            { $$ = $1 }
 ;
 
 use_declarations:
-        use_declarations ',' use_declaration            { $$ = append($1, $3) }
-    |   use_declaration                                 { $$ = []node.Node{$1} }
+        use_declarations ',' use_declaration
+            { $$ = append($1, $3) }
+    |   use_declaration
+            { $$ = []node.Node{$1} }
 ;
 
 use_declaration:
@@ -362,13 +373,9 @@ use_declaration:
 
 use_function_declarations:
         use_function_declarations ',' use_function_declaration
-            {
-                $$ = append($1, $3)
-            }
+            { $$ = append($1, $3) }
     |   use_function_declaration
-            {
-                $$ = []node.Node{$1}
-            }
+            { $$ = []node.Node{$1} }
 ;
 
 use_function_declaration:
@@ -422,13 +429,9 @@ use_function_declaration:
 
 use_const_declarations:
         use_const_declarations ',' use_const_declaration
-            {
-                $$ = append($1, $3)
-            }
+            { $$ = append($1, $3) }
     |   use_const_declaration
-            {
-                $$ = []node.Node{$1}
-            }
+            { $$ = []node.Node{$1} }
 ;
 
 use_const_declaration:
@@ -481,27 +484,77 @@ use_const_declaration:
 ;
 
 constant_declaration:
-        constant_declaration ',' T_STRING '=' static_scalar {  }
-    |   T_CONST T_STRING '=' static_scalar {  }
+        constant_declaration ',' T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($3.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(name, $3.Comments())
+
+                constant := stmt.NewConstant(name, $5, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
+                comments.AddComments(constant, $3.Comments())
+
+                constList := $1.(*stmt.ConstList)
+                constList.Consts = append(constList.Consts, constant)
+
+                $$ = $1
+                positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
+            }
+    |   T_CONST T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($2.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(name, $2.Comments())
+
+                constant := stmt.NewConstant(name, $4, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($2, $4))
+                comments.AddComments(constant, $2.Comments())
+
+                constList := []node.Node{constant}
+
+                $$ = stmt.NewConstList(constList)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, constList))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 inner_statement_list:
-        inner_statement_list inner_statement    { $$ = append($1, $2) }
-    |   /* empty */                             { $$ = []node.Node{} }
+        inner_statement_list inner_statement
+            { $$ = append($1, $2) }
+    |   /* empty */
+            { $$ = []node.Node{} }
 ;
 
 
 inner_statement:
-        statement                       { $$ = $1 }
-    |   function_declaration_statement  { $$ = nil }
-    |   class_declaration_statement     {  }
-    |   T_HALT_COMPILER '(' ')' ';'     {  }
+        statement
+            { $$ = $1 }
+    |   function_declaration_statement
+            { $$ = $1 }
+    |   class_declaration_statement
+            { $$ = $1 }
+    |   T_HALT_COMPILER '(' ')' ';'
+            {
+                $$ = stmt.NewHaltCompiler()
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
 statement:
-        unticked_statement { $$ = $1 }
-    |   T_STRING ':' {  }
+        unticked_statement
+            { $$ = $1 }
+    |   T_STRING ':'
+            {
+                label := node.NewIdentifier($1.Value)
+                positions.AddPosition(label, positionBuilder.NewTokenPosition($1))
+                $$ = stmt.NewLabel(label)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+
+                comments.AddComments(label, $1.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 unticked_statement:
@@ -510,16 +563,8 @@ unticked_statement:
     |   T_IF parenthesis_expr ':' {  } inner_statement_list {  } new_elseif_list new_else_single T_ENDIF ';' {  }
     |   T_WHILE {  } parenthesis_expr {  } while_statement {  }
     |   T_DO {  } statement T_WHILE {  } parenthesis_expr ';' {  }
-    |   T_FOR
-            '('
-                for_expr
-            ';' {  }
-                for_expr
-            ';' {  }
-                for_expr
-            ')' {  }
-            for_statement {  }
-    |   T_SWITCH parenthesis_expr   {  } switch_case_list {  }
+    |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement {  }
+    |   T_SWITCH parenthesis_expr switch_case_list {  }
     |   T_BREAK ';'             {  }
     |   T_BREAK expr ';'        {  }
     |   T_CONTINUE ';'          {  }
