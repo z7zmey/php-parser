@@ -218,7 +218,7 @@ import (
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> trait_reference_list
+%type <list> trait_reference_list non_empty_member_modifiers
 
 
 %type <simpleIndirectReference> simple_indirect_reference
@@ -1565,23 +1565,37 @@ trait_modifiers:
 ;
 
 method_body:
-        ';' /* abstract method */       {  }
-    |   '{' inner_statement_list '}'    {  }
+        ';' /* abstract method */
+            { $$ = &nodesWithEndToken{nil, $1} }
+    |   '{' inner_statement_list '}'
+            { $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 variable_modifiers:
-        non_empty_member_modifiers      {  }
-    |   T_VAR                           {  }
+        non_empty_member_modifiers
+            { $$ = $1; }
+    |   T_VAR
+            {
+                modifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(modifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(modifier, $1.Comments())
+                
+                $$ = []node.Node{modifier}
+            }
 ;
 
 method_modifiers:
-        /* empty */                         {  }
-    |   non_empty_member_modifiers          {  }
+        /* empty */
+            { $$ = nil }
+    |   non_empty_member_modifiers
+            { $$ = $1 }
 ;
 
 non_empty_member_modifiers:
-        member_modifier                     {  }
-    |   non_empty_member_modifiers member_modifier  {  }
+        member_modifier
+            { $$ = []node.Node{$1} }
+    |   non_empty_member_modifiers member_modifier
+            { $$ = append($1, $2) }
 ;
 
 member_modifier:
@@ -1624,15 +1638,102 @@ member_modifier:
 ;
 
 class_variable_declaration:
-        class_variable_declaration ',' T_VARIABLE                   {  }
-    |   class_variable_declaration ',' T_VARIABLE '=' static_scalar {  }
-    |   T_VARIABLE                      {  }
-    |   T_VARIABLE '=' static_scalar    {  }
+        class_variable_declaration ',' T_VARIABLE
+            {
+                identifier := node.NewIdentifier($3.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(identifier, $3.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(variable, $3.Comments())
+                
+                property := stmt.NewProperty(variable, nil, "")
+                positions.AddPosition(property, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(property, $3.Comments())
+
+                $$ = append($1, property)
+            }
+    |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
+            {
+                identifier := node.NewIdentifier($3.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(identifier, $3.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(variable, $3.Comments())
+                
+                property := stmt.NewProperty(variable, $5, "")
+                positions.AddPosition(property, positionBuilder.NewTokenNodePosition($3, $5))
+                comments.AddComments(property, $3.Comments())
+
+                $$ = append($1, property)
+            }
+    |   T_VARIABLE
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(identifier, $1.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(variable, $1.Comments())
+                
+                property := stmt.NewProperty(variable, nil, "")
+                positions.AddPosition(property, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(property, $1.Comments())
+
+                $$ = []node.Node{property}
+            }
+    |   T_VARIABLE '=' static_scalar
+            {
+                identifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(identifier, $1.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(variable, $1.Comments())
+                
+                property := stmt.NewProperty(variable, $3, "")
+                positions.AddPosition(property, positionBuilder.NewTokenNodePosition($1, $3))
+                comments.AddComments(property, $1.Comments())
+
+                $$ = []node.Node{property}
+            }
 ;
 
 class_constant_declaration:
-        class_constant_declaration ',' T_STRING '=' static_scalar   {  }
-    |   T_CONST T_STRING '=' static_scalar  {  }
+        class_constant_declaration ',' T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($3.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(name, $3.Comments())
+
+                constant := stmt.NewConstant(name, $5, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
+                comments.AddComments(constant, $3.Comments())
+
+                $1.(*stmt.ConstList).Consts = append($1.(*stmt.ConstList).Consts, constant)
+                positions.AddPosition($1, positionBuilder.NewNodesPosition($1, $5))
+
+                $$ = $1
+            }
+    |   T_CONST T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($2.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(name, $2.Comments())
+
+                constant := stmt.NewConstant(name, $4, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($2, $4))
+                comments.AddComments(constant, $2.Comments())
+
+                $$ = stmt.NewClassConstList(nil, []node.Node{constant})
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 echo_expr_list:
