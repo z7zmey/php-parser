@@ -205,7 +205,7 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single while_statement for_statement unset_variable
+%type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -213,7 +213,7 @@ import (
 %type <list> for_expr case_list echo_expr_list unset_variables
 
 %type <simpleIndirectReference> simple_indirect_reference
-%type <foreachVariable> foreach_variable
+%type <foreachVariable> foreach_variable foreach_optional_arg
 %type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
 %type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list
 
@@ -689,8 +689,26 @@ unticked_statement:
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
                 comments.AddComments($$, $1.Comments())
             }
-    |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
-    |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
+    |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
+            {
+                if $6.node == nil {
+                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                } else {
+                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                }
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
+            {
+                if $6.node == nil {
+                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                } else {
+                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                }
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
+                comments.AddComments($$, $1.Comments())
+            }
     |   T_DECLARE {  } '(' declare_list ')' declare_statement {  }
     |   ';'     /* empty statement */       {  }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement {  }
@@ -809,8 +827,10 @@ interface_list:
 ;
 
 foreach_optional_arg:
-        /* empty */                     {  }
-    |   T_DOUBLE_ARROW foreach_variable {  }
+        /* empty */
+            { $$ = foreachVariable{nil, false} }
+    |   T_DOUBLE_ARROW foreach_variable
+            { $$ = $2 }
 ;
 
 foreach_variable:
@@ -841,7 +861,13 @@ for_statement:
 
 foreach_statement:
         statement
+            { $$ = $1; }
     |   ':' inner_statement_list T_ENDFOREACH ';'
+            {
+                $$ = stmt.NewStmtList($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
