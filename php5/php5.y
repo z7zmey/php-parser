@@ -208,7 +208,8 @@ import (
 %type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement declare_statement
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
-%type <node> trait_use_statement function_call_parameter
+%type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
+%type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -216,13 +217,14 @@ import (
 %type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
-%type <list> interface_list non_empty_function_call_parameter_list
+%type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
+%type <list> trait_reference_list
 
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
 %type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
-%type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body
+%type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body trait_adaptations
 %type <boolWithToken> is_reference is_variadic
 
 %%
@@ -1446,60 +1448,120 @@ class_statement:
 
 trait_use_statement:
         T_USE trait_list trait_adaptations
-            {  }
+            {
+                $$ = stmt.NewTraitUse($2, $3.nodes)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 trait_list:
-        fully_qualified_class_name                      {  }
-    |   trait_list ',' fully_qualified_class_name       {  }
+        fully_qualified_class_name
+            { $$ = []node.Node{$1} }
+    |   trait_list ',' fully_qualified_class_name
+            { $$ = append($1, $3) }
 ;
 
 trait_adaptations:
         ';'
+            { $$ = &nodesWithEndToken{nil, $1} }
     |   '{' trait_adaptation_list '}'
+            { $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 trait_adaptation_list:
         /* empty */
+            { $$ = nil }
     |   non_empty_trait_adaptation_list
+            { $$ = $1 }
 ;
 
 non_empty_trait_adaptation_list:
         trait_adaptation_statement
+            { $$ = []node.Node{$1} }
     |   non_empty_trait_adaptation_list trait_adaptation_statement
+            { $$ = append($1, $2) }
 ;
 
 trait_adaptation_statement:
         trait_precedence ';'
+            { $$ = $1 }
     |   trait_alias ';'
+            { $$ = $1 }
 ;
 
 trait_precedence:
-    trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list {  }
+        trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
+            {
+                name := name.NewName($3)
+                positions.AddPosition(name, positionBuilder.NewNodeListPosition($3))
+                $$ = stmt.NewTraitUsePrecedence($1, name)
+                positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, $3))
+
+                comments.AddComments(name, ListGetFirstNodeComments($3))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 trait_reference_list:
-        fully_qualified_class_name                                  {  }
-    |   trait_reference_list ',' fully_qualified_class_name         {  }
+        fully_qualified_class_name
+            { $$ = []node.Node{$1} }
+    |   trait_reference_list ',' fully_qualified_class_name
+            { $$ = append($1, $3) }
 ;
 
 trait_method_reference:
-        T_STRING                                                    {  }
-    |   trait_method_reference_fully_qualified                      {  }
+        T_STRING
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(name, $1.Comments())
+                
+                $$ = stmt.NewTraitMethodRef(nil, name)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   trait_method_reference_fully_qualified
+            { $$ = $1 }
 ;
 
 trait_method_reference_fully_qualified:
-    fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING      {  }
+        fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
+            {
+                target := node.NewIdentifier($3.Value)
+                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(target, $3.Comments())
+                
+                $$ = stmt.NewTraitMethodRef($1, target)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 trait_alias:
-        trait_method_reference T_AS trait_modifiers T_STRING        {  }
-    |   trait_method_reference T_AS member_modifier                 {  }
+        trait_method_reference T_AS trait_modifiers T_STRING
+            {
+                alias := node.NewIdentifier($4.Value)
+                positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
+                $$ = stmt.NewTraitUseAlias($1, $3, alias)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                
+                comments.AddComments(alias, $4.Comments())
+                comments.AddComments($$, comments[$1])
+            }
+    |   trait_method_reference T_AS member_modifier
+            {
+                $$ = stmt.NewTraitUseAlias($1, $3, nil)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 trait_modifiers:
-        /* empty */                 {  } /* No change of methods visibility */
-    |   member_modifier {  } /* REM: Keep in mind, there are not only visibility modifiers */
+        /* empty */
+            { $$ = nil }
+    |   member_modifier
+            { $$ = $1 }
 ;
 
 method_body:
@@ -1523,12 +1585,42 @@ non_empty_member_modifiers:
 ;
 
 member_modifier:
-        T_PUBLIC                {  }
-    |   T_PROTECTED             {  }
-    |   T_PRIVATE               {  }
-    |   T_STATIC                {  }
-    |   T_ABSTRACT              {  }
-    |   T_FINAL                 {  }
+        T_PUBLIC
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_PROTECTED
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_PRIVATE
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_STATIC
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ABSTRACT
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FINAL
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 class_variable_declaration:
