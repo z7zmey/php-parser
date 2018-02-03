@@ -205,12 +205,15 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement
+%type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement declare_statement
+%type <node> finally_statement additional_catch
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list assignment_list lexical_var_list lexical_vars elseif_list new_elseif_list non_empty_for_expr
-%type <list> for_expr case_list echo_expr_list unset_variables
+%type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
+%type <list> non_empty_additional_catches
+
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
@@ -709,38 +712,108 @@ unticked_statement:
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
                 comments.AddComments($$, $1.Comments())
             }
-    |   T_DECLARE {  } '(' declare_list ')' declare_statement {  }
-    |   ';'     /* empty statement */       {  }
-    |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement {  }
-    |   T_THROW expr ';' {  }
-    |   T_GOTO T_STRING ';' {  }
+    |   T_DECLARE '(' declare_list ')' declare_statement
+            {
+                $$ = stmt.NewDeclare($3, $5)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   ';'
+            {
+                $$ = stmt.NewNop()
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
+            {
+                $$ = stmt.NewTry($3, $5, $6)
+
+                if $6 == nil {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $5))
+                } else {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
+                }
+
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_THROW expr ';'
+            {
+                $$ = stmt.NewThrow($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_GOTO T_STRING ';'
+            {
+                label := node.NewIdentifier($2.Value)
+                positions.AddPosition(label, positionBuilder.NewTokenPosition($2))
+                $$ = stmt.NewGoto(label)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+
+                comments.AddComments(label, $2.Comments())
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 catch_statement:
-                /* empty */ {  }
-    |   T_CATCH '(' {  } 
-        fully_qualified_class_name {  }
-        T_VARIABLE ')' {  }
-        '{' inner_statement_list '}' {  }
-        additional_catches {  }
+        /* empty */
+            { $$ = []node.Node{} }
+    |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
+            {
+                identifier := node.NewIdentifier($4.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(identifier, $4.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(variable, $4.Comments())
+                
+                catch := stmt.NewCatch([]node.Node{$3}, variable, $7)
+                positions.AddPosition(catch, positionBuilder.NewTokensPosition($1, $8))
+                comments.AddComments(catch, $1.Comments())
+
+                $$ = append([]node.Node{catch}, $9...)
+            }
 
 finally_statement:
-                    /* empty */ {  }
-    |   T_FINALLY {  } '{' inner_statement_list '}' {  }
+        /* empty */
+            { $$ = nil }
+    |   T_FINALLY '{' inner_statement_list '}'
+            {
+                $$ = stmt.NewFinally($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 additional_catches:
-        non_empty_additional_catches {  }
-    |   /* empty */ {  }
+        non_empty_additional_catches
+            { $$ = $1 }
+    |   /* empty */
+            { $$ = []node.Node{} }
 ;
 
 non_empty_additional_catches:
-        additional_catch {  }
-    |   non_empty_additional_catches additional_catch {  }
+        additional_catch
+            { $$ = []node.Node{$1} }
+    |   non_empty_additional_catches additional_catch
+            { $$ = append($1, $2) }
 ;
 
 additional_catch:
-    T_CATCH '(' fully_qualified_class_name {  } T_VARIABLE ')' {  } '{' inner_statement_list '}' {  }
+        T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}'
+            {
+                identifier := node.NewIdentifier($4.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(identifier, $4.Comments())
+                
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(variable, $4.Comments())
+                
+                $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 unset_variables:
@@ -873,13 +946,41 @@ foreach_statement:
 
 declare_statement:
         statement
+            { $$ = $1; }
     |   ':' inner_statement_list T_ENDDECLARE ';'
+            {
+                $$ = stmt.NewStmtList($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
 declare_list:
-        T_STRING '=' static_scalar                  {  }
-    |   declare_list ',' T_STRING '=' static_scalar {  }
+        T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($1.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(name, $1.Comments())
+
+                constant := stmt.NewConstant(name, $3, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($1, $3))
+                comments.AddComments(constant, $1.Comments())
+
+                $$ = []node.Node{constant}
+            }
+    |   declare_list ',' T_STRING '=' static_scalar
+            {
+                name := node.NewIdentifier($3.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(name, $3.Comments())
+
+                constant := stmt.NewConstant(name, $5, "")
+                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
+                comments.AddComments(constant, $3.Comments())
+
+                $$ = append($1, constant)
+            }
 ;
 
 
