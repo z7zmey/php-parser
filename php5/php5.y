@@ -22,7 +22,7 @@ import (
 %union{
     node node.Node
     token token.Token
-//    boolWithToken boolWithToken
+    boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
     nodesWithEndToken *nodesWithEndToken
@@ -194,7 +194,7 @@ import (
 %left T_ENDIF 
 %right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
-%type <token> function
+%type <token> function interface_entry
 
 %type <node> top_statement use_declaration use_function_declaration use_const_declaration common_scalar
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
@@ -206,19 +206,24 @@ import (
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
 %type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement declare_statement
-%type <node> finally_statement additional_catch
+%type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
+%type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
+%type <node> trait_use_statement
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list assignment_list lexical_var_list lexical_vars elseif_list new_elseif_list non_empty_for_expr
 %type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
-%type <list> non_empty_additional_catches
+%type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
+%type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
+%type <list> interface_list
 
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
 %type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
-%type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list
+%type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body
+%type <boolWithToken> is_reference is_variadic
 
 %%
 
@@ -829,74 +834,143 @@ unset_variable:
 ;
 
 function_declaration_statement:
-        unticked_function_declaration_statement {  }
+        unticked_function_declaration_statement
+            { $$ = $1 }
 ;
 
 class_declaration_statement:
-        unticked_class_declaration_statement    {  }
+        unticked_class_declaration_statement
+            { $$ = $1 }
 ;
 
 is_reference:
-        /* empty */ {  }
-    |   '&'         {  }
+        /* empty */
+            { $$ = boolWithToken{false, nil} }
+    |   '&'
+            { $$ = boolWithToken{true, &$1} }
 ;
 
 is_variadic:
-        /* empty */ {  }
-    |   T_ELLIPSIS  {  }
+        /* empty */
+            { $$ = boolWithToken{false, nil} }
+    |   T_ELLIPSIS
+            { $$ = boolWithToken{true, &$1} }
 ;
 
 unticked_function_declaration_statement:
-        function is_reference T_STRING {  }
-        '(' parameter_list ')'
-        '{' inner_statement_list '}' {  }
+        function is_reference T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
+            {
+                name := node.NewIdentifier($3.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
+                comments.AddComments(name, $3.Comments())
+
+                $$ = stmt.NewFunction(name, $2.value, $5, nil, $8, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 unticked_class_declaration_statement:
-        class_entry_type T_STRING extends_from
-            {  }
-            implements_list
-            '{'
-                class_statement_list
-            '}' {  }
-    |   interface_entry T_STRING
-            {  }
-            interface_extends_list
-            '{'
-                class_statement_list
-            '}' {  }
+        class_entry_type T_STRING extends_from implements_list '{' class_statement_list '}'
+            {
+                switch n := $1.(type) {
+                    case *stmt.Class :
+                        name := node.NewIdentifier($2.Value)
+                        positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                        n.ClassName = name
+                        n.Stmts = $6
+                        n.Extends = $3
+                        n.Implements = $4
+
+                    case *stmt.Trait :
+                        // TODO: is it possible that trait extend or implement
+                        name := node.NewIdentifier($2.Value)
+                        positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                        n.TraitName = name
+                        n.Stmts = $6
+                }
+
+                $$ = $1
+            }
+    |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
+            {
+                name := node.NewIdentifier($2.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                comments.AddComments(name, $2.Comments())
+                
+                $$ = stmt.NewInterface(name, $3, $5, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
 class_entry_type:
-        T_CLASS         {  }
-    |   T_ABSTRACT T_CLASS {  }
-    |   T_TRAIT {  }
-    |   T_FINAL T_CLASS {  }
+        T_CLASS
+            {
+                $$ = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ABSTRACT T_CLASS
+            {
+                classModifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(classModifier, $1.Comments())
+
+                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_TRAIT
+            {
+                $$ = stmt.NewTrait(nil, nil, "")
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FINAL T_CLASS
+            {
+                classModifier := node.NewIdentifier($1.Value)
+                positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
+                comments.AddComments(classModifier, $1.Comments())
+
+                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 extends_from:
-        /* empty */                 {  }
-    |   T_EXTENDS fully_qualified_class_name    {  }
+        /* empty */
+            { $$ = nil }
+    |   T_EXTENDS fully_qualified_class_name
+            { $$ = $2 }
 ;
 
 interface_entry:
-    T_INTERFACE     {  }
+        T_INTERFACE
+            { $$ = $1 }
 ;
 
 interface_extends_list:
         /* empty */
+            { $$ = nil }
     |   T_EXTENDS interface_list
+            { $$ = $2 }
 ;
 
 implements_list:
         /* empty */
+            { $$ = nil }
     |   T_IMPLEMENTS interface_list
+            { $$ = $2 }
 ;
 
 interface_list:
-        fully_qualified_class_name          {  }
-    |   interface_list ',' fully_qualified_class_name {  }
+        fully_qualified_class_name
+            { $$ = []node.Node{$1} }
+    |   interface_list ',' fully_qualified_class_name
+            { $$ = append($1, $3) }
 ;
 
 foreach_optional_arg:
@@ -1094,28 +1168,91 @@ new_else_single:
 
 parameter_list:
         non_empty_parameter_list
+            { $$ = $1; }
     |   /* empty */
+            { $$ = nil }
 ;
-
 
 non_empty_parameter_list:
         parameter
+            { $$ = []node.Node{$1} }
     |   non_empty_parameter_list ',' parameter
+            { $$ = append($1, $3) }
 ;
 
 parameter:
         optional_class_type is_reference is_variadic T_VARIABLE
-            {  }
+            {
+                identifier := node.NewIdentifier($4.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
+                comments.AddComments($$, $4.Comments())
+
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
+                comments.AddComments($$, $4.Comments())
+                
+                $$ = node.NewParameter($1, variable, nil, $2.value, $3.value)
+                
+                if $1 != nil {
+                    positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                    comments.AddComments($$, comments[$1])
+                } else if $2.value == true {
+                    positions.AddPosition($$, positionBuilder.NewTokensPosition(*$2.token, $4))
+                    comments.AddComments($$, $2.token.Comments())
+                } else if $3.value == true {
+                    positions.AddPosition($$, positionBuilder.NewTokensPosition(*$3.token, $4))
+                    comments.AddComments($$, $3.token.Comments())
+                } else {
+                    positions.AddPosition($$, positionBuilder.NewTokenPosition($4))
+                    comments.AddComments($$, $4.Comments())
+                }
+            }
     |   optional_class_type is_reference is_variadic T_VARIABLE '=' static_scalar
-            {  }
+            {
+                identifier := node.NewIdentifier($4.Value)
+                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(identifier, $4.Comments())
+
+                variable := expr.NewVariable(identifier)
+                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(variable, $4.Comments())
+
+                $$ = node.NewParameter($1, variable, $6, $2.value, $3.value)
+
+                if $1 != nil {
+                    positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $6))
+                    comments.AddComments($$, comments[$1])
+                } else if $2.value == true {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition(*$2.token, $6))
+                    comments.AddComments($$, $2.token.Comments())
+                } else if $3.value == true {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition(*$3.token, $6))
+                    comments.AddComments($$, $3.token.Comments())
+                } else {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($4, $6))
+                    comments.AddComments($$, $4.Comments())
+                }
+            }
 ;
 
 
 optional_class_type:
-        /* empty */                 {  }
-    |   T_ARRAY                     {  }
-    |   T_CALLABLE                  {  }
-    |   fully_qualified_class_name          {  }
+        /* empty */
+            { $$ = nil }
+    |   T_ARRAY
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CALLABLE
+            {
+                $$ = node.NewIdentifier($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   fully_qualified_class_name
+            { $$ = $1 }
 ;
 
 
@@ -1248,21 +1385,38 @@ static_var_list:
 
 class_statement_list:
         class_statement_list class_statement
+            { $$ = append($1, $2) }
     |   /* empty */
+            { $$ = []node.Node{} }
 ;
 
 
 class_statement:
-        variable_modifiers {  } class_variable_declaration ';'
+        variable_modifiers class_variable_declaration ';'
+            {
+                $$ = stmt.NewPropertyList($1, $2)
+                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
     |   class_constant_declaration ';'
+            { $$ = $1 }
     |   trait_use_statement
-    |   method_modifiers function is_reference T_STRING {  }
-        '(' parameter_list ')'
-        method_body {  }
+            { $$ = $1 }
+    |   method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body
+            {
+                name := node.NewIdentifier($4.Value)
+                positions.AddPosition(name, positionBuilder.NewTokenPosition($4))
+                comments.AddComments(name, $4.Comments())
+                
+                $$ = stmt.NewClassMethod(name, $1, $3.value, $6, nil, $8.nodes, "")
+                positions.AddPosition($$, positionBuilder.NewOptionalListTokensPosition($1, $2, $8.endToken))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
 ;
 
 trait_use_statement:
         T_USE trait_list trait_adaptations
+            {  }
 ;
 
 trait_list:
