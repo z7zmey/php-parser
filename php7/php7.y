@@ -1092,13 +1092,13 @@ non_empty_argument_list:
 argument:
     expr
         {
-            $$ = node.NewArgument($1, false)
+            $$ = node.NewArgument($1, false, false)
             positions.AddPosition($$, positionBuilder.NewNodePosition($1))
             comments.AddComments($$, comments[$1])
         }
     |   T_ELLIPSIS expr
         {
-            $$ = node.NewArgument($2, true)
+            $$ = node.NewArgument($2, true, false)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }

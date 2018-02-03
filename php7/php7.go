@@ -3660,7 +3660,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:1094
 		{
-			yyVAL.node = node.NewArgument(yyDollar[1].node, false)
+			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodePosition(yyDollar[1].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -3668,7 +3668,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1100
 		{
-			yyVAL.node = node.NewArgument(yyDollar[2].node, true)
+			yyVAL.node = node.NewArgument(yyDollar[2].node, true, false)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}

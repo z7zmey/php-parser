@@ -208,7 +208,7 @@ import (
 %type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement declare_statement
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
-%type <node> trait_use_statement
+%type <node> trait_use_statement function_call_parameter
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -216,7 +216,7 @@ import (
 %type <list> for_expr case_list echo_expr_list unset_variables declare_list catch_statement additional_catches
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
-%type <list> interface_list
+%type <list> interface_list non_empty_function_call_parameter_list
 
 
 %type <simpleIndirectReference> simple_indirect_reference
@@ -1259,21 +1259,51 @@ optional_class_type:
 function_call_parameter_list:
         '(' ')'
             { $$ = &nodesWithEndToken{[]node.Node{}, $2} }
-    |   '(' non_empty_function_call_parameter_list ')'  {  }
-    |   '(' yield_expr ')'  {  }
+    |   '(' non_empty_function_call_parameter_list ')'
+            { $$ = &nodesWithEndToken{$2, $3} }
+    |   '(' yield_expr ')'
+            {
+                arg := node.NewArgument($2, false, false)
+                positions.AddPosition(arg, positionBuilder.NewNodePosition($2))
+                comments.AddComments(arg, comments[$2])
+
+                $$ = &nodesWithEndToken{[]node.Node{arg}, $3}
+            }
 ;
 
 
 non_empty_function_call_parameter_list:
         function_call_parameter
+            { $$ = []node.Node{$1} }
     |   non_empty_function_call_parameter_list ',' function_call_parameter
+            { $$ = append($1, $3) }
 ;
 
 function_call_parameter:
-        expr_without_variable   {  }
-    |   variable                {  }
-    |   '&' w_variable          {  }
-    |   T_ELLIPSIS expr         {  }
+        expr_without_variable
+            {
+                $$ = node.NewArgument($1, false, false)
+                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable
+            {
+                $$ = node.NewArgument($1, false, false)
+                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
+                comments.AddComments($$, comments[$1])
+            }
+    |   '&' w_variable
+            {
+                $$ = node.NewArgument($2, false, true)
+                positions.AddPosition($$, positionBuilder.NewNodePosition($2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ELLIPSIS expr
+            {
+                $$ = node.NewArgument($2, true, false)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 global_var_list:
@@ -1799,14 +1829,66 @@ lexical_var_list:
 ;
 
 function_call:
-        namespace_name function_call_parameter_list {  }
-    |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list {  }
-    |   T_NS_SEPARATOR namespace_name function_call_parameter_list {  }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list {  }
-    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list {  }
-    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list {  }
-    |   variable_without_objects function_call_parameter_list {  }
+        namespace_name function_call_parameter_list
+            {
+                name := name.NewName($1)
+                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments(name, ListGetFirstNodeComments($1))
+
+                $$ = expr.NewFunctionCall(name, $2.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(name, $2.endToken))
+                comments.AddComments($$, comments[name])
+            }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
+            {
+                funcName := name.NewRelative($3)
+                positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments(funcName, $1.Comments())
+
+                $$ = expr.NewFunctionCall(funcName, $4.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $4.endToken))
+                comments.AddComments($$, comments[funcName])
+            }
+    |   T_NS_SEPARATOR namespace_name function_call_parameter_list
+            {
+                funcName := name.NewFullyQualified($2)
+                positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments(funcName, $1.Comments())
+
+                $$ = expr.NewFunctionCall(funcName, $3.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $3.endToken))
+                comments.AddComments($$, comments[funcName])
+            }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                comments.AddComments($$, comments[$1])
+            }
+    |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
+            {
+                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable_without_objects function_call_parameter_list
+            {
+                $$ = expr.NewFunctionCall($1, $2.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2.endToken))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 class_name:
