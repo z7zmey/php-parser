@@ -902,7 +902,7 @@ while_statement:
 if_stmt_without_else:
     T_IF '(' expr ')' statement
         {
-            $$ = stmt.NewIf($3, $5)
+            $$ = stmt.NewIf($3, $5, nil, nil)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
             comments.AddComments($$, $1.Comments())
         }
@@ -935,7 +935,7 @@ alt_if_stmt_without_else:
         { 
             stmts := stmt.NewStmtList($6)
             positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($6))
-            $$ = stmt.NewAltIf($3, stmts)
+            $$ = stmt.NewAltIf($3, stmts, nil, nil)
             positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $6))
 
             comments.AddComments(stmts, $5.Comments())

@@ -205,15 +205,17 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
+%type <node> else_single new_else_single while_statement for_statement unset_variable
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
-%type <list> array_pair_list assignment_list lexical_var_list lexical_vars
+%type <list> array_pair_list assignment_list lexical_var_list lexical_vars elseif_list new_elseif_list non_empty_for_expr
+%type <list> for_expr case_list echo_expr_list unset_variables
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable
 %type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
-%type <nodesWithEndToken> ctor_arguments function_call_parameter_list
+%type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list
 
 %%
 
@@ -558,27 +560,135 @@ statement:
 ;
 
 unticked_statement:
-        '{' inner_statement_list '}' {  }
-    |   T_IF parenthesis_expr {  } statement {  } elseif_list else_single {  }
-    |   T_IF parenthesis_expr ':' {  } inner_statement_list {  } new_elseif_list new_else_single T_ENDIF ';' {  }
-    |   T_WHILE {  } parenthesis_expr {  } while_statement {  }
-    |   T_DO {  } statement T_WHILE {  } parenthesis_expr ';' {  }
-    |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement {  }
-    |   T_SWITCH parenthesis_expr switch_case_list {  }
-    |   T_BREAK ';'             {  }
-    |   T_BREAK expr ';'        {  }
-    |   T_CONTINUE ';'          {  }
-    |   T_CONTINUE expr ';'     {  }
-    |   T_RETURN ';'                        {  }
-    |   T_RETURN expr_without_variable ';'  {  }
-    |   T_RETURN variable ';'               {  }
-    |   yield_expr ';'                      {  }
-    |   T_GLOBAL global_var_list ';'        {  }
-    |   T_STATIC static_var_list ';'        {  }
-    |   T_ECHO echo_expr_list ';'           {  }
-    |   T_INLINE_HTML                       {  }
-    |   expr ';'                            { $$ = $1 }
-    |   T_UNSET '(' unset_variables ')' ';' {  }
+        '{' inner_statement_list '}'
+            {
+                $$ = stmt.NewStmtList($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_IF parenthesis_expr statement elseif_list else_single
+            {
+                $$ = stmt.NewIf($2, $3, $4, $5)
+                
+                if $5 != nil {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
+                } else if len($4) > 0 {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $4))
+                } else {
+                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
+                }
+
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
+            {
+                stmts := stmt.NewStmtList($4)
+                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($4))
+
+                $$ = stmt.NewIf($2, stmts, $5, $6)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_WHILE parenthesis_expr while_statement
+            {
+                $$ = stmt.NewWhile($1, $2, $3)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DO statement T_WHILE parenthesis_expr ';'
+            {
+                $$ = stmt.NewDo($2, $4)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
+            {
+                $$ = stmt.NewFor($3, $5, $7, $9)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_SWITCH parenthesis_expr switch_case_list
+            {
+                $$ = stmt.NewSwitch($1, $2, $3.nodes)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_BREAK ';'
+            {
+                $$ = stmt.NewBreak(nil)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_BREAK expr ';'
+            {
+                $$ = stmt.NewBreak($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CONTINUE ';'
+            {
+                $$ = stmt.NewContinue(nil)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_CONTINUE expr ';'
+            {
+                $$ = stmt.NewContinue($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_RETURN ';'
+            {
+                $$ = stmt.NewReturn(nil)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_RETURN expr_without_variable ';'
+            {
+                $$ = stmt.NewReturn($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_RETURN variable ';'
+            {
+                $$ = stmt.NewReturn($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   yield_expr ';'
+            { $$ = $1 }
+    |   T_GLOBAL global_var_list ';'
+            {
+                $$ = stmt.NewGlobal($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_STATIC static_var_list ';'
+            {
+                $$ = stmt.NewStatic($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ECHO echo_expr_list ';'
+            {
+                $$ = stmt.NewEcho($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_INLINE_HTML
+            {
+                $$ = stmt.NewInlineHtml($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   expr ';'
+            { $$ = $1 }
+    |   T_UNSET '(' unset_variables ')' ';'
+            {
+                $$ = stmt.NewUnset($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
+                comments.AddComments($$, $1.Comments())
+            }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement {  }
     |   T_DECLARE {  } '(' declare_list ')' declare_statement {  }
@@ -617,11 +727,14 @@ additional_catch:
 
 unset_variables:
         unset_variable
+            { $$ = []node.Node{$1} }
     |   unset_variables ',' unset_variable
+            { $$ = append($1, $3) }
 ;
 
 unset_variable:
-        variable    {  }
+        variable
+            { $$ = $1 }
 ;
 
 function_declaration_statement:
@@ -716,7 +829,13 @@ foreach_variable:
 
 for_statement:
         statement
-    |   ':' inner_statement_list T_ENDFOR ';'
+            { $$ = $1; }
+    |    ':' inner_statement_list T_ENDFOR ';'
+            {
+                $$ = stmt.NewStmtList($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
@@ -739,17 +858,34 @@ declare_list:
 
 
 switch_case_list:
-        '{' case_list '}'                   {  }
-    |   '{' ';' case_list '}'               {  }
-    |   ':' case_list T_ENDSWITCH ';'       {  }
-    |   ':' ';' case_list T_ENDSWITCH ';'   {  }
+        '{' case_list '}'
+            { $$ = &nodesWithEndToken{$2, $3} }
+    |   '{' ';' case_list '}'
+            { $$ = &nodesWithEndToken{$3, $4} }
+    |   ':' case_list T_ENDSWITCH ';'
+            { $$ = &nodesWithEndToken{$2, $4} }
+    |   ':' ';' case_list T_ENDSWITCH ';'
+            { $$ = &nodesWithEndToken{$3, $5} }
 ;
 
 
 case_list:
-        /* empty */ {  }
-    |   case_list T_CASE expr case_separator {  } inner_statement_list {  }
-    |   case_list T_DEFAULT case_separator {  } inner_statement_list {  }
+        /* empty */
+            { $$ = []node.Node{} }
+    |   case_list T_CASE expr case_separator inner_statement_list
+            {
+                _case := stmt.NewCase($3, $5)
+                positions.AddPosition(_case, positionBuilder.NewTokenNodeListPosition($2, $5))
+                $$ = append($1, _case)
+                comments.AddComments(_case, $2.Comments())
+            }
+    |   case_list T_DEFAULT case_separator inner_statement_list
+            {
+                _default := stmt.NewDefault($4)
+                positions.AddPosition(_default, positionBuilder.NewTokenNodeListPosition($2, $4))
+                $$ = append($1, _default)
+                comments.AddComments(_default, $2.Comments())
+            }
 ;
 
 
@@ -761,32 +897,71 @@ case_separator:
 
 while_statement:
         statement
+            { $$ = $1 }
     |   ':' inner_statement_list T_ENDWHILE ';'
+            {
+                $$ = stmt.NewStmtList($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+            }
 ;
 
 
 
 elseif_list:
         /* empty */
-    |   elseif_list T_ELSEIF parenthesis_expr {  } statement {  }
+            { $$ = []node.Node{} }
+    |   elseif_list T_ELSEIF parenthesis_expr statement
+            {
+                _elseIf := stmt.NewElseIf($3, $4)
+                positions.AddPosition(_elseIf, positionBuilder.NewTokenNodePosition($2, $4))
+                comments.AddComments(_elseIf, $2.Comments())
+
+                $$ = append($1, _elseIf)
+            }
 ;
 
 
 new_elseif_list:
         /* empty */
-    |   new_elseif_list T_ELSEIF parenthesis_expr ':' {  } inner_statement_list {  }
+            { $$ = []node.Node{} }
+    |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
+            {
+                stmts := stmt.NewStmtList($5)
+                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($5))
+
+                _elseIf := stmt.NewAltElseIf($3, stmts)
+                positions.AddPosition(_elseIf, positionBuilder.NewTokenNodeListPosition($2, $5))
+                comments.AddComments(_elseIf, $2.Comments())
+
+                $$ = append($1, _elseIf)
+            }
 ;
 
 
 else_single:
         /* empty */
+            { $$ = nil }
     |   T_ELSE statement
+            {
+                $$ = stmt.NewElse($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
 new_else_single:
         /* empty */
+            { $$ = nil }
     |   T_ELSE ':' inner_statement_list
+            {
+                stmts := stmt.NewStmtList($3)
+                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($3))
+
+                $$ = stmt.NewAltElse(stmts)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 
@@ -838,8 +1013,10 @@ function_call_parameter:
 ;
 
 global_var_list:
-        global_var_list ',' global_var  { $$ = append($1, $3) }
-    |   global_var                      { $$ = []node.Node{$1} }
+        global_var_list ',' global_var
+            { $$ = append($1, $3) }
+    |   global_var
+            { $$ = []node.Node{$1} }
 ;
 
 
@@ -1056,19 +1233,25 @@ class_constant_declaration:
 ;
 
 echo_expr_list:
-        echo_expr_list ',' expr {  }
-    |   expr                    {  }
+        echo_expr_list ',' expr
+            { $$ = append($1, $3) }
+    |   expr
+            { $$ = []node.Node{$1} }
 ;
 
 
 for_expr:
-        /* empty */         {  }
-    |   non_empty_for_expr  {  }
+        /* empty */
+            { $$ = nil }
+    |   non_empty_for_expr
+            { $$ = $1 }
 ;
 
 non_empty_for_expr:
-        non_empty_for_expr ','  {  } expr {  }
-    |   expr                    {  }
+        non_empty_for_expr ',' expr
+            { $$ = append($1, $3) }
+    |   expr
+            { $$ = []node.Node{$1} }
 ;
 
 chaining_method_or_property:
