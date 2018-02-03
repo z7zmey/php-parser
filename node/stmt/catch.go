@@ -42,6 +42,11 @@ func (n *Catch) Walk(v walker.Visitor) {
 		}
 	}
 
+	if n.Variable != nil {
+		vv := v.GetChildrenVisitor("Variable")
+		n.Variable.Walk(vv)
+	}
+
 	if n.Stmts != nil {
 		vv := v.GetChildrenVisitor("Stmts")
 		for _, nn := range n.Stmts {
