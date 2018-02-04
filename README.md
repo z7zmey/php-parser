@@ -14,7 +14,7 @@
 A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com/nikic/PHP-Parser)
 
 ## Features:
-- Fully support PHP7 syntax (PHP5 in future)
+- Fully support PHP5 and PHP7 syntax
 - Abstract syntax tree representation
 - Traversing AST
 
@@ -50,10 +50,10 @@ func main() {
 - [x] AST dumper
 - [x] node position
 - [x] handling comments
+- [x] PHP 5 syntax analyzer
 - [ ] Tests
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
-- [ ] PHP 5 syntax analyzer
-- [ ] Code flow graph
 - [ ] Pretty printer
+- [ ] Code flow graph
