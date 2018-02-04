@@ -25,18 +25,21 @@ package main
 import (
 	"bytes"
 
-	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions := parser.ParsePhp7(src, "example.php")
+	nodes, comments, positions := php5.Parse(src, "example.php")
 
-	visitor := Dumper{"", comments, positions}
+	visitor := visitor.Dumper{
+		Indent:    "",
+		Comments:  comments,
+		Positions: positions,
+	}
 	nodes.Walk(visitor)
 }
-
 ```
 
 ## Roadmap

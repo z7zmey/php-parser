@@ -9,6 +9,7 @@ import (
 
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/visitor"
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 				src, _ := os.Open(string(path))
 				nodes, comments, positions := php5.Parse(src, path)
 
-				visitor := Dumper{
+				visitor := visitor.Dumper{
 					Indent:    "  | ",
 					Comments:  comments,
 					Positions: positions,
