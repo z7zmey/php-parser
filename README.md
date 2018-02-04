@@ -25,13 +25,13 @@ package main
 import (
 	"bytes"
 
-	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions := php5.Parse(src, "example.php")
+	nodes, comments, positions := php7.Parse(src, "example.php")
 
 	visitor := visitor.Dumper{
 		Indent:    "",
