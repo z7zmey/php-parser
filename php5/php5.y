@@ -3,7 +3,7 @@ package php5
 
 import (
 //    "fmt"
-//    "strings"
+    "strings"
     "strconv"
 
     "github.com/z7zmey/php-parser/token"
@@ -13,8 +13,8 @@ import (
     "github.com/z7zmey/php-parser/node/stmt"
     "github.com/z7zmey/php-parser/node/expr"
     "github.com/z7zmey/php-parser/node/expr/assign_op"
-//    "github.com/z7zmey/php-parser/node/expr/binary_op"
-//    "github.com/z7zmey/php-parser/node/expr/cast"
+    "github.com/z7zmey/php-parser/node/expr/binary_op"
+    "github.com/z7zmey/php-parser/node/expr/cast"
 )
 
 %}
@@ -217,7 +217,7 @@ import (
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> trait_reference_list non_empty_member_modifiers
+%type <list> trait_reference_list non_empty_member_modifiers backticks_expr
 
 %type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
 %type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
@@ -1825,57 +1825,317 @@ expr_without_variable:
                 comments.AddComments(list, $1.Comments())
                 comments.AddComments($$, $1.Comments())
             }
-    |   variable '=' expr       {  }
-    |   variable '=' '&' variable {  }
-    |   variable '=' '&' T_NEW class_name_reference {  } ctor_arguments {  }
-    |   T_CLONE expr {  }
-    |   variable T_PLUS_EQUAL expr  {  }
-    |   variable T_MINUS_EQUAL expr {  }
-    |   variable T_MUL_EQUAL expr       {  }
-    |   variable T_POW_EQUAL expr       {  }
-    |   variable T_DIV_EQUAL expr       {  }
-    |   variable T_CONCAT_EQUAL expr    {  }
-    |   variable T_MOD_EQUAL expr       {  }
-    |   variable T_AND_EQUAL expr       {  }
-    |   variable T_OR_EQUAL expr        {  }
-    |   variable T_XOR_EQUAL expr       {  }
-    |   variable T_SL_EQUAL expr    {  }
-    |   variable T_SR_EQUAL expr    {  }
-    |   rw_variable T_INC {  }
-    |   T_INC rw_variable {  }
-    |   rw_variable T_DEC {  }
-    |   T_DEC rw_variable {  }
-    |   expr T_BOOLEAN_OR {  } expr {  }
-    |   expr T_BOOLEAN_AND {  } expr {  }
-    |   expr T_LOGICAL_OR {  } expr {  }
-    |   expr T_LOGICAL_AND {  } expr {  }
-    |   expr T_LOGICAL_XOR expr {  }
-    |   expr '|' expr   {  }
-    |   expr '&' expr   {  }
-    |   expr '^' expr   {  }
-    |   expr '.' expr   {  }
-    |   expr '+' expr   {  }
-    |   expr '-' expr   {  }
-    |   expr '*' expr   {  }
-    |   expr T_POW expr {  }
-    |   expr '/' expr   {  }
-    |   expr '%' expr   {  }
-    |   expr T_SL expr  {  }
-    |   expr T_SR expr  {  }
-    |   '+' expr %prec T_INC {  }
-    |   '-' expr %prec T_INC {  }
-    |   '!' expr {  }
-    |   '~' expr {  }
-    |   expr T_IS_IDENTICAL expr        {  }
-    |   expr T_IS_NOT_IDENTICAL expr    {  }
-    |   expr T_IS_EQUAL expr            {  }
-    |   expr T_IS_NOT_EQUAL expr        {  }
-    |   expr '<' expr                   {  }
-    |   expr T_IS_SMALLER_OR_EQUAL expr {  }
-    |   expr '>' expr                   {  }
-    |   expr T_IS_GREATER_OR_EQUAL expr {  }
-    |   expr T_INSTANCEOF class_name_reference {  }
-    |   parenthesis_expr    {  }
+    |   variable '=' expr
+            {
+                $$ = assign_op.NewAssign($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable '=' '&' variable
+            {
+                $$ = assign_op.NewAssignRef($1, $4)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable '=' '&' T_NEW class_name_reference ctor_arguments
+            {
+                _new := expr.NewNew($5, nil)
+                positions.AddPosition(_new, positionBuilder.NewTokenNodePosition($4, $5))
+
+                if $6 != nil {
+                    _new := expr.NewNew($5, $6.nodes)
+                    positions.AddPosition(_new, positionBuilder.NewTokensPosition($4, $6.endToken))
+                }
+                comments.AddComments(_new, comments[$1])
+
+                $$ = assign_op.NewAssignRef($1, _new)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, _new))
+                comments.AddComments($$, comments[$1])
+            }
+    |   T_CLONE expr
+            {
+                $$ = expr.NewClone($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   variable T_PLUS_EQUAL expr
+            {
+                $$ = assign_op.NewPlus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_MINUS_EQUAL expr
+            {
+                $$ = assign_op.NewMinus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_MUL_EQUAL expr
+            {
+                $$ = assign_op.NewMul($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_POW_EQUAL expr
+            {
+                $$ = assign_op.NewPow($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_DIV_EQUAL expr
+            {
+                $$ = assign_op.NewDiv($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_CONCAT_EQUAL expr
+            {
+                $$ = assign_op.NewConcat($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_MOD_EQUAL expr
+            {
+                $$ = assign_op.NewMod($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_AND_EQUAL expr
+            {
+                $$ = assign_op.NewBitwiseAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_OR_EQUAL expr
+            {
+                $$ = assign_op.NewBitwiseOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_XOR_EQUAL expr
+            {
+                $$ = assign_op.NewBitwiseXor($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_SL_EQUAL expr
+            {
+                $$ = assign_op.NewShiftLeft($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   variable T_SR_EQUAL expr
+            {
+                $$ = assign_op.NewShiftRight($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   rw_variable T_INC
+            {
+                $$ = expr.NewPostInc($1)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
+                comments.AddComments($$, comments[$1])
+            }
+    |   T_INC rw_variable
+            {
+                $$ = expr.NewPreInc($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   rw_variable T_DEC
+            {
+                $$ = expr.NewPostDec($1)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
+                comments.AddComments($$, comments[$1])
+            }
+    |   T_DEC rw_variable
+            {
+                $$ = expr.NewPreDec($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   expr T_BOOLEAN_OR expr
+            {
+                $$ = binary_op.NewBooleanOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_BOOLEAN_AND expr
+            {
+                $$ = binary_op.NewBooleanAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_LOGICAL_OR expr
+            {
+                $$ = binary_op.NewLogicalOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_LOGICAL_AND expr
+            {
+                $$ = binary_op.NewLogicalAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_LOGICAL_XOR expr
+            {
+                $$ = binary_op.NewLogicalXor($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '|' expr
+            {
+                $$ = binary_op.NewBitwiseOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '&' expr
+            {
+                $$ = binary_op.NewBitwiseAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '^' expr
+            {
+                $$ = binary_op.NewBitwiseXor($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '.' expr
+            {
+                $$ = binary_op.NewConcat($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '+' expr
+            {
+                $$ = binary_op.NewPlus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '-' expr
+            {
+                $$ = binary_op.NewMinus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '*' expr
+            {
+                $$ = binary_op.NewMul($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_POW expr
+            {
+                $$ = binary_op.NewPow($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '/' expr
+            {
+                $$ = binary_op.NewDiv($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '%' expr
+            {
+                $$ = binary_op.NewMod($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_SL expr
+            {
+                $$ = binary_op.NewShiftLeft($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_SR expr
+            {
+                $$ = binary_op.NewShiftRight($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   '+' expr %prec T_INC
+            {
+                $$ = expr.NewUnaryPlus($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '-' expr %prec T_INC
+            {
+                $$ = expr.NewUnaryMinus($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '!' expr
+            {
+                $$ = expr.NewBooleanNot($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '~' expr
+            {
+                $$ = expr.NewBitwiseNot($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   expr T_IS_IDENTICAL expr
+            {
+                $$ = binary_op.NewIdentical($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_IS_NOT_IDENTICAL expr
+            {
+                $$ = binary_op.NewNotIdentical($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_IS_EQUAL expr
+            {
+                $$ = binary_op.NewEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_IS_NOT_EQUAL expr
+            {
+                $$ = binary_op.NewNotEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '<' expr
+            {
+                $$ = binary_op.NewSmaller($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_IS_SMALLER_OR_EQUAL expr
+            {
+                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '>' expr
+            {
+                $$ = binary_op.NewGreater($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_IS_GREATER_OR_EQUAL expr
+            {
+                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr T_INSTANCEOF class_name_reference
+            {
+                $$ = expr.NewInstanceOf($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   parenthesis_expr
+            { $$ = $1 }
     |   new_expr
             { $$ = $1 }
     |   '(' new_expr ')' instance_call
@@ -1904,40 +2164,139 @@ expr_without_variable:
                     }
                 }
             }
-    |   expr '?' {  }
-        expr ':' {  }
-        expr     {  }
-    |   expr '?' ':' {  }
-        expr     {  }
-    |   internal_functions_in_yacc {  }
-    |   T_INT_CAST expr     {  }
-    |   T_DOUBLE_CAST expr  {  }
-    |   T_STRING_CAST expr  {  }
-    |   T_ARRAY_CAST expr   {  }
-    |   T_OBJECT_CAST expr  {  }
-    |   T_BOOL_CAST expr    {  }
-    |   T_UNSET_CAST expr   {  }
-    |   T_EXIT exit_expr    {  }
-    |   '@' {  } expr {  }
-    |   scalar              { $$ = $1 }
-    |   combined_scalar_offset {  }
-    |   combined_scalar {  }
-    |   '`' backticks_expr '`' {  }
-    |   T_PRINT expr  {  }
-    |   T_YIELD {  }
-    |   function is_reference {  }
-        '(' parameter_list ')' lexical_vars
-        '{' inner_statement_list '}' {  }
-    |   T_STATIC function is_reference {  }
-        '(' parameter_list ')' lexical_vars
-        '{' inner_statement_list '}' {  }
+    |   expr '?' expr ':' expr
+            {
+                $$ = expr.NewTernary($1, $3, $5)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
+                comments.AddComments($$, comments[$1])
+            }
+    |   expr '?' ':' expr
+            {
+                $$ = expr.NewTernary($1, nil, $4)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   internal_functions_in_yacc
+            { $$ = $1 }
+    |   T_INT_CAST expr
+            {
+                $$ = cast.NewCastInt($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_DOUBLE_CAST expr
+            {
+                $$ = cast.NewCastDouble($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_STRING_CAST expr
+            {
+                $$ = cast.NewCastString($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ARRAY_CAST expr
+            {
+                $$ = cast.NewCastArray($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_OBJECT_CAST expr
+            {
+                $$ = cast.NewCastObject($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_BOOL_CAST expr
+            {
+                $$ = cast.NewCastBool($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_UNSET_CAST expr
+            {
+                $$ = cast.NewCastUnset($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_EXIT exit_expr
+            {
+                $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die"))
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '@' expr
+            {
+                $$ = expr.NewErrorSuppress($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   scalar
+            { $$ = $1 }
+    |   combined_scalar_offset
+            { $$ = $1 }
+    |   combined_scalar
+            { $$ = $1 }
+    |   '`' backticks_expr '`'
+            {
+                $$ = expr.NewShellExec($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_PRINT expr
+            {
+                $$ = expr.NewPrint($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_YIELD
+            {
+                $$ = expr.NewYield(nil, nil)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
+            {
+                $$ = expr.NewClosure($4, $6, nil, $8, false, $2.value, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
+                
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
+            {
+                $$ = expr.NewClosure($5, $7, nil, $9, true, $3.value, "")
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $10))
+                
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 yield_expr:
-        T_YIELD expr_without_variable {  }
-    |   T_YIELD variable {  }
-    |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable {  }
-    |   T_YIELD expr T_DOUBLE_ARROW variable {  }
+        T_YIELD expr_without_variable
+            {
+                $$ = expr.NewYield(nil, $2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_YIELD variable
+            {
+                $$ = expr.NewYield(nil, $2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
+            {
+                $$ = expr.NewYield($2, $4)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_YIELD expr T_DOUBLE_ARROW variable
+            {
+                $$ = expr.NewYield($2, $4)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
 ;
 
 combined_scalar_offset:
@@ -2260,9 +2619,12 @@ exit_expr:
 ;
 
 backticks_expr:
-        /* empty */ {  }
-    |   T_ENCAPSED_AND_WHITESPACE   {  }
-    |   encaps_list {  }
+        /* empty */
+            { $$ = []node.Node{} }
+    |   T_ENCAPSED_AND_WHITESPACE
+            { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value)} }
+    |   encaps_list
+            { $$ = $1; }
 ;
 
 ctor_arguments:
