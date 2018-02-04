@@ -27,7 +27,6 @@ import (
     foreachVariable foreachVariable
     nodesWithEndToken *nodesWithEndToken
     simpleIndirectReference simpleIndirectReference
-    objectPropertyList []objectProperty
 //    str string
 }
 
@@ -209,7 +208,7 @@ import (
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
-%type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier
+%type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -220,10 +219,12 @@ import (
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
 %type <list> trait_reference_list non_empty_member_modifiers
 
+%type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
+%type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
+%type <list> dynamic_class_name_variable_properties variable_properties
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
-%type <objectPropertyList> object_property object_dim_list dynamic_class_name_variable_properties dynamic_class_name_variable_property
 %type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body trait_adaptations
 %type <boolWithToken> is_reference is_variadic
 
@@ -1759,25 +1760,43 @@ non_empty_for_expr:
 ;
 
 chaining_method_or_property:
-        chaining_method_or_property variable_property   {  }
-    |   variable_property                               {  }
+        chaining_method_or_property variable_property
+            { $$ = append($1, $2...) }
+    |   variable_property
+            { $$ = $1 }
 ;
 
 chaining_dereference:
-        chaining_dereference '[' dim_offset ']' {  }
-    |   '[' dim_offset ']'      {  }
+        chaining_dereference '[' dim_offset ']'
+            {
+                fetch := expr.NewArrayDimFetch(nil, $3)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+
+                $$ = append($1, fetch)
+            }
+    |   '[' dim_offset ']'
+            {
+                fetch := expr.NewArrayDimFetch(nil, $2)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($2))
+                
+                $$ = []node.Node{fetch}
+            }
 ;
 
 chaining_instance_call:
-        chaining_dereference        {  } chaining_method_or_property {  }
-    |   chaining_dereference        {  }
-    |   chaining_method_or_property {  }
+        chaining_dereference chaining_method_or_property
+            { $$ = append($1, $2...) }
+    |   chaining_dereference
+            { $$ = $1 }
+    |   chaining_method_or_property
+            { $$ = $1 }
 ;
 
 instance_call:
-        /* empty */         {  }
-    |   {  }
-        chaining_instance_call  {  }
+        /* empty */
+            { $$ = nil }
+    |   chaining_instance_call
+            { $$ = $1 }
 ;
 
 new_expr:
@@ -1859,7 +1878,32 @@ expr_without_variable:
     |   parenthesis_expr    {  }
     |   new_expr
             { $$ = $1 }
-    |   '(' new_expr ')' {  } instance_call {  }
+    |   '(' new_expr ')' instance_call
+            {
+                $$ = $2
+
+                for _, n := range($4) {
+                    switch nn := n.(type) {
+                        case *expr.ArrayDimFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, $1.Comments())
+                            $$ = nn
+                        
+                        case *expr.PropertyFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, $1.Comments())
+                            $$ = nn
+                        
+                        case *expr.MethodCall:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, $1.Comments())
+                            $$ = nn
+                    }
+                }
+            }
     |   expr '?' {  }
         expr ':' {  }
         expr     {  }
@@ -2144,29 +2188,47 @@ dynamic_class_name_reference:
             {
                 $$ = $1
 
-                for _, f := range($3) {
-                    switch (f.fetchType) {
-                        case arrayFetchType:
-                            $$ = expr.NewArrayDimFetch($$, f.node)
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
-                            comments.AddComments($$, comments[$1])
-                        case propertyFetchType:
-                            $$ = expr.NewPropertyFetch($$, f.node)
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
-                            comments.AddComments($$, comments[$1])
+                for _, n := range($3) {
+                    switch nn := n.(type) {
+                        case *expr.ArrayDimFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.PropertyFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.MethodCall:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
                     }
                 }
 
-                for _, f := range($4) {
-                    switch (f.fetchType) {
-                        case arrayFetchType:
-                            $$ = expr.NewArrayDimFetch($$, f.node)
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
-                            comments.AddComments($$, comments[$1])
-                        case propertyFetchType:
-                            $$ = expr.NewPropertyFetch($$, f.node)
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($1, f.node))
-                            comments.AddComments($$, comments[$1])
+                for _, n := range($4) {
+                    switch nn := n.(type) {
+                        case *expr.ArrayDimFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.PropertyFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.MethodCall:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
                     }
                 }
             }
@@ -2179,7 +2241,7 @@ dynamic_class_name_variable_properties:
         dynamic_class_name_variable_properties dynamic_class_name_variable_property
             { $$ = append($1, $2...) }
     |   /* empty */
-            { $$ = []objectProperty{} }
+            { $$ = []node.Node{} }
 ;
 
 
@@ -2467,35 +2529,114 @@ rw_variable:
 
 variable:
         base_variable_with_function_calls T_OBJECT_OPERATOR object_property method_or_not variable_properties
-            {  }
+            {
+                $$ = $1
+
+                if $4 != nil {
+                    $4[0].(*expr.MethodCall).Method = $3[len($3)-1].(*expr.PropertyFetch).Property
+                    $3 = append($3[:len($3)-1], $4...)
+                }
+
+                for _, n := range($3) {
+                    switch nn := n.(type) {
+                        case *expr.ArrayDimFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.PropertyFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.MethodCall:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                    }
+                }
+
+                for _, n := range($5) {
+                    switch nn := n.(type) {
+                        case *expr.ArrayDimFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.PropertyFetch:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                        
+                        case *expr.MethodCall:
+                            nn.Variable = $$
+                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
+                            comments.AddComments(nn, comments[$1])
+                            $$ = nn
+                    }
+                }
+            }
     |   base_variable_with_function_calls
             { $$ = $1 }
 ;
 
 variable_properties:
-        variable_properties variable_property {  }
-    |   /* empty */ {  }
+        variable_properties variable_property
+            { $$ = append($1, $2...) }
+    |   /* empty */
+            { $$ = []node.Node{} }
 ;
 
 
 variable_property:
-        T_OBJECT_OPERATOR object_property {  } method_or_not {  }
+        T_OBJECT_OPERATOR object_property method_or_not
+            {
+                if $3 != nil {
+                    $3[0].(*expr.MethodCall).Method = $2[len($2)-1].(*expr.PropertyFetch).Property
+                    $2 = append($2[:len($2)-1], $3...)
+                }
+
+                $$ = $2
+            }
 ;
 
 array_method_dereference:
-        array_method_dereference '[' dim_offset ']' {  }
-    |   method '[' dim_offset ']' {  }
+        array_method_dereference '[' dim_offset ']'
+            {
+                fetch := expr.NewArrayDimFetch(nil, $3)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+
+                $$ = append($1, fetch)
+            }
+    |   method '[' dim_offset ']'
+            {
+                fetch := expr.NewArrayDimFetch(nil, $3)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+
+                $$ = []node.Node{$1, fetch}
+            }
 ;
 
 method:
-        {  }
-        function_call_parameter_list {  }
+        function_call_parameter_list
+            {
+                $$ = expr.NewMethodCall(nil, nil, $1.nodes)
+                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1.nodes, $1.endToken))
+            }
 ;
 
 method_or_not:
-        method                      {  }
-    |   array_method_dereference    {  }
-    |   /* empty */ {  }
+        method
+            { $$ = []node.Node{$1} }
+    |   array_method_dereference
+            { $$ = $1 }
+    |   /* empty */
+            { $$ = nil }
 ;
 
 variable_without_objects:
@@ -2613,26 +2754,34 @@ object_property:
             { $$ = $1 }
     |   variable_without_objects
             {
-                op := objectProperty{$1, propertyFetchType}
-                $$ = []objectProperty{op}
+                fetch := expr.NewPropertyFetch(nil, $1)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
+
+                $$ = []node.Node{fetch}
             }
 ;
 
 object_dim_list:
         object_dim_list '[' dim_offset ']'
             {
-                op := objectProperty{$3, arrayFetchType}
-                $$ = append($1, op)
+                fetch := expr.NewArrayDimFetch(nil, $3)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+
+                $$ = append($1, fetch)
             }
     |   object_dim_list '{' expr '}'
             {
-                op := objectProperty{$3, arrayFetchType}
-                $$ = append($1, op)
+                fetch := expr.NewArrayDimFetch(nil, $3)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+
+                $$ = append($1, fetch)
             }
     |   variable_name
             {
-                op := objectProperty{$1, propertyFetchType}
-                $$ = []objectProperty{op}
+                fetch := expr.NewPropertyFetch(nil, $1)
+                positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
+
+                $$ = []node.Node{fetch}
             }
 ;
 
