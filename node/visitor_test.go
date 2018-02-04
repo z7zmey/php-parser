@@ -31,7 +31,7 @@ var nodesToTest = []struct {
 	{
 		&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
 		[]string{"Expr"},
-		map[string]interface{}{"Variadic": true},
+		map[string]interface{}{"IsReference": false, "Variadic": true},
 	},
 	{
 		&node.Parameter{

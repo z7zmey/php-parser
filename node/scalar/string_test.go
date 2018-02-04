@@ -8,7 +8,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/php7"
 )
 
 func TestDoubleQuotedScalarString(t *testing.T) {
@@ -22,7 +22,7 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -39,7 +39,7 @@ func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -59,7 +59,7 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -77,7 +77,7 @@ func TestSingleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -97,7 +97,7 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -118,7 +118,7 @@ CAD;
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -139,7 +139,7 @@ CAD;
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -160,7 +160,7 @@ CAD;
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
