@@ -209,6 +209,7 @@ import (
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
+%type <node> static_scalar_value static_operation
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -217,7 +218,7 @@ import (
 %type <list> non_empty_additional_catches parameter_list non_empty_parameter_list class_statement_list implements_list
 %type <list> class_statement_list variable_modifiers method_modifiers class_variable_declaration interface_extends_list
 %type <list> interface_list non_empty_function_call_parameter_list trait_list trait_adaptation_list non_empty_trait_adaptation_list
-%type <list> trait_reference_list non_empty_member_modifiers backticks_expr
+%type <list> trait_reference_list non_empty_member_modifiers backticks_expr static_array_pair_list non_empty_static_array_pair_list
 
 %type <list> chaining_dereference chaining_instance_call chaining_method_or_property instance_call variable_property
 %type <list> method_or_not array_method_dereference object_property object_dim_list dynamic_class_name_variable_property
@@ -2722,57 +2723,253 @@ static_class_constant:
             }
 ;
 
-static_scalar: /* compile-time evaluated scalars */
-    static_scalar_value {  }
+static_scalar:
+        static_scalar_value
+            { $$ = $1 }
 ;
 
 static_scalar_value:
-        common_scalar   {  }
-    |   static_class_name_scalar    {  }
-    |   namespace_name      {  }
-    |   T_NAMESPACE T_NS_SEPARATOR namespace_name {  }
-    |   T_NS_SEPARATOR namespace_name {  }
-    |   T_ARRAY '(' static_array_pair_list ')' {  }
-    |   '[' static_array_pair_list ']' {  }
-    |   static_class_constant {  }
-    |   T_CLASS_C           {  }
-    |   static_operation {  }
+        common_scalar
+            { $$ = $1 }
+    |   static_class_name_scalar
+            { $$ = $1 }
+    |   namespace_name
+            {
+                $$ = name.NewName($1)
+                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments($$, ListGetFirstNodeComments($1))
+            }
+    |   T_NAMESPACE T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewRelative($3)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_NS_SEPARATOR namespace_name
+            {
+                $$ = name.NewFullyQualified($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   T_ARRAY '(' static_array_pair_list ')'
+            {
+                $$ = expr.NewArray($3)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '[' static_array_pair_list ']'
+            {
+                $$ = expr.NewShortArray($2)
+                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   static_class_constant
+            { $$ = $1 }
+    |   T_CLASS_C
+            {
+                $$ = scalar.NewMagicConstant($1.Value)
+                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   static_operation
+            { $$ = $1 }
 ;
 
 static_operation:
-        static_scalar_value '[' static_scalar_value ']' {  }
-    |   static_scalar_value '+' static_scalar_value {  }
-    |   static_scalar_value '-' static_scalar_value {  }
-    |   static_scalar_value '*' static_scalar_value {  }
-    |   static_scalar_value T_POW static_scalar_value {  }
-    |   static_scalar_value '/' static_scalar_value {  }
-    |   static_scalar_value '%' static_scalar_value {  }
-    |   '!' static_scalar_value {  }
-    |   '~' static_scalar_value {  }
-    |   static_scalar_value '|' static_scalar_value {  }
-    |   static_scalar_value '&' static_scalar_value {  }
-    |   static_scalar_value '^' static_scalar_value {  }
-    |   static_scalar_value T_SL static_scalar_value {  }
-    |   static_scalar_value T_SR static_scalar_value {  }
-    |   static_scalar_value '.' static_scalar_value {  }
-    |   static_scalar_value T_LOGICAL_XOR static_scalar_value {  }
-    |   static_scalar_value T_LOGICAL_AND static_scalar_value {  }
-    |   static_scalar_value T_LOGICAL_OR static_scalar_value {  }
-    |   static_scalar_value T_BOOLEAN_AND static_scalar_value {  }
-    |   static_scalar_value T_BOOLEAN_OR static_scalar_value {  }
-    |   static_scalar_value T_IS_IDENTICAL static_scalar_value {  }
-    |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value {  }
-    |   static_scalar_value T_IS_EQUAL static_scalar_value {  }
-    |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value {  }
-    |   static_scalar_value '<' static_scalar_value {  }
-    |   static_scalar_value '>' static_scalar_value {  }
-    |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value {  }
-    |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value {  }
-    |   static_scalar_value '?' ':' static_scalar_value {  }
-    |   static_scalar_value '?' static_scalar_value ':' static_scalar_value {  }
-    |   '+' static_scalar_value {  }
-    |   '-' static_scalar_value {  }
-    |   '(' static_scalar_value ')' {  }
+        static_scalar_value '[' static_scalar_value ']'
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '+' static_scalar_value
+            {
+                $$ = binary_op.NewPlus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '-' static_scalar_value
+            {
+                $$ = binary_op.NewMinus($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '*' static_scalar_value
+            {
+                $$ = binary_op.NewMul($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_POW static_scalar_value
+            {
+                $$ = binary_op.NewPow($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '/' static_scalar_value
+            {
+                $$ = binary_op.NewDiv($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '%' static_scalar_value
+            {
+                $$ = binary_op.NewMod($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   '!' static_scalar_value
+            {
+                $$ = expr.NewBooleanNot($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '~' static_scalar_value
+            {
+                $$ = expr.NewBitwiseNot($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   static_scalar_value '|' static_scalar_value
+            {
+                $$ = binary_op.NewBitwiseOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '&' static_scalar_value
+            {
+                $$ = binary_op.NewBitwiseAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '^' static_scalar_value
+            {
+                $$ = binary_op.NewBitwiseXor($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_SL static_scalar_value
+            {
+                $$ = binary_op.NewShiftLeft($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_SR static_scalar_value
+            {
+                $$ = binary_op.NewShiftRight($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '.' static_scalar_value
+            {
+                $$ = binary_op.NewConcat($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_LOGICAL_XOR static_scalar_value
+            {
+                $$ = binary_op.NewLogicalXor($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_LOGICAL_AND static_scalar_value
+            {
+                $$ = binary_op.NewLogicalAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_LOGICAL_OR static_scalar_value
+            {
+                $$ = binary_op.NewLogicalOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_BOOLEAN_AND static_scalar_value
+            {
+                $$ = binary_op.NewBooleanAnd($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_BOOLEAN_OR static_scalar_value
+            {
+                $$ = binary_op.NewBooleanOr($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_IDENTICAL static_scalar_value
+            {
+                $$ = binary_op.NewIdentical($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
+            {
+                $$ = binary_op.NewNotIdentical($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_EQUAL static_scalar_value
+            {
+                $$ = binary_op.NewEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
+            {
+                $$ = binary_op.NewNotEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '<' static_scalar_value
+            {
+                $$ = binary_op.NewSmaller($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '>' static_scalar_value
+            {
+                $$ = binary_op.NewGreater($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
+            {
+                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
+            {
+                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '?' ':' static_scalar_value
+            {
+                $$ = expr.NewTernary($1, nil, $4)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
+    |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
+            {
+                $$ = expr.NewTernary($1, $3, $5)
+                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
+                comments.AddComments($$, comments[$1])
+            }
+    |   '+' static_scalar_value
+            {
+                $$ = expr.NewUnaryPlus($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '-' static_scalar_value
+            {
+                $$ = expr.NewUnaryMinus($2)
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments($$, $1.Comments())
+            }
+    |   '(' static_scalar_value ')'
+            { $$ = $2 }
 ;
 
 general_constant:
@@ -2836,8 +3033,10 @@ scalar:
 ;
 
 static_array_pair_list:
-        /* empty */ {  }
-    |   non_empty_static_array_pair_list possible_comma {  }
+        /* empty */
+            { $$ = nil }
+    |   non_empty_static_array_pair_list possible_comma
+            { $$ = $1 }
 ;
 
 possible_comma:
@@ -2846,10 +3045,38 @@ possible_comma:
 ;
 
 non_empty_static_array_pair_list:
-        non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value {  }
-    |   non_empty_static_array_pair_list ',' static_scalar_value {  }
-    |   static_scalar_value T_DOUBLE_ARROW static_scalar_value {  }
-    |   static_scalar_value {  }
+        non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
+            {
+                arrayItem := expr.NewArrayItem($3, $5, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
+                comments.AddComments(arrayItem, comments[$3])
+
+                $$ = append($1, arrayItem)
+            }
+    |   non_empty_static_array_pair_list ',' static_scalar_value
+            {
+                arrayItem := expr.NewArrayItem(nil, $3, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
+                comments.AddComments(arrayItem, comments[$3])
+
+                $$ = append($1, arrayItem)
+            }
+    |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
+            {
+                arrayItem := expr.NewArrayItem($1, $3, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
+                comments.AddComments(arrayItem, comments[$1])
+
+                $$ = []node.Node{arrayItem}
+            }
+    |   static_scalar_value
+            {
+                arrayItem := expr.NewArrayItem(nil, $1, false)
+                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
+                comments.AddComments(arrayItem, comments[$1])
+
+                $$ = []node.Node{arrayItem}
+            }
 ;
 
 expr:
@@ -2869,24 +3096,18 @@ parenthesis_expr:
 
 r_variable:
         variable
-            {
-                $$ = $1
-            }
+            { $$ = $1 }
 ;
 
 
 w_variable:
         variable
-            {
-                $$ = $1
-            }
+            { $$ = $1 }
 ;
 
 rw_variable:
         variable
-            {
-                $$ = $1
-            }
+            { $$ = $1 }
 ;
 
 variable:
@@ -3039,9 +3260,17 @@ variable_class_name:
 
 array_function_dereference:
         array_function_dereference '[' dim_offset ']'
-            {  }
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
     |   function_call '[' dim_offset ']'
-            {  }
+            {
+                $$ = expr.NewArrayDimFetch($1, $3)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                comments.AddComments($$, comments[$1])
+            }
 ;
 
 base_variable_with_function_calls:
@@ -3106,8 +3335,10 @@ compound_variable:
 ;
 
 dim_offset:
-        /* empty */     { $$ = nil }
-    |   expr            { $$ = $1 }
+        /* empty */
+            { $$ = nil }
+    |   expr
+            { $$ = $1 }
 ;
 
 
@@ -3452,8 +3683,10 @@ isset_variables:
 ;
 
 isset_variable:
-        variable                { $$ = $1 }
-    |   expr_without_variable   { $$ = $1 }
+        variable
+            { $$ = $1 }
+    |   expr_without_variable
+            { $$ = $1 }
 ;
 
 class_constant:
