@@ -10,16 +10,16 @@ type If struct {
 	Cond   node.Node
 	Stmt   node.Node
 	ElseIf []node.Node
-	_else  node.Node
+	Else   node.Node
 }
 
 // NewIf node constuctor
-func NewIf(Cond node.Node, Stmt node.Node) *If {
+func NewIf(Cond node.Node, Stmt node.Node, ElseIf []node.Node, Else node.Node) *If {
 	return &If{
 		Cond,
 		Stmt,
-		nil,
-		nil,
+		ElseIf,
+		Else,
 	}
 }
 
@@ -38,8 +38,8 @@ func (n *If) AddElseIf(ElseIf node.Node) node.Node {
 	return n
 }
 
-func (n *If) SetElse(_else node.Node) node.Node {
-	n._else = _else
+func (n *If) SetElse(Else node.Node) node.Node {
+	n.Else = Else
 
 	return n
 }
@@ -70,9 +70,9 @@ func (n *If) Walk(v walker.Visitor) {
 		}
 	}
 
-	if n._else != nil {
+	if n.Else != nil {
 		vv := v.GetChildrenVisitor("else")
-		n._else.Walk(vv)
+		n.Else.Walk(vv)
 	}
 
 	v.LeaveNode(n)

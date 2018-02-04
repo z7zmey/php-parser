@@ -12,7 +12,7 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/php7"
 )
 
 func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
@@ -41,7 +41,7 @@ func TestIdentifier(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -132,7 +132,7 @@ func TestArgumentNode(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }
@@ -198,7 +198,7 @@ func TestParameterNode(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	assertEqual(t, expected, actual)
 }

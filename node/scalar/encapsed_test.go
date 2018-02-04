@@ -10,7 +10,7 @@ import (
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/php7"
 )
 
 func TestSimpleVar(t *testing.T) {
@@ -29,7 +29,7 @@ func TestSimpleVar(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -56,7 +56,7 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -79,7 +79,7 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -105,7 +105,7 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)
@@ -131,7 +131,7 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := parser.ParsePhp7(bytes.NewBufferString(src), "test.php")
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	if diff := pretty.Compare(expected, actual); diff != "" {
 		t.Errorf("diff: (-expected +actual)\n%s", diff)

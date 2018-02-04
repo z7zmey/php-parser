@@ -14,12 +14,12 @@ type AltIf struct {
 }
 
 // NewAltIf node constuctor
-func NewAltIf(Cond node.Node, Stmt node.Node) *AltIf {
+func NewAltIf(Cond node.Node, Stmt node.Node, ElseIf []node.Node, Else node.Node) *AltIf {
 	return &AltIf{
 		Cond,
 		Stmt,
-		nil,
-		nil,
+		ElseIf,
+		Else,
 	}
 }
 

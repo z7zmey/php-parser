@@ -14,7 +14,7 @@
 A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com/nikic/PHP-Parser)
 
 ## Features:
-- Fully support PHP7 syntax (PHP5 in progress)
+- Fully support PHP5 and PHP7 syntax
 - Abstract syntax tree representation
 - Traversing AST
 
@@ -25,18 +25,21 @@ package main
 import (
 	"bytes"
 
-	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions := parser.ParsePhp7(src, "example.php")
+	nodes, comments, positions := php5.Parse(src, "example.php")
 
-	visitor := Dumper{"", comments, positions}
+	visitor := visitor.Dumper{
+		Indent:    "",
+		Comments:  comments,
+		Positions: positions,
+	}
 	nodes.Walk(visitor)
 }
-
 ```
 
 ## Roadmap
@@ -47,10 +50,10 @@ func main() {
 - [x] AST dumper
 - [x] node position
 - [x] handling comments
+- [x] PHP 5 syntax analyzer
 - [ ] Tests
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
-- [ ] PHP 5 syntax analyzer
-- [ ] Code flow graph
 - [ ] Pretty printer
+- [ ] Code flow graph

@@ -1,10 +1,10 @@
 %{
-package parser
+package php7
 
 import (
-    "io"
     "strings"
     "strconv"
+
     "github.com/z7zmey/php-parser/token"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
@@ -14,50 +14,7 @@ import (
     "github.com/z7zmey/php-parser/node/expr/assign_op"
     "github.com/z7zmey/php-parser/node/expr/binary_op"
     "github.com/z7zmey/php-parser/node/expr/cast"
-    "github.com/z7zmey/php-parser/comment"
-    "github.com/z7zmey/php-parser/position"
 )
-
-var rootnode node.Node
-var comments comment.Comments
-var positions position.Positions
-var positionBuilder position.Builder
-
-func ParsePhp7(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
-    yyDebug        = 0
-    yyErrorVerbose = true
-    rootnode = stmt.NewStmtList([]node.Node{}) //reset
-    comments = comment.Comments{}
-    positions = position.Positions{}
-    positionBuilder = position.Builder{&positions}
-    yyParse(newLexer(src, fName))
-    return rootnode, comments, positions
-}
-
-func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
-	if len(list) == 0 {
-		return nil
-	}
-
-	node := list[0]
-
-	return comments[node]
-}
-
-type foreachVariable struct {
-    node  node.Node
-    byRef bool
-}
-
-type nodesWithEndToken struct {
-    nodes []node.Node
-    endToken token.Token
-}
-
-type boolWithToken struct {
-    value bool
-    token *token.Token
-}
 
 %}
 
@@ -70,40 +27,6 @@ type boolWithToken struct {
     nodesWithEndToken *nodesWithEndToken
     str string
 }
-
-%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
-%left ','
-%left T_LOGICAL_OR
-%left T_LOGICAL_XOR
-%left T_LOGICAL_AND
-%right T_PRINT
-%right T_YIELD
-%right T_DOUBLE_ARROW
-%right T_YIELD_FROM
-%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL
-%left '?' ':'
-%right T_COALESCE
-%left T_BOOLEAN_OR
-%left T_BOOLEAN_AND
-%left '|'
-%left '^'
-%left '&'
-%nonassoc T_IS_EQUAL T_IS_NOT_EQUAL T_IS_IDENTICAL T_IS_NOT_IDENTICAL T_SPACESHIP
-%nonassoc '<' T_IS_SMALLER_OR_EQUAL '>' T_IS_GREATER_OR_EQUAL
-%left T_SL T_SR
-%left '+' '-' '.'
-%left '*' '/' '%'
-%right '!'
-%nonassoc T_INSTANCEOF
-%right '~' T_INC T_DEC T_INT_CAST T_DOUBLE_CAST T_STRING_CAST T_ARRAY_CAST T_OBJECT_CAST T_BOOL_CAST T_UNSET_CAST '@'
-%right T_POW
-%right '['
-%nonassoc T_NEW T_CLONE
-%left T_NOELSE
-%left T_ELSEIF
-%left T_ELSE
-%left T_ENDIF
-%right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
 %type <token> $unk
 %token <token> T_INCLUDE
@@ -216,6 +139,9 @@ type boolWithToken struct {
 %token <token> T_OBJECT_CAST
 %token <token> T_BOOL_CAST
 %token <token> T_UNSET_CAST
+%token <token> T_COALESCE
+%token <token> T_SPACESHIP
+%token <token> T_NOELSE
 %token <token> '"'
 %token <token> '`'
 %token <token> '{'
@@ -234,6 +160,40 @@ type boolWithToken struct {
 %token <token> '~'
 %token <token> '@'
 %token <token> '$'
+
+%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
+%left ','
+%left T_LOGICAL_OR
+%left T_LOGICAL_XOR
+%left T_LOGICAL_AND
+%right T_PRINT
+%right T_YIELD
+%right T_DOUBLE_ARROW
+%right T_YIELD_FROM
+%left '=' T_PLUS_EQUAL T_MINUS_EQUAL T_MUL_EQUAL T_DIV_EQUAL T_CONCAT_EQUAL T_MOD_EQUAL T_AND_EQUAL T_OR_EQUAL T_XOR_EQUAL T_SL_EQUAL T_SR_EQUAL T_POW_EQUAL
+%left '?' ':'
+%right T_COALESCE
+%left T_BOOLEAN_OR
+%left T_BOOLEAN_AND
+%left '|'
+%left '^'
+%left '&'
+%nonassoc T_IS_EQUAL T_IS_NOT_EQUAL T_IS_IDENTICAL T_IS_NOT_IDENTICAL T_SPACESHIP
+%nonassoc '<' T_IS_SMALLER_OR_EQUAL '>' T_IS_GREATER_OR_EQUAL
+%left T_SL T_SR
+%left '+' '-' '.'
+%left '*' '/' '%'
+%right '!'
+%nonassoc T_INSTANCEOF
+%right '~' T_INC T_DEC T_INT_CAST T_DOUBLE_CAST T_STRING_CAST T_ARRAY_CAST T_OBJECT_CAST T_BOOL_CAST T_UNSET_CAST '@'
+%right T_POW
+%right '['
+%nonassoc T_NEW T_CLONE
+%left T_NOELSE
+%left T_ELSEIF
+%left T_ELSE
+%left T_ENDIF
+%right T_STATIC T_ABSTRACT T_FINAL T_PRIVATE T_PROTECTED T_PUBLIC
 
 %type <boolWithToken> is_reference is_variadic returns_ref
 
@@ -942,7 +902,7 @@ while_statement:
 if_stmt_without_else:
     T_IF '(' expr ')' statement
         {
-            $$ = stmt.NewIf($3, $5)
+            $$ = stmt.NewIf($3, $5, nil, nil)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
             comments.AddComments($$, $1.Comments())
         }
@@ -975,7 +935,7 @@ alt_if_stmt_without_else:
         { 
             stmts := stmt.NewStmtList($6)
             positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($6))
-            $$ = stmt.NewAltIf($3, stmts)
+            $$ = stmt.NewAltIf($3, stmts, nil, nil)
             positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $6))
 
             comments.AddComments(stmts, $5.Comments())
@@ -1132,13 +1092,13 @@ non_empty_argument_list:
 argument:
     expr
         {
-            $$ = node.NewArgument($1, false)
+            $$ = node.NewArgument($1, false, false)
             positions.AddPosition($$, positionBuilder.NewNodePosition($1))
             comments.AddComments($$, comments[$1])
         }
     |   T_ELLIPSIS expr
         {
-            $$ = node.NewArgument($2, true)
+            $$ = node.NewArgument($2, true, false)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
@@ -1952,7 +1912,7 @@ expr_without_variable:
 ;
 
 backup_doc_comment:
-	/* empty */ { $$ = yylex.(*lexer).phpDocComment; yylex.(*lexer).phpDocComment = "" }
+	/* empty */ { $$ = yylex.(*lexer).PhpDocComment; yylex.(*lexer).PhpDocComment = "" }
 ;
 
 returns_ref:
