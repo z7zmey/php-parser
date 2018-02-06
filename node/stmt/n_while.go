@@ -2,21 +2,18 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // While node
 type While struct {
-	Token token.Token
 	Cond  node.Node
 	Stmt  node.Node
 }
 
 // NewWhile node constuctor
-func NewWhile(Token token.Token, Cond node.Node, Stmt node.Node) *While {
+func NewWhile(Cond node.Node, Stmt node.Node) *While {
 	return &While{
-		Token,
 		Cond,
 		Stmt,
 	}

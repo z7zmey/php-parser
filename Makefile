@@ -2,14 +2,14 @@ PHPFILE=example.php
 
 all: compile run
 
-build: 
+build:
 	gofmt -l -s -w **/*.go
 	go build
 
 run: build
 	./php-parser $(PHPFILE)
 
-test: build
+test:
 	go test ./... --cover
 
 compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go

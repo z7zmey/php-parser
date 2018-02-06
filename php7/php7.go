@@ -2880,7 +2880,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line php7/php7.y:525
 		{
-			yyVAL.node = stmt.NewWhile(yyDollar[1].token, yyDollar[3].node, yyDollar[5].node)
+			yyVAL.node = stmt.NewWhile(yyDollar[3].node, yyDollar[5].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -2904,7 +2904,7 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 		//line php7/php7.y:543
 		{
-			yyVAL.node = stmt.NewSwitch(yyDollar[1].token, yyDollar[3].node, yyDollar[5].nodesWithEndToken.nodes)
+			yyVAL.node = stmt.NewSwitch(yyDollar[3].node, yyDollar[5].nodesWithEndToken.nodes)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].nodesWithEndToken.endToken))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}

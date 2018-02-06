@@ -523,7 +523,7 @@ statement:
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
         {
-            $$ = stmt.NewWhile($1, $3, $5)
+            $$ = stmt.NewWhile($3, $5)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
             comments.AddComments($$, $1.Comments())
         }
@@ -541,7 +541,7 @@ statement:
         }
     |   T_SWITCH '(' expr ')' switch_case_list
         {
-            $$ = stmt.NewSwitch($1, $3, $5.nodes)
+            $$ = stmt.NewSwitch($3, $5.nodes)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5.endToken))
             comments.AddComments($$, $1.Comments())
         }

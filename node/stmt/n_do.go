@@ -31,14 +31,14 @@ func (n *Do) Walk(v walker.Visitor) {
 		return
 	}
 
-	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
-	}
-
 	if n.Stmt != nil {
 		vv := v.GetChildrenVisitor("Stmt")
 		n.Stmt.Walk(vv)
+	}
+
+	if n.Cond != nil {
+		vv := v.GetChildrenVisitor("Cond")
+		n.Cond.Walk(vv)
 	}
 
 	v.LeaveNode(n)

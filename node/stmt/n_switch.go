@@ -2,23 +2,20 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Switch node
 type Switch struct {
-	token token.Token
 	Cond  node.Node
-	cases []node.Node
+	Cases []node.Node
 }
 
 // NewSwitch node constuctor
-func NewSwitch(token token.Token, Cond node.Node, cases []node.Node) *Switch {
+func NewSwitch(Cond node.Node, Cases []node.Node) *Switch {
 	return &Switch{
-		token,
 		Cond,
-		cases,
+		Cases,
 	}
 }
 
@@ -39,9 +36,9 @@ func (n *Switch) Walk(v walker.Visitor) {
 		n.Cond.Walk(vv)
 	}
 
-	if n.cases != nil {
-		vv := v.GetChildrenVisitor("cases")
-		for _, nn := range n.cases {
+	if n.Cases != nil {
+		vv := v.GetChildrenVisitor("Cases")
+		for _, nn := range n.Cases {
 			if nn != nil {
 				nn.Walk(vv)
 			}

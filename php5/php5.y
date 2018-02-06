@@ -603,7 +603,7 @@ unticked_statement:
             }
     |   T_WHILE parenthesis_expr while_statement
             {
-                $$ = stmt.NewWhile($1, $2, $3)
+                $$ = stmt.NewWhile($2, $3)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -621,7 +621,7 @@ unticked_statement:
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
-                $$ = stmt.NewSwitch($1, $2, $3.nodes)
+                $$ = stmt.NewSwitch($2, $3.nodes)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
                 comments.AddComments($$, $1.Comments())
             }

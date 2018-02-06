@@ -71,7 +71,7 @@ func (n *AltIf) Walk(v walker.Visitor) {
 	}
 
 	if n.Else != nil {
-		vv := v.GetChildrenVisitor("else")
+		vv := v.GetChildrenVisitor("Else")
 		n.Else.Walk(vv)
 	}
 
