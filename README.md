@@ -18,6 +18,12 @@ A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com
 - Abstract syntax tree representation
 - Traversing AST
 
+## Install
+
+```
+go get github.com/z7zmey/php-parser
+```
+
 ## Example
 ```Golang
 package main
@@ -42,9 +48,15 @@ func main() {
 }
 ```
 
+## CLI dumper
+
+```
+$GOPATH/bin/php-parser /path/to/file/or/dir
+```
+
 ## Roadmap
 - [X] Lexer
-- [x] PHP 7 syntax analyzer (completely)
+- [x] PHP 7 syntax analyzer
 - [x] AST nodes
 - [x] AST visitor
 - [x] AST dumper
@@ -52,6 +64,7 @@ func main() {
 - [x] handling comments
 - [x] PHP 5 syntax analyzer
 - [ ] Tests
+- [ ] PhpDocComment parser
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
