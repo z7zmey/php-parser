@@ -9,7 +9,7 @@ build:
 run: build
 	./php-parser $(PHPFILE)
 
-test: all
+test: build
 	go test ./... --cover
 
 compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
