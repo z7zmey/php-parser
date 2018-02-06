@@ -1,15 +1,19 @@
 PHPFILE=example.php
 
-all: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
-	rm -f y.output
-	gofmt -l -s -w *.go
+all: compile run
+
+build: 
+	gofmt -l -s -w **/*.go
 	go build
 
-run: all
+run: build
 	./php-parser $(PHPFILE)
 
 test: all
 	go test ./... --cover
+
+compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
+	rm -f y.output
 
 ./scanner/scanner.go: ./scanner/scanner.l
 	golex -o $@ $<

@@ -12,15 +12,15 @@ import (
 )
 
 type lexer struct {
-    scanner.Lexer
+	scanner.Lexer
 }
 
 func (l *lexer) Lex(lval *yySymType) int {
-    return l.Lexer.Lex(lval)
+	return l.Lexer.Lex(lval)
 }
 
 func (lval *yySymType) Token(t token.Token) {
-    lval.token = t
+	lval.token = t
 }
 
 func newLexer(src io.Reader, fName string) *lexer {

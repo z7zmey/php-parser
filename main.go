@@ -8,11 +8,20 @@ import (
 	"path/filepath"
 
 	"github.com/yookoala/realpath"
+	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
 func main() {
+	var nodes node.Node
+	var comments comment.Comments
+	var positions position.Positions
+
+	usePhp5 := flag.Bool("php5", false, "use PHP5 parser")
 	flag.Parse()
 
 	for _, path := range flag.Args() {
@@ -24,7 +33,11 @@ func main() {
 				fmt.Printf("==> %s\n", path)
 
 				src, _ := os.Open(string(path))
-				nodes, comments, positions := php5.Parse(src, path)
+				if *usePhp5 {
+					nodes, comments, positions = php5.Parse(src, path)
+				} else {
+					nodes, comments, positions = php7.Parse(src, path)
+				}
 
 				visitor := visitor.Dumper{
 					Indent:    "  | ",
