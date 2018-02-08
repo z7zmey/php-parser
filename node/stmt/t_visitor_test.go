@@ -1,14 +1,15 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/stmt"
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/stmt"
+
+	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/walker"
-	"github.com/kylelemons/godebug/pretty"
 )
 
 var nodesToTest = []struct {
@@ -28,47 +29,47 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.AltElse{
-			Stmt:   &stmt.StmtList{},
+			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Stmt"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.AltElseIf{
-			Cond:   &stmt.Expression{},
-			Stmt:   &stmt.StmtList{},
+			Cond: &stmt.Expression{},
+			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Break{
-			Expr:   &stmt.Expression{},
+			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Case{
-			Cond:   &stmt.Expression{},
-			Stmts:  []node.Node{},
+			Cond:  &stmt.Expression{},
+			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Cond", "Stmts"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Catch{
-			Types:    []node.Node{},
+			Types:    []node.Node{&stmt.Expression{}},
 			Variable: &expr.Variable{},
-			Stmts:    []node.Node{},
+			Stmts:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Types", "Variable", "Stmts"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.ClassConstList{
-			Modifiers: []node.Node{},
-			Consts:    []node.Node{},
+			Modifiers: []node.Node{&stmt.Expression{}},
+			Consts:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Modifiers", "Consts"},
 		map[string]interface{}{},
@@ -78,10 +79,10 @@ var nodesToTest = []struct {
 			ReturnsRef:    true,
 			PhpDocComment: "/** */",
 			MethodName:    &node.Identifier{},
-			Modifiers:     []node.Node{},
-			Params:        []node.Node{},
+			Modifiers:     []node.Node{&stmt.Expression{}},
+			Params:        []node.Node{&stmt.Expression{}},
 			ReturnType:    &node.Identifier{},
-			Stmts:         []node.Node{},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"MethodName", "Modifiers", "Params", "ReturnType", "Stmts"},
 		map[string]interface{}{"ReturnsRef": true, "PhpDocComment": "/** */"},
@@ -90,18 +91,18 @@ var nodesToTest = []struct {
 		&stmt.Class{
 			PhpDocComment: "/** */",
 			ClassName:     &node.Identifier{},
-			Modifiers:     []node.Node{},
-			Args:          []node.Node{},
+			Modifiers:     []node.Node{&stmt.Expression{}},
+			Args:          []node.Node{&stmt.Expression{}},
 			Extends:       &node.Identifier{},
-			Implements:    []node.Node{},
-			Stmts:         []node.Node{},
+			Implements:    []node.Node{&stmt.Expression{}},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"ClassName", "Modifiers", "Args", "Extends", "Implements", "Stmts"},
 		map[string]interface{}{"PhpDocComment": "/** */"},
 	},
 	{
 		&stmt.ConstList{
-			Consts:         []node.Node{},
+			Consts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Consts"},
 		map[string]interface{}{},
@@ -117,14 +118,14 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Continue{
-			Expr:          &stmt.Expression{},
+			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Declare{
-			Consts: []node.Node{},
+			Consts: []node.Node{&stmt.Expression{}},
 			Stmt:   &stmt.StmtList{},
 		},
 		[]string{"Consts", "Stmt"},
@@ -132,7 +133,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Default{
-			Stmts: []node.Node{},
+			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
 		map[string]interface{}{},
@@ -155,7 +156,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Echo{
-			Exprs: []node.Node{},
+			Exprs: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Exprs"},
 		map[string]interface{}{},
@@ -172,38 +173,38 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Else{
-			Stmt:   &stmt.StmtList{},
+			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Stmt"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.ElseIf{
-			Cond:   &stmt.Expression{},
-			Stmt:   &stmt.StmtList{},
+			Cond: &stmt.Expression{},
+			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Expression{
-			Expr:          &stmt.Expression{},
+			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Finally{
-			Stmts: []node.Node{},
+			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.For{
-			Init: []node.Node{},
-			Cond: []node.Node{},
-			Loop: []node.Node{},
+			Init: []node.Node{&stmt.Expression{}},
+			Cond: []node.Node{&stmt.Expression{}},
+			Loop: []node.Node{&stmt.Expression{}},
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Init", "Cond", "Loop", "Stmt"},
@@ -223,18 +224,18 @@ var nodesToTest = []struct {
 	{
 		&stmt.Function{
 			ReturnsRef:    true,
-			PhpDocComment:  "/** */",
+			PhpDocComment: "/** */",
 			FunctionName:  &node.Identifier{},
-			Params:        []node.Node{},
+			Params:        []node.Node{&stmt.Expression{}},
 			ReturnType:    &node.Identifier{},
-			Stmts:         []node.Node{},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"FunctionName", "Params", "ReturnType", "Stmts"},
 		map[string]interface{}{"ReturnsRef": true, "PhpDocComment": "/** */"},
 	},
 	{
 		&stmt.Global{
-			Vars: []node.Node{},
+			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
 		map[string]interface{}{},
@@ -250,7 +251,7 @@ var nodesToTest = []struct {
 		&stmt.GroupUse{
 			UseType: &node.Identifier{},
 			Prefix:  &node.Identifier{},
-			UseList: []node.Node{},
+			UseList: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"UseType", "Prefix", "UseList"},
 		map[string]interface{}{},
@@ -262,7 +263,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.InlineHtml{
-			Value:  "hello",
+			Value: "hello",
 		},
 		[]string{},
 		map[string]interface{}{"Value": "hello"},
@@ -271,8 +272,8 @@ var nodesToTest = []struct {
 		&stmt.Interface{
 			PhpDocComment: "/** */",
 			InterfaceName: &node.Identifier{},
-			Extends:       []node.Node{},
-			Stmts:         []node.Node{},
+			Extends:       []node.Node{&stmt.Expression{}},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"InterfaceName", "Extends", "Stmts"},
 		map[string]interface{}{"PhpDocComment": "/** */"},
@@ -287,7 +288,7 @@ var nodesToTest = []struct {
 	{
 		&stmt.Namespace{
 			NamespaceName: &node.Identifier{},
-			Stmts: []node.Node{},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"NamespaceName", "Stmts"},
 		map[string]interface{}{},
@@ -299,15 +300,15 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.PropertyList{
-			Modifiers:  []node.Node{},
-			Properties: []node.Node{},
+			Modifiers:  []node.Node{&stmt.Expression{}},
+			Properties: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Modifiers", "Properties"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.Property{
-			PhpDocComment:  "/** */",
+			PhpDocComment: "/** */",
 			Variable:      &expr.Variable{},
 			Expr:          &stmt.Expression{},
 		},
@@ -331,7 +332,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Static{
-			Vars: []node.Node{},
+			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
 		map[string]interface{}{},
@@ -339,7 +340,7 @@ var nodesToTest = []struct {
 	{
 		&stmt.Switch{
 			Cond:  &expr.Variable{},
-			Cases: []node.Node{},
+			Cases: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Cond", "Cases"},
 		map[string]interface{}{},
@@ -378,8 +379,8 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.TraitUse{
-			Traits:      []node.Node{},
-			Adaptations: []node.Node{},
+			Traits:      []node.Node{&stmt.Expression{}},
+			Adaptations: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Traits", "Adaptations"},
 		map[string]interface{}{},
@@ -388,15 +389,15 @@ var nodesToTest = []struct {
 		&stmt.Trait{
 			PhpDocComment: "/** */",
 			TraitName:     &node.Identifier{},
-			Stmts:         []node.Node{},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"TraitName", "Stmts"},
 		map[string]interface{}{"PhpDocComment": "/** */"},
 	},
 	{
 		&stmt.Try{
-			Stmts:   []node.Node{},
-			Catches: []node.Node{},
+			Stmts:   []node.Node{&stmt.Expression{}},
+			Catches: []node.Node{&stmt.Expression{}},
 			Finally: &stmt.Finally{},
 		},
 		[]string{"Stmts", "Catches", "Finally"},
@@ -404,7 +405,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Unset{
-			Vars: []node.Node{},
+			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
 		map[string]interface{}{},
@@ -412,7 +413,7 @@ var nodesToTest = []struct {
 	{
 		&stmt.UseList{
 			UseType: &node.Identifier{},
-			Uses:    []node.Node{},
+			Uses:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"UseType", "Uses"},
 		map[string]interface{}{},
@@ -428,8 +429,8 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.While{
-			Cond:  &expr.Variable{},
-			Stmt:  &stmt.StmtList{},
+			Cond: &expr.Variable{},
+			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
 		map[string]interface{}{},
