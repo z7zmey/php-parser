@@ -65,6 +65,7 @@ $GOPATH/bin/php-parser /path/to/file/or/dir
 - [x] PHP 5 syntax analyzer
 - [ ] Tests
 - [ ] PhpDocComment parser
+- [ ] Namespace resolver
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
