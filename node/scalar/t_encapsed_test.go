@@ -6,10 +6,10 @@ import (
 
 	"github.com/z7zmey/php-parser/node/expr"
 
-	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/stmt"
+	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 )
 
@@ -30,10 +30,10 @@ func TestSimpleVar(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
-	if diff := pretty.Compare(expected, actual); diff != "" {
-		t.Errorf("diff: (-expected +actual)\n%s", diff)
-	}
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 }
 
 func TestSimpleVarPropertyFetch(t *testing.T) {
@@ -57,10 +57,10 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
-	if diff := pretty.Compare(expected, actual); diff != "" {
-		t.Errorf("diff: (-expected +actual)\n%s", diff)
-	}
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 }
 
 func TestDollarOpenCurlyBraces(t *testing.T) {
@@ -80,10 +80,10 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
-	if diff := pretty.Compare(expected, actual); diff != "" {
-		t.Errorf("diff: (-expected +actual)\n%s", diff)
-	}
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 }
 
 func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
@@ -106,10 +106,10 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
-	if diff := pretty.Compare(expected, actual); diff != "" {
-		t.Errorf("diff: (-expected +actual)\n%s", diff)
-	}
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 }
 
 func TestCurlyOpenMethodCall(t *testing.T) {
@@ -124,6 +124,7 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 						&expr.MethodCall{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
 							Method:   &node.Identifier{Value: "bar"},
+							Arguments: []node.Node{},
 						},
 					},
 				},
@@ -132,8 +133,8 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
-	if diff := pretty.Compare(expected, actual); diff != "" {
-		t.Errorf("diff: (-expected +actual)\n%s", diff)
-	}
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 }

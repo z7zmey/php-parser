@@ -597,7 +597,7 @@ unticked_statement:
                 stmts := stmt.NewStmtList($4)
                 positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($4))
 
-                $$ = stmt.NewIf($2, stmts, $5, $6)
+                $$ = stmt.NewAltIf($2, stmts, $5, $6)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
                 comments.AddComments($$, $1.Comments())
             }
@@ -694,7 +694,11 @@ unticked_statement:
                 comments.AddComments($$, $1.Comments())
             }
     |   expr ';'
-            { $$ = $1 }
+            {
+                $$ = stmt.NewExpression($1)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
+                comments.AddComments($$, comments[$1])
+            }
     |   T_UNSET '(' unset_variables ')' ';'
             {
                 $$ = stmt.NewUnset($3)
@@ -1128,7 +1132,7 @@ elseif_list:
 
 new_elseif_list:
         /* empty */
-            { $$ = []node.Node{} }
+            { $$ = nil }
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
                 stmts := stmt.NewStmtList($5)
@@ -3571,7 +3575,7 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = expr.NewVariable($2)
+                $$ = $2
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }

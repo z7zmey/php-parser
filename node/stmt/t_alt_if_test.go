@@ -10,6 +10,7 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
+	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 )
 
@@ -20,7 +21,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 		if diff != "" {
 			t.Errorf("diff: (-expected +actual)\n%s", diff)
 		} else {
-			t.Errorf("expected and actual are not equal\n")
+			t.Errorf("expected and actual are not equal\nexpectd: %+v\nactual: %+v\n", expected, actual)
 		}
 
 	}
@@ -42,7 +43,10 @@ func TestAltIf(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -69,7 +73,10 @@ func TestAltElseIf(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -93,7 +100,10 @@ func TestAltElse(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -129,6 +139,9 @@ func TestAltElseElseIf(t *testing.T) {
 	}
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
 
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
