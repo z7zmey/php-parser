@@ -3426,7 +3426,11 @@ assignment_list:
 
 assignment_list_element:
         variable
-            { $$ = $1 }
+            {
+                $$ = expr.NewArrayItem(nil, $1, false)
+                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
+                comments.AddComments($$, comments[$1])
+            }
     |   T_LIST '(' assignment_list ')'
             {
                 $$ = expr.NewList($3)
