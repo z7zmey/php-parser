@@ -1118,7 +1118,7 @@ while_statement:
 
 elseif_list:
         /* empty */
-            { $$ = []node.Node{} }
+            { $$ = nil }
     |   elseif_list T_ELSEIF parenthesis_expr statement
             {
                 _elseIf := stmt.NewElseIf($3, $4)
