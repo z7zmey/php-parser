@@ -4079,7 +4079,7 @@ yydefault:
 			positions.AddPosition(constant, positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[5].node))
 			comments.AddComments(constant, yyDollar[3].token.Comments())
 
-			yyDollar[1].node.(*stmt.ConstList).Consts = append(yyDollar[1].node.(*stmt.ConstList).Consts, constant)
+			yyDollar[1].node.(*stmt.ClassConstList).Consts = append(yyDollar[1].node.(*stmt.ClassConstList).Consts, constant)
 			positions.AddPosition(yyDollar[1].node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
 
 			yyVAL.node = yyDollar[1].node

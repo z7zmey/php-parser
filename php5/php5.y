@@ -1721,7 +1721,7 @@ class_constant_declaration:
                 positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
                 comments.AddComments(constant, $3.Comments())
 
-                $1.(*stmt.ConstList).Consts = append($1.(*stmt.ConstList).Consts, constant)
+                $1.(*stmt.ClassConstList).Consts = append($1.(*stmt.ClassConstList).Consts, constant)
                 positions.AddPosition($1, positionBuilder.NewNodesPosition($1, $5))
 
                 $$ = $1
