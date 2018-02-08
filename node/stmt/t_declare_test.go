@@ -63,3 +63,30 @@ func TestDeclareStmts(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestAltDeclare(t *testing.T) {
+	src := `<? declare(ticks=1): enddeclare;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Declare{
+				Consts: []node.Node{
+					&stmt.Constant{
+						PhpDocComment: "",
+						ConstantName:  &node.Identifier{Value: "ticks"},
+						Expr:          &scalar.Lnumber{Value: "1"},
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
