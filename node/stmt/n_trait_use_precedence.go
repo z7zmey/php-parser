@@ -8,11 +8,11 @@ import (
 // TraitUsePrecedence node
 type TraitUsePrecedence struct {
 	Ref       node.Node
-	Insteadof node.Node
+	Insteadof []node.Node
 }
 
 // NewTraitUsePrecedence node constuctor
-func NewTraitUsePrecedence(Ref node.Node, Insteadof node.Node) *TraitUsePrecedence {
+func NewTraitUsePrecedence(Ref node.Node, Insteadof []node.Node) *TraitUsePrecedence {
 	return &TraitUsePrecedence{
 		Ref,
 		Insteadof,
@@ -38,7 +38,11 @@ func (n *TraitUsePrecedence) Walk(v walker.Visitor) {
 
 	if n.Insteadof != nil {
 		vv := v.GetChildrenVisitor("Insteadof")
-		n.Insteadof.Walk(vv)
+		for _, nn := range n.Insteadof {
+			if nn != nil {
+				nn.Walk(vv)
+			}
+		}
 	}
 
 	v.LeaveNode(n)

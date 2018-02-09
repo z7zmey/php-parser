@@ -1499,12 +1499,8 @@ trait_adaptation_statement:
 trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
-                name := name.NewName($3)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($3))
-                $$ = stmt.NewTraitUsePrecedence($1, name)
+                $$ = stmt.NewTraitUsePrecedence($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, $3))
-
-                comments.AddComments(name, ListGetFirstNodeComments($3))
                 comments.AddComments($$, comments[$1])
             }
 ;

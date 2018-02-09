@@ -372,7 +372,7 @@ var nodesToTest = []struct {
 	{
 		&stmt.TraitUsePrecedence{
 			Ref:       &node.Identifier{},
-			Insteadof: &node.Identifier{},
+			Insteadof: []node.Node{&node.Identifier{}},
 		},
 		[]string{"Ref", "Insteadof"},
 		map[string]interface{}{},
