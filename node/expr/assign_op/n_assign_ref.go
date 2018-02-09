@@ -7,16 +7,15 @@ import (
 
 // AssignRef node
 type AssignRef struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewAssignRef node constuctor
 func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
 	return &AssignRef{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

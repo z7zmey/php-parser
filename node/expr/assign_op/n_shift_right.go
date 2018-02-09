@@ -7,16 +7,15 @@ import (
 
 // ShiftRight node
 type ShiftRight struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewShiftRight node constuctor
 func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	return &ShiftRight{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

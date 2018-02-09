@@ -7,16 +7,15 @@ import (
 
 // Pow node
 type Pow struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewPow node constuctor
 func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

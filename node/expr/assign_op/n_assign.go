@@ -7,16 +7,15 @@ import (
 
 // Assign node
 type Assign struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewAssign node constuctor
 func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 	return &Assign{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

@@ -7,16 +7,15 @@ import (
 
 // Concat node
 type Concat struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewConcat node constuctor
 func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

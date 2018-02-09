@@ -7,16 +7,15 @@ import (
 
 // BitwiseOr node
 type BitwiseOr struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewBitwiseOr node constuctor
 func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	return &BitwiseOr{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

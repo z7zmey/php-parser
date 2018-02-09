@@ -7,16 +7,15 @@ import (
 
 // BitwiseAnd node
 type BitwiseAnd struct {
-	AssignOp
+	Variable   node.Node
+	Expression node.Node
 }
 
 // NewBitwiseAnd node constuctor
 func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	return &BitwiseAnd{
-		AssignOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 
