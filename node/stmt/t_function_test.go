@@ -1,6 +1,7 @@
 package stmt_test
 
 import (
+	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
 	"testing"
@@ -32,8 +33,31 @@ func TestSimpleFunction(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestFunctionReturn(t *testing.T) {
+	src := `<? function foo() {return;}`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Function{
+				ReturnsRef: false,
+				PhpDocComment: "",
+				FunctionName: &node.Identifier{Value: "foo"},
+				Stmts: []node.Node{
+					&stmt.Return{},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestRefFunction(t *testing.T) {
-	src := `<? function &foo() {}`
+	src := `<? function &foo() {return 1;}`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -41,7 +65,11 @@ func TestRefFunction(t *testing.T) {
 				ReturnsRef: true,
 				PhpDocComment: "",
 				FunctionName: &node.Identifier{Value: "foo"},
-				Stmts: []node.Node{},
+				Stmts: []node.Node{
+					&stmt.Return{
+						Expr: &scalar.Lnumber{Value: "1"},
+					},
+				},
 			},
 		},
 	}
