@@ -7,15 +7,13 @@ import (
 
 // CastBool node
 type CastBool struct {
-	Cast
+	Expr node.Node
 }
 
 // NewCastBool node constuctor
 func NewCastBool(Expr node.Node) *CastBool {
 	return &CastBool{
-		Cast{
-			Expr,
-		},
+		Expr,
 	}
 }
 

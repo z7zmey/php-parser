@@ -7,15 +7,13 @@ import (
 
 // CastObject node
 type CastObject struct {
-	Cast
+	Expr node.Node
 }
 
 // NewCastObject node constuctor
 func NewCastObject(Expr node.Node) *CastObject {
 	return &CastObject{
-		Cast{
-			Expr,
-		},
+		Expr,
 	}
 }
 

@@ -7,15 +7,13 @@ import (
 
 // CastArray node
 type CastArray struct {
-	Cast
+	Expr node.Node
 }
 
 // NewCastArray node constuctor
 func NewCastArray(Expr node.Node) *CastArray {
 	return &CastArray{
-		Cast{
-			Expr,
-		},
+		Expr,
 	}
 }
 

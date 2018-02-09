@@ -7,15 +7,13 @@ import (
 
 // CastUnset node
 type CastUnset struct {
-	Cast
+	Expr node.Node
 }
 
 // NewCastUnset node constuctor
 func NewCastUnset(Expr node.Node) *CastUnset {
 	return &CastUnset{
-		Cast{
-			Expr,
-		},
+		Expr,
 	}
 }
 

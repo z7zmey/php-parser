@@ -19,63 +19,49 @@ var nodesToTest = []struct {
 }{
 	{
 		&cast.CastArray{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastBool{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastDouble{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastInt{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastObject{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastString{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.CastUnset{
-			Cast: cast.Cast{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},

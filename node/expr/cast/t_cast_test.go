@@ -34,9 +34,7 @@ func TestCastArray(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastArray{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -56,9 +54,7 @@ func TestCastBool(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastBool{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -78,9 +74,7 @@ func TestCastBoolShort(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastBool{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -100,9 +94,7 @@ func TestCastDouble(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastDouble{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -122,9 +114,7 @@ func TestCastFloat(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastDouble{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -144,9 +134,7 @@ func TestCastInt(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastInt{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -166,9 +154,7 @@ func TestCastIntShort(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastInt{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -188,9 +174,7 @@ func TestCastObject(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastObject{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -210,9 +194,7 @@ func TestCastString(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastString{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -232,9 +214,7 @@ func TestCastUnset(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.CastUnset{
-					Cast: cast.Cast{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
