@@ -7,16 +7,15 @@ import (
 
 // BooleanOr node
 type BooleanOr struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewBooleanOr node constuctor
 func NewBooleanOr(Variable node.Node, Expression node.Node) *BooleanOr {
 	return &BooleanOr{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

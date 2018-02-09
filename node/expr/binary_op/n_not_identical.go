@@ -7,16 +7,15 @@ import (
 
 // NotIdentical node
 type NotIdentical struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewNotIdentical node constuctor
 func NewNotIdentical(Variable node.Node, Expression node.Node) *NotIdentical {
 	return &NotIdentical{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

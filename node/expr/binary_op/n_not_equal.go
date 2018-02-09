@@ -7,16 +7,15 @@ import (
 
 // NotEqual node
 type NotEqual struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewNotEqual node constuctor
 func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	return &NotEqual{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

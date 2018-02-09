@@ -7,16 +7,15 @@ import (
 
 // Identical node
 type Identical struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewIdentical node constuctor
 func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	return &Identical{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

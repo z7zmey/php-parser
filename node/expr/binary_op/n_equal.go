@@ -7,16 +7,15 @@ import (
 
 // Equal node
 type Equal struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewEqual node constuctor
 func NewEqual(Variable node.Node, Expression node.Node) *Equal {
 	return &Equal{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

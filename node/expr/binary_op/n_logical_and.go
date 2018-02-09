@@ -7,16 +7,15 @@ import (
 
 // LogicalAnd node
 type LogicalAnd struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewLogicalAnd node constuctor
 func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	return &LogicalAnd{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

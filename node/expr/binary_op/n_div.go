@@ -7,16 +7,15 @@ import (
 
 // Div node
 type Div struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewDiv node constuctor
 func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

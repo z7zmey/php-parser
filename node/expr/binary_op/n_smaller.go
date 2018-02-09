@@ -7,16 +7,15 @@ import (
 
 // Smaller node
 type Smaller struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewSmaller node constuctor
 func NewSmaller(Variable node.Node, Expression node.Node) *Smaller {
 	return &Smaller{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

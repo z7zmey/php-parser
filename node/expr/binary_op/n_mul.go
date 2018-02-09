@@ -7,16 +7,15 @@ import (
 
 // Mul node
 type Mul struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewMul node constuctor
 func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	return &Mul{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

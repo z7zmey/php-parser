@@ -7,16 +7,15 @@ import (
 
 // Pow node
 type Pow struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewPow node constuctor
 func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

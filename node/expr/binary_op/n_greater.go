@@ -7,16 +7,15 @@ import (
 
 // Greater node
 type Greater struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewGreater node constuctor
 func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	return &Greater{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

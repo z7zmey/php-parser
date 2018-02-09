@@ -3,9 +3,9 @@ package binary_op_test
 import (
 	"reflect"
 	"testing"
-	
+
 	"github.com/kylelemons/godebug/pretty"
-	
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/binary_op"
@@ -19,270 +19,216 @@ var nodesToTest = []struct {
 }{
 	{
 		&binary_op.BitwiseAnd{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.BitwiseOr{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.BitwiseXor{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.BooleanAnd{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.BooleanOr{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Coalesce{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Concat{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Div{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Equal{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.GreaterOrEqual{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Greater{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Identical{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.LogicalAnd{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.LogicalOr{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.LogicalXor{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Minus{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Mod{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Mul{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.NotEqual{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.NotIdentical{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Plus{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Pow{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.ShiftLeft{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.ShiftRight{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.SmallerOrEqual{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Smaller{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},
 	},
 	{
 		&binary_op.Spaceship{
-			BinaryOp: binary_op.BinaryOp{
-				Left: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			},
+			Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 		},
 		[]string{"Left", "Right"},
 		map[string]interface{}{},

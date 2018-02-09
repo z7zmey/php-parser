@@ -7,16 +7,15 @@ import (
 
 // Plus node
 type Plus struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewPlus node constuctor
 func NewPlus(Variable node.Node, Expression node.Node) *Plus {
 	return &Plus{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

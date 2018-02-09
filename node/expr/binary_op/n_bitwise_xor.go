@@ -7,16 +7,15 @@ import (
 
 // BitwiseXor node
 type BitwiseXor struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewBitwiseXor node constuctor
 func NewBitwiseXor(Variable node.Node, Expression node.Node) *BitwiseXor {
 	return &BitwiseXor{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

@@ -7,16 +7,15 @@ import (
 
 // Mod node
 type Mod struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewMod node constuctor
 func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

@@ -7,16 +7,15 @@ import (
 
 // GreaterOrEqual node
 type GreaterOrEqual struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewGreaterOrEqual node constuctor
 func NewGreaterOrEqual(Variable node.Node, Expression node.Node) *GreaterOrEqual {
 	return &GreaterOrEqual{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

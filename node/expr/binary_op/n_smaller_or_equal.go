@@ -7,16 +7,15 @@ import (
 
 // SmallerOrEqual node
 type SmallerOrEqual struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewSmallerOrEqual node constuctor
 func NewSmallerOrEqual(Variable node.Node, Expression node.Node) *SmallerOrEqual {
 	return &SmallerOrEqual{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

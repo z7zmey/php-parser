@@ -7,16 +7,15 @@ import (
 
 // Spaceship node
 type Spaceship struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewSpaceship node constuctor
 func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	return &Spaceship{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

@@ -7,16 +7,15 @@ import (
 
 // LogicalOr node
 type LogicalOr struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewLogicalOr node constuctor
 func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	return &LogicalOr{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

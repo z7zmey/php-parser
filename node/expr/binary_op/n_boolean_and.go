@@ -7,16 +7,15 @@ import (
 
 // BooleanAnd node
 type BooleanAnd struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewBooleanAnd node constuctor
 func NewBooleanAnd(Variable node.Node, Expression node.Node) *BooleanAnd {
 	return &BooleanAnd{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

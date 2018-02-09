@@ -7,16 +7,15 @@ import (
 
 // LogicalXor node
 type LogicalXor struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewLogicalXor node constuctor
 func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

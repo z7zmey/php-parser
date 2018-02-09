@@ -7,16 +7,15 @@ import (
 
 // Coalesce node
 type Coalesce struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewCoalesce node constuctor
 func NewCoalesce(Variable node.Node, Expression node.Node) *Coalesce {
 	return &Coalesce{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 

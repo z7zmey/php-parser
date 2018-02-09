@@ -7,16 +7,15 @@ import (
 
 // ShiftLeft node
 type ShiftLeft struct {
-	BinaryOp
+	Left  node.Node
+	Right node.Node
 }
 
 // NewShiftLeft node constuctor
 func NewShiftLeft(Variable node.Node, Expression node.Node) *ShiftLeft {
 	return &ShiftLeft{
-		BinaryOp{
-			Variable,
-			Expression,
-		},
+		Variable,
+		Expression,
 	}
 }
 
