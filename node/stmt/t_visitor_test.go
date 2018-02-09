@@ -435,6 +435,13 @@ var nodesToTest = []struct {
 		[]string{"Cond", "Stmt"},
 		map[string]interface{}{},
 	},
+	{
+		&stmt.StmtList{
+			Stmts: []node.Node{&stmt.Expression{}},
+		},
+		[]string{"Stmts"},
+		map[string]interface{}{},
+	},
 }
 
 type visitorMock struct {
