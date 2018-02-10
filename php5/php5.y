@@ -3440,7 +3440,7 @@ assignment_list_element:
 
 array_pair_list:
         /* empty */
-            { $$ = nil }
+            { $$ = []node.Node{} }
     |   non_empty_array_pair_list possible_comma
             { $$ = $1 }
 ;

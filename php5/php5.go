@@ -6284,7 +6284,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		//line php5/php5.y:3442
 		{
-			yyVAL.list = nil
+			yyVAL.list = []node.Node{}
 		}
 	case 480:
 		yyDollar = yyS[yypt-2 : yypt+1]
