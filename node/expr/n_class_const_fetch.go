@@ -31,14 +31,14 @@ func (n *ClassConstFetch) Walk(v walker.Visitor) {
 		return
 	}
 
-	if n.ConstantName != nil {
-		vv := v.GetChildrenVisitor("ConstantName")
-		n.ConstantName.Walk(vv)
-	}
-
 	if n.Class != nil {
 		vv := v.GetChildrenVisitor("Class")
 		n.Class.Walk(vv)
+	}
+
+	if n.ConstantName != nil {
+		vv := v.GetChildrenVisitor("ConstantName")
+		n.ConstantName.Walk(vv)
 	}
 
 	v.LeaveNode(n)

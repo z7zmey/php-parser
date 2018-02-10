@@ -5,22 +5,22 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// ClusureUse node
-type ClusureUse struct {
+// ClosureUse node
+type ClosureUse struct {
 	ByRef    bool
 	Variable node.Node
 }
 
-// NewClusureUse node constuctor
-func NewClusureUse(Variable node.Node, ByRef bool) *ClusureUse {
-	return &ClusureUse{
+// NewClosureUse node constuctor
+func NewClosureUse(Variable node.Node, ByRef bool) *ClosureUse {
+	return &ClosureUse{
 		ByRef,
 		Variable,
 	}
 }
 
 // Attributes returns node attributes as map
-func (n *ClusureUse) Attributes() map[string]interface{} {
+func (n *ClosureUse) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"ByRef": n.ByRef,
 	}
@@ -28,7 +28,7 @@ func (n *ClusureUse) Attributes() map[string]interface{} {
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *ClusureUse) Walk(v walker.Visitor) {
+func (n *ClosureUse) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

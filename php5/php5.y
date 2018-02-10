@@ -2369,7 +2369,7 @@ lexical_var_list:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(variable, $3.Comments())
                 
-                use := expr.NewClusureUse(variable, false)
+                use := expr.NewClosureUse(variable, false)
                 positions.AddPosition(use, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(use, $3.Comments())
                 
@@ -2385,7 +2385,7 @@ lexical_var_list:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
                 comments.AddComments(variable, $3.Comments())
 
-                use := expr.NewClusureUse(variable, true)
+                use := expr.NewClosureUse(variable, true)
                 positions.AddPosition(use, positionBuilder.NewTokensPosition($3, $4))
                 comments.AddComments(use, $3.Comments())
 
@@ -2401,7 +2401,7 @@ lexical_var_list:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(variable, $1.Comments())
                 
-                use := expr.NewClusureUse(variable, false)
+                use := expr.NewClosureUse(variable, false)
                 positions.AddPosition(use, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(use, $1.Comments())
                 
@@ -2417,7 +2417,7 @@ lexical_var_list:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
                 comments.AddComments(variable, $1.Comments())
 
-                use := expr.NewClusureUse(variable, true)
+                use := expr.NewClosureUse(variable, true)
                 positions.AddPosition(use, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments(use, $1.Comments())
 

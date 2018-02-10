@@ -1933,7 +1933,7 @@ lexical_var:
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
-            $$ = expr.NewClusureUse(variable, false)
+            $$ = expr.NewClosureUse(variable, false)
             positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
 
             comments.AddComments(identifier, $1.Comments())
@@ -1946,7 +1946,7 @@ lexical_var:
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
-            $$ = expr.NewClusureUse(variable, true)
+            $$ = expr.NewClosureUse(variable, true)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
 
             comments.AddComments(identifier, $2.Comments())

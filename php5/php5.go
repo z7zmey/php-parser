@@ -4935,7 +4935,7 @@ yydefault:
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[3].token))
 			comments.AddComments(variable, yyDollar[3].token.Comments())
 
-			use := expr.NewClusureUse(variable, false)
+			use := expr.NewClosureUse(variable, false)
 			positions.AddPosition(use, positionBuilder.NewTokenPosition(yyDollar[3].token))
 			comments.AddComments(use, yyDollar[3].token.Comments())
 
@@ -4953,7 +4953,7 @@ yydefault:
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[4].token))
 			comments.AddComments(variable, yyDollar[3].token.Comments())
 
-			use := expr.NewClusureUse(variable, true)
+			use := expr.NewClosureUse(variable, true)
 			positions.AddPosition(use, positionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token))
 			comments.AddComments(use, yyDollar[3].token.Comments())
 
@@ -4971,7 +4971,7 @@ yydefault:
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			comments.AddComments(variable, yyDollar[1].token.Comments())
 
-			use := expr.NewClusureUse(variable, false)
+			use := expr.NewClosureUse(variable, false)
 			positions.AddPosition(use, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			comments.AddComments(use, yyDollar[1].token.Comments())
 
@@ -4989,7 +4989,7 @@ yydefault:
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[2].token))
 			comments.AddComments(variable, yyDollar[1].token.Comments())
 
-			use := expr.NewClusureUse(variable, true)
+			use := expr.NewClosureUse(variable, true)
 			positions.AddPosition(use, positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 			comments.AddComments(use, yyDollar[1].token.Comments())
 

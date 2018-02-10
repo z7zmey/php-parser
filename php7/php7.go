@@ -4830,7 +4830,7 @@ yydefault:
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node = expr.NewClusureUse(variable, false)
+			yyVAL.node = expr.NewClosureUse(variable, false)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
 
 			comments.AddComments(identifier, yyDollar[1].token.Comments())
@@ -4845,7 +4845,7 @@ yydefault:
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[2].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node = expr.NewClusureUse(variable, true)
+			yyVAL.node = expr.NewClosureUse(variable, true)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 
 			comments.AddComments(identifier, yyDollar[2].token.Comments())
