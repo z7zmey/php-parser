@@ -2276,25 +2276,41 @@ expr_without_variable:
 yield_expr:
         T_YIELD expr_without_variable
             {
-                $$ = expr.NewYield(nil, $2)
+                yield := expr.NewYield(nil, $2)
+                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments(yield, $1.Comments())
+
+                $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD variable
             {
-                $$ = expr.NewYield(nil, $2)
+                yield := expr.NewYield(nil, $2)
+                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
+                comments.AddComments(yield, $1.Comments())
+
+                $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
-                $$ = expr.NewYield($2, $4)
+                yield := expr.NewYield($2, $4)
+                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
+                comments.AddComments(yield, $1.Comments())
+
+                $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
-                $$ = expr.NewYield($2, $4)
+                yield := expr.NewYield($2, $4)
+                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
+                comments.AddComments(yield, $1.Comments())
+
+                $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
