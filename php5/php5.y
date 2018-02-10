@@ -3441,9 +3441,13 @@ assignment_list_element:
             }
     |   T_LIST '(' assignment_list ')'
             {
-                $$ = expr.NewList($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                item := expr.NewList($3)
+                positions.AddPosition(item, positionBuilder.NewTokensPosition($1, $4))
+                comments.AddComments(item, $1.Comments())
+
+                $$ = expr.NewArrayItem(nil, item, false)
+                positions.AddPosition($$, positionBuilder.NewNodePosition(item))
+                comments.AddComments($$, comments[item])
             }
     |   /* empty */
             { $$ = nil }
