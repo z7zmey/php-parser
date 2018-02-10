@@ -25,18 +25,14 @@ func TestFor(t *testing.T) {
 			&stmt.For{
 				Init: []node.Node{
 					&assign_op.Assign{
-						assign_op.AssignOp{
-							Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-							Expression: &scalar.Lnumber{Value: "0"},
-						},
+						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Expression: &scalar.Lnumber{Value: "0"},
 					},
 				},
 				Cond: []node.Node{
 					&binary_op.Smaller{
-						binary_op.BinaryOp{
-							Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-							Right: &scalar.Lnumber{Value: "10"},
-						},
+						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Right: &scalar.Lnumber{Value: "10"},
 					},
 				},
 				Loop: []node.Node{
