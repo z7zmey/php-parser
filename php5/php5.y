@@ -2751,21 +2751,33 @@ static_scalar_value:
             { $$ = $1 }
     |   namespace_name
             {
-                $$ = name.NewName($1)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                name := name.NewName($1)
+                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                comments.AddComments(name, ListGetFirstNodeComments($1))
+
+                $$ = expr.NewConstFetch(name)
+                positions.AddPosition($$, positionBuilder.NewNodePosition(name))
+                comments.AddComments($$, comments[name])
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewRelative($3)
+                name := name.NewRelative($3)
+                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $3))
+                comments.AddComments(name, $1.Comments())
+
+                $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                comments.AddComments($$, comments[name])
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewFullyQualified($2)
+                name := name.NewFullyQualified($2)
+                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $2))
+                comments.AddComments(name, $1.Comments())
+
+                $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                comments.AddComments($$, comments[name])
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {

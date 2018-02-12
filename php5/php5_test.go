@@ -31,7 +31,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 	}
 }
 
-func TestPhp7(t *testing.T) {
+func TestPhp5(t *testing.T) {
 	src := `<?
 		foo($a, ...$b);
 		$foo($a, ...$b);
@@ -317,7 +317,7 @@ CAD;
 			Variadic:     false,
 			VariableType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "bar"}}},
 			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
-			DefaultValue: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}},
+			DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
 		},
 		&node.Parameter{
 			ByRef:        true,
