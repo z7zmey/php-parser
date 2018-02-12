@@ -668,7 +668,11 @@ unticked_statement:
                 comments.AddComments($$, $1.Comments())
             }
     |   yield_expr ';'
-            { fmt.Println("58"); $$ = $1 }
+            {
+                fmt.Println("58"); $$ = stmt.NewExpression($1)
+                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
+                comments.AddComments($$, comments[$1])
+            }
     |   T_GLOBAL global_var_list ';'
             {
                 fmt.Println("59"); $$ = stmt.NewGlobal($2)
@@ -2276,41 +2280,25 @@ expr_without_variable:
 yield_expr:
         T_YIELD expr_without_variable
             {
-                yield := expr.NewYield(nil, $2)
-                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments(yield, $1.Comments())
-
-                fmt.Println("307"); $$ = stmt.NewExpression(yield)
+                fmt.Println("307"); $$ = expr.NewYield(nil, $2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD variable
             {
-                yield := expr.NewYield(nil, $2)
-                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments(yield, $1.Comments())
-
-                fmt.Println("308"); $$ = stmt.NewExpression(yield)
+                fmt.Println("308"); $$ = expr.NewYield(nil, $2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
-                yield := expr.NewYield($2, $4)
-                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
-                comments.AddComments(yield, $1.Comments())
-
-                fmt.Println("309"); $$ = stmt.NewExpression(yield)
+                fmt.Println("309"); $$ = expr.NewYield($2, $4)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
-                yield := expr.NewYield($2, $4)
-                positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
-                comments.AddComments(yield, $1.Comments())
-
-                fmt.Println("310"); $$ = stmt.NewExpression(yield)
+                fmt.Println("310"); $$ = expr.NewYield($2, $4)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }

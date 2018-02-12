@@ -38,7 +38,7 @@ func TestDeclare(t *testing.T) {
 }
 
 func TestDeclareStmts(t *testing.T) {
-	src := `<? declare(ticks=1) {}`
+	src := `<? declare(ticks=1, strict_types=1) {}`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -47,6 +47,11 @@ func TestDeclareStmts(t *testing.T) {
 					&stmt.Constant{
 						PhpDocComment: "",
 						ConstantName:  &node.Identifier{Value: "ticks"},
+						Expr:          &scalar.Lnumber{Value: "1"},
+					},
+					&stmt.Constant{
+						PhpDocComment: "",
+						ConstantName:  &node.Identifier{Value: "strict_types"},
 						Expr:          &scalar.Lnumber{Value: "1"},
 					},
 				},

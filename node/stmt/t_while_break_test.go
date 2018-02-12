@@ -31,7 +31,6 @@ func TestBreakEmpty(t *testing.T) {
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
@@ -57,13 +56,12 @@ func TestBreakLight(t *testing.T) {
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
 func TestBreak(t *testing.T) {
-	src := `<? while (1) { break(3); }`
+	src := `<? while (1) : break(3); endwhile;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -82,7 +80,6 @@ func TestBreak(t *testing.T) {
 
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
-
 
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)

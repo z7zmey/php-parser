@@ -1,10 +1,11 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/scalar"
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
 	"testing"
+
+	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/node/scalar"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -19,10 +20,10 @@ func TestSimpleFunction(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef: false,
+				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName: &node.Identifier{Value: "foo"},
-				Stmts: []node.Node{},
+				FunctionName:  &node.Identifier{Value: "foo"},
+				Stmts:         []node.Node{},
 			},
 		},
 	}
@@ -40,9 +41,9 @@ func TestFunctionReturn(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef: false,
+				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName: &node.Identifier{Value: "foo"},
+				FunctionName:  &node.Identifier{Value: "foo"},
 				Stmts: []node.Node{
 					&stmt.Return{},
 				},
@@ -58,14 +59,28 @@ func TestFunctionReturn(t *testing.T) {
 }
 
 func TestFunctionReturnVar(t *testing.T) {
-	src := `<? function foo() {return $a;}`
+	src := `<? function foo(array $a, callable $b) {return $a;}`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef: false,
+				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName: &node.Identifier{Value: "foo"},
+				FunctionName:  &node.Identifier{Value: "foo"},
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "array"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					},
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "callable"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					},
+				},
 				Stmts: []node.Node{
 					&stmt.Return{
 						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
@@ -88,9 +103,9 @@ func TestRefFunction(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef: true,
+				ReturnsRef:    true,
 				PhpDocComment: "",
-				FunctionName: &node.Identifier{Value: "foo"},
+				FunctionName:  &node.Identifier{Value: "foo"},
 				Stmts: []node.Node{
 					&stmt.Return{
 						Expr: &scalar.Lnumber{Value: "1"},
@@ -113,9 +128,9 @@ func TestReturnTypeFunction(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef: true,
+				ReturnsRef:    true,
 				PhpDocComment: "",
-				FunctionName: &node.Identifier{Value: "foo"},
+				FunctionName:  &node.Identifier{Value: "foo"},
 				ReturnType: &name.Name{
 					Parts: []node.Node{
 						&name.NamePart{Value: "void"},

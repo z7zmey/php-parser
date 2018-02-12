@@ -102,7 +102,7 @@ CAD;
 
 		while (1) { break; }
 		while (1) { break 2; }
-		while (1) { break(3); }
+		while (1) : break(3); endwhile;
 		class foo{ const FOO = 1, BAR = 2; }
 		class foo{ function bar() {} }
 		class foo{ public static function &bar() {} }
@@ -117,7 +117,7 @@ CAD;
 		while (1) { continue 2; }
 		while (1) { continue(3); }
 		declare(ticks=1);
-		declare(ticks=1) {}
+		declare(ticks=1, strict_types=1) {}
 		declare(ticks=1): enddeclare;
 		do {} while(1);
 		echo $a, 1;
@@ -140,10 +140,10 @@ CAD;
 			return $a;
 		}
 		
-		function foo() {return;}
+		function foo(array $a, callable $b) {return;}
 		function &foo() {return 1;}
 		function &foo() {}
-		global $a, $b;
+		global $a, $b, $$c, ${foo()};
 		a: 
 		goto a;
 		__halt_compiler();
@@ -162,15 +162,26 @@ CAD;
 		class foo {var $a;}
 		class foo {public static $a, $b = 1;}
 		static $a, $b = 1;
+		static $a = 1, $b;
 
 		switch (1) :
 			case 1:
 			default:
+			case 2:
+		endswitch;
+
+		switch (1) :;
+			case 1;
 			case 2;
 		endswitch;
 		
 		switch (1) {
 			case 1: break;
+			case 2: break;
+		}
+		
+		switch (1) {;
+			case 1; break;
 			case 2; break;
 		}
 		throw $e;
@@ -223,9 +234,9 @@ CAD;
 		die;
 		die($a);
 		foo();
-		namespace\foo();
-		\foo();
-		$foo();
+		namespace\foo(&$a);
+		\foo([]);
+		$foo(yield $a);
 
 		$a--;
 		$a++;
@@ -794,6 +805,11 @@ CAD;
 						ConstantName:  &node.Identifier{Value: "ticks"},
 						Expr:          &scalar.Lnumber{Value: "1"},
 					},
+					&stmt.Constant{
+						PhpDocComment: "",
+						ConstantName:  &node.Identifier{Value: "strict_types"},
+						Expr:          &scalar.Lnumber{Value: "1"},
+					},
 				},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{},
@@ -936,7 +952,7 @@ CAD;
 				ReturnsRef:    false,
 				PhpDocComment: "",
 				FunctionName:  &node.Identifier{Value: "foo"},
-				Stmts:         []node.Node{
+				Stmts: []node.Node{
 					&stmt.HaltCompiler{},
 					&stmt.Function{
 						ReturnsRef:    false,
@@ -946,8 +962,8 @@ CAD;
 					},
 					&stmt.Class{
 						PhpDocComment: "",
-						ClassName: &node.Identifier{Value: "Baz"},
-						Stmts: []node.Node{},
+						ClassName:     &node.Identifier{Value: "Baz"},
+						Stmts:         []node.Node{},
 					},
 					&stmt.Return{
 						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
@@ -958,6 +974,20 @@ CAD;
 				ReturnsRef:    false,
 				PhpDocComment: "",
 				FunctionName:  &node.Identifier{Value: "foo"},
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "array"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					},
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "callable"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					},
+				},
 				Stmts: []node.Node{
 					&stmt.Return{},
 				},
@@ -982,6 +1012,17 @@ CAD;
 				Vars: []node.Node{
 					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$c"}}},
+					&expr.Variable{
+						VarName: &expr.FunctionCall{
+							Function: &name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "foo"},
+								},
+							},
+							Arguments: []node.Node{},
+						},
+					},
 				},
 			},
 			&stmt.Label{
@@ -1152,6 +1193,17 @@ CAD;
 					},
 				},
 			},
+			&stmt.Static{
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Expr:     &scalar.Lnumber{Value: "1"},
+					},
+					&stmt.StaticVar{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					},
+				},
+			},
 			&stmt.Switch{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Cases: []node.Node{
@@ -1165,6 +1217,36 @@ CAD;
 					&stmt.Case{
 						Cond:  &scalar.Lnumber{Value: "2"},
 						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Switch{
+				Cond: &scalar.Lnumber{Value: "1"},
+				Cases: []node.Node{
+					&stmt.Case{
+						Cond:  &scalar.Lnumber{Value: "1"},
+						Stmts: []node.Node{},
+					},
+					&stmt.Case{
+						Cond:  &scalar.Lnumber{Value: "2"},
+						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Switch{
+				Cond: &scalar.Lnumber{Value: "1"},
+				Cases: []node.Node{
+					&stmt.Case{
+						Cond: &scalar.Lnumber{Value: "1"},
+						Stmts: []node.Node{
+							&stmt.Break{},
+						},
+					},
+					&stmt.Case{
+						Cond: &scalar.Lnumber{Value: "2"},
+						Stmts: []node.Node{
+							&stmt.Break{},
+						},
 					},
 				},
 			},
@@ -1750,7 +1832,13 @@ CAD;
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					Arguments: []node.Node{
+						&node.Argument{
+							Variadic:    false,
+							IsReference: true,
+							Expr:        &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						},
+					},
 				},
 			},
 			&stmt.Expression{
@@ -1760,13 +1848,29 @@ CAD;
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					Arguments: []node.Node{
+						&node.Argument{
+							Variadic:    false,
+							IsReference: false,
+							Expr: &expr.ShortArray{
+								Items: []node.Node{},
+							},
+						},
+					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-					Arguments: []node.Node{},
+					Function: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Arguments: []node.Node{
+						&node.Argument{
+							Variadic:    false,
+							IsReference: false,
+							Expr: &expr.Yield{
+								Value: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							},
+						},
+					},
 				},
 			},
 			&stmt.Expression{

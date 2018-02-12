@@ -3,10 +3,11 @@ package stmt_test
 import (
 	"bytes"
 	"testing"
-	
+
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 )
@@ -32,7 +33,7 @@ func TestGlobal(t *testing.T) {
 }
 
 func TestGlobalVars(t *testing.T) {
-	src := `<? global $a, $b;`
+	src := `<? global $a, $b, $$c, ${foo()};`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -40,6 +41,17 @@ func TestGlobalVars(t *testing.T) {
 				Vars: []node.Node{
 					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$c"}}},
+					&expr.Variable{
+						VarName: &expr.FunctionCall{
+							Function: &name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "foo"},
+								},
+							},
+							Arguments: []node.Node{},
+						},
+					},
 				},
 			},
 		},
