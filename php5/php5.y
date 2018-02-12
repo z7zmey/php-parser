@@ -2,7 +2,7 @@
 package php5
 
 import (
-//    "fmt"
+    "fmt"
     "strings"
     "strconv"
 
@@ -199,7 +199,7 @@ import (
 %type <node> static_class_constant compound_variable reference_variable class_name variable_class_name
 %type <node> dim_offset expr expr_without_variable r_variable w_variable rw_variable variable base_variable_with_function_calls
 %type <node> base_variable array_function_dereference function_call inner_statement statement unticked_statement
-%type <node> inner_statement statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
+%type <node> statement global_var static_scalar scalar class_constant static_class_name_scalar class_name_scalar
 %type <node> encaps_var encaps_var encaps_var_offset general_constant isset_variable internal_functions_in_yacc assignment_list_element
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
@@ -239,8 +239,8 @@ start:
 ;
 
 top_statement_list:
-        top_statement_list top_statement                { $$ = append($1, $2) }
-    |   /* empty */                                     { $$ = []node.Node{} }
+        top_statement_list top_statement                { fmt.Println("1"); $$ = append($1, $2) }
+    |   /* empty */                                     { fmt.Println("2"); $$ = []node.Node{} }
 ;
 
 namespace_name:
@@ -248,28 +248,28 @@ namespace_name:
             {
                 namePart := name.NewNamePart($1.Value)
                 positions.AddPosition(namePart, positionBuilder.NewTokenPosition($1))
-                $$ = []node.Node{namePart}
+                fmt.Println("3"); $$ = []node.Node{namePart}
                 comments.AddComments(namePart, $1.Comments())
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 namePart := name.NewNamePart($3.Value)
                 positions.AddPosition(namePart, positionBuilder.NewTokenPosition($3))
-                $$ = append($1, namePart)
+                fmt.Println("4"); $$ = append($1, namePart)
                 comments.AddComments(namePart, $3.Comments())
             }
 ;
 
 top_statement:
         statement
-            { $$ = $1 }
+            { fmt.Println("5"); $$ = $1 }
     |   function_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("6"); $$ = $1 }
     |   class_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("7"); $$ = $1 }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = stmt.NewHaltCompiler()
+                fmt.Println("8"); $$ = stmt.NewHaltCompiler()
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -277,7 +277,7 @@ top_statement:
             {
                 name := name.NewName($2)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
-                $$ = stmt.NewNamespace(name, nil)
+                fmt.Println("9"); $$ = stmt.NewNamespace(name, nil)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -287,7 +287,7 @@ top_statement:
             {
                 name := name.NewName($2)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
-                $$ = stmt.NewNamespace(name, $4)
+                fmt.Println("10"); $$ = stmt.NewNamespace(name, $4)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -295,13 +295,13 @@ top_statement:
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
-                $$ = stmt.NewNamespace(nil, $3)
+                fmt.Println("11"); $$ = stmt.NewNamespace(nil, $3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_USE use_declarations ';'
             {
-                $$ = stmt.NewUseList(nil, $2)
+                fmt.Println("12"); $$ = stmt.NewUseList(nil, $2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -311,7 +311,7 @@ top_statement:
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($2))
                 comments.AddComments($$, $2.Comments())
 
-                $$ = stmt.NewUseList(useType, $3)
+                fmt.Println("13"); $$ = stmt.NewUseList(useType, $3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -321,19 +321,19 @@ top_statement:
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($2))
                 comments.AddComments($$, $2.Comments())
 
-                $$ = stmt.NewUseList(useType, $3)
+                fmt.Println("14"); $$ = stmt.NewUseList(useType, $3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   constant_declaration ';'
-            { $$ = $1 }
+            { fmt.Println("15"); $$ = $1 }
 ;
 
 use_declarations:
         use_declarations ',' use_declaration
-            { $$ = append($1, $3) }
+            { fmt.Println("16"); $$ = append($1, $3) }
     |   use_declaration
-            { $$ = []node.Node{$1} }
+            { fmt.Println("17"); $$ = []node.Node{$1} }
 ;
 
 use_declaration:
@@ -341,7 +341,7 @@ use_declaration:
             {
                 name := name.NewName($1)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("18"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -353,7 +353,7 @@ use_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("19"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -364,7 +364,7 @@ use_declaration:
             {
                 name := name.NewName($2)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("20"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -376,7 +376,7 @@ use_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("21"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -387,9 +387,9 @@ use_declaration:
 
 use_function_declarations:
         use_function_declarations ',' use_function_declaration
-            { $$ = append($1, $3) }
+            { fmt.Println("22"); $$ = append($1, $3) }
     |   use_function_declaration
-            { $$ = []node.Node{$1} }
+            { fmt.Println("23"); $$ = []node.Node{$1} }
 ;
 
 use_function_declaration:
@@ -397,7 +397,7 @@ use_function_declaration:
             {
                 name := name.NewName($1)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("24"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -409,7 +409,7 @@ use_function_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("25"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -420,7 +420,7 @@ use_function_declaration:
             {
                 name := name.NewName($2)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("26"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -432,7 +432,7 @@ use_function_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("27"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -443,9 +443,9 @@ use_function_declaration:
 
 use_const_declarations:
         use_const_declarations ',' use_const_declaration
-            { $$ = append($1, $3) }
+            { fmt.Println("28"); $$ = append($1, $3) }
     |   use_const_declaration
-            { $$ = []node.Node{$1} }
+            { fmt.Println("29"); $$ = []node.Node{$1} }
 ;
 
 use_const_declaration:
@@ -453,7 +453,7 @@ use_const_declaration:
             {
                 name := name.NewName($1)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("30"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -465,7 +465,7 @@ use_const_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("31"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 comments.AddComments(name, ListGetFirstNodeComments($1))
@@ -476,7 +476,7 @@ use_const_declaration:
             {
                 name := name.NewName($2)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
-                $$ = stmt.NewUse(nil, name, nil)
+                fmt.Println("32"); $$ = stmt.NewUse(nil, name, nil)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -488,7 +488,7 @@ use_const_declaration:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
-                $$ = stmt.NewUse(nil, name, alias)
+                fmt.Println("33"); $$ = stmt.NewUse(nil, name, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 comments.AddComments(name, ListGetFirstNodeComments($2))
@@ -511,7 +511,7 @@ constant_declaration:
                 constList := $1.(*stmt.ConstList)
                 constList.Consts = append(constList.Consts, constant)
 
-                $$ = $1
+                fmt.Println("34"); $$ = $1
                 positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
             }
     |   T_CONST T_STRING '=' static_scalar
@@ -526,7 +526,7 @@ constant_declaration:
 
                 constList := []node.Node{constant}
 
-                $$ = stmt.NewConstList(constList)
+                fmt.Println("35"); $$ = stmt.NewConstList(constList)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, constList))
                 comments.AddComments($$, $1.Comments())
             }
@@ -534,22 +534,22 @@ constant_declaration:
 
 inner_statement_list:
         inner_statement_list inner_statement
-            { $$ = append($1, $2) }
+            { fmt.Println("36"); $$ = append($1, $2) }
     |   /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("37"); $$ = []node.Node{} }
 ;
 
 
 inner_statement:
         statement
-            { $$ = $1 }
+            { fmt.Println("38"); $$ = $1 }
     |   function_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("39"); $$ = $1 }
     |   class_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("40"); $$ = $1 }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = stmt.NewHaltCompiler()
+                fmt.Println("41"); $$ = stmt.NewHaltCompiler()
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -558,12 +558,12 @@ inner_statement:
 
 statement:
         unticked_statement
-            { $$ = $1 }
+            { fmt.Println("42"); $$ = $1 }
     |   T_STRING ':'
             {
                 label := node.NewIdentifier($1.Value)
                 positions.AddPosition(label, positionBuilder.NewTokenPosition($1))
-                $$ = stmt.NewLabel(label)
+                fmt.Println("43"); $$ = stmt.NewLabel(label)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
 
                 comments.AddComments(label, $1.Comments())
@@ -574,13 +574,13 @@ statement:
 unticked_statement:
         '{' inner_statement_list '}'
             {
-                $$ = stmt.NewStmtList($2)
+                fmt.Println("44"); $$ = stmt.NewStmtList($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_IF parenthesis_expr statement elseif_list else_single
             {
-                $$ = stmt.NewIf($2, $3, $4, $5)
+                fmt.Println("45"); $$ = stmt.NewIf($2, $3, $4, $5)
                 
                 if $5 != nil {
                     positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
@@ -597,120 +597,120 @@ unticked_statement:
                 stmts := stmt.NewStmtList($4)
                 positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($4))
 
-                $$ = stmt.NewAltIf($2, stmts, $5, $6)
+                fmt.Println("46"); $$ = stmt.NewAltIf($2, stmts, $5, $6)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_WHILE parenthesis_expr while_statement
             {
-                $$ = stmt.NewWhile($2, $3)
+                fmt.Println("47"); $$ = stmt.NewWhile($2, $3)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
             {
-                $$ = stmt.NewDo($2, $4)
+                fmt.Println("48"); $$ = stmt.NewDo($2, $4)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
             {
-                $$ = stmt.NewFor($3, $5, $7, $9)
+                fmt.Println("49"); $$ = stmt.NewFor($3, $5, $7, $9)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
-                $$ = stmt.NewSwitch($2, $3.nodes)
+                fmt.Println("50"); $$ = stmt.NewSwitch($2, $3.nodes)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_BREAK ';'
             {
-                $$ = stmt.NewBreak(nil)
+                fmt.Println("51"); $$ = stmt.NewBreak(nil)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_BREAK expr ';'
             {
-                $$ = stmt.NewBreak($2)
+                fmt.Println("52"); $$ = stmt.NewBreak($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CONTINUE ';'
             {
-                $$ = stmt.NewContinue(nil)
+                fmt.Println("53"); $$ = stmt.NewContinue(nil)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CONTINUE expr ';'
             {
-                $$ = stmt.NewContinue($2)
+                fmt.Println("54"); $$ = stmt.NewContinue($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN ';'
             {
-                $$ = stmt.NewReturn(nil)
+                fmt.Println("55"); $$ = stmt.NewReturn(nil)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN expr_without_variable ';'
             {
-                $$ = stmt.NewReturn($2)
+                fmt.Println("56"); $$ = stmt.NewReturn($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN variable ';'
             {
-                $$ = stmt.NewReturn($2)
+                fmt.Println("57"); $$ = stmt.NewReturn($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   yield_expr ';'
-            { $$ = $1 }
+            { fmt.Println("58"); $$ = $1 }
     |   T_GLOBAL global_var_list ';'
             {
-                $$ = stmt.NewGlobal($2)
+                fmt.Println("59"); $$ = stmt.NewGlobal($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC static_var_list ';'
             {
-                $$ = stmt.NewStatic($2)
+                fmt.Println("60"); $$ = stmt.NewStatic($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_ECHO echo_expr_list ';'
             {
-                $$ = stmt.NewEcho($2)
+                fmt.Println("61"); $$ = stmt.NewEcho($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_INLINE_HTML
             {
-                $$ = stmt.NewInlineHtml($1.Value)
+                fmt.Println("62"); $$ = stmt.NewInlineHtml($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   expr ';'
             {
-                $$ = stmt.NewExpression($1)
+                fmt.Println("63"); $$ = stmt.NewExpression($1)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
                 comments.AddComments($$, comments[$1])
             }
     |   T_UNSET '(' unset_variables ')' ';'
             {
-                $$ = stmt.NewUnset($3)
+                fmt.Println("64"); $$ = stmt.NewUnset($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
                 if $6.node == nil {
-                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                    fmt.Println("65"); $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
                 } else {
-                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                    fmt.Println("66"); $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
                 }
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
                 comments.AddComments($$, $1.Comments())
@@ -718,28 +718,28 @@ unticked_statement:
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
                 if $6.node == nil {
-                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                    fmt.Println("67"); $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
                 } else {
-                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                    fmt.Println("68"); $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
                 }
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {
-                $$ = stmt.NewDeclare($3, $5)
+                fmt.Println("69"); $$ = stmt.NewDeclare($3, $5)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
                 comments.AddComments($$, $1.Comments())
             }
     |   ';'
             {
-                $$ = stmt.NewNop()
+                fmt.Println("70"); $$ = stmt.NewNop()
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
-                $$ = stmt.NewTry($3, $5, $6)
+                fmt.Println("71"); $$ = stmt.NewTry($3, $5, $6)
 
                 if $6 == nil {
                     positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $5))
@@ -751,7 +751,7 @@ unticked_statement:
             }
     |   T_THROW expr ';'
             {
-                $$ = stmt.NewThrow($2)
+                fmt.Println("72"); $$ = stmt.NewThrow($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -759,7 +759,7 @@ unticked_statement:
             {
                 label := node.NewIdentifier($2.Value)
                 positions.AddPosition(label, positionBuilder.NewTokenPosition($2))
-                $$ = stmt.NewGoto(label)
+                fmt.Println("73"); $$ = stmt.NewGoto(label)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
 
                 comments.AddComments(label, $2.Comments())
@@ -769,7 +769,7 @@ unticked_statement:
 
 catch_statement:
         /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("74"); $$ = []node.Node{} }
     |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
             {
                 identifier := node.NewIdentifier($4.Value)
@@ -784,15 +784,15 @@ catch_statement:
                 positions.AddPosition(catch, positionBuilder.NewTokensPosition($1, $8))
                 comments.AddComments(catch, $1.Comments())
 
-                $$ = append([]node.Node{catch}, $9...)
+                fmt.Println("75"); $$ = append([]node.Node{catch}, $9...)
             }
 
 finally_statement:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("76"); $$ = nil }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = stmt.NewFinally($3)
+                fmt.Println("77"); $$ = stmt.NewFinally($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -800,16 +800,16 @@ finally_statement:
 
 additional_catches:
         non_empty_additional_catches
-            { $$ = $1 }
+            { fmt.Println("78"); $$ = $1 }
     |   /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("79"); $$ = []node.Node{} }
 ;
 
 non_empty_additional_catches:
         additional_catch
-            { $$ = []node.Node{$1} }
+            { fmt.Println("80"); $$ = []node.Node{$1} }
     |   non_empty_additional_catches additional_catch
-            { $$ = append($1, $2) }
+            { fmt.Println("81"); $$ = append($1, $2) }
 ;
 
 additional_catch:
@@ -823,7 +823,7 @@ additional_catch:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
                 comments.AddComments(variable, $4.Comments())
                 
-                $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
+                fmt.Println("82"); $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
                 comments.AddComments($$, $1.Comments())
             }
@@ -831,38 +831,38 @@ additional_catch:
 
 unset_variables:
         unset_variable
-            { $$ = []node.Node{$1} }
+            { fmt.Println("83"); $$ = []node.Node{$1} }
     |   unset_variables ',' unset_variable
-            { $$ = append($1, $3) }
+            { fmt.Println("84"); $$ = append($1, $3) }
 ;
 
 unset_variable:
         variable
-            { $$ = $1 }
+            { fmt.Println("85"); $$ = $1 }
 ;
 
 function_declaration_statement:
         unticked_function_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("86"); $$ = $1 }
 ;
 
 class_declaration_statement:
         unticked_class_declaration_statement
-            { $$ = $1 }
+            { fmt.Println("87"); $$ = $1 }
 ;
 
 is_reference:
         /* empty */
-            { $$ = boolWithToken{false, nil} }
+            { fmt.Println("88"); $$ = boolWithToken{false, nil} }
     |   '&'
-            { $$ = boolWithToken{true, &$1} }
+            { fmt.Println("89"); $$ = boolWithToken{true, &$1} }
 ;
 
 is_variadic:
         /* empty */
-            { $$ = boolWithToken{false, nil} }
+            { fmt.Println("90"); $$ = boolWithToken{false, nil} }
     |   T_ELLIPSIS
-            { $$ = boolWithToken{true, &$1} }
+            { fmt.Println("91"); $$ = boolWithToken{true, &$1} }
 ;
 
 unticked_function_declaration_statement:
@@ -872,7 +872,7 @@ unticked_function_declaration_statement:
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(name, $3.Comments())
 
-                $$ = stmt.NewFunction(name, $2.value, $5, nil, $8, "")
+                fmt.Println("92"); $$ = stmt.NewFunction(name, $2.value, $5, nil, $8, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
                 comments.AddComments($$, $1.Comments())
             }
@@ -898,7 +898,7 @@ unticked_class_declaration_statement:
                         n.Stmts = $6
                 }
 
-                $$ = $1
+                fmt.Println("93"); $$ = $1
             }
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
@@ -906,7 +906,7 @@ unticked_class_declaration_statement:
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
                 comments.AddComments(name, $2.Comments())
                 
-                $$ = stmt.NewInterface(name, $3, $5, "")
+                fmt.Println("94"); $$ = stmt.NewInterface(name, $3, $5, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
                 comments.AddComments($$, $1.Comments())
             }
@@ -916,7 +916,7 @@ unticked_class_declaration_statement:
 class_entry_type:
         T_CLASS
             {
-                $$ = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
+                fmt.Println("95"); $$ = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
@@ -926,13 +926,13 @@ class_entry_type:
                 positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(classModifier, $1.Comments())
 
-                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                fmt.Println("96"); $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_TRAIT
             {
-                $$ = stmt.NewTrait(nil, nil, "")
+                fmt.Println("97"); $$ = stmt.NewTrait(nil, nil, "")
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
@@ -942,7 +942,7 @@ class_entry_type:
                 positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(classModifier, $1.Comments())
 
-                $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
+                fmt.Println("98"); $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -950,64 +950,64 @@ class_entry_type:
 
 extends_from:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("99"); $$ = nil }
     |   T_EXTENDS fully_qualified_class_name
-            { $$ = $2 }
+            { fmt.Println("100"); $$ = $2 }
 ;
 
 interface_entry:
         T_INTERFACE
-            { $$ = $1 }
+            { fmt.Println("101"); $$ = $1 }
 ;
 
 interface_extends_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("102"); $$ = nil }
     |   T_EXTENDS interface_list
-            { $$ = $2 }
+            { fmt.Println("103"); $$ = $2 }
 ;
 
 implements_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("104"); $$ = nil }
     |   T_IMPLEMENTS interface_list
-            { $$ = $2 }
+            { fmt.Println("105"); $$ = $2 }
 ;
 
 interface_list:
         fully_qualified_class_name
-            { $$ = []node.Node{$1} }
+            { fmt.Println("106"); $$ = []node.Node{$1} }
     |   interface_list ',' fully_qualified_class_name
-            { $$ = append($1, $3) }
+            { fmt.Println("107"); $$ = append($1, $3) }
 ;
 
 foreach_optional_arg:
         /* empty */
-            { $$ = foreachVariable{nil, false} }
+            { fmt.Println("108"); $$ = foreachVariable{nil, false} }
     |   T_DOUBLE_ARROW foreach_variable
-            { $$ = $2 }
+            { fmt.Println("109"); $$ = $2 }
 ;
 
 foreach_variable:
         variable
-            { $$ = foreachVariable{$1, false} }
+            { fmt.Println("110"); $$ = foreachVariable{$1, false} }
     |   '&' variable
-            { $$ = foreachVariable{$2, true} }
+            { fmt.Println("111"); $$ = foreachVariable{$2, true} }
     |   T_LIST '(' assignment_list ')'
             {
                 list := expr.NewList($3)
                 positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
-                $$ = foreachVariable{list, false}
+                fmt.Println("112"); $$ = foreachVariable{list, false}
                 comments.AddComments(list, $1.Comments())
             }
 ;
 
 for_statement:
         statement
-            { $$ = $1; }
+            { fmt.Println("113"); $$ = $1; }
     |    ':' inner_statement_list T_ENDFOR ';'
             {
-                $$ = stmt.NewStmtList($2)
+                fmt.Println("114"); $$ = stmt.NewStmtList($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1016,10 +1016,10 @@ for_statement:
 
 foreach_statement:
         statement
-            { $$ = $1; }
+            { fmt.Println("115"); $$ = $1; }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                $$ = stmt.NewStmtList($2)
+                fmt.Println("116"); $$ = stmt.NewStmtList($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1028,10 +1028,10 @@ foreach_statement:
 
 declare_statement:
         statement
-            { $$ = $1; }
+            { fmt.Println("117"); $$ = $1; }
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
-                $$ = stmt.NewStmtList($2)
+                fmt.Println("118"); $$ = stmt.NewStmtList($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1049,7 +1049,7 @@ declare_list:
                 positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($1, $3))
                 comments.AddComments(constant, $1.Comments())
 
-                $$ = []node.Node{constant}
+                fmt.Println("119"); $$ = []node.Node{constant}
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
@@ -1061,38 +1061,38 @@ declare_list:
                 positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
                 comments.AddComments(constant, $3.Comments())
 
-                $$ = append($1, constant)
+                fmt.Println("120"); $$ = append($1, constant)
             }
 ;
 
 
 switch_case_list:
         '{' case_list '}'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            { fmt.Println("121"); $$ = &nodesWithEndToken{$2, $3} }
     |   '{' ';' case_list '}'
-            { $$ = &nodesWithEndToken{$3, $4} }
+            { fmt.Println("122"); $$ = &nodesWithEndToken{$3, $4} }
     |   ':' case_list T_ENDSWITCH ';'
-            { $$ = &nodesWithEndToken{$2, $4} }
+            { fmt.Println("123"); $$ = &nodesWithEndToken{$2, $4} }
     |   ':' ';' case_list T_ENDSWITCH ';'
-            { $$ = &nodesWithEndToken{$3, $5} }
+            { fmt.Println("124"); $$ = &nodesWithEndToken{$3, $5} }
 ;
 
 
 case_list:
         /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("125"); $$ = []node.Node{} }
     |   case_list T_CASE expr case_separator inner_statement_list
             {
                 _case := stmt.NewCase($3, $5)
                 positions.AddPosition(_case, positionBuilder.NewTokenNodeListPosition($2, $5))
-                $$ = append($1, _case)
+                fmt.Println("126"); $$ = append($1, _case)
                 comments.AddComments(_case, $2.Comments())
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
                 _default := stmt.NewDefault($4)
                 positions.AddPosition(_default, positionBuilder.NewTokenNodeListPosition($2, $4))
-                $$ = append($1, _default)
+                fmt.Println("127"); $$ = append($1, _default)
                 comments.AddComments(_default, $2.Comments())
             }
 ;
@@ -1106,10 +1106,10 @@ case_separator:
 
 while_statement:
         statement
-            { $$ = $1 }
+            { fmt.Println("128"); $$ = $1 }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                $$ = stmt.NewStmtList($2)
+                fmt.Println("129"); $$ = stmt.NewStmtList($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
             }
 ;
@@ -1118,21 +1118,21 @@ while_statement:
 
 elseif_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("130"); $$ = nil }
     |   elseif_list T_ELSEIF parenthesis_expr statement
             {
                 _elseIf := stmt.NewElseIf($3, $4)
                 positions.AddPosition(_elseIf, positionBuilder.NewTokenNodePosition($2, $4))
                 comments.AddComments(_elseIf, $2.Comments())
 
-                $$ = append($1, _elseIf)
+                fmt.Println("131"); $$ = append($1, _elseIf)
             }
 ;
 
 
 new_elseif_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("132"); $$ = nil }
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
                 stmts := stmt.NewStmtList($5)
@@ -1142,17 +1142,17 @@ new_elseif_list:
                 positions.AddPosition(_elseIf, positionBuilder.NewTokenNodeListPosition($2, $5))
                 comments.AddComments(_elseIf, $2.Comments())
 
-                $$ = append($1, _elseIf)
+                fmt.Println("133"); $$ = append($1, _elseIf)
             }
 ;
 
 
 else_single:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("134"); $$ = nil }
     |   T_ELSE statement
             {
-                $$ = stmt.NewElse($2)
+                fmt.Println("135"); $$ = stmt.NewElse($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1161,13 +1161,13 @@ else_single:
 
 new_else_single:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("136"); $$ = nil }
     |   T_ELSE ':' inner_statement_list
             {
                 stmts := stmt.NewStmtList($3)
                 positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($3))
 
-                $$ = stmt.NewAltElse(stmts)
+                fmt.Println("137"); $$ = stmt.NewAltElse(stmts)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1176,16 +1176,16 @@ new_else_single:
 
 parameter_list:
         non_empty_parameter_list
-            { $$ = $1; }
+            { fmt.Println("138"); $$ = $1; }
     |   /* empty */
-            { $$ = nil }
+            { fmt.Println("139"); $$ = nil }
 ;
 
 non_empty_parameter_list:
         parameter
-            { $$ = []node.Node{$1} }
+            { fmt.Println("140"); $$ = []node.Node{$1} }
     |   non_empty_parameter_list ',' parameter
-            { $$ = append($1, $3) }
+            { fmt.Println("141"); $$ = append($1, $3) }
 ;
 
 parameter:
@@ -1199,7 +1199,7 @@ parameter:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
                 comments.AddComments($$, $4.Comments())
                 
-                $$ = node.NewParameter($1, variable, nil, $2.value, $3.value)
+                fmt.Println("142"); $$ = node.NewParameter($1, variable, nil, $2.value, $3.value)
                 
                 if $1 != nil {
                     positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
@@ -1225,7 +1225,7 @@ parameter:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
                 comments.AddComments(variable, $4.Comments())
 
-                $$ = node.NewParameter($1, variable, $6, $2.value, $3.value)
+                fmt.Println("143"); $$ = node.NewParameter($1, variable, $6, $2.value, $3.value)
 
                 if $1 != nil {
                     positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $6))
@@ -1246,69 +1246,69 @@ parameter:
 
 optional_class_type:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("144"); $$ = nil }
     |   T_ARRAY
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("145"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CALLABLE
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("146"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   fully_qualified_class_name
-            { $$ = $1 }
+            { fmt.Println("147"); $$ = $1 }
 ;
 
 
 function_call_parameter_list:
         '(' ')'
-            { $$ = &nodesWithEndToken{[]node.Node{}, $2} }
+            { fmt.Println("148"); $$ = &nodesWithEndToken{[]node.Node{}, $2} }
     |   '(' non_empty_function_call_parameter_list ')'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            { fmt.Println("149"); $$ = &nodesWithEndToken{$2, $3} }
     |   '(' yield_expr ')'
             {
                 arg := node.NewArgument($2, false, false)
                 positions.AddPosition(arg, positionBuilder.NewNodePosition($2))
                 comments.AddComments(arg, comments[$2])
 
-                $$ = &nodesWithEndToken{[]node.Node{arg}, $3}
+                fmt.Println("150"); $$ = &nodesWithEndToken{[]node.Node{arg}, $3}
             }
 ;
 
 
 non_empty_function_call_parameter_list:
         function_call_parameter
-            { $$ = []node.Node{$1} }
+            { fmt.Println("151"); $$ = []node.Node{$1} }
     |   non_empty_function_call_parameter_list ',' function_call_parameter
-            { $$ = append($1, $3) }
+            { fmt.Println("152"); $$ = append($1, $3) }
 ;
 
 function_call_parameter:
         expr_without_variable
             {
-                $$ = node.NewArgument($1, false, false)
+                fmt.Println("153"); $$ = node.NewArgument($1, false, false)
                 positions.AddPosition($$, positionBuilder.NewNodePosition($1))
                 comments.AddComments($$, comments[$1])
             }
     |   variable
             {
-                $$ = node.NewArgument($1, false, false)
+                fmt.Println("154"); $$ = node.NewArgument($1, false, false)
                 positions.AddPosition($$, positionBuilder.NewNodePosition($1))
                 comments.AddComments($$, comments[$1])
             }
     |   '&' w_variable
             {
-                $$ = node.NewArgument($2, false, true)
+                fmt.Println("155"); $$ = node.NewArgument($2, false, true)
                 positions.AddPosition($$, positionBuilder.NewNodePosition($2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_ELLIPSIS expr
             {
-                $$ = node.NewArgument($2, true, false)
+                fmt.Println("156"); $$ = node.NewArgument($2, true, false)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1316,9 +1316,9 @@ function_call_parameter:
 
 global_var_list:
         global_var_list ',' global_var
-            { $$ = append($1, $3) }
+            { fmt.Println("157"); $$ = append($1, $3) }
     |   global_var
-            { $$ = []node.Node{$1} }
+            { fmt.Println("158"); $$ = []node.Node{$1} }
 ;
 
 
@@ -1327,7 +1327,7 @@ global_var:
             {
                 name := node.NewIdentifier($1.Value)
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewVariable(name)
+                fmt.Println("159"); $$ = expr.NewVariable(name)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 
                 comments.AddComments(name, $1.Comments())
@@ -1335,13 +1335,13 @@ global_var:
             }
     |   '$' r_variable
             {
-                $$ = expr.NewVariable($2)
+                fmt.Println("160"); $$ = expr.NewVariable($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '$' '{' expr '}'
             {
-                $$ = expr.NewVariable($3)
+                fmt.Println("161"); $$ = expr.NewVariable($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1360,7 +1360,7 @@ static_var_list:
                 staticVar := stmt.NewStaticVar(variable, nil)
                 positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($3))
 
-                $$ = append($1, staticVar)
+                fmt.Println("162"); $$ = append($1, staticVar)
 
                 comments.AddComments(identifier, $3.Comments())
                 comments.AddComments(variable, $3.Comments())
@@ -1377,7 +1377,7 @@ static_var_list:
                 staticVar := stmt.NewStaticVar(variable, $5)
                 positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($3, $5))
 
-                $$ = append($1, staticVar)
+                fmt.Println("163"); $$ = append($1, staticVar)
 
                 comments.AddComments(identifier, $3.Comments())
                 comments.AddComments(variable, $3.Comments())
@@ -1394,7 +1394,7 @@ static_var_list:
                 staticVar := stmt.NewStaticVar(variable, nil)
                 positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($1))
 
-                $$ = []node.Node{staticVar}
+                fmt.Println("164"); $$ = []node.Node{staticVar}
 
                 comments.AddComments(identifier, $1.Comments())
                 comments.AddComments(variable, $1.Comments())
@@ -1411,7 +1411,7 @@ static_var_list:
                 staticVar := stmt.NewStaticVar(variable, $3)
                 positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($1, $3))
 
-                $$ = []node.Node{staticVar}
+                fmt.Println("165"); $$ = []node.Node{staticVar}
 
                 comments.AddComments(identifier, $1.Comments())
                 comments.AddComments(variable, $1.Comments())
@@ -1423,30 +1423,30 @@ static_var_list:
 
 class_statement_list:
         class_statement_list class_statement
-            { $$ = append($1, $2) }
+            { fmt.Println("166"); $$ = append($1, $2) }
     |   /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("167"); $$ = []node.Node{} }
 ;
 
 
 class_statement:
         variable_modifiers class_variable_declaration ';'
             {
-                $$ = stmt.NewPropertyList($1, $2)
+                fmt.Println("168"); $$ = stmt.NewPropertyList($1, $2)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
                 comments.AddComments($$, ListGetFirstNodeComments($1))
             }
     |   class_constant_declaration ';'
-            { $$ = $1 }
+            { fmt.Println("169"); $$ = $1 }
     |   trait_use_statement
-            { $$ = $1 }
+            { fmt.Println("170"); $$ = $1 }
     |   method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body
             {
                 name := node.NewIdentifier($4.Value)
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($4))
                 comments.AddComments(name, $4.Comments())
                 
-                $$ = stmt.NewClassMethod(name, $1, $3.value, $6, nil, $8.nodes, "")
+                fmt.Println("171"); $$ = stmt.NewClassMethod(name, $1, $3.value, $6, nil, $8.nodes, "")
                 positions.AddPosition($$, positionBuilder.NewOptionalListTokensPosition($1, $2, $8.endToken))
                 comments.AddComments($$, ListGetFirstNodeComments($1))
             }
@@ -1455,7 +1455,7 @@ class_statement:
 trait_use_statement:
         T_USE trait_list trait_adaptations
             {
-                $$ = stmt.NewTraitUse($2, $3.nodes)
+                fmt.Println("172"); $$ = stmt.NewTraitUse($2, $3.nodes)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1463,43 +1463,43 @@ trait_use_statement:
 
 trait_list:
         fully_qualified_class_name
-            { $$ = []node.Node{$1} }
+            { fmt.Println("173"); $$ = []node.Node{$1} }
     |   trait_list ',' fully_qualified_class_name
-            { $$ = append($1, $3) }
+            { fmt.Println("174"); $$ = append($1, $3) }
 ;
 
 trait_adaptations:
         ';'
-            { $$ = &nodesWithEndToken{nil, $1} }
+            { fmt.Println("175"); $$ = &nodesWithEndToken{nil, $1} }
     |   '{' trait_adaptation_list '}'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            { fmt.Println("176"); $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 trait_adaptation_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("177"); $$ = nil }
     |   non_empty_trait_adaptation_list
-            { $$ = $1 }
+            { fmt.Println("178"); $$ = $1 }
 ;
 
 non_empty_trait_adaptation_list:
         trait_adaptation_statement
-            { $$ = []node.Node{$1} }
+            { fmt.Println("179"); $$ = []node.Node{$1} }
     |   non_empty_trait_adaptation_list trait_adaptation_statement
-            { $$ = append($1, $2) }
+            { fmt.Println("180"); $$ = append($1, $2) }
 ;
 
 trait_adaptation_statement:
         trait_precedence ';'
-            { $$ = $1 }
+            { fmt.Println("181"); $$ = $1 }
     |   trait_alias ';'
-            { $$ = $1 }
+            { fmt.Println("182"); $$ = $1 }
 ;
 
 trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
-                $$ = stmt.NewTraitUsePrecedence($1, $3)
+                fmt.Println("183"); $$ = stmt.NewTraitUsePrecedence($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -1507,9 +1507,9 @@ trait_precedence:
 
 trait_reference_list:
         fully_qualified_class_name
-            { $$ = []node.Node{$1} }
+            { fmt.Println("184"); $$ = []node.Node{$1} }
     |   trait_reference_list ',' fully_qualified_class_name
-            { $$ = append($1, $3) }
+            { fmt.Println("185"); $$ = append($1, $3) }
 ;
 
 trait_method_reference:
@@ -1519,12 +1519,12 @@ trait_method_reference:
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(name, $1.Comments())
                 
-                $$ = stmt.NewTraitMethodRef(nil, name)
+                fmt.Println("186"); $$ = stmt.NewTraitMethodRef(nil, name)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   trait_method_reference_fully_qualified
-            { $$ = $1 }
+            { fmt.Println("187"); $$ = $1 }
 ;
 
 trait_method_reference_fully_qualified:
@@ -1534,7 +1534,7 @@ trait_method_reference_fully_qualified:
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(target, $3.Comments())
                 
-                $$ = stmt.NewTraitMethodRef($1, target)
+                fmt.Println("188"); $$ = stmt.NewTraitMethodRef($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -1545,7 +1545,7 @@ trait_alias:
             {
                 alias := node.NewIdentifier($4.Value)
                 positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
-                $$ = stmt.NewTraitUseAlias($1, $3, alias)
+                fmt.Println("189"); $$ = stmt.NewTraitUseAlias($1, $3, alias)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 comments.AddComments(alias, $4.Comments())
@@ -1553,7 +1553,7 @@ trait_alias:
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = stmt.NewTraitUseAlias($1, $3, nil)
+                fmt.Println("190"); $$ = stmt.NewTraitUseAlias($1, $3, nil)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -1561,79 +1561,79 @@ trait_alias:
 
 trait_modifiers:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("191"); $$ = nil }
     |   member_modifier
-            { $$ = $1 }
+            { fmt.Println("192"); $$ = $1 }
 ;
 
 method_body:
         ';' /* abstract method */
-            { $$ = &nodesWithEndToken{nil, $1} }
+            { fmt.Println("193"); $$ = &nodesWithEndToken{nil, $1} }
     |   '{' inner_statement_list '}'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            { fmt.Println("194"); $$ = &nodesWithEndToken{$2, $3} }
 ;
 
 variable_modifiers:
         non_empty_member_modifiers
-            { $$ = $1; }
+            { fmt.Println("195"); $$ = $1; }
     |   T_VAR
             {
                 modifier := node.NewIdentifier($1.Value)
                 positions.AddPosition(modifier, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(modifier, $1.Comments())
                 
-                $$ = []node.Node{modifier}
+                fmt.Println("196"); $$ = []node.Node{modifier}
             }
 ;
 
 method_modifiers:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("197"); $$ = nil }
     |   non_empty_member_modifiers
-            { $$ = $1 }
+            { fmt.Println("198"); $$ = $1 }
 ;
 
 non_empty_member_modifiers:
         member_modifier
-            { $$ = []node.Node{$1} }
+            { fmt.Println("199"); $$ = []node.Node{$1} }
     |   non_empty_member_modifiers member_modifier
-            { $$ = append($1, $2) }
+            { fmt.Println("200"); $$ = append($1, $2) }
 ;
 
 member_modifier:
         T_PUBLIC
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("201"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_PROTECTED
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("202"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_PRIVATE
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("203"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("204"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_ABSTRACT
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("205"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FINAL
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("206"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1654,7 +1654,7 @@ class_variable_declaration:
                 positions.AddPosition(property, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(property, $3.Comments())
 
-                $$ = append($1, property)
+                fmt.Println("207"); $$ = append($1, property)
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
@@ -1670,7 +1670,7 @@ class_variable_declaration:
                 positions.AddPosition(property, positionBuilder.NewTokenNodePosition($3, $5))
                 comments.AddComments(property, $3.Comments())
 
-                $$ = append($1, property)
+                fmt.Println("208"); $$ = append($1, property)
             }
     |   T_VARIABLE
             {
@@ -1686,7 +1686,7 @@ class_variable_declaration:
                 positions.AddPosition(property, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(property, $1.Comments())
 
-                $$ = []node.Node{property}
+                fmt.Println("209"); $$ = []node.Node{property}
             }
     |   T_VARIABLE '=' static_scalar
             {
@@ -1702,7 +1702,7 @@ class_variable_declaration:
                 positions.AddPosition(property, positionBuilder.NewTokenNodePosition($1, $3))
                 comments.AddComments(property, $1.Comments())
 
-                $$ = []node.Node{property}
+                fmt.Println("210"); $$ = []node.Node{property}
             }
 ;
 
@@ -1720,7 +1720,7 @@ class_constant_declaration:
                 $1.(*stmt.ClassConstList).Consts = append($1.(*stmt.ClassConstList).Consts, constant)
                 positions.AddPosition($1, positionBuilder.NewNodesPosition($1, $5))
 
-                $$ = $1
+                fmt.Println("211"); $$ = $1
             }
     |   T_CONST T_STRING '=' static_scalar
             {
@@ -1732,7 +1732,7 @@ class_constant_declaration:
                 positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($2, $4))
                 comments.AddComments(constant, $2.Comments())
 
-                $$ = stmt.NewClassConstList(nil, []node.Node{constant})
+                fmt.Println("212"); $$ = stmt.NewClassConstList(nil, []node.Node{constant})
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -1740,31 +1740,31 @@ class_constant_declaration:
 
 echo_expr_list:
         echo_expr_list ',' expr
-            { $$ = append($1, $3) }
+            { fmt.Println("213"); $$ = append($1, $3) }
     |   expr
-            { $$ = []node.Node{$1} }
+            { fmt.Println("214"); $$ = []node.Node{$1} }
 ;
 
 
 for_expr:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("215"); $$ = nil }
     |   non_empty_for_expr
-            { $$ = $1 }
+            { fmt.Println("216"); $$ = $1 }
 ;
 
 non_empty_for_expr:
         non_empty_for_expr ',' expr
-            { $$ = append($1, $3) }
+            { fmt.Println("217"); $$ = append($1, $3) }
     |   expr
-            { $$ = []node.Node{$1} }
+            { fmt.Println("218"); $$ = []node.Node{$1} }
 ;
 
 chaining_method_or_property:
         chaining_method_or_property variable_property
-            { $$ = append($1, $2...) }
+            { fmt.Println("219"); $$ = append($1, $2...) }
     |   variable_property
-            { $$ = $1 }
+            { fmt.Println("220"); $$ = $1 }
 ;
 
 chaining_dereference:
@@ -1773,41 +1773,41 @@ chaining_dereference:
                 fetch := expr.NewArrayDimFetch(nil, $3)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
 
-                $$ = append($1, fetch)
+                fmt.Println("221"); $$ = append($1, fetch)
             }
     |   '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $2)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($2))
                 
-                $$ = []node.Node{fetch}
+                fmt.Println("222"); $$ = []node.Node{fetch}
             }
 ;
 
 chaining_instance_call:
         chaining_dereference chaining_method_or_property
-            { $$ = append($1, $2...) }
+            { fmt.Println("223"); $$ = append($1, $2...) }
     |   chaining_dereference
-            { $$ = $1 }
+            { fmt.Println("224"); $$ = $1 }
     |   chaining_method_or_property
-            { $$ = $1 }
+            { fmt.Println("225"); $$ = $1 }
 ;
 
 instance_call:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("226"); $$ = nil }
     |   chaining_instance_call
-            { $$ = $1 }
+            { fmt.Println("227"); $$ = $1 }
 ;
 
 new_expr:
         T_NEW class_name_reference ctor_arguments
             {
                 if $3 != nil {
-                    $$ = expr.NewNew($2, $3.nodes)
+                    fmt.Println("228"); $$ = expr.NewNew($2, $3.nodes)
                     positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
                 } else {
-                    $$ = expr.NewNew($2, nil)
+                    fmt.Println("229"); $$ = expr.NewNew($2, nil)
                     positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 }
 
@@ -1820,7 +1820,7 @@ expr_without_variable:
             {
                 list := expr.NewList($3)
                 positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
-                $$ = assign_op.NewAssign(list, $6)
+                fmt.Println("230"); $$ = assign_op.NewAssign(list, $6)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
 
                 comments.AddComments(list, $1.Comments())
@@ -1828,13 +1828,13 @@ expr_without_variable:
             }
     |   variable '=' expr
             {
-                $$ = assign_op.NewAssign($1, $3)
+                fmt.Println("231"); $$ = assign_op.NewAssign($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable '=' '&' variable
             {
-                $$ = assign_op.NewAssignRef($1, $4)
+                fmt.Println("232"); $$ = assign_op.NewAssignRef($1, $4)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
@@ -1849,299 +1849,299 @@ expr_without_variable:
                 }
                 comments.AddComments(_new, comments[$1])
 
-                $$ = assign_op.NewAssignRef($1, _new)
+                fmt.Println("233"); $$ = assign_op.NewAssignRef($1, _new)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, _new))
                 comments.AddComments($$, comments[$1])
             }
     |   T_CLONE expr
             {
-                $$ = expr.NewClone($2)
+                fmt.Println("234"); $$ = expr.NewClone($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = assign_op.NewPlus($1, $3)
+                fmt.Println("235"); $$ = assign_op.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = assign_op.NewMinus($1, $3)
+                fmt.Println("236"); $$ = assign_op.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = assign_op.NewMul($1, $3)
+                fmt.Println("237"); $$ = assign_op.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = assign_op.NewPow($1, $3)
+                fmt.Println("238"); $$ = assign_op.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = assign_op.NewDiv($1, $3)
+                fmt.Println("239"); $$ = assign_op.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = assign_op.NewConcat($1, $3)
+                fmt.Println("240"); $$ = assign_op.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = assign_op.NewMod($1, $3)
+                fmt.Println("241"); $$ = assign_op.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseAnd($1, $3)
+                fmt.Println("242"); $$ = assign_op.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseOr($1, $3)
+                fmt.Println("243"); $$ = assign_op.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseXor($1, $3)
+                fmt.Println("244"); $$ = assign_op.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = assign_op.NewShiftLeft($1, $3)
+                fmt.Println("245"); $$ = assign_op.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = assign_op.NewShiftRight($1, $3)
+                fmt.Println("246"); $$ = assign_op.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   rw_variable T_INC
             {
-                $$ = expr.NewPostInc($1)
+                fmt.Println("247"); $$ = expr.NewPostInc($1)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
                 comments.AddComments($$, comments[$1])
             }
     |   T_INC rw_variable
             {
-                $$ = expr.NewPreInc($2)
+                fmt.Println("248"); $$ = expr.NewPreInc($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   rw_variable T_DEC
             {
-                $$ = expr.NewPostDec($1)
+                fmt.Println("249"); $$ = expr.NewPostDec($1)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
                 comments.AddComments($$, comments[$1])
             }
     |   T_DEC rw_variable
             {
-                $$ = expr.NewPreDec($2)
+                fmt.Println("250"); $$ = expr.NewPreDec($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = binary_op.NewBooleanOr($1, $3)
+                fmt.Println("251"); $$ = binary_op.NewBooleanOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = binary_op.NewBooleanAnd($1, $3)
+                fmt.Println("252"); $$ = binary_op.NewBooleanAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = binary_op.NewLogicalOr($1, $3)
+                fmt.Println("253"); $$ = binary_op.NewLogicalOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = binary_op.NewLogicalAnd($1, $3)
+                fmt.Println("254"); $$ = binary_op.NewLogicalAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = binary_op.NewLogicalXor($1, $3)
+                fmt.Println("255"); $$ = binary_op.NewLogicalXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '|' expr
             {
-                $$ = binary_op.NewBitwiseOr($1, $3)
+                fmt.Println("256"); $$ = binary_op.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '&' expr
             {
-                $$ = binary_op.NewBitwiseAnd($1, $3)
+                fmt.Println("257"); $$ = binary_op.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '^' expr
             {
-                $$ = binary_op.NewBitwiseXor($1, $3)
+                fmt.Println("258"); $$ = binary_op.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '.' expr
             {
-                $$ = binary_op.NewConcat($1, $3)
+                fmt.Println("259"); $$ = binary_op.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '+' expr
             {
-                $$ = binary_op.NewPlus($1, $3)
+                fmt.Println("260"); $$ = binary_op.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '-' expr
             {
-                $$ = binary_op.NewMinus($1, $3)
+                fmt.Println("261"); $$ = binary_op.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '*' expr
             {
-                $$ = binary_op.NewMul($1, $3)
+                fmt.Println("262"); $$ = binary_op.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_POW expr
             {
-                $$ = binary_op.NewPow($1, $3)
+                fmt.Println("263"); $$ = binary_op.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '/' expr
             {
-                $$ = binary_op.NewDiv($1, $3)
+                fmt.Println("264"); $$ = binary_op.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '%' expr
             {
-                $$ = binary_op.NewMod($1, $3)
+                fmt.Println("265"); $$ = binary_op.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_SL expr
             {
-                $$ = binary_op.NewShiftLeft($1, $3)
+                fmt.Println("266"); $$ = binary_op.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_SR expr
             {
-                $$ = binary_op.NewShiftRight($1, $3)
+                fmt.Println("267"); $$ = binary_op.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   '+' expr %prec T_INC
             {
-                $$ = expr.NewUnaryPlus($2)
+                fmt.Println("268"); $$ = expr.NewUnaryPlus($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '-' expr %prec T_INC
             {
-                $$ = expr.NewUnaryMinus($2)
+                fmt.Println("269"); $$ = expr.NewUnaryMinus($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '!' expr
             {
-                $$ = expr.NewBooleanNot($2)
+                fmt.Println("270"); $$ = expr.NewBooleanNot($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '~' expr
             {
-                $$ = expr.NewBitwiseNot($2)
+                fmt.Println("271"); $$ = expr.NewBitwiseNot($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = binary_op.NewIdentical($1, $3)
+                fmt.Println("272"); $$ = binary_op.NewIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = binary_op.NewNotIdentical($1, $3)
+                fmt.Println("273"); $$ = binary_op.NewNotIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = binary_op.NewEqual($1, $3)
+                fmt.Println("274"); $$ = binary_op.NewEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = binary_op.NewNotEqual($1, $3)
+                fmt.Println("275"); $$ = binary_op.NewNotEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '<' expr
             {
-                $$ = binary_op.NewSmaller($1, $3)
+                fmt.Println("276"); $$ = binary_op.NewSmaller($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                fmt.Println("277"); $$ = binary_op.NewSmallerOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '>' expr
             {
-                $$ = binary_op.NewGreater($1, $3)
+                fmt.Println("278"); $$ = binary_op.NewGreater($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                fmt.Println("279"); $$ = binary_op.NewGreaterOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = expr.NewInstanceOf($1, $3)
+                fmt.Println("280"); $$ = expr.NewInstanceOf($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   parenthesis_expr
-            { $$ = $1 }
+            { fmt.Println("281"); $$ = $1 }
     |   new_expr
-            { $$ = $1 }
+            { fmt.Println("282"); $$ = $1 }
     |   '(' new_expr ')' instance_call
             {
-                $$ = $2
+                fmt.Println("283"); $$ = $2
 
                 for _, n := range($4) {
                     switch nn := n.(type) {
@@ -2149,124 +2149,124 @@ expr_without_variable:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, $1.Comments())
-                            $$ = nn
+                            fmt.Println("284"); $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, $1.Comments())
-                            $$ = nn
+                            fmt.Println("285"); $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, $1.Comments())
-                            $$ = nn
+                            fmt.Println("286"); $$ = nn
                     }
                 }
             }
     |   expr '?' expr ':' expr
             {
-                $$ = expr.NewTernary($1, $3, $5)
+                fmt.Println("287"); $$ = expr.NewTernary($1, $3, $5)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '?' ':' expr
             {
-                $$ = expr.NewTernary($1, nil, $4)
+                fmt.Println("288"); $$ = expr.NewTernary($1, nil, $4)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   internal_functions_in_yacc
-            { $$ = $1 }
+            { fmt.Println("289"); $$ = $1 }
     |   T_INT_CAST expr
             {
-                $$ = cast.NewCastInt($2)
+                fmt.Println("290"); $$ = cast.NewCastInt($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = cast.NewCastDouble($2)
+                fmt.Println("291"); $$ = cast.NewCastDouble($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_STRING_CAST expr
             {
-                $$ = cast.NewCastString($2)
+                fmt.Println("292"); $$ = cast.NewCastString($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = cast.NewCastArray($2)
+                fmt.Println("293"); $$ = cast.NewCastArray($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = cast.NewCastObject($2)
+                fmt.Println("294"); $$ = cast.NewCastObject($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_BOOL_CAST expr
             {
-                $$ = cast.NewCastBool($2)
+                fmt.Println("295"); $$ = cast.NewCastBool($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_UNSET_CAST expr
             {
-                $$ = cast.NewCastUnset($2)
+                fmt.Println("296"); $$ = cast.NewCastUnset($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_EXIT exit_expr
             {
-                $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die"))
+                fmt.Println("297"); $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die"))
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '@' expr
             {
-                $$ = expr.NewErrorSuppress($2)
+                fmt.Println("298"); $$ = expr.NewErrorSuppress($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   scalar
-            { $$ = $1 }
+            { fmt.Println("299"); $$ = $1 }
     |   combined_scalar_offset
-            { $$ = $1 }
+            { fmt.Println("300"); $$ = $1 }
     |   combined_scalar
-            { $$ = $1 }
+            { fmt.Println("301"); $$ = $1 }
     |   '`' backticks_expr '`'
             {
-                $$ = expr.NewShellExec($2)
+                fmt.Println("302"); $$ = expr.NewShellExec($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_PRINT expr
             {
-                $$ = expr.NewPrint($2)
+                fmt.Println("303"); $$ = expr.NewPrint($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD
             {
-                $$ = expr.NewYield(nil, nil)
+                fmt.Println("304"); $$ = expr.NewYield(nil, nil)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, nil, $8, false, $2.value, "")
+                fmt.Println("305"); $$ = expr.NewClosure($4, $6, nil, $8, false, $2.value, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
                 
                 comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5, $7, nil, $9, true, $3.value, "")
+                fmt.Println("306"); $$ = expr.NewClosure($5, $7, nil, $9, true, $3.value, "")
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $10))
                 
                 comments.AddComments($$, $1.Comments())
@@ -2280,7 +2280,7 @@ yield_expr:
                 positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments(yield, $1.Comments())
 
-                $$ = stmt.NewExpression(yield)
+                fmt.Println("307"); $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2290,7 +2290,7 @@ yield_expr:
                 positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments(yield, $1.Comments())
 
-                $$ = stmt.NewExpression(yield)
+                fmt.Println("308"); $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2300,7 +2300,7 @@ yield_expr:
                 positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments(yield, $1.Comments())
 
-                $$ = stmt.NewExpression(yield)
+                fmt.Println("309"); $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2310,7 +2310,7 @@ yield_expr:
                 positions.AddPosition(yield, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments(yield, $1.Comments())
 
-                $$ = stmt.NewExpression(yield)
+                fmt.Println("310"); $$ = stmt.NewExpression(yield)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2319,13 +2319,13 @@ yield_expr:
 combined_scalar_offset:
         combined_scalar '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("311"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   combined_scalar_offset '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("312"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
@@ -2335,13 +2335,13 @@ combined_scalar_offset:
                 positions.AddPosition(str, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(str, $1.Comments())
 
-                $$ = expr.NewArrayDimFetch(str, $3)
+                fmt.Println("313"); $$ = expr.NewArrayDimFetch(str, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(str, $4))
                 comments.AddComments($$, comments[str])
             }
     |   general_constant '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("314"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
@@ -2350,13 +2350,13 @@ combined_scalar_offset:
 combined_scalar:
         T_ARRAY '(' array_pair_list ')'
             {
-                $$ = expr.NewArray($3)
+                fmt.Println("315"); $$ = expr.NewArray($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   '[' array_pair_list ']'
             {
-                $$ = expr.NewShortArray($2)
+                fmt.Println("316"); $$ = expr.NewShortArray($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2364,14 +2364,14 @@ combined_scalar:
 
 function:
     T_FUNCTION
-        { $$ = $1 }
+        { fmt.Println("317"); $$ = $1 }
 ;
 
 lexical_vars:
         /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("318"); $$ = []node.Node{} }
     |   T_USE '(' lexical_var_list ')'
-            { $$ = $3; }
+            { fmt.Println("319"); $$ = $3; }
 ;
 
 lexical_var_list:
@@ -2389,7 +2389,7 @@ lexical_var_list:
                 positions.AddPosition(use, positionBuilder.NewTokenPosition($3))
                 comments.AddComments(use, $3.Comments())
                 
-                $$ = append($1, use)
+                fmt.Println("320"); $$ = append($1, use)
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
@@ -2405,7 +2405,7 @@ lexical_var_list:
                 positions.AddPosition(use, positionBuilder.NewTokensPosition($3, $4))
                 comments.AddComments(use, $3.Comments())
 
-                $$ = append($1, use)
+                fmt.Println("321"); $$ = append($1, use)
             }
     |   T_VARIABLE
             {
@@ -2421,7 +2421,7 @@ lexical_var_list:
                 positions.AddPosition(use, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(use, $1.Comments())
                 
-                $$ = []node.Node{use}
+                fmt.Println("322"); $$ = []node.Node{use}
             }
     |   '&' T_VARIABLE
             {
@@ -2437,7 +2437,7 @@ lexical_var_list:
                 positions.AddPosition(use, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments(use, $1.Comments())
 
-                $$ = []node.Node{use}
+                fmt.Println("323"); $$ = []node.Node{use}
             }
 ;
 
@@ -2448,7 +2448,7 @@ function_call:
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 comments.AddComments(name, ListGetFirstNodeComments($1))
 
-                $$ = expr.NewFunctionCall(name, $2.nodes)
+                fmt.Println("324"); $$ = expr.NewFunctionCall(name, $2.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(name, $2.endToken))
                 comments.AddComments($$, comments[name])
             }
@@ -2458,7 +2458,7 @@ function_call:
                 positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments(funcName, $1.Comments())
 
-                $$ = expr.NewFunctionCall(funcName, $4.nodes)
+                fmt.Println("325"); $$ = expr.NewFunctionCall(funcName, $4.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $4.endToken))
                 comments.AddComments($$, comments[funcName])
             }
@@ -2468,37 +2468,37 @@ function_call:
                 positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments(funcName, $1.Comments())
 
-                $$ = expr.NewFunctionCall(funcName, $3.nodes)
+                fmt.Println("326"); $$ = expr.NewFunctionCall(funcName, $3.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $3.endToken))
                 comments.AddComments($$, comments[funcName])
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                fmt.Println("327"); $$ = expr.NewStaticCall($1, $3, $4.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
                 comments.AddComments($$, comments[$1])
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                fmt.Println("328"); $$ = expr.NewStaticCall($1, $3, $4.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
                 comments.AddComments($$, comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                fmt.Println("329"); $$ = expr.NewStaticCall($1, $3, $4.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
                 comments.AddComments($$, comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewStaticCall($1, $3, $4.nodes)
+                fmt.Println("330"); $$ = expr.NewStaticCall($1, $3, $4.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
                 comments.AddComments($$, comments[$1])
             }
     |   variable_without_objects function_call_parameter_list
             {
-                $$ = expr.NewFunctionCall($1, $2.nodes)
+                fmt.Println("331"); $$ = expr.NewFunctionCall($1, $2.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2.endToken))
                 comments.AddComments($$, comments[$1])
             }
@@ -2507,25 +2507,25 @@ function_call:
 class_name:
         T_STATIC
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("332"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   namespace_name 
             {
-                $$ = name.NewName($1)
+                fmt.Println("333"); $$ = name.NewName($1)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
                 comments.AddComments($$, ListGetFirstNodeComments($1))
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewRelative($3)
+                fmt.Println("334"); $$ = name.NewRelative($3)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewFullyQualified($2)
+                fmt.Println("335"); $$ = name.NewFullyQualified($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2534,19 +2534,19 @@ class_name:
 fully_qualified_class_name:
         namespace_name
             {
-                $$ = name.NewName($1)
+                fmt.Println("336"); $$ = name.NewName($1)
                 positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
                 comments.AddComments($$, ListGetFirstNodeComments($1))
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewRelative($3)
+                fmt.Println("337"); $$ = name.NewRelative($3)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_NS_SEPARATOR namespace_name
             {
-                $$ = name.NewFullyQualified($2)
+                fmt.Println("338"); $$ = name.NewFullyQualified($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2554,15 +2554,15 @@ fully_qualified_class_name:
 
 class_name_reference:
         class_name
-            { $$ = $1 }
+            { fmt.Println("339"); $$ = $1 }
     |   dynamic_class_name_reference
-            { $$ = $1 }
+            { fmt.Println("340"); $$ = $1 }
 ;
 
 dynamic_class_name_reference:
         base_variable T_OBJECT_OPERATOR object_property dynamic_class_name_variable_properties
             {
-                $$ = $1
+                fmt.Println("341"); $$ = $1
 
                 for _, n := range($3) {
                     switch nn := n.(type) {
@@ -2570,19 +2570,19 @@ dynamic_class_name_reference:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("342"); $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("343"); $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("344"); $$ = nn
                     }
                 }
 
@@ -2592,135 +2592,135 @@ dynamic_class_name_reference:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("345"); $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("346"); $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("347"); $$ = nn
                     }
                 }
             }
     |   base_variable 
-            { $$ = $1 }
+            { fmt.Println("348"); $$ = $1 }
 ;
 
 
 dynamic_class_name_variable_properties:
         dynamic_class_name_variable_properties dynamic_class_name_variable_property
-            { $$ = append($1, $2...) }
+            { fmt.Println("349"); $$ = append($1, $2...) }
     |   /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("350"); $$ = []node.Node{} }
 ;
 
 
 dynamic_class_name_variable_property:
         T_OBJECT_OPERATOR object_property
-            { $$ = $2 }
+            { fmt.Println("351"); $$ = $2 }
 ;
 
 exit_expr:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("352"); $$ = nil }
     |   '(' ')'
-            { $$ = nil }
+            { fmt.Println("353"); $$ = nil }
     |   parenthesis_expr
-            { $$ = $1 }
+            { fmt.Println("354"); $$ = $1 }
 ;
 
 backticks_expr:
         /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("355"); $$ = []node.Node{} }
     |   T_ENCAPSED_AND_WHITESPACE
-            { $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value)} }
+            { fmt.Println("356"); $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value)} }
     |   encaps_list
-            { $$ = $1; }
+            { fmt.Println("357"); $$ = $1; }
 ;
 
 ctor_arguments:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("358"); $$ = nil }
     |   function_call_parameter_list
-            { $$ = $1 }
+            { fmt.Println("359"); $$ = $1 }
 ;
 
 common_scalar:
         T_LNUMBER
             {
-                $$ = scalar.NewLnumber($1.Value)
+                fmt.Println("360"); $$ = scalar.NewLnumber($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DNUMBER
             {
-                $$ = scalar.NewDnumber($1.Value)
+                fmt.Println("361"); $$ = scalar.NewDnumber($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = scalar.NewString($1.Value)
+                fmt.Println("362"); $$ = scalar.NewString($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_LINE
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("363"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FILE
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("364"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DIR
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("365"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_TRAIT_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("366"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_METHOD_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("367"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FUNC_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("368"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_NS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("369"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                $$ = scalar.NewString($2.Value)
+                fmt.Println("370"); $$ = scalar.NewString($2.Value)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))/* TODO: mark as Heredoc*/
                 comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = scalar.NewEncapsed(nil)
+                fmt.Println("371"); $$ = scalar.NewEncapsed(nil)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
@@ -2731,7 +2731,7 @@ static_class_constant:
             {
                 target := node.NewIdentifier($3.Value)
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewClassConstFetch($1, target)
+                fmt.Println("372"); $$ = expr.NewClassConstFetch($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
 
                 comments.AddComments(target, $3.Comments())
@@ -2741,21 +2741,21 @@ static_class_constant:
 
 static_scalar:
         static_scalar_value
-            { $$ = $1 }
+            { fmt.Println("373"); $$ = $1 }
 ;
 
 static_scalar_value:
         common_scalar
-            { $$ = $1 }
+            { fmt.Println("374"); $$ = $1 }
     |   static_class_name_scalar
-            { $$ = $1 }
+            { fmt.Println("375"); $$ = $1 }
     |   namespace_name
             {
                 name := name.NewName($1)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 comments.AddComments(name, ListGetFirstNodeComments($1))
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("376"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewNodePosition(name))
                 comments.AddComments($$, comments[name])
             }
@@ -2765,7 +2765,7 @@ static_scalar_value:
                 positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments(name, $1.Comments())
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("377"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments($$, comments[name])
             }
@@ -2775,241 +2775,241 @@ static_scalar_value:
                 positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments(name, $1.Comments())
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("378"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments($$, comments[name])
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
-                $$ = expr.NewArray($3)
+                fmt.Println("379"); $$ = expr.NewArray($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
     |   '[' static_array_pair_list ']'
             {
-                $$ = expr.NewShortArray($2)
+                fmt.Println("380"); $$ = expr.NewShortArray($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   static_class_constant
-            { $$ = $1 }
+            { fmt.Println("381"); $$ = $1 }
     |   T_CLASS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("382"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   static_operation
-            { $$ = $1 }
+            { fmt.Println("383"); $$ = $1 }
 ;
 
 static_operation:
         static_scalar_value '[' static_scalar_value ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("384"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '+' static_scalar_value
             {
-                $$ = binary_op.NewPlus($1, $3)
+                fmt.Println("385"); $$ = binary_op.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '-' static_scalar_value
             {
-                $$ = binary_op.NewMinus($1, $3)
+                fmt.Println("386"); $$ = binary_op.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '*' static_scalar_value
             {
-                $$ = binary_op.NewMul($1, $3)
+                fmt.Println("387"); $$ = binary_op.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_POW static_scalar_value
             {
-                $$ = binary_op.NewPow($1, $3)
+                fmt.Println("388"); $$ = binary_op.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '/' static_scalar_value
             {
-                $$ = binary_op.NewDiv($1, $3)
+                fmt.Println("389"); $$ = binary_op.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '%' static_scalar_value
             {
-                $$ = binary_op.NewMod($1, $3)
+                fmt.Println("390"); $$ = binary_op.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   '!' static_scalar_value
             {
-                $$ = expr.NewBooleanNot($2)
+                fmt.Println("391"); $$ = expr.NewBooleanNot($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '~' static_scalar_value
             {
-                $$ = expr.NewBitwiseNot($2)
+                fmt.Println("392"); $$ = expr.NewBitwiseNot($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   static_scalar_value '|' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseOr($1, $3)
+                fmt.Println("393"); $$ = binary_op.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '&' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseAnd($1, $3)
+                fmt.Println("394"); $$ = binary_op.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '^' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseXor($1, $3)
+                fmt.Println("395"); $$ = binary_op.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_SL static_scalar_value
             {
-                $$ = binary_op.NewShiftLeft($1, $3)
+                fmt.Println("396"); $$ = binary_op.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_SR static_scalar_value
             {
-                $$ = binary_op.NewShiftRight($1, $3)
+                fmt.Println("397"); $$ = binary_op.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '.' static_scalar_value
             {
-                $$ = binary_op.NewConcat($1, $3)
+                fmt.Println("398"); $$ = binary_op.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_XOR static_scalar_value
             {
-                $$ = binary_op.NewLogicalXor($1, $3)
+                fmt.Println("399"); $$ = binary_op.NewLogicalXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_AND static_scalar_value
             {
-                $$ = binary_op.NewLogicalAnd($1, $3)
+                fmt.Println("400"); $$ = binary_op.NewLogicalAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_OR static_scalar_value
             {
-                $$ = binary_op.NewLogicalOr($1, $3)
+                fmt.Println("401"); $$ = binary_op.NewLogicalOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_AND static_scalar_value
             {
-                $$ = binary_op.NewBooleanAnd($1, $3)
+                fmt.Println("402"); $$ = binary_op.NewBooleanAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_OR static_scalar_value
             {
-                $$ = binary_op.NewBooleanOr($1, $3)
+                fmt.Println("403"); $$ = binary_op.NewBooleanOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_IDENTICAL static_scalar_value
             {
-                $$ = binary_op.NewIdentical($1, $3)
+                fmt.Println("404"); $$ = binary_op.NewIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
             {
-                $$ = binary_op.NewNotIdentical($1, $3)
+                fmt.Println("405"); $$ = binary_op.NewNotIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewEqual($1, $3)
+                fmt.Println("406"); $$ = binary_op.NewEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewNotEqual($1, $3)
+                fmt.Println("407"); $$ = binary_op.NewNotEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '<' static_scalar_value
             {
-                $$ = binary_op.NewSmaller($1, $3)
+                fmt.Println("408"); $$ = binary_op.NewSmaller($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '>' static_scalar_value
             {
-                $$ = binary_op.NewGreater($1, $3)
+                fmt.Println("409"); $$ = binary_op.NewGreater($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                fmt.Println("410"); $$ = binary_op.NewSmallerOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                fmt.Println("411"); $$ = binary_op.NewGreaterOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '?' ':' static_scalar_value
             {
-                $$ = expr.NewTernary($1, nil, $4)
+                fmt.Println("412"); $$ = expr.NewTernary($1, nil, $4)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
             {
-                $$ = expr.NewTernary($1, $3, $5)
+                fmt.Println("413"); $$ = expr.NewTernary($1, $3, $5)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
                 comments.AddComments($$, comments[$1])
             }
     |   '+' static_scalar_value
             {
-                $$ = expr.NewUnaryPlus($2)
+                fmt.Println("414"); $$ = expr.NewUnaryPlus($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '-' static_scalar_value
             {
-                $$ = expr.NewUnaryMinus($2)
+                fmt.Println("415"); $$ = expr.NewUnaryMinus($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   '(' static_scalar_value ')'
-            { $$ = $2 }
+            { fmt.Println("416"); $$ = $2 }
 ;
 
 general_constant:
         class_constant
-            { $$ = $1 }
+            { fmt.Println("417"); $$ = $1 }
     |   namespace_name
             {
                 name := name.NewName($1)
                 positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
                 comments.AddComments(name, ListGetFirstNodeComments($1))
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("418"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewNodePosition(name))
                 comments.AddComments($$, comments[name])
             }
@@ -3019,7 +3019,7 @@ general_constant:
                 positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $3))
                 comments.AddComments(name, $1.Comments())
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("419"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewNodePosition(name))
                 comments.AddComments($$, comments[name])
             }
@@ -3029,7 +3029,7 @@ general_constant:
                 positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $2))
                 comments.AddComments(name, $1.Comments())
 
-                $$ = expr.NewConstFetch(name)
+                fmt.Println("420"); $$ = expr.NewConstFetch(name)
                 positions.AddPosition($$, positionBuilder.NewNodePosition(name))
                 comments.AddComments($$, comments[name])
             }
@@ -3040,33 +3040,33 @@ scalar:
             {
                 name := node.NewIdentifier($1.Value)
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewVariable(name)
+                fmt.Println("421"); $$ = expr.NewVariable(name)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
 
                 comments.AddComments(name, $1.Comments())
                 comments.AddComments($$, $1.Comments())
             }
     |   general_constant
-            { $$ = $1 }
+            { fmt.Println("422"); $$ = $1 }
     |   class_name_scalar
-            { $$ = $1 }
+            { fmt.Println("423"); $$ = $1 }
     |   common_scalar
-            { $$ = $1 }
+            { fmt.Println("424"); $$ = $1 }
     |   '"' encaps_list '"'
             {
-                $$ = scalar.NewEncapsed($2)
+                fmt.Println("425"); $$ = scalar.NewEncapsed($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                $$ = scalar.NewEncapsed($2)
+                fmt.Println("426"); $$ = scalar.NewEncapsed($2)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CLASS_C
             {
-                $$ = scalar.NewMagicConstant($1.Value)
+                fmt.Println("427"); $$ = scalar.NewMagicConstant($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
@@ -3074,9 +3074,9 @@ scalar:
 
 static_array_pair_list:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("428"); $$ = nil }
     |   non_empty_static_array_pair_list possible_comma
-            { $$ = $1 }
+            { fmt.Println("429"); $$ = $1 }
 ;
 
 possible_comma:
@@ -3091,7 +3091,7 @@ non_empty_static_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
                 comments.AddComments(arrayItem, comments[$3])
 
-                $$ = append($1, arrayItem)
+                fmt.Println("430"); $$ = append($1, arrayItem)
             }
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
@@ -3099,7 +3099,7 @@ non_empty_static_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
                 comments.AddComments(arrayItem, comments[$3])
 
-                $$ = append($1, arrayItem)
+                fmt.Println("431"); $$ = append($1, arrayItem)
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
@@ -3107,7 +3107,7 @@ non_empty_static_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments(arrayItem, comments[$1])
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("432"); $$ = []node.Node{arrayItem}
             }
     |   static_scalar_value
             {
@@ -3115,45 +3115,45 @@ non_empty_static_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
                 comments.AddComments(arrayItem, comments[$1])
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("433"); $$ = []node.Node{arrayItem}
             }
 ;
 
 expr:
         r_variable
-            { $$ = $1 }
+            { fmt.Println("434"); $$ = $1 }
     |   expr_without_variable
-            { $$ = $1 }
+            { fmt.Println("435"); $$ = $1 }
 ;
 
 parenthesis_expr:
         '(' expr ')'
-            { $$ = $2 }
+            { fmt.Println("436"); $$ = $2 }
     |   '(' yield_expr ')'
-            { $$ = $2 }
+            { fmt.Println("437"); $$ = $2 }
 ;
 
 
 r_variable:
         variable
-            { $$ = $1 }
+            { fmt.Println("438"); $$ = $1 }
 ;
 
 
 w_variable:
         variable
-            { $$ = $1 }
+            { fmt.Println("439"); $$ = $1 }
 ;
 
 rw_variable:
         variable
-            { $$ = $1 }
+            { fmt.Println("440"); $$ = $1 }
 ;
 
 variable:
         base_variable_with_function_calls T_OBJECT_OPERATOR object_property method_or_not variable_properties
             {
-                $$ = $1
+                fmt.Println("441"); $$ = $1
 
                 if $4 != nil {
                     $4[0].(*expr.MethodCall).Method = $3[len($3)-1].(*expr.PropertyFetch).Property
@@ -3166,19 +3166,19 @@ variable:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("442"); $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("443"); $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("444"); $$ = nn
                     }
                 }
 
@@ -3188,31 +3188,31 @@ variable:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("445"); $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("446"); $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
-                            $$ = nn
+                            fmt.Println("447"); $$ = nn
                     }
                 }
             }
     |   base_variable_with_function_calls
-            { $$ = $1 }
+            { fmt.Println("448"); $$ = $1 }
 ;
 
 variable_properties:
         variable_properties variable_property
-            { $$ = append($1, $2...) }
+            { fmt.Println("449"); $$ = append($1, $2...) }
     |   /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("450"); $$ = []node.Node{} }
 ;
 
 
@@ -3224,7 +3224,7 @@ variable_property:
                     $2 = append($2[:len($2)-1], $3...)
                 }
 
-                $$ = $2
+                fmt.Println("451"); $$ = $2
             }
 ;
 
@@ -3234,37 +3234,37 @@ array_method_dereference:
                 fetch := expr.NewArrayDimFetch(nil, $3)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
 
-                $$ = append($1, fetch)
+                fmt.Println("452"); $$ = append($1, fetch)
             }
     |   method '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
 
-                $$ = []node.Node{$1, fetch}
+                fmt.Println("453"); $$ = []node.Node{$1, fetch}
             }
 ;
 
 method:
         function_call_parameter_list
             {
-                $$ = expr.NewMethodCall(nil, nil, $1.nodes)
+                fmt.Println("454"); $$ = expr.NewMethodCall(nil, nil, $1.nodes)
                 positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1.nodes, $1.endToken))
             }
 ;
 
 method_or_not:
         method
-            { $$ = []node.Node{$1} }
+            { fmt.Println("455"); $$ = []node.Node{$1} }
     |   array_method_dereference
-            { $$ = $1 }
+            { fmt.Println("456"); $$ = $1 }
     |   /* empty */
-            { $$ = nil }
+            { fmt.Println("457"); $$ = nil }
 ;
 
 variable_without_objects:
         reference_variable
-            { $$ = $1 }
+            { fmt.Println("458"); $$ = $1 }
     |   simple_indirect_reference reference_variable
             {
                 $1.last.SetVarName($2)
@@ -3273,20 +3273,20 @@ variable_without_objects:
                     positions[n] =  positionBuilder.NewNodesPosition(n, $2)
                 }
 
-                $$ = $1.all[0]
+                fmt.Println("459"); $$ = $1.all[0]
             }
 ;
 
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3)
+                fmt.Println("460"); $$ = expr.NewStaticPropertyFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
-                $$ = expr.NewStaticPropertyFetch($1, $3)
+                fmt.Println("461"); $$ = expr.NewStaticPropertyFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -3295,34 +3295,34 @@ static_member:
 
 variable_class_name:
         reference_variable
-            { $$ = $1 }
+            { fmt.Println("462"); $$ = $1 }
 ;
 
 array_function_dereference:
         array_function_dereference '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("463"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   function_call '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("464"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
 ;
 
 base_variable_with_function_calls:
-        base_variable               { $$ = $1 }
-    |   array_function_dereference  { $$ = $1 }
-    |   function_call               { $$ = $1 }
+        base_variable               { fmt.Println("465"); $$ = $1 }
+    |   array_function_dereference  { fmt.Println("466"); $$ = $1 }
+    |   function_call               { fmt.Println("467"); $$ = $1 }
 ;
 
 
 base_variable:
         reference_variable
-            { $$ = $1 }
+            { fmt.Println("468"); $$ = $1 }
     |   simple_indirect_reference reference_variable
             {
                 $1.last.SetVarName($2)
@@ -3331,27 +3331,27 @@ base_variable:
                     positions[n] =  positionBuilder.NewNodesPosition(n, $2)
                 }
 
-                $$ = $1.all[0]
+                fmt.Println("469"); $$ = $1.all[0]
             }
     |   static_member
-            { $$ = $1 }
+            { fmt.Println("470"); $$ = $1 }
 ;
 
 reference_variable:
         reference_variable '[' dim_offset ']'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("471"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   reference_variable '{' expr '}'
             {
-                $$ = expr.NewArrayDimFetch($1, $3)
+                fmt.Println("472"); $$ = expr.NewArrayDimFetch($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
     |   compound_variable
-            { $$ = $1 }
+            { fmt.Println("473"); $$ = $1 }
 ;
 
 
@@ -3360,7 +3360,7 @@ compound_variable:
             {
                 name := node.NewIdentifier($1.Value)
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewVariable(name)
+                fmt.Println("474"); $$ = expr.NewVariable(name)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 
                 comments.AddComments(name, $1.Comments())
@@ -3368,7 +3368,7 @@ compound_variable:
             }
     |   '$' '{' expr '}'
             {
-                $$ = expr.NewVariable($3)
+                fmt.Println("475"); $$ = expr.NewVariable($3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments($$, $1.Comments())
             }
@@ -3376,21 +3376,21 @@ compound_variable:
 
 dim_offset:
         /* empty */
-            { $$ = nil }
+            { fmt.Println("476"); $$ = nil }
     |   expr
-            { $$ = $1 }
+            { fmt.Println("477"); $$ = $1 }
 ;
 
 
 object_property:
         object_dim_list 
-            { $$ = $1 }
+            { fmt.Println("478"); $$ = $1 }
     |   variable_without_objects
             {
                 fetch := expr.NewPropertyFetch(nil, $1)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
 
-                $$ = []node.Node{fetch}
+                fmt.Println("479"); $$ = []node.Node{fetch}
             }
 ;
 
@@ -3400,33 +3400,33 @@ object_dim_list:
                 fetch := expr.NewArrayDimFetch(nil, $3)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
 
-                $$ = append($1, fetch)
+                fmt.Println("480"); $$ = append($1, fetch)
             }
     |   object_dim_list '{' expr '}'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
 
-                $$ = append($1, fetch)
+                fmt.Println("481"); $$ = append($1, fetch)
             }
     |   variable_name
             {
                 fetch := expr.NewPropertyFetch(nil, $1)
                 positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
 
-                $$ = []node.Node{fetch}
+                fmt.Println("482"); $$ = []node.Node{fetch}
             }
 ;
 
 variable_name:
         T_STRING
             {
-                $$ = node.NewIdentifier($1.Value)
+                fmt.Println("483"); $$ = node.NewIdentifier($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
     |   '{' expr '}'
-            { $$ = $2 }
+            { fmt.Println("484"); $$ = $2 }
 ;
 
 simple_indirect_reference:
@@ -3436,7 +3436,7 @@ simple_indirect_reference:
                 positions.AddPosition(n, positionBuilder.NewTokenPosition($1))
                 comments.AddComments(n, $1.Comments())
 
-                $$ = simpleIndirectReference{[]*expr.Variable{n}, n}
+                fmt.Println("485"); $$ = simpleIndirectReference{[]*expr.Variable{n}, n}
             }
     |   simple_indirect_reference '$'
             {
@@ -3448,22 +3448,22 @@ simple_indirect_reference:
 
                 $1.all = append($1.all, n)
                 $1.last = n
-                $$ = $1
+                fmt.Println("486"); $$ = $1
             }
 ;
 
 assignment_list:
         assignment_list ',' assignment_list_element
-            { $$ = append($1, $3) }
+            { fmt.Println("487"); $$ = append($1, $3) }
     |   assignment_list_element
-            { $$ = []node.Node{$1} }
+            { fmt.Println("488"); $$ = []node.Node{$1} }
 ;
 
 
 assignment_list_element:
         variable
             {
-                $$ = expr.NewArrayItem(nil, $1, false)
+                fmt.Println("489"); $$ = expr.NewArrayItem(nil, $1, false)
                 positions.AddPosition($$, positionBuilder.NewNodePosition($1))
                 comments.AddComments($$, comments[$1])
             }
@@ -3473,20 +3473,20 @@ assignment_list_element:
                 positions.AddPosition(item, positionBuilder.NewTokensPosition($1, $4))
                 comments.AddComments(item, $1.Comments())
 
-                $$ = expr.NewArrayItem(nil, item, false)
+                fmt.Println("490"); $$ = expr.NewArrayItem(nil, item, false)
                 positions.AddPosition($$, positionBuilder.NewNodePosition(item))
                 comments.AddComments($$, comments[item])
             }
     |   /* empty */
-            { $$ = nil }
+            { fmt.Println("491"); $$ = nil }
 ;
 
 
 array_pair_list:
         /* empty */
-            { $$ = []node.Node{} }
+            { fmt.Println("492"); $$ = []node.Node{} }
     |   non_empty_array_pair_list possible_comma
-            { $$ = $1 }
+            { fmt.Println("493"); $$ = $1 }
 ;
 
 non_empty_array_pair_list:
@@ -3496,7 +3496,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
                 comments.AddComments(arrayItem, comments[$3])
 
-                $$ = append($1, arrayItem)
+                fmt.Println("494"); $$ = append($1, arrayItem)
             }
     |   non_empty_array_pair_list ',' expr
             {
@@ -3504,7 +3504,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
                 comments.AddComments(arrayItem, comments[$3])
 
-                $$ = append($1, arrayItem)
+                fmt.Println("495"); $$ = append($1, arrayItem)
             }
     |   expr T_DOUBLE_ARROW expr
             {
@@ -3512,7 +3512,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments(arrayItem, comments[$1])
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("496"); $$ = []node.Node{arrayItem}
             }
     |   expr
             {
@@ -3520,7 +3520,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
                 comments.AddComments(arrayItem, comments[$1])
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("497"); $$ = []node.Node{arrayItem}
             }
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
@@ -3528,7 +3528,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $6))
                 comments.AddComments(arrayItem, comments[$3])
 
-                $$ = append($1, arrayItem)
+                fmt.Println("498"); $$ = append($1, arrayItem)
             }
     |   non_empty_array_pair_list ',' '&' w_variable
             {
@@ -3536,7 +3536,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($3, $4))
                 comments.AddComments(arrayItem, $3.Comments())
 
-                $$ = append($1, arrayItem)
+                fmt.Println("499"); $$ = append($1, arrayItem)
             }
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
@@ -3544,7 +3544,7 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments(arrayItem, comments[$1])
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("500"); $$ = []node.Node{arrayItem}
             }
     |   '&' w_variable
             {
@@ -3552,27 +3552,27 @@ non_empty_array_pair_list:
                 positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments(arrayItem, $1.Comments())
 
-                $$ = []node.Node{arrayItem}
+                fmt.Println("501"); $$ = []node.Node{arrayItem}
             }
 ;
 
 encaps_list:
         encaps_list encaps_var
-            { $$ = append($1, $2) }
+            { fmt.Println("502"); $$ = append($1, $2) }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
                 encapsed := scalar.NewEncapsedStringPart($2.Value)
                 positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($2))
-                $$ = append($1, encapsed)
+                fmt.Println("503"); $$ = append($1, encapsed)
                 comments.AddComments(encapsed, $2.Comments())
             }
     |   encaps_var
-            { $$ = []node.Node{$1} }
+            { fmt.Println("504"); $$ = []node.Node{$1} }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
                 encapsed := scalar.NewEncapsedStringPart($1.Value)
                 positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($1))
-                $$ = []node.Node{encapsed, $2}
+                fmt.Println("505"); $$ = []node.Node{encapsed, $2}
                 comments.AddComments(encapsed, $1.Comments())
             }
 ;
@@ -3582,7 +3582,7 @@ encaps_var:
             {
                 name := node.NewIdentifier($1.Value)
                 positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewVariable(name)
+                fmt.Println("506"); $$ = expr.NewVariable(name)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
 
                 comments.AddComments(name, $1.Comments())
@@ -3594,7 +3594,7 @@ encaps_var:
                 positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
                 variable := expr.NewVariable(identifier)
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewArrayDimFetch(variable, $3)
+                fmt.Println("507"); $$ = expr.NewArrayDimFetch(variable, $3)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
 
                 comments.AddComments(identifier, $1.Comments())
@@ -3609,7 +3609,7 @@ encaps_var:
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
                 fetch := node.NewIdentifier($3.Value)
                 positions.AddPosition(fetch, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewPropertyFetch(variable, fetch)
+                fmt.Println("508"); $$ = expr.NewPropertyFetch(variable, fetch)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 
                 comments.AddComments(identifier, $1.Comments())
@@ -3619,7 +3619,7 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = $2
+                fmt.Println("509"); $$ = $2
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
                 comments.AddComments($$, $1.Comments())
             }
@@ -3629,7 +3629,7 @@ encaps_var:
                 positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
                 variable := expr.NewVariable(identifier)
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
-                $$ = expr.NewArrayDimFetch(variable, $4)
+                fmt.Println("510"); $$ = expr.NewArrayDimFetch(variable, $4)
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
 
 
@@ -3638,13 +3638,13 @@ encaps_var:
                 comments.AddComments($$, $1.Comments())
             }
     |   T_CURLY_OPEN variable '}'
-            { $$ = $2; }
+            { fmt.Println("511"); $$ = $2; }
 ;
 
 encaps_var_offset:
         T_STRING
             {
-                $$ = scalar.NewString($1.Value)
+                fmt.Println("512"); $$ = scalar.NewString($1.Value)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 comments.AddComments($$, $1.Comments())
             }
@@ -3652,10 +3652,10 @@ encaps_var_offset:
             {
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi($1.Value); err == nil {
-                    $$ = scalar.NewLnumber($1.Value)
+                    fmt.Println("513"); $$ = scalar.NewLnumber($1.Value)
                     positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 } else {
-                    $$ = scalar.NewString($1.Value)
+                    fmt.Println("514"); $$ = scalar.NewString($1.Value)
                     positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
                 }
                 comments.AddComments($$, $1.Comments())
@@ -3664,7 +3664,7 @@ encaps_var_offset:
             {
                 identifier := node.NewIdentifier($1.Value)
                 positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
-                $$ = expr.NewVariable(identifier)
+                fmt.Println("515"); $$ = expr.NewVariable(identifier)
                 positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
 
                 comments.AddComments(identifier, $1.Comments())
@@ -3675,49 +3675,49 @@ encaps_var_offset:
 internal_functions_in_yacc:
     T_ISSET '(' isset_variables ')'
         {
-            $$ = expr.NewIsset($3)
+            fmt.Println("516"); $$ = expr.NewIsset($3)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
             comments.AddComments($$, $1.Comments())
         }
     |   T_EMPTY '(' variable ')'
         {
-            $$ = expr.NewEmpty($3)
+            fmt.Println("517"); $$ = expr.NewEmpty($3)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
             comments.AddComments($$, $1.Comments())
         }
     |   T_EMPTY '(' expr_without_variable ')'
         {
-            $$ = expr.NewEmpty($3)
+            fmt.Println("518"); $$ = expr.NewEmpty($3)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
             comments.AddComments($$, $1.Comments())
         }
     |   T_INCLUDE expr
         {
-            $$ = expr.NewInclude($2)
+            fmt.Println("519"); $$ = expr.NewInclude($2)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
     |   T_INCLUDE_ONCE expr
         {
-            $$ = expr.NewIncludeOnce($2)
+            fmt.Println("520"); $$ = expr.NewIncludeOnce($2)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
     |   T_EVAL '(' expr ')'
         {
-            $$ = expr.NewEval($3)
+            fmt.Println("521"); $$ = expr.NewEval($3)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
             comments.AddComments($$, $1.Comments())
         }
     |   T_REQUIRE expr
         {
-            $$ = expr.NewRequire($2)
+            fmt.Println("522"); $$ = expr.NewRequire($2)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
     |   T_REQUIRE_ONCE expr
         {
-            $$ = expr.NewRequireOnce($2)
+            fmt.Println("523"); $$ = expr.NewRequireOnce($2)
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
@@ -3725,16 +3725,16 @@ internal_functions_in_yacc:
 
 isset_variables:
         isset_variable
-            { $$ = []node.Node{$1} }
+            { fmt.Println("524"); $$ = []node.Node{$1} }
     |   isset_variables ',' isset_variable
-            { $$ = append($1, $3) }
+            { fmt.Println("525"); $$ = append($1, $3) }
 ;
 
 isset_variable:
         variable
-            { $$ = $1 }
+            { fmt.Println("526"); $$ = $1 }
     |   expr_without_variable
-            { $$ = $1 }
+            { fmt.Println("527"); $$ = $1 }
 ;
 
 class_constant:
@@ -3742,7 +3742,7 @@ class_constant:
             {
                 target := node.NewIdentifier($3.Value)
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewClassConstFetch($1, target)
+                fmt.Println("528"); $$ = expr.NewClassConstFetch($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
 
                 comments.AddComments(target, $3.Comments())
@@ -3752,7 +3752,7 @@ class_constant:
             {
                 target := node.NewIdentifier($3.Value)
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewClassConstFetch($1, target)
+                fmt.Println("529"); $$ = expr.NewClassConstFetch($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
 
                 comments.AddComments(target, $3.Comments())
@@ -3765,7 +3765,7 @@ static_class_name_scalar:
             {
                 target := node.NewIdentifier($3.Value)
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewClassConstFetch($1, target)
+                fmt.Println("530"); $$ = expr.NewClassConstFetch($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
 
                 comments.AddComments(target, $3.Comments())
@@ -3778,7 +3778,7 @@ class_name_scalar:
             {
                 target := node.NewIdentifier($3.Value)
                 positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                $$ = expr.NewClassConstFetch($1, target)
+                fmt.Println("531"); $$ = expr.NewClassConstFetch($1, target)
                 positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
 
                 comments.AddComments(target, $3.Comments())

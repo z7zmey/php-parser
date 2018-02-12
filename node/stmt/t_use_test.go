@@ -37,6 +37,59 @@ func TestSimpleUse(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestUseFullyQualified(t *testing.T) {
+	src := `<? use \Foo;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.UseList{
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestUseFullyQualifiedAlias(t *testing.T) {
+	src := `<? use \Foo as Bar;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.UseList{
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "Bar"},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestUseList(t *testing.T) {
 	src := `<? use Foo, Bar;`
 
@@ -105,7 +158,7 @@ func TestUseListAlias(t *testing.T) {
 }
 
 func TestUseListFunctionType(t *testing.T) {
-	src := `<? use function Foo, Bar;`
+	src := `<? use function Foo, \Bar;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -138,8 +191,44 @@ func TestUseListFunctionType(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestUseListFunctionTypeAliases(t *testing.T) {
+	src := `<? use function Foo as foo, \Bar as bar;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.UseList{
+				UseType: &node.Identifier{Value: "function"},
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "foo"},
+					},
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
+						},
+						Alias: &node.Identifier{Value: "bar"},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestUseListConstType(t *testing.T) {
-	src := `<? use const Foo, Bar;`
+	src := `<? use const Foo, \Bar;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -159,6 +248,42 @@ func TestUseListConstType(t *testing.T) {
 								&name.NamePart{Value: "Bar"},
 							},
 						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestUseListConstTypeAliases(t *testing.T) {
+	src := `<? use const Foo as foo, \Bar as bar;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.UseList{
+				UseType: &node.Identifier{Value: "const"},
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "foo"},
+					},
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
+						},
+						Alias: &node.Identifier{Value: "bar"},
 					},
 				},
 			},

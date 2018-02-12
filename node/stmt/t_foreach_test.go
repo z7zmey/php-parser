@@ -32,6 +32,26 @@ func TestForeach(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestForeachExpr(t *testing.T) {
+	src := `<? foreach ([] as $v) {}`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Foreach{
+				Expr:     &expr.ShortArray{Items: []node.Node{}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestAltForeach(t *testing.T) {
 	src := `<? foreach ($a as $v) : endforeach;`
 
@@ -59,6 +79,27 @@ func TestForeachWithKey(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestForeachExprWithKey(t *testing.T) {
+	src := `<? foreach ([] as $k => $v) {}`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Foreach{
+				Expr:     &expr.ShortArray{Items: []node.Node{}},
 				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},

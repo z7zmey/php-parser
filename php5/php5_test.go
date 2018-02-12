@@ -123,12 +123,23 @@ CAD;
 		echo $a, 1;
 		echo($a);
 		for($i = 0; $i < 10; $i++, $i++) {}
+		for($i = 0; $i < 10; $i++, $i++) : endfor;
 		foreach ($a as $v) {}
+		foreach ([] as $v) {}
 		foreach ($a as $v) : endforeach;
 		foreach ($a as $k => $v) {}
+		foreach ([] as $k => $v) {}
 		foreach ($a as $k => &$v) {}
 		foreach ($a as $k => list($v)) {}
 		function foo() {}
+
+		function foo() {
+			__halt_compiler();
+			function bar() {}
+			class Baz {}
+			return $a;
+		}
+		
 		function foo() {return;}
 		function &foo() {return 1;}
 		function &foo() {}
@@ -146,7 +157,7 @@ CAD;
 		interface Foo extends Bar {}
 		interface Foo extends Bar, Baz {}
 		namespace Foo;
-		namespace Foo {}
+		namespace Foo\Bar {}
 		namespace {}
 		class foo {var $a;}
 		class foo {public static $a, $b = 1;}
@@ -171,15 +182,20 @@ CAD;
 		try {}
 		try {} catch (Exception $e) {}
 		try {} catch (Exception $e) {} catch (RuntimeException $e) {}
+		try {} catch (Exception $e) {} catch (RuntimeException $e) {} catch (AdditionException $e) {}
 		try {} catch (Exception $e) {} finally {}
 
 		unset($a, $b);
 
 		use Foo;
+		use \Foo;
+		use \Foo as Bar;
 		use Foo, Bar;
 		use Foo, Bar as Baz;
-		use function Foo, Bar;
-		use const Foo, Bar;
+		use function Foo, \Bar;
+		use function Foo as foo, \Bar as bar;
+		use const Foo, \Bar;
+		use const Foo as foo, \Bar as bar;
 
 		$a[1];
 		$a[1][2];
@@ -839,8 +855,36 @@ CAD;
 				},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
+			&stmt.For{
+				Init: []node.Node{
+					&assign_op.Assign{
+						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Expression: &scalar.Lnumber{Value: "0"},
+					},
+				},
+				Cond: []node.Node{
+					&binary_op.Smaller{
+						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Right: &scalar.Lnumber{Value: "10"},
+					},
+				},
+				Loop: []node.Node{
+					&expr.PostInc{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+					},
+					&expr.PostInc{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+					},
+				},
+				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+			},
 			&stmt.Foreach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
+			},
+			&stmt.Foreach{
+				Expr:     &expr.ShortArray{Items: []node.Node{}},
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
@@ -851,6 +895,12 @@ CAD;
 			},
 			&stmt.Foreach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
+			},
+			&stmt.Foreach{
+				Expr:     &expr.ShortArray{Items: []node.Node{}},
 				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
@@ -881,6 +931,28 @@ CAD;
 				PhpDocComment: "",
 				FunctionName:  &node.Identifier{Value: "foo"},
 				Stmts:         []node.Node{},
+			},
+			&stmt.Function{
+				ReturnsRef:    false,
+				PhpDocComment: "",
+				FunctionName:  &node.Identifier{Value: "foo"},
+				Stmts:         []node.Node{
+					&stmt.HaltCompiler{},
+					&stmt.Function{
+						ReturnsRef:    false,
+						PhpDocComment: "",
+						FunctionName:  &node.Identifier{Value: "bar"},
+						Stmts:         []node.Node{},
+					},
+					&stmt.Class{
+						PhpDocComment: "",
+						ClassName: &node.Identifier{Value: "Baz"},
+						Stmts: []node.Node{},
+					},
+					&stmt.Return{
+						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					},
+				},
 			},
 			&stmt.Function{
 				ReturnsRef:    false,
@@ -1023,6 +1095,7 @@ CAD;
 				NamespaceName: &name.Name{
 					Parts: []node.Node{
 						&name.NamePart{Value: "Foo"},
+						&name.NamePart{Value: "Bar"},
 					},
 				},
 				Stmts: []node.Node{},
@@ -1279,6 +1352,50 @@ CAD;
 						},
 						Stmts: []node.Node{},
 					},
+					&stmt.Catch{
+						Types: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "RuntimeException"},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							VarName: &node.Identifier{Value: "$e"},
+						},
+						Stmts: []node.Node{},
+					},
+					&stmt.Catch{
+						Types: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "AdditionException"},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							VarName: &node.Identifier{Value: "$e"},
+						},
+						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Try{
+				Stmts: []node.Node{},
+				Catches: []node.Node{
+					&stmt.Catch{
+						Types: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Exception"},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							VarName: &node.Identifier{Value: "$e"},
+						},
+						Stmts: []node.Node{},
+					},
 				},
 				Finally: &stmt.Finally{
 					Stmts: []node.Node{},
@@ -1298,6 +1415,29 @@ CAD;
 								&name.NamePart{Value: "Foo"},
 							},
 						},
+					},
+				},
+			},
+			&stmt.UseList{
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.UseList{
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "Bar"},
 					},
 				},
 			},
@@ -1358,6 +1498,27 @@ CAD;
 				},
 			},
 			&stmt.UseList{
+				UseType: &node.Identifier{Value: "function"},
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "foo"},
+					},
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
+						},
+						Alias: &node.Identifier{Value: "bar"},
+					},
+				},
+			},
+			&stmt.UseList{
 				UseType: &node.Identifier{Value: "const"},
 				Uses: []node.Node{
 					&stmt.Use{
@@ -1373,6 +1534,27 @@ CAD;
 								&name.NamePart{Value: "Bar"},
 							},
 						},
+					},
+				},
+			},
+			&stmt.UseList{
+				UseType: &node.Identifier{Value: "const"},
+				Uses: []node.Node{
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Alias: &node.Identifier{Value: "foo"},
+					},
+					&stmt.Use{
+						Use: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
+						},
+						Alias: &node.Identifier{Value: "bar"},
 					},
 				},
 			},
