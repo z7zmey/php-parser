@@ -339,6 +339,12 @@ CAD;
 		$a **= $b;
 		$a <<= $b;
 		$a >>= $b;
+
+
+		(new \Foo());
+		(new \Foo())->bar()->baz;
+		(new \Foo())[0][0];
+		(new \Foo())[0]->bar();
 	`
 
 	expectedParams := []node.Node{
@@ -2584,6 +2590,66 @@ CAD;
 				Expr: &assign_op.ShiftRight{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &name.FullyQualified{
+						Parts: []node.Node{
+							&name.NamePart{Value: "Foo"},
+						},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.PropertyFetch{
+					Variable: &expr.MethodCall{
+						Variable: &expr.New{
+							Class: &name.FullyQualified{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Foo"},
+								},
+							},
+							Arguments: []node.Node{},
+						},
+						Method: &node.Identifier{Value: "bar"},
+						Arguments: []node.Node{},
+					},
+					Property: &node.Identifier{Value: "baz"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.ArrayDimFetch{
+						Variable: &expr.New{
+							Class: &name.FullyQualified{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Foo"},
+								},
+							},
+							Arguments: []node.Node{},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.MethodCall{
+					Variable: &expr.ArrayDimFetch{
+						Variable: &expr.New{
+							Class: &name.FullyQualified{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Foo"},
+								},
+							},
+							Arguments: []node.Node{},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+					Method: &node.Identifier{Value: "bar"},
+					Arguments: []node.Node{},
 				},
 			},
 		},
