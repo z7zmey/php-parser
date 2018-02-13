@@ -38,3 +38,24 @@ func TestClassConstFetch(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestStaticClassConstFetch(t *testing.T) {
+	src := `<? static::bar;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &expr.ClassConstFetch{
+					Class: &node.Identifier{Value: "static"},
+					ConstantName: &node.Identifier{Value: "bar"},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}

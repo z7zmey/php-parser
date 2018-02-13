@@ -196,7 +196,7 @@ CAD;
 		try {}
 		try {} catch (Exception $e) {}
 		try {} catch (Exception $e) {} catch (RuntimeException $e) {}
-		try {} catch (Exception $e) {} catch (RuntimeException $e) {} catch (AdditionException $e) {}
+		try {} catch (Exception $e) {} catch (\RuntimeException $e) {} catch (namespace\AdditionException $e) {}
 		try {} catch (Exception $e) {} finally {}
 
 		unset($a, $b);
@@ -275,6 +275,8 @@ CAD;
 		Foo::bar();
 		namespace\Foo::bar();
 		\Foo::bar();
+		Foo::$bar();
+		$foo::$bar();
 		Foo::$bar;
 		namespace\Foo::$bar;
 		\Foo::$bar;
@@ -354,6 +356,7 @@ CAD;
 		array([0])[0][0];
 		"foo"[0];
 		foo[0];
+		static::foo;
 	`
 
 	expectedParams := []node.Node{
@@ -1543,7 +1546,7 @@ CAD;
 					},
 					&stmt.Catch{
 						Types: []node.Node{
-							&name.Name{
+							&name.FullyQualified{
 								Parts: []node.Node{
 									&name.NamePart{Value: "RuntimeException"},
 								},
@@ -1556,7 +1559,7 @@ CAD;
 					},
 					&stmt.Catch{
 						Types: []node.Node{
-							&name.Name{
+							&name.Relative{
 								Parts: []node.Node{
 									&name.NamePart{Value: "AdditionException"},
 								},
@@ -2255,6 +2258,24 @@ CAD;
 				},
 			},
 			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class: &name.Name{
+						Parts: []node.Node{
+							&name.NamePart{Value: "Foo"},
+						},
+					},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
 				Expr: &expr.StaticPropertyFetch{
 					Class: &name.Name{
 						Parts: []node.Node{
@@ -2771,6 +2792,12 @@ CAD;
 						},
 					},
 					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ClassConstFetch{
+					Class: &node.Identifier{Value: "static"},
+					ConstantName: &node.Identifier{Value: "foo"},
 				},
 			},
 		},

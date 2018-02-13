@@ -91,3 +91,51 @@ func TestStaticCallFullyQualified(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestStaticCallVar(t *testing.T) {
+	src := `<? Foo::$bar();`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class: &name.Name{
+						Parts: []node.Node{
+							&name.NamePart{Value: "Foo"},
+						},
+					},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestStaticCallVarVar(t *testing.T) {
+	src := `<? $foo::$bar();`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
