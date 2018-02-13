@@ -123,7 +123,7 @@ CAD;
 		echo $a, 1;
 		echo($a);
 		for($i = 0; $i < 10; $i++, $i++) {}
-		for($i = 0; $i < 10; $i++, $i++) : endfor;
+		for(; $i < 10; $i++) : endfor;
 		foreach ($a as $v) {}
 		foreach ([] as $v) {}
 		foreach ($a as $v) : endforeach;
@@ -161,6 +161,7 @@ CAD;
 		namespace {}
 		class foo {var $a;}
 		class foo {public static $a, $b = 1;}
+		class foo {public static $a = 1, $b;}
 		static $a, $b = 1;
 		static $a = 1, $b;
 
@@ -893,12 +894,6 @@ CAD;
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.For{
-				Init: []node.Node{
-					&assign_op.Assign{
-						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-						Expression: &scalar.Lnumber{Value: "0"},
-					},
-				},
 				Cond: []node.Node{
 					&binary_op.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
@@ -906,9 +901,6 @@ CAD;
 					},
 				},
 				Loop: []node.Node{
-					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-					},
 					&expr.PostInc{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 					},
@@ -1198,6 +1190,28 @@ CAD;
 								PhpDocComment: "",
 								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 								Expr:          &scalar.Lnumber{Value: "1"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				ClassName: &node.Identifier{Value: "foo"},
+				Stmts: []node.Node{
+					&stmt.PropertyList{
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "public"},
+							&node.Identifier{Value: "static"},
+						},
+						Properties: []node.Node{
+							&stmt.Property{
+								PhpDocComment: "",
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Expr:          &scalar.Lnumber{Value: "1"},
+							},
+							&stmt.Property{
+								PhpDocComment: "",
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 							},
 						},
 					},

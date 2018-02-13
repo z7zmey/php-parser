@@ -56,17 +56,11 @@ func TestFor(t *testing.T) {
 }
 
 func TestAltFor(t *testing.T) {
-	src := `<? for($i = 0; $i < 10; $i++, $i++) : endfor;`
+	src := `<? for(; $i < 10; $i++) : endfor;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.For{
-				Init: []node.Node{
-					&assign_op.Assign{
-						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-						Expression: &scalar.Lnumber{Value: "0"},
-					},
-				},
 				Cond: []node.Node{
 					&binary_op.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
@@ -74,9 +68,6 @@ func TestAltFor(t *testing.T) {
 					},
 				},
 				Loop: []node.Node{
-					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
-					},
 					&expr.PostInc{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 					},

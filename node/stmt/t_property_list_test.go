@@ -79,3 +79,40 @@ func TestProperties(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestProperties2(t *testing.T) {
+	src := `<? class foo {public static $a = 1, $b;}`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Class{
+				ClassName: &node.Identifier{Value: "foo"},
+				Stmts: []node.Node{
+					&stmt.PropertyList{
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "public"},
+							&node.Identifier{Value: "static"},
+						},
+						Properties: []node.Node{
+							&stmt.Property{
+								PhpDocComment: "",
+								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Expr: &scalar.Lnumber{Value: "1"},
+							},
+							&stmt.Property{
+								PhpDocComment: "",
+								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
