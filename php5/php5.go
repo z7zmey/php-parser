@@ -4476,7 +4476,7 @@ yydefault:
 			positions.AddPosition(_new, positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[5].node))
 
 			if yyDollar[6].nodesWithEndToken != nil {
-				_new := expr.NewNew(yyDollar[5].node, yyDollar[6].nodesWithEndToken.nodes)
+				_new = expr.NewNew(yyDollar[5].node, yyDollar[6].nodesWithEndToken.nodes)
 				positions.AddPosition(_new, positionBuilder.NewTokensPosition(yyDollar[4].token, yyDollar[6].nodesWithEndToken.endToken))
 			}
 			comments.AddComments(_new, comments[yyDollar[1].node])

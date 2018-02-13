@@ -1848,7 +1848,7 @@ expr_without_variable:
                 positions.AddPosition(_new, positionBuilder.NewTokenNodePosition($4, $5))
 
                 if $6 != nil {
-                    _new := expr.NewNew($5, $6.nodes)
+                    _new = expr.NewNew($5, $6.nodes)
                     positions.AddPosition(_new, positionBuilder.NewTokensPosition($4, $6.endToken))
                 }
                 comments.AddComments(_new, comments[$1])

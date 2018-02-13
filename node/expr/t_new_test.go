@@ -15,7 +15,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	src := `<? new Foo();`
+	src := `<? new Foo;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
@@ -26,7 +26,6 @@ func TestNew(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
 				},
 			},
 		},

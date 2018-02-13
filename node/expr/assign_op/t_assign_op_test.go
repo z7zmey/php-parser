@@ -11,6 +11,7 @@ import (
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
@@ -37,6 +38,67 @@ func TestAssignRef(t *testing.T) {
 				Expr: &assign_op.AssignRef{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestAssignRefNew(t *testing.T) {
+	src := `<? $a =& new Foo;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &assign_op.AssignRef{
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expression: &expr.New{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestAssignRefArgs(t *testing.T) {
+	src := `<? $a =& new Foo($b);`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &assign_op.AssignRef{
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expression: &expr.New{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic: false,
+								IsReference: false,
+								Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							},
+						},
+					},
 				},
 			},
 		},

@@ -261,7 +261,7 @@ CAD;
 		list(list($a)) = $b;
 
 		$a->foo();
-		new Foo();
+		new Foo;
 		new namespace\Foo();
 		new \Foo();
 		print($a);
@@ -326,6 +326,8 @@ CAD;
 		$a < $b;
 
 		$a =& $b;
+		$a =& new Foo;
+		$a =& new Foo($b);
 		$a = $b;
 		$a &= $b;
 		$a |= $b;
@@ -2111,7 +2113,6 @@ CAD;
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
 				},
 			},
 			&stmt.Expression{
@@ -2512,6 +2513,37 @@ CAD;
 				Expr: &assign_op.AssignRef{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &assign_op.AssignRef{
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expression: &expr.New{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &assign_op.AssignRef{
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expression: &expr.New{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic: false,
+								IsReference: false,
+								Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							},
+						},
+					},
 				},
 			},
 			&stmt.Expression{
