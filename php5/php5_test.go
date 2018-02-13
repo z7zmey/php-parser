@@ -224,6 +224,7 @@ CAD;
 		clone $a;
 		function(){};
 		function($a, $b) use ($c, &$d) {};
+		function($a, $b) use (&$c, $d) {};
 		function() {};
 		foo;
 		namespace\foo;
@@ -287,6 +288,8 @@ CAD;
 		yield;
 		yield $a;
 		yield $a => $b;
+		yield 1;
+		yield $a => 1;
 		
 		(array)$a;
 		(boolean)$a;
@@ -1863,6 +1866,36 @@ CAD;
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
+					Params: []node.Node{
+						&node.Parameter{
+							ByRef:    false,
+							Variadic: false,
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						},
+						&node.Parameter{
+							ByRef:    false,
+							Variadic: false,
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						},
+					},
+					Uses: []node.Node{
+						&expr.ClosureUse{
+							ByRef:    true,
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						},
+						&expr.ClosureUse{
+							ByRef:    false,
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+						},
+					},
+					Stmts: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Closure{
+					ReturnsRef:    false,
+					Static:        false,
+					PhpDocComment: "",
 					Uses:          []node.Node{},
 					Stmts:         []node.Node{},
 				},
@@ -2311,6 +2344,17 @@ CAD;
 				Expr: &expr.Yield{
 					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Value: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Yield{
+					Value: &scalar.Lnumber{Value: "1"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Yield{
+					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Value: &scalar.Lnumber{Value: "1"},
 				},
 			},
 			&stmt.Expression{
