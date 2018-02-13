@@ -347,6 +347,10 @@ CAD;
 		(new \Foo())->bar()->baz;
 		(new \Foo())[0][0];
 		(new \Foo())[0]->bar();
+
+		array([0])[0][0];
+		"foo"[0];
+		foo[0];
 	`
 
 	expectedParams := []node.Node{
@@ -2682,6 +2686,47 @@ CAD;
 					},
 					Method: &node.Identifier{Value: "bar"},
 					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.ArrayDimFetch{
+						Variable: &expr.Array{
+							Items: []node.Node{
+								&expr.ArrayItem{
+									ByRef: false,
+									Val: &expr.ShortArray{
+										Items: []node.Node{
+											&expr.ArrayItem{
+												ByRef: false,
+												Val: &scalar.Lnumber{Value: "0"},
+											},
+										},
+									},
+								},
+							},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &scalar.String{Value: "\"foo\""},
+					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.ConstFetch{
+						Constant: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "foo"},
+							},
+						},
+					},
+					Dim: &scalar.Lnumber{Value: "0"},
 				},
 			},
 		},
