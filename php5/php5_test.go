@@ -106,8 +106,8 @@ CAD;
 		class foo{ const FOO = 1, BAR = 2; }
 		class foo{ function bar() {} }
 		class foo{ public static function &bar() {} }
-		class foo{ public static function &bar() {} }
-		abstract class foo{ }
+		class foo{ final private function bar() {} protected function baz() {} }
+		abstract class foo{ abstract public function bar(); }
 		final class foo extends bar { }
 		final class foo implements bar { }
 		final class foo implements bar, baz { }
@@ -187,7 +187,9 @@ CAD;
 		throw $e;
 		trait Foo {}
 		class Foo { use Bar; }
-		class Foo { use Bar, Baz; }
+		class Foo { use Bar, Baz {} }
+		class Foo { use Bar, Baz { one as public; } }
+		class Foo { use Bar, Baz { one as public two; } }
 		class Foo { use Bar, Baz { Bar::one insteadof Baz, Quux; Baz::one as two; } }
 
 		try {}
@@ -684,11 +686,20 @@ CAD;
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						ReturnsRef:    true,
+						ReturnsRef:    false,
 						MethodName:    &node.Identifier{Value: "bar"},
 						Modifiers: []node.Node{
-							&node.Identifier{Value: "public"},
-							&node.Identifier{Value: "static"},
+							&node.Identifier{Value: "final"},
+							&node.Identifier{Value: "private"},
+						},
+						Stmts: []node.Node{},
+					},
+					&stmt.ClassMethod{
+						PhpDocComment: "",
+						ReturnsRef:    false,
+						MethodName:    &node.Identifier{Value: "baz"},
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "protected"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -699,7 +710,17 @@ CAD;
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "abstract"},
 				},
-				Stmts: []node.Node{},
+				Stmts: []node.Node{
+					&stmt.ClassMethod{
+						PhpDocComment: "",
+						ReturnsRef:    false,
+						MethodName:    &node.Identifier{Value: "bar"},
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "abstract"},
+							&node.Identifier{Value: "public"},
+						},
+					},
+				},
 			},
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
@@ -1305,6 +1326,63 @@ CAD;
 								Parts: []node.Node{
 									&name.NamePart{Value: "Baz"},
 								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+								Alias: &node.Identifier{Value: "two"},
 							},
 						},
 					},

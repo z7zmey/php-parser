@@ -76,6 +76,128 @@ func TestTraitsUse(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestTraitsUseEmptyAdaptations(t *testing.T) {
+	src := `<? class Foo { use Bar, Baz {} }`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName: &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestTraitsUseModifier(t *testing.T) {
+	src := `<? class Foo { use Bar, Baz { one as public; } }`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName: &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestTraitsUseAliasModifier(t *testing.T) {
+	src := `<? class Foo { use Bar, Baz { one as public two; } }`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName: &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+								Alias: &node.Identifier{Value: "two"},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestTraitsUseAdaptions(t *testing.T) {
 	src := `<? class Foo { use Bar, Baz { Bar::one insteadof Baz, Quux; Baz::one as two; } }`
 
