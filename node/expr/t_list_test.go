@@ -14,6 +14,29 @@ import (
 	"github.com/z7zmey/php-parser/php7"
 )
 
+func TestEmptyList(t *testing.T) {
+	src := `<? list() = $b;`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &assign_op.Assign{
+					Variable: &expr.List{
+						Items: []node.Node{},
+					},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestList(t *testing.T) {
 	src := `<? list($a) = $b;`
 

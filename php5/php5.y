@@ -3432,7 +3432,13 @@ assignment_list:
         assignment_list ',' assignment_list_element
             { fmt.Println("487"); $$ = append($1, $3) }
     |   assignment_list_element
-            { fmt.Println("488"); $$ = []node.Node{$1} }
+            {
+                if $1 == nil {
+                    $$ = []node.Node{}
+                } else {
+                    fmt.Println("488"); $$ = []node.Node{$1}
+                }
+            }
 ;
 
 

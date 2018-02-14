@@ -86,6 +86,11 @@ CAD;
 		__TRAIT__;
 
 		"test $var";
+		"test $var[1]";
+		"test $var[1234567890123456789012345678901234567890]";
+		"test $var[bar]";
+		"test $var[$bar]";
+		"$foo $bar";
 		"test $foo->bar()";
 		"test ${foo}";
 		"test ${foo[0]}";
@@ -221,6 +226,8 @@ CAD;
 		array();
 		array(1);
 		array(1=>1, &$b,);
+		array(3 =>&$b);
+		array(&$b, 1=>1, 1, 3 =>&$b);
 		~$a;
 		!$a;
 
@@ -236,6 +243,7 @@ CAD;
 		\foo;
 
 		empty($a);
+		empty(Foo);
 		@$a;
 		eval($a);
 		exit;
@@ -262,7 +270,9 @@ CAD;
 		$a instanceof \Foo;
 
 		isset($a, $b);
-		list($a) = $b;
+		isset(Foo);
+		list() = $b;
+		list($a, $b) = $b;
 		list($a[]) = $b;
 		list(list($a)) = $b;
 
@@ -272,6 +282,9 @@ CAD;
 		new \Foo();
 		print($a);
 		$a->foo;
+		$a->foo[1];
+		$a->foo->bar->baz()->quux[0];
+		$a->foo()[1][1];
 		` + "`cmd $a`;" + `
 		` + "`cmd`;" + `
 		` + "``;" + `
@@ -294,6 +307,7 @@ CAD;
 		-$a;
 		+$a;
 		$$a;
+		$$$a;
 		yield;
 		yield $a;
 		yield $a => $b;
@@ -366,6 +380,7 @@ CAD;
 		static::foo;
 
 		new $foo;
+		new $foo::$bar;
 		new $a->b[0];
 		new $a->b{$b ?: null}->$c->d[0];static $a = [1][0];
 
@@ -410,6 +425,16 @@ CAD;
 		static $a = array();
 		static $a = array(1 => 1, 2);
 		static $a = [1, 2 => 2][0];
+
+		if (yield 1) {}
+		Foo::$$bar;
+
+		$foo();
+		$foo()[0][0];
+		$a{$b};
+		${$a};
+		$foo::{$bar}();
+		$foo::bar;
 	`
 
 	expectedParams := []node.Node{
@@ -608,6 +633,59 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim: &scalar.Lnumber{Value: "1"},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim: &scalar.String{Value: "1234567890123456789012345678901234567890"},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim: &scalar.String{Value: "bar"},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						&scalar.EncapsedStringPart{Value: " "},
+						&expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
 					},
 				},
 			},
@@ -1479,7 +1557,7 @@ CAD;
 									Method: &node.Identifier{Value: "one"},
 								},
 								Modifier: &node.Identifier{Value: "public"},
-								Alias: &node.Identifier{Value: "two"},
+								Alias:    &node.Identifier{Value: "two"},
 							},
 						},
 					},
@@ -1861,6 +1939,41 @@ CAD;
 				},
 			},
 			&stmt.Expression{
+				Expr: &expr.Array{
+					Items: []node.Node{
+						&expr.ArrayItem{
+							ByRef: true,
+							Key:   &scalar.Lnumber{Value: "3"},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Array{
+					Items: []node.Node{
+						&expr.ArrayItem{
+							ByRef: true,
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						},
+						&expr.ArrayItem{
+							ByRef: false,
+							Key:   &scalar.Lnumber{Value: "1"},
+							Val:   &scalar.Lnumber{Value: "1"},
+						},
+						&expr.ArrayItem{
+							ByRef: false,
+							Val:   &scalar.Lnumber{Value: "1"},
+						},
+						&expr.ArrayItem{
+							ByRef: true,
+							Key:   &scalar.Lnumber{Value: "3"},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
 				Expr: &expr.BitwiseNot{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
@@ -1986,6 +2099,13 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.Empty{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Empty{
+					Expr: &expr.ConstFetch{
+						Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					},
 				},
 			},
 			&stmt.Expression{
@@ -2157,12 +2277,33 @@ CAD;
 				},
 			},
 			&stmt.Expression{
+				Expr: &expr.Isset{
+					Variables: []node.Node{
+						&expr.ConstFetch{
+							Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &assign_op.Assign{
+					Variable: &expr.List{
+						Items: []node.Node{},
+					},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+			&stmt.Expression{
 				Expr: &assign_op.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
 								ByRef: false,
 								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							},
+							&expr.ArrayItem{
+								ByRef: false,
+								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 							},
 						},
 					},
@@ -2249,6 +2390,47 @@ CAD;
 				Expr: &expr.PropertyFetch{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Property: &node.Identifier{Value: "foo"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.PropertyFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Property: &node.Identifier{Value: "foo"},
+					},
+					Dim: &scalar.Lnumber{Value: "1"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.PropertyFetch{
+						Variable: &expr.MethodCall{
+							Variable: &expr.PropertyFetch{
+								Variable: &expr.PropertyFetch{
+									Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+									Property: &node.Identifier{Value: "foo"},
+								},
+								Property: &node.Identifier{Value: "bar"},
+							},
+							Method:    &node.Identifier{Value: "baz"},
+							Arguments: []node.Node{},
+						},
+						Property: &node.Identifier{Value: "quux"},
+					},
+					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.ArrayDimFetch{
+						Variable: &expr.MethodCall{
+							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Method:    &node.Identifier{Value: "foo"},
+							Arguments: []node.Node{},
+						},
+						Dim: &scalar.Lnumber{Value: "1"},
+					},
+					Dim: &scalar.Lnumber{Value: "1"},
 				},
 			},
 			&stmt.Expression{
@@ -2431,6 +2613,9 @@ CAD;
 				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
 			},
 			&stmt.Expression{
+				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}}},
+			},
+			&stmt.Expression{
 				Expr: &expr.Yield{},
 			},
 			&stmt.Expression{
@@ -2458,7 +2643,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Key: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Value: &expr.ClassConstFetch{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -2677,7 +2862,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &assign_op.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -2689,7 +2874,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &assign_op.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -2698,9 +2883,9 @@ CAD;
 						},
 						Arguments: []node.Node{
 							&node.Argument{
-								Variadic: false,
+								Variadic:    false,
 								IsReference: false,
-								Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Expr:        &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 							},
 						},
 					},
@@ -2805,7 +2990,7 @@ CAD;
 							},
 							Arguments: []node.Node{},
 						},
-						Method: &node.Identifier{Value: "bar"},
+						Method:    &node.Identifier{Value: "bar"},
 						Arguments: []node.Node{},
 					},
 					Property: &node.Identifier{Value: "baz"},
@@ -2840,7 +3025,7 @@ CAD;
 						},
 						Dim: &scalar.Lnumber{Value: "0"},
 					},
-					Method: &node.Identifier{Value: "bar"},
+					Method:    &node.Identifier{Value: "bar"},
 					Arguments: []node.Node{},
 				},
 			},
@@ -2855,7 +3040,7 @@ CAD;
 										Items: []node.Node{
 											&expr.ArrayItem{
 												ByRef: false,
-												Val: &scalar.Lnumber{Value: "0"},
+												Val:   &scalar.Lnumber{Value: "0"},
 											},
 										},
 									},
@@ -2870,7 +3055,7 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
 					Variable: &scalar.String{Value: "\"foo\""},
-					Dim: &scalar.Lnumber{Value: "0"},
+					Dim:      &scalar.Lnumber{Value: "0"},
 				},
 			},
 			&stmt.Expression{
@@ -2887,7 +3072,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{
-					Class: &node.Identifier{Value: "static"},
+					Class:        &node.Identifier{Value: "static"},
 					ConstantName: &node.Identifier{Value: "foo"},
 				},
 			},
@@ -2898,10 +3083,18 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
+					Class: &expr.StaticPropertyFetch{
+						Class:    &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
 					Class: &expr.ArrayDimFetch{
 						Variable: &expr.PropertyFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-							Property:  &node.Identifier{Value: "b"},
+							Property: &node.Identifier{Value: "b"},
 						},
 						Dim: &scalar.Lnumber{Value: "0"},
 					},
@@ -2928,9 +3121,9 @@ CAD;
 										},
 									},
 								},
-								Property:  &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+								Property: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
 							},
-							Property:  &node.Identifier{Value: "d"},
+							Property: &node.Identifier{Value: "d"},
 						},
 						Dim: &scalar.Lnumber{Value: "0"},
 					},
@@ -2945,7 +3138,7 @@ CAD;
 								Items: []node.Node{
 									&expr.ArrayItem{
 										ByRef: false,
-										Val: &scalar.Lnumber{Value: "1"},
+										Val:   &scalar.Lnumber{Value: "1"},
 									},
 								},
 							},
@@ -2998,7 +3191,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &scalar.Lnumber{Value: "1"},
+						Expr:     &scalar.Lnumber{Value: "1"},
 					},
 				},
 			},
@@ -3006,9 +3199,9 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.Ternary{
+						Expr: &expr.Ternary{
 							Condition: &scalar.Lnumber{Value: "1"},
-							IfFalse: &scalar.Lnumber{Value: "2"},
+							IfFalse:   &scalar.Lnumber{Value: "2"},
 						},
 					},
 				},
@@ -3017,10 +3210,10 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.Ternary{
+						Expr: &expr.Ternary{
 							Condition: &scalar.Lnumber{Value: "1"},
-							IfTrue: &scalar.Lnumber{Value: "2"},
-							IfFalse: &scalar.Lnumber{Value: "3"},
+							IfTrue:    &scalar.Lnumber{Value: "2"},
+							IfFalse:   &scalar.Lnumber{Value: "3"},
 						},
 					},
 				},
@@ -3029,8 +3222,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.BitwiseAnd{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.BitwiseAnd{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3040,8 +3233,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.BitwiseOr{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.BitwiseOr{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3051,8 +3244,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.BitwiseXor{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.BitwiseXor{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3062,8 +3255,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.BooleanAnd{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.BooleanAnd{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3073,8 +3266,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.BooleanOr{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.BooleanOr{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3084,8 +3277,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Concat{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Concat{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3095,8 +3288,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Div{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Div{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3106,8 +3299,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Equal{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Equal{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3117,8 +3310,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.GreaterOrEqual{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.GreaterOrEqual{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3128,8 +3321,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Greater{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Greater{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3139,8 +3332,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Identical{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Identical{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3150,8 +3343,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.LogicalAnd{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.LogicalAnd{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3161,8 +3354,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.LogicalOr{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.LogicalOr{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3172,8 +3365,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.LogicalXor{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.LogicalXor{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3183,8 +3376,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Minus{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Minus{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3194,8 +3387,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Mod{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Mod{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3205,8 +3398,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Mul{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Mul{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3216,8 +3409,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.NotEqual{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.NotEqual{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3227,8 +3420,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.NotIdentical{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.NotIdentical{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3238,8 +3431,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Plus{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Plus{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3249,8 +3442,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Pow{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Pow{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3260,8 +3453,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.ShiftLeft{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.ShiftLeft{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3271,8 +3464,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.ShiftRight{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.ShiftRight{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3282,8 +3475,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.SmallerOrEqual{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.SmallerOrEqual{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3293,8 +3486,8 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &binary_op.Smaller{
-							Left: &scalar.Lnumber{Value: "1"},
+						Expr: &binary_op.Smaller{
+							Left:  &scalar.Lnumber{Value: "1"},
 							Right: &scalar.Lnumber{Value: "2"},
 						},
 					},
@@ -3304,7 +3497,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.ClassConstFetch{
+						Expr: &expr.ClassConstFetch{
 							Class: &name.Name{
 								Parts: []node.Node{
 									&name.NamePart{Value: "Foo"},
@@ -3319,7 +3512,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.ClassConstFetch{
+						Expr: &expr.ClassConstFetch{
 							Class: &name.Name{
 								Parts: []node.Node{
 									&name.NamePart{Value: "Foo"},
@@ -3334,7 +3527,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &scalar.MagicConstant{Value: "__CLASS__"},
+						Expr:     &scalar.MagicConstant{Value: "__CLASS__"},
 					},
 				},
 			},
@@ -3342,7 +3535,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.ConstFetch{
+						Expr: &expr.ConstFetch{
 							Constant: &name.Name{
 								Parts: []node.Node{
 									&name.NamePart{Value: "Foo"},
@@ -3356,7 +3549,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.ConstFetch{
+						Expr: &expr.ConstFetch{
 							Constant: &name.Relative{
 								Parts: []node.Node{
 									&name.NamePart{Value: "Foo"},
@@ -3370,7 +3563,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.ConstFetch{
+						Expr: &expr.ConstFetch{
 							Constant: &name.FullyQualified{
 								Parts: []node.Node{
 									&name.NamePart{Value: "Foo"},
@@ -3384,7 +3577,7 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.Array{},
+						Expr:     &expr.Array{},
 					},
 				},
 			},
@@ -3392,23 +3585,22 @@ CAD;
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						Expr:  &expr.Array{
+						Expr: &expr.Array{
 							Items: []node.Node{
 								&expr.ArrayItem{
 									ByRef: false,
-									Key: &scalar.Lnumber{Value: "1"},
-									Val: &scalar.Lnumber{Value: "1"},
+									Key:   &scalar.Lnumber{Value: "1"},
+									Val:   &scalar.Lnumber{Value: "1"},
 								},
 								&expr.ArrayItem{
 									ByRef: false,
-									Val: &scalar.Lnumber{Value: "2"},
+									Val:   &scalar.Lnumber{Value: "2"},
 								},
 							},
 						},
 					},
 				},
 			},
-
 			&stmt.Static{
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -3418,18 +3610,72 @@ CAD;
 								Items: []node.Node{
 									&expr.ArrayItem{
 										ByRef: false,
-										Val: &scalar.Lnumber{Value: "1"},
+										Val:   &scalar.Lnumber{Value: "1"},
 									},
 									&expr.ArrayItem{
 										ByRef: false,
-										Key: &scalar.Lnumber{Value: "2"},
-										Val: &scalar.Lnumber{Value: "2"},
+										Key:   &scalar.Lnumber{Value: "2"},
+										Val:   &scalar.Lnumber{Value: "2"},
 									},
 								},
 							},
 							Dim: &scalar.Lnumber{Value: "0"},
 						},
 					},
+				},
+			},
+			&stmt.If{
+				Cond: &expr.Yield{
+					Value: &scalar.Lnumber{Value: "1"},
+				},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticPropertyFetch{
+					Class:    &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Property: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.ArrayDimFetch{
+						Variable: &expr.FunctionCall{
+							Function:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+							Arguments: []node.Node{},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+					Dim: &scalar.Lnumber{Value: "0"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ArrayDimFetch{
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Dim:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ClassConstFetch{
+					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					ConstantName: &node.Identifier{Value: "bar"},
 				},
 			},
 		},
