@@ -642,7 +642,7 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
-							Dim: &scalar.Lnumber{Value: "1"},
+							Dim:      &scalar.Lnumber{Value: "1"},
 						},
 					},
 				},
@@ -653,7 +653,7 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
-							Dim: &scalar.String{Value: "1234567890123456789012345678901234567890"},
+							Dim:      &scalar.String{Value: "1234567890123456789012345678901234567890"},
 						},
 					},
 				},
@@ -664,7 +664,7 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
-							Dim: &scalar.String{Value: "bar"},
+							Dim:      &scalar.String{Value: "bar"},
 						},
 					},
 				},
@@ -675,7 +675,7 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
-							Dim: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+							Dim:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
 						},
 					},
 				},
@@ -3674,7 +3674,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{
-					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Class:        &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
 					ConstantName: &node.Identifier{Value: "bar"},
 				},
 			},
