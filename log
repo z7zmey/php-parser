@@ -4120,6 +4120,98 @@
 42
 5
 1
+474
+473
+468
+348
+340
+358
+229
+282
+435
+63
+42
+5
+1
+474
+473
+468
+483
+482
+360
+424
+299
+435
+477
+480
+478
+350
+341
+343
+342
+340
+358
+229
+282
+435
+63
+42
+5
+1
+474
+473
+468
+483
+482
+474
+473
+468
+465
+448
+438
+434
+3
+418
+422
+299
+435
+288
+435
+481
+478
+350
+474
+473
+458
+479
+351
+349
+483
+482
+360
+424
+299
+435
+477
+480
+478
+351
+349
+341
+343
+342
+346
+346
+345
+340
+358
+229
+282
+435
+63
+42
+5
+1
   | *stmt.StmtList
   |   "Stmts":
   |     *stmt.Expression Pos{Line: 2-2 Pos: 6-20}
@@ -4135,7 +4227,7 @@
   |                 *expr.Variable Pos{Line: 2-2 Pos: 10-11}
   |                   "VarName":
   |                     *node.Identifier Pos{Line: 2-2 Pos: 10-11} map[Value:$a]
-  |             *node.Argument Pos{Line: 2-2 Pos: 14-18} map[IsReference:false Variadic:true]
+  |             *node.Argument Pos{Line: 2-2 Pos: 14-18} map[Variadic:true IsReference:false]
   |               "Expr":
   |                 *expr.Variable Pos{Line: 2-2 Pos: 17-18}
   |                   "VarName":
@@ -4148,7 +4240,7 @@
   |               "VarName":
   |                 *node.Identifier Pos{Line: 3-3 Pos: 24-27} map[Value:$foo]
   |           "Arguments":
-  |             *node.Argument Pos{Line: 3-3 Pos: 29-30} map[Variadic:false IsReference:false]
+  |             *node.Argument Pos{Line: 3-3 Pos: 29-30} map[IsReference:false Variadic:false]
   |               "Expr":
   |                 *expr.Variable Pos{Line: 3-3 Pos: 29-30}
   |                   "VarName":
@@ -4173,7 +4265,7 @@
   |                 *expr.Variable Pos{Line: 4-4 Pos: 53-54}
   |                   "VarName":
   |                     *node.Identifier Pos{Line: 4-4 Pos: 53-54} map[Value:$a]
-  |             *node.Argument Pos{Line: 4-4 Pos: 57-61} map[Variadic:true IsReference:false]
+  |             *node.Argument Pos{Line: 4-4 Pos: 57-61} map[IsReference:false Variadic:true]
   |               "Expr":
   |                 *expr.Variable Pos{Line: 4-4 Pos: 60-61}
   |                   "VarName":
@@ -4213,7 +4305,7 @@
   |                 *expr.Variable Pos{Line: 6-6 Pos: 100-101}
   |                   "VarName":
   |                     *node.Identifier Pos{Line: 6-6 Pos: 100-101} map[Value:$a]
-  |             *node.Argument Pos{Line: 6-6 Pos: 104-108} map[IsReference:false Variadic:true]
+  |             *node.Argument Pos{Line: 6-6 Pos: 104-108} map[Variadic:true IsReference:false]
   |               "Expr":
   |                 *expr.Variable Pos{Line: 6-6 Pos: 107-108}
   |                   "VarName":
@@ -4304,7 +4396,7 @@
   |       "Expr":
   |         *expr.Closure Pos{Line: 11-11 Pos: 250-289} map[ReturnsRef:false Static:false PhpDocComment:]
   |           "Params":
-  |             *node.Parameter Pos{Line: 11-11 Pos: 259-271} map[ByRef:false Variadic:false]
+  |             *node.Parameter Pos{Line: 11-11 Pos: 259-271} map[Variadic:false ByRef:false]
   |               "VariableType":
   |                 *name.Name Pos{Line: 11-11 Pos: 259-261}
   |                   "Parts":
@@ -4319,7 +4411,7 @@
   |                     *name.Name Pos{Line: 11-11 Pos: 268-271}
   |                       "Parts":
   |                         *name.NamePart Pos{Line: 11-11 Pos: 268-271} map[Value:null]
-  |             *node.Parameter Pos{Line: 11-11 Pos: 274-285} map[Variadic:true ByRef:true]
+  |             *node.Parameter Pos{Line: 11-11 Pos: 274-285} map[ByRef:true Variadic:true]
   |               "VariableType":
   |                 *name.Name Pos{Line: 11-11 Pos: 274-276}
   |                   "Parts":
@@ -4923,7 +5015,7 @@
   |         *node.Identifier Pos{Line: 101-101 Pos: 2076-2078} map[Value:foo]
   |       "Stmts":
   |         *stmt.HaltCompiler Pos{Line: 113-113 Pos: 2310-2327}
-  |         *stmt.Function Pos{Line: 103-103 Pos: 2121-2137} map[PhpDocComment: ReturnsRef:false]
+  |         *stmt.Function Pos{Line: 103-103 Pos: 2121-2137} map[ReturnsRef:false PhpDocComment:]
   |           "FunctionName":
   |             *node.Identifier Pos{Line: 103-103 Pos: 2130-2132} map[Value:bar]
   |           "Stmts":
@@ -4936,12 +5028,12 @@
   |             *expr.Variable Pos{Line: 105-105 Pos: 2183-2184}
   |               "VarName":
   |                 *node.Identifier Pos{Line: 105-105 Pos: 2183-2184} map[Value:$a]
-  |     *stmt.Function Pos{Line: 107-107 Pos: 2199-2222} map[ReturnsRef:false PhpDocComment:]
+  |     *stmt.Function Pos{Line: 107-107 Pos: 2199-2222} map[PhpDocComment: ReturnsRef:false]
   |       "FunctionName":
   |         *node.Identifier Pos{Line: 107-107 Pos: 2208-2210} map[Value:foo]
   |       "Stmts":
   |         *stmt.Return Pos{Line: 107-107 Pos: 2215-2221}
-  |     *stmt.Function Pos{Line: 108-108 Pos: 2226-2252} map[PhpDocComment: ReturnsRef:true]
+  |     *stmt.Function Pos{Line: 108-108 Pos: 2226-2252} map[ReturnsRef:true PhpDocComment:]
   |       "FunctionName":
   |         *node.Identifier Pos{Line: 108-108 Pos: 2236-2238} map[Value:foo]
   |       "Stmts":
@@ -5656,14 +5748,14 @@
   |           "Stmts":
   |     *stmt.Expression Pos{Line: 181-181 Pos: 3842-3875}
   |       "Expr":
-  |         *expr.Closure Pos{Line: 181-181 Pos: 3842-3874} map[PhpDocComment: ReturnsRef:false Static:false]
+  |         *expr.Closure Pos{Line: 181-181 Pos: 3842-3874} map[ReturnsRef:false Static:false PhpDocComment:]
   |           "Params":
   |             *node.Parameter Pos{Line: 181-181 Pos: 3851-3852} map[ByRef:false Variadic:false]
   |               "Variable":
   |                 *expr.Variable Pos{Line: 181-181 Pos: 3851-3852}
   |                   "VarName":
   |                     *node.Identifier Pos{Line: 181-181 Pos: 3851-3852} map[Value:$a]
-  |             *node.Parameter Pos{Line: 181-181 Pos: 3855-3856} map[ByRef:false Variadic:false]
+  |             *node.Parameter Pos{Line: 181-181 Pos: 3855-3856} map[Variadic:false ByRef:false]
   |               "Variable":
   |                 *expr.Variable Pos{Line: 181-181 Pos: 3855-3856}
   |                   "VarName":
@@ -6857,3 +6949,64 @@
   |             *node.Identifier Pos{Line: 313-313 Pos: 5586-5591} map[Value:static]
   |           "ConstantName":
   |             *node.Identifier Pos{Line: 313-313 Pos: 5594-5596} map[Value:foo]
+  |     *stmt.Expression Pos{Line: 315-315 Pos: 5608-5616}
+  |       "Expr":
+  |         *expr.New Pos{Line: 315-315 Pos: 5608-5615}
+  |           "Class":
+  |             *expr.Variable Pos{Line: 315-315 Pos: 5612-5615}
+  |               "VarName":
+  |                 *node.Identifier Pos{Line: 315-315 Pos: 5612-5615} map[Value:$foo]
+  |     *stmt.Expression Pos{Line: 316-316 Pos: 5626-5638}
+  |       "Expr":
+  |         *expr.New Pos{Line: 316-316 Pos: 5626-5636}
+  |           "Class":
+  |             *expr.ArrayDimFetch Pos{Line: 316-316 Pos: 5636-5636}
+  |               "Variable":
+  |                 *expr.PropertyFetch Pos{Line: 316-316 Pos: 5634-5636}
+  |                   "Variable":
+  |                     *expr.Variable Pos{Line: 316-316 Pos: 5630-5634}
+  |                       "VarName":
+  |                         *node.Identifier Pos{Line: 316-316 Pos: 5630-5631} map[Value:$a]
+  |                   "Property":
+  |                     *node.Identifier Pos{Line: 316-316 Pos: 5634-5634} map[Value:b]
+  |               "Dim":
+  |                 *scalar.Lnumber Pos{Line: 316-316 Pos: 5636-5636} map[Value:0]
+  |     *stmt.Expression Pos{Line: 317-317 Pos: 5648-5679}
+  |       "Expr":
+  |         *expr.New Pos{Line: 317-317 Pos: 5648-5677}
+  |           "Class":
+  |             *expr.ArrayDimFetch Pos{Line: 317-317 Pos: 5677-5677}
+  |               "Variable":
+  |                 *expr.PropertyFetch Pos{Line: 317-317 Pos: 5675-5677}
+  |                   "Variable":
+  |                     *expr.PropertyFetch Pos{Line: 317-317 Pos: 5671-5675}
+  |                       "Variable":
+  |                         *expr.ArrayDimFetch Pos{Line: 317-317 Pos: 5658-5672}
+  |                           "Variable":
+  |                             *expr.PropertyFetch Pos{Line: 317-317 Pos: 5656-5667}
+  |                               "Variable":
+  |                                 *expr.Variable Pos{Line: 317-317 Pos: 5652-5656}
+  |                                   "VarName":
+  |                                     *node.Identifier Pos{Line: 317-317 Pos: 5652-5653} map[Value:$a]
+  |                               "Property":
+  |                                 *node.Identifier Pos{Line: 317-317 Pos: 5656-5656} map[Value:b]
+  |                           "Dim":
+  |                             *expr.Ternary Pos{Line: 317-317 Pos: 5658-5667}
+  |                               "Condition":
+  |                                 *expr.Variable Pos{Line: 317-317 Pos: 5658-5659}
+  |                                   "VarName":
+  |                                     *node.Identifier Pos{Line: 317-317 Pos: 5658-5659} map[Value:$b]
+  |                               "IfFalse":
+  |                                 *expr.ConstFetch Pos{Line: 317-317 Pos: 5664-5667}
+  |                                   "Constant":
+  |                                     *name.Name Pos{Line: 317-317 Pos: 5664-5667}
+  |                                       "Parts":
+  |                                         *name.NamePart Pos{Line: 317-317 Pos: 5664-5667} map[Value:null]
+  |                       "Property":
+  |                         *expr.Variable Pos{Line: 317-317 Pos: 5671-5672}
+  |                           "VarName":
+  |                             *node.Identifier Pos{Line: 317-317 Pos: 5671-5672} map[Value:$c]
+  |                   "Property":
+  |                     *node.Identifier Pos{Line: 317-317 Pos: 5675-5675} map[Value:d]
+  |               "Dim":
+  |                 *scalar.Lnumber Pos{Line: 317-317 Pos: 5677-5677} map[Value:0]

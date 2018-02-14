@@ -357,6 +357,10 @@ CAD;
 		"foo"[0];
 		foo[0];
 		static::foo;
+
+		new $foo;
+		new $a->b[0];
+		new $a->b{$b ?: null}->$c->d[0];
 	`
 
 	expectedParams := []node.Node{
@@ -2798,6 +2802,51 @@ CAD;
 				Expr: &expr.ClassConstFetch{
 					Class: &node.Identifier{Value: "static"},
 					ConstantName: &node.Identifier{Value: "foo"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.ArrayDimFetch{
+						Variable: &expr.PropertyFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Property:  &node.Identifier{Value: "b"},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.ArrayDimFetch{
+						Variable: &expr.PropertyFetch{
+							Variable: &expr.PropertyFetch{
+								Variable: &expr.ArrayDimFetch{
+									Variable: &expr.PropertyFetch{
+										Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+										Property: &node.Identifier{Value: "b"},
+									},
+									Dim: &expr.Ternary{
+										Condition: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+										IfFalse: &expr.ConstFetch{
+											Constant: &name.Name{
+												Parts: []node.Node{
+													&name.NamePart{Value: "null"},
+												},
+											},
+										},
+									},
+								},
+								Property:  &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+							},
+							Property:  &node.Identifier{Value: "d"},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
 				},
 			},
 		},

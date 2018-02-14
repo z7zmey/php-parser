@@ -2565,12 +2565,6 @@ dynamic_class_name_reference:
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
                             fmt.Println("343"); $$ = nn
-                        
-                        case *expr.MethodCall:
-                            nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
-                            fmt.Println("344"); $$ = nn
                     }
                 }
 
@@ -2587,12 +2581,6 @@ dynamic_class_name_reference:
                             positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
                             comments.AddComments(nn, comments[$1])
                             fmt.Println("346"); $$ = nn
-                        
-                        case *expr.MethodCall:
-                            nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
-                            fmt.Println("347"); $$ = nn
                     }
                 }
             }
