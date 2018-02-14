@@ -104,6 +104,26 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestPlainHeredocEmptyString(t *testing.T) {
+	src := `<? <<<CAD
+CAD;
+`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestPlainHeredocScalarString(t *testing.T) {
 	src := `<? <<<CAD
 	hello

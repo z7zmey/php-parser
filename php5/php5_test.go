@@ -55,6 +55,8 @@ func TestPhp5(t *testing.T) {
 			$test
 		';
 		<<<CAD
+CAD;
+		<<<CAD
 	hello
 CAD;
 		<<<"CAD"
@@ -235,7 +237,7 @@ CAD;
 		eval($a);
 		exit;
 		exit($a);
-		die;
+		die();
 		die($a);
 		foo();
 		namespace\foo(&$a);
@@ -267,7 +269,9 @@ CAD;
 		new \Foo();
 		print($a);
 		$a->foo;
-	` + "`cmd $a`;" + `
+		` + "`cmd $a`;" + `
+		` + "`cmd`;" + `
+		` + "``;" + `
 		[];
 		[1];
 		[1=>1, &$b,];
@@ -485,6 +489,9 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "'\n\t\t\t$test\n\t\t'"},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{},
 			},
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\thello\n"},
@@ -2196,6 +2203,18 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "cmd "},
 						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ShellExec{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "cmd"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ShellExec{
+					Parts: []node.Node{},
 				},
 			},
 			&stmt.Expression{
