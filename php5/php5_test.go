@@ -62,6 +62,9 @@ CAD;
 		<<<"CAD"
 	hello
 CAD;
+		<<<"CAD"
+	hello $world
+CAD;
 		<<<'CAD'
 	hello $world
 CAD;
@@ -294,8 +297,8 @@ CAD;
 		yield;
 		yield $a;
 		yield $a => $b;
-		yield 1;
-		yield $a => 1;
+		yield Foo::class;
+		yield $a => Foo::class;
 		
 		(array)$a;
 		(boolean)$a;
@@ -405,6 +408,8 @@ CAD;
 		static $a = namespace\Foo;
 		static $a = \Foo;
 		static $a = array();
+		static $a = array(1 => 1, 2);
+		static $a = [1, 2 => 2][0];
 	`
 
 	expectedParams := []node.Node{
@@ -538,6 +543,15 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\thello\n"},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "\thello "},
+						&expr.Variable{VarName: &node.Identifier{Value: "$world"}},
+						&scalar.EncapsedStringPart{Value: "\n"},
+					},
+				},
 			},
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\thello $world\n"},
@@ -2432,13 +2446,27 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Value: &scalar.Lnumber{Value: "1"},
+					Value: &expr.ClassConstFetch{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						ConstantName: &node.Identifier{Value: "class"},
+					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{
 					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Value: &scalar.Lnumber{Value: "1"},
+					Value: &expr.ClassConstFetch{
+						Class: &name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Foo"},
+							},
+						},
+						ConstantName: &node.Identifier{Value: "class"},
+					},
 				},
 			},
 			&stmt.Expression{
@@ -3357,6 +3385,50 @@ CAD;
 					&stmt.StaticVar{
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 						Expr:  &expr.Array{},
+					},
+				},
+			},
+			&stmt.Static{
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Expr:  &expr.Array{
+							Items: []node.Node{
+								&expr.ArrayItem{
+									ByRef: false,
+									Key: &scalar.Lnumber{Value: "1"},
+									Val: &scalar.Lnumber{Value: "1"},
+								},
+								&expr.ArrayItem{
+									ByRef: false,
+									Val: &scalar.Lnumber{Value: "2"},
+								},
+							},
+						},
+					},
+				},
+			},
+
+			&stmt.Static{
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Expr: &expr.ArrayDimFetch{
+							Variable: &expr.ShortArray{
+								Items: []node.Node{
+									&expr.ArrayItem{
+										ByRef: false,
+										Val: &scalar.Lnumber{Value: "1"},
+									},
+									&expr.ArrayItem{
+										ByRef: false,
+										Key: &scalar.Lnumber{Value: "2"},
+										Val: &scalar.Lnumber{Value: "2"},
+									},
+								},
+							},
+							Dim: &scalar.Lnumber{Value: "0"},
+						},
 					},
 				},
 			},
