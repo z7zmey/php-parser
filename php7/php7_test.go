@@ -41,6 +41,13 @@ func TestPhp7(t *testing.T) {
 		new foo($a, ...$b);
 		/** anonymous class */
 		new class ($a, ...$b) {};
+		new class {};
+		new $foo;
+		new $foo[1];
+		new $foo{$bar};
+		new $foo->bar;
+		new $foo::$bar;
+		new static::$bar;
 
 		function foo(?bar $bar=null, baz &...$baz) {}
 		class foo {public function foo(?bar $bar=null, baz &...$baz) {}}
@@ -89,13 +96,16 @@ CAD;
 
 		"test $var";
 		"test $var[1]";
+		"test $var[-1]";
 		"test $var[1234567890123456789012345678901234567890]";
+		"test $var[-1234567890123456789012345678901234567890]";
 		"test $var[bar]";
 		"test $var[$bar]";
 		"$foo $bar";
 		"test $foo->bar()";
 		"test ${foo}";
 		"test ${foo[0]}";
+		"test ${$foo}";
 		"test {$foo->bar()}";
 
 		if ($a) :
@@ -190,9 +200,13 @@ CAD;
 		}
 
 		throw $e;
+
 		trait Foo {}
 		class Foo { use Bar; }
-		class Foo { use Bar, Baz; }
+		class Foo { use Bar, Baz {} }
+		class Foo { use Bar, Baz { one as include; } }
+		class Foo { use Bar, Baz { one as public; } }
+		class Foo { use Bar, Baz { one as public two; } }
 		class Foo { use Bar, Baz { Bar::one insteadof Baz, Quux; Baz::one as two; } }
 
 		try {}
@@ -228,6 +242,7 @@ CAD;
 		!$a;
 
 		Foo::Bar;
+		$foo::Bar;
 		clone($a);
 		clone $a;
 		function(){};
@@ -275,7 +290,9 @@ CAD;
 		new class ($a, ...$b) {};
 		print($a);
 		$a->foo;
-	` + "`cmd $a`;" + `
+		` + "`cmd $a`;" + `
+		` + "`cmd`;" + `
+		` + "``;" + `
 		[];
 		[1];
 		[1=>1, &$b,];
@@ -287,6 +304,7 @@ CAD;
 		namespace\Foo::bar();
 		\Foo::bar();
 		Foo::$bar;
+		$foo::$bar;
 		namespace\Foo::$bar;
 		\Foo::$bar;
 		$a ? $b : $c;
@@ -365,6 +383,26 @@ CAD;
 			trait Quux{}
 			interface Quuux {}
 		}
+		
+		function foo(&$a = 1, ...$b = 1, $c = 1) {}
+		function foo(array $a, callable $b) {}
+		abstract final class foo { abstract protected static function bar(); final private function baz() {} }
+
+		(new Foo)->bar;
+		(new Foo)();
+		[$foo][0]();
+		foo[1]();
+		"foo"();
+		[1]{$foo}();
+		${foo()};
+
+		Foo::$bar();
+		Foo::{$bar[0]}();
+		
+		$foo->$bar;
+		$foo->{$bar[0]};
+
+		[1=>&$a, 2=>list($b)];
 	`
 
 	expectedParams := []node.Node{
@@ -451,6 +489,59 @@ CAD;
 							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
 						},
 						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &stmt.Class{
+						PhpDocComment: "",
+						Stmts:         []node.Node{},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.ArrayDimFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Dim:      &scalar.Lnumber{Value: "1"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.ArrayDimFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Dim:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.PropertyFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Property: &node.Identifier{Value: "bar"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.StaticPropertyFetch{
+						Class:    &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.New{
+					Class: &expr.StaticPropertyFetch{
+						Class:    &node.Identifier{Value: "static"},
+						Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
 					},
 				},
 			},
@@ -595,7 +686,31 @@ CAD;
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim: &expr.UnaryMinus{
+								Expr: &scalar.Lnumber{Value: "1"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
 							Dim:      &scalar.String{Value: "1234567890123456789012345678901234567890"},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.ArrayDimFetch{
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Dim:      &scalar.String{Value: "-1234567890123456789012345678901234567890"},
 						},
 					},
 				},
@@ -659,6 +774,14 @@ CAD;
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 							Dim:      &scalar.Lnumber{Value: "0"},
 						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}}},
 					},
 				},
 			},
@@ -1424,6 +1547,91 @@ CAD;
 							},
 						},
 						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Alias: &node.Identifier{Value: "include"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
+							&stmt.TraitUseAlias{
+								Ref: &stmt.TraitMethodRef{
+									Method: &node.Identifier{Value: "one"},
+								},
+								Modifier: &node.Identifier{Value: "public"},
+								Alias:    &node.Identifier{Value: "two"},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						Adaptations: []node.Node{
 							&stmt.TraitUsePrecedence{
 								Ref: &stmt.TraitMethodRef{
 									Trait: &name.Name{
@@ -1901,6 +2109,12 @@ CAD;
 				},
 			},
 			&stmt.Expression{
+				Expr: &expr.ClassConstFetch{
+					Class:        &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					ConstantName: &node.Identifier{Value: "Bar"},
+				},
+			},
+			&stmt.Expression{
 				Expr: &expr.Clone{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
@@ -2244,6 +2458,18 @@ CAD;
 				},
 			},
 			&stmt.Expression{
+				Expr: &expr.ShellExec{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "cmd"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ShellExec{
+					Parts: []node.Node{},
+				},
+			},
+			&stmt.Expression{
 				Expr: &expr.ShortArray{
 					Items: []node.Node{},
 				},
@@ -2361,6 +2587,12 @@ CAD;
 							&name.NamePart{Value: "Foo"},
 						},
 					},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticPropertyFetch{
+					Class:    &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
 					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
 				},
 			},
@@ -2772,12 +3004,12 @@ CAD;
 				FunctionName: &node.Identifier{Value: "foo"},
 				Params: []node.Node{
 					&node.Parameter{
-						ByRef: true,
+						ByRef:    true,
 						Variadic: false,
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					},
 					&node.Parameter{
-						ByRef: false,
+						ByRef:    false,
 						Variadic: true,
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 					},
@@ -2786,19 +3018,214 @@ CAD;
 					&stmt.HaltCompiler{},
 					&stmt.Function{
 						FunctionName: &node.Identifier{Value: "bar"},
-						Stmts: []node.Node{},
+						Stmts:        []node.Node{},
 					},
 					&stmt.Class{
 						ClassName: &node.Identifier{Value: "Baz"},
-						Stmts: []node.Node{},
+						Stmts:     []node.Node{},
 					},
 					&stmt.Trait{
 						TraitName: &node.Identifier{Value: "Quux"},
-						Stmts: []node.Node{},
+						Stmts:     []node.Node{},
 					},
 					&stmt.Interface{
 						InterfaceName: &node.Identifier{Value: "Quuux"},
+						Stmts:         []node.Node{},
+					},
+				},
+			},
+			&stmt.Function{
+				FunctionName: &node.Identifier{Value: "foo"},
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:        true,
+						Variadic:     false,
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						DefaultValue: &scalar.Lnumber{Value: "1"},
+					},
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     true,
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						DefaultValue: &scalar.Lnumber{Value: "1"},
+					},
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						DefaultValue: &scalar.Lnumber{Value: "1"},
+					},
+				},
+				Stmts: []node.Node{},
+			},
+			&stmt.Function{
+				FunctionName: &node.Identifier{Value: "foo"},
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "array"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					},
+					&node.Parameter{
+						ByRef:        false,
+						Variadic:     false,
+						VariableType: &node.Identifier{Value: "callable"},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					},
+				},
+				Stmts: []node.Node{},
+			},
+			&stmt.Class{
+				ClassName: &node.Identifier{Value: "foo"},
+				Modifiers: []node.Node{
+					&node.Identifier{Value: "abstract"},
+					&node.Identifier{Value: "final"},
+				},
+				Stmts: []node.Node{
+					&stmt.ClassMethod{
+						MethodName: &node.Identifier{Value: "bar"},
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "abstract"},
+							&node.Identifier{Value: "protected"},
+							&node.Identifier{Value: "static"},
+						},
+					},
+					&stmt.ClassMethod{
+						MethodName: &node.Identifier{Value: "baz"},
+						Modifiers: []node.Node{
+							&node.Identifier{Value: "final"},
+							&node.Identifier{Value: "private"},
+						},
 						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.PropertyFetch{
+					Variable: &expr.New{
+						Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					},
+					Property: &node.Identifier{Value: "bar"},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function: &expr.New{
+						Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function: &expr.ArrayDimFetch{
+						Variable: &expr.ShortArray{
+							Items: []node.Node{
+								&expr.ArrayItem{
+									ByRef: false,
+									Val:   &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+								},
+							},
+						},
+						Dim: &scalar.Lnumber{Value: "0"},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function: &expr.ArrayDimFetch{
+						Variable: &expr.ConstFetch{
+							Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+						},
+						Dim: &scalar.Lnumber{Value: "1"},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function:  &scalar.String{Value: "\"foo\""},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.FunctionCall{
+					Function: &expr.ArrayDimFetch{
+						Variable: &expr.ShortArray{
+							Items: []node.Node{
+								&expr.ArrayItem{
+									ByRef: false,
+									Val:   &scalar.Lnumber{Value: "1"},
+								},
+							},
+						},
+						Dim: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.Variable{
+					VarName: &expr.FunctionCall{
+						Function:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+						Arguments: []node.Node{},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Call: &expr.ArrayDimFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Dim:      &scalar.Lnumber{Value: "0"},
+					},
+					Arguments: []node.Node{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.PropertyFetch{
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.PropertyFetch{
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Property: &expr.ArrayDimFetch{
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Dim:      &scalar.Lnumber{Value: "0"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ShortArray{
+					Items: []node.Node{
+						&expr.ArrayItem{
+							ByRef: true,
+							Key:   &scalar.Lnumber{Value: "1"},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						},
+						&expr.ArrayItem{
+							ByRef: false,
+							Key:   &scalar.Lnumber{Value: "2"},
+							Val: &expr.List{
+								Items: []node.Node{
+									&expr.ArrayItem{
+										ByRef: false,
+										Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
