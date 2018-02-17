@@ -143,15 +143,15 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>catch                                      lval.Token(l.newToken(l.Token())); return T_CATCH
 <PHP>class                                      lval.Token(l.newToken(l.Token())); return T_CLASS
 <PHP>clone                                      lval.Token(l.newToken(l.Token())); return T_CLONE
-<PHP>const                                      lval.Token(l.newToken(l.Token())); return T_CONST;
-<PHP>continue                                   lval.Token(l.newToken(l.Token())); return T_CONTINUE;
-<PHP>declare                                    lval.Token(l.newToken(l.Token())); return T_DECLARE;
-<PHP>default                                    lval.Token(l.newToken(l.Token())); return T_DEFAULT;
-<PHP>do                                         lval.Token(l.newToken(l.Token())); return T_DO;
-<PHP>echo                                       lval.Token(l.newToken(l.Token())); return T_ECHO;
-<PHP>else                                       lval.Token(l.newToken(l.Token())); return T_ELSE;
-<PHP>elseif                                     lval.Token(l.newToken(l.Token())); return T_ELSEIF;
-<PHP>empty                                      lval.Token(l.newToken(l.Token())); return T_EMPTY;
+<PHP>const                                      lval.Token(l.newToken(l.Token())); return T_CONST
+<PHP>continue                                   lval.Token(l.newToken(l.Token())); return T_CONTINUE
+<PHP>declare                                    lval.Token(l.newToken(l.Token())); return T_DECLARE
+<PHP>default                                    lval.Token(l.newToken(l.Token())); return T_DEFAULT
+<PHP>do                                         lval.Token(l.newToken(l.Token())); return T_DO
+<PHP>echo                                       lval.Token(l.newToken(l.Token())); return T_ECHO
+<PHP>else                                       lval.Token(l.newToken(l.Token())); return T_ELSE
+<PHP>elseif                                     lval.Token(l.newToken(l.Token())); return T_ELSEIF
+<PHP>empty                                      lval.Token(l.newToken(l.Token())); return T_EMPTY
 <PHP>enddeclare                                 lval.Token(l.newToken(l.Token())); return T_ENDDECLARE
 <PHP>endfor                                     lval.Token(l.newToken(l.Token())); return T_ENDFOR
 <PHP>endforeach                                 lval.Token(l.newToken(l.Token())); return T_ENDFOREACH
@@ -217,23 +217,23 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>or                                         lval.Token(l.newToken(l.Token())); return T_LOGICAL_OR
 <PHP>xor                                        lval.Token(l.newToken(l.Token())); return T_LOGICAL_XOR
 <PHP>\\                                         lval.Token(l.newToken(l.Token())); return T_NS_SEPARATOR
-<PHP>\.\.\.                                     lval.Token(l.newToken(l.Token())); return T_ELLIPSIS;
-<PHP>::                                         lval.Token(l.newToken(l.Token())); return T_PAAMAYIM_NEKUDOTAYIM; // T_DOUBLE_COLON
+<PHP>\.\.\.                                     lval.Token(l.newToken(l.Token())); return T_ELLIPSIS
+<PHP>::                                         lval.Token(l.newToken(l.Token())); return T_PAAMAYIM_NEKUDOTAYIM // T_DOUBLE_COLON
 <PHP>&&                                         lval.Token(l.newToken(l.Token())); return T_BOOLEAN_AND
 <PHP>\|\|                                       lval.Token(l.newToken(l.Token())); return T_BOOLEAN_OR
 <PHP>&=                                         lval.Token(l.newToken(l.Token())); return T_AND_EQUAL
 <PHP>\|=                                        lval.Token(l.newToken(l.Token())); return T_OR_EQUAL
-<PHP>\.=                                        lval.Token(l.newToken(l.Token())); return T_CONCAT_EQUAL;
+<PHP>\.=                                        lval.Token(l.newToken(l.Token())); return T_CONCAT_EQUAL
 <PHP>\*=                                        lval.Token(l.newToken(l.Token())); return T_MUL_EQUAL
 <PHP>\*\*=                                      lval.Token(l.newToken(l.Token())); return T_POW_EQUAL
-<PHP>[/]=                                       lval.Token(l.newToken(l.Token())); return T_DIV_EQUAL;
+<PHP>[/]=                                       lval.Token(l.newToken(l.Token())); return T_DIV_EQUAL
 <PHP>\+=                                        lval.Token(l.newToken(l.Token())); return T_PLUS_EQUAL
 <PHP>-=                                         lval.Token(l.newToken(l.Token())); return T_MINUS_EQUAL
 <PHP>\^=                                        lval.Token(l.newToken(l.Token())); return T_XOR_EQUAL
 <PHP>%=                                         lval.Token(l.newToken(l.Token())); return T_MOD_EQUAL
-<PHP>--                                         lval.Token(l.newToken(l.Token())); return T_DEC;
+<PHP>--                                         lval.Token(l.newToken(l.Token())); return T_DEC
 <PHP>\+\+                                       lval.Token(l.newToken(l.Token())); return T_INC
-<PHP>=>                                         lval.Token(l.newToken(l.Token())); return T_DOUBLE_ARROW;
+<PHP>=>                                         lval.Token(l.newToken(l.Token())); return T_DOUBLE_ARROW
 <PHP>\<=\>                                      lval.Token(l.newToken(l.Token())); return T_SPACESHIP
 <PHP>\!=|\<\>                                   lval.Token(l.newToken(l.Token())); return T_IS_NOT_EQUAL
 <PHP>\!==                                       lval.Token(l.newToken(l.Token())); return T_IS_NOT_IDENTICAL
@@ -288,7 +288,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>{VAR_NAME}                                 lval.Token(l.newToken(l.Token())); return T_STRING
 
 <PHP>->                                         l.begin(PROPERTY);lval.Token(l.newToken(l.Token())); return T_OBJECT_OPERATOR;
-<PROPERTY>[ \t\n\r]+                            lval.Token(l.newToken(l.Token())); return T_WHITESPACE;
+<PROPERTY>[ \t\n\r]+                            lval.Token(l.newToken(l.Token())); // return T_WHITESPACE;
 <PROPERTY>->                                    lval.Token(l.newToken(l.Token())); return T_OBJECT_OPERATOR;
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.Token(l.newToken(l.Token())); return T_STRING;
 <PROPERTY>.                                     l.ungetChars(1);l.begin(PHP)

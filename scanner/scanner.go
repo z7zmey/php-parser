@@ -8398,8 +8398,7 @@ yyrule132: // ->
 	}
 yyrule133: // [ \t\n\r]+
 	{
-		lval.Token(l.newToken(l.Token()))
-		return T_WHITESPACE
+		lval.Token(l.newToken(l.Token())) // return T_WHITESPACE;
 		goto yystate0
 	}
 yyrule134: // ->
