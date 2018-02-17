@@ -209,9 +209,9 @@ func TestIdentifier(t *testing.T) {
 
 		'adsf\'adsf\''
 
-		` + "`test $var {$var} ${var_name}`" + `
+		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
 
-		"test $var {$var} ${var_name}"
+		"test $var {$var} ${var_name} {s $ \$a "
 		
 		"{$var}"
 
@@ -232,6 +232,10 @@ CAT;
 		$var[0b1]
 		$var[var_name]
 		$var[$var]
+
+		{$var}
+		${var_name}
+		{s $ \$a 
 CAT;
 
 		( array )              
@@ -427,6 +431,7 @@ CAT;
 		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
 		scanner.T_STRING_VARNAME,
 		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.Rune2Class('`'),
 
 		scanner.Rune2Class('"'),
@@ -440,6 +445,7 @@ CAT;
 		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
 		scanner.T_STRING_VARNAME,
 		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.Rune2Class('"'),
 
 		scanner.Rune2Class('"'),
@@ -466,35 +472,39 @@ CAT;
 		scanner.T_OBJECT_OPERATOR,
 		scanner.T_STRING,
 		scanner.T_ENCAPSED_AND_WHITESPACE,
-
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('['),
 		scanner.T_NUM_STRING,
 		scanner.Rune2Class(']'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
-
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('['),
 		scanner.T_NUM_STRING,
 		scanner.Rune2Class(']'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
-
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('['),
 		scanner.T_NUM_STRING,
 		scanner.Rune2Class(']'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
-
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('['),
 		scanner.T_STRING,
 		scanner.Rune2Class(']'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
-
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('['),
 		scanner.T_VARIABLE,
 		scanner.Rune2Class(']'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
+		scanner.T_STRING_VARNAME,
+		scanner.Rune2Class('}'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 
 		scanner.T_END_HEREDOC,
