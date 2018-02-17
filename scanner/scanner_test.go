@@ -211,6 +211,13 @@ func TestIdentifier(t *testing.T) {
 
 		` + "`test $var {$var} ${var_name}`" + `
 
+		"test $var {$var} ${var_name}"
+		
+		"{$var}"
+
+		"test"
+		b"\$var $4 {a"
+
 		<<<CAT
 		test
 CAT;
@@ -226,6 +233,18 @@ CAT;
 		$var[var_name]
 		$var[$var]
 CAT;
+
+		( array )              
+		( bool )
+		( boolean )
+		( real )
+		( double )
+		( float )
+		( int )
+		( integer )
+		( object )
+		( string )
+		( unset )
 
 	`
 
@@ -410,6 +429,28 @@ CAT;
 		scanner.Rune2Class('}'),
 		scanner.Rune2Class('`'),
 
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
+		scanner.T_STRING_VARNAME,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+
 		scanner.T_START_HEREDOC,
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_END_HEREDOC,
@@ -458,6 +499,18 @@ CAT;
 
 		scanner.T_END_HEREDOC,
 		scanner.Rune2Class(';'),
+
+		scanner.T_ARRAY_CAST,
+		scanner.T_BOOL_CAST,
+		scanner.T_BOOL_CAST,
+		scanner.T_DOUBLE_CAST,
+		scanner.T_DOUBLE_CAST,
+		scanner.T_DOUBLE_CAST,
+		scanner.T_INT_CAST,
+		scanner.T_INT_CAST,
+		scanner.T_OBJECT_CAST,
+		scanner.T_STRING_CAST,
+		scanner.T_UNSET_CAST,
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
