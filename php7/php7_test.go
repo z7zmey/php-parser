@@ -1147,7 +1147,7 @@ CAD;
 				},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
-			&stmt.For{
+			&stmt.AltFor{
 				Cond: []node.Node{
 					&binary_op.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},

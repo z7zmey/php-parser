@@ -208,7 +208,7 @@ import (
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
-%type <node> expr optional_expr for_statement 
+%type <node> expr optional_expr
 %type <node> foreach_statement declare_statement finally_statement unset_variable variable
 %type <node> extends_from parameter optional_type argument expr_without_variable global_var
 %type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
@@ -246,7 +246,7 @@ import (
 
 %type <str> backup_doc_comment
 
-%type <altSyntaxNode> while_statement
+%type <altSyntaxNode> while_statement for_statement
 
 %%
 
@@ -542,8 +542,12 @@ statement:
         }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
         {
-            $$ = stmt.NewFor($3, $5, $7, $9)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9))
+            if ($9.isAlt) {
+                $$ = stmt.NewAltFor($3, $5, $7, $9.node)
+            } else {
+                $$ = stmt.NewFor($3, $5, $7, $9.node)
+            }
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9.node))
             comments.AddComments($$, $1.Comments())
         }
     |   T_SWITCH '(' expr ')' switch_case_list
@@ -837,13 +841,13 @@ foreach_variable:
 ;
 
 for_statement:
-        statement                                       { $$ = $1; }
-    |    ':' inner_statement_list T_ENDFOR ';'
-        {
-            $$ = stmt.NewStmtList($2)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
-        }
+        statement
+            { $$ = altSyntaxNode{$1, false} }
+    |   ':' inner_statement_list T_ENDFOR ';'
+            {
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+            }
 ;
 
 foreach_statement:

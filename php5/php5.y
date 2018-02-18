@@ -203,7 +203,7 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single for_statement unset_variable foreach_statement declare_statement
+%type <node> else_single new_else_single unset_variable foreach_statement declare_statement
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
@@ -227,7 +227,7 @@ import (
 %type <foreachVariable> foreach_variable foreach_optional_arg
 %type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body trait_adaptations
 %type <boolWithToken> is_reference is_variadic
-%type <altSyntaxNode> while_statement
+%type <altSyntaxNode> while_statement for_statement
 
 %%
 
@@ -619,8 +619,12 @@ unticked_statement:
             }
     |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
             {
-                $$ = stmt.NewFor($3, $5, $7, $9)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9))
+                if ($9.isAlt) {
+                    $$ = stmt.NewAltFor($3, $5, $7, $9.node)
+                } else {
+                    $$ = stmt.NewFor($3, $5, $7, $9.node)
+                }
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9.node))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_SWITCH parenthesis_expr switch_case_list
@@ -1012,12 +1016,11 @@ foreach_variable:
 
 for_statement:
         statement
-            { $$ = $1; }
-    |    ':' inner_statement_list T_ENDFOR ';'
+            { $$ = altSyntaxNode{$1, false} }
+    |   ':' inner_statement_list T_ENDFOR ';'
             {
-                $$ = stmt.NewStmtList($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 

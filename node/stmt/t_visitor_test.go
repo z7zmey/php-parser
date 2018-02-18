@@ -211,6 +211,16 @@ var nodesToTest = []struct {
 		map[string]interface{}{},
 	},
 	{
+		&stmt.AltFor{
+			Init: []node.Node{&stmt.Expression{}},
+			Cond: []node.Node{&stmt.Expression{}},
+			Loop: []node.Node{&stmt.Expression{}},
+			Stmt: &stmt.StmtList{},
+		},
+		[]string{"Init", "Cond", "Loop", "Stmt"},
+		map[string]interface{}{},
+	},
+	{
 		&stmt.Foreach{
 			ByRef:    true,
 			Expr:     &stmt.Expression{},
