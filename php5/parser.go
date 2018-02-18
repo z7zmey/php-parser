@@ -59,3 +59,8 @@ type simpleIndirectReference struct {
 	all  []*expr.Variable
 	last *expr.Variable
 }
+
+type altSyntaxNode struct {
+	node  node.Node
+	isAlt bool
+}

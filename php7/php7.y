@@ -26,6 +26,7 @@ import (
     foreachVariable foreachVariable
     nodesWithEndToken *nodesWithEndToken
     str string
+    altSyntaxNode altSyntaxNode
 }
 
 %type <token> $unk
@@ -207,7 +208,7 @@ import (
 %type <node> group_use_declaration inline_use_declaration
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
-%type <node> expr optional_expr while_statement for_statement 
+%type <node> expr optional_expr for_statement 
 %type <node> foreach_statement declare_statement finally_statement unset_variable variable
 %type <node> extends_from parameter optional_type argument expr_without_variable global_var
 %type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
@@ -244,6 +245,8 @@ import (
 %type <list> non_empty_member_modifiers name_list class_modifiers
 
 %type <str> backup_doc_comment
+
+%type <altSyntaxNode> while_statement
 
 %%
 
@@ -523,8 +526,12 @@ statement:
     |   alt_if_stmt                                     { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
         {
-            $$ = stmt.NewWhile($3, $5)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
+            if ($5.isAlt) {
+                $$ = stmt.NewAltWhile($3, $5.node)
+            } else {
+                $$ = stmt.NewWhile($3, $5.node)
+            }
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5.node))
             comments.AddComments($$, $1.Comments())
         }
     |   T_DO statement T_WHILE '(' expr ')' ';'
@@ -890,13 +897,13 @@ case_separator:
 ;
 
 while_statement:
-        statement                                       { $$ = $1; }
+        statement
+            { $$ = altSyntaxNode{$1, false} }
     |   ':' inner_statement_list T_ENDWHILE ';'
-        {
-            $$ = stmt.NewStmtList($2)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
-        }
+            {
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+            }
 ;
 
 if_stmt_without_else:

@@ -789,7 +789,7 @@ CAD;
 					},
 				},
 			},
-			&stmt.While{
+			&stmt.AltWhile{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{

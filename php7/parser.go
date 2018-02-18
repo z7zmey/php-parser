@@ -50,3 +50,8 @@ type boolWithToken struct {
 	value bool
 	token *token.Token
 }
+
+type altSyntaxNode struct {
+	node  node.Node
+	isAlt bool
+}

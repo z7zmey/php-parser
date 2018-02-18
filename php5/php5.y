@@ -26,7 +26,7 @@ import (
     foreachVariable foreachVariable
     nodesWithEndToken *nodesWithEndToken
     simpleIndirectReference simpleIndirectReference
-//    str string
+    altSyntaxNode altSyntaxNode
 }
 
 %type <token> $unk
@@ -203,7 +203,7 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single while_statement for_statement unset_variable foreach_statement declare_statement
+%type <node> else_single new_else_single for_statement unset_variable foreach_statement declare_statement
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
@@ -227,6 +227,7 @@ import (
 %type <foreachVariable> foreach_variable foreach_optional_arg
 %type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body trait_adaptations
 %type <boolWithToken> is_reference is_variadic
+%type <altSyntaxNode> while_statement
 
 %%
 
@@ -602,8 +603,12 @@ unticked_statement:
             }
     |   T_WHILE parenthesis_expr while_statement
             {
-                $$ = stmt.NewWhile($2, $3)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
+                if ($3.isAlt) {
+                    $$ = stmt.NewAltWhile($2, $3.node)
+                } else {
+                    $$ = stmt.NewWhile($2, $3.node)
+                }
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3.node))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
@@ -1109,11 +1114,11 @@ case_separator:
 
 while_statement:
         statement
-            { $$ = $1 }
+            { $$ = altSyntaxNode{$1, false} }
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                $$ = stmt.NewStmtList($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 

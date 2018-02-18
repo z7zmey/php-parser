@@ -436,6 +436,14 @@ var nodesToTest = []struct {
 		map[string]interface{}{},
 	},
 	{
+		&stmt.AltWhile{
+			Cond: &expr.Variable{},
+			Stmt: &stmt.StmtList{},
+		},
+		[]string{"Cond", "Stmt"},
+		map[string]interface{}{},
+	},
+	{
 		&stmt.StmtList{
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
