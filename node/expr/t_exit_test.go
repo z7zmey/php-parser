@@ -18,9 +18,7 @@ func TestExit(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: false,
-				},
+				Expr: &expr.Exit{},
 			},
 		},
 	}
@@ -39,8 +37,7 @@ func TestExitExpr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Exit{
-					IsDie: false,
-					Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},
@@ -59,9 +56,7 @@ func TestDie(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: true,
-				},
+				Expr: &expr.Die{},
 			},
 		},
 	}
@@ -79,9 +74,8 @@ func TestDieExpr(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: true,
-					Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Expr: &expr.Die{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 		},

@@ -1844,7 +1844,11 @@ expr_without_variable:
         }
     |   T_EXIT exit_expr
         {
-            $$ = expr.NewExit($2, strings.EqualFold($1.Value, "die"))
+            if (strings.EqualFold($1.Value, "die")) {
+                $$ = expr.NewDie($2)
+            } else {
+                $$ = expr.NewExit($2)
+            }
             positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }

@@ -2206,25 +2206,19 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: false,
-				},
+				Expr: &expr.Exit{},
 			},
 			&stmt.Expression{
 				Expr: &expr.Exit{
-					IsDie: false,
-					Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: true,
-				},
+				Expr: &expr.Die{},
 			},
 			&stmt.Expression{
-				Expr: &expr.Exit{
-					IsDie: true,
-					Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Expr: &expr.Die{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				},
 			},
 			&stmt.Expression{
