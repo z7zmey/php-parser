@@ -552,7 +552,11 @@ statement:
         }
     |   T_SWITCH '(' expr ')' switch_case_list
         {
-            $$ = stmt.NewSwitch($3, $5.nodes)
+            if ($5.endToken.Value == ";") {
+                $$ = stmt.NewAltSwitch($3, $5.nodes)
+            } else {
+                $$ = stmt.NewSwitch($3, $5.nodes)
+            }
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5.endToken))
             comments.AddComments($$, $1.Comments())
         }

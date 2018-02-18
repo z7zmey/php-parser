@@ -1400,7 +1400,7 @@ CAD;
 					},
 				},
 			},
-			&stmt.Switch{
+			&stmt.AltSwitch{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Cases: []node.Node{
 					&stmt.Case{
@@ -1416,7 +1416,7 @@ CAD;
 					},
 				},
 			},
-			&stmt.Switch{
+			&stmt.AltSwitch{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Cases: []node.Node{
 					&stmt.Case{

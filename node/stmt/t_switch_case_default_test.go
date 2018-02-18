@@ -23,7 +23,7 @@ func TestAltSwitch(t *testing.T) {
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
-			&stmt.Switch{
+			&stmt.AltSwitch{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Cases: []node.Node{
 					&stmt.Case{
@@ -59,7 +59,7 @@ func TestAltSwitchSemicolon(t *testing.T) {
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
-			&stmt.Switch{
+			&stmt.AltSwitch{
 				Cond: &scalar.Lnumber{Value: "1"},
 				Cases: []node.Node{
 					&stmt.Case{

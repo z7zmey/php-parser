@@ -629,7 +629,11 @@ unticked_statement:
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
-                $$ = stmt.NewSwitch($2, $3.nodes)
+                if ($3.endToken.Value == ";") {
+                    $$ = stmt.NewAltSwitch($2, $3.nodes)
+                } else {
+                    $$ = stmt.NewSwitch($2, $3.nodes)
+                }
                 positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
                 comments.AddComments($$, $1.Comments())
             }
