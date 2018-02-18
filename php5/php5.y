@@ -203,7 +203,7 @@ import (
 %type <node> variable_name variable_without_objects dynamic_class_name_reference new_expr class_name_reference static_member
 %type <node> function_call fully_qualified_class_name combined_scalar combined_scalar_offset general_constant parenthesis_expr
 %type <node> exit_expr yield_expr function_declaration_statement class_declaration_statement constant_declaration
-%type <node> else_single new_else_single unset_variable foreach_statement declare_statement
+%type <node> else_single new_else_single unset_variable declare_statement
 %type <node> finally_statement additional_catch unticked_function_declaration_statement unticked_class_declaration_statement
 %type <node> optional_class_type parameter class_entry_type extends_from class_statement class_constant_declaration
 %type <node> trait_use_statement function_call_parameter trait_adaptation_statement trait_precedence trait_alias
@@ -227,7 +227,7 @@ import (
 %type <foreachVariable> foreach_variable foreach_optional_arg
 %type <nodesWithEndToken> ctor_arguments function_call_parameter_list switch_case_list method_body trait_adaptations
 %type <boolWithToken> is_reference is_variadic
-%type <altSyntaxNode> while_statement for_statement
+%type <altSyntaxNode> while_statement for_statement foreach_statement
 
 %%
 
@@ -720,21 +720,37 @@ unticked_statement:
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
                 if $6.node == nil {
-                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                    if ($8.isAlt) {
+                        $$ = stmt.NewAltForeach($3, nil, $5.node, $8.node, $5.byRef)
+                    } else {
+                        $$ = stmt.NewForeach($3, nil, $5.node, $8.node, $5.byRef)
+                    }
                 } else {
-                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                    if ($8.isAlt) {
+                        $$ = stmt.NewAltForeach($3, $5.node, $6.node, $8.node, $6.byRef)
+                    } else {
+                        $$ = stmt.NewForeach($3, $5.node, $6.node, $8.node, $6.byRef)
+                    }
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8.node))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
                 if $6.node == nil {
-                    $$ = stmt.NewForeach($3, nil, $5.node, $8, $5.byRef)
+                    if ($8.isAlt) {
+                        $$ = stmt.NewAltForeach($3, nil, $5.node, $8.node, $5.byRef)
+                    } else {
+                        $$ = stmt.NewForeach($3, nil, $5.node, $8.node, $5.byRef)
+                    }
                 } else {
-                    $$ = stmt.NewForeach($3, $5.node, $6.node, $8, $6.byRef)
+                    if ($8.isAlt) {
+                        $$ = stmt.NewAltForeach($3, $5.node, $6.node, $8.node, $6.byRef)
+                    } else {
+                        $$ = stmt.NewForeach($3, $5.node, $6.node, $8.node, $6.byRef)
+                    }
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8))
+                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8.node))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
@@ -1027,12 +1043,11 @@ for_statement:
 
 foreach_statement:
         statement
-            { $$ = $1; }
+            { $$ = altSyntaxNode{$1, false} }
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                $$ = stmt.NewStmtList($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 

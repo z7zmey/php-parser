@@ -209,7 +209,7 @@ import (
 %type <node> mixed_group_use_declaration use_declaration unprefixed_use_declaration
 %type <node> const_decl inner_statement
 %type <node> expr optional_expr
-%type <node> foreach_statement declare_statement finally_statement unset_variable variable
+%type <node> declare_statement finally_statement unset_variable variable
 %type <node> extends_from parameter optional_type argument expr_without_variable global_var
 %type <node> static_var class_statement trait_adaptation trait_precedence trait_alias
 %type <node> absolute_trait_method_reference trait_method_reference property echo_expr
@@ -246,7 +246,7 @@ import (
 
 %type <str> backup_doc_comment
 
-%type <altSyntaxNode> while_statement for_statement
+%type <altSyntaxNode> while_statement for_statement foreach_statement
 
 %%
 
@@ -612,14 +612,22 @@ statement:
         }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
         {
-            $$ = stmt.NewForeach($3, nil, $5.node, $7, $5.byRef)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $7))
+            if ($7.isAlt) {
+                $$ = stmt.NewAltForeach($3, nil, $5.node, $7.node, $5.byRef)
+            } else {
+                $$ = stmt.NewForeach($3, nil, $5.node, $7.node, $5.byRef)
+            }
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $7.node))
             comments.AddComments($$, $1.Comments())
         }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
         {
-            $$ = stmt.NewForeach($3, $5, $7.node, $9, $7.byRef)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9))
+            if ($9.isAlt) {
+                $$ = stmt.NewAltForeach($3, $5, $7.node, $9.node, $7.byRef)
+            } else {
+                $$ = stmt.NewForeach($3, $5, $7.node, $9.node, $7.byRef)
+            }
+            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9.node))
             comments.AddComments($$, $1.Comments())
         }
     |   T_DECLARE '(' const_list ')' declare_statement
@@ -851,13 +859,13 @@ for_statement:
 ;
 
 foreach_statement:
-        statement                                       { $$ = $1; }
+        statement
+            { $$ = altSyntaxNode{$1, false} }
     |   ':' inner_statement_list T_ENDFOREACH ';'
-        {
-            $$ = stmt.NewStmtList($2)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
-        }
+            {
+                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+            }
 ;
 
 declare_statement:

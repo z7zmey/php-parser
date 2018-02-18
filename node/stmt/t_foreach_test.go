@@ -57,7 +57,7 @@ func TestAltForeach(t *testing.T) {
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
-			&stmt.Foreach{
+			&stmt.AltForeach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},

@@ -232,6 +232,17 @@ var nodesToTest = []struct {
 		map[string]interface{}{"ByRef": true},
 	},
 	{
+		&stmt.AltForeach{
+			ByRef:    true,
+			Expr:     &stmt.Expression{},
+			Key:      &expr.Variable{},
+			Variable: &expr.Variable{},
+			Stmt:     &stmt.StmtList{},
+		},
+		[]string{"Expr", "Key", "Variable", "Stmt"},
+		map[string]interface{}{"ByRef": true},
+	},
+	{
 		&stmt.Function{
 			ReturnsRef:    true,
 			PhpDocComment: "/** */",
