@@ -1,8 +1,8 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/name"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -297,7 +297,6 @@ func TestUseListConstTypeAliases(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
-
 func TestGroupUse(t *testing.T) {
 	src := `<? use Foo\{Bar, Baz};`
 
@@ -440,7 +439,6 @@ func TestConstGroupUse(t *testing.T) {
 	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
-
 
 func TestMixedGroupUse(t *testing.T) {
 	src := `<? use Foo\{const Bar, function Baz};`

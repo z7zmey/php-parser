@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/kylelemons/godebug/pretty"
-	
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/cast"

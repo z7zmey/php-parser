@@ -3,7 +3,7 @@ package stmt_test
 import (
 	"bytes"
 	"testing"
-	
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
@@ -17,8 +17,8 @@ func TestTrait(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Trait{
 				PhpDocComment: "",
-				TraitName: &node.Identifier{Value: "Foo"},
-				Stmts: []node.Node{},
+				TraitName:     &node.Identifier{Value: "Foo"},
+				Stmts:         []node.Node{},
 			},
 		},
 	}

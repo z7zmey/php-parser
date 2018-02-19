@@ -1,9 +1,9 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/scalar"
-	"github.com/z7zmey/php-parser/node/expr"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/scalar"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -27,7 +27,7 @@ func TestProperty(t *testing.T) {
 						Properties: []node.Node{
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 							},
 						},
 					},
@@ -59,12 +59,12 @@ func TestProperties(t *testing.T) {
 						Properties: []node.Node{
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 							},
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-								Expr: &scalar.Lnumber{Value: "1"},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Expr:          &scalar.Lnumber{Value: "1"},
 							},
 						},
 					},
@@ -96,12 +96,12 @@ func TestProperties2(t *testing.T) {
 						Properties: []node.Node{
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-								Expr: &scalar.Lnumber{Value: "1"},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Expr:          &scalar.Lnumber{Value: "1"},
 							},
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 							},
 						},
 					},

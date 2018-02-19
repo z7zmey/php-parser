@@ -1,9 +1,8 @@
-
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/name"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -20,7 +19,7 @@ func TestInterface(t *testing.T) {
 			&stmt.Interface{
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{Value: "Foo"},
-				Stmts: []node.Node{},
+				Stmts:         []node.Node{},
 			},
 		},
 	}

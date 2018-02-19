@@ -1,4 +1,3 @@
-
 package stmt_test
 
 import (

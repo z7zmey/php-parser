@@ -1,10 +1,10 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/name"
 	"testing"
-	
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
@@ -18,7 +18,7 @@ func TestTraitUse(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{
@@ -48,7 +48,7 @@ func TestTraitsUse(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{
@@ -83,7 +83,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{
@@ -118,7 +118,7 @@ func TestTraitsUseModifier(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{
@@ -161,7 +161,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{
@@ -182,7 +182,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 									Method: &node.Identifier{Value: "one"},
 								},
 								Modifier: &node.Identifier{Value: "public"},
-								Alias: &node.Identifier{Value: "two"},
+								Alias:    &node.Identifier{Value: "two"},
 							},
 						},
 					},
@@ -205,7 +205,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				PhpDocComment: "",
-				ClassName: &node.Identifier{Value: "Foo"},
+				ClassName:     &node.Identifier{Value: "Foo"},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Traits: []node.Node{

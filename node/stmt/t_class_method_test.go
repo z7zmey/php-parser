@@ -1,8 +1,8 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/name"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -21,8 +21,8 @@ func TestSimpleClassMethod(t *testing.T) {
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						MethodName: &node.Identifier{Value: "bar"},
-						Stmts: []node.Node{},
+						MethodName:    &node.Identifier{Value: "bar"},
+						Stmts:         []node.Node{},
 					},
 				},
 			},
@@ -85,8 +85,8 @@ func TestPhp5ClassMethod(t *testing.T) {
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						ReturnsRef: true,
-						MethodName: &node.Identifier{Value: "bar"},
+						ReturnsRef:    true,
+						MethodName:    &node.Identifier{Value: "bar"},
 						Modifiers: []node.Node{
 							&node.Identifier{Value: "public"},
 							&node.Identifier{Value: "static"},
@@ -112,8 +112,8 @@ func TestPhp7ClassMethod(t *testing.T) {
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						ReturnsRef: true,
-						MethodName: &node.Identifier{Value: "bar"},
+						ReturnsRef:    true,
+						MethodName:    &node.Identifier{Value: "bar"},
 						Modifiers: []node.Node{
 							&node.Identifier{Value: "public"},
 							&node.Identifier{Value: "static"},
@@ -145,8 +145,8 @@ func TestAbstractClassMethod(t *testing.T) {
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						ReturnsRef: false,
-						MethodName: &node.Identifier{Value: "bar"},
+						ReturnsRef:    false,
+						MethodName:    &node.Identifier{Value: "bar"},
 						Modifiers: []node.Node{
 							&node.Identifier{Value: "abstract"},
 							&node.Identifier{Value: "public"},
@@ -175,8 +175,8 @@ func TestPhp7AbstractClassMethod(t *testing.T) {
 				Stmts: []node.Node{
 					&stmt.ClassMethod{
 						PhpDocComment: "",
-						ReturnsRef: false,
-						MethodName: &node.Identifier{Value: "bar"},
+						ReturnsRef:    false,
+						MethodName:    &node.Identifier{Value: "bar"},
 						Modifiers: []node.Node{
 							&node.Identifier{Value: "public"},
 						},

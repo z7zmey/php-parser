@@ -57,7 +57,7 @@ func TestAssignRefNew(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign_op.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -84,7 +84,7 @@ func TestAssignRefArgs(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign_op.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -93,9 +93,9 @@ func TestAssignRefArgs(t *testing.T) {
 						},
 						Arguments: []node.Node{
 							&node.Argument{
-								Variadic: false,
+								Variadic:    false,
 								IsReference: false,
-								Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Expr:        &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 							},
 						},
 					},

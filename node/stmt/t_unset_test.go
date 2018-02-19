@@ -3,7 +3,7 @@ package stmt_test
 import (
 	"bytes"
 	"testing"
-	
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/stmt"

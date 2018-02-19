@@ -46,7 +46,7 @@ func TestStaticClassConstFetch(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{
-					Class: &node.Identifier{Value: "static"},
+					Class:        &node.Identifier{Value: "static"},
 					ConstantName: &node.Identifier{Value: "bar"},
 				},
 			},

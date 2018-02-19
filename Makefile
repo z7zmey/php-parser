@@ -3,7 +3,7 @@ PHPFILE=example.php
 all: compile run
 
 build:
-	gofmt -l -s -w **/*.go
+	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
 	go build
 
 run: build

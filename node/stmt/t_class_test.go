@@ -1,9 +1,9 @@
 package stmt_test
 
 import (
+	"bytes"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
-	"bytes"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -19,7 +19,7 @@ func TestSimpleClass(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
-				Stmts: []node.Node{},
+				Stmts:     []node.Node{},
 			},
 		},
 	}

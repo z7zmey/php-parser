@@ -1,9 +1,9 @@
 package stmt_test
 
 import (
+	"bytes"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
-	"bytes"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -20,7 +20,7 @@ func TestTry(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Try{
-				Stmts: []node.Node{},
+				Stmts:   []node.Node{},
 				Catches: []node.Node{},
 			},
 		},

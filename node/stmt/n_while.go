@@ -7,8 +7,8 @@ import (
 
 // While node
 type While struct {
-	Cond  node.Node
-	Stmt  node.Node
+	Cond node.Node
+	Stmt node.Node
 }
 
 // NewWhile node constuctor

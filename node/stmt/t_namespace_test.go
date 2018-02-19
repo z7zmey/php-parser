@@ -1,8 +1,8 @@
 package stmt_test
 
 import (
-	"github.com/z7zmey/php-parser/node/name"
 	"bytes"
+	"github.com/z7zmey/php-parser/node/name"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -55,7 +55,6 @@ func TestNamespaceStmts(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
-
 
 func TestAnonymousNamespace(t *testing.T) {
 	src := `<? namespace {}`
