@@ -19,17 +19,19 @@ var positionBuilder position.Builder
 
 var parentNode node.Node
 
+// Parse the php5 parser entrypoint
 func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
 	yyDebug = 0
 	yyErrorVerbose = true
 	rootnode = stmt.NewStmtList([]node.Node{}) //reset
 	comments = comment.Comments{}
 	positions = position.Positions{}
-	positionBuilder = position.Builder{&positions}
+	positionBuilder = position.Builder{Positions: &positions}
 	yyParse(newLexer(src, fName))
 	return rootnode, comments, positions
 }
 
+// ListGetFirstNodeComments returns comments of a first node in the list
 func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
 	if len(list) == 0 {
 		return nil

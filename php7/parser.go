@@ -15,6 +15,7 @@ var comments comment.Comments
 var positions position.Positions
 var positionBuilder position.Builder
 
+// Parse the php7 parser entrypoint
 func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
 	yyDebug = 0
 	yyErrorVerbose = true
@@ -26,6 +27,7 @@ func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.P
 	return rootnode, comments, positions
 }
 
+// ListGetFirstNodeComments returns comments of a first node in the list
 func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
 	if len(list) == 0 {
 		return nil

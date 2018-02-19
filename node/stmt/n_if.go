@@ -28,6 +28,7 @@ func (n *If) Attributes() map[string]interface{} {
 	return nil
 }
 
+// AddElseIf add ElseIf node and returns AltIf node
 func (n *If) AddElseIf(ElseIf node.Node) node.Node {
 	if n.ElseIf == nil {
 		n.ElseIf = make([]node.Node, 0)
@@ -38,6 +39,7 @@ func (n *If) AddElseIf(ElseIf node.Node) node.Node {
 	return n
 }
 
+// SetElse set Else node and returns AltIf node
 func (n *If) SetElse(Else node.Node) node.Node {
 	n.Else = Else
 

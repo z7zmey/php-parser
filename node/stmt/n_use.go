@@ -26,6 +26,7 @@ func (n *Use) Attributes() map[string]interface{} {
 	return nil
 }
 
+// SetUseType set use type and returns node
 func (n *Use) SetUseType(UseType node.Node) node.Node {
 	n.UseType = UseType
 	return n
