@@ -7,8 +7,8 @@ import (
 
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign_op"
-	"github.com/z7zmey/php-parser/node/expr/binary_op"
+	"github.com/z7zmey/php-parser/node/expr/assign"
+	"github.com/z7zmey/php-parser/node/expr/binary"
 	"github.com/z7zmey/php-parser/node/expr/cast"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
@@ -1126,13 +1126,13 @@ CAD;
 			},
 			&stmt.For{
 				Init: []node.Node{
-					&assign_op.Assign{
+					&assign.Assign{
 						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Expression: &scalar.Lnumber{Value: "0"},
 					},
 				},
 				Cond: []node.Node{
-					&binary_op.Smaller{
+					&binary.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},
@@ -1149,7 +1149,7 @@ CAD;
 			},
 			&stmt.AltFor{
 				Cond: []node.Node{
-					&binary_op.Smaller{
+					&binary.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},
@@ -2336,7 +2336,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2349,7 +2349,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2364,7 +2364,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2494,7 +2494,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2507,7 +2507,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2522,7 +2522,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -2728,247 +2728,247 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.BitwiseAnd{
+				Expr: &binary.BitwiseAnd{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.BitwiseOr{
+				Expr: &binary.BitwiseOr{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.BitwiseXor{
+				Expr: &binary.BitwiseXor{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.BooleanAnd{
+				Expr: &binary.BooleanAnd{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.BooleanOr{
+				Expr: &binary.BooleanOr{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Coalesce{
+				Expr: &binary.Coalesce{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Concat{
+				Expr: &binary.Concat{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Div{
+				Expr: &binary.Div{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Equal{
+				Expr: &binary.Equal{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.GreaterOrEqual{
+				Expr: &binary.GreaterOrEqual{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Greater{
+				Expr: &binary.Greater{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Identical{
+				Expr: &binary.Identical{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.LogicalAnd{
+				Expr: &binary.LogicalAnd{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.LogicalOr{
+				Expr: &binary.LogicalOr{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.LogicalXor{
+				Expr: &binary.LogicalXor{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Minus{
+				Expr: &binary.Minus{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Mod{
+				Expr: &binary.Mod{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Mul{
+				Expr: &binary.Mul{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.NotEqual{
+				Expr: &binary.NotEqual{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.NotIdentical{
+				Expr: &binary.NotIdentical{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Plus{
+				Expr: &binary.Plus{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Pow{
+				Expr: &binary.Pow{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.ShiftLeft{
+				Expr: &binary.ShiftLeft{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.ShiftRight{
+				Expr: &binary.ShiftRight{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.SmallerOrEqual{
+				Expr: &binary.SmallerOrEqual{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Smaller{
+				Expr: &binary.Smaller{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &binary_op.Spaceship{
+				Expr: &binary.Spaceship{
 					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.AssignRef{
+				Expr: &assign.AssignRef{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.BitwiseAnd{
+				Expr: &assign.BitwiseAnd{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.BitwiseOr{
+				Expr: &assign.BitwiseOr{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.BitwiseXor{
+				Expr: &assign.BitwiseXor{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Concat{
+				Expr: &assign.Concat{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Div{
+				Expr: &assign.Div{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Minus{
+				Expr: &assign.Minus{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Mod{
+				Expr: &assign.Mod{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Mul{
+				Expr: &assign.Mul{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Plus{
+				Expr: &assign.Plus{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.Pow{
+				Expr: &assign.Pow{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.ShiftLeft{
+				Expr: &assign.ShiftLeft{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign_op.ShiftRight{
+				Expr: &assign.ShiftRight{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
 				},

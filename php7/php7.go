@@ -10,8 +10,8 @@ import (
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign_op"
-	"github.com/z7zmey/php-parser/node/expr/binary_op"
+	"github.com/z7zmey/php-parser/node/expr/assign"
+	"github.com/z7zmey/php-parser/node/expr/binary"
 	"github.com/z7zmey/php-parser/node/expr/cast"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
@@ -4193,7 +4193,7 @@ yydefault:
 		{
 			list := expr.NewList(yyDollar[3].list)
 			positions.AddPosition(list, positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node = assign_op.NewAssign(list, yyDollar[6].node)
+			yyVAL.node = assign.NewAssign(list, yyDollar[6].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
 
 			comments.AddComments(list, yyDollar[1].token.Comments())
@@ -4205,7 +4205,7 @@ yydefault:
 		{
 			shortList := expr.NewShortList(yyDollar[2].list)
 			positions.AddPosition(shortList, positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-			yyVAL.node = assign_op.NewAssign(shortList, yyDollar[5].node)
+			yyVAL.node = assign.NewAssign(shortList, yyDollar[5].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
 
 			comments.AddComments(shortList, yyDollar[1].token.Comments())
@@ -4215,7 +4215,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1506
 		{
-			yyVAL.node = assign_op.NewAssign(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewAssign(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4223,7 +4223,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:1512
 		{
-			yyVAL.node = assign_op.NewAssignRef(yyDollar[1].node, yyDollar[4].node)
+			yyVAL.node = assign.NewAssignRef(yyDollar[1].node, yyDollar[4].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4239,7 +4239,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1524
 		{
-			yyVAL.node = assign_op.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewPlus(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4247,7 +4247,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1530
 		{
-			yyVAL.node = assign_op.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewMinus(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4255,7 +4255,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1536
 		{
-			yyVAL.node = assign_op.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewMul(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4263,7 +4263,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1542
 		{
-			yyVAL.node = assign_op.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewPow(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4271,7 +4271,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1548
 		{
-			yyVAL.node = assign_op.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewDiv(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4279,7 +4279,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1554
 		{
-			yyVAL.node = assign_op.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewConcat(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4287,7 +4287,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1560
 		{
-			yyVAL.node = assign_op.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewMod(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4295,7 +4295,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1566
 		{
-			yyVAL.node = assign_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4303,7 +4303,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1572
 		{
-			yyVAL.node = assign_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4311,7 +4311,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1578
 		{
-			yyVAL.node = assign_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4319,7 +4319,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1584
 		{
-			yyVAL.node = assign_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4327,7 +4327,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1590
 		{
-			yyVAL.node = assign_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = assign.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4367,7 +4367,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1620
 		{
-			yyVAL.node = binary_op.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4375,7 +4375,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1626
 		{
-			yyVAL.node = binary_op.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4383,7 +4383,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1632
 		{
-			yyVAL.node = binary_op.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4391,7 +4391,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1638
 		{
-			yyVAL.node = binary_op.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4399,7 +4399,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1644
 		{
-			yyVAL.node = binary_op.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4407,7 +4407,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1650
 		{
-			yyVAL.node = binary_op.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4415,7 +4415,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1656
 		{
-			yyVAL.node = binary_op.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4423,7 +4423,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1662
 		{
-			yyVAL.node = binary_op.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4431,7 +4431,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1668
 		{
-			yyVAL.node = binary_op.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4439,7 +4439,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1674
 		{
-			yyVAL.node = binary_op.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4447,7 +4447,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1680
 		{
-			yyVAL.node = binary_op.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4455,7 +4455,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1686
 		{
-			yyVAL.node = binary_op.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4463,7 +4463,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1692
 		{
-			yyVAL.node = binary_op.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4471,7 +4471,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1698
 		{
-			yyVAL.node = binary_op.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4479,7 +4479,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1704
 		{
-			yyVAL.node = binary_op.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4487,7 +4487,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1710
 		{
-			yyVAL.node = binary_op.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4495,7 +4495,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1716
 		{
-			yyVAL.node = binary_op.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4535,7 +4535,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1746
 		{
-			yyVAL.node = binary_op.NewIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4543,7 +4543,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1752
 		{
-			yyVAL.node = binary_op.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4551,7 +4551,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1758
 		{
-			yyVAL.node = binary_op.NewEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4559,7 +4559,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1764
 		{
-			yyVAL.node = binary_op.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4567,7 +4567,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1770
 		{
-			yyVAL.node = binary_op.NewSmaller(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4575,7 +4575,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1776
 		{
-			yyVAL.node = binary_op.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4583,7 +4583,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1782
 		{
-			yyVAL.node = binary_op.NewGreater(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4591,7 +4591,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1788
 		{
-			yyVAL.node = binary_op.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4599,7 +4599,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1794
 		{
-			yyVAL.node = binary_op.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}
@@ -4643,7 +4643,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1820
 		{
-			yyVAL.node = binary_op.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = binary.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}

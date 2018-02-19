@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node/expr/binary_op"
+	"github.com/z7zmey/php-parser/node/expr/binary"
 
 	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign_op"
+	"github.com/z7zmey/php-parser/node/expr/assign"
 
 	"github.com/z7zmey/php-parser/node/scalar"
 
@@ -24,13 +24,13 @@ func TestFor(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.For{
 				Init: []node.Node{
-					&assign_op.Assign{
+					&assign.Assign{
 						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Expression: &scalar.Lnumber{Value: "0"},
 					},
 				},
 				Cond: []node.Node{
-					&binary_op.Smaller{
+					&binary.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},
@@ -62,7 +62,7 @@ func TestAltFor(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.AltFor{
 				Cond: []node.Node{
-					&binary_op.Smaller{
+					&binary.Smaller{
 						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},

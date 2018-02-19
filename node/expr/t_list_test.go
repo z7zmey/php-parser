@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node/expr/assign_op"
+	"github.com/z7zmey/php-parser/node/expr/assign"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -20,7 +20,7 @@ func TestEmptyList(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{},
 					},
@@ -43,7 +43,7 @@ func TestList(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -71,7 +71,7 @@ func TestListArrayIndex(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -101,7 +101,7 @@ func TestListList(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{

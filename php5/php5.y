@@ -11,8 +11,8 @@ import (
     "github.com/z7zmey/php-parser/node/name"
     "github.com/z7zmey/php-parser/node/stmt"
     "github.com/z7zmey/php-parser/node/expr"
-    "github.com/z7zmey/php-parser/node/expr/assign_op"
-    "github.com/z7zmey/php-parser/node/expr/binary_op"
+    "github.com/z7zmey/php-parser/node/expr/assign"
+    "github.com/z7zmey/php-parser/node/expr/binary"
     "github.com/z7zmey/php-parser/node/expr/cast"
 )
 
@@ -1850,7 +1850,7 @@ expr_without_variable:
             {
                 list := expr.NewList($3)
                 positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
-                $$ = assign_op.NewAssign(list, $6)
+                $$ = assign.NewAssign(list, $6)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
 
                 comments.AddComments(list, $1.Comments())
@@ -1858,13 +1858,13 @@ expr_without_variable:
             }
     |   variable '=' expr
             {
-                $$ = assign_op.NewAssign($1, $3)
+                $$ = assign.NewAssign($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable '=' '&' variable
             {
-                $$ = assign_op.NewAssignRef($1, $4)
+                $$ = assign.NewAssignRef($1, $4)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
@@ -1879,7 +1879,7 @@ expr_without_variable:
                 }
                 comments.AddComments(_new, comments[$1])
 
-                $$ = assign_op.NewAssignRef($1, _new)
+                $$ = assign.NewAssignRef($1, _new)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, _new))
                 comments.AddComments($$, comments[$1])
             }
@@ -1891,73 +1891,73 @@ expr_without_variable:
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = assign_op.NewPlus($1, $3)
+                $$ = assign.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = assign_op.NewMinus($1, $3)
+                $$ = assign.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = assign_op.NewMul($1, $3)
+                $$ = assign.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = assign_op.NewPow($1, $3)
+                $$ = assign.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = assign_op.NewDiv($1, $3)
+                $$ = assign.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = assign_op.NewConcat($1, $3)
+                $$ = assign.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = assign_op.NewMod($1, $3)
+                $$ = assign.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseAnd($1, $3)
+                $$ = assign.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseOr($1, $3)
+                $$ = assign.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = assign_op.NewBitwiseXor($1, $3)
+                $$ = assign.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = assign_op.NewShiftLeft($1, $3)
+                $$ = assign.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = assign_op.NewShiftRight($1, $3)
+                $$ = assign.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -1987,103 +1987,103 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = binary_op.NewBooleanOr($1, $3)
+                $$ = binary.NewBooleanOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = binary_op.NewBooleanAnd($1, $3)
+                $$ = binary.NewBooleanAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = binary_op.NewLogicalOr($1, $3)
+                $$ = binary.NewLogicalOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = binary_op.NewLogicalAnd($1, $3)
+                $$ = binary.NewLogicalAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = binary_op.NewLogicalXor($1, $3)
+                $$ = binary.NewLogicalXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '|' expr
             {
-                $$ = binary_op.NewBitwiseOr($1, $3)
+                $$ = binary.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '&' expr
             {
-                $$ = binary_op.NewBitwiseAnd($1, $3)
+                $$ = binary.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '^' expr
             {
-                $$ = binary_op.NewBitwiseXor($1, $3)
+                $$ = binary.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '.' expr
             {
-                $$ = binary_op.NewConcat($1, $3)
+                $$ = binary.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '+' expr
             {
-                $$ = binary_op.NewPlus($1, $3)
+                $$ = binary.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '-' expr
             {
-                $$ = binary_op.NewMinus($1, $3)
+                $$ = binary.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '*' expr
             {
-                $$ = binary_op.NewMul($1, $3)
+                $$ = binary.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_POW expr
             {
-                $$ = binary_op.NewPow($1, $3)
+                $$ = binary.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '/' expr
             {
-                $$ = binary_op.NewDiv($1, $3)
+                $$ = binary.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '%' expr
             {
-                $$ = binary_op.NewMod($1, $3)
+                $$ = binary.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_SL expr
             {
-                $$ = binary_op.NewShiftLeft($1, $3)
+                $$ = binary.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_SR expr
             {
-                $$ = binary_op.NewShiftRight($1, $3)
+                $$ = binary.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -2113,49 +2113,49 @@ expr_without_variable:
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = binary_op.NewIdentical($1, $3)
+                $$ = binary.NewIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = binary_op.NewNotIdentical($1, $3)
+                $$ = binary.NewNotIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = binary_op.NewEqual($1, $3)
+                $$ = binary.NewEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = binary_op.NewNotEqual($1, $3)
+                $$ = binary.NewNotEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '<' expr
             {
-                $$ = binary_op.NewSmaller($1, $3)
+                $$ = binary.NewSmaller($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                $$ = binary.NewSmallerOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr '>' expr
             {
-                $$ = binary_op.NewGreater($1, $3)
+                $$ = binary.NewGreater($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                $$ = binary.NewGreaterOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -2818,37 +2818,37 @@ static_operation:
             }
     |   static_scalar_value '+' static_scalar_value
             {
-                $$ = binary_op.NewPlus($1, $3)
+                $$ = binary.NewPlus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '-' static_scalar_value
             {
-                $$ = binary_op.NewMinus($1, $3)
+                $$ = binary.NewMinus($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '*' static_scalar_value
             {
-                $$ = binary_op.NewMul($1, $3)
+                $$ = binary.NewMul($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_POW static_scalar_value
             {
-                $$ = binary_op.NewPow($1, $3)
+                $$ = binary.NewPow($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '/' static_scalar_value
             {
-                $$ = binary_op.NewDiv($1, $3)
+                $$ = binary.NewDiv($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '%' static_scalar_value
             {
-                $$ = binary_op.NewMod($1, $3)
+                $$ = binary.NewMod($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
@@ -2866,115 +2866,115 @@ static_operation:
             }
     |   static_scalar_value '|' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseOr($1, $3)
+                $$ = binary.NewBitwiseOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '&' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseAnd($1, $3)
+                $$ = binary.NewBitwiseAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '^' static_scalar_value
             {
-                $$ = binary_op.NewBitwiseXor($1, $3)
+                $$ = binary.NewBitwiseXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_SL static_scalar_value
             {
-                $$ = binary_op.NewShiftLeft($1, $3)
+                $$ = binary.NewShiftLeft($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_SR static_scalar_value
             {
-                $$ = binary_op.NewShiftRight($1, $3)
+                $$ = binary.NewShiftRight($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '.' static_scalar_value
             {
-                $$ = binary_op.NewConcat($1, $3)
+                $$ = binary.NewConcat($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_XOR static_scalar_value
             {
-                $$ = binary_op.NewLogicalXor($1, $3)
+                $$ = binary.NewLogicalXor($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_AND static_scalar_value
             {
-                $$ = binary_op.NewLogicalAnd($1, $3)
+                $$ = binary.NewLogicalAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_LOGICAL_OR static_scalar_value
             {
-                $$ = binary_op.NewLogicalOr($1, $3)
+                $$ = binary.NewLogicalOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_AND static_scalar_value
             {
-                $$ = binary_op.NewBooleanAnd($1, $3)
+                $$ = binary.NewBooleanAnd($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_OR static_scalar_value
             {
-                $$ = binary_op.NewBooleanOr($1, $3)
+                $$ = binary.NewBooleanOr($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_IDENTICAL static_scalar_value
             {
-                $$ = binary_op.NewIdentical($1, $3)
+                $$ = binary.NewIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
             {
-                $$ = binary_op.NewNotIdentical($1, $3)
+                $$ = binary.NewNotIdentical($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewEqual($1, $3)
+                $$ = binary.NewEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewNotEqual($1, $3)
+                $$ = binary.NewNotEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '<' static_scalar_value
             {
-                $$ = binary_op.NewSmaller($1, $3)
+                $$ = binary.NewSmaller($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value '>' static_scalar_value
             {
-                $$ = binary_op.NewGreater($1, $3)
+                $$ = binary.NewGreater($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewSmallerOrEqual($1, $3)
+                $$ = binary.NewSmallerOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }
     |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
             {
-                $$ = binary_op.NewGreaterOrEqual($1, $3)
+                $$ = binary.NewGreaterOrEqual($1, $3)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
                 comments.AddComments($$, comments[$1])
             }

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node/expr/assign_op"
+	"github.com/z7zmey/php-parser/node/expr/assign"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -19,7 +19,7 @@ func TestShortList(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -44,7 +44,7 @@ func TestShortListArrayIndex(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
@@ -71,7 +71,7 @@ func TestShortListList(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign_op.Assign{
+				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
