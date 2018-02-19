@@ -298,7 +298,7 @@ type Lval interface {
 	Token(tkn t.Token)
 }
 
-// Lexer
+// Lexer php lexer
 type Lexer struct {
 	*lex.Lexer
 	StateStack    []int
