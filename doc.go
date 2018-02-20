@@ -4,9 +4,9 @@ A Parser for PHP written in Go
 
 Features:
 
-	Fully support PHP5 and PHP7 syntax
-	Abstract syntax tree representation
-	Traversing AST
+* Fully support PHP5 and PHP7 syntax
+* Abstract syntax tree representation
+* Traversing AST
 
 Install
 
