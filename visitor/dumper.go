@@ -1,4 +1,4 @@
-package visitor
+package visitor // Visitor implementations
 
 import (
 	"fmt"
@@ -11,15 +11,6 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-func isWalkerImplementsNodeInterface(w walker.Walkable) bool {
-	switch w.(type) {
-	case node.Node:
-		return true
-	default:
-		return false
-	}
-}
-
 // Dumper prints ast hierarchy to stdout
 // Also prints comments and positions attached to nodes
 type Dumper struct {
@@ -30,10 +21,6 @@ type Dumper struct {
 
 // EnterNode is invoked at every node in heirerchy
 func (d Dumper) EnterNode(w walker.Walkable) bool {
-	if !isWalkerImplementsNodeInterface(w) {
-		return false
-	}
-
 	n := w.(node.Node)
 
 	fmt.Printf("%v%v", d.Indent, reflect.TypeOf(n))
