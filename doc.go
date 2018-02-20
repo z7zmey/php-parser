@@ -4,21 +4,19 @@ A Parser for PHP written in Go
 
 Features:
 
-* Fully support PHP5 and PHP7 syntax
+	* Fully support PHP5 and PHP7 syntax
+	* Abstract syntax tree representation
+	* Traversing AST
 
-* Abstract syntax tree representation
-
-* Traversing AST
-
-Install
+Install:
 
 	go get github.com/z7zmey/php-parser
 
-CLI dumper
+CLI dumper:
 
 	$GOPATH/bin/php-parser -php5 /path/to/file/or/dir
 
-Package usage example
+Package usage example:
 
 	package main
 
