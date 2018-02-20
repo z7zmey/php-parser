@@ -11,7 +11,7 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-func isWalkerImplementsNodeInterface(w walker.Walker) bool {
+func isWalkerImplementsNodeInterface(w walker.Walkable) bool {
 	switch w.(type) {
 	case node.Node:
 		return true
@@ -29,7 +29,7 @@ type Dumper struct {
 }
 
 // EnterNode is invoked at every node in heirerchy
-func (d Dumper) EnterNode(w walker.Walker) bool {
+func (d Dumper) EnterNode(w walker.Walkable) bool {
 	if !isWalkerImplementsNodeInterface(w) {
 		return false
 	}
@@ -62,6 +62,6 @@ func (d Dumper) GetChildrenVisitor(key string) walker.Visitor {
 }
 
 // LeaveNode is invoked after node process
-func (d Dumper) LeaveNode(n walker.Walker) {
+func (d Dumper) LeaveNode(n walker.Walkable) {
 	// do nothing
 }

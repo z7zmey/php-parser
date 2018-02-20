@@ -73,12 +73,12 @@ type visitorMock struct {
 	visitedKeys   []string
 }
 
-func (v *visitorMock) EnterNode(n walker.Walker) bool { return v.visitChildren }
+func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
 func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
 	v.visitedKeys = append(v.visitedKeys, key)
 	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walker) {}
+func (v *visitorMock) LeaveNode(n walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
