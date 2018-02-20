@@ -1,4 +1,5 @@
-package visitor // Visitor implementations
+// Package visitor contains walker.visitor implementations
+package visitor
 
 import (
 	"fmt"

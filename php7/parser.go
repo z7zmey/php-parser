@@ -1,3 +1,4 @@
+// Package php7 parses PHP7
 package php7
 
 import (

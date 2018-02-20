@@ -1,3 +1,4 @@
+// Package php5 parses PHP5
 package php5
 
 import (

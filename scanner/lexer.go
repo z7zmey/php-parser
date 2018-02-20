@@ -1,3 +1,4 @@
+// Package scanner transforms an input string into a stream of PHP tokens.
 package scanner
 
 import (

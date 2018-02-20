@@ -1,4 +1,5 @@
-package walker // Node walking behavior
+// Package walker declares walking behavior
+package walker
 
 // Walkable interface
 //
