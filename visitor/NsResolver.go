@@ -66,22 +66,7 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 			useType = n.UseType.(*node.Identifier).Value
 		}
 		for _, nn := range n.Uses {
-			switch use := nn.(type) {
-			case *stmt.Use:
-				if use.UseType != nil {
-					useType = use.UseType.(*node.Identifier).Value
-				}
-
-				useNameParts := use.Use.(*name.Name).Parts
-				var alias string
-				if use.Alias == nil {
-					alias = useNameParts[len(useNameParts)-1].(*name.NamePart).Value
-				} else {
-					alias = use.Alias.(*node.Identifier).Value
-				}
-
-				nsr.Namespace.AddAlias(useType, concatNameParts(useNameParts), alias)
-			}
+			nsr.AddAlias(useType, nn, nil)
 		}
 	case *stmt.GroupUse:
 		useType := ""
@@ -89,28 +74,30 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 			useType = n.UseType.(*node.Identifier).Value
 		}
 		for _, nn := range n.UseList {
-			switch use := nn.(type) {
-			case *stmt.Use:
-				if use.UseType != nil {
-					useType = use.UseType.(*node.Identifier).Value
-				}
-
-				useNameParts := use.Use.(*name.Name).Parts
-				var alias string
-				if use.Alias == nil {
-					alias = useNameParts[len(useNameParts)-1].(*name.NamePart).Value
-				} else {
-					alias = use.Alias.(*node.Identifier).Value
-				}
-
-				aliasName := concatNameParts(n.Prefix.(*name.Name).Parts, useNameParts)
-				nsr.Namespace.AddAlias(useType, aliasName, alias)
-			}
-
+			nsr.AddAlias(useType, nn, n.Prefix.(*name.Name).Parts)
 		}
 	}
 
 	return true
+}
+
+func (nsr *NsResolver) AddAlias(useType string, nn node.Node, prefix []node.Node) {
+	switch use := nn.(type) {
+	case *stmt.Use:
+		if use.UseType != nil {
+			useType = use.UseType.(*node.Identifier).Value
+		}
+
+		useNameParts := use.Use.(*name.Name).Parts
+		var alias string
+		if use.Alias == nil {
+			alias = useNameParts[len(useNameParts)-1].(*name.NamePart).Value
+		} else {
+			alias = use.Alias.(*node.Identifier).Value
+		}
+
+		nsr.Namespace.AddAlias(useType, concatNameParts(prefix, useNameParts), alias)
+	}
 }
 
 // GetChildrenVisitor is invoked at every node parameter that contains children nodes
