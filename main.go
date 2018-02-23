@@ -39,12 +39,15 @@ func main() {
 					nodes, comments, positions = php7.Parse(src, path)
 				}
 
-				visitor := visitor.Dumper{
+				nsResolver := visitor.NewNsResolver()
+				nodes.Walk(nsResolver)
+
+				dumper := visitor.Dumper{
 					Indent:    "  | ",
 					Comments:  comments,
 					Positions: positions,
 				}
-				nodes.Walk(visitor)
+				nodes.Walk(dumper)
 			}
 			return nil
 		})
