@@ -2,7 +2,6 @@
 package visitor
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/z7zmey/php-parser/node"
@@ -60,22 +59,33 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 			NSParts := n.NamespaceName.(*name.Name).Parts
 			nsr.Namespace = NewNamespace(concatNameParts(NSParts))
 		}
+
 	case *stmt.UseList:
 		useType := ""
 		if n.UseType != nil {
 			useType = n.UseType.(*node.Identifier).Value
 		}
+
 		for _, nn := range n.Uses {
 			nsr.AddAlias(useType, nn, nil)
 		}
+
+		// no reason to iterate into depth
+		return false
+
 	case *stmt.GroupUse:
 		useType := ""
 		if n.UseType != nil {
 			useType = n.UseType.(*node.Identifier).Value
 		}
+
 		for _, nn := range n.UseList {
 			nsr.AddAlias(useType, nn, n.Prefix.(*name.Name).Parts)
 		}
+
+		// no reason to iterate into depth
+		return false
+
 	}
 
 	return true
@@ -110,7 +120,6 @@ func (nsr *NsResolver) LeaveNode(w walker.Walkable) {
 	switch n := w.(type) {
 	case *stmt.Namespace:
 		if n.Stmts != nil {
-			fmt.Printf("%+v \n", nsr.Namespace.Aliases)
 			nsr.Namespace = NewNamespace("")
 		}
 	}

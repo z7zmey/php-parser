@@ -1,12 +1,14 @@
 PHPFILE=example.php
 
-all: compile run
+all: compile fmt build run
+
+fmt:
+	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
 
 build:
-	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
 	go build
 
-run: build
+run:
 	./php-parser $(PHPFILE)
 
 test:
