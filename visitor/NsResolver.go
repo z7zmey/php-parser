@@ -5,6 +5,8 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/z7zmey/php-parser/node/expr"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -155,11 +157,148 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 			nsr.resolveName(n.Extends, "")
 		}
 
-		for _, _ = range n.Implements {
-			// todo resolve inteface name
+		for _, interfaceName := range n.Implements {
+			nsr.resolveName(interfaceName, "")
 		}
 
 		nsr.addNamespacedName(n, n.ClassName.(*node.Identifier).Value)
+
+	case *stmt.Interface:
+		for _, interfaceName := range n.Extends {
+			nsr.resolveName(interfaceName, "")
+		}
+
+		nsr.addNamespacedName(n, n.InterfaceName.(*node.Identifier).Value)
+
+	case *stmt.Trait:
+		nsr.addNamespacedName(n, n.TraitName.(*node.Identifier).Value)
+
+	case *stmt.Function:
+		nsr.addNamespacedName(n, n.FunctionName.(*node.Identifier).Value)
+
+		for _, parameter := range n.Params {
+			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+		}
+
+		if n.ReturnType != nil {
+			nsr.resolveType(n.ReturnType)
+		}
+
+	case *stmt.ClassMethod:
+		for _, parameter := range n.Params {
+			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+		}
+
+		if n.ReturnType != nil {
+			nsr.resolveType(n.ReturnType)
+		}
+
+	case *expr.Closure:
+		for _, parameter := range n.Params {
+			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+		}
+
+		if n.ReturnType != nil {
+			nsr.resolveType(n.ReturnType)
+		}
+
+	case *stmt.ConstList:
+		for _, constant := range n.Consts {
+			nsr.addNamespacedName(constant, constant.(*stmt.Constant).ConstantName.(*node.Identifier).Value)
+		}
+
+	case *expr.StaticCall:
+		switch nn := n.Class.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "")
+		case *name.Relative:
+			nsr.resolveName(nn, "")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "")
+		}
+
+	case *expr.StaticPropertyFetch:
+		switch nn := n.Class.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "")
+		case *name.Relative:
+			nsr.resolveName(nn, "")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "")
+		}
+
+	case *expr.ClassConstFetch:
+		switch nn := n.Class.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "")
+		case *name.Relative:
+			nsr.resolveName(nn, "")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "")
+		}
+
+	case *expr.New:
+		switch nn := n.Class.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "")
+		case *name.Relative:
+			nsr.resolveName(nn, "")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "")
+		}
+
+	case *expr.InstanceOf:
+		switch nn := n.Class.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "")
+		case *name.Relative:
+			nsr.resolveName(nn, "")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "")
+		}
+
+	case *stmt.Catch:
+		for _, t := range n.Types {
+			nsr.resolveName(t, "")
+		}
+
+	case *expr.FunctionCall:
+		switch nn := n.Function.(type) {
+		case *name.Name:
+			nsr.resolveName(nn, "function")
+		case *name.Relative:
+			nsr.resolveName(nn, "function")
+		case *name.FullyQualified:
+			nsr.resolveName(nn, "function")
+		}
+
+	case *expr.ConstFetch:
+		nsr.resolveName(n.Constant, "const")
+
+	case *stmt.TraitUse:
+		for _, t := range n.Traits {
+			nsr.resolveName(t, "")
+		}
+
+		for _, a := range n.Adaptations {
+			switch aa := a.(type) {
+			case *stmt.TraitUsePrecedence:
+				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
+				if refTrait != nil {
+					nsr.resolveName(refTrait, "")
+				}
+				for _, insteadOf := range aa.Insteadof {
+					nsr.resolveName(insteadOf, "")
+				}
+
+			case *stmt.TraitUseAlias:
+				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
+				if refTrait != nil {
+					nsr.resolveName(refTrait, "")
+				}
+			}
+		}
+
 	}
 
 	return true
@@ -209,4 +348,17 @@ func (nsr *NsResolver) addNamespacedName(nn node.Node, nodeName string) {
 
 func (nsr *NsResolver) resolveName(nameNode node.Node, aliasType string) {
 	nsr.ResolvedNames[nameNode] = nsr.Namespace.resolveName(nameNode, aliasType)
+}
+
+func (nsr *NsResolver) resolveType(n node.Node) {
+	switch nn := n.(type) {
+	case *node.Nullable:
+		nsr.resolveType(nn.Expr)
+	case *name.Name:
+		nsr.resolveName(n, "")
+	case *name.Relative:
+		nsr.resolveName(n, "")
+	case *name.FullyQualified:
+		nsr.resolveName(n, "")
+	}
 }
