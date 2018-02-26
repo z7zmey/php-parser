@@ -42,6 +42,8 @@ func main() {
 				nsResolver := visitor.NewNsResolver()
 				nodes.Walk(nsResolver)
 
+				fmt.Printf("%+v \n", nsResolver.ResolvedNames)
+
 				dumper := visitor.Dumper{
 					Indent:    "  | ",
 					Comments:  comments,
