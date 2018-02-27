@@ -13,22 +13,22 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// NsResolver visitor
-type NsResolver struct {
+// NamespaceResolver visitor
+type NamespaceResolver struct {
 	Namespace     *Namespace
 	ResolvedNames map[node.Node]string
 }
 
-// NewNsResolver NsResolver type constructor
-func NewNsResolver() *NsResolver {
-	return &NsResolver{
+// NewNamespaceResolver NamespaceResolver type constructor
+func NewNamespaceResolver() *NamespaceResolver {
+	return &NamespaceResolver{
 		Namespace:     NewNamespace(""),
 		ResolvedNames: map[node.Node]string{},
 	}
 }
 
 // EnterNode is invoked at every node in heirerchy
-func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
+func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 	switch n := w.(type) {
 	case *stmt.Namespace:
 		if n.NamespaceName == nil {
@@ -193,12 +193,12 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 }
 
 // GetChildrenVisitor is invoked at every node parameter that contains children nodes
-func (nsr *NsResolver) GetChildrenVisitor(key string) walker.Visitor {
+func (nsr *NamespaceResolver) GetChildrenVisitor(key string) walker.Visitor {
 	return nsr
 }
 
 // LeaveNode is invoked after node process
-func (nsr *NsResolver) LeaveNode(w walker.Walkable) {
+func (nsr *NamespaceResolver) LeaveNode(w walker.Walkable) {
 	switch n := w.(type) {
 	case *stmt.Namespace:
 		if n.Stmts != nil {
@@ -208,7 +208,7 @@ func (nsr *NsResolver) LeaveNode(w walker.Walkable) {
 }
 
 // AddAlias adds a new alias
-func (nsr *NsResolver) AddAlias(useType string, nn node.Node, prefix []node.Node) {
+func (nsr *NamespaceResolver) AddAlias(useType string, nn node.Node, prefix []node.Node) {
 	switch use := nn.(type) {
 	case *stmt.Use:
 		if use.UseType != nil {
@@ -228,7 +228,7 @@ func (nsr *NsResolver) AddAlias(useType string, nn node.Node, prefix []node.Node
 }
 
 // AddNamespacedName adds namespaced name by node
-func (nsr *NsResolver) AddNamespacedName(nn node.Node, nodeName string) {
+func (nsr *NamespaceResolver) AddNamespacedName(nn node.Node, nodeName string) {
 	if nsr.Namespace.Namespace == "" {
 		nsr.ResolvedNames[nn] = nodeName
 	} else {
@@ -237,12 +237,12 @@ func (nsr *NsResolver) AddNamespacedName(nn node.Node, nodeName string) {
 }
 
 // ResolveName adds a resolved fully qualified name by node
-func (nsr *NsResolver) ResolveName(nameNode node.Node, aliasType string) {
+func (nsr *NamespaceResolver) ResolveName(nameNode node.Node, aliasType string) {
 	nsr.ResolvedNames[nameNode] = nsr.Namespace.ResolveName(nameNode, aliasType)
 }
 
 // ResolveType adds a resolved fully qualified type name
-func (nsr *NsResolver) ResolveType(n node.Node) {
+func (nsr *NamespaceResolver) ResolveType(n node.Node) {
 	switch nn := n.(type) {
 	case *node.Nullable:
 		nsr.ResolveType(nn.Expr)
