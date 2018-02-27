@@ -8322,7 +8322,8 @@ yyrule124: // \?\?
 	}
 yyrule125: // (#|[/][/]).*{NEW_LINE}
 	{
-		lval.Token(l.newToken(l.Token())) // return T_COMMENT; // TODO: handle ?>
+		lval.Token(l.newToken(l.Token()))
+		l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil)))) // return T_COMMENT; // TODO: handle ?>
 		goto yystate0
 	}
 yyrule126: // ([/][*])|([/][*][*])
