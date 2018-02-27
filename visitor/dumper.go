@@ -29,12 +29,14 @@ func (d Dumper) EnterNode(w walker.Walkable) bool {
 		fmt.Printf(" %v", *p)
 	}
 	if a := n.Attributes(); len(a) > 0 {
-		fmt.Printf(" %v", a)
+		for key, attr := range a {
+			fmt.Printf("\n%v\"%v\": %v;", d.Indent+"  ", key, attr)
+		}
 	}
 	fmt.Println()
 
 	if c := d.Comments[n]; len(c) > 0 {
-		fmt.Printf("%vComments:\n", d.Indent+"  ")
+		fmt.Printf("%v\"Comments\":\n", d.Indent+"  ")
 		for _, cc := range c {
 			fmt.Printf("%v%q\n", d.Indent+"    ", cc)
 		}
