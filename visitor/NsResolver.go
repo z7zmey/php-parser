@@ -29,11 +29,13 @@ func concatNameParts(parts ...[]node.Node) string {
 	return str
 }
 
+// Namespace context
 type Namespace struct {
 	Namespace string
 	Aliases   map[string]map[string]string
 }
 
+// NewNamespace constructor
 func NewNamespace(NSName string) *Namespace {
 	return &Namespace{
 		Namespace: NSName,
@@ -45,6 +47,7 @@ func NewNamespace(NSName string) *Namespace {
 	}
 }
 
+// AddAlias adds a new alias
 func (ns *Namespace) AddAlias(aliasType string, aliasName string, alias string) {
 	aliasType = strings.ToLower(aliasType)
 
@@ -55,21 +58,25 @@ func (ns *Namespace) AddAlias(aliasType string, aliasName string, alias string) 
 	}
 }
 
-func (ns *Namespace) resolveName(nameNode node.Node, aliasType string) string {
+// ResolveName returns a resolved fully qualified name
+func (ns *Namespace) ResolveName(nameNode node.Node, aliasType string) string {
 	switch n := nameNode.(type) {
 	case *name.FullyQualified:
+		// Fully qualifid name is already resolved
 		return concatNameParts(n.Parts)
 
 	case *name.Relative:
 		return ns.Namespace + "\\" + concatNameParts(n.Parts)
 
 	case *name.Name:
-		aliasName, err := ns.resolveAlias(nameNode, aliasType)
+		aliasName, err := ns.ResolveAlias(nameNode, aliasType)
 		if err != nil {
+			// resolve as relative name if alias not found
 			return ns.Namespace + "\\" + concatNameParts(n.Parts)
 		}
 
 		if len(n.Parts) > 1 {
+			// if name qualified, replace first part by alias
 			return aliasName + "\\" + concatNameParts(n.Parts[1:])
 		}
 
@@ -79,7 +86,8 @@ func (ns *Namespace) resolveName(nameNode node.Node, aliasType string) string {
 	panic("invalid nameNode variable type")
 }
 
-func (ns *Namespace) resolveAlias(nameNode node.Node, aliasType string) (string, error) {
+// ResolveAlias returns alias or error if not found
+func (ns *Namespace) ResolveAlias(nameNode node.Node, aliasType string) (string, error) {
 	aliasType = strings.ToLower(aliasType)
 	nameParts := nameNode.(*name.Name).Parts
 
@@ -102,6 +110,7 @@ func (ns *Namespace) resolveAlias(nameNode node.Node, aliasType string) (string,
 	return aliasName, nil
 }
 
+// NsResolver visitor
 type NsResolver struct {
 	Namespace     *Namespace
 	ResolvedNames map[node.Node]string
@@ -154,130 +163,106 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 
 	case *stmt.Class:
 		if n.Extends != nil {
-			nsr.resolveName(n.Extends, "")
+			nsr.ResolveName(n.Extends, "")
 		}
 
 		for _, interfaceName := range n.Implements {
-			nsr.resolveName(interfaceName, "")
+			nsr.ResolveName(interfaceName, "")
 		}
 
-		nsr.addNamespacedName(n, n.ClassName.(*node.Identifier).Value)
+		nsr.AddNamespacedName(n, n.ClassName.(*node.Identifier).Value)
 
 	case *stmt.Interface:
 		for _, interfaceName := range n.Extends {
-			nsr.resolveName(interfaceName, "")
+			nsr.ResolveName(interfaceName, "")
 		}
 
-		nsr.addNamespacedName(n, n.InterfaceName.(*node.Identifier).Value)
+		nsr.AddNamespacedName(n, n.InterfaceName.(*node.Identifier).Value)
 
 	case *stmt.Trait:
-		nsr.addNamespacedName(n, n.TraitName.(*node.Identifier).Value)
+		nsr.AddNamespacedName(n, n.TraitName.(*node.Identifier).Value)
 
 	case *stmt.Function:
-		nsr.addNamespacedName(n, n.FunctionName.(*node.Identifier).Value)
+		nsr.AddNamespacedName(n, n.FunctionName.(*node.Identifier).Value)
 
 		for _, parameter := range n.Params {
-			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+			nsr.ResolveType(parameter.(*node.Parameter).VariableType)
 		}
 
 		if n.ReturnType != nil {
-			nsr.resolveType(n.ReturnType)
+			nsr.ResolveType(n.ReturnType)
 		}
 
 	case *stmt.ClassMethod:
 		for _, parameter := range n.Params {
-			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+			nsr.ResolveType(parameter.(*node.Parameter).VariableType)
 		}
 
 		if n.ReturnType != nil {
-			nsr.resolveType(n.ReturnType)
+			nsr.ResolveType(n.ReturnType)
 		}
 
 	case *expr.Closure:
 		for _, parameter := range n.Params {
-			nsr.resolveType(parameter.(*node.Parameter).VariableType)
+			nsr.ResolveType(parameter.(*node.Parameter).VariableType)
 		}
 
 		if n.ReturnType != nil {
-			nsr.resolveType(n.ReturnType)
+			nsr.ResolveType(n.ReturnType)
 		}
 
 	case *stmt.ConstList:
 		for _, constant := range n.Consts {
-			nsr.addNamespacedName(constant, constant.(*stmt.Constant).ConstantName.(*node.Identifier).Value)
+			nsr.AddNamespacedName(constant, constant.(*stmt.Constant).ConstantName.(*node.Identifier).Value)
 		}
 
 	case *expr.StaticCall:
-		switch nn := n.Class.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "")
-		case *name.Relative:
-			nsr.resolveName(nn, "")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "")
+		clsName, ok := n.Class.(name.Names)
+		if ok {
+			nsr.ResolveName(clsName, "")
 		}
 
 	case *expr.StaticPropertyFetch:
-		switch nn := n.Class.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "")
-		case *name.Relative:
-			nsr.resolveName(nn, "")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "")
+		clsName, ok := n.Class.(name.Names)
+		if ok {
+			nsr.ResolveName(clsName, "")
 		}
 
 	case *expr.ClassConstFetch:
-		switch nn := n.Class.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "")
-		case *name.Relative:
-			nsr.resolveName(nn, "")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "")
+		clsName, ok := n.Class.(name.Names)
+		if ok {
+			nsr.ResolveName(clsName, "")
 		}
 
 	case *expr.New:
-		switch nn := n.Class.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "")
-		case *name.Relative:
-			nsr.resolveName(nn, "")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "")
+		clsName, ok := n.Class.(name.Names)
+		if ok {
+			nsr.ResolveName(clsName, "")
 		}
 
 	case *expr.InstanceOf:
-		switch nn := n.Class.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "")
-		case *name.Relative:
-			nsr.resolveName(nn, "")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "")
+		clsName, ok := n.Class.(name.Names)
+		if ok {
+			nsr.ResolveName(clsName, "")
 		}
 
 	case *stmt.Catch:
 		for _, t := range n.Types {
-			nsr.resolveName(t, "")
+			nsr.ResolveName(t, "")
 		}
 
 	case *expr.FunctionCall:
-		switch nn := n.Function.(type) {
-		case *name.Name:
-			nsr.resolveName(nn, "function")
-		case *name.Relative:
-			nsr.resolveName(nn, "function")
-		case *name.FullyQualified:
-			nsr.resolveName(nn, "function")
+		funcName, ok := n.Function.(name.Names)
+		if ok {
+			nsr.ResolveName(funcName, "function")
 		}
 
 	case *expr.ConstFetch:
-		nsr.resolveName(n.Constant, "const")
+		nsr.ResolveName(n.Constant, "const")
 
 	case *stmt.TraitUse:
 		for _, t := range n.Traits {
-			nsr.resolveName(t, "")
+			nsr.ResolveName(t, "")
 		}
 
 		for _, a := range n.Adaptations {
@@ -285,16 +270,16 @@ func (nsr *NsResolver) EnterNode(w walker.Walkable) bool {
 			case *stmt.TraitUsePrecedence:
 				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
 				if refTrait != nil {
-					nsr.resolveName(refTrait, "")
+					nsr.ResolveName(refTrait, "")
 				}
 				for _, insteadOf := range aa.Insteadof {
-					nsr.resolveName(insteadOf, "")
+					nsr.ResolveName(insteadOf, "")
 				}
 
 			case *stmt.TraitUseAlias:
 				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
 				if refTrait != nil {
-					nsr.resolveName(refTrait, "")
+					nsr.ResolveName(refTrait, "")
 				}
 			}
 		}
@@ -319,6 +304,7 @@ func (nsr *NsResolver) LeaveNode(w walker.Walkable) {
 	}
 }
 
+// AddAlias adds a new alias
 func (nsr *NsResolver) AddAlias(useType string, nn node.Node, prefix []node.Node) {
 	switch use := nn.(type) {
 	case *stmt.Use:
@@ -338,7 +324,8 @@ func (nsr *NsResolver) AddAlias(useType string, nn node.Node, prefix []node.Node
 	}
 }
 
-func (nsr *NsResolver) addNamespacedName(nn node.Node, nodeName string) {
+// AddNamespacedName adds namespaced name by node
+func (nsr *NsResolver) AddNamespacedName(nn node.Node, nodeName string) {
 	if nsr.Namespace.Namespace == "" {
 		nsr.ResolvedNames[nn] = nodeName
 	} else {
@@ -346,19 +333,17 @@ func (nsr *NsResolver) addNamespacedName(nn node.Node, nodeName string) {
 	}
 }
 
-func (nsr *NsResolver) resolveName(nameNode node.Node, aliasType string) {
-	nsr.ResolvedNames[nameNode] = nsr.Namespace.resolveName(nameNode, aliasType)
+// ResolveName adds a resolved fully qualified name by node
+func (nsr *NsResolver) ResolveName(nameNode node.Node, aliasType string) {
+	nsr.ResolvedNames[nameNode] = nsr.Namespace.ResolveName(nameNode, aliasType)
 }
 
-func (nsr *NsResolver) resolveType(n node.Node) {
+// ResolveType adds a resolved fully qualified type name
+func (nsr *NsResolver) ResolveType(n node.Node) {
 	switch nn := n.(type) {
 	case *node.Nullable:
-		nsr.resolveType(nn.Expr)
-	case *name.Name:
-		nsr.resolveName(n, "")
-	case *name.Relative:
-		nsr.resolveName(n, "")
-	case *name.FullyQualified:
-		nsr.resolveName(n, "")
+		nsr.ResolveType(nn.Expr)
+	case name.Names:
+		nsr.ResolveName(n, "")
 	}
 }

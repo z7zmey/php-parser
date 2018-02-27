@@ -40,3 +40,8 @@ func (n *Name) Walk(v walker.Visitor) {
 
 	v.LeaveNode(n)
 }
+
+// GetParts returns the name parts
+func (n *Name) GetParts() []node.Node {
+	return n.Parts
+}

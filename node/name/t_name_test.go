@@ -96,3 +96,18 @@ func TestRelative(t *testing.T) {
 	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestNamePartsGetter(t *testing.T) {
+	expected := []node.Node{
+		&name.NamePart{Value: "a"},
+		&name.NamePart{Value: "b"},
+	}
+
+	plainName := &name.Name{Parts: expected}
+	relativeName := &name.Relative{Parts: expected}
+	fullyQualifiedName := &name.FullyQualified{Parts: expected}
+
+	assertEqual(t, expected, plainName.GetParts())
+	assertEqual(t, expected, relativeName.GetParts())
+	assertEqual(t, expected, fullyQualifiedName.GetParts())
+}
