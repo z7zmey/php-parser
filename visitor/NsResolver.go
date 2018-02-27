@@ -13,103 +13,6 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-func concatNameParts(parts ...[]node.Node) string {
-	str := ""
-
-	for _, p := range parts {
-		for _, n := range p {
-			if str == "" {
-				str = n.(*name.NamePart).Value
-			} else {
-				str = str + "\\" + n.(*name.NamePart).Value
-			}
-		}
-	}
-
-	return str
-}
-
-// Namespace context
-type Namespace struct {
-	Namespace string
-	Aliases   map[string]map[string]string
-}
-
-// NewNamespace constructor
-func NewNamespace(NSName string) *Namespace {
-	return &Namespace{
-		Namespace: NSName,
-		Aliases: map[string]map[string]string{
-			"":         {},
-			"const":    {},
-			"function": {},
-		},
-	}
-}
-
-// AddAlias adds a new alias
-func (ns *Namespace) AddAlias(aliasType string, aliasName string, alias string) {
-	aliasType = strings.ToLower(aliasType)
-
-	if aliasType == "const" {
-		ns.Aliases[aliasType][alias] = aliasName
-	} else {
-		ns.Aliases[aliasType][strings.ToLower(alias)] = aliasName
-	}
-}
-
-// ResolveName returns a resolved fully qualified name
-func (ns *Namespace) ResolveName(nameNode node.Node, aliasType string) string {
-	switch n := nameNode.(type) {
-	case *name.FullyQualified:
-		// Fully qualifid name is already resolved
-		return concatNameParts(n.Parts)
-
-	case *name.Relative:
-		return ns.Namespace + "\\" + concatNameParts(n.Parts)
-
-	case *name.Name:
-		aliasName, err := ns.ResolveAlias(nameNode, aliasType)
-		if err != nil {
-			// resolve as relative name if alias not found
-			return ns.Namespace + "\\" + concatNameParts(n.Parts)
-		}
-
-		if len(n.Parts) > 1 {
-			// if name qualified, replace first part by alias
-			return aliasName + "\\" + concatNameParts(n.Parts[1:])
-		}
-
-		return aliasName
-	}
-
-	panic("invalid nameNode variable type")
-}
-
-// ResolveAlias returns alias or error if not found
-func (ns *Namespace) ResolveAlias(nameNode node.Node, aliasType string) (string, error) {
-	aliasType = strings.ToLower(aliasType)
-	nameParts := nameNode.(*name.Name).Parts
-
-	firstPartStr := nameParts[0].(*name.NamePart).Value
-
-	if len(nameParts) > 1 { // resolve aliases for qualified names, always against class alias table
-		firstPartStr = strings.ToLower(firstPartStr)
-		aliasType = ""
-	} else {
-		if aliasType != "const" { // constans are case-sensitive
-			firstPartStr = strings.ToLower(firstPartStr)
-		}
-	}
-
-	aliasName, ok := ns.Aliases[aliasType][firstPartStr]
-	if !ok {
-		return "", errors.New("Not found")
-	}
-
-	return aliasName, nil
-}
-
 // NsResolver visitor
 type NsResolver struct {
 	Namespace     *Namespace
@@ -346,4 +249,101 @@ func (nsr *NsResolver) ResolveType(n node.Node) {
 	case name.Names:
 		nsr.ResolveName(n, "")
 	}
+}
+
+// Namespace context
+type Namespace struct {
+	Namespace string
+	Aliases   map[string]map[string]string
+}
+
+// NewNamespace constructor
+func NewNamespace(NSName string) *Namespace {
+	return &Namespace{
+		Namespace: NSName,
+		Aliases: map[string]map[string]string{
+			"":         {},
+			"const":    {},
+			"function": {},
+		},
+	}
+}
+
+// AddAlias adds a new alias
+func (ns *Namespace) AddAlias(aliasType string, aliasName string, alias string) {
+	aliasType = strings.ToLower(aliasType)
+
+	if aliasType == "const" {
+		ns.Aliases[aliasType][alias] = aliasName
+	} else {
+		ns.Aliases[aliasType][strings.ToLower(alias)] = aliasName
+	}
+}
+
+// ResolveName returns a resolved fully qualified name
+func (ns *Namespace) ResolveName(nameNode node.Node, aliasType string) string {
+	switch n := nameNode.(type) {
+	case *name.FullyQualified:
+		// Fully qualifid name is already resolved
+		return concatNameParts(n.Parts)
+
+	case *name.Relative:
+		return ns.Namespace + "\\" + concatNameParts(n.Parts)
+
+	case *name.Name:
+		aliasName, err := ns.ResolveAlias(nameNode, aliasType)
+		if err != nil {
+			// resolve as relative name if alias not found
+			return ns.Namespace + "\\" + concatNameParts(n.Parts)
+		}
+
+		if len(n.Parts) > 1 {
+			// if name qualified, replace first part by alias
+			return aliasName + "\\" + concatNameParts(n.Parts[1:])
+		}
+
+		return aliasName
+	}
+
+	panic("invalid nameNode variable type")
+}
+
+// ResolveAlias returns alias or error if not found
+func (ns *Namespace) ResolveAlias(nameNode node.Node, aliasType string) (string, error) {
+	aliasType = strings.ToLower(aliasType)
+	nameParts := nameNode.(*name.Name).Parts
+
+	firstPartStr := nameParts[0].(*name.NamePart).Value
+
+	if len(nameParts) > 1 { // resolve aliases for qualified names, always against class alias table
+		firstPartStr = strings.ToLower(firstPartStr)
+		aliasType = ""
+	} else {
+		if aliasType != "const" { // constans are case-sensitive
+			firstPartStr = strings.ToLower(firstPartStr)
+		}
+	}
+
+	aliasName, ok := ns.Aliases[aliasType][firstPartStr]
+	if !ok {
+		return "", errors.New("Not found")
+	}
+
+	return aliasName, nil
+}
+
+func concatNameParts(parts ...[]node.Node) string {
+	str := ""
+
+	for _, p := range parts {
+		for _, n := range p {
+			if str == "" {
+				str = n.(*name.NamePart).Value
+			} else {
+				str = str + "\\" + n.(*name.NamePart).Value
+			}
+		}
+	}
+
+	return str
 }
