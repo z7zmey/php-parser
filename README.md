@@ -18,6 +18,7 @@ A Parser for PHP written in Go inspired by [Nikic PHP Parser](https://github.com
 - Fully support PHP5 and PHP7 syntax
 - Abstract syntax tree representation
 - Traversing AST
+- Namespace resolver
 
 ## Install
 
@@ -65,8 +66,8 @@ $GOPATH/bin/php-parser /path/to/file/or/dir
 - [x] handling comments
 - [x] PHP 5 syntax analyzer
 - [x] Tests
+- [x] Namespace resolver
 - [ ] PhpDocComment parser
-- [ ] Namespace resolver
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
