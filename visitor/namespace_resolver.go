@@ -306,11 +306,11 @@ func (ns *Namespace) ResolveAlias(nameNode node.Node, aliasType string) (string,
 
 	firstPartStr := nameParts[0].(*name.NamePart).Value
 
-	if len(nameParts) > 1 { // resolve aliases for qualified names, always against class alias table
+	if len(nameParts) > 1 { // resolve aliases for qualified names, always against class alias type
 		firstPartStr = strings.ToLower(firstPartStr)
 		aliasType = ""
 	} else {
-		if aliasType != "const" { // constans are case-sensitive
+		if aliasType != "const" { // constants are case-sensitive
 			firstPartStr = strings.ToLower(firstPartStr)
 		}
 	}
