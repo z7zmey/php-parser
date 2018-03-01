@@ -56,6 +56,14 @@ func main() {
 $GOPATH/bin/php-parser /path/to/file/or/dir
 ```
 
+## Namespace resolver
+
+Namespace resolver is a visitor that traverses nodes and resolves nodes fully qualified name.
+It does not change AST but collects resolved names into `map[node.Node]string`
+
+- For `Class`, `Interface`, `Trait`, `Function`, `ConstList` nodes collects name with current namespace.
+- For `Name`, `Relative`, `FullyQualified` nodes resolves `use` aliases and collects a fully qualified name.
+
 ## Roadmap
 - [X] Lexer
 - [x] PHP 7 syntax analyzer
