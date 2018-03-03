@@ -3,6 +3,7 @@ package visitor
 
 import (
 	"fmt"
+	"io"
 	"reflect"
 
 	"github.com/z7zmey/php-parser/node"
@@ -15,6 +16,7 @@ import (
 // Dumper prints ast hierarchy to stdout
 // Also prints comments and positions attached to nodes
 type Dumper struct {
+	Writer     io.Writer
 	Indent     string
 	Comments   comment.Comments
 	Positions  position.Positions
@@ -25,32 +27,32 @@ type Dumper struct {
 func (d Dumper) EnterNode(w walker.Walkable) bool {
 	n := w.(node.Node)
 
-	fmt.Printf("%v[%v]\n", d.Indent, reflect.TypeOf(n))
+	fmt.Fprintf(d.Writer, "%v[%v]\n", d.Indent, reflect.TypeOf(n))
 
 	if d.Positions != nil {
 		if p := d.Positions[n]; p != nil {
-			fmt.Printf("%v\"Position\": %s;\n", d.Indent+"  ", *p)
+			fmt.Fprintf(d.Writer, "%v\"Position\": %s;\n", d.Indent+"  ", *p)
 		}
 	}
 
 	if d.NsResolver != nil {
 		if namespacedName, ok := d.NsResolver.ResolvedNames[n]; ok {
-			fmt.Printf("%v\"NamespacedName\": %s;\n", d.Indent+"  ", namespacedName)
+			fmt.Fprintf(d.Writer, "%v\"NamespacedName\": %s;\n", d.Indent+"  ", namespacedName)
 		}
 	}
 
 	if d.Comments != nil {
 		if c := d.Comments[n]; len(c) > 0 {
-			fmt.Printf("%v\"Comments\":\n", d.Indent+"  ")
+			fmt.Fprintf(d.Writer, "%v\"Comments\":\n", d.Indent+"  ")
 			for _, cc := range c {
-				fmt.Printf("%v%q\n", d.Indent+"    ", cc)
+				fmt.Fprintf(d.Writer, "%v%q\n", d.Indent+"    ", cc)
 			}
 		}
 	}
 
 	if a := n.Attributes(); len(a) > 0 {
 		for key, attr := range a {
-			fmt.Printf("%v\"%v\": %v;\n", d.Indent+"  ", key, attr)
+			fmt.Fprintf(d.Writer, "%v\"%v\": %v;\n", d.Indent+"  ", key, attr)
 		}
 	}
 
@@ -59,8 +61,8 @@ func (d Dumper) EnterNode(w walker.Walkable) bool {
 
 // GetChildrenVisitor is invoked at every node parameter that contains children nodes
 func (d Dumper) GetChildrenVisitor(key string) walker.Visitor {
-	fmt.Printf("%v%q:\n", d.Indent+"  ", key)
-	return Dumper{d.Indent + "    ", d.Comments, d.Positions, d.NsResolver}
+	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
+	return Dumper{d.Writer, d.Indent + "    ", d.Comments, d.Positions, d.NsResolver}
 }
 
 // LeaveNode is invoked after node process

@@ -43,6 +43,7 @@ func main() {
 				nodes.Walk(nsResolver)
 
 				dumper := visitor.Dumper{
+					Writer:     os.Stdout,
 					Indent:     "  | ",
 					Comments:   comments,
 					Positions:  positions,
