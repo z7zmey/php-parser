@@ -12,6 +12,8 @@
 [![Exago](https://api.exago.io:443/badge/cov/github.com/z7zmey/php-parser)](https://exago.io/project/github.com/z7zmey/php-parser)
 [![GoDoc](https://godoc.org/github.com/z7zmey/php-parser?status.svg)](https://godoc.org/github.com/z7zmey/php-parser)
 
+#### Try it online: [demo](https://php-parser.com)
+
 ## Features:
 - Fully support PHP5 and PHP7 syntax
 - Abstract syntax tree representation
