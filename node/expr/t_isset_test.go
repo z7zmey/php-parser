@@ -20,7 +20,7 @@ func TestIsset(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Isset{
 					Variables: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 				},
 			},
@@ -42,8 +42,8 @@ func TestIssetVariables(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Isset{
 					Variables: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 			},

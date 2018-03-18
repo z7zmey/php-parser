@@ -36,7 +36,7 @@ func TestAltIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -59,11 +59,11 @@ func TestAltElseIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
@@ -88,7 +88,7 @@ func TestAltElse(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				Else: &stmt.AltElse{
 					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -116,15 +116,15 @@ func TestAltElseElseIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},

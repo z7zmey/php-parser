@@ -23,7 +23,7 @@ func TestShellExec(t *testing.T) {
 				Expr: &expr.ShellExec{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "cmd "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 				},
 			},

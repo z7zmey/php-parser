@@ -19,7 +19,7 @@ func TestEmpty(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Empty{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},

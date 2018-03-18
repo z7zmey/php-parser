@@ -74,7 +74,7 @@ func TestArrayItems(t *testing.T) {
 						},
 						&expr.ArrayItem{
 							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 				},

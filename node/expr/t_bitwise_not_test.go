@@ -19,7 +19,7 @@ func TestBitwiseNot(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.BitwiseNot{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},

@@ -24,7 +24,7 @@ func TestEmptyList(t *testing.T) {
 					Variable: &expr.List{
 						Items: []node.Node{},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -48,11 +48,11 @@ func TestList(t *testing.T) {
 						Items: []node.Node{
 							&expr.ArrayItem{
 								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -77,12 +77,12 @@ func TestListArrayIndex(t *testing.T) {
 							&expr.ArrayItem{
 								ByRef: false,
 								Val: &expr.ArrayDimFetch{
-									Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -110,14 +110,14 @@ func TestListList(t *testing.T) {
 									Items: []node.Node{
 										&expr.ArrayItem{
 											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},

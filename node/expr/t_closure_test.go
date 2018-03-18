@@ -52,22 +52,22 @@ func TestClosureUse(t *testing.T) {
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						},
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
 							ByRef:    false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						},
 						&expr.ClosureUse{
 							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -97,22 +97,22 @@ func TestClosureUse2(t *testing.T) {
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						},
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
 							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						},
 						&expr.ClosureUse{
 							ByRef:    false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 					Stmts: []node.Node{},

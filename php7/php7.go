@@ -3089,7 +3089,7 @@ yydefault:
 		yyDollar = yyS[yypt-9 : yypt+1]
 		//line php7/php7.y:691
 		{
-			identifier := node.NewIdentifier(yyDollar[5].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[5].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[5].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[5].token))
@@ -3534,7 +3534,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:1012
 		{
-			identifier := node.NewIdentifier(yyDollar[4].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[4].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[4].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[4].token))
@@ -3564,7 +3564,7 @@ yydefault:
 		yyDollar = yyS[yypt-6 : yypt+1]
 		//line php7/php7.y:1040
 		{
-			identifier := node.NewIdentifier(yyDollar[4].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[4].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[4].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[4].token))
@@ -3724,7 +3724,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:1146
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -3739,7 +3739,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:1159
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -4049,7 +4049,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1377
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -4064,7 +4064,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:1390
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -4848,7 +4848,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:1958
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -4863,7 +4863,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1971
 		{
-			identifier := node.NewIdentifier(yyDollar[2].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[2].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[2].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[2].token))
@@ -5288,7 +5288,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:2249
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
+			name := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(name, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			yyVAL.node = expr.NewVariable(name)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -5540,7 +5540,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:2435
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
+			name := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(name, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			yyVAL.node = expr.NewVariable(name)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -5552,7 +5552,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:2445
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -5567,7 +5567,7 @@ yydefault:
 		yyDollar = yyS[yypt-3 : yypt+1]
 		//line php7/php7.y:2458
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			variable := expr.NewVariable(identifier)
 			positions.AddPosition(variable, positionBuilder.NewTokenPosition(yyDollar[1].token))
@@ -5668,7 +5668,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:2543
 		{
-			identifier := node.NewIdentifier(yyDollar[1].token.Value)
+			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			positions.AddPosition(identifier, positionBuilder.NewTokenPosition(yyDollar[1].token))
 			yyVAL.node = expr.NewVariable(identifier)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenPosition(yyDollar[1].token))

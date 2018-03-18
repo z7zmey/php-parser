@@ -90,7 +90,7 @@ func ExampleDumper() {
 	//|                       "VarName":
 	//|                         [*node.Identifier]
 	//|                           "Position": Pos{Line: 5-5 Pos: 79-82};
-	//|                           "Value": $var;
+	//|                           "Value": var;
 	//|                   "DefaultValue":
 	//|                     [*expr.ConstFetch]
 	//|                       "Position": Pos{Line: 5-5 Pos: 86-89};
@@ -115,7 +115,7 @@ func ExampleDumper() {
 	//|                       "VarName":
 	//|                         [*node.Identifier]
 	//|                           "Position": Pos{Line: 8-8 Pos: 124-127};
-	//|                           "Value": $var;
+	//|                           "Value": var;
 	//|                           "Comments":
 	//|                             "// some comment\n"
 }

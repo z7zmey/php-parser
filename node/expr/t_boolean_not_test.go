@@ -19,7 +19,7 @@ func TestBooleanNot(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.BooleanNot{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},

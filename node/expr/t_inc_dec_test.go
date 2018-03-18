@@ -19,7 +19,7 @@ func TestPostDec(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PostDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -39,7 +39,7 @@ func TestPostInc(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PostInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -59,7 +59,7 @@ func TestPreDec(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PreDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -79,7 +79,7 @@ func TestPreInc(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PreInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},

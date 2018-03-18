@@ -164,7 +164,7 @@ func TestResolveInstanceOf(t *testing.T) {
 				},
 			},
 			&expr.InstanceOf{
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 				Class: nameBC,
 			},
 		},
@@ -208,7 +208,7 @@ func TestResolveInstanceCatch(t *testing.T) {
 							nameBC,
 							nameF,
 						},
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 						Stmts:    []node.Node{},
 					},
 				},
@@ -500,7 +500,7 @@ func TestResolveFunctionName(t *testing.T) {
 				ByRef:        false,
 				Variadic:     false,
 				VariableType: nameAB,
-				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 			},
 		},
 		ReturnType: &node.Nullable{Expr: nameBC},
@@ -538,7 +538,7 @@ func TestResolveMethodName(t *testing.T) {
 				ByRef:        false,
 				Variadic:     false,
 				VariableType: nameAB,
-				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 			},
 		},
 		ReturnType: &node.Nullable{Expr: nameBC},
@@ -569,7 +569,7 @@ func TestResolveClosureName(t *testing.T) {
 				ByRef:        false,
 				Variadic:     false,
 				VariableType: nameAB,
-				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 			},
 		},
 		ReturnType: &node.Nullable{Expr: nameBC},
@@ -708,7 +708,7 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	ast := &stmt.StmtList{
 		Stmts: []node.Node{
 			&expr.StaticCall{
-				Class:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+				Class:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 				Call:      &node.Identifier{Value: "foo"},
 				Arguments: []node.Node{},
 			},

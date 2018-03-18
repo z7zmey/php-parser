@@ -19,7 +19,7 @@ func TestPropertyFetch(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PropertyFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Property: &node.Identifier{Value: "foo"},
 				},
 			},

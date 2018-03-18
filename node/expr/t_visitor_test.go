@@ -24,7 +24,7 @@ var nodesToTest = []struct {
 }{
 	{
 		&expr.ArrayDimFetch{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Dim:      &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Variable", "Dim"},
@@ -54,21 +54,21 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.BitwiseNot{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.BooleanNot{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.ClassConstFetch{
-			Class:        &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Class:        &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			ConstantName: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Class", "ConstantName"},
@@ -76,7 +76,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.Clone{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
@@ -84,7 +84,7 @@ var nodesToTest = []struct {
 	{
 		&expr.ClosureUse{
 			ByRef:    false,
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Variable"},
 		map[string]interface{}{"ByRef": false},
@@ -111,42 +111,42 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.Empty{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.ErrorSuppress{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Eval{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Exit{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Die{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.FunctionCall{
-			Function:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Function:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Arguments: []node.Node{&node.Argument{}},
 		},
 		[]string{"Function", "Arguments"},
@@ -154,21 +154,21 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.IncludeOnce{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Include{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.InstanceOf{
-			Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Class: &name.Name{},
 		},
 		[]string{"Expr", "Class"},
@@ -177,7 +177,7 @@ var nodesToTest = []struct {
 	{
 		&expr.Isset{
 			Variables: []node.Node{
-				&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			},
 		},
 		[]string{"Variables"},
@@ -194,7 +194,7 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.MethodCall{
-			Variable:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Method:    &node.Identifier{Value: "foo"},
 			Arguments: []node.Node{&node.Argument{}},
 		},
@@ -211,42 +211,42 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.PostDec{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Variable"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.PostInc{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Variable"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.PreDec{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Variable"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.PreInc{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Variable"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Print{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.PropertyFetch{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Property: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Variable", "Property"},
@@ -254,14 +254,14 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.RequireOnce{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Require{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
@@ -312,43 +312,43 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.Ternary{
-			Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-			IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+			Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 		},
 		[]string{"Condition", "IfTrue", "IfFalse"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.UnaryMinus{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.UnaryPlus{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+		&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		[]string{"VarName"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.YieldFrom{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.Yield{
-			Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-			Value: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+			Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Value: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 		[]string{"Key", "Value"},
 		map[string]interface{}{},

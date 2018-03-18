@@ -24,11 +24,11 @@ func TestShortList(t *testing.T) {
 						Items: []node.Node{
 							&expr.ArrayItem{
 								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -50,12 +50,12 @@ func TestShortListArrayIndex(t *testing.T) {
 							&expr.ArrayItem{
 								ByRef: false,
 								Val: &expr.ArrayDimFetch{
-									Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -80,14 +80,14 @@ func TestShortListList(t *testing.T) {
 									Items: []node.Node{
 										&expr.ArrayItem{
 											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},

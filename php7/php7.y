@@ -689,7 +689,7 @@ catch_list:
         /* empty */                                     { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
         {
-            identifier := node.NewIdentifier($5.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($5.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($5))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($5))
@@ -1010,7 +1010,7 @@ non_empty_parameter_list:
 parameter:
     optional_type is_reference is_variadic T_VARIABLE
         {
-            identifier := node.NewIdentifier($4.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
@@ -1038,7 +1038,7 @@ parameter:
         }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
         {
-            identifier := node.NewIdentifier($4.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
@@ -1144,7 +1144,7 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifier := node.NewIdentifier($1.Value)
+                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
                 positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
                 variable := expr.NewVariable(identifier)
                 positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -1157,7 +1157,7 @@ static_var:
             }
     |   T_VARIABLE '=' expr
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -1375,7 +1375,7 @@ property_list:
 property:
     T_VARIABLE backup_doc_comment
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -1388,7 +1388,7 @@ property:
         }
     |   T_VARIABLE '=' expr backup_doc_comment
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -1956,7 +1956,7 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -1969,7 +1969,7 @@ lexical_var:
         }
     |   '&' T_VARIABLE
         {
-            identifier := node.NewIdentifier($2.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($2.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
@@ -2248,7 +2248,7 @@ variable:
 simple_variable:
     T_VARIABLE
         {
-            name := node.NewIdentifier($1.Value)
+            name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
             $$ = expr.NewVariable(name)
             positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
@@ -2434,7 +2434,7 @@ encaps_list:
 encaps_var:
     T_VARIABLE
         {
-            name := node.NewIdentifier($1.Value)
+            name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
             $$ = expr.NewVariable(name)
             positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
@@ -2444,7 +2444,7 @@ encaps_var:
         }
     |   T_VARIABLE '[' encaps_var_offset ']'
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -2457,7 +2457,7 @@ encaps_var:
         }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             variable := expr.NewVariable(identifier)
             positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
@@ -2542,7 +2542,7 @@ encaps_var_offset:
         }
     |   T_VARIABLE
         {
-            identifier := node.NewIdentifier($1.Value)
+            identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
             positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
             $$ = expr.NewVariable(identifier)
             positions.AddPosition($$, positionBuilder.NewTokenPosition($1))

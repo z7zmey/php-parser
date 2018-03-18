@@ -19,7 +19,7 @@ func TestGlobal(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Global{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -39,9 +39,9 @@ func TestGlobalVars(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Global{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-					&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$c"}}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
 					&expr.Variable{
 						VarName: &expr.FunctionCall{
 							Function: &name.Name{

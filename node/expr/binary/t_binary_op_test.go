@@ -34,8 +34,8 @@ func TestBitwiseAnd(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -55,8 +55,8 @@ func TestBitwiseOr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -76,8 +76,8 @@ func TestBitwiseXor(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseXor{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -97,8 +97,8 @@ func TestBooleanAnd(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BooleanAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -118,8 +118,8 @@ func TestBooleanOr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BooleanOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -139,8 +139,8 @@ func TestCoalesce(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Coalesce{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -157,8 +157,8 @@ func TestConcat(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Concat{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -178,8 +178,8 @@ func TestDiv(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Div{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -199,8 +199,8 @@ func TestEqual(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Equal{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -220,8 +220,8 @@ func TestGreaterOrEqual(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.GreaterOrEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -241,8 +241,8 @@ func TestGreater(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Greater{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -262,8 +262,8 @@ func TestIdentical(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Identical{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -283,8 +283,8 @@ func TestLogicalAnd(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -304,8 +304,8 @@ func TestLogicalOr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -325,8 +325,8 @@ func TestLogicalXor(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalXor{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -346,8 +346,8 @@ func TestMinus(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Minus{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -367,8 +367,8 @@ func TestMod(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Mod{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -388,8 +388,8 @@ func TestMul(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Mul{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -409,8 +409,8 @@ func TestNotEqual(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.NotEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -430,8 +430,8 @@ func TestNotIdentical(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.NotIdentical{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -451,8 +451,8 @@ func TestPlus(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Plus{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -472,8 +472,8 @@ func TestPow(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Pow{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -493,8 +493,8 @@ func TestShiftLeft(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.ShiftLeft{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -514,8 +514,8 @@ func TestShiftRight(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.ShiftRight{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -535,8 +535,8 @@ func TestSmallerOrEqual(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.SmallerOrEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -556,8 +556,8 @@ func TestSmaller(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Smaller{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -577,8 +577,8 @@ func TestSpaceship(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Spaceship{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},

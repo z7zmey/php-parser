@@ -18,7 +18,7 @@ func TestVariable(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			},
 		},
 	}
@@ -36,7 +36,7 @@ func TestVariableVariable(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
+				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			},
 		},
 	}

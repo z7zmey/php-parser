@@ -22,7 +22,7 @@ func TestSimpleVar(t *testing.T) {
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
 					},
 				},
 			},
@@ -46,7 +46,7 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.PropertyFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 							Property: &node.Identifier{Value: "bar"},
 						},
 						&scalar.EncapsedStringPart{Value: "()"},
@@ -122,7 +122,7 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.MethodCall{
-							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 							Method:    &node.Identifier{Value: "bar"},
 							Arguments: []node.Node{},
 						},

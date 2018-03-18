@@ -36,8 +36,8 @@ func TestAssignRef(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -57,7 +57,7 @@ func TestAssignRefNew(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.AssignRef{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -84,7 +84,7 @@ func TestAssignRefArgs(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.AssignRef{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
 							Parts: []node.Node{
@@ -95,7 +95,7 @@ func TestAssignRefArgs(t *testing.T) {
 							&node.Argument{
 								Variadic:    false,
 								IsReference: false,
-								Expr:        &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Expr:        &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 							},
 						},
 					},
@@ -118,8 +118,8 @@ func TestAssign(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -139,8 +139,8 @@ func TestBitwiseAnd(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.BitwiseAnd{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -160,8 +160,8 @@ func TestBitwiseOr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.BitwiseOr{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -181,8 +181,8 @@ func TestBitwiseXor(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.BitwiseXor{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -202,8 +202,8 @@ func TestConcat(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Concat{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -223,8 +223,8 @@ func TestDiv(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Div{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -244,8 +244,8 @@ func TestMinus(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Minus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -265,8 +265,8 @@ func TestMod(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Mod{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -286,8 +286,8 @@ func TestMul(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Mul{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -307,8 +307,8 @@ func TestPlus(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Plus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -328,8 +328,8 @@ func TestPow(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Pow{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -349,8 +349,8 @@ func TestShiftLeft(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.ShiftLeft{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -370,8 +370,8 @@ func TestShiftRight(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.ShiftRight{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},

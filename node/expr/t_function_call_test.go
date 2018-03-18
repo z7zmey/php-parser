@@ -104,13 +104,13 @@ func TestFunctionCallVar(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Arguments: []node.Node{
 						&node.Argument{
 							Variadic:    false,
 							IsReference: false,
 							Expr: &expr.Yield{
-								Value: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},

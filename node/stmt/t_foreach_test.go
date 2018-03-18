@@ -18,8 +18,8 @@ func TestForeach(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -39,7 +39,7 @@ func TestForeachExpr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.ShortArray{Items: []node.Node{}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -58,8 +58,8 @@ func TestAltForeach(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.AltForeach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -78,9 +78,9 @@ func TestForeachWithKey(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -100,8 +100,8 @@ func TestForeachExprWithKey(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.ShortArray{Items: []node.Node{}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -121,9 +121,9 @@ func TestForeachWithRef(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				ByRef:    true,
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -143,13 +143,13 @@ func TestForeachWithList(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				ByRef: false,
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:   &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
+				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.List{
 					Items: []node.Node{
 						&expr.ArrayItem{
 							ByRef: false,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 						},
 					},
 				},

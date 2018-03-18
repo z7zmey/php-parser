@@ -104,7 +104,7 @@ func TestStaticCallVar(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					Arguments: []node.Node{},
 				},
 			},
@@ -125,8 +125,8 @@ func TestStaticCallVarVar(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.StaticCall{
-					Class:     &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Class:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					Arguments: []node.Node{},
 				},
 			},

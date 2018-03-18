@@ -20,7 +20,7 @@ func TestStaticVar(t *testing.T) {
 			&stmt.Static{
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 				},
 			},
@@ -42,10 +42,10 @@ func TestStaticVars(t *testing.T) {
 			&stmt.Static{
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Expr:     &scalar.Lnumber{Value: "1"},
 					},
 				},
@@ -68,11 +68,11 @@ func TestStaticVars2(t *testing.T) {
 			&stmt.Static{
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						Expr:     &scalar.Lnumber{Value: "1"},
 					},
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 			},

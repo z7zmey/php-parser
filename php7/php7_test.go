@@ -410,14 +410,14 @@ CAD;
 			ByRef:        false,
 			Variadic:     false,
 			VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "bar"}}}},
-			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 			DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
 		},
 		&node.Parameter{
 			ByRef:        true,
 			Variadic:     true,
 			VariableType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "baz"}}},
-			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$baz"}},
+			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "baz"}},
 		},
 	}
 
@@ -427,27 +427,27 @@ CAD;
 				Expr: &expr.FunctionCall{
 					Function: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.MethodCall{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Method:   &node.Identifier{Value: "bar"},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
@@ -456,18 +456,18 @@ CAD;
 					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
 					Call:  &node.Identifier{Value: "bar"},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.StaticCall{
-					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Class: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Call:  &node.Identifier{Value: "bar"},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
@@ -475,8 +475,8 @@ CAD;
 				Expr: &expr.New{
 					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
 					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
@@ -485,8 +485,8 @@ CAD;
 					Class: &stmt.Class{
 						PhpDocComment: "/** anonymous class */",
 						Args: []node.Node{
-							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
 						Stmts: []node.Node{},
 					},
@@ -502,13 +502,13 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
-					Class: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Class: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 						Dim:      &scalar.Lnumber{Value: "1"},
 					},
 				},
@@ -516,15 +516,15 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-						Dim:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+						Dim:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &expr.PropertyFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 						Property: &node.Identifier{Value: "bar"},
 					},
 				},
@@ -532,8 +532,8 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &expr.StaticPropertyFetch{
-						Class:    &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-						Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Class:    &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+						Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					},
 				},
 			},
@@ -541,7 +541,7 @@ CAD;
 				Expr: &expr.New{
 					Class: &expr.StaticPropertyFetch{
 						Class:    &node.Identifier{Value: "static"},
-						Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					},
 				},
 			},
@@ -606,7 +606,7 @@ CAD;
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "\thello "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$world"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "world"}},
 						&scalar.EncapsedStringPart{Value: "\n"},
 					},
 				},
@@ -665,7 +665,7 @@ CAD;
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
 					},
 				},
 			},
@@ -674,7 +674,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 							Dim:      &scalar.Lnumber{Value: "1"},
 						},
 					},
@@ -685,7 +685,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 							Dim: &expr.UnaryMinus{
 								Expr: &scalar.Lnumber{Value: "1"},
 							},
@@ -698,7 +698,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 							Dim:      &scalar.String{Value: "1234567890123456789012345678901234567890"},
 						},
 					},
@@ -709,7 +709,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 							Dim:      &scalar.String{Value: "-1234567890123456789012345678901234567890"},
 						},
 					},
@@ -720,7 +720,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 							Dim:      &scalar.String{Value: "bar"},
 						},
 					},
@@ -731,8 +731,8 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.ArrayDimFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$var"}},
-							Dim:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+							Dim:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 						},
 					},
 				},
@@ -740,9 +740,9 @@ CAD;
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 						&scalar.EncapsedStringPart{Value: " "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					},
 				},
 			},
@@ -751,7 +751,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.PropertyFetch{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 							Property: &node.Identifier{Value: "bar"},
 						},
 						&scalar.EncapsedStringPart{Value: "()"},
@@ -781,7 +781,7 @@ CAD;
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
-						&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}}},
+						&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
 					},
 				},
 			},
@@ -790,7 +790,7 @@ CAD;
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.MethodCall{
-							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 							Method:    &node.Identifier{Value: "bar"},
 							Arguments: []node.Node{},
 						},
@@ -799,36 +799,36 @@ CAD;
 			},
 
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
 			},
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				Else: &stmt.AltElse{
 					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				},
 			},
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
@@ -1112,7 +1112,7 @@ CAD;
 			&stmt.Echo{
 				Exprs: []node.Node{
 					&expr.Variable{
-						VarName: &node.Identifier{Value: "$a"},
+						VarName: &node.Identifier{Value: "a"},
 					},
 					&scalar.Lnumber{Value: "1"},
 				},
@@ -1120,29 +1120,29 @@ CAD;
 			&stmt.Echo{
 				Exprs: []node.Node{
 					&expr.Variable{
-						VarName: &node.Identifier{Value: "$a"},
+						VarName: &node.Identifier{Value: "a"},
 					},
 				},
 			},
 			&stmt.For{
 				Init: []node.Node{
 					&assign.Assign{
-						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Variable:   &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 						Expression: &scalar.Lnumber{Value: "0"},
 					},
 				},
 				Cond: []node.Node{
 					&binary.Smaller{
-						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Left:  &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},
 				},
 				Loop: []node.Node{
 					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 					},
 					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 					},
 				},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -1150,52 +1150,52 @@ CAD;
 			&stmt.AltFor{
 				Cond: []node.Node{
 					&binary.Smaller{
-						Left:  &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Left:  &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 						Right: &scalar.Lnumber{Value: "10"},
 					},
 				},
 				Loop: []node.Node{
 					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 					},
 					&expr.PostInc{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$i"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "i"}},
 					},
 				},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.AltForeach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
 				ByRef:    true,
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
 				ByRef: false,
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:   &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
+				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.List{
 					Items: []node.Node{
 						&expr.ArrayItem{
 							ByRef: false,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 						},
 					},
 				},
@@ -1203,13 +1203,13 @@ CAD;
 			},
 			&stmt.Foreach{
 				ByRef: false,
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-				Key:   &expr.Variable{VarName: &node.Identifier{Value: "$k"}},
+				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.ShortList{
 					Items: []node.Node{
 						&expr.ArrayItem{
 							ByRef: false,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$v"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 						},
 					},
 				},
@@ -1252,8 +1252,8 @@ CAD;
 			},
 			&stmt.Global{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Label{
@@ -1264,36 +1264,36 @@ CAD;
 			},
 			&stmt.HaltCompiler{},
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
 			},
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				Else: &stmt.Else{
 					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				},
 			},
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
@@ -1302,17 +1302,17 @@ CAD;
 				},
 			},
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
 				Else: &stmt.Else{
 					Stmt: &stmt.If{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 						Else: &stmt.Else{
 							Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -1384,7 +1384,7 @@ CAD;
 						Properties: []node.Node{
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
@@ -1401,11 +1401,11 @@ CAD;
 						Properties: []node.Node{
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 							&stmt.Property{
 								PhpDocComment: "",
-								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+								Variable:      &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 								Expr:          &scalar.Lnumber{Value: "1"},
 							},
 						},
@@ -1415,10 +1415,10 @@ CAD;
 			&stmt.Static{
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Expr:     &scalar.Lnumber{Value: "1"},
 					},
 				},
@@ -1487,7 +1487,7 @@ CAD;
 				},
 			},
 			&stmt.Throw{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 			},
 			&stmt.Trait{
 				PhpDocComment: "",
@@ -1685,7 +1685,7 @@ CAD;
 							},
 						},
 						Variable: &expr.Variable{
-							VarName: &node.Identifier{Value: "$e"},
+							VarName: &node.Identifier{Value: "e"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -1708,7 +1708,7 @@ CAD;
 							},
 						},
 						Variable: &expr.Variable{
-							VarName: &node.Identifier{Value: "$e"},
+							VarName: &node.Identifier{Value: "e"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -1726,7 +1726,7 @@ CAD;
 							},
 						},
 						Variable: &expr.Variable{
-							VarName: &node.Identifier{Value: "$e"},
+							VarName: &node.Identifier{Value: "e"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -1739,7 +1739,7 @@ CAD;
 							},
 						},
 						Variable: &expr.Variable{
-							VarName: &node.Identifier{Value: "$e"},
+							VarName: &node.Identifier{Value: "e"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -1757,7 +1757,7 @@ CAD;
 							},
 						},
 						Variable: &expr.Variable{
-							VarName: &node.Identifier{Value: "$e"},
+							VarName: &node.Identifier{Value: "e"},
 						},
 						Stmts: []node.Node{},
 					},
@@ -1768,8 +1768,8 @@ CAD;
 			},
 			&stmt.Unset{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.UseList{
@@ -2045,14 +2045,14 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Dim:      &scalar.Lnumber{Value: "1"},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
 					Variable: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						Dim:      &scalar.Lnumber{Value: "1"},
 					},
 					Dim: &scalar.Lnumber{Value: "2"},
@@ -2083,19 +2083,19 @@ CAD;
 						},
 						&expr.ArrayItem{
 							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.BitwiseNot{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.BooleanNot{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
@@ -2110,18 +2110,18 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{
-					Class:        &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Class:        &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					ConstantName: &node.Identifier{Value: "Bar"},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Clone{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Clone{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
@@ -2142,22 +2142,22 @@ CAD;
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						},
 						&node.Parameter{
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
 							ByRef:    false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						},
 						&expr.ClosureUse{
 							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -2192,17 +2192,17 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Empty{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.ErrorSuppress{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Eval{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
@@ -2210,7 +2210,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Exit{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
@@ -2218,7 +2218,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Die{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
@@ -2253,53 +2253,53 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function:  &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Function:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Arguments: []node.Node{},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PostDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PostInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PreDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PreInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Include{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.IncludeOnce{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Require{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.RequireOnce{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Class: &name.Name{
 						Parts: []node.Node{
 							&name.NamePart{Value: "Foo"},
@@ -2309,7 +2309,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Class: &name.Relative{
 						Parts: []node.Node{
 							&name.NamePart{Value: "Foo"},
@@ -2319,7 +2319,7 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Class: &name.FullyQualified{
 						Parts: []node.Node{
 							&name.NamePart{Value: "Foo"},
@@ -2330,8 +2330,8 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.Isset{
 					Variables: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 			},
@@ -2341,11 +2341,11 @@ CAD;
 						Items: []node.Node{
 							&expr.ArrayItem{
 								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
@@ -2355,12 +2355,12 @@ CAD;
 							&expr.ArrayItem{
 								ByRef: false,
 								Val: &expr.ArrayDimFetch{
-									Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
@@ -2373,19 +2373,19 @@ CAD;
 									Items: []node.Node{
 										&expr.ArrayItem{
 											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.MethodCall{
-					Variable:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Method:    &node.Identifier{Value: "foo"},
 					Arguments: []node.Node{},
 				},
@@ -2425,8 +2425,8 @@ CAD;
 					Class: &stmt.Class{
 						PhpDocComment: "",
 						Args: []node.Node{
-							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
-							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "$b"}}},
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
 						Stmts: []node.Node{},
 					},
@@ -2434,12 +2434,12 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.Print{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PropertyFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Property: &node.Identifier{Value: "foo"},
 				},
 			},
@@ -2447,7 +2447,7 @@ CAD;
 				Expr: &expr.ShellExec{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "cmd "},
-						&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 				},
 			},
@@ -2488,7 +2488,7 @@ CAD;
 						},
 						&expr.ArrayItem{
 							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
 				},
@@ -2499,11 +2499,11 @@ CAD;
 						Items: []node.Node{
 							&expr.ArrayItem{
 								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
@@ -2513,12 +2513,12 @@ CAD;
 							&expr.ArrayItem{
 								ByRef: false,
 								Val: &expr.ArrayDimFetch{
-									Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
@@ -2531,14 +2531,14 @@ CAD;
 									Items: []node.Node{
 										&expr.ArrayItem{
 											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
@@ -2581,13 +2581,13 @@ CAD;
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.StaticPropertyFetch{
-					Class:    &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Class:    &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 				},
 			},
 			&stmt.Expression{
@@ -2597,7 +2597,7 @@ CAD;
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 				},
 			},
 			&stmt.Expression{
@@ -2607,370 +2607,370 @@ CAD;
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					IfTrue: &expr.Ternary{
-						Condition: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
-						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+						Condition: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 					},
-					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Ternary{
 					Condition: &expr.Ternary{
-						Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 					},
-					IfTrue:  &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
-					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+					IfTrue:  &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.UnaryMinus{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.UnaryPlus{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "$a"}}},
+				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{},
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Value: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.YieldFrom{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastArray{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastBool{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastBool{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastDouble{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastDouble{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastInt{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastInt{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastObject{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastString{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &cast.CastUnset{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.BitwiseAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.BitwiseOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.BitwiseXor{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.BooleanAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.BooleanOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Coalesce{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Concat{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Div{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Equal{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.GreaterOrEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Greater{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Identical{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.LogicalAnd{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.LogicalOr{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.LogicalXor{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Minus{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Mod{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Mul{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.NotEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.NotIdentical{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Plus{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Pow{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.ShiftLeft{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.ShiftRight{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.SmallerOrEqual{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Smaller{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &binary.Spaceship{
-					Left:  &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Right: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.AssignRef{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Assign{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.BitwiseAnd{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.BitwiseOr{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.BitwiseXor{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Concat{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Div{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Minus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Mod{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Mul{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Plus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.Pow{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.ShiftLeft{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &assign.ShiftRight{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Class{
@@ -3000,12 +3000,12 @@ CAD;
 					&node.Parameter{
 						ByRef:    true,
 						Variadic: false,
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 					&node.Parameter{
 						ByRef:    false,
 						Variadic: true,
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 				Stmts: []node.Node{
@@ -3034,19 +3034,19 @@ CAD;
 					&node.Parameter{
 						ByRef:        true,
 						Variadic:     false,
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						DefaultValue: &scalar.Lnumber{Value: "1"},
 					},
 					&node.Parameter{
 						ByRef:        false,
 						Variadic:     true,
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						DefaultValue: &scalar.Lnumber{Value: "1"},
 					},
 					&node.Parameter{
 						ByRef:        false,
 						Variadic:     false,
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						DefaultValue: &scalar.Lnumber{Value: "1"},
 					},
 				},
@@ -3059,13 +3059,13 @@ CAD;
 						ByRef:        false,
 						Variadic:     false,
 						VariableType: &node.Identifier{Value: "array"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 					&node.Parameter{
 						ByRef:        false,
 						Variadic:     false,
 						VariableType: &node.Identifier{Value: "callable"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 				Stmts: []node.Node{},
@@ -3118,7 +3118,7 @@ CAD;
 							Items: []node.Node{
 								&expr.ArrayItem{
 									ByRef: false,
-									Val:   &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+									Val:   &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 								},
 							},
 						},
@@ -3155,7 +3155,7 @@ CAD;
 								},
 							},
 						},
-						Dim: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+						Dim: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					},
 					Arguments: []node.Node{},
 				},
@@ -3171,7 +3171,7 @@ CAD;
 			&stmt.Expression{
 				Expr: &expr.StaticCall{
 					Class:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-					Call:      &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Call:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 					Arguments: []node.Node{},
 				},
 			},
@@ -3179,7 +3179,7 @@ CAD;
 				Expr: &expr.StaticCall{
 					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 					Call: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 						Dim:      &scalar.Lnumber{Value: "0"},
 					},
 					Arguments: []node.Node{},
@@ -3187,15 +3187,15 @@ CAD;
 			},
 			&stmt.Expression{
 				Expr: &expr.PropertyFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
-					Property: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+					Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.PropertyFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$foo"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Property: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$bar"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 						Dim:      &scalar.Lnumber{Value: "0"},
 					},
 				},
@@ -3206,7 +3206,7 @@ CAD;
 						&expr.ArrayItem{
 							ByRef: true,
 							Key:   &scalar.Lnumber{Value: "1"},
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+							Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						},
 						&expr.ArrayItem{
 							ByRef: false,
@@ -3215,7 +3215,7 @@ CAD;
 								Items: []node.Node{
 									&expr.ArrayItem{
 										ByRef: false,
-										Val:   &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+										Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 									},
 								},
 							},

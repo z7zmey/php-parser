@@ -35,7 +35,7 @@ func TestArrayDimFetch(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Dim:      &scalar.Lnumber{Value: "1"},
 				},
 			},
@@ -57,7 +57,7 @@ func TestArrayDimFetchNested(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
 					Variable: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 						Dim:      &scalar.Lnumber{Value: "1"},
 					},
 					Dim: &scalar.Lnumber{Value: "2"},

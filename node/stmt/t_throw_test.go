@@ -17,7 +17,7 @@ func TestThrow(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Throw{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 			},
 		},
 	}

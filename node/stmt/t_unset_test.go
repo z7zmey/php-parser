@@ -18,7 +18,7 @@ func TestUnset(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -38,8 +38,8 @@ func TestUnsetVars(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -59,8 +59,8 @@ func TestUnsetTrailingComma(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},

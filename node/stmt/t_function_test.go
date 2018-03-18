@@ -72,18 +72,18 @@ func TestFunctionReturnVar(t *testing.T) {
 						ByRef:        false,
 						Variadic:     false,
 						VariableType: &node.Identifier{Value: "array"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 					&node.Parameter{
 						ByRef:        false,
 						Variadic:     false,
 						VariableType: &node.Identifier{Value: "callable"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 				Stmts: []node.Node{
 					&stmt.Return{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+						Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					},
 				},
 			},

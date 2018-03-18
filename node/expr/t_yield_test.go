@@ -38,7 +38,7 @@ func TestYieldVal(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},
@@ -58,8 +58,8 @@ func TestYieldKeyVal(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+					Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Value: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 		},
@@ -99,7 +99,7 @@ func TestYieldKeyExpr(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Value: &scalar.Lnumber{Value: "1"},
 				},
 			},
@@ -120,7 +120,7 @@ func TestYieldFrom(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.YieldFrom{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 		},

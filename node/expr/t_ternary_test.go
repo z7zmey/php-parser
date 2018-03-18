@@ -19,9 +19,9 @@ func TestTernary(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				},
 			},
 		},
@@ -41,8 +41,8 @@ func TestTernarySimple(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				},
 			},
 		},
@@ -62,13 +62,13 @@ func TestTernaryNestedTrue(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
-					Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+					Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					IfTrue: &expr.Ternary{
-						Condition: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
-						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
+						Condition: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 					},
-					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 				},
 			},
 		},
@@ -89,12 +89,12 @@ func TestTernaryNestedCond(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Ternary{
 					Condition: &expr.Ternary{
-						Condition: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
-						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
-						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 					},
-					IfTrue:  &expr.Variable{VarName: &node.Identifier{Value: "$d"}},
-					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "$e"}},
+					IfTrue:  &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+					IfFalse: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
 				},
 			},
 		},

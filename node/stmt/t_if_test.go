@@ -18,7 +18,7 @@ func TestIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 		},
@@ -38,11 +38,11 @@ func TestElseIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
@@ -63,7 +63,7 @@ func TestElse(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				Else: &stmt.Else{
 					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -85,15 +85,15 @@ func TestElseElseIf(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
@@ -117,17 +117,17 @@ func TestElseIfElseIfElse(t *testing.T) {
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "$a"}},
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$b"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 					},
 				},
 				Else: &stmt.Else{
 					Stmt: &stmt.If{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "$c"}},
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 						Else: &stmt.Else{
 							Stmt: &stmt.StmtList{Stmts: []node.Node{}},

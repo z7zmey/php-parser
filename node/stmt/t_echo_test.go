@@ -22,7 +22,7 @@ func TestSimpleEcho(t *testing.T) {
 			&stmt.Echo{
 				Exprs: []node.Node{
 					&expr.Variable{
-						VarName: &node.Identifier{Value: "$a"},
+						VarName: &node.Identifier{Value: "a"},
 					},
 					&scalar.Lnumber{Value: "1"},
 				},
@@ -45,7 +45,7 @@ func TestEcho(t *testing.T) {
 			&stmt.Echo{
 				Exprs: []node.Node{
 					&expr.Variable{
-						VarName: &node.Identifier{Value: "$a"},
+						VarName: &node.Identifier{Value: "a"},
 					},
 				},
 			},
