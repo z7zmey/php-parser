@@ -3,6 +3,7 @@ package visitor_test
 
 import (
 	"bytes"
+	"os"
 
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/visitor"
@@ -27,6 +28,7 @@ func ExampleDumper() {
 	nodes.Walk(nsResolver)
 
 	dumper := visitor.Dumper{
+		Writer:     os.Stdout,
 		Indent:     "| ",
 		Comments:   comments,
 		Positions:  positions,
