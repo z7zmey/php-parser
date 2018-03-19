@@ -11,6 +11,7 @@ import (
 	"github.com/z7zmey/php-parser/node/expr/cast"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/printer"
 	"github.com/z7zmey/php-parser/walker"
 )
@@ -1810,6 +1811,251 @@ func TestPrintYieldFull(t *testing.T) {
 	})
 
 	expected := `yield $k => $var`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+// stmt
+
+func TestPrintAltElseIf(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltElseIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			},
+		},
+	})
+
+	expected := "elseif ($a) :\n$b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltElse(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltElse{
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			},
+		},
+	})
+
+	expected := "else :\n$b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltFor(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltFor{
+		Init: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+		Cond: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+		},
+		Loop: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+	})
+
+	expected := "for ($a; $b; $c) :\n$d;\nendfor;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltForeach(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltForeach{
+		ByRef:    true,
+		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+	})
+
+	expected := "foreach ($var as $key => &$val) :\n$d;\nendforeach;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltIf(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+		ElseIf: []node.Node{
+			&stmt.AltElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					},
+				},
+			},
+			&stmt.AltElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				Stmt: &stmt.StmtList{},
+			},
+		},
+		Else: &stmt.AltElse{
+			Stmt: &stmt.StmtList{
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				},
+			},
+		},
+	})
+
+	expected := `if ($a) :
+$d;
+elseif ($b) :
+$b;
+elseif ($c) :
+else :
+$b;
+endif;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtAltSwitch(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltSwitch{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Cases: []node.Node{
+			&stmt.Case{
+				Cond: &scalar.String{Value: "a"},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
+			&stmt.Case{
+				Cond: &scalar.String{Value: "b"},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				},
+			},
+		},
+	})
+
+	expected := `switch ($var) :
+case 'a':
+$a;
+case 'b':
+$b;
+endswitch;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltWhile(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltWhile{
+		Cond: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			},
+		},
+	})
+
+	expected := "while ($a) :\n$b;\nendwhile;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtCase(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Case{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := "case $a:\n$a;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+		},
+	})
+
+	expected := "$a;\n$b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintExpression(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}})
+
+	expected := "$a"
 	actual := o.String()
 
 	if expected != actual {

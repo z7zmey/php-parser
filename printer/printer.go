@@ -3,6 +3,8 @@ package printer
 import (
 	"io"
 
+	"github.com/z7zmey/php-parser/node/stmt"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
@@ -24,6 +26,14 @@ func printComaSeparated(o io.Writer, nn []node.Node) {
 		}
 
 		Print(o, n)
+	}
+}
+
+func printNodes(o io.Writer, nn []node.Node) {
+	// TODO: handle indentations
+	for _, n := range nn {
+		Print(o, n)
+		io.WriteString(o, ";\n")
 	}
 }
 
@@ -256,6 +266,29 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printExprYieldFrom
 	case *expr.Yield:
 		return printExprYield
+
+	// stmt
+
+	case *stmt.AltElseIf:
+		return printStmtAltElseIf
+	case *stmt.AltElse:
+		return printStmtAltElse
+	case *stmt.AltFor:
+		return printStmtAltFor
+	case *stmt.AltForeach:
+		return printStmtAltForeach
+	case *stmt.AltIf:
+		return printStmtAltIf
+	case *stmt.AltSwitch:
+		return printStmtAltSwitch
+	case *stmt.AltWhile:
+		return printStmtAltWhile
+	case *stmt.Case:
+		return printStmtCase
+	case *stmt.StmtList:
+		return printStmtStmtList
+	case *stmt.Expression:
+		return printStmtExpression
 	}
 
 	panic("printer is missing for the node")
@@ -1131,4 +1164,132 @@ func printExprYield(o io.Writer, n node.Node) {
 	}
 
 	Print(o, nn.Value)
+}
+
+// smtm
+
+func printStmtAltElseIf(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltElseIf)
+
+	io.WriteString(o, "elseif (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ") :\n")
+
+	Print(o, nn.Stmt)
+}
+
+func printStmtAltElse(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltElse)
+
+	io.WriteString(o, "else :\n")
+
+	Print(o, nn.Stmt)
+}
+
+func printStmtAltFor(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltFor)
+
+	io.WriteString(o, "for (")
+	printComaSeparated(o, nn.Init)
+	io.WriteString(o, "; ")
+	printComaSeparated(o, nn.Cond)
+	io.WriteString(o, "; ")
+	printComaSeparated(o, nn.Loop)
+	io.WriteString(o, ") :\n")
+
+	Print(o, nn.Stmt)
+
+	io.WriteString(o, "endfor;\n")
+}
+
+func printStmtAltForeach(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltForeach)
+
+	io.WriteString(o, "foreach (")
+	Print(o, nn.Expr)
+	io.WriteString(o, " as ")
+
+	if nn.Key != nil {
+		Print(o, nn.Key)
+		io.WriteString(o, " => ")
+	}
+
+	if nn.ByRef {
+		io.WriteString(o, "&")
+	}
+
+	Print(o, nn.Variable)
+
+	io.WriteString(o, ") :\n")
+
+	Print(o, nn.Stmt)
+
+	io.WriteString(o, "endforeach;\n")
+}
+
+func printStmtAltIf(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltIf)
+
+	io.WriteString(o, "if (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ") :\n")
+
+	Print(o, nn.Stmt)
+
+	for _, elseif := range nn.ElseIf {
+		Print(o, elseif)
+	}
+
+	if nn.Else != nil {
+		Print(o, nn.Else)
+	}
+
+	io.WriteString(o, "endif;\n")
+}
+
+func printStmtAltSwitch(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltSwitch)
+
+	io.WriteString(o, "switch (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ") :\n")
+
+	for _, c := range nn.Cases {
+		Print(o, c)
+	}
+
+	io.WriteString(o, "endswitch;\n")
+}
+
+func printStmtAltWhile(o io.Writer, n node.Node) {
+	nn := n.(*stmt.AltWhile)
+
+	io.WriteString(o, "while (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ") :\n")
+
+	Print(o, nn.Stmt)
+
+	io.WriteString(o, "endwhile;\n")
+}
+
+func printStmtCase(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Case)
+
+	io.WriteString(o, "case ")
+	Print(o, nn.Cond)
+	io.WriteString(o, ":\n")
+	printNodes(o, nn.Stmts)
+}
+
+func printStmtStmtList(o io.Writer, n node.Node) {
+	nn := n.(*stmt.StmtList)
+
+	printNodes(o, nn.Stmts)
+}
+
+func printStmtExpression(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Expression)
+
+	Print(o, nn.Expr)
 }
