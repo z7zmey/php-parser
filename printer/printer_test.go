@@ -2087,31 +2087,6 @@ $a;
 	}
 }
 
-func TestPrintStmtClassConstList(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	printer.Print(o, &stmt.ClassConstList{
-		Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "a"},
-			},
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "BAR"},
-				Expr:         &scalar.String{Value: "b"},
-			},
-		},
-	})
-
-	expected := "public const FOO = 'a', BAR = 'b';\n"
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrintStmtClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2228,6 +2203,31 @@ public const FOO = 'bar';
 	}
 }
 
+func TestPrintStmtClassConstList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ClassConstList{
+		Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "a"},
+			},
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "BAR"},
+				Expr:         &scalar.String{Value: "b"},
+			},
+		},
+	})
+
+	expected := "public const FOO = 'a', BAR = 'b';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2237,6 +2237,21 @@ func TestPrintStmtConstant(t *testing.T) {
 	})
 
 	expected := "FOO = 'BAR'"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtContinue(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Continue{
+		Expr: &scalar.Lnumber{Value: "1"},
+	})
+
+	expected := "continue 1;\n"
 	actual := o.String()
 
 	if expected != actual {
