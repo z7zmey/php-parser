@@ -2149,6 +2149,85 @@ $a;
 	}
 }
 
+func TestPrintStmtClass(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Class{
+		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+		ClassName: &node.Identifier{Value: "Foo"},
+		Extends:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		Implements: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+		},
+		Stmts: []node.Node{
+			&stmt.ClassConstList{
+				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "bar"},
+					},
+				},
+			},
+		},
+	})
+
+	expected := `abstract class Foo extends Bar implements Baz, Quuz
+{
+public const FOO = 'bar';
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtAnonymousClass(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Class{
+		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+		Args: []node.Node{
+			&node.Argument{
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			},
+			&node.Argument{
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+		Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		Implements: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+		},
+		Stmts: []node.Node{
+			&stmt.ClassConstList{
+				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "bar"},
+					},
+				},
+			},
+		},
+	})
+
+	expected := `abstract class($a, $b) extends Bar implements Baz, Quuz
+{
+public const FOO = 'bar';
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 

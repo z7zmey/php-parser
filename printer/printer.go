@@ -294,6 +294,8 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtClassConstList
 	case *stmt.ClassMethod:
 		return printStmtClassMethod
+	case *stmt.Class:
+		return printStmtClass
 
 	case *stmt.Constant:
 		return printStmtConstant
@@ -1359,6 +1361,41 @@ func printStmtClassMethod(o io.Writer, n node.Node) {
 	if nn.ReturnType != nil {
 		io.WriteString(o, ": ")
 		Print(o, nn.ReturnType)
+	}
+
+	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n") // TODO: handle indentation
+}
+
+func printStmtClass(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Class)
+
+	if nn.Modifiers != nil {
+		joinPrint(" ", o, nn.Modifiers)
+		io.WriteString(o, " ")
+	}
+	io.WriteString(o, "class")
+
+	if nn.ClassName != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.ClassName)
+	}
+
+	if nn.Args != nil {
+		io.WriteString(o, "(")
+		joinPrint(", ", o, nn.Args)
+		io.WriteString(o, ")")
+	}
+
+	if nn.Extends != nil {
+		io.WriteString(o, " extends ")
+		Print(o, nn.Extends)
+	}
+
+	if nn.Implements != nil {
+		io.WriteString(o, " implements ")
+		joinPrint(", ", o, nn.Implements)
 	}
 
 	io.WriteString(o, "\n{\n") // TODO: handle indentation
