@@ -1864,13 +1864,13 @@ func TestPrintAltFor(t *testing.T) {
 
 	printer.Print(o, &stmt.AltFor{
 		Init: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		Cond: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 		Loop: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
 		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
@@ -1998,7 +1998,7 @@ func TestPrintAltWhile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	printer.Print(o, &stmt.AltWhile{
-		Cond: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
@@ -2007,6 +2007,21 @@ func TestPrintAltWhile(t *testing.T) {
 	})
 
 	expected := "while ($a) :\n$b;\nendwhile;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtBreak(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Break{
+		Expr: &scalar.Lnumber{Value: "1"},
+	})
+
+	expected := "break 1;\n"
 	actual := o.String()
 
 	if expected != actual {
@@ -2025,6 +2040,72 @@ func TestPrintStmtCase(t *testing.T) {
 	})
 
 	expected := "case $a:\n$a;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtCatch(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Catch{
+		Types: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+			&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := `catch (Exception | \RuntimeException $e) {
+$a;
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtClassConstList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ClassConstList{
+		Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "a"},
+			},
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "BAR"},
+				Expr:         &scalar.String{Value: "b"},
+			},
+		},
+	})
+
+	expected := "public const FOO = 'a', BAR = 'b';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtConstant(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Constant{
+		ConstantName: &node.Identifier{Value: "FOO"},
+		Expr:         &scalar.String{Value: "BAR"},
+	})
+
+	expected := "FOO = 'BAR'"
 	actual := o.String()
 
 	if expected != actual {
@@ -2055,7 +2136,7 @@ func TestPrintExpression(t *testing.T) {
 
 	printer.Print(o, &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}})
 
-	expected := "$a"
+	expected := "$a;\n"
 	actual := o.String()
 
 	if expected != actual {

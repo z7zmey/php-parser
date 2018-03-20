@@ -19,10 +19,10 @@ func Print(o io.Writer, n node.Node) {
 	fn(o, n)
 }
 
-func printComaSeparated(o io.Writer, nn []node.Node) {
+func joinPrint(glue string, o io.Writer, nn []node.Node) {
 	for k, n := range nn {
 		if k > 0 {
-			io.WriteString(o, ", ")
+			io.WriteString(o, glue)
 		}
 
 		Print(o, n)
@@ -33,7 +33,6 @@ func printNodes(o io.Writer, nn []node.Node) {
 	// TODO: handle indentations
 	for _, n := range nn {
 		Print(o, n)
-		io.WriteString(o, ";\n")
 	}
 }
 
@@ -283,8 +282,16 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtAltSwitch
 	case *stmt.AltWhile:
 		return printStmtAltWhile
+	case *stmt.Break:
+		return printStmtBreak
 	case *stmt.Case:
 		return printStmtCase
+	case *stmt.Catch:
+		return printStmtCatch
+	case *stmt.ClassConstList:
+		return printStmtClassConstList
+	case *stmt.Constant:
+		return printStmtConstant
 	case *stmt.StmtList:
 		return printStmtStmtList
 	case *stmt.Expression:
@@ -822,7 +829,7 @@ func printExprArray(o io.Writer, n node.Node) {
 	nn := n.(*expr.Array)
 
 	io.WriteString(o, "array(")
-	printComaSeparated(o, nn.Items)
+	joinPrint(", ", o, nn.Items)
 	io.WriteString(o, ")")
 }
 
@@ -877,12 +884,12 @@ func printExprClosure(o io.Writer, n node.Node) {
 	}
 
 	io.WriteString(o, "(")
-	printComaSeparated(o, nn.Params)
+	joinPrint(", ", o, nn.Params)
 	io.WriteString(o, ")")
 
 	if nn.Uses != nil {
 		io.WriteString(o, " use (")
-		printComaSeparated(o, nn.Uses)
+		joinPrint(", ", o, nn.Uses)
 		io.WriteString(o, ")")
 	}
 
@@ -942,7 +949,7 @@ func printExprFunctionCall(o io.Writer, n node.Node) {
 
 	Print(o, nn.Function)
 	io.WriteString(o, "(")
-	printComaSeparated(o, nn.Arguments)
+	joinPrint(", ", o, nn.Arguments)
 	io.WriteString(o, ")")
 }
 
@@ -972,7 +979,7 @@ func printExprIsset(o io.Writer, n node.Node) {
 	nn := n.(*expr.Isset)
 
 	io.WriteString(o, "isset(")
-	printComaSeparated(o, nn.Variables)
+	joinPrint(", ", o, nn.Variables)
 	io.WriteString(o, ")")
 }
 
@@ -980,7 +987,7 @@ func printExprList(o io.Writer, n node.Node) {
 	nn := n.(*expr.List)
 
 	io.WriteString(o, "list(")
-	printComaSeparated(o, nn.Items)
+	joinPrint(", ", o, nn.Items)
 	io.WriteString(o, ")")
 }
 
@@ -991,7 +998,7 @@ func printExprMethodCall(o io.Writer, n node.Node) {
 	io.WriteString(o, "->")
 	Print(o, nn.Method)
 	io.WriteString(o, "(")
-	printComaSeparated(o, nn.Arguments)
+	joinPrint(", ", o, nn.Arguments)
 	io.WriteString(o, ")")
 }
 
@@ -1003,7 +1010,7 @@ func printExprNew(o io.Writer, n node.Node) {
 
 	if nn.Arguments != nil {
 		io.WriteString(o, "(")
-		printComaSeparated(o, nn.Arguments)
+		joinPrint(", ", o, nn.Arguments)
 		io.WriteString(o, ")")
 	}
 }
@@ -1080,7 +1087,7 @@ func printExprShortArray(o io.Writer, n node.Node) {
 	nn := n.(*expr.ShortArray)
 
 	io.WriteString(o, "[")
-	printComaSeparated(o, nn.Items)
+	joinPrint(", ", o, nn.Items)
 	io.WriteString(o, "]")
 }
 
@@ -1088,7 +1095,7 @@ func printExprShortList(o io.Writer, n node.Node) {
 	nn := n.(*expr.ShortList)
 
 	io.WriteString(o, "[")
-	printComaSeparated(o, nn.Items)
+	joinPrint(", ", o, nn.Items)
 	io.WriteString(o, "]")
 }
 
@@ -1099,7 +1106,7 @@ func printExprStaticCall(o io.Writer, n node.Node) {
 	io.WriteString(o, "::")
 	Print(o, nn.Call)
 	io.WriteString(o, "(")
-	printComaSeparated(o, nn.Arguments)
+	joinPrint(", ", o, nn.Arguments)
 	io.WriteString(o, ")")
 }
 
@@ -1190,11 +1197,11 @@ func printStmtAltFor(o io.Writer, n node.Node) {
 	nn := n.(*stmt.AltFor)
 
 	io.WriteString(o, "for (")
-	printComaSeparated(o, nn.Init)
+	joinPrint(", ", o, nn.Init)
 	io.WriteString(o, "; ")
-	printComaSeparated(o, nn.Cond)
+	joinPrint(", ", o, nn.Cond)
 	io.WriteString(o, "; ")
-	printComaSeparated(o, nn.Loop)
+	joinPrint(", ", o, nn.Loop)
 	io.WriteString(o, ") :\n")
 
 	Print(o, nn.Stmt)
@@ -1273,6 +1280,18 @@ func printStmtAltWhile(o io.Writer, n node.Node) {
 	io.WriteString(o, "endwhile;\n")
 }
 
+func printStmtBreak(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Break)
+
+	io.WriteString(o, "break")
+	if nn.Expr != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.Expr)
+	}
+
+	io.WriteString(o, ";\n")
+}
+
 func printStmtCase(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Case)
 
@@ -1280,6 +1299,40 @@ func printStmtCase(o io.Writer, n node.Node) {
 	Print(o, nn.Cond)
 	io.WriteString(o, ":\n")
 	printNodes(o, nn.Stmts)
+}
+
+func printStmtCatch(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Catch)
+
+	io.WriteString(o, "catch (")
+	joinPrint(" | ", o, nn.Types)
+	io.WriteString(o, " ")
+	Print(o, nn.Variable)
+	io.WriteString(o, ") {\n")
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n")
+}
+
+func printStmtClassConstList(o io.Writer, n node.Node) {
+	nn := n.(*stmt.ClassConstList)
+
+	if nn.Modifiers != nil {
+		joinPrint(" ", o, nn.Modifiers)
+		io.WriteString(o, " ")
+	}
+	io.WriteString(o, "const ")
+
+	joinPrint(", ", o, nn.Consts)
+
+	io.WriteString(o, ";\n")
+}
+
+func printStmtConstant(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Constant)
+
+	Print(o, nn.ConstantName)
+	io.WriteString(o, " = ")
+	Print(o, nn.Expr)
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {
@@ -1292,4 +1345,6 @@ func printStmtExpression(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Expression)
 
 	Print(o, nn.Expr)
+
+	io.WriteString(o, ";\n")
 }
