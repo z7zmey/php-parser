@@ -201,6 +201,8 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printExprClosureUse
 	case *expr.Closure:
 		return printExprClosure
+	case *expr.ConstFetch:
+		return printExprConstFetch
 	case *expr.Die:
 		return printExprDie
 	case *expr.Empty:
@@ -290,6 +292,9 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtCatch
 	case *stmt.ClassConstList:
 		return printStmtClassConstList
+	case *stmt.ClassMethod:
+		return printStmtClassMethod
+
 	case *stmt.Constant:
 		return printStmtConstant
 	case *stmt.StmtList:
@@ -905,6 +910,12 @@ func printExprClosure(o io.Writer, n node.Node) {
 	io.WriteString(o, "}")
 }
 
+func printExprConstFetch(o io.Writer, n node.Node) {
+	nn := n.(*expr.ConstFetch)
+
+	Print(o, nn.Constant)
+}
+
 func printExprDie(o io.Writer, n node.Node) {
 	nn := n.(*expr.Die)
 
@@ -1325,6 +1336,34 @@ func printStmtClassConstList(o io.Writer, n node.Node) {
 	joinPrint(", ", o, nn.Consts)
 
 	io.WriteString(o, ";\n")
+}
+
+func printStmtClassMethod(o io.Writer, n node.Node) {
+	nn := n.(*stmt.ClassMethod)
+
+	if nn.Modifiers != nil {
+		joinPrint(" ", o, nn.Modifiers)
+		io.WriteString(o, " ")
+	}
+	io.WriteString(o, "function ")
+
+	if nn.ReturnsRef {
+		io.WriteString(o, "&")
+	}
+
+	Print(o, nn.MethodName)
+	io.WriteString(o, "(")
+	joinPrint(", ", o, nn.Params)
+	io.WriteString(o, ")")
+
+	if nn.ReturnType != nil {
+		io.WriteString(o, ": ")
+		Print(o, nn.ReturnType)
+	}
+
+	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n") // TODO: handle indentation
 }
 
 func printStmtConstant(o io.Writer, n node.Node) {

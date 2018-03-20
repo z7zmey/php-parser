@@ -1232,6 +1232,21 @@ func TestPrintExprClosure(t *testing.T) {
 	}
 }
 
+func TestPrintExprConstFetch(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &expr.ConstFetch{
+		Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}},
+	})
+
+	expected := "null"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintDie(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2090,6 +2105,43 @@ func TestPrintStmtClassConstList(t *testing.T) {
 	})
 
 	expected := "public const FOO = 'a', BAR = 'b';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtClassMethod(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ClassMethod{
+		Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+		ReturnsRef: true,
+		MethodName: &node.Identifier{Value: "foo"},
+		Params: []node.Node{
+			&node.Parameter{
+				ByRef:        true,
+				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
+				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
+			},
+			&node.Parameter{
+				Variadic: true,
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+		ReturnType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "void"}}},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := `public function &foo(?int &$a = null, ...$b): void
+{
+$a;
+}
+`
 	actual := o.String()
 
 	if expected != actual {
