@@ -19,6 +19,21 @@ func Print(o io.Writer, n node.Node) {
 	fn(o, n)
 }
 
+func printStmt(o io.Writer, n node.Node) {
+	switch nn := n.(type) {
+	case *stmt.Nop:
+		Print(o, nn)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, nn.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, nn)
+	}
+}
+
 func joinPrint(glue string, o io.Writer, nn []node.Node) {
 	for k, n := range nn {
 		if k > 0 {
@@ -300,11 +315,15 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtConstant
 	case *stmt.Continue:
 		return printStmtContinue
+	case *stmt.Declare:
+		return printStmtDeclare
 
 	case *stmt.StmtList:
 		return printStmtStmtList
 	case *stmt.Expression:
 		return printStmtExpression
+	case *stmt.Nop:
+		return printStmtNop
 	}
 
 	panic("printer is missing for the node")
@@ -1430,6 +1449,15 @@ func printStmtContinue(o io.Writer, n node.Node) {
 	io.WriteString(o, ";\n")
 }
 
+func printStmtDeclare(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Declare)
+
+	io.WriteString(o, "declare(")
+	joinPrint(", ", o, nn.Consts)
+	io.WriteString(o, ")")
+	printStmt(o, nn.Stmt)
+}
+
 func printStmtStmtList(o io.Writer, n node.Node) {
 	nn := n.(*stmt.StmtList)
 
@@ -1441,5 +1469,9 @@ func printStmtExpression(o io.Writer, n node.Node) {
 
 	Print(o, nn.Expr)
 
+	io.WriteString(o, ";\n")
+}
+
+func printStmtNop(o io.Writer, n node.Node) {
 	io.WriteString(o, ";\n")
 }

@@ -2259,6 +2259,73 @@ func TestPrintStmtContinue(t *testing.T) {
 	}
 }
 
+func TestPrintStmtDeclareStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Declare{
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "bar"},
+			},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := "declare(FOO = 'bar') {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtDeclareExpr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Declare{
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "bar"},
+			},
+		},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	})
+
+	expected := "declare(FOO = 'bar')\n'bar';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtDeclareNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Declare{
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "bar"},
+			},
+		},
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := "declare(FOO = 'bar');\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2283,6 +2350,19 @@ func TestPrintExpression(t *testing.T) {
 	printer.Print(o, &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}})
 
 	expected := "$a;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Nop{})
+
+	expected := ";\n"
 	actual := o.String()
 
 	if expected != actual {
