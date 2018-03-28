@@ -1197,7 +1197,8 @@ func printStmtAltElseIf(o io.Writer, n node.Node) {
 	Print(o, nn.Cond)
 	io.WriteString(o, ") :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 }
 
 func printStmtAltElse(o io.Writer, n node.Node) {
@@ -1205,7 +1206,8 @@ func printStmtAltElse(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "else :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 }
 
 func printStmtAltFor(o io.Writer, n node.Node) {
@@ -1219,7 +1221,8 @@ func printStmtAltFor(o io.Writer, n node.Node) {
 	joinPrint(", ", o, nn.Loop)
 	io.WriteString(o, ") :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 
 	io.WriteString(o, "endfor;\n")
 }
@@ -1244,7 +1247,8 @@ func printStmtAltForeach(o io.Writer, n node.Node) {
 
 	io.WriteString(o, ") :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 
 	io.WriteString(o, "endforeach;\n")
 }
@@ -1256,7 +1260,8 @@ func printStmtAltIf(o io.Writer, n node.Node) {
 	Print(o, nn.Cond)
 	io.WriteString(o, ") :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 
 	for _, elseif := range nn.ElseIf {
 		Print(o, elseif)
@@ -1276,9 +1281,8 @@ func printStmtAltSwitch(o io.Writer, n node.Node) {
 	Print(o, nn.Cond)
 	io.WriteString(o, ") :\n")
 
-	for _, c := range nn.Cases {
-		Print(o, c)
-	}
+	s := nn.Cases
+	printNodes(o, s)
 
 	io.WriteString(o, "endswitch;\n")
 }
@@ -1290,7 +1294,8 @@ func printStmtAltWhile(o io.Writer, n node.Node) {
 	Print(o, nn.Cond)
 	io.WriteString(o, ") :\n")
 
-	Print(o, nn.Stmt)
+	s := nn.Stmt.(*stmt.StmtList)
+	printNodes(o, s.Stmts)
 
 	io.WriteString(o, "endwhile;\n")
 }
