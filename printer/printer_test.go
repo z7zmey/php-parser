@@ -2326,6 +2326,61 @@ func TestPrintStmtDeclareNop(t *testing.T) {
 	}
 }
 
+func TestPrintStmtDefalut(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Default{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := "default:\n$a;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtDo_Expression(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Do{
+		Cond: &scalar.Lnumber{Value: "1"},
+		Stmt: &stmt.Expression{
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+	})
+
+	expected := "do\n$a;\nwhile (1);\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtDo_StmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Do{
+		Cond: &scalar.Lnumber{Value: "1"},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			},
+		},
+	})
+
+	expected := "do {\n$a;\n} while (1);\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 

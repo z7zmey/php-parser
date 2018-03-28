@@ -317,6 +317,10 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtContinue
 	case *stmt.Declare:
 		return printStmtDeclare
+	case *stmt.Default:
+		return printStmtDefault
+	case *stmt.Do:
+		return printStmtDo
 
 	case *stmt.StmtList:
 		return printStmtStmtList
@@ -1456,6 +1460,31 @@ func printStmtDeclare(o io.Writer, n node.Node) {
 	joinPrint(", ", o, nn.Consts)
 	io.WriteString(o, ")")
 	printStmt(o, nn.Stmt)
+}
+
+func printStmtDefault(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Default)
+	io.WriteString(o, "default:\n")
+	printNodes(o, nn.Stmts)
+}
+
+func printStmtDo(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Do)
+	io.WriteString(o, "do")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "} ")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
+
+	io.WriteString(o, "while (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ");\n")
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {
