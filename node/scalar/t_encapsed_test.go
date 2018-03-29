@@ -36,6 +36,30 @@ func TestSimpleVar(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestSimpleVarEndsEcapsed(t *testing.T) {
+	src := `<? "test $var\"";`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
+						&scalar.EncapsedStringPart{Value: "\\\""},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestSimpleVarPropertyFetch(t *testing.T) {
 	src := `<? "test $foo->bar()";`
 
