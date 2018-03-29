@@ -25,11 +25,11 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 }
 
 type lval struct {
-	token token.Token
+	Tkn token.Token
 }
 
 func (lv *lval) Token(t token.Token) {
-	lv.token = t
+	lv.Tkn = t
 }
 
 func TestIdentifier(t *testing.T) {
@@ -537,4 +537,42 @@ CAT;
 	}
 
 	assertEqual(t, expected, actual)
+}
+
+func TestStringTokensAfterVariable(t *testing.T) {
+	src := `<?php "test \"$var\""`
+
+	expected := []int{
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+	}
+
+	expectedTokens := []string{
+		"\"",
+		"test \\\"",
+		"$var",
+		"\\\"",
+		"\"",
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+	actualTokens := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actualTokens = append(actualTokens, lv.Tkn.Value)
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+	assertEqual(t, expectedTokens, actualTokens)
 }

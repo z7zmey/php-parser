@@ -10,7 +10,7 @@ package scanner
 import (
     "fmt"
     "bytes"
-	"github.com/cznic/golex/lex"
+    "github.com/cznic/golex/lex"
     "github.com/z7zmey/php-parser/comment"
 )
 
@@ -448,43 +448,44 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING,HEREDOC,BACKQUOTE>\$                l.ungetChars(1);l.pushState(STRING_VAR)
 <STRING>.|[ \t\n\r]
     F1:for {
-        if c == -1 {
-            break;
-        }
-
-        switch c {
-            case '"' : 
-                lval.Token(l.newToken(l.Token()));
-                return T_ENCAPSED_AND_WHITESPACE
-                break F1;
-            
+        switch l.Prev.Rune {
             case '$':
                 c = l.Next();
-                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-                    l.ungetChars(1)
+                if l.Prev.Rune == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                    l.ungetChars(2)
                     tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-1]));
+                    lval.Token(l.newToken(tb[:len(tb)-2]));
                     return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
-                l.ungetChars(0)
+                l.ungetChars(1)
             
             case '{':
                 c = l.Next();
-                if rune(c) == '$' {
-                    l.ungetChars(1)
+                if l.Prev.Rune == '$' {
+                    l.ungetChars(2)
                     tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-1])); 
+                    lval.Token(l.newToken(tb[:len(tb)-2])); 
                     return T_ENCAPSED_AND_WHITESPACE
                     break F1;
                 } 
-                l.ungetChars(0)
+                l.ungetChars(1)
 
             case '\\':
                 c = l.Next();
         }
 
+        if rune(c) == '"' {
+            lval.Token(l.newToken(l.Token()));
+            return T_ENCAPSED_AND_WHITESPACE
+            break F1;
+        }
+
         c = l.Next()
+
+        if c == -1 {
+            break;
+        }
     }
 
 <BACKQUOTE>.|[ \t\n\r]
