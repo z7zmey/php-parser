@@ -8604,42 +8604,37 @@ yyrule149: // .|[ \t\n\r]
 yyrule150: // .|[ \t\n\r]
 	{
 
-	F2:
+		currentChar := l.Prev
+		tb := []lex.Char{currentChar}
 		for {
+			switch currentChar.Rune {
+			case '$':
+				if c == '{' || isValidFirstVarNameRune(rune(c)) {
+					l.ungetChars(1)
+					lval.Token(l.newToken(tb[:len(tb)-1]))
+					return T_ENCAPSED_AND_WHITESPACE
+				}
+			case '{':
+				if rune(c) == '$' {
+					l.ungetChars(1)
+					lval.Token(l.newToken(tb[:len(tb)-1]))
+					return T_ENCAPSED_AND_WHITESPACE
+				}
+			case '\\':
+				currentChar := l.Last
+				tb = append(tb, currentChar)
+				c = l.Next()
+			}
+			if rune(c) == '`' {
+				lval.Token(l.newToken(l.Token()))
+				return T_ENCAPSED_AND_WHITESPACE
+			}
+			currentChar = l.Last
+			tb = append(tb, currentChar)
+			c = l.Next()
 			if c == -1 {
 				break
 			}
-			switch c {
-			case '`':
-				lval.Token(l.newToken(l.Token()))
-				return T_ENCAPSED_AND_WHITESPACE
-				break F2
-
-			case '$':
-				c = l.Next()
-				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-					l.ungetChars(1)
-					tb := l.Token()
-					lval.Token(l.newToken(tb[:len(tb)-1]))
-					return T_ENCAPSED_AND_WHITESPACE
-					break F2
-				}
-				l.ungetChars(0)
-
-			case '{':
-				c = l.Next()
-				if rune(c) == '$' {
-					l.ungetChars(1)
-					tb := l.Token()
-					lval.Token(l.newToken(tb[:len(tb)-1]))
-					return T_ENCAPSED_AND_WHITESPACE
-					break F2
-				}
-				l.ungetChars(0)
-			case '\\':
-				c = l.Next()
-			}
-			c = l.Next()
 		}
 		goto yystate0
 	}

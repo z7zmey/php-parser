@@ -433,8 +433,6 @@ func TestTeplateStringTokens(t *testing.T) {
 
 		"foo $a{$b}"
 
-		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
-
 		"test $var {$var} ${var_name} {s $ \$a "
 		
 		"{$var}"
@@ -460,20 +458,6 @@ func TestTeplateStringTokens(t *testing.T) {
 		scanner.Rune2Class('}'),
 		scanner.Rune2Class('"'),
 
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
-		scanner.T_STRING_VARNAME,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('`'),
-
 		scanner.Rune2Class('"'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_VARIABLE,
@@ -513,6 +497,91 @@ func TestTeplateStringTokens(t *testing.T) {
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('"'),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+}
+
+func TestBackquoteStringTokens(t *testing.T) {
+	src := `<?php
+		` + "`foo $a`" + `
+		` + "`foo $a{$b}`" + `
+
+		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
+		
+		` + "`{$var}`" + `
+		` + "`$foo/`" + `
+		` + "`$foo/100`" + `
+		` + "`$/$foo`" + `
+		` + "`$0$foo`" + `
+	`
+
+	expected := []int{
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
+		scanner.T_STRING_VARNAME,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
