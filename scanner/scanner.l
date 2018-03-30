@@ -54,7 +54,7 @@ DNUM            ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 HNUM            0x[0-9a-fA-F]+
 BNUM            0b[01]+
 EXPONENT_DNUM   (({LNUM}|{DNUM})[eE][+-]?{LNUM})
-VAR_NAME        [a-zA-Z_\x7f-\xff^0-9/][a-zA-Z0-9_\x7f-\xff]*
+VAR_NAME        [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 NEW_LINE        (\r|\n|\r\n)
 
@@ -449,42 +449,39 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING>\"                                  l.popState(); lval.Token(l.newToken(l.Token())); return Rune2Class(l.Token()[0].Rune)
 <STRING,HEREDOC,BACKQUOTE>\{\$              lval.Token(l.newToken(l.ungetChars(1))); l.pushState(PHP); return T_CURLY_OPEN
 <STRING,HEREDOC,BACKQUOTE>\$\{              l.pushState(STRING_VAR_NAME); lval.Token(l.newToken(l.Token())); return T_DOLLAR_OPEN_CURLY_BRACES
-<STRING,HEREDOC,BACKQUOTE>\$                l.ungetChars(1);l.pushState(STRING_VAR)
+<STRING,HEREDOC,BACKQUOTE>\${VAR_NAME}      l.ungetChars(len(l.Token()));l.pushState(STRING_VAR)
 <STRING>.|[ \t\n\r]
-    F1:for {
-        switch l.Prev.Rune {
+    currentChar := l.Prev
+    tb := []lex.Char{currentChar}
+    for {
+        switch currentChar.Rune {
             case '$':
-                c = l.Next();
-                if l.Prev.Rune == '{' || isValidFirstVarNameRune(l.Prev.Rune) {
-                    l.ungetChars(2)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-2]));
+                if c == '{' || isValidFirstVarNameRune(rune(c)) {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1]));
                     return T_ENCAPSED_AND_WHITESPACE
-                    break F1;
-                } 
-                l.ungetChars(1)
-            
+                }
+
             case '{':
-                c = l.Next();
-                if l.Prev.Rune == '$' {
-                    l.ungetChars(2)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-2])); 
+                if rune(c) == '$' {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1])); 
                     return T_ENCAPSED_AND_WHITESPACE
-                    break F1;
-                } 
-                l.ungetChars(1)
+                }
 
             case '\\':
+                currentChar := l.Last
+                tb = append(tb, currentChar)
                 c = l.Next();
         }
 
         if rune(c) == '"' {
             lval.Token(l.newToken(l.Token()));
             return T_ENCAPSED_AND_WHITESPACE
-            break F1;
         }
 
+        currentChar = l.Last
+        tb = append(tb, currentChar)
         c = l.Next()
 
         if c == -1 {

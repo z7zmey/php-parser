@@ -436,6 +436,12 @@ func TestTeplateStringTokens(t *testing.T) {
 		"test $var {$var} ${var_name} {s $ \$a "
 		
 		"{$var}"
+		
+		"$foo/"
+		"$foo/100;"
+
+		"$/$foo"
+		"$0$foo"
 	`
 
 	expected := []int{
@@ -484,6 +490,26 @@ func TestTeplateStringTokens(t *testing.T) {
 		scanner.T_CURLY_OPEN,
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
 		scanner.Rune2Class('"'),
 	}
 
@@ -613,6 +639,40 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"$var",
 		"\\\"",
 		"\"",
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+	actualTokens := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actualTokens = append(actualTokens, lv.Tkn.Value)
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+	assertEqual(t, expectedTokens, actualTokens)
+}
+
+func TestSlashAfterVariable(t *testing.T) {
+	src := `<?php $foo/3`
+
+	expected := []int{
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('/'),
+		scanner.T_LNUMBER,
+	}
+
+	expectedTokens := []string{
+		"$foo",
+		"/",
+		"3",
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
