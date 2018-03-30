@@ -251,7 +251,48 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\<\<                                       lval.Token(l.newToken(l.Token())); return T_SL
 <PHP>\>\>                                       lval.Token(l.newToken(l.Token())); return T_SR
 <PHP>\?\?                                       lval.Token(l.newToken(l.Token())); return T_COALESCE
-<PHP>(#|[/][/]).*{NEW_LINE}                     lval.Token(l.newToken(l.Token())); l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil))))// return T_COMMENT; // TODO: handle ?>
+<PHP>(#|[/][/])
+    tb := []rune{}
+
+    for _, chr := range(l.Token()) {
+        tb = append(tb, chr.Rune)
+    }
+
+    for {
+        if c == -1 {
+            break
+        }
+
+        tb = append(tb, rune(c))
+
+        switch c {
+            case '\r':
+                c = l.Next()
+                if c == '\n' {
+                    continue
+                }
+                
+            case '\n':
+
+            case '?':
+                c = l.Next()
+                if c == '>' {
+                    l.ungetChars(1)
+                    tb = tb[:len(tb)-1]
+                    break
+                }
+                continue
+
+            default:
+                c = l.Next()
+                continue
+        }
+
+        break;
+    }
+
+    l.addComment(comment.NewPlainComment(string(tb)))
+
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false

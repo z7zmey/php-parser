@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/comment"
+
 	"github.com/z7zmey/php-parser/scanner"
 	"github.com/z7zmey/php-parser/token"
 
@@ -692,4 +694,90 @@ func TestSlashAfterVariable(t *testing.T) {
 
 	assertEqual(t, expected, actual)
 	assertEqual(t, expectedTokens, actualTokens)
+}
+
+func TestCommentEnd(t *testing.T) {
+	src := `<?php //test`
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine(t *testing.T) {
+	src := "<?php //test\n$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test\n"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine1(t *testing.T) {
+	src := "<?php //test\r$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test\r"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine2(t *testing.T) {
+	src := "<?php #test\r\n$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("#test\r\n"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentWithPhpEndTag(t *testing.T) {
+	src := `<?php
+	//test?> test`
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
 }

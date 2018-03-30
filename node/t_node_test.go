@@ -346,3 +346,17 @@ func TestPhp5ParameterNode(t *testing.T) {
 	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
+
+func TestCommentEndFile(t *testing.T) {
+	src := `<? //comment at the end)`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
