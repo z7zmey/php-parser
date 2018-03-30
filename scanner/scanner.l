@@ -30,6 +30,10 @@ const (
 
 var heredocLabel []lex.Char
 
+func isValidFirstVarNameRune(r rune) bool {
+    return r >= 'A' && r <= 'Z' || r == '_' || r >= 'a' && r <= 'z' || r >= '\u007f' && r <= 'ÿ'
+}
+
 func (l *Lexer) Lex(lval Lval) int {
     l.Comments = nil
     c := l.Enter()
@@ -50,7 +54,7 @@ DNUM            ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
 HNUM            0x[0-9a-fA-F]+
 BNUM            0b[01]+
 EXPONENT_DNUM   (({LNUM}|{DNUM})[eE][+-]?{LNUM})
-VAR_NAME        [a-zA-Z_\x7f-\xff^0-9/][a-zA-Z0-9_\x7f-\xff]*
+VAR_NAME        [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 NEW_LINE        (\r|\n|\r\n)
 
@@ -247,7 +251,48 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\<\<                                       lval.Token(l.newToken(l.Token())); return T_SL
 <PHP>\>\>                                       lval.Token(l.newToken(l.Token())); return T_SR
 <PHP>\?\?                                       lval.Token(l.newToken(l.Token())); return T_COALESCE
-<PHP>(#|[/][/]).*{NEW_LINE}                     lval.Token(l.newToken(l.Token())); l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil))))// return T_COMMENT; // TODO: handle ?>
+<PHP>(#|[/][/])
+    tb := []rune{}
+
+    for _, chr := range(l.Token()) {
+        tb = append(tb, chr.Rune)
+    }
+
+    for {
+        if c == -1 {
+            break
+        }
+
+        tb = append(tb, rune(c))
+
+        switch c {
+            case '\r':
+                c = l.Next()
+                if c == '\n' {
+                    continue
+                }
+                
+            case '\n':
+
+            case '?':
+                c = l.Next()
+                if c == '>' {
+                    l.ungetChars(1)
+                    tb = tb[:len(tb)-1]
+                    break
+                }
+                continue
+
+            default:
+                c = l.Next()
+                continue
+        }
+
+        break;
+    }
+
+    l.addComment(comment.NewPlainComment(string(tb)))
+
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false
@@ -445,42 +490,39 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING>\"                                  l.popState(); lval.Token(l.newToken(l.Token())); return Rune2Class(l.Token()[0].Rune)
 <STRING,HEREDOC,BACKQUOTE>\{\$              lval.Token(l.newToken(l.ungetChars(1))); l.pushState(PHP); return T_CURLY_OPEN
 <STRING,HEREDOC,BACKQUOTE>\$\{              l.pushState(STRING_VAR_NAME); lval.Token(l.newToken(l.Token())); return T_DOLLAR_OPEN_CURLY_BRACES
-<STRING,HEREDOC,BACKQUOTE>\$                l.ungetChars(1);l.pushState(STRING_VAR)
+<STRING,HEREDOC,BACKQUOTE>\${VAR_NAME}      l.ungetChars(len(l.Token()));l.pushState(STRING_VAR)
 <STRING>.|[ \t\n\r]
-    F1:for {
-        switch l.Prev.Rune {
+    currentChar := l.Prev
+    tb := []lex.Char{currentChar}
+    for {
+        switch currentChar.Rune {
             case '$':
-                c = l.Next();
-                if l.Prev.Rune == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-                    l.ungetChars(2)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-2]));
+                if c == '{' || isValidFirstVarNameRune(rune(c)) {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1]));
                     return T_ENCAPSED_AND_WHITESPACE
-                    break F1;
-                } 
-                l.ungetChars(1)
-            
+                }
+
             case '{':
-                c = l.Next();
-                if l.Prev.Rune == '$' {
-                    l.ungetChars(2)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-2])); 
+                if rune(c) == '$' {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1])); 
                     return T_ENCAPSED_AND_WHITESPACE
-                    break F1;
-                } 
-                l.ungetChars(1)
+                }
 
             case '\\':
+                currentChar := l.Last
+                tb = append(tb, currentChar)
                 c = l.Next();
         }
 
         if rune(c) == '"' {
             lval.Token(l.newToken(l.Token()));
             return T_ENCAPSED_AND_WHITESPACE
-            break F1;
         }
 
+        currentChar = l.Last
+        tb = append(tb, currentChar)
         c = l.Next()
 
         if c == -1 {
@@ -489,44 +531,43 @@ NEW_LINE        (\r|\n|\r\n)
     }
 
 <BACKQUOTE>.|[ \t\n\r]
-    F2:for {
+    currentChar := l.Prev
+    tb := []lex.Char{currentChar}
+
+    for {
+        switch currentChar.Rune {
+            case '$':
+                if c == '{' || isValidFirstVarNameRune(rune(c)) {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1]));
+                    return T_ENCAPSED_AND_WHITESPACE
+                }
+
+            case '{':
+                if rune(c) == '$' {
+                    l.ungetChars(1)
+                    lval.Token(l.newToken(tb[:len(tb)-1])); 
+                    return T_ENCAPSED_AND_WHITESPACE
+                }
+
+            case '\\':
+                currentChar := l.Last
+                tb = append(tb, currentChar)
+                c = l.Next();
+        }
+
+        if rune(c) == '`' {
+            lval.Token(l.newToken(l.Token()));
+            return T_ENCAPSED_AND_WHITESPACE
+        }
+
+        currentChar = l.Last
+        tb = append(tb, currentChar)
+        c = l.Next()
+
         if c == -1 {
             break;
         }
-
-        switch c {
-            case '`' :
-                lval.Token(l.newToken(l.Token())); 
-                return T_ENCAPSED_AND_WHITESPACE
-                break F2;
-            
-            case '$':
-                c = l.Next();
-                if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
-                    l.ungetChars(1)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-1])); 
-                    return T_ENCAPSED_AND_WHITESPACE
-                    break F2;
-                } 
-                l.ungetChars(0)
-            
-            case '{':
-                c = l.Next();
-                if rune(c) == '$' {
-                    l.ungetChars(1)
-                    tb := l.Token()
-                    lval.Token(l.newToken(tb[:len(tb)-1])); 
-                    return T_ENCAPSED_AND_WHITESPACE
-                    break F2;
-                } 
-                l.ungetChars(0)
-
-            case '\\':
-                c = l.Next();
-        }
-
-        c = l.Next()
     }
 
 <HEREDOC>.|[ \t\n\r]

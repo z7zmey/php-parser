@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/comment"
+
 	"github.com/z7zmey/php-parser/scanner"
 	"github.com/z7zmey/php-parser/token"
 
@@ -427,17 +429,123 @@ func TestTokens(t *testing.T) {
 
 func TestTeplateStringTokens(t *testing.T) {
 	src := `<?php
-		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
+		"foo $a"
+
+		"foo $a{$b}"
 
 		"test $var {$var} ${var_name} {s $ \$a "
 		
 		"{$var}"
+		
+		"$foo/"
+		"$foo/100;"
+
+		"$/$foo"
+		"$0$foo"
+	`
+
+	expected := []int{
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
+		scanner.T_STRING_VARNAME,
+		scanner.Rune2Class('}'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('"'),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+}
+
+func TestBackquoteStringTokens(t *testing.T) {
+	src := `<?php
+		` + "`foo $a`" + `
+		` + "`foo $a{$b}`" + `
+
+		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
+		
+		` + "`{$var}`" + `
+		` + "`$foo/`" + `
+		` + "`$foo/100`" + `
+		` + "`$/$foo`" + `
+		` + "`$0$foo`" + `
 	`
 
 	expected := []int{
 		scanner.Rune2Class('`'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_CURLY_OPEN,
 		scanner.T_VARIABLE,
@@ -449,25 +557,31 @@ func TestTeplateStringTokens(t *testing.T) {
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.Rune2Class('`'),
 
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
 		scanner.T_CURLY_OPEN,
 		scanner.T_VARIABLE,
 		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
-		scanner.T_STRING_VARNAME,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('"'),
+		scanner.Rune2Class('`'),
 
-		scanner.Rune2Class('"'),
-		scanner.T_CURLY_OPEN,
+		scanner.Rune2Class('`'),
 		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
+
+		scanner.Rune2Class('`'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('`'),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -615,4 +729,124 @@ func TestStringTokensAfterVariable(t *testing.T) {
 
 	assertEqual(t, expected, actual)
 	assertEqual(t, expectedTokens, actualTokens)
+}
+
+func TestSlashAfterVariable(t *testing.T) {
+	src := `<?php $foo/3`
+
+	expected := []int{
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('/'),
+		scanner.T_LNUMBER,
+	}
+
+	expectedTokens := []string{
+		"$foo",
+		"/",
+		"3",
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+	actualTokens := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actualTokens = append(actualTokens, lv.Tkn.Value)
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+	assertEqual(t, expectedTokens, actualTokens)
+}
+
+func TestCommentEnd(t *testing.T) {
+	src := `<?php //test`
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine(t *testing.T) {
+	src := "<?php //test\n$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test\n"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine1(t *testing.T) {
+	src := "<?php //test\r$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test\r"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentNewLine2(t *testing.T) {
+	src := "<?php #test\r\n$a"
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("#test\r\n"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
+func TestCommentWithPhpEndTag(t *testing.T) {
+	src := `<?php
+	//test?> test`
+
+	expected := []comment.Comment{
+		comment.NewPlainComment("//test"),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
 }
