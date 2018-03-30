@@ -427,6 +427,10 @@ func TestTokens(t *testing.T) {
 
 func TestTeplateStringTokens(t *testing.T) {
 	src := `<?php
+		"foo $a"
+
+		"foo $a{$b}"
+
 		` + "`test $var {$var} ${var_name} {s $ \\$a `" + `
 
 		"test $var {$var} ${var_name} {s $ \$a "
@@ -435,6 +439,19 @@ func TestTeplateStringTokens(t *testing.T) {
 	`
 
 	expected := []int{
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('"'),
+
+		scanner.Rune2Class('"'),
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_CURLY_OPEN,
+		scanner.T_VARIABLE,
+		scanner.Rune2Class('}'),
+		scanner.Rune2Class('"'),
+
 		scanner.Rune2Class('`'),
 		scanner.T_ENCAPSED_AND_WHITESPACE,
 		scanner.T_VARIABLE,

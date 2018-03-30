@@ -36,6 +36,29 @@ func TestSimpleVar(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestSimpleVarOneChar(t *testing.T) {
+	src := `<? "test $a";`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "test "},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
 func TestSimpleVarEndsEcapsed(t *testing.T) {
 	src := `<? "test $var\"";`
 
@@ -47,6 +70,30 @@ func TestSimpleVarEndsEcapsed(t *testing.T) {
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
 						&scalar.EncapsedStringPart{Value: "\\\""},
+					},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+
+	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestStringVarCurveOpen(t *testing.T) {
+	src := `<? "=$a{$b}";`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.Encapsed{
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "="},
+						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 			},

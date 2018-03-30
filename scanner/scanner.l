@@ -30,6 +30,10 @@ const (
 
 var heredocLabel []lex.Char
 
+func isValidFirstVarNameRune(r rune) bool {
+    return r >= 'A' && r <= 'Z' || r == '_' || r >= 'a' && r <= 'z' || r >= '\u007f' && r <= 'ÿ'
+}
+
 func (l *Lexer) Lex(lval Lval) int {
     l.Comments = nil
     c := l.Enter()
@@ -451,7 +455,7 @@ NEW_LINE        (\r|\n|\r\n)
         switch l.Prev.Rune {
             case '$':
                 c = l.Next();
-                if l.Prev.Rune == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+                if l.Prev.Rune == '{' || isValidFirstVarNameRune(l.Prev.Rune) {
                     l.ungetChars(2)
                     tb := l.Token()
                     lval.Token(l.newToken(tb[:len(tb)-2]));
