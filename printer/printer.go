@@ -312,11 +312,13 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtElseif
 	case *stmt.Else:
 		return printStmtElse
+	case *stmt.Expression:
+		return printStmtExpression
+	case *stmt.Finally:
+		return printStmtFinally
 
 	case *stmt.StmtList:
 		return printStmtStmtList
-	case *stmt.Expression:
-		return printStmtExpression
 	case *stmt.Nop:
 		return printStmtNop
 	}
@@ -1537,18 +1539,26 @@ func printStmtElse(o io.Writer, n node.Node) {
 	}
 }
 
-func printStmtStmtList(o io.Writer, n node.Node) {
-	nn := n.(*stmt.StmtList)
-
-	printNodes(o, nn.Stmts)
-}
-
 func printStmtExpression(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Expression)
 
 	Print(o, nn.Expr)
 
 	io.WriteString(o, ";\n")
+}
+
+func printStmtFinally(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Finally)
+
+	io.WriteString(o, "finally {\n")
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n")
+}
+
+func printStmtStmtList(o io.Writer, n node.Node) {
+	nn := n.(*stmt.StmtList)
+
+	printNodes(o, nn.Stmts)
 }
 
 func printStmtNop(o io.Writer, n node.Node) {
