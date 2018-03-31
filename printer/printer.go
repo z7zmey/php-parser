@@ -306,6 +306,12 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtDefault
 	case *stmt.Do:
 		return printStmtDo
+	case *stmt.Echo:
+		return printStmtEcho
+	case *stmt.ElseIf:
+		return printStmtElseif
+	case *stmt.Else:
+		return printStmtElse
 
 	case *stmt.StmtList:
 		return printStmtStmtList
@@ -1482,6 +1488,53 @@ func printStmtDo(o io.Writer, n node.Node) {
 	io.WriteString(o, "while (")
 	Print(o, nn.Cond)
 	io.WriteString(o, ");\n")
+}
+
+func printStmtEcho(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Echo)
+	io.WriteString(o, "echo ")
+	joinPrint(", ", o, nn.Exprs)
+	io.WriteString(o, ";\n")
+}
+
+func printStmtElseif(o io.Writer, n node.Node) {
+	nn := n.(*stmt.ElseIf)
+
+	io.WriteString(o, "elseif (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ")")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
+}
+
+func printStmtElse(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Else)
+
+	io.WriteString(o, "else")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {

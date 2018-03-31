@@ -2381,6 +2381,125 @@ func TestPrintStmtDo_StmtList(t *testing.T) {
 	}
 }
 
+func TestPrintStmtEcho(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Echo{
+		Exprs: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+	})
+
+	expected := "echo $a, $b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseIfStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ElseIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := "elseif ($a) {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseIfExpr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ElseIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	})
+
+	expected := "elseif ($a)\n'bar';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseIfNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.ElseIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := "elseif ($a);\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Else{
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := "else {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseExpr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Else{
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	})
+
+	expected := "else\n'bar';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtElseNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Else{
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := "else;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
