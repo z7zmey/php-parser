@@ -19,21 +19,6 @@ func Print(o io.Writer, n node.Node) {
 	fn(o, n)
 }
 
-func printStmt(o io.Writer, n node.Node) {
-	switch nn := n.(type) {
-	case *stmt.Nop:
-		Print(o, nn)
-		break
-	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, nn.Stmts)
-		io.WriteString(o, "}\n")
-	default:
-		io.WriteString(o, "\n")
-		Print(o, nn)
-	}
-}
-
 func joinPrint(glue string, o io.Writer, nn []node.Node) {
 	for k, n := range nn {
 		if k > 0 {
@@ -1459,7 +1444,19 @@ func printStmtDeclare(o io.Writer, n node.Node) {
 	io.WriteString(o, "declare(")
 	joinPrint(", ", o, nn.Consts)
 	io.WriteString(o, ")")
-	printStmt(o, nn.Stmt)
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
 }
 
 func printStmtDefault(o io.Writer, n node.Node) {
