@@ -2530,6 +2530,169 @@ func TestPrintStmtFinally(t *testing.T) {
 	}
 }
 
+func TestPrintStmtForStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.For{
+		Init: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		Cond: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "d"}},
+		},
+		Loop: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "e"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "f"}},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := "for ($a, $b; $c, $d; $e, $f) {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtForExpr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.For{
+		Init: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+		Cond: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		Loop: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+		},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	})
+
+	expected := "for ($a; $b; $c)\n'bar';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtForNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.For{
+		Init: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+		Cond: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		Loop: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+		},
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := "for ($a; $b; $c);\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtForeachStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Foreach{
+		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := "foreach ($a as $b) {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtForeachExpr(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Foreach{
+		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+		Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	})
+
+	expected := "foreach ($a as $k => $v)\n'bar';\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtForeachNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Foreach{
+		ByRef:    true,
+		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+		Stmt:     &stmt.Nop{},
+	})
+
+	expected := "foreach ($a as $k => &$v);\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+func TestPrintStmtFunction(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Function{
+		ReturnsRef:   true,
+		FunctionName: &node.Identifier{Value: "foo"},
+		Params: []node.Node{
+			&node.Parameter{
+				ByRef:    true,
+				Variadic: false,
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			},
+		},
+		ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Stmts: []node.Node{
+			&stmt.Nop{},
+		},
+	})
+
+	expected := "function &foo(&$var): \\Foo {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 

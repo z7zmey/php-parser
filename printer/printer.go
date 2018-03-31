@@ -316,6 +316,12 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtExpression
 	case *stmt.Finally:
 		return printStmtFinally
+	case *stmt.For:
+		return printStmtFor
+	case *stmt.Foreach:
+		return printStmtForeach
+	case *stmt.Function:
+		return printStmtFunction
 
 	case *stmt.StmtList:
 		return printStmtStmtList
@@ -1551,6 +1557,88 @@ func printStmtFinally(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Finally)
 
 	io.WriteString(o, "finally {\n")
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n")
+}
+
+func printStmtFor(o io.Writer, n node.Node) {
+	nn := n.(*stmt.For)
+
+	io.WriteString(o, "for (")
+	joinPrint(", ", o, nn.Init)
+	io.WriteString(o, "; ")
+	joinPrint(", ", o, nn.Cond)
+	io.WriteString(o, "; ")
+	joinPrint(", ", o, nn.Loop)
+	io.WriteString(o, ")")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
+}
+
+func printStmtForeach(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Foreach)
+
+	io.WriteString(o, "foreach (")
+	Print(o, nn.Expr)
+	io.WriteString(o, " as ")
+
+	if nn.Key != nil {
+		Print(o, nn.Key)
+		io.WriteString(o, " => ")
+	}
+
+	if nn.ByRef {
+		io.WriteString(o, "&")
+	}
+	Print(o, nn.Variable)
+	io.WriteString(o, ")")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
+}
+
+func printStmtFunction(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Function)
+
+	io.WriteString(o, "function ")
+
+	if nn.ReturnsRef {
+		io.WriteString(o, "&")
+	}
+
+	Print(o, nn.FunctionName)
+
+	io.WriteString(o, "(")
+	joinPrint(", ", o, nn.Params)
+	io.WriteString(o, ")")
+
+	if nn.ReturnType != nil {
+		io.WriteString(o, ": ")
+		Print(o, nn.ReturnType)
+	}
+
+	io.WriteString(o, " {\n")
 	printNodes(o, nn.Stmts)
 	io.WriteString(o, "}\n")
 }
