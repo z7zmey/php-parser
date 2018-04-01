@@ -693,6 +693,38 @@ CAT;
 	assertEqual(t, expected, actual)
 }
 
+func TestInlineHtmlNopTokens(t *testing.T) {
+	src := `<?php
+		$a; ?> test <?php
+		$a ?> test
+	`
+
+	expected := []int{
+		scanner.T_VARIABLE,
+		scanner.Rune2Class(';'),
+		scanner.T_INLINE_HTML,
+
+		scanner.T_VARIABLE,
+		scanner.Rune2Class(';'),
+		scanner.T_INLINE_HTML,
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+}
+
 func TestStringTokensAfterVariable(t *testing.T) {
 	src := `<?php "test \"$var\""`
 

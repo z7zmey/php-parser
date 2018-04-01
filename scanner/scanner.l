@@ -93,6 +93,7 @@ NEW_LINE        (\r|\n|\r\n)
 <INITIAL>\<\?=                                  l.begin(PHP);lval.Token(l.newToken(l.Token())); return T_ECHO;
 
 <PHP>[ \t\n\r]+                                 lval.Token(l.newToken(l.Token()));// return T_WHITESPACE
+<PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.begin(INITIAL);lval.Token(l.newToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.Token(l.newToken(l.Token())); return Rune2Class(';');
 
 <PHP>{DNUM}|{EXPONENT_DNUM}                     lval.Token(l.newToken(l.Token())); return T_DNUMBER
