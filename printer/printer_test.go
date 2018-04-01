@@ -2959,24 +2959,6 @@ $a;
 	}
 }
 
-func TestPrintStmtList(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	printer.Print(o, &stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-		},
-	})
-
-	expected := "$a;\n$b;\n"
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrintNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -3040,6 +3022,97 @@ func TestPrintReturn(t *testing.T) {
 	})
 
 	expected := "return 1;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStaticVar(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.StaticVar{
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expr:     &scalar.Lnumber{Value: "1"},
+	})
+
+	expected := "$a = 1"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStatic(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Static{
+		Vars: []node.Node{
+			&stmt.StaticVar{
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			},
+			&stmt.StaticVar{
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+	})
+
+	expected := "static $a, $b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+		},
+	})
+
+	expected := "$a;\n$b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtSwitch(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Switch{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Cases: []node.Node{
+			&stmt.Case{
+				Cond: &scalar.String{Value: "a"},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
+			&stmt.Case{
+				Cond: &scalar.String{Value: "b"},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				},
+			},
+		},
+	})
+
+	expected := `switch ($var) {
+case 'a':
+$a;
+case 'b':
+$b;
+}
+`
 	actual := o.String()
 
 	if expected != actual {

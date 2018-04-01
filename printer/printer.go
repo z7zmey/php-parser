@@ -348,9 +348,15 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtProperty
 	case *stmt.Return:
 		return printStmtReturn
-
+	case *stmt.StaticVar:
+		return printStmtStaticVar
+	case *stmt.Static:
+		return printStmtStatic
 	case *stmt.StmtList:
 		return printStmtStmtList
+	case *stmt.Switch:
+		return printStmtSwitch
+
 	case *stmt.Use:
 		return printStmtUse
 	}
@@ -1816,10 +1822,40 @@ func printStmtReturn(o io.Writer, n node.Node) {
 	io.WriteString(o, ";\n")
 }
 
+func printStmtStaticVar(o io.Writer, n node.Node) {
+	nn := n.(*stmt.StaticVar)
+	Print(o, nn.Variable)
+
+	if nn.Expr != nil {
+		io.WriteString(o, " = ")
+		Print(o, nn.Expr)
+	}
+}
+
+func printStmtStatic(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Static)
+
+	io.WriteString(o, "static ")
+	joinPrint(", ", o, nn.Vars)
+	io.WriteString(o, ";\n")
+}
+
 func printStmtStmtList(o io.Writer, n node.Node) {
 	nn := n.(*stmt.StmtList)
 
 	printNodes(o, nn.Stmts)
+}
+
+func printStmtSwitch(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Switch)
+
+	io.WriteString(o, "switch (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ")")
+
+	io.WriteString(o, " {\n")
+	printNodes(o, nn.Cases)
+	io.WriteString(o, "}\n")
 }
 
 func printStmtUse(o io.Writer, n node.Node) {
