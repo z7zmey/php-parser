@@ -322,11 +322,21 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtForeach
 	case *stmt.Function:
 		return printStmtFunction
+	case *stmt.Global:
+		return printStmtGlobal
+	case *stmt.Goto:
+		return printStmtGoto
+	case *stmt.GroupUse:
+		return printStmtGroupUse
+	case *stmt.HaltCompiler:
+		return printStmtHaltCompiler
 
 	case *stmt.StmtList:
 		return printStmtStmtList
 	case *stmt.Nop:
 		return printStmtNop
+	case *stmt.Use:
+		return printStmtUse
 	}
 
 	panic("printer is missing for the node")
@@ -1643,6 +1653,42 @@ func printStmtFunction(o io.Writer, n node.Node) {
 	io.WriteString(o, "}\n")
 }
 
+func printStmtGlobal(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Global)
+
+	io.WriteString(o, "global ")
+	joinPrint(", ", o, nn.Vars)
+	io.WriteString(o, ";\n")
+}
+
+func printStmtGoto(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Goto)
+
+	io.WriteString(o, "goto ")
+	Print(o, nn.Label)
+	io.WriteString(o, ";\n")
+}
+
+func printStmtGroupUse(o io.Writer, n node.Node) {
+	nn := n.(*stmt.GroupUse)
+
+	io.WriteString(o, "use ")
+
+	if nn.UseType != nil {
+		Print(o, nn.UseType)
+		io.WriteString(o, " ")
+	}
+
+	Print(o, nn.Prefix)
+	io.WriteString(o, "\\{")
+	joinPrint(", ", o, nn.UseList)
+	io.WriteString(o, "};\n")
+}
+
+func printStmtHaltCompiler(o io.Writer, n node.Node) {
+	io.WriteString(o, "__halt_compiler();\n")
+}
+
 func printStmtStmtList(o io.Writer, n node.Node) {
 	nn := n.(*stmt.StmtList)
 
@@ -1651,4 +1697,20 @@ func printStmtStmtList(o io.Writer, n node.Node) {
 
 func printStmtNop(o io.Writer, n node.Node) {
 	io.WriteString(o, ";\n")
+}
+
+func printStmtUse(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Use)
+
+	if nn.UseType != nil {
+		Print(o, nn.UseType)
+		io.WriteString(o, " ")
+	}
+
+	Print(o, nn.Use)
+
+	if nn.Alias != nil {
+		io.WriteString(o, " as ")
+		Print(o, nn.Alias)
+	}
 }

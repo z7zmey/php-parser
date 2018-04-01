@@ -2666,6 +2666,7 @@ func TestPrintStmtForeachNop(t *testing.T) {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
+
 func TestPrintStmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2686,6 +2687,77 @@ func TestPrintStmtFunction(t *testing.T) {
 	})
 
 	expected := "function &foo(&$var): \\Foo {\n;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtGlobal(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Global{
+		Vars: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+	})
+
+	expected := "global $a, $b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtGoto(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Goto{
+		Label: &node.Identifier{Value: "FOO"},
+	})
+
+	expected := "goto FOO;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtGroupUse(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.GroupUse{
+		UseType: &node.Identifier{Value: "function"},
+		Prefix:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		UseList: []node.Node{
+			&stmt.Use{
+				Use:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				Alias: &node.Identifier{Value: "Baz"},
+			},
+			&stmt.Use{
+				Use: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+			},
+		},
+	})
+
+	expected := "use function Foo\\{Bar as Baz, Quuz};\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintHaltCompiler(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.HaltCompiler{})
+
+	expected := "__halt_compiler();\n"
 	actual := o.String()
 
 	if expected != actual {
@@ -2717,6 +2789,23 @@ func TestPrintNop(t *testing.T) {
 	printer.Print(o, &stmt.Nop{})
 
 	expected := ";\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintUse(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Use{
+		UseType: &node.Identifier{Value: "function"},
+		Use:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Alias:   &node.Identifier{Value: "Bar"},
+	})
+
+	expected := "function Foo as Bar"
 	actual := o.String()
 
 	if expected != actual {
