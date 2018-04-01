@@ -2990,6 +2990,63 @@ func TestPrintNop(t *testing.T) {
 	}
 }
 
+func TestPrintPropertyList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.PropertyList{
+		Modifiers: []node.Node{
+			&node.Identifier{Value: "public"},
+			&node.Identifier{Value: "static"},
+		},
+		Properties: []node.Node{
+			&stmt.Property{
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			},
+			&stmt.Property{
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+	})
+
+	expected := "public static $a, $b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintProperty(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Property{
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expr:     &scalar.Lnumber{Value: "1"},
+	})
+
+	expected := "$a = 1"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintReturn(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Return{
+		Expr: &scalar.Lnumber{Value: "1"},
+	})
+
+	expected := "return 1;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 

@@ -340,11 +340,17 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtLabel
 	case *stmt.Namespace:
 		return printStmtNamespace
+	case *stmt.Nop:
+		return printStmtNop
+	case *stmt.PropertyList:
+		return printStmtPropertyList
+	case *stmt.Property:
+		return printStmtProperty
+	case *stmt.Return:
+		return printStmtReturn
 
 	case *stmt.StmtList:
 		return printStmtStmtList
-	case *stmt.Nop:
-		return printStmtNop
 	case *stmt.Use:
 		return printStmtUse
 	}
@@ -1778,14 +1784,42 @@ func printStmtNamespace(o io.Writer, n node.Node) {
 	}
 }
 
+func printStmtNop(o io.Writer, n node.Node) {
+	io.WriteString(o, ";\n")
+}
+
+func printStmtPropertyList(o io.Writer, n node.Node) {
+	nn := n.(*stmt.PropertyList)
+
+	joinPrint(" ", o, nn.Modifiers)
+	io.WriteString(o, " ")
+	joinPrint(", ", o, nn.Properties)
+	io.WriteString(o, ";\n")
+}
+
+func printStmtProperty(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Property)
+
+	Print(o, nn.Variable)
+
+	if nn.Expr != nil {
+		io.WriteString(o, " = ")
+		Print(o, nn.Expr)
+	}
+}
+
+func printStmtReturn(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Return)
+
+	io.WriteString(o, "return ")
+	Print(o, nn.Expr)
+	io.WriteString(o, ";\n")
+}
+
 func printStmtStmtList(o io.Writer, n node.Node) {
 	nn := n.(*stmt.StmtList)
 
 	printNodes(o, nn.Stmts)
-}
-
-func printStmtNop(o io.Writer, n node.Node) {
-	io.WriteString(o, ";\n")
 }
 
 func printStmtUse(o io.Writer, n node.Node) {
