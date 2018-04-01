@@ -334,6 +334,12 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtIf
 	case *stmt.InlineHtml:
 		return printStmtInlineHTML
+	case *stmt.Interface:
+		return printStmtInterface
+	case *stmt.Label:
+		return printStmtLabel
+	case *stmt.Namespace:
+		return printStmtNamespace
 
 	case *stmt.StmtList:
 		return printStmtStmtList
@@ -1728,6 +1734,48 @@ func printStmtInlineHTML(o io.Writer, n node.Node) {
 	io.WriteString(o, "?>")
 	io.WriteString(o, nn.Value)
 	io.WriteString(o, "<?php\n")
+}
+
+func printStmtInterface(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Interface)
+
+	io.WriteString(o, "interface")
+
+	if nn.InterfaceName != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.InterfaceName)
+	}
+
+	if nn.Extends != nil {
+		io.WriteString(o, " extends ")
+		joinPrint(", ", o, nn.Extends)
+	}
+
+	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n") // TODO: handle indentation
+}
+
+func printStmtLabel(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Label)
+
+	Print(o, nn.LabelName)
+	io.WriteString(o, ":\n")
+}
+
+func printStmtNamespace(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Namespace)
+
+	io.WriteString(o, "namespace ")
+	Print(o, nn.NamespaceName)
+
+	if nn.Stmts != nil {
+		io.WriteString(o, " {\n")
+		printNodes(o, nn.Stmts)
+		io.WriteString(o, "}\n")
+	} else {
+		io.WriteString(o, ";\n")
+	}
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {

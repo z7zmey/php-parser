@@ -2870,6 +2870,95 @@ func TestPrintInlineHtml(t *testing.T) {
 	}
 }
 
+func TestPrintInterface(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Interface{
+		InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Extends: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+		},
+		Stmts: []node.Node{
+			&stmt.ClassMethod{
+				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+				MethodName: &node.Identifier{Value: "foo"},
+				Params:     []node.Node{},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
+		},
+	})
+
+	expected := `interface Foo extends Bar, Baz
+{
+public function foo()
+{
+$a;
+}
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintLabel(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Label{
+		LabelName: &node.Identifier{Value: "FOO"},
+	})
+
+	expected := `FOO:
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintNamespace(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Namespace{
+		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	})
+
+	expected := `namespace Foo;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintNamespaceWithStmts(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Namespace{
+		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := `namespace Foo {
+$a;
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
