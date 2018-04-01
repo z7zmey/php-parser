@@ -3120,6 +3120,127 @@ $b;
 	}
 }
 
+func TestPrintStmtThrow(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Throw{
+		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+	})
+
+	expected := "throw $var;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTraitMethodRef(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.TraitMethodRef{
+		Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Method: &node.Identifier{Value: "a"},
+	})
+
+	expected := "Foo::a"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTraitUseAlias(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.TraitUseAlias{
+		Ref: &stmt.TraitMethodRef{
+			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			Method: &node.Identifier{Value: "a"},
+		},
+		Modifier: &node.Identifier{Value: "public"},
+		Alias:    &node.Identifier{Value: "b"},
+	})
+
+	expected := "Foo::a as public b;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTraitUsePrecedence(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.TraitUsePrecedence{
+		Ref: &stmt.TraitMethodRef{
+			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			Method: &node.Identifier{Value: "a"},
+		},
+		Insteadof: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+		},
+	})
+
+	expected := "Foo::a insteadof Bar, Baz;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTraitUse(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.TraitUse{
+		Traits: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		},
+	})
+
+	expected := "use Foo, Bar;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTraitAdaptations(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.TraitUse{
+		Traits: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		},
+		Adaptations: []node.Node{
+			&stmt.TraitUseAlias{
+				Ref: &stmt.TraitMethodRef{
+					Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Method: &node.Identifier{Value: "a"},
+				},
+				Alias: &node.Identifier{Value: "b"},
+			},
+		},
+	})
+
+	expected := `use Foo, Bar {
+Foo::a as b;
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 

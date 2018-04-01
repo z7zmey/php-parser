@@ -356,6 +356,16 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtStmtList
 	case *stmt.Switch:
 		return printStmtSwitch
+	case *stmt.Throw:
+		return printStmtThrow
+	case *stmt.TraitMethodRef:
+		return printStmtTraitMethodRef
+	case *stmt.TraitUseAlias:
+		return printStmtTraitUseAlias
+	case *stmt.TraitUsePrecedence:
+		return printStmtTraitUsePrecedence
+	case *stmt.TraitUse:
+		return printStmtTraitUse
 
 	case *stmt.Use:
 		return printStmtUse
@@ -1856,6 +1866,66 @@ func printStmtSwitch(o io.Writer, n node.Node) {
 	io.WriteString(o, " {\n")
 	printNodes(o, nn.Cases)
 	io.WriteString(o, "}\n")
+}
+
+func printStmtThrow(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Throw)
+
+	io.WriteString(o, "throw ")
+	Print(o, nn.Expr)
+	io.WriteString(o, ";\n")
+}
+
+func printStmtTraitMethodRef(o io.Writer, n node.Node) {
+	nn := n.(*stmt.TraitMethodRef)
+
+	Print(o, nn.Trait)
+	io.WriteString(o, "::")
+	Print(o, nn.Method)
+}
+
+func printStmtTraitUseAlias(o io.Writer, n node.Node) {
+	nn := n.(*stmt.TraitUseAlias)
+
+	Print(o, nn.Ref)
+	io.WriteString(o, " as")
+
+	if nn.Modifier != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.Modifier)
+	}
+
+	if nn.Alias != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.Alias)
+	}
+
+	io.WriteString(o, ";\n")
+}
+
+func printStmtTraitUsePrecedence(o io.Writer, n node.Node) {
+	nn := n.(*stmt.TraitUsePrecedence)
+
+	Print(o, nn.Ref)
+	io.WriteString(o, " insteadof ")
+	joinPrint(", ", o, nn.Insteadof)
+
+	io.WriteString(o, ";\n")
+}
+
+func printStmtTraitUse(o io.Writer, n node.Node) {
+	nn := n.(*stmt.TraitUse)
+
+	io.WriteString(o, "use ")
+	joinPrint(", ", o, nn.Traits)
+
+	if nn.Adaptations != nil {
+		io.WriteString(o, " {\n")
+		printNodes(o, nn.Adaptations)
+		io.WriteString(o, "}\n")
+	} else {
+		io.WriteString(o, ";\n")
+	}
 }
 
 func printStmtUse(o io.Writer, n node.Node) {
