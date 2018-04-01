@@ -2765,6 +2765,111 @@ func TestPrintHaltCompiler(t *testing.T) {
 	}
 }
 
+func TestPrintIfExpression(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.If{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Expression{
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		ElseIf: []node.Node{
+			&stmt.ElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{
+							Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+						},
+					},
+				},
+			},
+			&stmt.ElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Stmt: &stmt.Nop{},
+			},
+		},
+		Else: &stmt.Else{
+			Stmt: &stmt.Expression{
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
+			},
+		},
+	})
+
+	expected := `if ($a)
+$b;
+elseif ($c) {
+$d;
+}
+elseif ($e);
+else
+$f;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintIfStmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.If{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+			},
+		},
+	})
+
+	expected := `if ($a) {
+$b;
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintIfNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.If{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := `if ($a);
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintInlineHtml(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.InlineHtml{
+		Value: "test",
+	})
+
+	expected := `?>test<?php
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 

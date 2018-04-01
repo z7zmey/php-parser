@@ -330,6 +330,10 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtGroupUse
 	case *stmt.HaltCompiler:
 		return printStmtHaltCompiler
+	case *stmt.If:
+		return printStmtIf
+	case *stmt.InlineHtml:
+		return printStmtInlineHTML
 
 	case *stmt.StmtList:
 		return printStmtStmtList
@@ -1687,6 +1691,43 @@ func printStmtGroupUse(o io.Writer, n node.Node) {
 
 func printStmtHaltCompiler(o io.Writer, n node.Node) {
 	io.WriteString(o, "__halt_compiler();\n")
+}
+
+func printStmtIf(o io.Writer, n node.Node) {
+	nn := n.(*stmt.If)
+
+	io.WriteString(o, "if (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ")")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
+	}
+
+	if nn.ElseIf != nil {
+		printNodes(o, nn.ElseIf)
+	}
+
+	if nn.Else != nil {
+		Print(o, nn.Else)
+	}
+}
+
+func printStmtInlineHTML(o io.Writer, n node.Node) {
+	nn := n.(*stmt.InlineHtml)
+
+	io.WriteString(o, "?>")
+	io.WriteString(o, nn.Value)
+	io.WriteString(o, "<?php\n")
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {
