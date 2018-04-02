@@ -366,9 +366,18 @@ func getPrintFuncByNode(n node.Node) func(o io.Writer, n node.Node) {
 		return printStmtTraitUsePrecedence
 	case *stmt.TraitUse:
 		return printStmtTraitUse
-
+	case *stmt.Trait:
+		return printStmtTrait
+	case *stmt.Try:
+		return printStmtTry
+	case *stmt.Unset:
+		return printStmtUnset
+	case *stmt.UseList:
+		return printStmtUseList
 	case *stmt.Use:
 		return printStmtUse
+	case *stmt.While:
+		return printStmtWhile
 	}
 
 	panic("printer is missing for the node")
@@ -1928,6 +1937,50 @@ func printStmtTraitUse(o io.Writer, n node.Node) {
 	}
 }
 
+func printStmtTrait(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Trait)
+
+	io.WriteString(o, "trait ")
+	Print(o, nn.TraitName)
+
+	io.WriteString(o, "\n{\n")
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n")
+}
+
+func printStmtTry(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Try)
+
+	io.WriteString(o, "try {\n")
+	printNodes(o, nn.Stmts)
+	io.WriteString(o, "}\n")
+
+	printNodes(o, nn.Catches)
+	Print(o, nn.Finally)
+}
+
+func printStmtUnset(o io.Writer, n node.Node) {
+	nn := n.(*stmt.Unset)
+
+	io.WriteString(o, "unset(")
+	joinPrint(", ", o, nn.Vars)
+	io.WriteString(o, ");\n")
+}
+
+func printStmtUseList(o io.Writer, n node.Node) {
+	nn := n.(*stmt.UseList)
+
+	io.WriteString(o, "use ")
+
+	if nn.UseType != nil {
+		Print(o, nn.UseType)
+		io.WriteString(o, " ")
+	}
+
+	joinPrint(", ", o, nn.Uses)
+	io.WriteString(o, ";\n")
+}
+
 func printStmtUse(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Use)
 
@@ -1941,5 +1994,26 @@ func printStmtUse(o io.Writer, n node.Node) {
 	if nn.Alias != nil {
 		io.WriteString(o, " as ")
 		Print(o, nn.Alias)
+	}
+}
+
+func printStmtWhile(o io.Writer, n node.Node) {
+	nn := n.(*stmt.While)
+
+	io.WriteString(o, "while (")
+	Print(o, nn.Cond)
+	io.WriteString(o, ")")
+
+	switch s := nn.Stmt.(type) {
+	case *stmt.Nop:
+		Print(o, s)
+		break
+	case *stmt.StmtList:
+		io.WriteString(o, " {\n")
+		printNodes(o, s.Stmts)
+		io.WriteString(o, "}\n")
+	default:
+		io.WriteString(o, "\n")
+		Print(o, s)
 	}
 }

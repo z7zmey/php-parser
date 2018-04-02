@@ -3241,6 +3241,124 @@ Foo::a as b;
 	}
 }
 
+func TestPrintTrait(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Trait{
+		TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Stmts: []node.Node{
+			&stmt.ClassMethod{
+				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+				MethodName: &node.Identifier{Value: "foo"},
+				Params:     []node.Node{},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
+		},
+	})
+
+	expected := `trait Foo
+{
+public function foo()
+{
+$a;
+}
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtTry(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Try{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+		Catches: []node.Node{
+			&stmt.Catch{
+				Types: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+				},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				},
+			},
+		},
+		Finally: &stmt.Finally{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := `try {
+$a;
+}
+catch (Exception | \RuntimeException $e) {
+$b;
+}
+finally {
+;
+}
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtUset(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Unset{
+		Vars: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+	})
+
+	expected := `unset($a, $b);
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtUseList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.UseList{
+		UseType: &node.Identifier{Value: "function"},
+		Uses: []node.Node{
+			&stmt.Use{
+				Use:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+				Alias: &node.Identifier{Value: "Bar"},
+			},
+			&stmt.Use{
+				Use: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			},
+		},
+	})
+
+	expected := "use function Foo as Bar, Baz;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -3251,6 +3369,58 @@ func TestPrintUse(t *testing.T) {
 	})
 
 	expected := "function Foo as Bar"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintWhileStmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.While{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			},
+		},
+	})
+
+	expected := "while ($a) {\n$a;\n}\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintWhileExpression(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.While{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+	})
+
+	expected := "while ($a)\n$a;\n"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintWhileNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.While{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Nop{},
+	})
+
+	expected := "while ($a);\n"
 	actual := o.String()
 
 	if expected != actual {
