@@ -3158,8 +3158,10 @@ func TestPrintStmtList(t *testing.T) {
 		},
 	})
 
-	expected := `$a;
-$b;`
+	expected := `{
+$a;
+$b;
+}`
 	actual := o.String()
 
 	if expected != actual {

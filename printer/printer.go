@@ -1533,9 +1533,8 @@ func printStmtDeclare(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1558,9 +1557,9 @@ func printStmtDo(o io.Writer, n node.Node) {
 
 	switch s := nn.Stmt.(type) {
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n} ")
+		io.WriteString(o, " ")
+		Print(o, s)
+		io.WriteString(o, " ")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1591,9 +1590,8 @@ func printStmtElseif(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1610,9 +1608,8 @@ func printStmtElse(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1651,9 +1648,8 @@ func printStmtFor(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1683,9 +1679,8 @@ func printStmtForeach(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1765,9 +1760,8 @@ func printStmtIf(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1891,7 +1885,9 @@ func printStmtStatic(o io.Writer, n node.Node) {
 func printStmtStmtList(o io.Writer, n node.Node) {
 	nn := n.(*stmt.StmtList)
 
+	io.WriteString(o, "{\n")
 	printNodes(o, nn.Stmts)
+	io.WriteString(o, "\n}")
 }
 
 func printStmtSwitch(o io.Writer, n node.Node) {
@@ -2045,9 +2041,8 @@ func printStmtWhile(o io.Writer, n node.Node) {
 		Print(o, s)
 		break
 	case *stmt.StmtList:
-		io.WriteString(o, " {\n")
-		printNodes(o, s.Stmts)
-		io.WriteString(o, "\n}")
+		io.WriteString(o, " ")
+		Print(o, s)
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
