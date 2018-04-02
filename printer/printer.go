@@ -30,9 +30,12 @@ func joinPrint(glue string, o io.Writer, nn []node.Node) {
 }
 
 func printNodes(o io.Writer, nn []node.Node) {
-	// TODO: handle indentations
-	for _, n := range nn {
+	l := len(nn) - 1
+	for k, n := range nn {
 		Print(o, n)
+		if k < l {
+			io.WriteString(o, "\n")
+		}
 	}
 }
 
@@ -1268,19 +1271,23 @@ func printStmtAltElseIf(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "elseif (")
 	Print(o, nn.Cond)
-	io.WriteString(o, ") :\n")
+	io.WriteString(o, ") :")
 
-	s := nn.Stmt.(*stmt.StmtList)
-	printNodes(o, s.Stmts)
+	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
+		io.WriteString(o, "\n")
+		printNodes(o, s)
+	}
 }
 
 func printStmtAltElse(o io.Writer, n node.Node) {
 	nn := n.(*stmt.AltElse)
 
-	io.WriteString(o, "else :\n")
+	io.WriteString(o, "else :")
 
-	s := nn.Stmt.(*stmt.StmtList)
-	printNodes(o, s.Stmts)
+	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
+		io.WriteString(o, "\n")
+		printNodes(o, s)
+	}
 }
 
 func printStmtAltFor(o io.Writer, n node.Node) {
@@ -1296,8 +1303,9 @@ func printStmtAltFor(o io.Writer, n node.Node) {
 
 	s := nn.Stmt.(*stmt.StmtList)
 	printNodes(o, s.Stmts)
+	io.WriteString(o, "\n")
 
-	io.WriteString(o, "endfor;\n")
+	io.WriteString(o, "endfor;")
 }
 
 func printStmtAltForeach(o io.Writer, n node.Node) {
@@ -1322,8 +1330,9 @@ func printStmtAltForeach(o io.Writer, n node.Node) {
 
 	s := nn.Stmt.(*stmt.StmtList)
 	printNodes(o, s.Stmts)
+	io.WriteString(o, "\n")
 
-	io.WriteString(o, "endforeach;\n")
+	io.WriteString(o, "endforeach;")
 }
 
 func printStmtAltIf(o io.Writer, n node.Node) {
@@ -1337,14 +1346,17 @@ func printStmtAltIf(o io.Writer, n node.Node) {
 	printNodes(o, s.Stmts)
 
 	for _, elseif := range nn.ElseIf {
+		io.WriteString(o, "\n")
 		Print(o, elseif)
 	}
 
 	if nn.Else != nil {
+		io.WriteString(o, "\n")
 		Print(o, nn.Else)
 	}
 
-	io.WriteString(o, "endif;\n")
+	io.WriteString(o, "\n")
+	io.WriteString(o, "endif;")
 }
 
 func printStmtAltSwitch(o io.Writer, n node.Node) {
@@ -1356,8 +1368,9 @@ func printStmtAltSwitch(o io.Writer, n node.Node) {
 
 	s := nn.Cases
 	printNodes(o, s)
+	io.WriteString(o, "\n")
 
-	io.WriteString(o, "endswitch;\n")
+	io.WriteString(o, "endswitch;")
 }
 
 func printStmtAltWhile(o io.Writer, n node.Node) {
@@ -1369,8 +1382,9 @@ func printStmtAltWhile(o io.Writer, n node.Node) {
 
 	s := nn.Stmt.(*stmt.StmtList)
 	printNodes(o, s.Stmts)
+	io.WriteString(o, "\n")
 
-	io.WriteString(o, "endwhile;\n")
+	io.WriteString(o, "endwhile;")
 }
 
 func printStmtBreak(o io.Writer, n node.Node) {
@@ -1382,7 +1396,7 @@ func printStmtBreak(o io.Writer, n node.Node) {
 		Print(o, nn.Expr)
 	}
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtCase(o io.Writer, n node.Node) {
@@ -1390,8 +1404,12 @@ func printStmtCase(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "case ")
 	Print(o, nn.Cond)
-	io.WriteString(o, ":\n")
-	printNodes(o, nn.Stmts)
+	io.WriteString(o, ":")
+
+	if len(nn.Stmts) > 0 {
+		io.WriteString(o, "\n")
+		printNodes(o, nn.Stmts)
+	}
 }
 
 func printStmtCatch(o io.Writer, n node.Node) {
@@ -1403,7 +1421,7 @@ func printStmtCatch(o io.Writer, n node.Node) {
 	Print(o, nn.Variable)
 	io.WriteString(o, ") {\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 }
 
 func printStmtClassMethod(o io.Writer, n node.Node) {
@@ -1429,9 +1447,9 @@ func printStmtClassMethod(o io.Writer, n node.Node) {
 		Print(o, nn.ReturnType)
 	}
 
-	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	io.WriteString(o, "\n{\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n") // TODO: handle indentation
+	io.WriteString(o, "\n}")
 }
 
 func printStmtClass(o io.Writer, n node.Node) {
@@ -1464,9 +1482,9 @@ func printStmtClass(o io.Writer, n node.Node) {
 		joinPrint(", ", o, nn.Implements)
 	}
 
-	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	io.WriteString(o, "\n{\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n") // TODO: handle indentation
+	io.WriteString(o, "\n}")
 }
 
 func printStmtClassConstList(o io.Writer, n node.Node) {
@@ -1480,7 +1498,7 @@ func printStmtClassConstList(o io.Writer, n node.Node) {
 
 	joinPrint(", ", o, nn.Consts)
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtConstant(o io.Writer, n node.Node) {
@@ -1500,7 +1518,7 @@ func printStmtContinue(o io.Writer, n node.Node) {
 		Print(o, nn.Expr)
 	}
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtDeclare(o io.Writer, n node.Node) {
@@ -1517,7 +1535,7 @@ func printStmtDeclare(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1526,8 +1544,12 @@ func printStmtDeclare(o io.Writer, n node.Node) {
 
 func printStmtDefault(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Default)
-	io.WriteString(o, "default:\n")
-	printNodes(o, nn.Stmts)
+	io.WriteString(o, "default:")
+
+	if len(nn.Stmts) > 0 {
+		io.WriteString(o, "\n")
+		printNodes(o, nn.Stmts)
+	}
 }
 
 func printStmtDo(o io.Writer, n node.Node) {
@@ -1538,22 +1560,23 @@ func printStmtDo(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "} ")
+		io.WriteString(o, "\n} ")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
+		io.WriteString(o, "\n")
 	}
 
 	io.WriteString(o, "while (")
 	Print(o, nn.Cond)
-	io.WriteString(o, ");\n")
+	io.WriteString(o, ");")
 }
 
 func printStmtEcho(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Echo)
 	io.WriteString(o, "echo ")
 	joinPrint(", ", o, nn.Exprs)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtElseif(o io.Writer, n node.Node) {
@@ -1570,7 +1593,7 @@ func printStmtElseif(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1589,7 +1612,7 @@ func printStmtElse(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1601,7 +1624,7 @@ func printStmtExpression(o io.Writer, n node.Node) {
 
 	Print(o, nn.Expr)
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtFinally(o io.Writer, n node.Node) {
@@ -1609,7 +1632,7 @@ func printStmtFinally(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "finally {\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 }
 
 func printStmtFor(o io.Writer, n node.Node) {
@@ -1630,7 +1653,7 @@ func printStmtFor(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1662,7 +1685,7 @@ func printStmtForeach(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
@@ -1691,7 +1714,7 @@ func printStmtFunction(o io.Writer, n node.Node) {
 
 	io.WriteString(o, " {\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 }
 
 func printStmtGlobal(o io.Writer, n node.Node) {
@@ -1699,7 +1722,7 @@ func printStmtGlobal(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "global ")
 	joinPrint(", ", o, nn.Vars)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtGoto(o io.Writer, n node.Node) {
@@ -1707,7 +1730,7 @@ func printStmtGoto(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "goto ")
 	Print(o, nn.Label)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtGroupUse(o io.Writer, n node.Node) {
@@ -1723,11 +1746,11 @@ func printStmtGroupUse(o io.Writer, n node.Node) {
 	Print(o, nn.Prefix)
 	io.WriteString(o, "\\{")
 	joinPrint(", ", o, nn.UseList)
-	io.WriteString(o, "};\n")
+	io.WriteString(o, "};")
 }
 
 func printStmtHaltCompiler(o io.Writer, n node.Node) {
-	io.WriteString(o, "__halt_compiler();\n")
+	io.WriteString(o, "__halt_compiler();")
 }
 
 func printStmtIf(o io.Writer, n node.Node) {
@@ -1744,17 +1767,19 @@ func printStmtIf(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)
 	}
 
 	if nn.ElseIf != nil {
+		io.WriteString(o, "\n")
 		printNodes(o, nn.ElseIf)
 	}
 
 	if nn.Else != nil {
+		io.WriteString(o, "\n")
 		Print(o, nn.Else)
 	}
 }
@@ -1764,7 +1789,7 @@ func printStmtInlineHTML(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "?>")
 	io.WriteString(o, nn.Value)
-	io.WriteString(o, "<?php\n")
+	io.WriteString(o, "<?php")
 }
 
 func printStmtInterface(o io.Writer, n node.Node) {
@@ -1782,35 +1807,39 @@ func printStmtInterface(o io.Writer, n node.Node) {
 		joinPrint(", ", o, nn.Extends)
 	}
 
-	io.WriteString(o, "\n{\n") // TODO: handle indentation
+	io.WriteString(o, "\n{\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n") // TODO: handle indentation
+	io.WriteString(o, "\n}")
 }
 
 func printStmtLabel(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Label)
 
 	Print(o, nn.LabelName)
-	io.WriteString(o, ":\n")
+	io.WriteString(o, ":")
 }
 
 func printStmtNamespace(o io.Writer, n node.Node) {
 	nn := n.(*stmt.Namespace)
 
-	io.WriteString(o, "namespace ")
-	Print(o, nn.NamespaceName)
+	io.WriteString(o, "namespace")
+
+	if nn.NamespaceName != nil {
+		io.WriteString(o, " ")
+		Print(o, nn.NamespaceName)
+	}
 
 	if nn.Stmts != nil {
 		io.WriteString(o, " {\n")
 		printNodes(o, nn.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	} else {
-		io.WriteString(o, ";\n")
+		io.WriteString(o, ";")
 	}
 }
 
 func printStmtNop(o io.Writer, n node.Node) {
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtPropertyList(o io.Writer, n node.Node) {
@@ -1819,7 +1848,7 @@ func printStmtPropertyList(o io.Writer, n node.Node) {
 	joinPrint(" ", o, nn.Modifiers)
 	io.WriteString(o, " ")
 	joinPrint(", ", o, nn.Properties)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtProperty(o io.Writer, n node.Node) {
@@ -1838,7 +1867,7 @@ func printStmtReturn(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "return ")
 	Print(o, nn.Expr)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtStaticVar(o io.Writer, n node.Node) {
@@ -1856,7 +1885,7 @@ func printStmtStatic(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "static ")
 	joinPrint(", ", o, nn.Vars)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtStmtList(o io.Writer, n node.Node) {
@@ -1874,7 +1903,7 @@ func printStmtSwitch(o io.Writer, n node.Node) {
 
 	io.WriteString(o, " {\n")
 	printNodes(o, nn.Cases)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 }
 
 func printStmtThrow(o io.Writer, n node.Node) {
@@ -1882,7 +1911,7 @@ func printStmtThrow(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "throw ")
 	Print(o, nn.Expr)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtTraitMethodRef(o io.Writer, n node.Node) {
@@ -1909,7 +1938,7 @@ func printStmtTraitUseAlias(o io.Writer, n node.Node) {
 		Print(o, nn.Alias)
 	}
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtTraitUsePrecedence(o io.Writer, n node.Node) {
@@ -1919,7 +1948,7 @@ func printStmtTraitUsePrecedence(o io.Writer, n node.Node) {
 	io.WriteString(o, " insteadof ")
 	joinPrint(", ", o, nn.Insteadof)
 
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtTraitUse(o io.Writer, n node.Node) {
@@ -1931,9 +1960,9 @@ func printStmtTraitUse(o io.Writer, n node.Node) {
 	if nn.Adaptations != nil {
 		io.WriteString(o, " {\n")
 		printNodes(o, nn.Adaptations)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	} else {
-		io.WriteString(o, ";\n")
+		io.WriteString(o, ";")
 	}
 }
 
@@ -1945,7 +1974,7 @@ func printStmtTrait(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "\n{\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 }
 
 func printStmtTry(o io.Writer, n node.Node) {
@@ -1953,10 +1982,17 @@ func printStmtTry(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "try {\n")
 	printNodes(o, nn.Stmts)
-	io.WriteString(o, "}\n")
+	io.WriteString(o, "\n}")
 
-	printNodes(o, nn.Catches)
-	Print(o, nn.Finally)
+	if nn.Catches != nil {
+		io.WriteString(o, "\n")
+		printNodes(o, nn.Catches)
+	}
+
+	if nn.Finally != nil {
+		io.WriteString(o, "\n")
+		Print(o, nn.Finally)
+	}
 }
 
 func printStmtUnset(o io.Writer, n node.Node) {
@@ -1964,7 +2000,7 @@ func printStmtUnset(o io.Writer, n node.Node) {
 
 	io.WriteString(o, "unset(")
 	joinPrint(", ", o, nn.Vars)
-	io.WriteString(o, ");\n")
+	io.WriteString(o, ");")
 }
 
 func printStmtUseList(o io.Writer, n node.Node) {
@@ -1978,7 +2014,7 @@ func printStmtUseList(o io.Writer, n node.Node) {
 	}
 
 	joinPrint(", ", o, nn.Uses)
-	io.WriteString(o, ";\n")
+	io.WriteString(o, ";")
 }
 
 func printStmtUse(o io.Writer, n node.Node) {
@@ -2011,7 +2047,7 @@ func printStmtWhile(o io.Writer, n node.Node) {
 	case *stmt.StmtList:
 		io.WriteString(o, " {\n")
 		printNodes(o, s.Stmts)
-		io.WriteString(o, "}\n")
+		io.WriteString(o, "\n}")
 	default:
 		io.WriteString(o, "\n")
 		Print(o, s)

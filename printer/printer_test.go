@@ -1847,7 +1847,24 @@ func TestPrintAltElseIf(t *testing.T) {
 		},
 	})
 
-	expected := "elseif ($a) :\n$b;\n"
+	expected := `elseif ($a) :
+$b;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltElseIfEmpty(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltElseIf{
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{},
+	})
+
+	expected := `elseif ($a) :`
 	actual := o.String()
 
 	if expected != actual {
@@ -1866,7 +1883,23 @@ func TestPrintAltElse(t *testing.T) {
 		},
 	})
 
-	expected := "else :\n$b;\n"
+	expected := `else :
+$b;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintAltElseEmpty(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.AltElse{
+		Stmt: &stmt.StmtList{},
+	})
+
+	expected := `else :`
 	actual := o.String()
 
 	if expected != actual {
@@ -1894,7 +1927,9 @@ func TestPrintAltFor(t *testing.T) {
 		},
 	})
 
-	expected := "for ($a; $b; $c) :\n$d;\nendfor;\n"
+	expected := `for ($a; $b; $c) :
+$d;
+endfor;`
 	actual := o.String()
 
 	if expected != actual {
@@ -1917,7 +1952,9 @@ func TestPrintAltForeach(t *testing.T) {
 		},
 	})
 
-	expected := "foreach ($var as $key => &$val) :\n$d;\nendforeach;\n"
+	expected := `foreach ($var as $key => &$val) :
+$d;
+endforeach;`
 	actual := o.String()
 
 	if expected != actual {
@@ -1965,8 +2002,7 @@ $b;
 elseif ($c) :
 else :
 $b;
-endif;
-`
+endif;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2000,8 +2036,7 @@ case 'a':
 $a;
 case 'b':
 $b;
-endswitch;
-`
+endswitch;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2021,7 +2056,9 @@ func TestPrintAltWhile(t *testing.T) {
 		},
 	})
 
-	expected := "while ($a) :\n$b;\nendwhile;\n"
+	expected := `while ($a) :
+$b;
+endwhile;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2036,7 +2073,7 @@ func TestPrintStmtBreak(t *testing.T) {
 		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := "break 1;\n"
+	expected := "break 1;"
 	actual := o.String()
 
 	if expected != actual {
@@ -2054,7 +2091,24 @@ func TestPrintStmtCase(t *testing.T) {
 		},
 	})
 
-	expected := "case $a:\n$a;\n"
+	expected := `case $a:
+$a;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtCaseEmpty(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Case{
+		Cond:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmts: []node.Node{},
+	})
+
+	expected := "case $a:"
 	actual := o.String()
 
 	if expected != actual {
@@ -2078,8 +2132,7 @@ func TestPrintStmtCatch(t *testing.T) {
 
 	expected := `catch (Exception | \RuntimeException $e) {
 $a;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2115,8 +2168,7 @@ func TestPrintStmtClassMethod(t *testing.T) {
 	expected := `public function &foo(?int &$a = null, ...$b): void
 {
 $a;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2151,8 +2203,7 @@ func TestPrintStmtClass(t *testing.T) {
 	expected := `abstract class Foo extends Bar implements Baz, Quuz
 {
 public const FOO = 'bar';
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2194,8 +2245,7 @@ func TestPrintStmtAnonymousClass(t *testing.T) {
 	expected := `abstract class($a, $b) extends Bar implements Baz, Quuz
 {
 public const FOO = 'bar';
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2220,7 +2270,7 @@ func TestPrintStmtClassConstList(t *testing.T) {
 		},
 	})
 
-	expected := "public const FOO = 'a', BAR = 'b';\n"
+	expected := `public const FOO = 'a', BAR = 'b';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2251,7 +2301,7 @@ func TestPrintStmtContinue(t *testing.T) {
 		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := "continue 1;\n"
+	expected := `continue 1;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2276,7 +2326,9 @@ func TestPrintStmtDeclareStmts(t *testing.T) {
 		},
 	})
 
-	expected := "declare(FOO = 'bar') {\n;\n}\n"
+	expected := `declare(FOO = 'bar') {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2297,7 +2349,8 @@ func TestPrintStmtDeclareExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := "declare(FOO = 'bar')\n'bar';\n"
+	expected := `declare(FOO = 'bar')
+'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2318,7 +2371,7 @@ func TestPrintStmtDeclareNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := "declare(FOO = 'bar');\n"
+	expected := `declare(FOO = 'bar');`
 	actual := o.String()
 
 	if expected != actual {
@@ -2335,7 +2388,23 @@ func TestPrintStmtDefalut(t *testing.T) {
 		},
 	})
 
-	expected := "default:\n$a;\n"
+	expected := `default:
+$a;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtDefalutEmpty(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	printer.Print(o, &stmt.Default{
+		Stmts: []node.Node{},
+	})
+
+	expected := `default:`
 	actual := o.String()
 
 	if expected != actual {
@@ -2353,7 +2422,9 @@ func TestPrintStmtDo_Expression(t *testing.T) {
 		},
 	})
 
-	expected := "do\n$a;\nwhile (1);\n"
+	expected := `do
+$a;
+while (1);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2373,7 +2444,9 @@ func TestPrintStmtDo_StmtList(t *testing.T) {
 		},
 	})
 
-	expected := "do {\n$a;\n} while (1);\n"
+	expected := `do {
+$a;
+} while (1);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2391,7 +2464,7 @@ func TestPrintStmtEcho(t *testing.T) {
 		},
 	})
 
-	expected := "echo $a, $b;\n"
+	expected := `echo $a, $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2411,7 +2484,9 @@ func TestPrintStmtElseIfStmts(t *testing.T) {
 		},
 	})
 
-	expected := "elseif ($a) {\n;\n}\n"
+	expected := `elseif ($a) {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2427,7 +2502,8 @@ func TestPrintStmtElseIfExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := "elseif ($a)\n'bar';\n"
+	expected := `elseif ($a)
+'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2443,7 +2519,7 @@ func TestPrintStmtElseIfNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := "elseif ($a);\n"
+	expected := `elseif ($a);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2462,7 +2538,9 @@ func TestPrintStmtElseStmts(t *testing.T) {
 		},
 	})
 
-	expected := "else {\n;\n}\n"
+	expected := `else {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2477,7 +2555,8 @@ func TestPrintStmtElseExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := "else\n'bar';\n"
+	expected := `else
+'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2492,7 +2571,7 @@ func TestPrintStmtElseNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := "else;\n"
+	expected := `else;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2505,7 +2584,7 @@ func TestPrintExpression(t *testing.T) {
 
 	printer.Print(o, &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}})
 
-	expected := "$a;\n"
+	expected := `$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2522,7 +2601,9 @@ func TestPrintStmtFinally(t *testing.T) {
 		},
 	})
 
-	expected := "finally {\n;\n}\n"
+	expected := `finally {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2553,7 +2634,9 @@ func TestPrintStmtForStmts(t *testing.T) {
 		},
 	})
 
-	expected := "for ($a, $b; $c, $d; $e, $f) {\n;\n}\n"
+	expected := `for ($a, $b; $c, $d; $e, $f) {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2577,7 +2660,8 @@ func TestPrintStmtForExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := "for ($a; $b; $c)\n'bar';\n"
+	expected := `for ($a; $b; $c)
+'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2601,7 +2685,7 @@ func TestPrintStmtForNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := "for ($a; $b; $c);\n"
+	expected := `for ($a; $b; $c);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2622,7 +2706,9 @@ func TestPrintStmtForeachStmts(t *testing.T) {
 		},
 	})
 
-	expected := "foreach ($a as $b) {\n;\n}\n"
+	expected := `foreach ($a as $b) {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2640,7 +2726,8 @@ func TestPrintStmtForeachExpr(t *testing.T) {
 		Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := "foreach ($a as $k => $v)\n'bar';\n"
+	expected := `foreach ($a as $k => $v)
+'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2659,7 +2746,7 @@ func TestPrintStmtForeachNop(t *testing.T) {
 		Stmt:     &stmt.Nop{},
 	})
 
-	expected := "foreach ($a as $k => &$v);\n"
+	expected := `foreach ($a as $k => &$v);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2686,7 +2773,9 @@ func TestPrintStmtFunction(t *testing.T) {
 		},
 	})
 
-	expected := "function &foo(&$var): \\Foo {\n;\n}\n"
+	expected := `function &foo(&$var): \Foo {
+;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2704,7 +2793,7 @@ func TestPrintStmtGlobal(t *testing.T) {
 		},
 	})
 
-	expected := "global $a, $b;\n"
+	expected := `global $a, $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2719,7 +2808,7 @@ func TestPrintStmtGoto(t *testing.T) {
 		Label: &node.Identifier{Value: "FOO"},
 	})
 
-	expected := "goto FOO;\n"
+	expected := `goto FOO;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2744,7 +2833,7 @@ func TestPrintStmtGroupUse(t *testing.T) {
 		},
 	})
 
-	expected := "use function Foo\\{Bar as Baz, Quuz};\n"
+	expected := `use function Foo\{Bar as Baz, Quuz};`
 	actual := o.String()
 
 	if expected != actual {
@@ -2757,7 +2846,7 @@ func TestPrintHaltCompiler(t *testing.T) {
 
 	printer.Print(o, &stmt.HaltCompiler{})
 
-	expected := "__halt_compiler();\n"
+	expected := `__halt_compiler();`
 	actual := o.String()
 
 	if expected != actual {
@@ -2803,8 +2892,7 @@ $d;
 }
 elseif ($e);
 else
-$f;
-`
+$f;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2828,8 +2916,7 @@ func TestPrintIfStmtList(t *testing.T) {
 
 	expected := `if ($a) {
 $b;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2845,8 +2932,7 @@ func TestPrintIfNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `if ($a);
-`
+	expected := `if ($a);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2861,8 +2947,7 @@ func TestPrintInlineHtml(t *testing.T) {
 		Value: "test",
 	})
 
-	expected := `?>test<?php
-`
+	expected := `?>test<?php`
 	actual := o.String()
 
 	if expected != actual {
@@ -2897,8 +2982,7 @@ public function foo()
 {
 $a;
 }
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2913,8 +2997,7 @@ func TestPrintLabel(t *testing.T) {
 		LabelName: &node.Identifier{Value: "FOO"},
 	})
 
-	expected := `FOO:
-`
+	expected := `FOO:`
 	actual := o.String()
 
 	if expected != actual {
@@ -2929,8 +3012,7 @@ func TestPrintNamespace(t *testing.T) {
 		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 	})
 
-	expected := `namespace Foo;
-`
+	expected := `namespace Foo;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2950,8 +3032,7 @@ func TestPrintNamespaceWithStmts(t *testing.T) {
 
 	expected := `namespace Foo {
 $a;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2964,7 +3045,7 @@ func TestPrintNop(t *testing.T) {
 
 	printer.Print(o, &stmt.Nop{})
 
-	expected := ";\n"
+	expected := `;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2990,7 +3071,7 @@ func TestPrintPropertyList(t *testing.T) {
 		},
 	})
 
-	expected := "public static $a, $b;\n"
+	expected := `public static $a, $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3006,7 +3087,7 @@ func TestPrintProperty(t *testing.T) {
 		Expr:     &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := "$a = 1"
+	expected := `$a = 1`
 	actual := o.String()
 
 	if expected != actual {
@@ -3021,7 +3102,7 @@ func TestPrintReturn(t *testing.T) {
 		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := "return 1;\n"
+	expected := `return 1;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3037,7 +3118,7 @@ func TestPrintStaticVar(t *testing.T) {
 		Expr:     &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := "$a = 1"
+	expected := `$a = 1`
 	actual := o.String()
 
 	if expected != actual {
@@ -3059,7 +3140,7 @@ func TestPrintStatic(t *testing.T) {
 		},
 	})
 
-	expected := "static $a, $b;\n"
+	expected := `static $a, $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3077,7 +3158,8 @@ func TestPrintStmtList(t *testing.T) {
 		},
 	})
 
-	expected := "$a;\n$b;\n"
+	expected := `$a;
+$b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3111,8 +3193,7 @@ case 'a':
 $a;
 case 'b':
 $b;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3127,7 +3208,7 @@ func TestPrintStmtThrow(t *testing.T) {
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := "throw $var;\n"
+	expected := `throw $var;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3143,7 +3224,7 @@ func TestPrintStmtTraitMethodRef(t *testing.T) {
 		Method: &node.Identifier{Value: "a"},
 	})
 
-	expected := "Foo::a"
+	expected := `Foo::a`
 	actual := o.String()
 
 	if expected != actual {
@@ -3163,7 +3244,7 @@ func TestPrintStmtTraitUseAlias(t *testing.T) {
 		Alias:    &node.Identifier{Value: "b"},
 	})
 
-	expected := "Foo::a as public b;\n"
+	expected := `Foo::a as public b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3185,7 +3266,7 @@ func TestPrintStmtTraitUsePrecedence(t *testing.T) {
 		},
 	})
 
-	expected := "Foo::a insteadof Bar, Baz;\n"
+	expected := `Foo::a insteadof Bar, Baz;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3203,7 +3284,7 @@ func TestPrintStmtTraitUse(t *testing.T) {
 		},
 	})
 
-	expected := "use Foo, Bar;\n"
+	expected := `use Foo, Bar;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3232,8 +3313,7 @@ func TestPrintStmtTraitAdaptations(t *testing.T) {
 
 	expected := `use Foo, Bar {
 Foo::a as b;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3264,8 +3344,7 @@ public function foo()
 {
 $a;
 }
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3307,8 +3386,7 @@ $b;
 }
 finally {
 ;
-}
-`
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3326,8 +3404,7 @@ func TestPrintStmtUset(t *testing.T) {
 		},
 	})
 
-	expected := `unset($a, $b);
-`
+	expected := `unset($a, $b);`
 	actual := o.String()
 
 	if expected != actual {
@@ -3351,7 +3428,7 @@ func TestPrintStmtUseList(t *testing.T) {
 		},
 	})
 
-	expected := "use function Foo as Bar, Baz;\n"
+	expected := `use function Foo as Bar, Baz;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3368,7 +3445,7 @@ func TestPrintUse(t *testing.T) {
 		Alias:   &node.Identifier{Value: "Bar"},
 	})
 
-	expected := "function Foo as Bar"
+	expected := `function Foo as Bar`
 	actual := o.String()
 
 	if expected != actual {
@@ -3388,7 +3465,9 @@ func TestPrintWhileStmtList(t *testing.T) {
 		},
 	})
 
-	expected := "while ($a) {\n$a;\n}\n"
+	expected := `while ($a) {
+$a;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3404,7 +3483,8 @@ func TestPrintWhileExpression(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 	})
 
-	expected := "while ($a)\n$a;\n"
+	expected := `while ($a)
+$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3420,7 +3500,7 @@ func TestPrintWhileNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := "while ($a);\n"
+	expected := `while ($a);`
 	actual := o.String()
 
 	if expected != actual {
