@@ -37,7 +37,7 @@ func TestPrintParameter(t *testing.T) {
 		Variadic:     true,
 		VariableType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Variable:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		DefaultValue: &scalar.String{Value: "default"},
+		DefaultValue: &scalar.String{Value: "'default'"},
 	})
 
 	expected := "\\Foo ...$var = 'default'"
@@ -58,7 +58,7 @@ func TestPrintNullable(t *testing.T) {
 			Variadic:     true,
 			VariableType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-			DefaultValue: &scalar.String{Value: "default"},
+			DefaultValue: &scalar.String{Value: "'default'"},
 		},
 	})
 
@@ -220,10 +220,13 @@ func TestPrintScalarString(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.String{Value: "hello world"})
+	p.Print(&scalar.String{Value: "'hello world'"})
 
-	if o.String() != `'hello world'` {
-		t.Errorf("TestPrintScalarString is failed\n")
+	expected := `'hello world'`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
 
@@ -1106,7 +1109,7 @@ func TestPrintExprArrayItemWithKey(t *testing.T) {
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.ArrayItem{
 		ByRef: false,
-		Key:   &scalar.String{Value: "Hello"},
+		Key:   &scalar.String{Value: "'Hello'"},
 		Val:   &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 	})
 
@@ -1143,7 +1146,7 @@ func TestPrintExprArray(t *testing.T) {
 		Items: []node.Node{
 			&expr.ArrayItem{
 				ByRef: false,
-				Key:   &scalar.String{Value: "Hello"},
+				Key:   &scalar.String{Value: "'Hello'"},
 				Val:   &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 			},
 			&expr.ArrayItem{
@@ -1413,7 +1416,7 @@ func TestPrintInclude(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Include{Expr: &scalar.String{Value: "path"}})
+	p.Print(&expr.Include{Expr: &scalar.String{Value: "'path'"}})
 
 	expected := `include 'path'`
 	actual := o.String()
@@ -1427,7 +1430,7 @@ func TestPrintIncludeOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.IncludeOnce{Expr: &scalar.String{Value: "path"}})
+	p.Print(&expr.IncludeOnce{Expr: &scalar.String{Value: "'path'"}})
 
 	expected := `include_once 'path'`
 	actual := o.String()
@@ -1653,7 +1656,7 @@ func TestPrintRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Require{Expr: &scalar.String{Value: "path"}})
+	p.Print(&expr.Require{Expr: &scalar.String{Value: "'path'"}})
 
 	expected := `require 'path'`
 	actual := o.String()
@@ -1667,7 +1670,7 @@ func TestPrintRequireOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.RequireOnce{Expr: &scalar.String{Value: "path"}})
+	p.Print(&expr.RequireOnce{Expr: &scalar.String{Value: "'path'"}})
 
 	expected := `require_once 'path'`
 	actual := o.String()
@@ -1704,7 +1707,7 @@ func TestPrintExprShortArray(t *testing.T) {
 	p.Print(&expr.ShortArray{
 		Items: []node.Node{
 			&expr.ArrayItem{
-				Key: &scalar.String{Value: "Hello"},
+				Key: &scalar.String{Value: "'Hello'"},
 				Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 			},
 			&expr.ArrayItem{
@@ -1806,7 +1809,7 @@ func TestPrintTernary(t *testing.T) {
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.Ternary{
 		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
 	expected := `$a ?: $b`
@@ -1823,8 +1826,8 @@ func TestPrintTernaryFull(t *testing.T) {
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.Ternary{
 		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+		IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 	})
 
 	expected := `$a ? $b : $c`
@@ -2142,13 +2145,13 @@ func TestPrintStmtAltSwitch(t *testing.T) {
 				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 				Cases: []node.Node{
 					&stmt.Case{
-						Cond: &scalar.String{Value: "a"},
+						Cond: &scalar.String{Value: "'a'"},
 						Stmts: []node.Node{
 							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 						},
 					},
 					&stmt.Case{
-						Cond: &scalar.String{Value: "b"},
+						Cond: &scalar.String{Value: "'b'"},
 						Stmts: []node.Node{
 							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
@@ -2343,7 +2346,7 @@ func TestPrintStmtClass(t *testing.T) {
 						Consts: []node.Node{
 							&stmt.Constant{
 								ConstantName: &node.Identifier{Value: "FOO"},
-								Expr:         &scalar.String{Value: "bar"},
+								Expr:         &scalar.String{Value: "'bar'"},
 							},
 						},
 					},
@@ -2392,7 +2395,7 @@ func TestPrintStmtAnonymousClass(t *testing.T) {
 						Consts: []node.Node{
 							&stmt.Constant{
 								ConstantName: &node.Identifier{Value: "FOO"},
-								Expr:         &scalar.String{Value: "bar"},
+								Expr:         &scalar.String{Value: "'bar'"},
 							},
 						},
 					},
@@ -2423,11 +2426,11 @@ func TestPrintStmtClassConstList(t *testing.T) {
 		Consts: []node.Node{
 			&stmt.Constant{
 				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "a"},
+				Expr:         &scalar.String{Value: "'a'"},
 			},
 			&stmt.Constant{
 				ConstantName: &node.Identifier{Value: "BAR"},
-				Expr:         &scalar.String{Value: "b"},
+				Expr:         &scalar.String{Value: "'b'"},
 			},
 		},
 	})
@@ -2446,7 +2449,7 @@ func TestPrintStmtConstant(t *testing.T) {
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&stmt.Constant{
 		ConstantName: &node.Identifier{Value: "FOO"},
-		Expr:         &scalar.String{Value: "BAR"},
+		Expr:         &scalar.String{Value: "'BAR'"},
 	})
 
 	expected := "FOO = 'BAR'"
@@ -2483,7 +2486,7 @@ func TestPrintStmtDeclareStmts(t *testing.T) {
 				Consts: []node.Node{
 					&stmt.Constant{
 						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "bar"},
+						Expr:         &scalar.String{Value: "'bar'"},
 					},
 				},
 				Stmt: &stmt.StmtList{
@@ -2517,10 +2520,10 @@ func TestPrintStmtDeclareExpr(t *testing.T) {
 				Consts: []node.Node{
 					&stmt.Constant{
 						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "bar"},
+						Expr:         &scalar.String{Value: "'bar'"},
 					},
 				},
-				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 			},
 		},
 	})
@@ -2544,7 +2547,7 @@ func TestPrintStmtDeclareNop(t *testing.T) {
 		Consts: []node.Node{
 			&stmt.Constant{
 				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "bar"},
+				Expr:         &scalar.String{Value: "'bar'"},
 			},
 		},
 		Stmt: &stmt.Nop{},
@@ -2697,7 +2700,7 @@ func TestPrintStmtElseIfExpr(t *testing.T) {
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&stmt.ElseIf{
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
 	expected := `elseif ($a)
@@ -2753,7 +2756,7 @@ func TestPrintStmtElseExpr(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&stmt.Else{
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
 	expected := `else
@@ -2877,7 +2880,7 @@ func TestPrintStmtForExpr(t *testing.T) {
 				Loop: []node.Node{
 					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				},
-				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 			},
 		},
 	})
@@ -2958,7 +2961,7 @@ func TestPrintStmtForeachExpr(t *testing.T) {
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
-				Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+				Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 			},
 		},
 	})
@@ -3505,13 +3508,13 @@ func TestPrintStmtSwitch(t *testing.T) {
 				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 				Cases: []node.Node{
 					&stmt.Case{
-						Cond: &scalar.String{Value: "a"},
+						Cond: &scalar.String{Value: "'a'"},
 						Stmts: []node.Node{
 							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 						},
 					},
 					&stmt.Case{
-						Cond: &scalar.String{Value: "b"},
+						Cond: &scalar.String{Value: "'b'"},
 						Stmts: []node.Node{
 							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},

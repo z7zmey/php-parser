@@ -512,9 +512,7 @@ func (p *Printer) printScalarDNumber(n node.Node) {
 func (p *Printer) printScalarString(n node.Node) {
 	v := n.(*scalar.String).Value
 
-	io.WriteString(p.w, "'")
 	io.WriteString(p.w, v)
-	io.WriteString(p.w, "'")
 }
 
 func (p *Printer) printScalarEncapsedStringPart(n node.Node) {
@@ -1236,14 +1234,14 @@ func (p *Printer) printExprTernary(n node.Node) {
 	p.Print(nn.Condition)
 	io.WriteString(p.w, " ?")
 
-	if nn.IfFalse != nil {
+	if nn.IfTrue != nil {
 		io.WriteString(p.w, " ")
-		p.Print(nn.IfFalse)
+		p.Print(nn.IfTrue)
 		io.WriteString(p.w, " ")
 	}
 
 	io.WriteString(p.w, ": ")
-	p.Print(nn.IfTrue)
+	p.Print(nn.IfFalse)
 }
 
 func (p *Printer) printExprUnaryMinus(n node.Node) {
