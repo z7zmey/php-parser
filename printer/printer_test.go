@@ -1252,34 +1252,40 @@ func TestPrintExprClosure(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Closure{
-		Static:     true,
-		ReturnsRef: true,
-		Params: []node.Node{
-			&node.Parameter{
-				ByRef:    true,
-				Variadic: false,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-			},
-		},
-		Uses: []node.Node{
-			&expr.ClosureUse{
-				ByRef:    true,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			},
-			&expr.ClosureUse{
-				ByRef:    false,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-			},
-		},
-		ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&expr.Closure{
+				Static:     true,
+				ReturnsRef: true,
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:    true,
+						Variadic: false,
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+					},
+				},
+				Uses: []node.Node{
+					&expr.ClosureUse{
+						ByRef:    true,
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					},
+					&expr.ClosureUse{
+						ByRef:    false,
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					},
+				},
+				ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
 		},
 	})
 
-	expected := `static function &(&$var) use (&$a, $b): \Foo {
-$a;
+	expected := `namespace {
+    static function &(&$var) use (&$a, $b): \Foo {
+        $a;
+    }
 }`
 	actual := o.String()
 
@@ -1940,7 +1946,7 @@ func TestPrintAltElseIf(t *testing.T) {
 	})
 
 	expected := `elseif ($a) :
-$b;`
+    $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -1978,7 +1984,7 @@ func TestPrintAltElse(t *testing.T) {
 	})
 
 	expected := `else :
-$b;`
+    $b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2006,26 +2012,32 @@ func TestPrintAltFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.AltFor{
-		Init: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		},
-		Cond: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		},
-		Loop: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.AltFor{
+				Init: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				},
+				Cond: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+				Loop: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `for ($a; $b; $c) :
-$d;
-endfor;`
+	expected := `namespace {
+    for ($a; $b; $c) :
+        $d;
+    endfor;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2037,21 +2049,27 @@ func TestPrintAltForeach(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.AltForeach{
-		ByRef:    true,
-		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.AltForeach{
+				ByRef:    true,
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `foreach ($var as $key => &$val) :
-$d;
-endforeach;`
+	expected := `namespace {
+    foreach ($var as $key => &$val) :
+        $d;
+    endforeach;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2063,44 +2081,50 @@ func TestPrintAltIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.AltIf{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
-			},
-		},
-		ElseIf: []node.Node{
-			&stmt.AltElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.AltIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
 					},
 				},
-			},
-			&stmt.AltElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-				Stmt: &stmt.StmtList{},
-			},
-		},
-		Else: &stmt.AltElse{
-			Stmt: &stmt.StmtList{
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				ElseIf: []node.Node{
+					&stmt.AltElseIf{
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{
+								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+							},
+						},
+					},
+					&stmt.AltElseIf{
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+						Stmt: &stmt.StmtList{},
+					},
+				},
+				Else: &stmt.AltElse{
+					Stmt: &stmt.StmtList{
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `if ($a) :
-$d;
-elseif ($b) :
-$b;
-elseif ($c) :
-else :
-$b;
-endif;`
+	expected := `namespace {
+    if ($a) :
+        $d;
+    elseif ($b) :
+        $b;
+    elseif ($c) :
+    else :
+        $b;
+    endif;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2112,30 +2136,36 @@ func TestPrintStmtAltSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.AltSwitch{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		Cases: []node.Node{
-			&stmt.Case{
-				Cond: &scalar.String{Value: "a"},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				},
-			},
-			&stmt.Case{
-				Cond: &scalar.String{Value: "b"},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.AltSwitch{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Cases: []node.Node{
+					&stmt.Case{
+						Cond: &scalar.String{Value: "a"},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						},
+					},
+					&stmt.Case{
+						Cond: &scalar.String{Value: "b"},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `switch ($var) :
-case 'a':
-$a;
-case 'b':
-$b;
-endswitch;`
+	expected := `namespace {
+    switch ($var) :
+        case 'a':
+            $a;
+        case 'b':
+            $b;
+    endswitch;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2147,18 +2177,24 @@ func TestPrintAltWhile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.AltWhile{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.AltWhile{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `while ($a) :
-$b;
-endwhile;`
+	expected := `namespace {
+    while ($a) :
+        $b;
+    endwhile;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2194,7 +2230,7 @@ func TestPrintStmtCase(t *testing.T) {
 	})
 
 	expected := `case $a:
-$a;`
+    $a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2223,19 +2259,25 @@ func TestPrintStmtCatch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Catch{
-		Types: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-			&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
-		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Catch{
+				Types: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+				},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
 		},
 	})
 
-	expected := `catch (Exception | \RuntimeException $e) {
-$a;
+	expected := `namespace {
+    catch (Exception | \RuntimeException $e) {
+        $a;
+    }
 }`
 	actual := o.String()
 
@@ -2272,7 +2314,7 @@ func TestPrintStmtClassMethod(t *testing.T) {
 
 	expected := `public function &foo(?int &$a = null, ...$b): void
 {
-$a;
+    $a;
 }`
 	actual := o.String()
 
@@ -2285,30 +2327,36 @@ func TestPrintStmtClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Class{
-		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-		ClassName: &node.Identifier{Value: "Foo"},
-		Extends:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-		Implements: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
-		},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.ClassConstList{
-				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "bar"},
+			&stmt.Class{
+				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+				ClassName: &node.Identifier{Value: "Foo"},
+				Extends:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				Implements: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+				},
+				Stmts: []node.Node{
+					&stmt.ClassConstList{
+						Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+						Consts: []node.Node{
+							&stmt.Constant{
+								ConstantName: &node.Identifier{Value: "FOO"},
+								Expr:         &scalar.String{Value: "bar"},
+							},
+						},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `abstract class Foo extends Bar implements Baz, Quuz
-{
-public const FOO = 'bar';
+	expected := `namespace {
+    abstract class Foo extends Bar implements Baz, Quuz
+    {
+        public const FOO = 'bar';
+    }
 }`
 	actual := o.String()
 
@@ -2321,37 +2369,43 @@ func TestPrintStmtAnonymousClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Class{
-		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-		Args: []node.Node{
-			&node.Argument{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			},
-			&node.Argument{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-			},
-		},
-		Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-		Implements: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
-		},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.ClassConstList{
-				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "bar"},
+			&stmt.Class{
+				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+				Args: []node.Node{
+					&node.Argument{
+						Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					},
+					&node.Argument{
+						Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					},
+				},
+				Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				Implements: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+				},
+				Stmts: []node.Node{
+					&stmt.ClassConstList{
+						Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+						Consts: []node.Node{
+							&stmt.Constant{
+								ConstantName: &node.Identifier{Value: "FOO"},
+								Expr:         &scalar.String{Value: "bar"},
+							},
+						},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `abstract class($a, $b) extends Bar implements Baz, Quuz
-{
-public const FOO = 'bar';
+	expected := `namespace {
+    abstract class($a, $b) extends Bar implements Baz, Quuz
+    {
+        public const FOO = 'bar';
+    }
 }`
 	actual := o.String()
 
@@ -2423,22 +2477,28 @@ func TestPrintStmtDeclareStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Declare{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "bar"},
-			},
-		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+	p.Print(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Declare{
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "bar"},
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Nop{},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `declare(FOO = 'bar') {
-;
+	expected := `{
+    declare(FOO = 'bar') {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -2451,18 +2511,24 @@ func TestPrintStmtDeclareExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Declare{
-		Consts: []node.Node{
-			&stmt.Constant{
-				ConstantName: &node.Identifier{Value: "FOO"},
-				Expr:         &scalar.String{Value: "bar"},
+	p.Print(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Declare{
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "bar"},
+					},
+				},
+				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 			},
 		},
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := `declare(FOO = 'bar')
-'bar';`
+	expected := `{
+    declare(FOO = 'bar')
+        'bar';
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2503,7 +2569,7 @@ func TestPrintStmtDefalut(t *testing.T) {
 	})
 
 	expected := `default:
-$a;`
+    $a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2531,16 +2597,22 @@ func TestPrintStmtDo_Expression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Do{
-		Cond: &scalar.Lnumber{Value: "1"},
-		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.Do{
+				Cond: &scalar.Lnumber{Value: "1"},
+				Stmt: &stmt.Expression{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				},
+			},
 		},
 	})
 
-	expected := `do
-$a;
-while (1);`
+	expected := `namespace {
+    do
+        $a;
+    while (1);
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2552,18 +2624,24 @@ func TestPrintStmtDo_StmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Do{
-		Cond: &scalar.Lnumber{Value: "1"},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.Do{
+				Cond: &scalar.Lnumber{Value: "1"},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `do {
-$a;
-} while (1);`
+	expected := `namespace {
+    do {
+        $a;
+    } while (1);
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2604,7 +2682,7 @@ func TestPrintStmtElseIfStmts(t *testing.T) {
 	})
 
 	expected := `elseif ($a) {
-;
+    ;
 }`
 	actual := o.String()
 
@@ -2623,7 +2701,7 @@ func TestPrintStmtElseIfExpr(t *testing.T) {
 	})
 
 	expected := `elseif ($a)
-'bar';`
+    'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2661,7 +2739,7 @@ func TestPrintStmtElseStmts(t *testing.T) {
 	})
 
 	expected := `else {
-;
+    ;
 }`
 	actual := o.String()
 
@@ -2679,7 +2757,7 @@ func TestPrintStmtElseExpr(t *testing.T) {
 	})
 
 	expected := `else
-'bar';`
+    'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2721,14 +2799,20 @@ func TestPrintStmtFinally(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Finally{
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.Nop{},
+			&stmt.Finally{
+				Stmts: []node.Node{
+					&stmt.Nop{},
+				},
+			},
 		},
 	})
 
-	expected := `finally {
-;
+	expected := `namespace {
+    finally {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -2741,28 +2825,34 @@ func TestPrintStmtForStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.For{
-		Init: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		},
-		Cond: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "d"}},
-		},
-		Loop: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "e"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "f"}},
-		},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.For{
+				Init: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+				Cond: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "d"}},
+				},
+				Loop: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "e"}},
+					&expr.Variable{VarName: &node.Identifier{Value: "f"}},
+				},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Nop{},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `for ($a, $b; $c, $d; $e, $f) {
-;
+	expected := `namespace {
+    for ($a, $b; $c, $d; $e, $f) {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -2775,21 +2865,27 @@ func TestPrintStmtForExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.For{
-		Init: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.For{
+				Init: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				},
+				Cond: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+				Loop: []node.Node{
+					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				},
+				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+			},
 		},
-		Cond: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		},
-		Loop: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-		},
-		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
 	})
 
-	expected := `for ($a; $b; $c)
-'bar';`
+	expected := `namespace {
+    for ($a; $b; $c)
+        'bar';
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2826,18 +2922,24 @@ func TestPrintStmtForeachStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Foreach{
-		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.Foreach{
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Nop{},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `foreach ($a as $b) {
-;
+	expected := `namespace {
+    foreach ($a as $b) {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -2850,15 +2952,21 @@ func TestPrintStmtForeachExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Foreach{
-		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
-		Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.Foreach{
+				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+				Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "bar"}},
+			},
+		},
 	})
 
-	expected := `foreach ($a as $k => $v)
-'bar';`
+	expected := `namespace {
+    foreach ($a as $k => $v)
+        'bar';
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2890,24 +2998,30 @@ func TestPrintStmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Function{
-		ReturnsRef:   true,
-		FunctionName: &node.Identifier{Value: "foo"},
-		Params: []node.Node{
-			&node.Parameter{
-				ByRef:    true,
-				Variadic: false,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-			},
-		},
-		ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.Nop{},
+			&stmt.Function{
+				ReturnsRef:   true,
+				FunctionName: &node.Identifier{Value: "foo"},
+				Params: []node.Node{
+					&node.Parameter{
+						ByRef:    true,
+						Variadic: false,
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+					},
+				},
+				ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+				Stmts: []node.Node{
+					&stmt.Nop{},
+				},
+			},
 		},
 	})
 
-	expected := `function &foo(&$var): \Foo {
-;
+	expected := `namespace {
+    function &foo(&$var): \Foo {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -2995,42 +3109,48 @@ func TestPrintIfExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.If{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		},
-		ElseIf: []node.Node{
-			&stmt.ElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{
-							Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.If{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Stmt: &stmt.Expression{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+				ElseIf: []node.Node{
+					&stmt.ElseIf{
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{
+								&stmt.Expression{
+									Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+								},
+							},
 						},
 					},
+					&stmt.ElseIf{
+						Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+						Stmt: &stmt.Nop{},
+					},
 				},
-			},
-			&stmt.ElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
-				Stmt: &stmt.Nop{},
-			},
-		},
-		Else: &stmt.Else{
-			Stmt: &stmt.Expression{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
+				Else: &stmt.Else{
+					Stmt: &stmt.Expression{
+						Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `if ($a)
-$b;
-elseif ($c) {
-$d;
-}
-elseif ($e);
-else
-$f;`
+	expected := `namespace {
+    if ($a)
+        $b;
+    elseif ($c) {
+        $d;
+    }
+    elseif ($e);
+    else
+        $f;
+}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3042,19 +3162,25 @@ func TestPrintIfStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.If{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.If{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{
+							Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `if ($a) {
-$b;
+	expected := `namespace {
+    if ($a) {
+        $b;
+    }
 }`
 	actual := o.String()
 
@@ -3100,30 +3226,36 @@ func TestPrintInterface(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Interface{
-		InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Extends: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-		},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.ClassMethod{
-				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-				MethodName: &node.Identifier{Value: "foo"},
-				Params:     []node.Node{},
+			&stmt.Interface{
+				InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+				Extends: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+				},
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+					&stmt.ClassMethod{
+						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+						MethodName: &node.Identifier{Value: "foo"},
+						Params:     []node.Node{},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `interface Foo extends Bar, Baz
-{
-public function foo()
-{
-$a;
-}
+	expected := `namespace {
+    interface Foo extends Bar, Baz
+    {
+        public function foo()
+        {
+            $a;
+        }
+    }
 }`
 	actual := o.String()
 
@@ -3168,15 +3300,21 @@ func TestPrintNamespaceWithStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	p.Print(&stmt.StmtList{
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Namespace{
+				NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				},
+			},
 		},
 	})
 
-	expected := `namespace Foo {
-$a;
+	expected := `{
+    namespace Foo {
+        $a;
+    }
 }`
 	actual := o.String()
 
@@ -3311,8 +3449,44 @@ func TestPrintStmtList(t *testing.T) {
 	})
 
 	expected := `{
-$a;
-$b;
+    $a;
+    $b;
+}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintStmtListNested(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.Print(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.StmtList{
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					&stmt.StmtList{
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+						},
+					},
+				},
+			},
+		},
+	})
+
+	expected := `{
+    $a;
+    {
+        $b;
+        {
+            $c;
+        }
+    }
 }`
 	actual := o.String()
 
@@ -3325,29 +3499,35 @@ func TestPrintStmtSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Switch{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		Cases: []node.Node{
-			&stmt.Case{
-				Cond: &scalar.String{Value: "a"},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				},
-			},
-			&stmt.Case{
-				Cond: &scalar.String{Value: "b"},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+	p.Print(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Switch{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Cases: []node.Node{
+					&stmt.Case{
+						Cond: &scalar.String{Value: "a"},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						},
+					},
+					&stmt.Case{
+						Cond: &scalar.String{Value: "b"},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `switch ($var) {
-case 'a':
-$a;
-case 'b':
-$b;
+	expected := `{
+    switch ($var) {
+        case 'a':
+            $a;
+        case 'b':
+            $b;
+    }
 }`
 	actual := o.String()
 
@@ -3456,24 +3636,30 @@ func TestPrintStmtTraitAdaptations(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.TraitUse{
-		Traits: []node.Node{
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-		},
-		Adaptations: []node.Node{
-			&stmt.TraitUseAlias{
-				Ref: &stmt.TraitMethodRef{
-					Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-					Method: &node.Identifier{Value: "a"},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.TraitUse{
+				Traits: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 				},
-				Alias: &node.Identifier{Value: "b"},
+				Adaptations: []node.Node{
+					&stmt.TraitUseAlias{
+						Ref: &stmt.TraitMethodRef{
+							Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+							Method: &node.Identifier{Value: "a"},
+						},
+						Alias: &node.Identifier{Value: "b"},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `use Foo, Bar {
-Foo::a as b;
+	expected := `namespace {
+    use Foo, Bar {
+        Foo::a as b;
+    }
 }`
 	actual := o.String()
 
@@ -3486,26 +3672,32 @@ func TestPrintTrait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Trait{
-		TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.ClassMethod{
-				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-				MethodName: &node.Identifier{Value: "foo"},
-				Params:     []node.Node{},
+			&stmt.Trait{
+				TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+					&stmt.ClassMethod{
+						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+						MethodName: &node.Identifier{Value: "foo"},
+						Params:     []node.Node{},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						},
+					},
 				},
 			},
 		},
 	})
 
-	expected := `trait Foo
-{
-public function foo()
-{
-$a;
-}
+	expected := `namespace {
+    trait Foo
+    {
+        public function foo()
+        {
+            $a;
+        }
+    }
 }`
 	actual := o.String()
 
@@ -3518,37 +3710,43 @@ func TestPrintStmtTry(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Try{
+	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-		},
-		Catches: []node.Node{
-			&stmt.Catch{
-				Types: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
-				},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+			&stmt.Try{
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 				},
-			},
-		},
-		Finally: &stmt.Finally{
-			Stmts: []node.Node{
-				&stmt.Nop{},
+				Catches: []node.Node{
+					&stmt.Catch{
+						Types: []node.Node{
+							&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+							&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+						},
+						Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+						Stmts: []node.Node{
+							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
+					},
+				},
+				Finally: &stmt.Finally{
+					Stmts: []node.Node{
+						&stmt.Nop{},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `try {
-$a;
-}
-catch (Exception | \RuntimeException $e) {
-$b;
-}
-finally {
-;
+	expected := `namespace {
+    try {
+        $a;
+    }
+    catch (Exception | \RuntimeException $e) {
+        $b;
+    }
+    finally {
+        ;
+    }
 }`
 	actual := o.String()
 
@@ -3623,17 +3821,23 @@ func TestPrintWhileStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.While{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.StmtList{
-			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.While{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+					},
+				},
 			},
 		},
 	})
 
-	expected := `while ($a) {
-$a;
+	expected := `namespace {
+    while ($a) {
+        $a;
+    }
 }`
 	actual := o.String()
 
@@ -3646,13 +3850,19 @@ func TestPrintWhileExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.While{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+	p.Print(&stmt.Namespace{
+		Stmts: []node.Node{
+			&stmt.While{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Stmt: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			},
+		},
 	})
 
-	expected := `while ($a)
-$a;`
+	expected := `namespace {
+    while ($a)
+        $a;
+}`
 	actual := o.String()
 
 	if expected != actual {

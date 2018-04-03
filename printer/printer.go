@@ -44,12 +44,21 @@ func (p *Printer) joinPrint(glue string, nn []node.Node) {
 }
 
 func (p *Printer) printNodes(nn []node.Node) {
+	p.indentDepth++
 	l := len(nn) - 1
 	for k, n := range nn {
+		p.printIndent()
 		p.Print(n)
 		if k < l {
 			io.WriteString(p.w, "\n")
 		}
+	}
+	p.indentDepth--
+}
+
+func (p *Printer) printIndent() {
+	for i := 0; i < p.indentDepth; i++ {
+		io.WriteString(p.w, p.indentStr)
 	}
 }
 
@@ -997,7 +1006,9 @@ func (p *Printer) printExprClosure(n node.Node) {
 
 	io.WriteString(p.w, " {\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printExprConstFetch(n node.Node) {
@@ -1314,6 +1325,7 @@ func (p *Printer) printStmtAltFor(n node.Node) {
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
 	io.WriteString(p.w, "\n")
+	p.printIndent()
 
 	io.WriteString(p.w, "endfor;")
 }
@@ -1340,8 +1352,9 @@ func (p *Printer) printStmtAltForeach(n node.Node) {
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
-	io.WriteString(p.w, "\n")
 
+	io.WriteString(p.w, "\n")
+	p.printIndent()
 	io.WriteString(p.w, "endforeach;")
 }
 
@@ -1357,15 +1370,18 @@ func (p *Printer) printStmtAltIf(n node.Node) {
 
 	for _, elseif := range nn.ElseIf {
 		io.WriteString(p.w, "\n")
+		p.printIndent()
 		p.Print(elseif)
 	}
 
 	if nn.Else != nil {
 		io.WriteString(p.w, "\n")
+		p.printIndent()
 		p.Print(nn.Else)
 	}
 
 	io.WriteString(p.w, "\n")
+	p.printIndent()
 	io.WriteString(p.w, "endif;")
 }
 
@@ -1378,8 +1394,9 @@ func (p *Printer) printStmtAltSwitch(n node.Node) {
 
 	s := nn.Cases
 	p.printNodes(s)
-	io.WriteString(p.w, "\n")
 
+	io.WriteString(p.w, "\n")
+	p.printIndent()
 	io.WriteString(p.w, "endswitch;")
 }
 
@@ -1392,8 +1409,9 @@ func (p *Printer) printStmtAltWhile(n node.Node) {
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
-	io.WriteString(p.w, "\n")
 
+	io.WriteString(p.w, "\n")
+	p.printIndent()
 	io.WriteString(p.w, "endwhile;")
 }
 
@@ -1431,7 +1449,9 @@ func (p *Printer) printStmtCatch(n node.Node) {
 	p.Print(nn.Variable)
 	io.WriteString(p.w, ") {\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtClassMethod(n node.Node) {
@@ -1457,9 +1477,13 @@ func (p *Printer) printStmtClassMethod(n node.Node) {
 		p.Print(nn.ReturnType)
 	}
 
-	io.WriteString(p.w, "\n{\n")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtClass(n node.Node) {
@@ -1492,9 +1516,13 @@ func (p *Printer) printStmtClass(n node.Node) {
 		p.joinPrint(", ", nn.Implements)
 	}
 
-	io.WriteString(p.w, "\n{\n")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtClassConstList(n node.Node) {
@@ -1547,7 +1575,10 @@ func (p *Printer) printStmtDeclare(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
 
@@ -1572,8 +1603,12 @@ func (p *Printer) printStmtDo(n node.Node) {
 		io.WriteString(p.w, " ")
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 		io.WriteString(p.w, "\n")
+		p.printIndent()
 	}
 
 	io.WriteString(p.w, "while (")
@@ -1604,7 +1639,10 @@ func (p *Printer) printStmtElseif(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
 
@@ -1622,7 +1660,10 @@ func (p *Printer) printStmtElse(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
 
@@ -1639,7 +1680,9 @@ func (p *Printer) printStmtFinally(n node.Node) {
 
 	io.WriteString(p.w, "finally {\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtFor(n node.Node) {
@@ -1662,7 +1705,10 @@ func (p *Printer) printStmtFor(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
 
@@ -1693,7 +1739,10 @@ func (p *Printer) printStmtForeach(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
 
@@ -1719,7 +1768,9 @@ func (p *Printer) printStmtFunction(n node.Node) {
 
 	io.WriteString(p.w, " {\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtGlobal(n node.Node) {
@@ -1774,16 +1825,22 @@ func (p *Printer) printStmtIf(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 
 	if nn.ElseIf != nil {
 		io.WriteString(p.w, "\n")
+		p.indentDepth--
 		p.printNodes(nn.ElseIf)
+		p.indentDepth++
 	}
 
 	if nn.Else != nil {
 		io.WriteString(p.w, "\n")
+		p.printIndent()
 		p.Print(nn.Else)
 	}
 }
@@ -1811,9 +1868,13 @@ func (p *Printer) printStmtInterface(n node.Node) {
 		p.joinPrint(", ", nn.Extends)
 	}
 
-	io.WriteString(p.w, "\n{\n")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtLabel(n node.Node) {
@@ -1836,7 +1897,9 @@ func (p *Printer) printStmtNamespace(n node.Node) {
 	if nn.Stmts != nil {
 		io.WriteString(p.w, " {\n")
 		p.printNodes(nn.Stmts)
-		io.WriteString(p.w, "\n}")
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "}")
 	} else {
 		io.WriteString(p.w, ";")
 	}
@@ -1897,7 +1960,9 @@ func (p *Printer) printStmtStmtList(n node.Node) {
 
 	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtSwitch(n node.Node) {
@@ -1909,7 +1974,9 @@ func (p *Printer) printStmtSwitch(n node.Node) {
 
 	io.WriteString(p.w, " {\n")
 	p.printNodes(nn.Cases)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtThrow(n node.Node) {
@@ -1966,7 +2033,9 @@ func (p *Printer) printStmtTraitUse(n node.Node) {
 	if nn.Adaptations != nil {
 		io.WriteString(p.w, " {\n")
 		p.printNodes(nn.Adaptations)
-		io.WriteString(p.w, "\n}")
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "}")
 	} else {
 		io.WriteString(p.w, ";")
 	}
@@ -1978,9 +2047,13 @@ func (p *Printer) printStmtTrait(n node.Node) {
 	io.WriteString(p.w, "trait ")
 	p.Print(nn.TraitName)
 
-	io.WriteString(p.w, "\n{\n")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "{\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 }
 
 func (p *Printer) printStmtTry(n node.Node) {
@@ -1988,15 +2061,20 @@ func (p *Printer) printStmtTry(n node.Node) {
 
 	io.WriteString(p.w, "try {\n")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n}")
+	io.WriteString(p.w, "\n")
+	p.printIndent()
+	io.WriteString(p.w, "}")
 
 	if nn.Catches != nil {
 		io.WriteString(p.w, "\n")
+		p.indentDepth--
 		p.printNodes(nn.Catches)
+		p.indentDepth++
 	}
 
 	if nn.Finally != nil {
 		io.WriteString(p.w, "\n")
+		p.printIndent()
 		p.Print(nn.Finally)
 	}
 }
@@ -2055,6 +2133,9 @@ func (p *Printer) printStmtWhile(n node.Node) {
 		p.Print(s)
 	default:
 		io.WriteString(p.w, "\n")
+		p.indentDepth++
+		p.printIndent()
 		p.Print(s)
+		p.indentDepth--
 	}
 }
