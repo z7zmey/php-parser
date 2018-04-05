@@ -2,6 +2,7 @@ package printer
 
 import (
 	"io"
+	"strings"
 
 	"github.com/z7zmey/php-parser/node/stmt"
 
@@ -99,6 +100,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printScalarEncapsedStringPart(n)
 	case *scalar.Encapsed:
 		p.printScalarEncapsed(n)
+	case *scalar.Heredoc:
+		p.printScalarHeredoc(n)
 	case *scalar.MagicConstant:
 		p.printScalarMagicConstant(n)
 
@@ -528,6 +531,20 @@ func (p *Printer) printScalarEncapsed(n node.Node) {
 	}
 
 	io.WriteString(p.w, "\"")
+}
+
+func (p *Printer) printScalarHeredoc(n node.Node) {
+	nn := n.(*scalar.Heredoc)
+
+	io.WriteString(p.w, "<<<")
+	io.WriteString(p.w, nn.Label)
+	io.WriteString(p.w, "\n")
+
+	for _, nn := range nn.Parts {
+		p.Print(nn)
+	}
+
+	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
 }
 
 func (p *Printer) printScalarMagicConstant(n node.Node) {

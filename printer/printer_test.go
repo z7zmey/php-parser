@@ -258,6 +258,50 @@ func TestPrintScalarEncapsed(t *testing.T) {
 	}
 }
 
+func TestPrintScalarHeredoc(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.Print(&scalar.Heredoc{
+		Label: "LBL",
+		Parts: []node.Node{
+			&scalar.EncapsedStringPart{Value: "hello "},
+			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			&scalar.EncapsedStringPart{Value: " world\n"},
+		},
+	})
+
+	expected := `<<<LBL
+hello $var world
+LBL`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintScalarNowdoc(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.Print(&scalar.Heredoc{
+		Label: "'LBL'",
+		Parts: []node.Node{
+			&scalar.EncapsedStringPart{Value: "hello world\n"},
+		},
+	})
+
+	expected := `<<<'LBL'
+hello world
+LBL`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintScalarMagicConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
