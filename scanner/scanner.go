@@ -8481,6 +8481,8 @@ yyrule141: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			}
 			break
 		}
+		heredocToken := make([]lex.Char, lblLast-lblFirst+1)
+		copy(heredocToken, tb[lblFirst:lblLast+1])
 		switch tb[lblFirst].Rune {
 		case '\'':
 			lblFirst++
@@ -8513,7 +8515,7 @@ yyrule141: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			}
 		}
 		l.ungetChars(ungetCnt)
-		lval.Token(l.newToken(tb))
+		lval.Token(l.newToken(heredocToken))
 		return T_START_HEREDOC
 	}
 yyrule142: // .|[ \t\n\r]

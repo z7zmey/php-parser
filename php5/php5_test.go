@@ -45,30 +45,6 @@ func TestPhp5(t *testing.T) {
 		function(bar $bar=null, baz &...$baz) {};
 		static function(bar $bar=null, baz &...$baz) {};
 
-		"test";
-		"\$test";
-		"
-			test
-		";
-		'$test';
-		'
-			$test
-		';
-		<<<CAD
-CAD;
-		<<<CAD
-	hello
-CAD;
-		<<<"CAD"
-	hello
-CAD;
-		<<<"CAD"
-	hello $world
-CAD;
-		<<<'CAD'
-	hello $world
-CAD;
-
 		1234567890123456789;
 		12345678901234567890;
 		0.;
@@ -544,42 +520,6 @@ CAD;
 					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"test\""},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"\\$test\""},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"\n\t\t\ttest\n\t\t\""},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "'$test'"},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "'\n\t\t\t$test\n\t\t'"},
-			},
-			&stmt.Expression{
-				Expr: &scalar.Encapsed{},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\thello\n"},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\thello\n"},
-			},
-			&stmt.Expression{
-				Expr: &scalar.Encapsed{
-					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "\thello "},
-						&expr.Variable{VarName: &node.Identifier{Value: "world"}},
-						&scalar.EncapsedStringPart{Value: "\n"},
-					},
-				},
-			},
-			&stmt.Expression{
-				Expr: &scalar.String{Value: "\thello $world\n"},
 			},
 			&stmt.Expression{
 				Expr: &scalar.Lnumber{Value: "1234567890123456789"},
@@ -3670,6 +3610,109 @@ CAD;
 				Expr: &expr.ClassConstFetch{
 					Class:        &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					ConstantName: &node.Identifier{Value: "bar"},
+				},
+			},
+		},
+	}
+
+	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestPhp5Strings(t *testing.T) {
+	src := `<?
+		"test";
+		"\$test";
+		"
+			test
+		";
+		'$test';
+		'
+			$test
+		';
+	`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"test\""},
+			},
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"\\$test\""},
+			},
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "\"\n\t\t\ttest\n\t\t\""},
+			},
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "'$test'"},
+			},
+			&stmt.Expression{
+				Expr: &scalar.String{Value: "'\n\t\t\t$test\n\t\t'"},
+			},
+		},
+	}
+
+	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	assertEqual(t, expected, actual)
+}
+
+func TestPhp5Heredoc(t *testing.T) {
+	src := `<?
+		<<<CAD
+CAD;
+		<<<CAD
+	hello
+CAD;
+		<<<"CAD"
+	hello
+CAD;
+		<<<"CAD"
+	hello $world
+CAD;
+		<<<'CAD'
+	hello $world
+CAD;
+	`
+
+	expected := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "CAD",
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "CAD",
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "\thello\n"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "\"CAD\"",
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "\thello\n"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "\"CAD\"",
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "\thello "},
+						&expr.Variable{VarName: &node.Identifier{Value: "world"}},
+						&scalar.EncapsedStringPart{Value: "\n"},
+					},
+				},
+			},
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "'CAD'",
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "\thello $world\n"},
+					},
 				},
 			},
 		},

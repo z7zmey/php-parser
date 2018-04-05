@@ -45,6 +45,11 @@ var nameNodesTests = []struct {
 		[]string{"Parts"},
 		nil,
 	},
+	{
+		&scalar.Heredoc{Label: "LBL", Parts: []node.Node{&scalar.EncapsedStringPart{Value: "foo"}}},
+		[]string{"Parts"},
+		map[string]interface{}{"Label": "LBL"},
+	},
 }
 
 type visitorMock struct {

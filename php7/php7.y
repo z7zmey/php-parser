@@ -2124,13 +2124,17 @@ scalar:
         }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
         {
-            $$ = scalar.NewString($2.Value)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))/* TODO: mark as Heredoc*/
+            encapsed := scalar.NewEncapsedStringPart($2.Value)
+            positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($2))
+            comments.AddComments(encapsed, $2.Comments())
+
+            $$ = scalar.NewHeredoc($1.Value, []node.Node{encapsed})
+            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
             comments.AddComments($$, $1.Comments())
         }
     |   T_START_HEREDOC T_END_HEREDOC
         {
-            $$ = scalar.NewEncapsed(nil)
+            $$ = scalar.NewHeredoc($1.Value, nil)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
             comments.AddComments($$, $1.Comments())
         }
@@ -2142,7 +2146,7 @@ scalar:
         }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
         {
-            $$ = scalar.NewEncapsed($2)
+            $$ = scalar.NewHeredoc($1.Value, $2)
             positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
             comments.AddComments($$, $1.Comments())
         }

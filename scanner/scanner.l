@@ -366,6 +366,9 @@ NEW_LINE        (\r|\n|\r\n)
         break
     }
 
+    heredocToken := make([]lex.Char, lblLast - lblFirst + 1)
+    copy(heredocToken, tb[lblFirst:lblLast+1])
+
     switch tb[lblFirst].Rune {
         case '\'' : 
             lblFirst++
@@ -402,7 +405,7 @@ NEW_LINE        (\r|\n|\r\n)
 
     l.ungetChars(ungetCnt)
 
-    lval.Token(l.newToken(tb)); 
+    lval.Token(l.newToken(heredocToken));
     return T_START_HEREDOC
 
 <NOWDOC>.|[ \t\n\r]
