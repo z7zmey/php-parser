@@ -18,17 +18,54 @@ import (
 func TestPrintFile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o, "\t")
 	p.PrintFile(&stmt.StmtList{
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			&stmt.Namespace{
+				NamespaceName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Foo"},
+					},
+				},
+			},
+			&stmt.Class{
+				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+				ClassName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Bar"},
+					},
+				},
+				Extends: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Baz"},
+					},
+				},
+				Stmts: []node.Node{
+					&stmt.ClassMethod{
+						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+						MethodName: &node.Identifier{Value: "greet"},
+						Stmts: []node.Node{
+							&stmt.Echo{
+								Exprs: []node.Node{
+									&scalar.String{Value: "'Hello world'"},
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	})
 
 	expected := `<?php
-$a;
-$b;
+namespace Foo;
+abstract class Bar extends Baz
+{
+	public function greet()
+	{
+		echo 'Hello world';
+	}
+}
 `
 	actual := o.String()
 
