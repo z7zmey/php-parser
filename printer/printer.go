@@ -30,6 +30,27 @@ func NewPrinter(w io.Writer, indentStr string) *Printer {
 	}
 }
 
+func (p *Printer) PrintFile(n *stmt.StmtList) {
+	if len(n.Stmts) > 0 {
+		firstStmt := n.Stmts[0]
+		n.Stmts = n.Stmts[1:]
+
+		switch fs := firstStmt.(type) {
+		case *stmt.InlineHtml:
+			io.WriteString(p.w, fs.Value)
+			io.WriteString(p.w, "<?php\n")
+		default:
+			io.WriteString(p.w, "<?php\n")
+			p.printIndent()
+			p.Print(fs)
+			io.WriteString(p.w, "\n")
+		}
+	}
+	p.indentDepth--
+	p.printNodes(n.Stmts)
+	io.WriteString(p.w, "\n")
+}
+
 func (p *Printer) Print(n node.Node) {
 	p.printNode(n)
 }

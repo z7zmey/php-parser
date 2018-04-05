@@ -15,6 +15,58 @@ import (
 	"github.com/z7zmey/php-parser/printer"
 )
 
+func TestPrintFile(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.PrintFile(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+		},
+	})
+
+	expected := `<?php
+$a;
+$b;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintFileInlineHtml(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.PrintFile(&stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.InlineHtml{Value: "<div>HTML</div>"},
+			&stmt.Expression{
+				Expr: &scalar.Heredoc{
+					Label: "\"LBL\"",
+					Parts: []node.Node{
+						&scalar.EncapsedStringPart{Value: "hello world\n"},
+					},
+				},
+			},
+		},
+	})
+
+	expected := `<div>HTML</div><?php
+<<<"LBL"
+hello world
+LBL;
+`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 // node
 
 func TestPrintIdentifier(t *testing.T) {
