@@ -8720,57 +8720,65 @@ yyrule152: // .|[ \t\n\r]
 		searchLabel := []byte{}
 		tb := []lex.Char{}
 
-	HEREDOCFOR:
 		for {
 			if c == -1 {
 				break
 			}
+			nls := 0
 			switch c {
-			case '\n':
-				fallthrough
 			case '\r':
+				nls = 1
+				c := l.Next()
+				if c != '\n' {
+					nls = 0
+					l.ungetChars(0)
+				}
+				fallthrough
+			case '\n':
 				if bytes.Equal(append(l.charsToBytes(heredocLabel), ';'), searchLabel) {
 					l.begin(HEREDOC_END)
-					tb = l.ungetChars(len(heredocLabel) + 1)
-					break HEREDOCFOR
+					tb = l.ungetChars(len(heredocLabel) + 1 + nls)
+					lval.Token(l.newToken(tb))
+					return T_ENCAPSED_AND_WHITESPACE
 				}
 				if bytes.Equal(l.charsToBytes(heredocLabel), searchLabel) {
 					l.begin(HEREDOC_END)
-					tb = l.ungetChars(len(heredocLabel))
-					break HEREDOCFOR
+					tb = l.ungetChars(len(heredocLabel) + nls)
+					lval.Token(l.newToken(tb))
+					return T_ENCAPSED_AND_WHITESPACE
 				}
 
 				searchLabel = []byte{}
 
 			case '$':
 				c = l.Next()
-				if rune(c) == '{' || c >= 'A' && c <= 'Z' || c == '_' || c >= 'a' && c <= 'z' || c >= '\u007f' && c <= 'ÿ' {
+				if rune(c) == '{' || isValidFirstVarNameRune(rune(c)) {
 					tb = l.ungetChars(1)
-					break HEREDOCFOR
+					lval.Token(l.newToken(tb))
+					return T_ENCAPSED_AND_WHITESPACE
 				}
 				l.ungetChars(0)
-				searchLabel = []byte{}
 
 			case '{':
 				c = l.Next()
 				if rune(c) == '$' {
 					tb = l.ungetChars(1)
-					break HEREDOCFOR
+					lval.Token(l.newToken(tb))
+					return T_ENCAPSED_AND_WHITESPACE
 				}
 				l.ungetChars(0)
-				searchLabel = []byte{}
 			case '\\':
 				c = l.Next()
-				searchLabel = []byte{}
+				if c == '\n' || c == '\r' {
+					l.ungetChars(0)
+				}
 
 			default:
 				searchLabel = append(searchLabel, byte(rune(c)))
 			}
 			c = l.Next()
 		}
-
-		lval.Token(l.newToken(tb))
-		return T_ENCAPSED_AND_WHITESPACE
+		goto yystate0
 	}
 yyrule153: // \${VAR_NAME}
 	{

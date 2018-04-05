@@ -693,6 +693,79 @@ CAT;
 	assertEqual(t, expected, actual)
 }
 
+func TestHereDocTokens2(t *testing.T) {
+	src := `<?php
+	<<<CAT
+$foo/
+CAT;
+
+	<<<CAT
+$foo/100
+CAT;
+
+	<<<CAT
+$/$foo
+CAT;
+
+	<<<CAT
+$0$foo
+CAT;
+
+	<<<CAT
+$foo$bar\
+CAT
+`
+
+	expected := []int{
+		scanner.T_START_HEREDOC,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_END_HEREDOC,
+		scanner.Rune2Class(';'),
+
+		scanner.T_START_HEREDOC,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_END_HEREDOC,
+		scanner.Rune2Class(';'),
+
+		scanner.T_START_HEREDOC,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_END_HEREDOC,
+		scanner.Rune2Class(';'),
+
+		scanner.T_START_HEREDOC,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_END_HEREDOC,
+		scanner.Rune2Class(';'),
+
+		scanner.T_START_HEREDOC,
+		scanner.T_VARIABLE,
+		scanner.T_VARIABLE,
+		scanner.T_ENCAPSED_AND_WHITESPACE,
+		scanner.T_END_HEREDOC,
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+}
+
 func TestInlineHtmlNopTokens(t *testing.T) {
 	src := `<?php
 		$a; ?> test <?php
