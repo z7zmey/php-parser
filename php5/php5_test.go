@@ -2849,13 +2849,13 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
@@ -2867,7 +2867,7 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{

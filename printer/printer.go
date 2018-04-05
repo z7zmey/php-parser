@@ -106,8 +106,8 @@ func (p *Printer) printNode(n node.Node) {
 
 	case *assign.Assign:
 		p.printAssign(n)
-	case *assign.AssignRef:
-		p.printAssignRef(n)
+	case *assign.Reference:
+		p.printReference(n)
 	case *assign.BitwiseAnd:
 		p.printAssignBitwiseAnd(n)
 	case *assign.BitwiseOr:
@@ -544,8 +544,8 @@ func (p *Printer) printAssign(n node.Node) {
 	p.Print(nn.Expression)
 }
 
-func (p *Printer) printAssignRef(n node.Node) {
-	nn := n.(*assign.AssignRef)
+func (p *Printer) printReference(n node.Node) {
+	nn := n.(*assign.Reference)
 	p.Print(nn.Variable)
 	io.WriteString(p.w, " =& ")
 	p.Print(nn.Expression)

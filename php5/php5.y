@@ -1864,7 +1864,7 @@ expr_without_variable:
             }
     |   variable '=' '&' variable
             {
-                $$ = assign.NewAssignRef($1, $4)
+                $$ = assign.NewReference($1, $4)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
                 comments.AddComments($$, comments[$1])
             }
@@ -1879,7 +1879,7 @@ expr_without_variable:
                 }
                 comments.AddComments(_new, comments[$1])
 
-                $$ = assign.NewAssignRef($1, _new)
+                $$ = assign.NewReference($1, _new)
                 positions.AddPosition($$, positionBuilder.NewNodesPosition($1, _new))
                 comments.AddComments($$, comments[$1])
             }

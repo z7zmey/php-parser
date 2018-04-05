@@ -4223,7 +4223,7 @@ yydefault:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:1512
 		{
-			yyVAL.node = assign.NewAssignRef(yyDollar[1].node, yyDollar[4].node)
+			yyVAL.node = assign.NewReference(yyDollar[1].node, yyDollar[4].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
 			comments.AddComments(yyVAL.node, comments[yyDollar[1].node])
 		}

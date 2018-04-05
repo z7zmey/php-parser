@@ -29,13 +29,13 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 	}
 }
 
-func TestAssignRef(t *testing.T) {
+func TestReference(t *testing.T) {
 	src := `<? $a =& $b;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				},
@@ -50,13 +50,13 @@ func TestAssignRef(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
-func TestAssignRefNew(t *testing.T) {
+func TestReferenceNew(t *testing.T) {
 	src := `<? $a =& new Foo;`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{
@@ -77,13 +77,13 @@ func TestAssignRefNew(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
-func TestAssignRefArgs(t *testing.T) {
+func TestReferenceArgs(t *testing.T) {
 	src := `<? $a =& new Foo($b);`
 
 	expected := &stmt.StmtList{
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &assign.AssignRef{
+				Expr: &assign.Reference{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 					Expression: &expr.New{
 						Class: &name.Name{

@@ -19,7 +19,7 @@ var nodesToTest = []struct {
 	expectedAttributes  map[string]interface{}
 }{
 	{
-		&assign.AssignRef{
+		&assign.Reference{
 			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},

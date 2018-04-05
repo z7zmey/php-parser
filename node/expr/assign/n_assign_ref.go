@@ -5,28 +5,28 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// AssignRef node
-type AssignRef struct {
+// Reference node
+type Reference struct {
 	Variable   node.Node
 	Expression node.Node
 }
 
-// NewAssignRef node constuctor
-func NewAssignRef(Variable node.Node, Expression node.Node) *AssignRef {
-	return &AssignRef{
+// NewReference node constuctor
+func NewReference(Variable node.Node, Expression node.Node) *Reference {
+	return &Reference{
 		Variable,
 		Expression,
 	}
 }
 
 // Attributes returns node attributes as map
-func (n *AssignRef) Attributes() map[string]interface{} {
+func (n *Reference) Attributes() map[string]interface{} {
 	return nil
 }
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *AssignRef) Walk(v walker.Visitor) {
+func (n *Reference) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

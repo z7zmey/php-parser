@@ -288,11 +288,11 @@ func TestPrintAssign(t *testing.T) {
 	}
 }
 
-func TestPrintAssignRef(t *testing.T) {
+func TestPrintReference(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&assign.AssignRef{
+	p.Print(&assign.Reference{
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
