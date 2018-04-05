@@ -7,7 +7,7 @@ type Identifier struct {
 	Value string
 }
 
-// NewIdentifier node constuctor
+// NewIdentifier node constructor
 func NewIdentifier(Value string) *Identifier {
 	return &Identifier{
 		Value,

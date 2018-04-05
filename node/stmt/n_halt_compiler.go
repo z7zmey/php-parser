@@ -6,7 +6,7 @@ import "github.com/z7zmey/php-parser/walker"
 type HaltCompiler struct {
 }
 
-// NewHaltCompiler node constuctor
+// NewHaltCompiler node constructor
 func NewHaltCompiler() *HaltCompiler {
 	return &HaltCompiler{}
 }

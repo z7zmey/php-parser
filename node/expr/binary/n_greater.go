@@ -11,7 +11,7 @@ type Greater struct {
 	Right node.Node
 }
 
-// NewGreater node constuctor
+// NewGreater node constructor
 func NewGreater(Variable node.Node, Expression node.Node) *Greater {
 	return &Greater{
 		Variable,

@@ -11,7 +11,7 @@ type BitwiseXor struct {
 	Right node.Node
 }
 
-// NewBitwiseXor node constuctor
+// NewBitwiseXor node constructor
 func NewBitwiseXor(Variable node.Node, Expression node.Node) *BitwiseXor {
 	return &BitwiseXor{
 		Variable,

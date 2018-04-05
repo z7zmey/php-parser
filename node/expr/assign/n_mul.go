@@ -11,7 +11,7 @@ type Mul struct {
 	Expression node.Node
 }
 
-// NewMul node constuctor
+// NewMul node constructor
 func NewMul(Variable node.Node, Expression node.Node) *Mul {
 	return &Mul{
 		Variable,

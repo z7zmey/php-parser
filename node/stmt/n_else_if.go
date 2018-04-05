@@ -11,7 +11,7 @@ type ElseIf struct {
 	Stmt node.Node
 }
 
-// NewElseIf node constuctor
+// NewElseIf node constructor
 func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	return &ElseIf{
 		Cond,

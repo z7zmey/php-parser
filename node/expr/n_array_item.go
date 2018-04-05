@@ -12,7 +12,7 @@ type ArrayItem struct {
 	Val   node.Node
 }
 
-// NewArrayItem node constuctor
+// NewArrayItem node constructor
 func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
 	return &ArrayItem{
 		ByRef,

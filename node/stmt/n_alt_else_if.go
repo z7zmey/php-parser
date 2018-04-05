@@ -11,7 +11,7 @@ type AltElseIf struct {
 	Stmt node.Node
 }
 
-// NewAltElseIf node constuctor
+// NewAltElseIf node constructor
 func NewAltElseIf(Cond node.Node, Stmt node.Node) *AltElseIf {
 	return &AltElseIf{
 		Cond,

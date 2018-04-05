@@ -10,7 +10,7 @@ type Relative struct {
 	Parts []node.Node
 }
 
-// NewRelative node constuctor
+// NewRelative node constructor
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
 		Parts,

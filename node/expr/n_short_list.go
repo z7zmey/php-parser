@@ -10,7 +10,7 @@ type ShortList struct {
 	Items []node.Node
 }
 
-// NewShortList node constuctor
+// NewShortList node constructor
 func NewShortList(Items []node.Node) *ShortList {
 	return &ShortList{
 		Items,

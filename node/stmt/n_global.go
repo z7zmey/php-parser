@@ -10,7 +10,7 @@ type Global struct {
 	Vars []node.Node
 }
 
-// NewGlobal node constuctor
+// NewGlobal node constructor
 func NewGlobal(Vars []node.Node) *Global {
 	return &Global{
 		Vars,

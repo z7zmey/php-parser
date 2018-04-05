@@ -11,7 +11,7 @@ type ShiftRight struct {
 	Right node.Node
 }
 
-// NewShiftRight node constuctor
+// NewShiftRight node constructor
 func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	return &ShiftRight{
 		Variable,

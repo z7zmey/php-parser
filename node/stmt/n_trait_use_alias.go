@@ -12,7 +12,7 @@ type TraitUseAlias struct {
 	Alias    node.Node
 }
 
-// NewTraitUseAlias node constuctor
+// NewTraitUseAlias node constructor
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) *TraitUseAlias {
 	return &TraitUseAlias{
 		Ref,

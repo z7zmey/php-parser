@@ -10,7 +10,7 @@ type Die struct {
 	Expr node.Node
 }
 
-// NewDie node constuctor
+// NewDie node constructor
 func NewDie(Expr node.Node) *Die {
 	return &Die{
 		Expr,

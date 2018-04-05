@@ -11,7 +11,7 @@ type Equal struct {
 	Right node.Node
 }
 
-// NewEqual node constuctor
+// NewEqual node constructor
 func NewEqual(Variable node.Node, Expression node.Node) *Equal {
 	return &Equal{
 		Variable,

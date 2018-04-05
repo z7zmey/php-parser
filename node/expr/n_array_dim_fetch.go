@@ -11,7 +11,7 @@ type ArrayDimFetch struct {
 	Dim      node.Node
 }
 
-// NewArrayDimFetch node constuctor
+// NewArrayDimFetch node constructor
 func NewArrayDimFetch(Variable node.Node, Dim node.Node) *ArrayDimFetch {
 	return &ArrayDimFetch{
 		Variable,

@@ -10,7 +10,7 @@ type ConstFetch struct {
 	Constant node.Node
 }
 
-// NewConstFetch node constuctor
+// NewConstFetch node constructor
 func NewConstFetch(Constant node.Node) *ConstFetch {
 	return &ConstFetch{
 		Constant,

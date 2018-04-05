@@ -10,7 +10,7 @@ type Array struct {
 	Items []node.Node
 }
 
-// NewArray node constuctor
+// NewArray node constructor
 func NewArray(Items []node.Node) *Array {
 	return &Array{
 		Items,

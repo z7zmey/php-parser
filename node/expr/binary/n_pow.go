@@ -11,7 +11,7 @@ type Pow struct {
 	Right node.Node
 }
 
-// NewPow node constuctor
+// NewPow node constructor
 func NewPow(Variable node.Node, Expression node.Node) *Pow {
 	return &Pow{
 		Variable,

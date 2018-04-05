@@ -10,7 +10,7 @@ type Eval struct {
 	Expr node.Node
 }
 
-// NewEval node constuctor
+// NewEval node constructor
 func NewEval(Expression node.Node) *Eval {
 	return &Eval{
 		Expression,

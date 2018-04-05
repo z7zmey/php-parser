@@ -13,7 +13,7 @@ type AltFor struct {
 	Stmt node.Node
 }
 
-// NewAltFor node constuctor
+// NewAltFor node constructor
 func NewAltFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *AltFor {
 	return &AltFor{
 		Init,

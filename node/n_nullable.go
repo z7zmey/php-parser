@@ -7,7 +7,7 @@ type Nullable struct {
 	Expr Node
 }
 
-// NewNullable node constuctor
+// NewNullable node constructor
 func NewNullable(Expression Node) *Nullable {
 	return &Nullable{
 		Expression,

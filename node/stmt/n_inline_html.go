@@ -7,7 +7,7 @@ type InlineHtml struct {
 	Value string
 }
 
-// NewInlineHtml node constuctor
+// NewInlineHtml node constructor
 func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
 		Value,

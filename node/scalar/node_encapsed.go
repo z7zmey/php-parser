@@ -10,7 +10,7 @@ type Encapsed struct {
 	Parts []node.Node
 }
 
-// NewEncapsed node constuctor
+// NewEncapsed node constructor
 func NewEncapsed(Parts []node.Node) *Encapsed {
 	return &Encapsed{
 		Parts,

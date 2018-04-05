@@ -11,7 +11,7 @@ type Plus struct {
 	Expression node.Node
 }
 
-// NewPlus node constuctor
+// NewPlus node constructor
 func NewPlus(Variable node.Node, Expression node.Node) *Plus {
 	return &Plus{
 		Variable,

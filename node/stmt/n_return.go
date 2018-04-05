@@ -10,7 +10,7 @@ type Return struct {
 	Expr node.Node
 }
 
-// NewReturn node constuctor
+// NewReturn node constructor
 func NewReturn(Expr node.Node) *Return {
 	return &Return{
 		Expr,

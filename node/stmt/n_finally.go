@@ -10,7 +10,7 @@ type Finally struct {
 	Stmts []node.Node
 }
 
-// NewFinally node constuctor
+// NewFinally node constructor
 func NewFinally(Stmts []node.Node) *Finally {
 	return &Finally{
 		Stmts,

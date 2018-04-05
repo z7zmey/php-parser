@@ -10,7 +10,7 @@ type UnaryPlus struct {
 	Expr node.Node
 }
 
-// NewUnaryPlus node constuctor
+// NewUnaryPlus node constructor
 func NewUnaryPlus(Expression node.Node) *UnaryPlus {
 	return &UnaryPlus{
 		Expression,

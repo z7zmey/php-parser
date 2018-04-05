@@ -6,7 +6,7 @@ import "github.com/z7zmey/php-parser/walker"
 type Nop struct {
 }
 
-// NewNop node constuctor
+// NewNop node constructor
 func NewNop() *Nop {
 	return &Nop{}
 }

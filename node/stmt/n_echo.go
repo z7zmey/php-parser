@@ -10,7 +10,7 @@ type Echo struct {
 	Exprs []node.Node
 }
 
-// NewEcho node constuctor
+// NewEcho node constructor
 func NewEcho(Exprs []node.Node) *Echo {
 	return &Echo{
 		Exprs,

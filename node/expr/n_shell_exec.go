@@ -10,7 +10,7 @@ type ShellExec struct {
 	Parts []node.Node
 }
 
-// NewShellExec node constuctor
+// NewShellExec node constructor
 func NewShellExec(Parts []node.Node) *ShellExec {
 	return &ShellExec{
 		Parts,

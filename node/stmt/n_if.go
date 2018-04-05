@@ -13,7 +13,7 @@ type If struct {
 	Else   node.Node
 }
 
-// NewIf node constuctor
+// NewIf node constructor
 func NewIf(Cond node.Node, Stmt node.Node, ElseIf []node.Node, Else node.Node) *If {
 	return &If{
 		Cond,

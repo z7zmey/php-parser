@@ -14,7 +14,7 @@ type Foreach struct {
 	Stmt     node.Node
 }
 
-// NewForeach node constuctor
+// NewForeach node constructor
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
 	return &Foreach{
 		ByRef,

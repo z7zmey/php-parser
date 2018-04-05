@@ -11,7 +11,7 @@ type LogicalOr struct {
 	Right node.Node
 }
 
-// NewLogicalOr node constuctor
+// NewLogicalOr node constructor
 func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	return &LogicalOr{
 		Variable,

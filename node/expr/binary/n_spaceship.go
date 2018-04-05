@@ -11,7 +11,7 @@ type Spaceship struct {
 	Right node.Node
 }
 
-// NewSpaceship node constuctor
+// NewSpaceship node constructor
 func NewSpaceship(Variable node.Node, Expression node.Node) *Spaceship {
 	return &Spaceship{
 		Variable,

@@ -11,7 +11,7 @@ type Concat struct {
 	Expression node.Node
 }
 
-// NewConcat node constuctor
+// NewConcat node constructor
 func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
 		Variable,

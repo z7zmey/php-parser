@@ -11,7 +11,7 @@ type ClosureUse struct {
 	Variable node.Node
 }
 
-// NewClosureUse node constuctor
+// NewClosureUse node constructor
 func NewClosureUse(Variable node.Node, ByRef bool) *ClosureUse {
 	return &ClosureUse{
 		ByRef,

@@ -10,7 +10,7 @@ type Goto struct {
 	Label node.Node
 }
 
-// NewGoto node constuctor
+// NewGoto node constructor
 func NewGoto(Label node.Node) *Goto {
 	return &Goto{
 		Label,

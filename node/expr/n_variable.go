@@ -10,7 +10,7 @@ type Variable struct {
 	VarName node.Node
 }
 
-// NewVariable node constuctor
+// NewVariable node constructor
 func NewVariable(VarName node.Node) *Variable {
 	return &Variable{
 		VarName,

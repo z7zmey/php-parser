@@ -11,7 +11,7 @@ type FunctionCall struct {
 	Arguments []node.Node
 }
 
-// NewFunctionCall node constuctor
+// NewFunctionCall node constructor
 func NewFunctionCall(Function node.Node, Arguments []node.Node) *FunctionCall {
 	return &FunctionCall{
 		Function,

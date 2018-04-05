@@ -10,7 +10,7 @@ type ErrorSuppress struct {
 	Expr node.Node
 }
 
-// NewErrorSuppress node constuctor
+// NewErrorSuppress node constructor
 func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	return &ErrorSuppress{
 		Expression,

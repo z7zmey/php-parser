@@ -11,7 +11,7 @@ type TraitMethodRef struct {
 	Method node.Node
 }
 
-// NewTraitMethodRef node constuctor
+// NewTraitMethodRef node constructor
 func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	return &TraitMethodRef{
 		Trait,

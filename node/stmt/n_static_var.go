@@ -11,7 +11,7 @@ type StaticVar struct {
 	Expr     node.Node
 }
 
-// NewStaticVar node constuctor
+// NewStaticVar node constructor
 func NewStaticVar(Variable node.Node, Expr node.Node) *StaticVar {
 	return &StaticVar{
 		Variable,

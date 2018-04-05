@@ -7,7 +7,7 @@ type NamePart struct {
 	Value string
 }
 
-// NewNamePart node constuctor
+// NewNamePart node constructor
 func NewNamePart(Value string) *NamePart {
 	return &NamePart{
 		Value,

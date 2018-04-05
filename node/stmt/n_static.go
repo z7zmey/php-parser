@@ -10,7 +10,7 @@ type Static struct {
 	Vars []node.Node
 }
 
-// NewStatic node constuctor
+// NewStatic node constructor
 func NewStatic(Vars []node.Node) *Static {
 	return &Static{
 		Vars,

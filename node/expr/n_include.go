@@ -10,7 +10,7 @@ type Include struct {
 	Expr node.Node
 }
 
-// NewInclude node constuctor
+// NewInclude node constructor
 func NewInclude(Expression node.Node) *Include {
 	return &Include{
 		Expression,

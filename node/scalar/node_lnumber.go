@@ -7,7 +7,7 @@ type Lnumber struct {
 	Value string
 }
 
-// NewLnumber node constuctor
+// NewLnumber node constructor
 func NewLnumber(Value string) *Lnumber {
 	return &Lnumber{
 		Value,

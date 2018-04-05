@@ -10,7 +10,7 @@ type Expression struct {
 	Expr node.Node
 }
 
-// NewExpression node constuctor
+// NewExpression node constructor
 func NewExpression(Expr node.Node) *Expression {
 	return &Expression{
 		Expr,

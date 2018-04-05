@@ -10,7 +10,7 @@ type RequireOnce struct {
 	Expr node.Node
 }
 
-// NewRequireOnce node constuctor
+// NewRequireOnce node constructor
 func NewRequireOnce(Expression node.Node) *RequireOnce {
 	return &RequireOnce{
 		Expression,

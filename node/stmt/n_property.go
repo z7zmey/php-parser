@@ -12,7 +12,7 @@ type Property struct {
 	Expr          node.Node
 }
 
-// NewProperty node constuctor
+// NewProperty node constructor
 func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Property {
 	return &Property{
 		PhpDocComment,

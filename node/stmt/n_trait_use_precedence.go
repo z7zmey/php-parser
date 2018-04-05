@@ -11,7 +11,7 @@ type TraitUsePrecedence struct {
 	Insteadof []node.Node
 }
 
-// NewTraitUsePrecedence node constuctor
+// NewTraitUsePrecedence node constructor
 func NewTraitUsePrecedence(Ref node.Node, Insteadof []node.Node) *TraitUsePrecedence {
 	return &TraitUsePrecedence{
 		Ref,

@@ -11,7 +11,7 @@ type BooleanAnd struct {
 	Right node.Node
 }
 
-// NewBooleanAnd node constuctor
+// NewBooleanAnd node constructor
 func NewBooleanAnd(Variable node.Node, Expression node.Node) *BooleanAnd {
 	return &BooleanAnd{
 		Variable,

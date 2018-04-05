@@ -10,7 +10,7 @@ type IncludeOnce struct {
 	Expr node.Node
 }
 
-// NewIncludeOnce node constuctor
+// NewIncludeOnce node constructor
 func NewIncludeOnce(Expression node.Node) *IncludeOnce {
 	return &IncludeOnce{
 		Expression,

@@ -10,7 +10,7 @@ type ShortArray struct {
 	Items []node.Node
 }
 
-// NewShortArray node constuctor
+// NewShortArray node constructor
 func NewShortArray(Items []node.Node) *ShortArray {
 	return &ShortArray{
 		Items,

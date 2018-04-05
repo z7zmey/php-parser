@@ -11,7 +11,7 @@ type While struct {
 	Stmt node.Node
 }
 
-// NewWhile node constuctor
+// NewWhile node constructor
 func NewWhile(Cond node.Node, Stmt node.Node) *While {
 	return &While{
 		Cond,

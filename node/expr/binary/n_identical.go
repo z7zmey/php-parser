@@ -11,7 +11,7 @@ type Identical struct {
 	Right node.Node
 }
 
-// NewIdentical node constuctor
+// NewIdentical node constructor
 func NewIdentical(Variable node.Node, Expression node.Node) *Identical {
 	return &Identical{
 		Variable,

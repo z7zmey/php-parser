@@ -7,7 +7,7 @@ type Dnumber struct {
 	Value string
 }
 
-// NewDnumber node constuctor
+// NewDnumber node constructor
 func NewDnumber(Value string) *Dnumber {
 	return &Dnumber{
 		Value,

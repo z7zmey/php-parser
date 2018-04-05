@@ -11,7 +11,7 @@ type StaticPropertyFetch struct {
 	Property node.Node
 }
 
-// NewStaticPropertyFetch node constuctor
+// NewStaticPropertyFetch node constructor
 func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
 		Class,

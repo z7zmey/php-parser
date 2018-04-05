@@ -11,7 +11,7 @@ type PropertyFetch struct {
 	Property node.Node
 }
 
-// NewPropertyFetch node constuctor
+// NewPropertyFetch node constructor
 func NewPropertyFetch(Variable node.Node, Property node.Node) *PropertyFetch {
 	return &PropertyFetch{
 		Variable,

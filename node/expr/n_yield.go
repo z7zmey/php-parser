@@ -11,7 +11,7 @@ type Yield struct {
 	Value node.Node
 }
 
-// NewYield node constuctor
+// NewYield node constructor
 func NewYield(Key node.Node, Value node.Node) *Yield {
 	return &Yield{
 		Key,

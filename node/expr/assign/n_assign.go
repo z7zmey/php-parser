@@ -11,7 +11,7 @@ type Assign struct {
 	Expression node.Node
 }
 
-// NewAssign node constuctor
+// NewAssign node constructor
 func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 	return &Assign{
 		Variable,

@@ -11,7 +11,7 @@ type NotIdentical struct {
 	Right node.Node
 }
 
-// NewNotIdentical node constuctor
+// NewNotIdentical node constructor
 func NewNotIdentical(Variable node.Node, Expression node.Node) *NotIdentical {
 	return &NotIdentical{
 		Variable,

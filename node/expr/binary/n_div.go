@@ -11,7 +11,7 @@ type Div struct {
 	Right node.Node
 }
 
-// NewDiv node constuctor
+// NewDiv node constructor
 func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
 		Variable,

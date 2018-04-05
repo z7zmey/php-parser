@@ -7,7 +7,7 @@ type MagicConstant struct {
 	Value string
 }
 
-// NewMagicConstant node constuctor
+// NewMagicConstant node constructor
 func NewMagicConstant(Value string) *MagicConstant {
 	return &MagicConstant{
 		Value,

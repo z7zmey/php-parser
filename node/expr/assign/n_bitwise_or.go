@@ -11,7 +11,7 @@ type BitwiseOr struct {
 	Expression node.Node
 }
 
-// NewBitwiseOr node constuctor
+// NewBitwiseOr node constructor
 func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	return &BitwiseOr{
 		Variable,

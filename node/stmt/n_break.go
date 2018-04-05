@@ -10,7 +10,7 @@ type Break struct {
 	Expr node.Node
 }
 
-// NewBreak node constuctor
+// NewBreak node constructor
 func NewBreak(Expr node.Node) *Break {
 	return &Break{
 		Expr,

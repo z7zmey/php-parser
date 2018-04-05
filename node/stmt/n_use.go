@@ -12,7 +12,7 @@ type Use struct {
 	Alias   node.Node
 }
 
-// NewUse node constuctor
+// NewUse node constructor
 func NewUse(UseType node.Node, use node.Node, Alias node.Node) *Use {
 	return &Use{
 		UseType,

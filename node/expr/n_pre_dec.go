@@ -10,7 +10,7 @@ type PreDec struct {
 	Variable node.Node
 }
 
-// NewPreDec node constuctor
+// NewPreDec node constructor
 func NewPreDec(Variable node.Node) *PreDec {
 	return &PreDec{
 		Variable,

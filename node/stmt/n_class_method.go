@@ -16,7 +16,7 @@ type ClassMethod struct {
 	Stmts         []node.Node
 }
 
-// NewClassMethod node constuctor
+// NewClassMethod node constructor
 func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *ClassMethod {
 	return &ClassMethod{
 		ReturnsRef,

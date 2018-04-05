@@ -10,7 +10,7 @@ type List struct {
 	Items []node.Node
 }
 
-// NewList node constuctor
+// NewList node constructor
 func NewList(Items []node.Node) *List {
 	return &List{
 		Items,

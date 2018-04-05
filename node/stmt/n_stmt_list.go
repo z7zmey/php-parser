@@ -10,7 +10,7 @@ type StmtList struct {
 	Stmts []node.Node
 }
 
-// NewStmtList node constuctor
+// NewStmtList node constructor
 func NewStmtList(Stmts []node.Node) *StmtList {
 	return &StmtList{
 		Stmts,

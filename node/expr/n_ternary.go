@@ -12,7 +12,7 @@ type Ternary struct {
 	IfFalse   node.Node
 }
 
-// NewTernary node constuctor
+// NewTernary node constructor
 func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
 		Condition,

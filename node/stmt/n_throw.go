@@ -10,7 +10,7 @@ type Throw struct {
 	Expr node.Node
 }
 
-// NewThrow node constuctor
+// NewThrow node constructor
 func NewThrow(Expr node.Node) *Throw {
 	return &Throw{
 		Expr,

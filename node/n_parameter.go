@@ -11,7 +11,7 @@ type Parameter struct {
 	DefaultValue Node
 }
 
-// NewParameter node constuctor
+// NewParameter node constructor
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
 		ByRef,

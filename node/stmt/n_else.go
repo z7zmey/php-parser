@@ -10,7 +10,7 @@ type Else struct {
 	Stmt node.Node
 }
 
-// NewElse node constuctor
+// NewElse node constructor
 func NewElse(Stmt node.Node) *Else {
 	return &Else{
 		Stmt,

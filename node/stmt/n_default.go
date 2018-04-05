@@ -10,7 +10,7 @@ type Default struct {
 	Stmts []node.Node
 }
 
-// NewDefault node constuctor
+// NewDefault node constructor
 func NewDefault(Stmts []node.Node) *Default {
 	return &Default{
 		Stmts,

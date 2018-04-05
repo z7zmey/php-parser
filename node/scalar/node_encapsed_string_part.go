@@ -7,7 +7,7 @@ type EncapsedStringPart struct {
 	Value string
 }
 
-// NewEncapsedStringPart node constuctor
+// NewEncapsedStringPart node constructor
 func NewEncapsedStringPart(Value string) *EncapsedStringPart {
 	return &EncapsedStringPart{
 		Value,

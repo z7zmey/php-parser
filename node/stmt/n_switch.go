@@ -11,7 +11,7 @@ type Switch struct {
 	Cases []node.Node
 }
 
-// NewSwitch node constuctor
+// NewSwitch node constructor
 func NewSwitch(Cond node.Node, Cases []node.Node) *Switch {
 	return &Switch{
 		Cond,

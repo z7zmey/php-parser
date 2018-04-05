@@ -7,7 +7,7 @@ type String struct {
 	Value string
 }
 
-// NewString node constuctor
+// NewString node constructor
 func NewString(Value string) *String {
 	return &String{
 		Value,

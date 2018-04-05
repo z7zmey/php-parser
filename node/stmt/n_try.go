@@ -12,7 +12,7 @@ type Try struct {
 	Finally node.Node
 }
 
-// NewTry node constuctor
+// NewTry node constructor
 func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) *Try {
 	return &Try{
 		Stmts,

@@ -12,7 +12,7 @@ type Constant struct {
 	Expr          node.Node
 }
 
-// NewConstant node constuctor
+// NewConstant node constructor
 func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
 		PhpDocComment,

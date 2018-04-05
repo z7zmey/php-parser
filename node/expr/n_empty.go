@@ -10,7 +10,7 @@ type Empty struct {
 	Expr node.Node
 }
 
-// NewEmpty node constuctor
+// NewEmpty node constructor
 func NewEmpty(Expression node.Node) *Empty {
 	return &Empty{
 		Expression,

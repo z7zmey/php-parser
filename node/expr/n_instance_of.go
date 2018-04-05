@@ -11,7 +11,7 @@ type InstanceOf struct {
 	Class node.Node
 }
 
-// NewInstanceOf node constuctor
+// NewInstanceOf node constructor
 func NewInstanceOf(Expr node.Node, Class node.Node) *InstanceOf {
 	return &InstanceOf{
 		Expr,

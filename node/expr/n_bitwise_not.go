@@ -10,7 +10,7 @@ type BitwiseNot struct {
 	Expr node.Node
 }
 
-// NewBitwiseNot node constuctor
+// NewBitwiseNot node constructor
 func NewBitwiseNot(Expression node.Node) *BitwiseNot {
 	return &BitwiseNot{
 		Expression,

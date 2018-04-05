@@ -11,7 +11,7 @@ type Case struct {
 	Stmts []node.Node
 }
 
-// NewCase node constuctor
+// NewCase node constructor
 func NewCase(Cond node.Node, Stmts []node.Node) *Case {
 	return &Case{
 		Cond,

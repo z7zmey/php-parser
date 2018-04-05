@@ -10,7 +10,7 @@ type Require struct {
 	Expr node.Node
 }
 
-// NewRequire node constuctor
+// NewRequire node constructor
 func NewRequire(Expression node.Node) *Require {
 	return &Require{
 		Expression,

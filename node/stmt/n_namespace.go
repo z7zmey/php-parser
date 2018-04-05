@@ -11,7 +11,7 @@ type Namespace struct {
 	Stmts         []node.Node
 }
 
-// NewNamespace node constuctor
+// NewNamespace node constructor
 func NewNamespace(NamespaceName node.Node, Stmts []node.Node) *Namespace {
 	return &Namespace{
 		NamespaceName,

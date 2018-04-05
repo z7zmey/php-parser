@@ -10,7 +10,7 @@ type FullyQualified struct {
 	Parts []node.Node
 }
 
-// NewFullyQualified node constuctor
+// NewFullyQualified node constructor
 func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
 		Parts,

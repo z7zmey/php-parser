@@ -11,7 +11,7 @@ type Mod struct {
 	Expression node.Node
 }
 
-// NewMod node constuctor
+// NewMod node constructor
 func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
 		Variable,

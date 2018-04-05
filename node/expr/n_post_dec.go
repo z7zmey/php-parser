@@ -10,7 +10,7 @@ type PostDec struct {
 	Variable node.Node
 }
 
-// NewPostDec node constuctor
+// NewPostDec node constructor
 func NewPostDec(Variable node.Node) *PostDec {
 	return &PostDec{
 		Variable,

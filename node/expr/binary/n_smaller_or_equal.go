@@ -11,7 +11,7 @@ type SmallerOrEqual struct {
 	Right node.Node
 }
 
-// NewSmallerOrEqual node constuctor
+// NewSmallerOrEqual node constructor
 func NewSmallerOrEqual(Variable node.Node, Expression node.Node) *SmallerOrEqual {
 	return &SmallerOrEqual{
 		Variable,

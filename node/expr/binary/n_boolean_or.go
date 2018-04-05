@@ -11,7 +11,7 @@ type BooleanOr struct {
 	Right node.Node
 }
 
-// NewBooleanOr node constuctor
+// NewBooleanOr node constructor
 func NewBooleanOr(Variable node.Node, Expression node.Node) *BooleanOr {
 	return &BooleanOr{
 		Variable,

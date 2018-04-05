@@ -13,7 +13,7 @@ type For struct {
 	Stmt node.Node
 }
 
-// NewFor node constuctor
+// NewFor node constructor
 func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *For {
 	return &For{
 		Init,

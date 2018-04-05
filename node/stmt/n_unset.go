@@ -10,7 +10,7 @@ type Unset struct {
 	Vars []node.Node
 }
 
-// NewUnset node constuctor
+// NewUnset node constructor
 func NewUnset(Vars []node.Node) *Unset {
 	return &Unset{
 		Vars,

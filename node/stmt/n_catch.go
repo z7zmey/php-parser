@@ -12,7 +12,7 @@ type Catch struct {
 	Stmts    []node.Node
 }
 
-// NewCatch node constuctor
+// NewCatch node constructor
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
 		Types,

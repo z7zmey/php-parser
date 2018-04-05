@@ -12,7 +12,7 @@ type MethodCall struct {
 	Arguments []node.Node
 }
 
-// NewMethodCall node constuctor
+// NewMethodCall node constructor
 func NewMethodCall(Variable node.Node, Method node.Node, Arguments []node.Node) *MethodCall {
 	return &MethodCall{
 		Variable,

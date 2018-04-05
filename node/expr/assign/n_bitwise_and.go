@@ -11,7 +11,7 @@ type BitwiseAnd struct {
 	Expression node.Node
 }
 
-// NewBitwiseAnd node constuctor
+// NewBitwiseAnd node constructor
 func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	return &BitwiseAnd{
 		Variable,

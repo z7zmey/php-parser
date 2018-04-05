@@ -12,7 +12,7 @@ type StaticCall struct {
 	Arguments []node.Node
 }
 
-// NewStaticCall node constuctor
+// NewStaticCall node constructor
 func NewStaticCall(Class node.Node, Call node.Node, Arguments []node.Node) *StaticCall {
 	return &StaticCall{
 		Class,

@@ -10,7 +10,7 @@ type BooleanNot struct {
 	Expr node.Node
 }
 
-// NewBooleanNot node constuctor
+// NewBooleanNot node constructor
 func NewBooleanNot(Expression node.Node) *BooleanNot {
 	return &BooleanNot{
 		Expression,

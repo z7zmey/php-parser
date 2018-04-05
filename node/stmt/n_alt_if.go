@@ -13,7 +13,7 @@ type AltIf struct {
 	Else   node.Node
 }
 
-// NewAltIf node constuctor
+// NewAltIf node constructor
 func NewAltIf(Cond node.Node, Stmt node.Node, ElseIf []node.Node, Else node.Node) *AltIf {
 	return &AltIf{
 		Cond,

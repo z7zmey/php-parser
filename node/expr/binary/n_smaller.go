@@ -11,7 +11,7 @@ type Smaller struct {
 	Right node.Node
 }
 
-// NewSmaller node constuctor
+// NewSmaller node constructor
 func NewSmaller(Variable node.Node, Expression node.Node) *Smaller {
 	return &Smaller{
 		Variable,

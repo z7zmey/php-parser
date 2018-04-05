@@ -11,7 +11,7 @@ type Do struct {
 	Cond node.Node
 }
 
-// NewDo node constuctor
+// NewDo node constructor
 func NewDo(Stmt node.Node, Cond node.Node) *Do {
 	return &Do{
 		Stmt,

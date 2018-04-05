@@ -10,7 +10,7 @@ type Exit struct {
 	Expr node.Node
 }
 
-// NewExit node constuctor
+// NewExit node constructor
 func NewExit(Expr node.Node) *Exit {
 	return &Exit{
 		Expr,

@@ -11,7 +11,7 @@ type PropertyList struct {
 	Properties []node.Node
 }
 
-// NewPropertyList node constuctor
+// NewPropertyList node constructor
 func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
 		Modifiers,

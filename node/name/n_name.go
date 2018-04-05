@@ -10,7 +10,7 @@ type Name struct {
 	Parts []node.Node
 }
 
-// NewName node constuctor
+// NewName node constructor
 func NewName(Parts []node.Node) *Name {
 	return &Name{
 		Parts,

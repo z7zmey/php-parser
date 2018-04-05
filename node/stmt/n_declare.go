@@ -11,7 +11,7 @@ type Declare struct {
 	Stmt   node.Node
 }
 
-// NewDeclare node constuctor
+// NewDeclare node constructor
 func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	return &Declare{
 		Consts,

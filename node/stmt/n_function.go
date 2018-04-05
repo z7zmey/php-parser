@@ -15,7 +15,7 @@ type Function struct {
 	Stmts         []node.Node
 }
 
-// NewFunction node constuctor
+// NewFunction node constructor
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *Function {
 	return &Function{
 		ReturnsRef,

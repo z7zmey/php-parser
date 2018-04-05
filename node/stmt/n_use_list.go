@@ -11,7 +11,7 @@ type UseList struct {
 	Uses    []node.Node
 }
 
-// NewUseList node constuctor
+// NewUseList node constructor
 func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 	return &UseList{
 		UseType,

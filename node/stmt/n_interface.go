@@ -13,7 +13,7 @@ type Interface struct {
 	Stmts         []node.Node
 }
 
-// NewInterface node constuctor
+// NewInterface node constructor
 func NewInterface(InterfaceName node.Node, Extends []node.Node, Stmts []node.Node, PhpDocComment string) *Interface {
 	return &Interface{
 		PhpDocComment,

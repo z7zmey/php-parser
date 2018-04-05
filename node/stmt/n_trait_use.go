@@ -11,7 +11,7 @@ type TraitUse struct {
 	Adaptations []node.Node
 }
 
-// NewTraitUse node constuctor
+// NewTraitUse node constructor
 func NewTraitUse(Traits []node.Node, Adaptations []node.Node) *TraitUse {
 	return &TraitUse{
 		Traits,

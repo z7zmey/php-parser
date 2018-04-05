@@ -9,7 +9,7 @@ type Argument struct {
 	Expr        Node // Exression
 }
 
-// NewArgument node constuctor
+// NewArgument node constructor
 func NewArgument(Expression Node, Variadic bool, IsReference bool) *Argument {
 	return &Argument{
 		Variadic,

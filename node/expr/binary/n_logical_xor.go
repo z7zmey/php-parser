@@ -11,7 +11,7 @@ type LogicalXor struct {
 	Right node.Node
 }
 
-// NewLogicalXor node constuctor
+// NewLogicalXor node constructor
 func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
 		Variable,

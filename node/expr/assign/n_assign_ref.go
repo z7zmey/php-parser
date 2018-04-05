@@ -11,7 +11,7 @@ type Reference struct {
 	Expression node.Node
 }
 
-// NewReference node constuctor
+// NewReference node constructor
 func NewReference(Variable node.Node, Expression node.Node) *Reference {
 	return &Reference{
 		Variable,

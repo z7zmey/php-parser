@@ -10,7 +10,7 @@ type Clone struct {
 	Expr node.Node
 }
 
-// NewClone node constuctor
+// NewClone node constructor
 func NewClone(Expression node.Node) *Clone {
 	return &Clone{
 		Expression,

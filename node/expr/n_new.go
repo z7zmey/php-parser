@@ -11,7 +11,7 @@ type New struct {
 	Arguments []node.Node
 }
 
-// NewNew node constuctor
+// NewNew node constructor
 func NewNew(Class node.Node, Arguments []node.Node) *New {
 	return &New{
 		Class,

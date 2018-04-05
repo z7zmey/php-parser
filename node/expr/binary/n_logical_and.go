@@ -11,7 +11,7 @@ type LogicalAnd struct {
 	Right node.Node
 }
 
-// NewLogicalAnd node constuctor
+// NewLogicalAnd node constructor
 func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	return &LogicalAnd{
 		Variable,

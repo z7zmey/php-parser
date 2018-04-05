@@ -10,7 +10,7 @@ type Label struct {
 	LabelName node.Node
 }
 
-// NewLabel node constuctor
+// NewLabel node constructor
 func NewLabel(LabelName node.Node) *Label {
 	return &Label{
 		LabelName,

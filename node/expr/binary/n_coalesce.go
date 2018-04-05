@@ -11,7 +11,7 @@ type Coalesce struct {
 	Right node.Node
 }
 
-// NewCoalesce node constuctor
+// NewCoalesce node constructor
 func NewCoalesce(Variable node.Node, Expression node.Node) *Coalesce {
 	return &Coalesce{
 		Variable,

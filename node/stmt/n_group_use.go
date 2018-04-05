@@ -12,7 +12,7 @@ type GroupUse struct {
 	UseList []node.Node
 }
 
-// NewGroupUse node constuctor
+// NewGroupUse node constructor
 func NewGroupUse(UseType node.Node, Prefix node.Node, UseList []node.Node) *GroupUse {
 	return &GroupUse{
 		UseType,

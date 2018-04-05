@@ -16,7 +16,7 @@ type Class struct {
 	Stmts         []node.Node
 }
 
-// NewClass node constuctor
+// NewClass node constructor
 func NewClass(ClassName node.Node, Modifiers []node.Node, Args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
 		PhpDocComment,

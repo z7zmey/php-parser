@@ -11,7 +11,7 @@ type AltSwitch struct {
 	Cases []node.Node
 }
 
-// NewAltSwitch node constuctor
+// NewAltSwitch node constructor
 func NewAltSwitch(Cond node.Node, Cases []node.Node) *AltSwitch {
 	return &AltSwitch{
 		Cond,

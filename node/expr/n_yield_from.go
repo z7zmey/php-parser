@@ -10,7 +10,7 @@ type YieldFrom struct {
 	Expr node.Node
 }
 
-// NewYieldFrom node constuctor
+// NewYieldFrom node constructor
 func NewYieldFrom(Expression node.Node) *YieldFrom {
 	return &YieldFrom{
 		Expression,

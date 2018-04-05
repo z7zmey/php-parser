@@ -11,7 +11,7 @@ type AltWhile struct {
 	Stmt node.Node
 }
 
-// NewAltWhile node constuctor
+// NewAltWhile node constructor
 func NewAltWhile(Cond node.Node, Stmt node.Node) *AltWhile {
 	return &AltWhile{
 		Cond,

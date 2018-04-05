@@ -12,7 +12,7 @@ type Trait struct {
 	Stmts         []node.Node
 }
 
-// NewTrait node constuctor
+// NewTrait node constructor
 func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Trait {
 	return &Trait{
 		PhpDocComment,

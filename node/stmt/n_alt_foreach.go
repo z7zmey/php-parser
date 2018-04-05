@@ -14,7 +14,7 @@ type AltForeach struct {
 	Stmt     node.Node
 }
 
-// NewAltForeach node constuctor
+// NewAltForeach node constructor
 func NewAltForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *AltForeach {
 	return &AltForeach{
 		ByRef,

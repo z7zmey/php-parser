@@ -10,7 +10,7 @@ type PostInc struct {
 	Variable node.Node
 }
 
-// NewPostInc node constuctor
+// NewPostInc node constructor
 func NewPostInc(Variable node.Node) *PostInc {
 	return &PostInc{
 		Variable,

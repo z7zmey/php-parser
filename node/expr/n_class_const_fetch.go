@@ -11,7 +11,7 @@ type ClassConstFetch struct {
 	ConstantName node.Node
 }
 
-// NewClassConstFetch node constuctor
+// NewClassConstFetch node constructor
 func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
 		Class,

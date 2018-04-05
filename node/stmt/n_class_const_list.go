@@ -11,7 +11,7 @@ type ClassConstList struct {
 	Consts    []node.Node
 }
 
-// NewClassConstList node constuctor
+// NewClassConstList node constructor
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstList {
 	return &ClassConstList{
 		Modifiers,

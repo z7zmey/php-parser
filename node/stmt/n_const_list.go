@@ -10,7 +10,7 @@ type ConstList struct {
 	Consts []node.Node
 }
 
-// NewConstList node constuctor
+// NewConstList node constructor
 func NewConstList(Consts []node.Node) *ConstList {
 	return &ConstList{
 		Consts,

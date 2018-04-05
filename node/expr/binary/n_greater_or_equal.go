@@ -11,7 +11,7 @@ type GreaterOrEqual struct {
 	Right node.Node
 }
 
-// NewGreaterOrEqual node constuctor
+// NewGreaterOrEqual node constructor
 func NewGreaterOrEqual(Variable node.Node, Expression node.Node) *GreaterOrEqual {
 	return &GreaterOrEqual{
 		Variable,

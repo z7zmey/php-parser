@@ -10,7 +10,7 @@ type PreInc struct {
 	Variable node.Node
 }
 
-// NewPreInc node constuctor
+// NewPreInc node constructor
 func NewPreInc(Variable node.Node) *PreInc {
 	return &PreInc{
 		Variable,

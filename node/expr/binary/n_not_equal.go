@@ -11,7 +11,7 @@ type NotEqual struct {
 	Right node.Node
 }
 
-// NewNotEqual node constuctor
+// NewNotEqual node constructor
 func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	return &NotEqual{
 		Variable,

@@ -10,7 +10,7 @@ type AltElse struct {
 	Stmt node.Node
 }
 
-// NewAltElse node constuctor
+// NewAltElse node constructor
 func NewAltElse(Stmt node.Node) *AltElse {
 	return &AltElse{
 		Stmt,

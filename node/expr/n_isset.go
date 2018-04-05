@@ -10,7 +10,7 @@ type Isset struct {
 	Variables []node.Node
 }
 
-// NewIsset node constuctor
+// NewIsset node constructor
 func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
 		Variables,

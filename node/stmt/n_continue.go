@@ -10,7 +10,7 @@ type Continue struct {
 	Expr node.Node
 }
 
-// NewContinue node constuctor
+// NewContinue node constructor
 func NewContinue(Expr node.Node) *Continue {
 	return &Continue{
 		Expr,

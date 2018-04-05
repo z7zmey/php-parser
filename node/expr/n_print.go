@@ -10,7 +10,7 @@ type Print struct {
 	Expr node.Node
 }
 
-// NewPrint node constuctor
+// NewPrint node constructor
 func NewPrint(Expression node.Node) *Print {
 	return &Print{
 		Expression,
