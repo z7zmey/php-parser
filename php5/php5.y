@@ -2211,43 +2211,43 @@ expr_without_variable:
             { $$ = $1 }
     |   T_INT_CAST expr
             {
-                $$ = cast.NewCastInt($2)
+                $$ = cast.NewInt($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = cast.NewCastDouble($2)
+                $$ = cast.NewDouble($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_STRING_CAST expr
             {
-                $$ = cast.NewCastString($2)
+                $$ = cast.NewString($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = cast.NewCastArray($2)
+                $$ = cast.NewArray($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = cast.NewCastObject($2)
+                $$ = cast.NewObject($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_BOOL_CAST expr
             {
-                $$ = cast.NewCastBool($2)
+                $$ = cast.NewBool($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }
     |   T_UNSET_CAST expr
             {
-                $$ = cast.NewCastUnset($2)
+                $$ = cast.NewUnset($2)
                 positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
                 comments.AddComments($$, $1.Comments())
             }

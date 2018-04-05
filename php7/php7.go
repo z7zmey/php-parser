@@ -4657,7 +4657,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1827
 		{
-			yyVAL.node = cast.NewCastInt(yyDollar[2].node)
+			yyVAL.node = cast.NewInt(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4665,7 +4665,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1833
 		{
-			yyVAL.node = cast.NewCastDouble(yyDollar[2].node)
+			yyVAL.node = cast.NewDouble(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4673,7 +4673,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1839
 		{
-			yyVAL.node = cast.NewCastString(yyDollar[2].node)
+			yyVAL.node = cast.NewString(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4681,7 +4681,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1845
 		{
-			yyVAL.node = cast.NewCastArray(yyDollar[2].node)
+			yyVAL.node = cast.NewArray(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4689,7 +4689,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1851
 		{
-			yyVAL.node = cast.NewCastObject(yyDollar[2].node)
+			yyVAL.node = cast.NewObject(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4697,7 +4697,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1857
 		{
-			yyVAL.node = cast.NewCastBool(yyDollar[2].node)
+			yyVAL.node = cast.NewBool(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}
@@ -4705,7 +4705,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:1863
 		{
-			yyVAL.node = cast.NewCastUnset(yyDollar[2].node)
+			yyVAL.node = cast.NewUnset(yyDollar[2].node)
 			positions.AddPosition(yyVAL.node, positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 			comments.AddComments(yyVAL.node, yyDollar[1].token.Comments())
 		}

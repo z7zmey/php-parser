@@ -5,26 +5,26 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// CastString node
-type CastString struct {
+// String node
+type String struct {
 	Expr node.Node
 }
 
-// NewCastString node constuctor
-func NewCastString(Expr node.Node) *CastString {
-	return &CastString{
+// NewString node constructor
+func NewString(Expr node.Node) *String {
+	return &String{
 		Expr,
 	}
 }
 
 // Attributes returns node attributes as map
-func (n *CastString) Attributes() map[string]interface{} {
+func (n *String) Attributes() map[string]interface{} {
 	return nil
 }
 
 // Walk traverses nodes
 // Walk is invoked recursively until v.EnterNode returns true
-func (n *CastString) Walk(v walker.Visitor) {
+func (n *String) Walk(v walker.Visitor) {
 	if v.EnterNode(n) == false {
 		return
 	}

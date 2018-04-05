@@ -18,49 +18,49 @@ var nodesToTest = []struct {
 	expectedAttributes  map[string]interface{}
 }{
 	{
-		&cast.CastArray{
+		&cast.Array{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastBool{
+		&cast.Bool{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastDouble{
+		&cast.Double{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastInt{
+		&cast.Int{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastObject{
+		&cast.Object{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastString{
+		&cast.String{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
-		&cast.CastUnset{
+		&cast.Unset{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
 		[]string{"Expr"},

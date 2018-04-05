@@ -76,7 +76,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *node.Argument:
 		p.printNodeArgument(n)
 
-	// name
+		// name
 
 	case *name.NamePart:
 		p.printNameNamePart(n)
@@ -87,7 +87,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *name.Relative:
 		p.printNameRelative(n)
 
-	// scalar
+		// scalar
 
 	case *scalar.Lnumber:
 		p.printScalarLNumber(n)
@@ -102,7 +102,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *scalar.MagicConstant:
 		p.printScalarMagicConstant(n)
 
-	// assign
+		// assign
 
 	case *assign.Assign:
 		p.printAssign(n)
@@ -133,7 +133,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *assign.ShiftRight:
 		p.printAssignShiftRight(n)
 
-	// binary
+		// binary
 
 	case *binary.BitwiseAnd:
 		p.printBinaryBitwiseAnd(n)
@@ -190,24 +190,24 @@ func (p *Printer) printNode(n node.Node) {
 	case *binary.Spaceship:
 		p.printBinarySpaceship(n)
 
-	// cast
+		// cast
 
-	case *cast.CastArray:
-		p.printCastArray(n)
-	case *cast.CastBool:
-		p.printCastBool(n)
-	case *cast.CastDouble:
-		p.printCastDouble(n)
-	case *cast.CastInt:
-		p.printCastInt(n)
-	case *cast.CastObject:
-		p.printCastObject(n)
-	case *cast.CastString:
-		p.printCastString(n)
-	case *cast.CastUnset:
-		p.printCastUnset(n)
+	case *cast.Array:
+		p.printArray(n)
+	case *cast.Bool:
+		p.printBool(n)
+	case *cast.Double:
+		p.printDouble(n)
+	case *cast.Int:
+		p.printInt(n)
+	case *cast.Object:
+		p.printObject(n)
+	case *cast.String:
+		p.printString(n)
+	case *cast.Unset:
+		p.printUnset(n)
 
-	// expr
+		// expr
 
 	case *expr.ArrayDimFetch:
 		p.printExprArrayDimFetch(n)
@@ -294,7 +294,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *expr.Yield:
 		p.printExprYield(n)
 
-	// stmt
+		// stmt
 
 	case *stmt.AltElseIf:
 		p.printStmtAltElseIf(n)
@@ -855,50 +855,50 @@ func (p *Printer) printBinarySpaceship(n node.Node) {
 
 // cast
 
-func (p *Printer) printCastArray(n node.Node) {
-	nn := n.(*cast.CastArray)
+func (p *Printer) printArray(n node.Node) {
+	nn := n.(*cast.Array)
 
 	io.WriteString(p.w, "(array)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastBool(n node.Node) {
-	nn := n.(*cast.CastBool)
+func (p *Printer) printBool(n node.Node) {
+	nn := n.(*cast.Bool)
 
 	io.WriteString(p.w, "(bool)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastDouble(n node.Node) {
-	nn := n.(*cast.CastDouble)
+func (p *Printer) printDouble(n node.Node) {
+	nn := n.(*cast.Double)
 
 	io.WriteString(p.w, "(float)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastInt(n node.Node) {
-	nn := n.(*cast.CastInt)
+func (p *Printer) printInt(n node.Node) {
+	nn := n.(*cast.Int)
 
 	io.WriteString(p.w, "(int)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastObject(n node.Node) {
-	nn := n.(*cast.CastObject)
+func (p *Printer) printObject(n node.Node) {
+	nn := n.(*cast.Object)
 
 	io.WriteString(p.w, "(object)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastString(n node.Node) {
-	nn := n.(*cast.CastString)
+func (p *Printer) printString(n node.Node) {
+	nn := n.(*cast.String)
 
 	io.WriteString(p.w, "(string)")
 	p.Print(nn.Expr)
 }
 
-func (p *Printer) printCastUnset(n node.Node) {
-	nn := n.(*cast.CastUnset)
+func (p *Printer) printUnset(n node.Node) {
+	nn := n.(*cast.Unset)
 
 	io.WriteString(p.w, "(unset)")
 	p.Print(nn.Expr)

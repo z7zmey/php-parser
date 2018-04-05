@@ -2678,52 +2678,52 @@ CAD;
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastArray{
+				Expr: &cast.Array{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastBool{
+				Expr: &cast.Bool{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastBool{
+				Expr: &cast.Bool{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastDouble{
+				Expr: &cast.Double{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastDouble{
+				Expr: &cast.Double{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastInt{
+				Expr: &cast.Int{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastInt{
+				Expr: &cast.Int{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastObject{
+				Expr: &cast.Object{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastString{
+				Expr: &cast.String{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},
 			&stmt.Expression{
-				Expr: &cast.CastUnset{
+				Expr: &cast.Unset{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				},
 			},

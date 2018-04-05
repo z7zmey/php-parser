@@ -972,11 +972,11 @@ func TestPrintBinarySpaceship(t *testing.T) {
 
 // cast
 
-func TestPrintCastArray(t *testing.T) {
+func TestPrintArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastArray{
+	p.Print(&cast.Array{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -988,11 +988,11 @@ func TestPrintCastArray(t *testing.T) {
 	}
 }
 
-func TestPrintCastBool(t *testing.T) {
+func TestPrintBool(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastBool{
+	p.Print(&cast.Bool{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -1004,11 +1004,11 @@ func TestPrintCastBool(t *testing.T) {
 	}
 }
 
-func TestPrintCastDouble(t *testing.T) {
+func TestPrintDouble(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastDouble{
+	p.Print(&cast.Double{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -1020,11 +1020,11 @@ func TestPrintCastDouble(t *testing.T) {
 	}
 }
 
-func TestPrintCastInt(t *testing.T) {
+func TestPrintInt(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastInt{
+	p.Print(&cast.Int{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -1036,11 +1036,11 @@ func TestPrintCastInt(t *testing.T) {
 	}
 }
 
-func TestPrintCastObject(t *testing.T) {
+func TestPrintObject(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastObject{
+	p.Print(&cast.Object{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -1052,11 +1052,11 @@ func TestPrintCastObject(t *testing.T) {
 	}
 }
 
-func TestPrintCastString(t *testing.T) {
+func TestPrintString(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastString{
+	p.Print(&cast.String{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
@@ -1068,11 +1068,11 @@ func TestPrintCastString(t *testing.T) {
 	}
 }
 
-func TestPrintCastUnset(t *testing.T) {
+func TestPrintUnset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o, "    ")
-	p.Print(&cast.CastUnset{
+	p.Print(&cast.Unset{
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
