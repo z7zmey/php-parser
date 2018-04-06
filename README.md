@@ -64,6 +64,53 @@ It does not change AST but collects resolved names into `map[node.Node]string`
 - For `Class`, `Interface`, `Trait`, `Function`, `ConstList` nodes collects name with current namespace.
 - For `Name`, `Relative`, `FullyQualified` nodes resolves `use` aliases and collects a fully qualified name.
 
+## Pretty printer
+
+```Golang
+nodes := &stmt.StmtList{
+	Stmts: []node.Node{
+		&stmt.Namespace{
+			NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		},
+		&stmt.Class{
+			Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+			Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			Stmts: []node.Node{
+				&stmt.ClassMethod{
+					Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+					MethodName: &node.Identifier{Value: "greet"},
+					Stmts: []node.Node{
+						&stmt.Echo{
+							Exprs: []node.Node{
+								&scalar.String{Value: "'Hello world'"},
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+file := os.Stdout
+p := printer.NewPrinter(file, "    ")
+p.PrintFile(nodes)
+```
+
+Output:
+```PHP
+<?php
+namespace Foo;
+abstract class Bar extends Baz
+{
+    public function greet()
+    {
+        echo 'Hello world';
+    }
+}
+```
+
 ## Roadmap
 - [X] Lexer
 - [x] PHP 7 syntax analyzer
@@ -75,9 +122,9 @@ It does not change AST but collects resolved names into `map[node.Node]string`
 - [x] PHP 5 syntax analyzer
 - [x] Tests
 - [x] Namespace resolver
+- [x] Pretty printer
 - [ ] PhpDocComment parser
 - [ ] Error handling
 - [ ] Stabilize api
 - [ ] Documentation
-- [ ] Pretty printer
 - [ ] Code flow graph
