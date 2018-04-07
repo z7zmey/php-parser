@@ -13,7 +13,7 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// Dumper prints ast hierarchy to stdout
+// Dumper writes ast hierarchy to Writer
 // Also prints comments and positions attached to nodes
 type Dumper struct {
 	Writer     io.Writer
@@ -23,7 +23,7 @@ type Dumper struct {
 	NsResolver *NamespaceResolver
 }
 
-// EnterNode is invoked at every node in heirerchy
+// EnterNode is invoked at every node in hierarchy
 func (d Dumper) EnterNode(w walker.Walkable) bool {
 	n := w.(node.Node)
 
