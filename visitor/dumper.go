@@ -13,7 +13,7 @@ import (
 	"github.com/z7zmey/php-parser/walker"
 )
 
-// Dumper writes ast hierarchy to Writer
+// Dumper writes ast hierarchy to an io.Writer
 // Also prints comments and positions attached to nodes
 type Dumper struct {
 	Writer     io.Writer
