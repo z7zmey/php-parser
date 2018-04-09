@@ -29,10 +29,10 @@ func TestSimpleVar(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -52,10 +52,10 @@ func TestSimpleVarOneChar(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -76,10 +76,10 @@ func TestSimpleVarEndsEcapsed(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -100,10 +100,10 @@ func TestStringVarCurveOpen(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -127,10 +127,10 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -150,10 +150,10 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -176,10 +176,10 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -203,9 +203,9 @@ func TestCurlyOpenMethodCall(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }

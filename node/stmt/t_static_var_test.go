@@ -27,10 +27,10 @@ func TestStaticVar(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -53,10 +53,10 @@ func TestStaticVars(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -79,9 +79,9 @@ func TestStaticVars2(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }

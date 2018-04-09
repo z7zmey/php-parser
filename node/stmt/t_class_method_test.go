@@ -29,10 +29,10 @@ func TestSimpleClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -68,10 +68,10 @@ func TestPrivateProtectedClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -98,7 +98,7 @@ func TestPhp5ClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -130,7 +130,7 @@ func TestPhp7ClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -157,10 +157,10 @@ func TestAbstractClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 
-	actual, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ = php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -191,6 +191,6 @@ func TestPhp7AbstractClassMethod(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }

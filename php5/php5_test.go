@@ -3615,7 +3615,7 @@ func TestPhp5(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -3652,7 +3652,7 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }
 
@@ -3718,6 +3718,6 @@ CAD;
 		},
 	}
 
-	actual, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
 	assertEqual(t, expected, actual)
 }

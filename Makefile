@@ -12,6 +12,9 @@ run:
 	./php-parser $(PHPFILE)
 
 test:
+	go test ./...
+
+cover:
 	go test ./... --cover
 
 bench:

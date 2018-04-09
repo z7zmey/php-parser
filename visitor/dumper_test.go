@@ -22,7 +22,7 @@ func ExampleDumper() {
 			}
 		}`
 
-	nodes, comments, positions := php7.Parse(bytes.NewBufferString(src), "test.php")
+	nodes, comments, positions, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
 
 	nsResolver := visitor.NewNamespaceResolver()
 	nodes.Walk(nsResolver)
