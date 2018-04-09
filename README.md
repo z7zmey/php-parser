@@ -40,10 +40,12 @@ import (
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions := php7.Parse(src, "example.php")
+	nodes, comments, positions, errors := php7.Parse(src, "example.php")
+
+	_ = errors
 
 	visitor := visitor.Dumper{
-	        Writer:    os.Stdout,
+		Writer:    os.Stdout,
 		Indent:    "",
 		Comments:  comments,
 		Positions: positions,
