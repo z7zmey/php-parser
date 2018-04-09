@@ -1,63 +1,117 @@
-// Package php7 parses PHP7
 package php7
 
 import (
+	"bufio"
+	goToken "go/token"
 	"io"
+
+	"github.com/cznic/golex/lex"
 
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/scanner"
 	"github.com/z7zmey/php-parser/token"
 )
 
-var rootnode node.Node
-var comments comment.Comments
-var positions position.Positions
-var positionBuilder position.Builder
-
-// Parse the php7 parser entrypoint
-func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions, []*errors.Error) {
-	yyDebug = 0
-	yyErrorVerbose = true
-	rootnode = stmt.NewStmtList([]node.Node{}) //reset
-	comments = comment.Comments{}
-	positions = position.Positions{}
-	positionBuilder = position.Builder{&positions}
-
-	lexer := newLexer(src, fName)
-	yyParse(lexer)
-	return rootnode, comments, positions, lexer.errors
+func (lval *yySymType) Token(t token.Token) {
+	lval.token = t
 }
 
-// ListGetFirstNodeComments returns comments of a first node in the list
-func ListGetFirstNodeComments(list []node.Node) []comment.Comment {
+// Parser structure
+type Parser struct {
+	scanner.Lexer
+	lastToken       *token.Token
+	positionBuilder *position.Builder
+	errors          []*errors.Error
+	rootNode        node.Node
+	comments        comment.Comments
+	positions       position.Positions
+}
+
+// NewParser creates and returns new Parser
+func NewParser(src io.Reader, fName string) *Parser {
+	file := goToken.NewFileSet().AddFile(fName, -1, 1<<31-1)
+	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(scanner.Rune2Class))
+	if err != nil {
+		panic(err)
+	}
+
+	scanner := scanner.Lexer{
+		Lexer:         lx,
+		StateStack:    []int{0},
+		PhpDocComment: "",
+		Comments:      nil,
+	}
+
+	return &Parser{
+		scanner,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+		nil,
+	}
+}
+
+// Lex proxy to lexer Lex
+func (l *Parser) Lex(lval *yySymType) int {
+	t := l.Lexer.Lex(lval)
+	l.lastToken = &lval.token
+	return t
+}
+
+func (l *Parser) Error(msg string) {
+	l.errors = append(l.errors, errors.NewError(msg, *l.lastToken))
+}
+
+// Parse the php7 Parser entrypoint
+func (l *Parser) Parse() int {
+	yyDebug = 0
+	yyErrorVerbose = true
+
+	// init
+	l.errors = nil
+	l.rootNode = nil
+	l.comments = comment.Comments{}
+	l.positions = position.Positions{}
+	l.positionBuilder = &position.Builder{
+		Positions: &l.positions,
+	}
+
+	// parse
+
+	return yyParse(l)
+}
+
+func (l *Parser) listGetFirstNodeComments(list []node.Node) []comment.Comment {
 	if len(list) == 0 {
 		return nil
 	}
 
 	node := list[0]
 
-	return comments[node]
+	return l.comments[node]
 }
 
-type foreachVariable struct {
-	node  node.Node
-	byRef bool
+// GetRootNode returns root node
+func (l *Parser) GetRootNode() node.Node {
+	return l.rootNode
 }
 
-type nodesWithEndToken struct {
-	nodes    []node.Node
-	endToken token.Token
+// GetErrors returns errors list
+func (l *Parser) GetErrors() []*errors.Error {
+	return l.errors
 }
 
-type boolWithToken struct {
-	value bool
-	token *token.Token
+// GetComments returns comments list
+func (l *Parser) GetComments() comment.Comments {
+	return l.comments
 }
 
-type altSyntaxNode struct {
-	node  node.Node
-	isAlt bool
+// GetPositions returns positions list
+func (l *Parser) GetPositions() position.Positions {
+	return l.positions
 }

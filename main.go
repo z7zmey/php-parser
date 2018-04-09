@@ -36,9 +36,19 @@ func main() {
 
 				src, _ := os.Open(string(path))
 				if *usePhp5 {
-					nodes, comments, positions, errors = php5.Parse(src, path)
+					parser := php5.NewParser(src, path)
+					parser.Parse()
+					nodes = parser.GetRootNode()
+					errors = parser.GetErrors()
+					comments = parser.GetComments()
+					positions = parser.GetPositions()
 				} else {
-					nodes, comments, positions, errors = php7.Parse(src, path)
+					parser := php7.NewParser(src, path)
+					parser.Parse()
+					nodes = parser.GetRootNode()
+					errors = parser.GetErrors()
+					comments = parser.GetComments()
+					positions = parser.GetPositions()
 				}
 
 				for _, e := range errors {
