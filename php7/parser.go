@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/position"
@@ -17,15 +18,17 @@ var positions position.Positions
 var positionBuilder position.Builder
 
 // Parse the php7 parser entrypoint
-func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
+func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions, []*errors.Error) {
 	yyDebug = 0
 	yyErrorVerbose = true
 	rootnode = stmt.NewStmtList([]node.Node{}) //reset
 	comments = comment.Comments{}
 	positions = position.Positions{}
 	positionBuilder = position.Builder{&positions}
-	yyParse(newLexer(src, fName))
-	return rootnode, comments, positions
+
+	lexer := newLexer(src, fName)
+	yyParse(lexer)
+	return rootnode, comments, positions, lexer.errors
 }
 
 // ListGetFirstNodeComments returns comments of a first node in the list

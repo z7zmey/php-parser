@@ -281,7 +281,12 @@ identifier:
 ;
 
 top_statement_list:
-        top_statement_list top_statement                { $$ = append($1, $2) }
+    top_statement_list top_statement
+        {
+            if $2 != nil {
+                $$ = append($1, $2)
+            }
+        }
     |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
@@ -324,7 +329,12 @@ name:
 ;
 
 top_statement:
-        statement                                       { $$ = $1; }
+    error
+        {
+            // error
+            $$ = nil
+        }
+    |   statement                                       { $$ = $1; }
     |   function_declaration_statement                  { $$ = $1; }
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }
@@ -498,12 +508,22 @@ const_list:
 ;
 
 inner_statement_list:
-        inner_statement_list inner_statement            { $$ = append($1, $2) }
+    inner_statement_list inner_statement
+        {
+            if $2 != nil {
+                $$ = append($1, $2)
+            }
+        }
     |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
 inner_statement:
-    statement                                           { $$ = $1; }
+    error
+        {
+            // error
+            $$ = nil
+        }
+    |   statement                                       { $$ = $1; }
     |   function_declaration_statement                  { $$ = $1; }
     |   class_declaration_statement                     { $$ = $1; }
     |   trait_declaration_statement                     { $$ = $1; }

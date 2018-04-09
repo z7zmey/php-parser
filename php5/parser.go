@@ -4,6 +4,7 @@ package php5
 import (
 	"io"
 
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node/expr"
 
 	"github.com/z7zmey/php-parser/comment"
@@ -21,15 +22,17 @@ var positionBuilder position.Builder
 var parentNode node.Node
 
 // Parse the php5 parser entrypoint
-func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions) {
+func Parse(src io.Reader, fName string) (node.Node, comment.Comments, position.Positions, []*errors.Error) {
 	yyDebug = 0
 	yyErrorVerbose = true
 	rootnode = stmt.NewStmtList([]node.Node{}) //reset
 	comments = comment.Comments{}
 	positions = position.Positions{}
 	positionBuilder = position.Builder{Positions: &positions}
-	yyParse(newLexer(src, fName))
-	return rootnode, comments, positions
+
+	lexer := newLexer(src, fName)
+	yyParse(lexer)
+	return rootnode, comments, positions, lexer.errors
 }
 
 // ListGetFirstNodeComments returns comments of a first node in the list

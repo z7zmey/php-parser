@@ -7,16 +7,26 @@ import (
 
 	"github.com/cznic/golex/lex"
 
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/scanner"
 	"github.com/z7zmey/php-parser/token"
 )
 
 type lexer struct {
 	scanner.Lexer
+	lastToken *token.Token
+	errors    []*errors.Error
 }
 
 func (l *lexer) Lex(lval *yySymType) int {
-	return l.Lexer.Lex(lval)
+	t := l.Lexer.Lex(lval)
+	l.lastToken = &lval.token
+
+	return t
+}
+
+func (l *lexer) Error(msg string) {
+	l.errors = append(l.errors, errors.NewError(msg, *l.lastToken))
 }
 
 func (lval *yySymType) Token(t token.Token) {
@@ -30,12 +40,16 @@ func newLexer(src io.Reader, fName string) *lexer {
 		panic(err)
 	}
 
+	scanner := scanner.Lexer{
+		Lexer:         lx,
+		StateStack:    []int{0},
+		PhpDocComment: "",
+		Comments:      nil,
+	}
+
 	return &lexer{
-		scanner.Lexer{
-			Lexer:         lx,
-			StateStack:    []int{0},
-			PhpDocComment: "",
-			Comments:      nil,
-		},
+		scanner,
+		nil,
+		nil,
 	}
 }

@@ -9,6 +9,7 @@ import (
 
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
@@ -20,6 +21,7 @@ func main() {
 	var nodes node.Node
 	var comments comment.Comments
 	var positions position.Positions
+	var errors []*errors.Error
 
 	usePhp5 := flag.Bool("php5", false, "use PHP5 parser")
 	flag.Parse()
@@ -34,9 +36,13 @@ func main() {
 
 				src, _ := os.Open(string(path))
 				if *usePhp5 {
-					nodes, comments, positions = php5.Parse(src, path)
+					nodes, comments, positions, errors = php5.Parse(src, path)
 				} else {
-					nodes, comments, positions = php7.Parse(src, path)
+					nodes, comments, positions, errors = php7.Parse(src, path)
+				}
+
+				for _, e := range errors {
+					fmt.Println(e)
 				}
 
 				nsResolver := visitor.NewNamespaceResolver()

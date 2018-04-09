@@ -239,7 +239,12 @@ start:
 ;
 
 top_statement_list:
-        top_statement_list top_statement                { $$ = append($1, $2) }
+        top_statement_list top_statement
+            {
+                if $2 != nil {
+                    $$ = append($1, $2)
+                }
+            }
     |   /* empty */                                     { $$ = []node.Node{} }
 ;
 
@@ -261,7 +266,12 @@ namespace_name:
 ;
 
 top_statement:
-        statement
+        error
+            {
+                // error
+                $$ = nil
+            }
+    |   statement
             { $$ = $1 }
     |   function_declaration_statement
             { $$ = $1 }
@@ -534,14 +544,23 @@ constant_declaration:
 
 inner_statement_list:
         inner_statement_list inner_statement
-            { $$ = append($1, $2) }
+            {
+                if $2 != nil {
+                    $$ = append($1, $2)
+                }
+            }
     |   /* empty */
             { $$ = []node.Node{} }
 ;
 
 
 inner_statement:
-        statement
+        error
+            {
+                // error
+                $$ = nil
+            }
+    |   statement
             { $$ = $1 }
     |   function_declaration_statement
             { $$ = $1 }
