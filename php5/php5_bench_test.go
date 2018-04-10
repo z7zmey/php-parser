@@ -414,6 +414,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php5.Parse(bytes.NewBufferString(src), "test.php")
+		php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+		php5parser.Parse()
 	}
 }

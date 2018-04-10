@@ -382,6 +382,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php7.Parse(bytes.NewBufferString(src), "test.php")
+		php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+		php7parser.Parse()
 	}
 }

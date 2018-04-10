@@ -22,7 +22,9 @@ func ExampleDumper() {
 			}
 		}`
 
-	nodes, comments, positions, _ := php7.Parse(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	nodes := php7parser.GetRootNode()
 
 	nsResolver := visitor.NewNamespaceResolver()
 	nodes.Walk(nsResolver)
@@ -30,8 +32,8 @@ func ExampleDumper() {
 	dumper := visitor.Dumper{
 		Writer:     os.Stdout,
 		Indent:     "| ",
-		Comments:   comments,
-		Positions:  positions,
+		Comments:   php7parser.GetComments(),
+		Positions:  php7parser.GetPositions(),
 		NsResolver: nsResolver,
 	}
 	nodes.Walk(dumper)
