@@ -1,11 +1,7 @@
 package php7
 
 import (
-	"bufio"
-	goToken "go/token"
 	"io"
-
-	"github.com/cznic/golex/lex"
 
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/errors"
@@ -21,7 +17,7 @@ func (lval *yySymType) Token(t token.Token) {
 
 // Parser structure
 type Parser struct {
-	scanner.Lexer
+	*scanner.Lexer
 	lastToken       *token.Token
 	positionBuilder *position.Builder
 	errors          []*errors.Error
@@ -32,21 +28,10 @@ type Parser struct {
 
 // NewParser creates and returns new Parser
 func NewParser(src io.Reader, fName string) *Parser {
-	file := goToken.NewFileSet().AddFile(fName, -1, 1<<31-1)
-	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(scanner.Rune2Class))
-	if err != nil {
-		panic(err)
-	}
-
-	scanner := scanner.Lexer{
-		Lexer:         lx,
-		StateStack:    []int{0},
-		PhpDocComment: "",
-		Comments:      nil,
-	}
+	lexer := scanner.NewLexer(src, fName)
 
 	return &Parser{
-		scanner,
+		lexer,
 		nil,
 		nil,
 		nil,
