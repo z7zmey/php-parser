@@ -8358,12 +8358,11 @@ yyrule127: // ([/][*])|([/][*][*])
 			if c == -1 {
 				break // TODO: Unterminated comment starting line %d
 			}
-			p := c
-			c = l.Next()
-			if rune(p) == '*' && rune(c) == '/' {
+			if l.Prev.Rune == '*' && l.Last.Rune == '/' {
 				c = l.Next()
 				break
 			}
+			c = l.Next()
 		}
 		lval.Token(l.newToken(l.Token()))
 		if is_doc_comment {
