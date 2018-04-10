@@ -31,6 +31,7 @@ go get github.com/z7zmey/php-parser
 package main
 
 import (
+	"fmt"
 	"bytes"
 	"os"
 
@@ -40,17 +41,23 @@ import (
 
 func main() {
 	src := bytes.NewBufferString(`<? echo "Hello world";`)
-	nodes, comments, positions, errors := php7.Parse(src, "example.php")
 
-	_ = errors
+	parser := php7.NewParser(src, "example.php")
+	parser.Parse()
+
+	for _, e := range parser.GetErrors() {
+		fmt.Println(e)
+	}
 
 	visitor := visitor.Dumper{
 		Writer:    os.Stdout,
 		Indent:    "",
-		Comments:  comments,
-		Positions: positions,
+		Comments:  parser.GetComments(),
+		Positions: parser.GetPositions(),
 	}
-	nodes.Walk(visitor)
+
+	rootNode := parser.GetRootNode()
+	rootNode.Walk(visitor)
 }
 ```
 
