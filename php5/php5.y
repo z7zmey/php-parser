@@ -234,7 +234,8 @@ import (
 start:
         top_statement_list
             {
-                rootnode = stmt.NewStmtList($1)
+                yylex.(*Parser).rootNode = stmt.NewStmtList($1)
+                yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
             }
 ;
 
@@ -252,16 +253,16 @@ namespace_name:
         T_STRING
             {
                 namePart := name.NewNamePart($1.Value)
-                positions.AddPosition(namePart, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = []node.Node{namePart}
-                comments.AddComments(namePart, $1.Comments())
+                yylex.(*Parser).comments.AddComments(namePart, $1.Comments())
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 namePart := name.NewNamePart($3.Value)
-                positions.AddPosition(namePart, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = append($1, namePart)
-                comments.AddComments(namePart, $3.Comments())
+                yylex.(*Parser).comments.AddComments(namePart, $3.Comments())
             }
 ;
 
@@ -280,60 +281,60 @@ top_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = stmt.NewHaltCompiler()
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NAMESPACE namespace_name ';'
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 $$ = stmt.NewNamespace(name, nil)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 $$ = stmt.NewNamespace(name, $4)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 $$ = stmt.NewNamespace(nil, $3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_USE use_declarations ';'
             {
                 $$ = stmt.NewUseList(nil, $2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_USE T_FUNCTION use_function_declarations ';'
             {
                 useType := node.NewIdentifier($2.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($2))
-                comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments($$, $2.Comments())
 
                 $$ = stmt.NewUseList(useType, $3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_USE T_CONST use_const_declarations ';'
             {
                 useType := node.NewIdentifier($2.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($2))
-                comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments($$, $2.Comments())
 
                 $$ = stmt.NewUseList(useType, $3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   constant_declaration ';'
             { $$ = $1 }
@@ -350,48 +351,48 @@ use_declaration:
         namespace_name
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   namespace_name T_AS T_STRING
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments(alias, $3.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments(alias, $4.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(alias, $4.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
 ;
 
@@ -406,48 +407,48 @@ use_function_declaration:
         namespace_name
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   namespace_name T_AS T_STRING
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments(alias, $3.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments(alias, $4.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(alias, $4.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
 ;
 
@@ -462,48 +463,48 @@ use_const_declaration:
         namespace_name
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   namespace_name T_AS T_STRING
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 alias := node.NewIdentifier($3.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
-                comments.AddComments(name, ListGetFirstNodeComments($1))
-                comments.AddComments(alias, $3.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
+                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 $$ = stmt.NewUse(nil, name, nil)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
     |   T_NS_SEPARATOR namespace_name T_AS T_STRING
             {
                 name := name.NewName($2)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
                 alias := node.NewIdentifier($4.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 $$ = stmt.NewUse(nil, name, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($2, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
-                comments.AddComments(name, ListGetFirstNodeComments($2))
-                comments.AddComments(alias, $4.Comments())
-                comments.AddComments($$, ListGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($2))
+                yylex.(*Parser).comments.AddComments(alias, $4.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($2))
             }
 ;
 
@@ -511,34 +512,34 @@ constant_declaration:
         constant_declaration ',' T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($3.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(name, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(name, $3.Comments())
 
                 constant := stmt.NewConstant(name, $5, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
-                comments.AddComments(constant, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).comments.AddComments(constant, $3.Comments())
 
                 constList := $1.(*stmt.ConstList)
                 constList.Consts = append(constList.Consts, constant)
 
                 $$ = $1
-                positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
             }
     |   T_CONST T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($2.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(name, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(name, $2.Comments())
 
                 constant := stmt.NewConstant(name, $4, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($2, $4))
-                comments.AddComments(constant, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
+                yylex.(*Parser).comments.AddComments(constant, $2.Comments())
 
                 constList := []node.Node{constant}
 
                 $$ = stmt.NewConstList(constList)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, constList))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, constList))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -569,8 +570,8 @@ inner_statement:
     |   T_HALT_COMPILER '(' ')' ';'
             {
                 $$ = stmt.NewHaltCompiler()
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -581,12 +582,12 @@ statement:
     |   T_STRING ':'
             {
                 label := node.NewIdentifier($1.Value)
-                positions.AddPosition(label, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(label, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = stmt.NewLabel(label)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
-                comments.AddComments(label, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(label, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -594,31 +595,31 @@ unticked_statement:
         '{' inner_statement_list '}'
             {
                 $$ = stmt.NewStmtList($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_IF parenthesis_expr statement elseif_list else_single
             {
                 $$ = stmt.NewIf($2, $3, $4, $5)
                 
                 if $5 != nil {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
                 } else if len($4) > 0 {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $4))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $4))
                 } else {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 }
 
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_IF parenthesis_expr ':' inner_statement_list new_elseif_list new_else_single T_ENDIF ';'
             {
                 stmts := stmt.NewStmtList($4)
-                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($4))
+                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($4))
 
                 $$ = stmt.NewAltIf($2, stmts, $5, $6)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_WHILE parenthesis_expr while_statement
             {
@@ -627,14 +628,14 @@ unticked_statement:
                 } else {
                     $$ = stmt.NewWhile($2, $3.node)
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $3.node))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3.node))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DO statement T_WHILE parenthesis_expr ';'
             {
                 $$ = stmt.NewDo($2, $4)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FOR '(' for_expr ';' for_expr ';' for_expr ')' for_statement
             {
@@ -643,8 +644,8 @@ unticked_statement:
                 } else {
                     $$ = stmt.NewFor($3, $5, $7, $9.node)
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $9.node))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9.node))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_SWITCH parenthesis_expr switch_case_list
             {
@@ -653,92 +654,92 @@ unticked_statement:
                 } else {
                     $$ = stmt.NewSwitch($2, $3.nodes)
                 }
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_BREAK ';'
             {
                 $$ = stmt.NewBreak(nil)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_BREAK expr ';'
             {
                 $$ = stmt.NewBreak($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CONTINUE ';'
             {
                 $$ = stmt.NewContinue(nil)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CONTINUE expr ';'
             {
                 $$ = stmt.NewContinue($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN ';'
             {
                 $$ = stmt.NewReturn(nil)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN expr_without_variable ';'
             {
                 $$ = stmt.NewReturn($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_RETURN variable ';'
             {
                 $$ = stmt.NewReturn($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   yield_expr ';'
             {
                 $$ = stmt.NewExpression($1)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_GLOBAL global_var_list ';'
             {
                 $$ = stmt.NewGlobal($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC static_var_list ';'
             {
                 $$ = stmt.NewStatic($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_ECHO echo_expr_list ';'
             {
                 $$ = stmt.NewEcho($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_INLINE_HTML
             {
                 $$ = stmt.NewInlineHtml($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   expr ';'
             {
                 $$ = stmt.NewExpression($1)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_UNSET '(' unset_variables ')' ';'
             {
                 $$ = stmt.NewUnset($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $5))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FOREACH '(' variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
@@ -755,8 +756,8 @@ unticked_statement:
                         $$ = stmt.NewForeach($3, $5.node, $6.node, $8.node, $6.byRef)
                     }
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8.node))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8.node))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FOREACH '(' expr_without_variable T_AS foreach_variable foreach_optional_arg ')' foreach_statement
             {
@@ -773,48 +774,48 @@ unticked_statement:
                         $$ = stmt.NewForeach($3, $5.node, $6.node, $8.node, $6.byRef)
                     }
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $8.node))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8.node))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DECLARE '(' declare_list ')' declare_statement
             {
                 $$ = stmt.NewDeclare($3, $5)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $5))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   ';'
             {
                 $$ = stmt.NewNop()
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_TRY '{' inner_statement_list '}' catch_statement finally_statement
             {
                 $$ = stmt.NewTry($3, $5, $6)
 
                 if $6 == nil {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $5))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $5))
                 } else {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
                 }
 
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_THROW expr ';'
             {
                 $$ = stmt.NewThrow($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_GOTO T_STRING ';'
             {
                 label := node.NewIdentifier($2.Value)
-                positions.AddPosition(label, positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).positions.AddPosition(label, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 $$ = stmt.NewGoto(label)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
-                comments.AddComments(label, $2.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(label, $2.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -824,16 +825,16 @@ catch_statement:
     |   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(identifier, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(identifier, $4.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(variable, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(variable, $4.Comments())
                 
                 catch := stmt.NewCatch([]node.Node{$3}, variable, $7)
-                positions.AddPosition(catch, positionBuilder.NewTokensPosition($1, $8))
-                comments.AddComments(catch, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(catch, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                yylex.(*Parser).comments.AddComments(catch, $1.Comments())
 
                 $$ = append([]node.Node{catch}, $9...)
             }
@@ -844,8 +845,8 @@ finally_statement:
     |   T_FINALLY '{' inner_statement_list '}'
             {
                 $$ = stmt.NewFinally($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -867,16 +868,16 @@ additional_catch:
         T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}'
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(identifier, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(identifier, $4.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(variable, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(variable, $4.Comments())
                 
                 $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $8))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -920,12 +921,12 @@ unticked_function_declaration_statement:
         function is_reference T_STRING '(' parameter_list ')' '{' inner_statement_list '}'
             {
                 name := node.NewIdentifier($3.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(name, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(name, $3.Comments())
 
                 $$ = stmt.NewFunction(name, $2.value, $5, nil, $8, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -935,7 +936,7 @@ unticked_class_declaration_statement:
                 switch n := $1.(type) {
                     case *stmt.Class :
                         name := node.NewIdentifier($2.Value)
-                        positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                        yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                         n.ClassName = name
                         n.Stmts = $6
                         n.Extends = $3
@@ -944,7 +945,7 @@ unticked_class_declaration_statement:
                     case *stmt.Trait :
                         // TODO: is it possible that trait extend or implement
                         name := node.NewIdentifier($2.Value)
-                        positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
+                        yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                         n.TraitName = name
                         n.Stmts = $6
                 }
@@ -954,12 +955,12 @@ unticked_class_declaration_statement:
     |   interface_entry T_STRING interface_extends_list '{' class_statement_list '}'
             {
                 name := node.NewIdentifier($2.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(name, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(name, $2.Comments())
                 
                 $$ = stmt.NewInterface(name, $3, $5, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -968,34 +969,34 @@ class_entry_type:
         T_CLASS
             {
                 $$ = stmt.NewClass(nil, nil, nil, nil, nil, nil, "")
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_ABSTRACT T_CLASS
             {
                 classModifier := node.NewIdentifier($1.Value)
-                positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(classModifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(classModifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(classModifier, $1.Comments())
 
                 $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_TRAIT
             {
                 $$ = stmt.NewTrait(nil, nil, "")
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FINAL T_CLASS
             {
                 classModifier := node.NewIdentifier($1.Value)
-                positions.AddPosition(classModifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(classModifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(classModifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(classModifier, $1.Comments())
 
                 $$ = stmt.NewClass(nil, []node.Node{classModifier}, nil, nil, nil, nil, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1047,9 +1048,9 @@ foreach_variable:
     |   T_LIST '(' assignment_list ')'
             {
                 list := expr.NewList($3)
-                positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 $$ = foreachVariable{list, false}
-                comments.AddComments(list, $1.Comments())
+                yylex.(*Parser).comments.AddComments(list, $1.Comments())
             }
 ;
 
@@ -1059,7 +1060,7 @@ for_statement:
     |   ':' inner_statement_list T_ENDFOR ';'
             {
                 $$ = altSyntaxNode{stmt.NewStmtList($2), true}
-                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 
@@ -1070,7 +1071,7 @@ foreach_statement:
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
                 $$ = altSyntaxNode{stmt.NewStmtList($2), true}
-                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 
@@ -1081,8 +1082,8 @@ declare_statement:
     |   ':' inner_statement_list T_ENDDECLARE ';'
             {
                 $$ = stmt.NewStmtList($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1091,24 +1092,24 @@ declare_list:
         T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($1.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
 
                 constant := stmt.NewConstant(name, $3, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($1, $3))
-                comments.AddComments(constant, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                yylex.(*Parser).comments.AddComments(constant, $1.Comments())
 
                 $$ = []node.Node{constant}
             }
     |   declare_list ',' T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($3.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(name, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(name, $3.Comments())
 
                 constant := stmt.NewConstant(name, $5, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
-                comments.AddComments(constant, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).comments.AddComments(constant, $3.Comments())
 
                 $$ = append($1, constant)
             }
@@ -1133,16 +1134,16 @@ case_list:
     |   case_list T_CASE expr case_separator inner_statement_list
             {
                 _case := stmt.NewCase($3, $5)
-                positions.AddPosition(_case, positionBuilder.NewTokenNodeListPosition($2, $5))
+                yylex.(*Parser).positions.AddPosition(_case, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
                 $$ = append($1, _case)
-                comments.AddComments(_case, $2.Comments())
+                yylex.(*Parser).comments.AddComments(_case, $2.Comments())
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
                 _default := stmt.NewDefault($4)
-                positions.AddPosition(_default, positionBuilder.NewTokenNodeListPosition($2, $4))
+                yylex.(*Parser).positions.AddPosition(_default, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
                 $$ = append($1, _default)
-                comments.AddComments(_default, $2.Comments())
+                yylex.(*Parser).comments.AddComments(_default, $2.Comments())
             }
 ;
 
@@ -1159,7 +1160,7 @@ while_statement:
     |   ':' inner_statement_list T_ENDWHILE ';'
             {
                 $$ = altSyntaxNode{stmt.NewStmtList($2), true}
-                positions.AddPosition($$.node, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
             }
 ;
 
@@ -1171,8 +1172,8 @@ elseif_list:
     |   elseif_list T_ELSEIF parenthesis_expr statement
             {
                 _elseIf := stmt.NewElseIf($3, $4)
-                positions.AddPosition(_elseIf, positionBuilder.NewTokenNodePosition($2, $4))
-                comments.AddComments(_elseIf, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(_elseIf, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
+                yylex.(*Parser).comments.AddComments(_elseIf, $2.Comments())
 
                 $$ = append($1, _elseIf)
             }
@@ -1185,11 +1186,11 @@ new_elseif_list:
     |   new_elseif_list T_ELSEIF parenthesis_expr ':' inner_statement_list
             {
                 stmts := stmt.NewStmtList($5)
-                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($5))
+                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($5))
 
                 _elseIf := stmt.NewAltElseIf($3, stmts)
-                positions.AddPosition(_elseIf, positionBuilder.NewTokenNodeListPosition($2, $5))
-                comments.AddComments(_elseIf, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(_elseIf, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
+                yylex.(*Parser).comments.AddComments(_elseIf, $2.Comments())
 
                 $$ = append($1, _elseIf)
             }
@@ -1202,8 +1203,8 @@ else_single:
     |   T_ELSE statement
             {
                 $$ = stmt.NewElse($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1214,11 +1215,11 @@ new_else_single:
     |   T_ELSE ':' inner_statement_list
             {
                 stmts := stmt.NewStmtList($3)
-                positions.AddPosition(stmts, positionBuilder.NewNodeListPosition($3))
+                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($3))
 
                 $$ = stmt.NewAltElse(stmts)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1241,53 +1242,53 @@ parameter:
         optional_class_type is_reference is_variadic T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
-                comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments($$, $4.Comments())
 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
-                comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments($$, $4.Comments())
                 
                 $$ = node.NewParameter($1, variable, nil, $2.value, $3.value)
                 
                 if $1 != nil {
-                    positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                    comments.AddComments($$, comments[$1])
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                    yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
                 } else if $2.value == true {
-                    positions.AddPosition($$, positionBuilder.NewTokensPosition(*$2.token, $4))
-                    comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition(*$2.token, $4))
+                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
                 } else if $3.value == true {
-                    positions.AddPosition($$, positionBuilder.NewTokensPosition(*$3.token, $4))
-                    comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition(*$3.token, $4))
+                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
                 } else {
-                    positions.AddPosition($$, positionBuilder.NewTokenPosition($4))
-                    comments.AddComments($$, $4.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                    yylex.(*Parser).comments.AddComments($$, $4.Comments())
                 }
             }
     |   optional_class_type is_reference is_variadic T_VARIABLE '=' static_scalar
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(identifier, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(identifier, $4.Comments())
 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(variable, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(variable, $4.Comments())
 
                 $$ = node.NewParameter($1, variable, $6, $2.value, $3.value)
 
                 if $1 != nil {
-                    positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $6))
-                    comments.AddComments($$, comments[$1])
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
+                    yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
                 } else if $2.value == true {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition(*$2.token, $6))
-                    comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*$2.token, $6))
+                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
                 } else if $3.value == true {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition(*$3.token, $6))
-                    comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*$3.token, $6))
+                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
                 } else {
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($4, $6))
-                    comments.AddComments($$, $4.Comments())
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
+                    yylex.(*Parser).comments.AddComments($$, $4.Comments())
                 }
             }
 ;
@@ -1299,14 +1300,14 @@ optional_class_type:
     |   T_ARRAY
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CALLABLE
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   fully_qualified_class_name
             { $$ = $1 }
@@ -1321,8 +1322,8 @@ function_call_parameter_list:
     |   '(' yield_expr ')'
             {
                 arg := node.NewArgument($2, false, false)
-                positions.AddPosition(arg, positionBuilder.NewNodePosition($2))
-                comments.AddComments(arg, comments[$2])
+                yylex.(*Parser).positions.AddPosition(arg, yylex.(*Parser).positionBuilder.NewNodePosition($2))
+                yylex.(*Parser).comments.AddComments(arg, yylex.(*Parser).comments[$2])
 
                 $$ = &nodesWithEndToken{[]node.Node{arg}, $3}
             }
@@ -1340,26 +1341,26 @@ function_call_parameter:
         expr_without_variable
             {
                 $$ = node.NewArgument($1, false, false)
-                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable
             {
                 $$ = node.NewArgument($1, false, false)
-                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   '&' w_variable
             {
                 $$ = node.NewArgument($2, false, true)
-                positions.AddPosition($$, positionBuilder.NewNodePosition($2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_ELLIPSIS expr
             {
                 $$ = node.NewArgument($2, true, false)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1375,24 +1376,24 @@ global_var:
         T_VARIABLE
             {
                 name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewVariable(name)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
-                comments.AddComments(name, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '$' r_variable
             {
                 $$ = expr.NewVariable($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '$' '{' expr '}'
             {
                 $$ = expr.NewVariable($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1401,70 +1402,70 @@ static_var_list:
         static_var_list ',' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($3.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 
                 staticVar := stmt.NewStaticVar(variable, nil)
-                positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(staticVar, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 $$ = append($1, staticVar)
 
-                comments.AddComments(identifier, $3.Comments())
-                comments.AddComments(variable, $3.Comments())
-                comments.AddComments(staticVar, $3.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $3.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).comments.AddComments(staticVar, $3.Comments())
             }
     |   static_var_list ',' T_VARIABLE '=' static_scalar
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($3.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 
                 staticVar := stmt.NewStaticVar(variable, $5)
-                positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).positions.AddPosition(staticVar, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
 
                 $$ = append($1, staticVar)
 
-                comments.AddComments(identifier, $3.Comments())
-                comments.AddComments(variable, $3.Comments())
-                comments.AddComments(staticVar, $3.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $3.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).comments.AddComments(staticVar, $3.Comments())
             }
     |   T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 staticVar := stmt.NewStaticVar(variable, nil)
-                positions.AddPosition(staticVar, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(staticVar, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 $$ = []node.Node{staticVar}
 
-                comments.AddComments(identifier, $1.Comments())
-                comments.AddComments(variable, $1.Comments())
-                comments.AddComments(staticVar, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddComments(staticVar, $1.Comments())
             }
     |   T_VARIABLE '=' static_scalar
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 staticVar := stmt.NewStaticVar(variable, $3)
-                positions.AddPosition(staticVar, positionBuilder.NewTokenNodePosition($1, $3))
+                yylex.(*Parser).positions.AddPosition(staticVar, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 $$ = []node.Node{staticVar}
 
-                comments.AddComments(identifier, $1.Comments())
-                comments.AddComments(variable, $1.Comments())
-                comments.AddComments(staticVar, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddComments(staticVar, $1.Comments())
             }
 
 ;
@@ -1482,8 +1483,8 @@ class_statement:
         variable_modifiers class_variable_declaration ';'
             {
                 $$ = stmt.NewPropertyList($1, $2)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1, $3))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   class_constant_declaration ';'
             { $$ = $1 }
@@ -1492,12 +1493,12 @@ class_statement:
     |   method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body
             {
                 name := node.NewIdentifier($4.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(name, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(name, $4.Comments())
                 
                 $$ = stmt.NewClassMethod(name, $1, $3.value, $6, nil, $8.nodes, "")
-                positions.AddPosition($$, positionBuilder.NewOptionalListTokensPosition($1, $2, $8.endToken))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $8.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
 ;
 
@@ -1505,8 +1506,8 @@ trait_use_statement:
         T_USE trait_list trait_adaptations
             {
                 $$ = stmt.NewTraitUse($2, $3.nodes)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1549,8 +1550,8 @@ trait_precedence:
         trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list
             {
                 $$ = stmt.NewTraitUsePrecedence($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeNodeListPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -1565,12 +1566,12 @@ trait_method_reference:
         T_STRING
             {
                 name := node.NewIdentifier($1.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
                 
                 $$ = stmt.NewTraitMethodRef(nil, name)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   trait_method_reference_fully_qualified
             { $$ = $1 }
@@ -1580,12 +1581,12 @@ trait_method_reference_fully_qualified:
         fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
                 
                 $$ = stmt.NewTraitMethodRef($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -1593,18 +1594,18 @@ trait_alias:
         trait_method_reference T_AS trait_modifiers T_STRING
             {
                 alias := node.NewIdentifier($4.Value)
-                positions.AddPosition(alias, positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 $$ = stmt.NewTraitUseAlias($1, $3, alias)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
-                comments.AddComments(alias, $4.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(alias, $4.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   trait_method_reference T_AS member_modifier
             {
                 $$ = stmt.NewTraitUseAlias($1, $3, nil)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -1628,8 +1629,8 @@ variable_modifiers:
     |   T_VAR
             {
                 modifier := node.NewIdentifier($1.Value)
-                positions.AddPosition(modifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(modifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(modifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(modifier, $1.Comments())
                 
                 $$ = []node.Node{modifier}
             }
@@ -1653,38 +1654,38 @@ member_modifier:
         T_PUBLIC
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_PROTECTED
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_PRIVATE
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_ABSTRACT
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FINAL
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1692,64 +1693,64 @@ class_variable_declaration:
         class_variable_declaration ',' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($3.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(identifier, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(identifier, $3.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
                 
                 property := stmt.NewProperty(variable, nil, "")
-                positions.AddPosition(property, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(property, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(property, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(property, $3.Comments())
 
                 $$ = append($1, property)
             }
     |   class_variable_declaration ',' T_VARIABLE '=' static_scalar
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($3.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(identifier, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(identifier, $3.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
                 
                 property := stmt.NewProperty(variable, $5, "")
-                positions.AddPosition(property, positionBuilder.NewTokenNodePosition($3, $5))
-                comments.AddComments(property, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(property, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).comments.AddComments(property, $3.Comments())
 
                 $$ = append($1, property)
             }
     |   T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
                 
                 property := stmt.NewProperty(variable, nil, "")
-                positions.AddPosition(property, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(property, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(property, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(property, $1.Comments())
 
                 $$ = []node.Node{property}
             }
     |   T_VARIABLE '=' static_scalar
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
                 
                 property := stmt.NewProperty(variable, $3, "")
-                positions.AddPosition(property, positionBuilder.NewTokenNodePosition($1, $3))
-                comments.AddComments(property, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(property, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                yylex.(*Parser).comments.AddComments(property, $1.Comments())
 
                 $$ = []node.Node{property}
             }
@@ -1759,31 +1760,31 @@ class_constant_declaration:
         class_constant_declaration ',' T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($3.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(name, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(name, $3.Comments())
 
                 constant := stmt.NewConstant(name, $5, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($3, $5))
-                comments.AddComments(constant, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
+                yylex.(*Parser).comments.AddComments(constant, $3.Comments())
 
                 $1.(*stmt.ClassConstList).Consts = append($1.(*stmt.ClassConstList).Consts, constant)
-                positions.AddPosition($1, positionBuilder.NewNodesPosition($1, $5))
+                yylex.(*Parser).positions.AddPosition($1, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
 
                 $$ = $1
             }
     |   T_CONST T_STRING '=' static_scalar
             {
                 name := node.NewIdentifier($2.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(name, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(name, $2.Comments())
 
                 constant := stmt.NewConstant(name, $4, "")
-                positions.AddPosition(constant, positionBuilder.NewTokenNodePosition($2, $4))
-                comments.AddComments(constant, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(constant, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
+                yylex.(*Parser).comments.AddComments(constant, $2.Comments())
 
                 $$ = stmt.NewClassConstList(nil, []node.Node{constant})
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1820,14 +1821,14 @@ chaining_dereference:
         chaining_dereference '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 $$ = append($1, fetch)
             }
     |   '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $2)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($2))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($2))
                 
                 $$ = []node.Node{fetch}
             }
@@ -1854,13 +1855,13 @@ new_expr:
             {
                 if $3 != nil {
                     $$ = expr.NewNew($2, $3.nodes)
-                    positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3.endToken))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
                 } else {
                     $$ = expr.NewNew($2, nil)
-                    positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 }
 
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -1868,321 +1869,321 @@ expr_without_variable:
         T_LIST '(' assignment_list ')' '=' expr
             {
                 list := expr.NewList($3)
-                positions.AddPosition(list, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 $$ = assign.NewAssign(list, $6)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $6))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
-                comments.AddComments(list, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(list, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   variable '=' expr
             {
                 $$ = assign.NewAssign($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable '=' '&' variable
             {
                 $$ = assign.NewReference($1, $4)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable '=' '&' T_NEW class_name_reference ctor_arguments
             {
                 _new := expr.NewNew($5, nil)
-                positions.AddPosition(_new, positionBuilder.NewTokenNodePosition($4, $5))
+                yylex.(*Parser).positions.AddPosition(_new, yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $5))
 
                 if $6 != nil {
                     _new = expr.NewNew($5, $6.nodes)
-                    positions.AddPosition(_new, positionBuilder.NewTokensPosition($4, $6.endToken))
+                    yylex.(*Parser).positions.AddPosition(_new, yylex.(*Parser).positionBuilder.NewTokensPosition($4, $6.endToken))
                 }
-                comments.AddComments(_new, comments[$1])
+                yylex.(*Parser).comments.AddComments(_new, yylex.(*Parser).comments[$1])
 
                 $$ = assign.NewReference($1, _new)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, _new))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, _new))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_CLONE expr
             {
                 $$ = expr.NewClone($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   variable T_PLUS_EQUAL expr
             {
                 $$ = assign.NewPlus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_MINUS_EQUAL expr
             {
                 $$ = assign.NewMinus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_MUL_EQUAL expr
             {
                 $$ = assign.NewMul($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_POW_EQUAL expr
             {
                 $$ = assign.NewPow($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_DIV_EQUAL expr
             {
                 $$ = assign.NewDiv($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_CONCAT_EQUAL expr
             {
                 $$ = assign.NewConcat($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_MOD_EQUAL expr
             {
                 $$ = assign.NewMod($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_AND_EQUAL expr
             {
                 $$ = assign.NewBitwiseAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_OR_EQUAL expr
             {
                 $$ = assign.NewBitwiseOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_XOR_EQUAL expr
             {
                 $$ = assign.NewBitwiseXor($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_SL_EQUAL expr
             {
                 $$ = assign.NewShiftLeft($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable T_SR_EQUAL expr
             {
                 $$ = assign.NewShiftRight($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   rw_variable T_INC
             {
                 $$ = expr.NewPostInc($1)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_INC rw_variable
             {
                 $$ = expr.NewPreInc($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   rw_variable T_DEC
             {
                 $$ = expr.NewPostDec($1)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_DEC rw_variable
             {
                 $$ = expr.NewPreDec($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   expr T_BOOLEAN_OR expr
             {
                 $$ = binary.NewBooleanOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_BOOLEAN_AND expr
             {
                 $$ = binary.NewBooleanAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_LOGICAL_OR expr
             {
                 $$ = binary.NewLogicalOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_LOGICAL_AND expr
             {
                 $$ = binary.NewLogicalAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_LOGICAL_XOR expr
             {
                 $$ = binary.NewLogicalXor($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '|' expr
             {
                 $$ = binary.NewBitwiseOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '&' expr
             {
                 $$ = binary.NewBitwiseAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '^' expr
             {
                 $$ = binary.NewBitwiseXor($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '.' expr
             {
                 $$ = binary.NewConcat($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '+' expr
             {
                 $$ = binary.NewPlus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '-' expr
             {
                 $$ = binary.NewMinus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '*' expr
             {
                 $$ = binary.NewMul($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_POW expr
             {
                 $$ = binary.NewPow($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '/' expr
             {
                 $$ = binary.NewDiv($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '%' expr
             {
                 $$ = binary.NewMod($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_SL expr
             {
                 $$ = binary.NewShiftLeft($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_SR expr
             {
                 $$ = binary.NewShiftRight($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   '+' expr %prec T_INC
             {
                 $$ = expr.NewUnaryPlus($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '-' expr %prec T_INC
             {
                 $$ = expr.NewUnaryMinus($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '!' expr
             {
                 $$ = expr.NewBooleanNot($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '~' expr
             {
                 $$ = expr.NewBitwiseNot($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   expr T_IS_IDENTICAL expr
             {
                 $$ = binary.NewIdentical($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
                 $$ = binary.NewNotIdentical($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_IS_EQUAL expr
             {
                 $$ = binary.NewEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_IS_NOT_EQUAL expr
             {
                 $$ = binary.NewNotEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '<' expr
             {
                 $$ = binary.NewSmaller($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
                 $$ = binary.NewSmallerOrEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '>' expr
             {
                 $$ = binary.NewGreater($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
                 $$ = binary.NewGreaterOrEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr T_INSTANCEOF class_name_reference
             {
                 $$ = expr.NewInstanceOf($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   parenthesis_expr
             { $$ = $1 }
@@ -2196,20 +2197,20 @@ expr_without_variable:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, $1.Comments())
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, $1.Comments())
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, $1.Comments())
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, $1.Comments())
                             $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, $1.Comments())
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, $1.Comments())
                             $$ = nn
                     }
                 }
@@ -2217,58 +2218,58 @@ expr_without_variable:
     |   expr '?' expr ':' expr
             {
                 $$ = expr.NewTernary($1, $3, $5)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   expr '?' ':' expr
             {
                 $$ = expr.NewTernary($1, nil, $4)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   internal_functions_in_yacc
             { $$ = $1 }
     |   T_INT_CAST expr
             {
                 $$ = cast.NewInt($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DOUBLE_CAST expr
             {
                 $$ = cast.NewDouble($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_STRING_CAST expr
             {
                 $$ = cast.NewString($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_ARRAY_CAST expr
             {
                 $$ = cast.NewArray($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_OBJECT_CAST expr
             {
                 $$ = cast.NewObject($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_BOOL_CAST expr
             {
                 $$ = cast.NewBool($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_UNSET_CAST expr
             {
                 $$ = cast.NewUnset($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_EXIT exit_expr
             {
@@ -2277,14 +2278,14 @@ expr_without_variable:
                 } else {
                     $$ = expr.NewExit($2)
                 }
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '@' expr
             {
                 $$ = expr.NewErrorSuppress($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   scalar
             { $$ = $1 }
@@ -2295,34 +2296,34 @@ expr_without_variable:
     |   '`' backticks_expr '`'
             {
                 $$ = expr.NewShellExec($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_PRINT expr
             {
                 $$ = expr.NewPrint($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD
             {
                 $$ = expr.NewYield(nil, nil)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
                 $$ = expr.NewClosure($4, $6, nil, $8, false, $2.value, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $9))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
                 
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
                 $$ = expr.NewClosure($5, $7, nil, $9, true, $3.value, "")
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $10))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $10))
                 
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2330,26 +2331,26 @@ yield_expr:
         T_YIELD expr_without_variable
             {
                 $$ = expr.NewYield(nil, $2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD variable
             {
                 $$ = expr.NewYield(nil, $2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr_without_variable
             {
                 $$ = expr.NewYield($2, $4)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_YIELD expr T_DOUBLE_ARROW variable
             {
                 $$ = expr.NewYield($2, $4)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2357,30 +2358,30 @@ combined_scalar_offset:
         combined_scalar '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   combined_scalar_offset '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_CONSTANT_ENCAPSED_STRING '[' dim_offset ']'
             {
                 str := scalar.NewString($1.Value)
-                positions.AddPosition(str, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(str, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(str, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(str, $1.Comments())
 
                 $$ = expr.NewArrayDimFetch(str, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(str, $4))
-                comments.AddComments($$, comments[str])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(str, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[str])
             }
     |   general_constant '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -2388,14 +2389,14 @@ combined_scalar:
         T_ARRAY '(' array_pair_list ')'
             {
                 $$ = expr.NewArray($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '[' array_pair_list ']'
             {
                 $$ = expr.NewShortArray($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2415,64 +2416,64 @@ lexical_var_list:
         lexical_var_list ',' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($3.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(identifier, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(identifier, $3.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
                 
                 use := expr.NewClosureUse(variable, false)
-                positions.AddPosition(use, positionBuilder.NewTokenPosition($3))
-                comments.AddComments(use, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(use, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).comments.AddComments(use, $3.Comments())
                 
                 $$ = append($1, use)
             }
     |   lexical_var_list ',' '&' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(identifier, $4.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(identifier, $4.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($4))
-                comments.AddComments(variable, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                yylex.(*Parser).comments.AddComments(variable, $3.Comments())
 
                 use := expr.NewClosureUse(variable, true)
-                positions.AddPosition(use, positionBuilder.NewTokensPosition($3, $4))
-                comments.AddComments(use, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(use, yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
+                yylex.(*Parser).comments.AddComments(use, $3.Comments())
 
                 $$ = append($1, use)
             }
     |   T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
                 
                 use := expr.NewClosureUse(variable, false)
-                positions.AddPosition(use, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(use, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(use, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(use, $1.Comments())
                 
                 $$ = []node.Node{use}
             }
     |   '&' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($2.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(identifier, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(identifier, $2.Comments())
                 
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
 
                 use := expr.NewClosureUse(variable, true)
-                positions.AddPosition(use, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments(use, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(use, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments(use, $1.Comments())
 
                 $$ = []node.Node{use}
             }
@@ -2482,62 +2483,62 @@ function_call:
         namespace_name function_call_parameter_list
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments(name, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
 
                 $$ = expr.NewFunctionCall(name, $2.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(name, $2.endToken))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(name, $2.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
                 funcName := name.NewRelative($3)
-                positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments(funcName, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(funcName, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments(funcName, $1.Comments())
 
                 $$ = expr.NewFunctionCall(funcName, $4.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $4.endToken))
-                comments.AddComments($$, comments[funcName])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(funcName, $4.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[funcName])
             }
     |   T_NS_SEPARATOR namespace_name function_call_parameter_list
             {
                 funcName := name.NewFullyQualified($2)
-                positions.AddPosition(funcName, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments(funcName, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(funcName, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments(funcName, $1.Comments())
 
                 $$ = expr.NewFunctionCall(funcName, $3.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition(funcName, $3.endToken))
-                comments.AddComments($$, comments[funcName])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(funcName, $3.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[funcName])
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
                 $$ = expr.NewStaticCall($1, $3, $4.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
                 $$ = expr.NewStaticCall($1, $3, $4.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_name function_call_parameter_list
             {
                 $$ = expr.NewStaticCall($1, $3, $4.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects function_call_parameter_list
             {
                 $$ = expr.NewStaticCall($1, $3, $4.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4.endToken))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable_without_objects function_call_parameter_list
             {
                 $$ = expr.NewFunctionCall($1, $2.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $2.endToken))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2.endToken))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -2545,26 +2546,26 @@ class_name:
         T_STATIC
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   namespace_name 
             {
                 $$ = name.NewName($1)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = name.NewRelative($3)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = name.NewFullyQualified($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2572,20 +2573,20 @@ fully_qualified_class_name:
         namespace_name
             {
                 $$ = name.NewName($1)
-                positions.AddPosition($$, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments($$, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).listGetFirstNodeComments($1))
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 $$ = name.NewRelative($3)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 $$ = name.NewFullyQualified($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2605,14 +2606,14 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                     }
                 }
@@ -2621,14 +2622,14 @@ dynamic_class_name_reference:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                     }
                 }
@@ -2680,78 +2681,78 @@ common_scalar:
         T_LNUMBER
             {
                 $$ = scalar.NewLnumber($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DNUMBER
             {
                 $$ = scalar.NewDnumber($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
                 $$ = scalar.NewString($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_LINE
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FILE
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DIR
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_TRAIT_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_METHOD_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_FUNC_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NS_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
                 encapsed := scalar.NewEncapsedStringPart($2.Value)
-                positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(encapsed, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(encapsed, $2.Comments())
 
                 $$ = scalar.NewHeredoc($1.Value, []node.Node{encapsed})
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
                 $$ = scalar.NewHeredoc($1.Value, nil)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -2759,12 +2760,12 @@ static_class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewClassConstFetch($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
-                comments.AddComments(target, $3.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -2781,52 +2782,52 @@ static_scalar_value:
     |   namespace_name
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments(name, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewNodePosition(name))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 name := name.NewRelative($3)
-                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 name := name.NewFullyQualified($2)
-                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_ARRAY '(' static_array_pair_list ')'
             {
                 $$ = expr.NewArray($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '[' static_array_pair_list ']'
             {
                 $$ = expr.NewShortArray($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   static_class_constant
             { $$ = $1 }
     |   T_CLASS_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   static_operation
             { $$ = $1 }
@@ -2836,194 +2837,194 @@ static_operation:
         static_scalar_value '[' static_scalar_value ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '+' static_scalar_value
             {
                 $$ = binary.NewPlus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '-' static_scalar_value
             {
                 $$ = binary.NewMinus($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '*' static_scalar_value
             {
                 $$ = binary.NewMul($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_POW static_scalar_value
             {
                 $$ = binary.NewPow($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '/' static_scalar_value
             {
                 $$ = binary.NewDiv($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '%' static_scalar_value
             {
                 $$ = binary.NewMod($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   '!' static_scalar_value
             {
                 $$ = expr.NewBooleanNot($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '~' static_scalar_value
             {
                 $$ = expr.NewBitwiseNot($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   static_scalar_value '|' static_scalar_value
             {
                 $$ = binary.NewBitwiseOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '&' static_scalar_value
             {
                 $$ = binary.NewBitwiseAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '^' static_scalar_value
             {
                 $$ = binary.NewBitwiseXor($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_SL static_scalar_value
             {
                 $$ = binary.NewShiftLeft($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_SR static_scalar_value
             {
                 $$ = binary.NewShiftRight($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '.' static_scalar_value
             {
                 $$ = binary.NewConcat($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_LOGICAL_XOR static_scalar_value
             {
                 $$ = binary.NewLogicalXor($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_LOGICAL_AND static_scalar_value
             {
                 $$ = binary.NewLogicalAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_LOGICAL_OR static_scalar_value
             {
                 $$ = binary.NewLogicalOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_AND static_scalar_value
             {
                 $$ = binary.NewBooleanAnd($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_BOOLEAN_OR static_scalar_value
             {
                 $$ = binary.NewBooleanOr($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_IDENTICAL static_scalar_value
             {
                 $$ = binary.NewIdentical($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_NOT_IDENTICAL static_scalar_value
             {
                 $$ = binary.NewNotIdentical($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_EQUAL static_scalar_value
             {
                 $$ = binary.NewEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_NOT_EQUAL static_scalar_value
             {
                 $$ = binary.NewNotEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '<' static_scalar_value
             {
                 $$ = binary.NewSmaller($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '>' static_scalar_value
             {
                 $$ = binary.NewGreater($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_SMALLER_OR_EQUAL static_scalar_value
             {
                 $$ = binary.NewSmallerOrEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value T_IS_GREATER_OR_EQUAL static_scalar_value
             {
                 $$ = binary.NewGreaterOrEqual($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '?' ':' static_scalar_value
             {
                 $$ = expr.NewTernary($1, nil, $4)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   static_scalar_value '?' static_scalar_value ':' static_scalar_value
             {
                 $$ = expr.NewTernary($1, $3, $5)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $5))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   '+' static_scalar_value
             {
                 $$ = expr.NewUnaryPlus($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '-' static_scalar_value
             {
                 $$ = expr.NewUnaryMinus($2)
-                positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '(' static_scalar_value ')'
             { $$ = $2 }
@@ -3035,32 +3036,32 @@ general_constant:
     |   namespace_name
             {
                 name := name.NewName($1)
-                positions.AddPosition(name, positionBuilder.NewNodeListPosition($1))
-                comments.AddComments(name, ListGetFirstNodeComments($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).comments.AddComments(name, yylex.(*Parser).listGetFirstNodeComments($1))
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewNodePosition(name))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 name := name.NewRelative($3)
-                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $3))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewNodePosition(name))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
     |   T_NS_SEPARATOR namespace_name
             {
                 name := name.NewFullyQualified($2)
-                positions.AddPosition(name, positionBuilder.NewTokenNodeListPosition($1, $2))
-                comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
 
                 $$ = expr.NewConstFetch(name)
-                positions.AddPosition($$, positionBuilder.NewNodePosition(name))
-                comments.AddComments($$, comments[name])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition(name))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[name])
             }
 ;
 
@@ -3068,12 +3069,12 @@ scalar:
         T_STRING_VARNAME
             {
                 name := node.NewIdentifier($1.Value)
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewVariable(name)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
-                comments.AddComments(name, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   general_constant
             { $$ = $1 }
@@ -3084,20 +3085,20 @@ scalar:
     |   '"' encaps_list '"'
             {
                 $$ = scalar.NewEncapsed($2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
                  $$ = scalar.NewHeredoc($1.Value, $2)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CLASS_C
             {
                 $$ = scalar.NewMagicConstant($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -3117,32 +3118,32 @@ non_empty_static_array_pair_list:
         non_empty_static_array_pair_list ',' static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
                 arrayItem := expr.NewArrayItem($3, $5, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
-                comments.AddComments(arrayItem, comments[$3])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$3])
 
                 $$ = append($1, arrayItem)
             }
     |   non_empty_static_array_pair_list ',' static_scalar_value
             {
                 arrayItem := expr.NewArrayItem(nil, $3, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
-                comments.AddComments(arrayItem, comments[$3])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$3])
 
                 $$ = append($1, arrayItem)
             }
     |   static_scalar_value T_DOUBLE_ARROW static_scalar_value
             {
                 arrayItem := expr.NewArrayItem($1, $3, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments(arrayItem, comments[$1])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$1])
 
                 $$ = []node.Node{arrayItem}
             }
     |   static_scalar_value
             {
                 arrayItem := expr.NewArrayItem(nil, $1, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
-                comments.AddComments(arrayItem, comments[$1])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$1])
 
                 $$ = []node.Node{arrayItem}
             }
@@ -3193,20 +3194,20 @@ variable:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                     }
                 }
@@ -3215,20 +3216,20 @@ variable:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
-                            positions.AddPosition($$, positionBuilder.NewNodesPosition($$, nn))
-                            comments.AddComments(nn, comments[$1])
+                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).comments.AddComments(nn, yylex.(*Parser).comments[$1])
                             $$ = nn
                     }
                 }
@@ -3261,14 +3262,14 @@ array_method_dereference:
         array_method_dereference '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 $$ = append($1, fetch)
             }
     |   method '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 $$ = []node.Node{$1, fetch}
             }
@@ -3278,7 +3279,7 @@ method:
         function_call_parameter_list
             {
                 $$ = expr.NewMethodCall(nil, nil, $1.nodes)
-                positions.AddPosition($$, positionBuilder.NewNodeListTokenPosition($1.nodes, $1.endToken))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1.nodes, $1.endToken))
             }
 ;
 
@@ -3299,7 +3300,7 @@ variable_without_objects:
                 $1.last.SetVarName($2)
 
                 for _, n := range($1.all) {
-                    positions[n] =  positionBuilder.NewNodesPosition(n, $2)
+                    yylex.(*Parser).positions[n] =  yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2)
                 }
 
                 $$ = $1.all[0]
@@ -3310,14 +3311,14 @@ static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
                 $$ = expr.NewStaticPropertyFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM variable_without_objects
             {
                 $$ = expr.NewStaticPropertyFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 
 ;
@@ -3331,14 +3332,14 @@ array_function_dereference:
         array_function_dereference '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   function_call '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -3357,7 +3358,7 @@ base_variable:
                 $1.last.SetVarName($2)
 
                 for _, n := range($1.all) {
-                    positions[n] =  positionBuilder.NewNodesPosition(n, $2)
+                    yylex.(*Parser).positions[n] =  yylex.(*Parser).positionBuilder.NewNodesPosition(n, $2)
                 }
 
                 $$ = $1.all[0]
@@ -3370,14 +3371,14 @@ reference_variable:
         reference_variable '[' dim_offset ']'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   reference_variable '{' expr '}'
             {
                 $$ = expr.NewArrayDimFetch($1, $3)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $4))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   compound_variable
             { $$ = $1 }
@@ -3388,18 +3389,18 @@ compound_variable:
         T_VARIABLE
             {
                 name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewVariable(name)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
-                comments.AddComments(name, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '$' '{' expr '}'
             {
                 $$ = expr.NewVariable($3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -3417,7 +3418,7 @@ object_property:
     |   variable_without_objects
             {
                 fetch := expr.NewPropertyFetch(nil, $1)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 $$ = []node.Node{fetch}
             }
@@ -3427,21 +3428,21 @@ object_dim_list:
         object_dim_list '[' dim_offset ']'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 $$ = append($1, fetch)
             }
     |   object_dim_list '{' expr '}'
             {
                 fetch := expr.NewArrayDimFetch(nil, $3)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 $$ = append($1, fetch)
             }
     |   variable_name
             {
                 fetch := expr.NewPropertyFetch(nil, $1)
-                positions.AddPosition(fetch, positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 $$ = []node.Node{fetch}
             }
@@ -3451,8 +3452,8 @@ variable_name:
         T_STRING
             {
                 $$ = node.NewIdentifier($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   '{' expr '}'
             { $$ = $2 }
@@ -3462,16 +3463,16 @@ simple_indirect_reference:
         '$'
             {
                 n := expr.NewVariable(nil)
-                positions.AddPosition(n, positionBuilder.NewTokenPosition($1))
-                comments.AddComments(n, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(n, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments(n, $1.Comments())
 
                 $$ = simpleIndirectReference{[]*expr.Variable{n}, n}
             }
     |   simple_indirect_reference '$'
             {
                 n := expr.NewVariable(nil)
-                positions.AddPosition(n, positionBuilder.NewTokenPosition($2))
-                comments.AddComments(n, $2.Comments())
+                yylex.(*Parser).positions.AddPosition(n, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).comments.AddComments(n, $2.Comments())
 
                 $1.last.SetVarName(n)
 
@@ -3499,18 +3500,18 @@ assignment_list_element:
         variable
             {
                 $$ = expr.NewArrayItem(nil, $1, false)
-                positions.AddPosition($$, positionBuilder.NewNodePosition($1))
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   T_LIST '(' assignment_list ')'
             {
                 item := expr.NewList($3)
-                positions.AddPosition(item, positionBuilder.NewTokensPosition($1, $4))
-                comments.AddComments(item, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(item, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).comments.AddComments(item, $1.Comments())
 
                 $$ = expr.NewArrayItem(nil, item, false)
-                positions.AddPosition($$, positionBuilder.NewNodePosition(item))
-                comments.AddComments($$, comments[item])
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition(item))
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[item])
             }
     |   /* empty */
             { $$ = nil }
@@ -3528,64 +3529,64 @@ non_empty_array_pair_list:
         non_empty_array_pair_list ',' expr T_DOUBLE_ARROW expr
             {
                 arrayItem := expr.NewArrayItem($3, $5, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $5))
-                comments.AddComments(arrayItem, comments[$3])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$3])
 
                 $$ = append($1, arrayItem)
             }
     |   non_empty_array_pair_list ',' expr
             {
                 arrayItem := expr.NewArrayItem(nil, $3, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($3))
-                comments.AddComments(arrayItem, comments[$3])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodePosition($3))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$3])
 
                 $$ = append($1, arrayItem)
             }
     |   expr T_DOUBLE_ARROW expr
             {
                 arrayItem := expr.NewArrayItem($1, $3, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $3))
-                comments.AddComments(arrayItem, comments[$1])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$1])
 
                 $$ = []node.Node{arrayItem}
             }
     |   expr
             {
                 arrayItem := expr.NewArrayItem(nil, $1, false)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodePosition($1))
-                comments.AddComments(arrayItem, comments[$1])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$1])
 
                 $$ = []node.Node{arrayItem}
             }
     |   non_empty_array_pair_list ',' expr T_DOUBLE_ARROW '&' w_variable
             {
                 arrayItem := expr.NewArrayItem($3, $6, true)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($3, $6))
-                comments.AddComments(arrayItem, comments[$3])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($3, $6))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$3])
 
                 $$ = append($1, arrayItem)
             }
     |   non_empty_array_pair_list ',' '&' w_variable
             {
                 arrayItem := expr.NewArrayItem(nil, $4, true)
-                positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($3, $4))
-                comments.AddComments(arrayItem, $3.Comments())
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
+                yylex.(*Parser).comments.AddComments(arrayItem, $3.Comments())
 
                 $$ = append($1, arrayItem)
             }
     |   expr T_DOUBLE_ARROW '&' w_variable
             {
                 arrayItem := expr.NewArrayItem($1, $4, true)
-                positions.AddPosition(arrayItem, positionBuilder.NewNodesPosition($1, $4))
-                comments.AddComments(arrayItem, comments[$1])
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                yylex.(*Parser).comments.AddComments(arrayItem, yylex.(*Parser).comments[$1])
 
                 $$ = []node.Node{arrayItem}
             }
     |   '&' w_variable
             {
                 arrayItem := expr.NewArrayItem(nil, $2, true)
-                positions.AddPosition(arrayItem, positionBuilder.NewTokenNodePosition($1, $2))
-                comments.AddComments(arrayItem, $1.Comments())
+                yylex.(*Parser).positions.AddPosition(arrayItem, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                yylex.(*Parser).comments.AddComments(arrayItem, $1.Comments())
 
                 $$ = []node.Node{arrayItem}
             }
@@ -3597,18 +3598,18 @@ encaps_list:
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
                 encapsed := scalar.NewEncapsedStringPart($2.Value)
-                positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 $$ = append($1, encapsed)
-                comments.AddComments(encapsed, $2.Comments())
+                yylex.(*Parser).comments.AddComments(encapsed, $2.Comments())
             }
     |   encaps_var
             { $$ = []node.Node{$1} }
     |   T_ENCAPSED_AND_WHITESPACE encaps_var
             {
                 encapsed := scalar.NewEncapsedStringPart($1.Value)
-                positions.AddPosition(encapsed, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = []node.Node{encapsed, $2}
-                comments.AddComments(encapsed, $1.Comments())
+                yylex.(*Parser).comments.AddComments(encapsed, $1.Comments())
             }
 ;
 
@@ -3616,61 +3617,61 @@ encaps_var:
         T_VARIABLE
             {
                 name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(name, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewVariable(name)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
-                comments.AddComments(name, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewArrayDimFetch(variable, $3)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
-                comments.AddComments(identifier, $1.Comments())
-                comments.AddComments(variable, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 fetch := node.NewIdentifier($3.Value)
-                positions.AddPosition(fetch, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewPropertyFetch(variable, fetch)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
-                comments.AddComments(identifier, $1.Comments())
-                comments.AddComments(variable, $1.Comments())
-                comments.AddComments(fetch, $3.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddComments(fetch, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
                 $$ = $2
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $3))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
                 identifier := node.NewIdentifier($2.Value)
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 variable := expr.NewVariable(identifier)
-                positions.AddPosition(variable, positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 $$ = expr.NewArrayDimFetch(variable, $4)
-                positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $6))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
 
-                comments.AddComments(identifier, $2.Comments())
-                comments.AddComments(variable, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $2.Comments())
+                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_CURLY_OPEN variable '}'
             { $$ = $2; }
@@ -3680,30 +3681,30 @@ encaps_var_offset:
         T_STRING
             {
                 $$ = scalar.NewString($1.Value)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_NUM_STRING
             {
                 // TODO: add option to handle 64 bit integer
                 if _, err := strconv.Atoi($1.Value); err == nil {
                     $$ = scalar.NewLnumber($1.Value)
-                    positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 } else {
                     $$ = scalar.NewString($1.Value)
-                    positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 }
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                positions.AddPosition(identifier, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 $$ = expr.NewVariable(identifier)
-                positions.AddPosition($$, positionBuilder.NewTokenPosition($1))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
-                comments.AddComments(identifier, $1.Comments())
-                comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddComments(identifier, $1.Comments())
+                yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
 
@@ -3711,50 +3712,50 @@ internal_functions_in_yacc:
     T_ISSET '(' isset_variables ')'
         {
             $$ = expr.NewIsset($3)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_EMPTY '(' variable ')'
         {
             $$ = expr.NewEmpty($3)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_EMPTY '(' expr_without_variable ')'
         {
             $$ = expr.NewEmpty($3)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_INCLUDE expr
         {
             $$ = expr.NewInclude($2)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_INCLUDE_ONCE expr
         {
             $$ = expr.NewIncludeOnce($2)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_EVAL '(' expr ')'
         {
             $$ = expr.NewEval($3)
-            positions.AddPosition($$, positionBuilder.NewTokensPosition($1, $4))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_REQUIRE expr
         {
             $$ = expr.NewRequire($2)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
     |   T_REQUIRE_ONCE expr
         {
             $$ = expr.NewRequireOnce($2)
-            positions.AddPosition($$, positionBuilder.NewTokenNodePosition($1, $2))
-            comments.AddComments($$, $1.Comments())
+            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+            yylex.(*Parser).comments.AddComments($$, $1.Comments())
         }
 ;
 
@@ -3776,22 +3777,22 @@ class_constant:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewClassConstFetch($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
-                comments.AddComments(target, $3.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewClassConstFetch($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
-                comments.AddComments(target, $3.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -3799,12 +3800,12 @@ static_class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewClassConstFetch($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
-                comments.AddComments(target, $3.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
@@ -3812,13 +3813,38 @@ class_name_scalar:
         class_name T_PAAMAYIM_NEKUDOTAYIM T_CLASS
             {
                 target := node.NewIdentifier($3.Value)
-                positions.AddPosition(target, positionBuilder.NewTokenPosition($3))
+                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 $$ = expr.NewClassConstFetch($1, target)
-                positions.AddPosition($$, positionBuilder.NewNodeTokenPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
-                comments.AddComments(target, $3.Comments())
-                comments.AddComments($$, comments[$1])
+                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
             }
 ;
 
 %%
+
+type foreachVariable struct {
+	node  node.Node
+	byRef bool
+}
+
+type nodesWithEndToken struct {
+	nodes    []node.Node
+	endToken token.Token
+}
+
+type boolWithToken struct {
+	value bool
+	token *token.Token
+}
+
+type simpleIndirectReference struct {
+	all  []*expr.Variable
+	last *expr.Variable
+}
+
+type altSyntaxNode struct {
+	node  node.Node
+	isAlt bool
+}

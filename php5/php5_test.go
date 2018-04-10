@@ -3615,7 +3615,9 @@ func TestPhp5(t *testing.T) {
 		},
 	}
 
-	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual := php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }
 
@@ -3652,7 +3654,9 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual := php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }
 
@@ -3718,6 +3722,8 @@ CAD;
 		},
 	}
 
-	actual, _, _, _ := php5.Parse(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual := php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }

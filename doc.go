@@ -7,6 +7,7 @@ Features:
 	* Fully support PHP5 and PHP7 syntax
 	* Abstract syntax tree representation
 	* Traversing AST
+	* Namespace resolver
 
 Install:
 
@@ -21,7 +22,9 @@ Package usage example:
 	package main
 
 	import (
+		"fmt"
 		"bytes"
+		"os"
 
 		"github.com/z7zmey/php-parser/php7"
 		"github.com/z7zmey/php-parser/visitor"
@@ -29,14 +32,23 @@ Package usage example:
 
 	func main() {
 		src := bytes.NewBufferString(`<? echo "Hello world";`)
-		nodes, comments, positions := php7.Parse(src, "example.php")
+
+		parser := php7.NewParser(src, "example.php")
+		parser.Parse()
+
+		for _, e := range parser.GetErrors() {
+			fmt.Println(e)
+		}
 
 		visitor := visitor.Dumper{
+			Writer:    os.Stdout,
 			Indent:    "",
-			Comments:  comments,
-			Positions: positions,
+			Comments:  parser.GetComments(),
+			Positions: parser.GetPositions(),
 		}
-		nodes.Walk(visitor)
+
+		rootNode := parser.GetRootNode()
+		rootNode.Walk(visitor)
 	}
 */
 package main // import "github.com/z7zmey/php-parser"
