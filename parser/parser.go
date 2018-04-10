@@ -1,4 +1,4 @@
-package main
+package parser
 
 import (
 	"github.com/z7zmey/php-parser/comment"
@@ -7,6 +7,7 @@ import (
 	"github.com/z7zmey/php-parser/position"
 )
 
+// Parser interface
 type Parser interface {
 	Parse() int
 	GetPath() string

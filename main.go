@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/yookoala/realpath"
+	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/visitor"
@@ -18,15 +19,15 @@ var wg sync.WaitGroup
 var usePhp5 *bool
 
 func main() {
-	usePhp5 = flag.Bool("php5", false, "use PHP5 parser")
+	usePhp5 = flag.Bool("php5", false, "use PHP5 parserWorker")
 	flag.Parse()
 
 	pathCh := make(chan string)
-	resultCh := make(chan Parser)
+	resultCh := make(chan parser.Parser)
 
-	// run 4 concurrent parsers
+	// run 4 concurrent parserWorkers
 	for i := 0; i < 4; i++ {
-		go parser(pathCh, resultCh)
+		go parserWorker(pathCh, resultCh)
 	}
 
 	// run printer goroutine
@@ -57,44 +58,44 @@ func processPath(pathList []string, pathCh chan<- string) {
 	}
 }
 
-func parser(pathCh <-chan string, result chan<- Parser) {
-	var parser Parser
+func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
+	var parserWorker parser.Parser
 
 	for {
 		path := <-pathCh
 		src, _ := os.Open(path)
 
 		if *usePhp5 {
-			parser = php5.NewParser(src, path)
+			parserWorker = php5.NewParser(src, path)
 		} else {
-			parser = php7.NewParser(src, path)
+			parserWorker = php7.NewParser(src, path)
 		}
 
-		parser.Parse()
-		result <- parser
+		parserWorker.Parse()
+		result <- parserWorker
 	}
 }
 
-func printer(result <-chan Parser) {
+func printer(result <-chan parser.Parser) {
 	for {
-		parser := <-result
-		fmt.Printf("==> %s\n", parser.GetPath())
+		parserWorker := <-result
+		fmt.Printf("==> %s\n", parserWorker.GetPath())
 
-		for _, e := range parser.GetErrors() {
+		for _, e := range parserWorker.GetErrors() {
 			fmt.Println(e)
 		}
 
 		nsResolver := visitor.NewNamespaceResolver()
-		parser.GetRootNode().Walk(nsResolver)
+		parserWorker.GetRootNode().Walk(nsResolver)
 
 		dumper := visitor.Dumper{
 			Writer:     os.Stdout,
 			Indent:     "  | ",
-			Comments:   parser.GetComments(),
-			Positions:  parser.GetPositions(),
+			Comments:   parserWorker.GetComments(),
+			Positions:  parserWorker.GetPositions(),
 			NsResolver: nsResolver,
 		}
-		parser.GetRootNode().Walk(dumper)
+		parserWorker.GetRootNode().Walk(dumper)
 		wg.Done()
 	}
 }
