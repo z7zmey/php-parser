@@ -18,6 +18,7 @@ func (lval *yySymType) Token(t token.Token) {
 // Parser structure
 type Parser struct {
 	*scanner.Lexer
+	path            string
 	lastToken       *token.Token
 	positionBuilder *position.Builder
 	errors          []*errors.Error
@@ -27,11 +28,12 @@ type Parser struct {
 }
 
 // NewParser creates and returns new Parser
-func NewParser(src io.Reader, fName string) *Parser {
-	lexer := scanner.NewLexer(src, fName)
+func NewParser(src io.Reader, path string) *Parser {
+	lexer := scanner.NewLexer(src, path)
 
 	return &Parser{
 		lexer,
+		path,
 		nil,
 		nil,
 		nil,
@@ -79,6 +81,11 @@ func (l *Parser) listGetFirstNodeComments(list []node.Node) []comment.Comment {
 	node := list[0]
 
 	return l.comments[node]
+}
+
+// GetPath return path to file
+func (l *Parser) GetPath() string {
+	return l.path
 }
 
 // GetRootNode returns root node
