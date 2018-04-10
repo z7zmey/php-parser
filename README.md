@@ -5,7 +5,7 @@
   Keywords: go golang php php-parser ast
   -->
 
-<img src="./parser.jpg" alt="A parser for PHP written in Go" width="980"/>
+<img src="./parser.jpg" alt="PHP Parser written in Go" width="980"/>
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/z7zmey/php-parser)](https://goreportcard.com/report/github.com/z7zmey/php-parser)
 [![Exago](https://api.exago.io:443/badge/tests/github.com/z7zmey/php-parser)](https://exago.io/project/github.com/z7zmey/php-parser)
@@ -15,16 +15,31 @@
 #### Try it online: [demo](https://php-parser.com)
 
 ## Features:
-- Fully support PHP5 and PHP7 syntax
-- Abstract syntax tree representation
+- Fully support PHP 5 and PHP 7 syntax
+- Abstract syntax tree (AST) representation
 - Traversing AST
 - Namespace resolver
+- Able to parse syntax-invalid PHP files
+
+## Roadmap
+
+- Control Flow Graph (CFG)
+- PhpDocComment parser
+- Stabilize api
 
 ## Install
 
 ```
 go get github.com/z7zmey/php-parser
 ```
+
+## CLI
+
+```
+php-parser [-php5] <path> ...
+```
+
+Dump AST to stdout.
 
 ## Example
 ```Golang
@@ -61,19 +76,16 @@ func main() {
 }
 ```
 
-## CLI dumper
-
-```
-$GOPATH/bin/php-parser /path/to/file/or/dir
-```
-
 ## Namespace resolver
 
-Namespace resolver is a visitor that traverses nodes and resolves nodes fully qualified name.
-It does not change AST but collects resolved names into `map[node.Node]string`
+Namespace resolver is a visitor that resolves nodes fully qualified name and saves into `map[node.Node]string` structure
 
-- For `Class`, `Interface`, `Trait`, `Function`, `ConstList` nodes collects name with current namespace.
-- For `Name`, `Relative`, `FullyQualified` nodes resolves `use` aliases and collects a fully qualified name.
+- For `Class`, `Interface`, `Trait`, `Function`, `Constant` nodes it saves name with current namespace.
+- For `Name`, `Relative`, `FullyQualified` nodes it resolves `use` aliases and saves a fully qualified name.
+
+## Parsing syntax-invalid PHP files
+
+If we try to parse `$a$b;` then the parser triggers error 'syntax error: unexpected T_VARIABLE'. Token `$b` is unexpected, but parser recovers parsing process and returns `$b;` statement to AST, because it is syntactically correct.
 
 ## Pretty printer
 
@@ -121,21 +133,3 @@ abstract class Bar extends Baz
     }
 }
 ```
-
-## Roadmap
-- [X] Lexer
-- [x] PHP 7 syntax analyzer
-- [x] AST nodes
-- [x] AST visitor
-- [x] AST dumper
-- [x] node position
-- [x] handling comments
-- [x] PHP 5 syntax analyzer
-- [x] Tests
-- [x] Namespace resolver
-- [x] Pretty printer
-- [ ] PhpDocComment parser
-- [ ] Error handling
-- [ ] Stabilize api
-- [ ] Documentation
-- [ ] Code flow graph
