@@ -73,7 +73,9 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 			nsr.ResolveName(interfaceName, "")
 		}
 
-		nsr.AddNamespacedName(n, n.ClassName.(*node.Identifier).Value)
+		if n.ClassName != nil {
+			nsr.AddNamespacedName(n, n.ClassName.(*node.Identifier).Value)
+		}
 
 	case *stmt.Interface:
 		for _, interfaceName := range n.Extends {
