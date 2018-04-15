@@ -12,7 +12,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/cznic/golex/lex"
-	"github.com/z7zmey/php-parser/comment"
 )
 
 const (
@@ -8311,15 +8310,12 @@ yyrule125: // \?\?
 yyrule126: // (#|[/][/])
 	{
 
-		tb := []rune{}
-		for _, chr := range l.Token() {
-			tb = append(tb, chr.Rune)
-		}
+		tb := l.Token()
 		for {
 			if c == -1 {
 				break
 			}
-			tb = append(tb, rune(c))
+			tb = append(tb, l.Last)
 			switch c {
 			case '\r':
 				c = l.Next()
@@ -8342,7 +8338,7 @@ yyrule126: // (#|[/][/])
 			}
 			break
 		}
-		l.addComment(comment.NewPlainComment(string(tb)))
+		l.addComment(tb)
 		goto yystate0
 	}
 yyrule127: // ([/][*])|([/][*][*])
@@ -8367,10 +8363,10 @@ yyrule127: // ([/][*])|([/][*][*])
 		lval.Token(l.newToken(l.Token()))
 		if is_doc_comment {
 			l.PhpDocComment = string(l.TokenBytes(nil))
-			l.addComment(comment.NewDocComment(string(l.TokenBytes(nil))))
+			l.addComment(l.Token())
 			// return T_DOC_COMMENT
 		} else {
-			l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil))))
+			l.addComment(l.Token())
 			// return T_COMMENT
 		}
 		goto yystate0

@@ -72,7 +72,7 @@ func (l *Parser) Parse() int {
 	return yyParse(l)
 }
 
-func (l *Parser) listGetFirstNodeComments(list []node.Node) []comment.Comment {
+func (l *Parser) listGetFirstNodeComments(list []node.Node) []*comment.Comment {
 	if len(list) == 0 {
 		return nil
 	}

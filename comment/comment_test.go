@@ -10,9 +10,9 @@ import (
 func TestComments(t *testing.T) {
 	n := node.NewIdentifier("test")
 
-	commentGroup := []comment.Comment{
-		comment.NewDocComment("/** hello world */"),
-		comment.NewPlainComment("// hello world"),
+	commentGroup := []*comment.Comment{
+		comment.NewComment("/** hello world */"),
+		comment.NewComment("// hello world"),
 	}
 
 	comments := comment.Comments{}

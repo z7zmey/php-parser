@@ -438,7 +438,7 @@ type Lexer struct {
 	*lex.Lexer
 	StateStack    []int
 	PhpDocComment string
-	Comments      []comment.Comment
+	Comments      []*comment.Comment
 }
 
 // Rune2Class returns the rune integer id
@@ -520,7 +520,8 @@ func (l *Lexer) newToken(chars []lex.Char) Token {
 	return NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
 }
 
-func (l *Lexer) addComment(c comment.Comment) {
+func (l *Lexer) addComment(chars []lex.Char) {
+	c := comment.NewComment(string(l.charsToBytes(chars)))
 	l.Comments = append(l.Comments, c)
 }
 

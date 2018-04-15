@@ -1,16 +1,17 @@
 package comment
 
-import "github.com/z7zmey/php-parser/node"
-
-// Comment represents comment lines in the code
-type Comment interface {
-	String() string
+// Comment aggrigates information about comment /**
+type Comment struct {
+	value string
 }
 
-// Comments a collection of comment groups assigned to nodes
-type Comments map[node.Node][]Comment
+// NewComment - Comment constructor
+func NewComment(value string) *Comment {
+	return &Comment{
+		value,
+	}
+}
 
-// AddComments add comment group to the collection
-func (c Comments) AddComments(node node.Node, comments []Comment) {
-	c[node] = append(c[node], comments...)
+func (c *Comment) String() string {
+	return c.value
 }

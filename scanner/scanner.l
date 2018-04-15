@@ -11,7 +11,6 @@ import (
     "fmt"
     "bytes"
     "github.com/cznic/golex/lex"
-    "github.com/z7zmey/php-parser/comment"
 )
 
 const (
@@ -253,18 +252,14 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\>\>                                       lval.Token(l.newToken(l.Token())); return T_SR
 <PHP>\?\?                                       lval.Token(l.newToken(l.Token())); return T_COALESCE
 <PHP>(#|[/][/])
-    tb := []rune{}
-
-    for _, chr := range(l.Token()) {
-        tb = append(tb, chr.Rune)
-    }
+    tb := l.Token()
 
     for {
         if c == -1 {
             break
         }
 
-        tb = append(tb, rune(c))
+        tb = append(tb, l.Last)
 
         switch c {
             case '\r':
@@ -292,7 +287,7 @@ NEW_LINE        (\r|\n|\r\n)
         break;
     }
 
-    l.addComment(comment.NewPlainComment(string(tb)))
+    l.addComment(tb)
 
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
@@ -318,10 +313,10 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.newToken(l.Token()))
     if is_doc_comment {
         l.PhpDocComment = string(l.TokenBytes(nil))
-        l.addComment(comment.NewDocComment(string(l.TokenBytes(nil))))
+        l.addComment(l.Token())
         // return T_DOC_COMMENT
     } else {
-        l.addComment(comment.NewPlainComment(string(l.TokenBytes(nil))))
+        l.addComment(l.Token())
         // return T_COMMENT
     }
 

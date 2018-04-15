@@ -11,7 +11,7 @@ type Token struct {
 	EndLine   int
 	StartPos  int
 	EndPos    int
-	comments  []comment.Comment
+	comments  []*comment.Comment
 }
 
 // NewToken Token constructor
@@ -25,12 +25,12 @@ func (t Token) String() string {
 }
 
 // Comments returns attached comments
-func (t Token) Comments() []comment.Comment {
+func (t Token) Comments() []*comment.Comment {
 	return t.comments
 }
 
 // SetComments attach comments
-func (t Token) SetComments(comments []comment.Comment) Token {
+func (t Token) SetComments(comments []*comment.Comment) Token {
 	t.comments = comments
 	return t
 }
