@@ -23,7 +23,7 @@ import (
 type yySymType struct {
 	yys               int
 	node              node.Node
-	token             scanner.Token
+	token             *scanner.Token
 	boolWithToken     boolWithToken
 	list              []node.Node
 	foreachVariable   foreachVariable
@@ -345,6 +345,7 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line php7/php7.y:2635
+
 type foreachVariable struct {
 	node  node.Node
 	byRef bool
@@ -352,7 +353,7 @@ type foreachVariable struct {
 
 type nodesWithEndToken struct {
 	nodes    []node.Node
-	endToken scanner.Token
+	endToken *scanner.Token
 }
 
 type boolWithToken struct {
@@ -3242,7 +3243,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:764
 		{
-			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
+			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
@@ -3254,7 +3255,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:769
 		{
-			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
+			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
@@ -3623,11 +3624,11 @@ yydefault:
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yylex.(*Parser).comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(*yyDollar[2].boolWithToken.token, yyDollar[4].token))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].boolWithToken.token, yyDollar[4].token))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(*yyDollar[3].boolWithToken.token, yyDollar[4].token))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].boolWithToken.token, yyDollar[4].token))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
@@ -3653,11 +3654,11 @@ yydefault:
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yylex.(*Parser).comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*yyDollar[2].boolWithToken.token, yyDollar[6].node))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].boolWithToken.token, yyDollar[6].node))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*yyDollar[3].boolWithToken.token, yyDollar[6].node))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].boolWithToken.token, yyDollar[6].node))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
 				yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].boolWithToken.value, yyDollar[3].boolWithToken.value)
@@ -4893,7 +4894,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:1963
 		{
-			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
+			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]

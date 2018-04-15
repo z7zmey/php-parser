@@ -10,7 +10,7 @@ import (
 	"github.com/z7zmey/php-parser/scanner"
 )
 
-func (lval *yySymType) Token(t scanner.Token) {
+func (lval *yySymType) Token(t *scanner.Token) {
 	lval.token = t
 }
 
@@ -45,12 +45,12 @@ func NewParser(src io.Reader, path string) *Parser {
 // Lex proxy to lexer Lex
 func (l *Parser) Lex(lval *yySymType) int {
 	t := l.Lexer.Lex(lval)
-	l.lastToken = &lval.token
+	l.lastToken = lval.token
 	return t
 }
 
 func (l *Parser) Error(msg string) {
-	l.errors = append(l.errors, errors.NewError(msg, *l.lastToken))
+	l.errors = append(l.errors, errors.NewError(msg, l.lastToken))
 }
 
 // Parse the php7 Parser entrypoint

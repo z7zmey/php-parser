@@ -20,7 +20,7 @@ import (
 
 %union{
     node node.Node
-    token scanner.Token
+    token *scanner.Token
     boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
@@ -907,14 +907,14 @@ is_reference:
         /* empty */
             { $$ = boolWithToken{false, nil} }
     |   '&'
-            { $$ = boolWithToken{true, &$1} }
+            { $$ = boolWithToken{true, $1} }
 ;
 
 is_variadic:
         /* empty */
             { $$ = boolWithToken{false, nil} }
     |   T_ELLIPSIS
-            { $$ = boolWithToken{true, &$1} }
+            { $$ = boolWithToken{true, $1} }
 ;
 
 unticked_function_declaration_statement:
@@ -1255,10 +1255,10 @@ parameter:
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                     yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
                 } else if $2.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition(*$2.token, $4))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($2.token, $4))
                     yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
                 } else if $3.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition(*$3.token, $4))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($3.token, $4))
                     yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
                 } else {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
@@ -1281,10 +1281,10 @@ parameter:
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
                     yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
                 } else if $2.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*$2.token, $6))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2.token, $6))
                     yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
                 } else if $3.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*$3.token, $6))
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3.token, $6))
                     yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
                 } else {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
@@ -3831,7 +3831,7 @@ type foreachVariable struct {
 
 type nodesWithEndToken struct {
 	nodes    []node.Node
-	endToken scanner.Token
+	endToken *scanner.Token
 }
 
 type boolWithToken struct {

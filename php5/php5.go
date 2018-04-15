@@ -23,7 +23,7 @@ import (
 type yySymType struct {
 	yys                     int
 	node                    node.Node
-	token                   scanner.Token
+	token                   *scanner.Token
 	boolWithToken           boolWithToken
 	list                    []node.Node
 	foreachVariable         foreachVariable
@@ -345,6 +345,7 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line php5/php5.y:3825
+
 type foreachVariable struct {
 	node  node.Node
 	byRef bool
@@ -352,7 +353,7 @@ type foreachVariable struct {
 
 type nodesWithEndToken struct {
 	nodes    []node.Node
-	endToken scanner.Token
+	endToken *scanner.Token
 }
 
 type boolWithToken struct {
@@ -3132,7 +3133,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:910
 		{
-			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
+			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 91:
 		yyDollar = yyS[yypt-0 : yypt+1]
@@ -3144,7 +3145,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:917
 		{
-			yyVAL.boolWithToken = boolWithToken{true, &yyDollar[1].token}
+			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 93:
 		yyDollar = yyS[yypt-9 : yypt+1]
@@ -3557,10 +3558,10 @@ yydefault:
 				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yylex.(*Parser).comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(*yyDollar[2].boolWithToken.token, yyDollar[4].token))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].boolWithToken.token, yyDollar[4].token))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(*yyDollar[3].boolWithToken.token, yyDollar[4].token))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].boolWithToken.token, yyDollar[4].token))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
 				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
@@ -3585,10 +3586,10 @@ yydefault:
 				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yylex.(*Parser).comments[yyDollar[1].node])
 			} else if yyDollar[2].boolWithToken.value == true {
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*yyDollar[2].boolWithToken.token, yyDollar[6].node))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].boolWithToken.token, yyDollar[6].node))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[2].boolWithToken.token.Comments())
 			} else if yyDollar[3].boolWithToken.value == true {
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(*yyDollar[3].boolWithToken.token, yyDollar[6].node))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].boolWithToken.token, yyDollar[6].node))
 				yylex.(*Parser).comments.AddComments(yyVAL.node, yyDollar[3].boolWithToken.token.Comments())
 			} else {
 				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))

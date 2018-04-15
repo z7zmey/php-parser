@@ -432,7 +432,7 @@ const T_POW = 57481
 
 // Lval parsers yySymType must implement this interface
 type Lval interface {
-	Token(tkn Token)
+	Token(tkn *Token)
 }
 
 // Lexer php lexer
@@ -510,16 +510,18 @@ func (l *Lexer) getCurrentState() int {
 	return l.StateStack[len(l.StateStack)-1]
 }
 
-func (l *Lexer) newToken(chars []lex.Char) Token {
+func (l *Lexer) newToken(chars []lex.Char) *Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
-	startLine := l.File.Line(firstChar.Pos())
-	endLine := l.File.Line(lastChar.Pos())
-	startPos := int(firstChar.Pos())
-	endPos := int(lastChar.Pos())
+	pos := position.NewPosition(
+		l.File.Line(firstChar.Pos()),
+		l.File.Line(lastChar.Pos()),
+		int(firstChar.Pos()),
+		int(lastChar.Pos()),
+	)
 
-	return NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
+	return NewToken(l.charsToBytes(chars), pos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(chars []lex.Char) {

@@ -28,10 +28,10 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 }
 
 type lval struct {
-	Tkn scanner.Token
+	Tkn *scanner.Token
 }
 
-func (lv *lval) Token(t scanner.Token) {
+func (lv *lval) Token(t *scanner.Token) {
 	lv.Tkn = t
 }
 
