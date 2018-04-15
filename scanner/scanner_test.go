@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/z7zmey/php-parser/comment"
 
 	"github.com/z7zmey/php-parser/scanner"
@@ -873,7 +875,7 @@ func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
 	expected := []*comment.Comment{
-		comment.NewComment("//test"),
+		comment.NewComment("//test", position.NewPosition(1, 1, 7, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -890,7 +892,7 @@ func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
 	expected := []*comment.Comment{
-		comment.NewComment("//test\n"),
+		comment.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -907,7 +909,7 @@ func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
 	expected := []*comment.Comment{
-		comment.NewComment("//test\r"),
+		comment.NewComment("//test\r", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -924,7 +926,7 @@ func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
 	expected := []*comment.Comment{
-		comment.NewComment("#test\r\n"),
+		comment.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -942,7 +944,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	//test?> test`
 
 	expected := []*comment.Comment{
-		comment.NewComment("//test"),
+		comment.NewComment("//test", position.NewPosition(2, 2, 8, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -960,7 +962,7 @@ func TestInlineComment(t *testing.T) {
 	/*test*/`
 
 	expected := []*comment.Comment{
-		comment.NewComment("/*test*/"),
+		comment.NewComment("/*test*/", position.NewPosition(2, 2, 8, 15)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -978,7 +980,7 @@ func TestEmptyInlineComment(t *testing.T) {
 	/**/`
 
 	expected := []*comment.Comment{
-		comment.NewComment("/**/"),
+		comment.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -996,7 +998,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 	/***/`
 
 	expected := []*comment.Comment{
-		comment.NewComment("/***/"),
+		comment.NewComment("/***/", position.NewPosition(2, 2, 8, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")

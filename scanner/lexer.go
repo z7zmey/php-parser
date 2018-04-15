@@ -8,6 +8,8 @@ import (
 	"io"
 	"unicode"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
 )
@@ -521,7 +523,17 @@ func (l *Lexer) newToken(chars []lex.Char) Token {
 }
 
 func (l *Lexer) addComment(chars []lex.Char) {
-	c := comment.NewComment(string(l.charsToBytes(chars)))
+	firstChar := chars[0]
+	lastChar := chars[len(chars)-1]
+
+	pos := position.NewPosition(
+		l.File.Line(firstChar.Pos()),
+		l.File.Line(lastChar.Pos()),
+		int(firstChar.Pos()),
+		int(lastChar.Pos()),
+	)
+
+	c := comment.NewComment(string(l.charsToBytes(chars)), pos)
 	l.Comments = append(l.Comments, c)
 }
 

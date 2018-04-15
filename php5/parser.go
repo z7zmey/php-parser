@@ -6,6 +6,7 @@ import (
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
 )
@@ -19,7 +20,7 @@ type Parser struct {
 	*scanner.Lexer
 	path            string
 	lastToken       *scanner.Token
-	positionBuilder *position.Builder
+	positionBuilder *parser.Builder
 	errors          []*errors.Error
 	rootNode        node.Node
 	comments        comment.Comments
@@ -63,7 +64,7 @@ func (l *Parser) Parse() int {
 	l.rootNode = nil
 	l.comments = comment.Comments{}
 	l.positions = position.Positions{}
-	l.positionBuilder = &position.Builder{
+	l.positionBuilder = &parser.Builder{
 		Positions: &l.positions,
 	}
 
