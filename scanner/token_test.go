@@ -1,4 +1,4 @@
-package token_test
+package scanner_test
 
 import (
 	"reflect"
@@ -6,11 +6,11 @@ import (
 
 	"github.com/z7zmey/php-parser/comment"
 
-	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/scanner"
 )
 
 func TestToken(t *testing.T) {
-	tkn := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	tkn := scanner.NewToken([]byte(`foo`), 1, 1, 0, 3)
 
 	c := []comment.Comment{
 		comment.NewPlainComment("test comment"),

@@ -8,10 +8,9 @@ import (
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/token"
 )
 
-func (lval *yySymType) Token(t token.Token) {
+func (lval *yySymType) Token(t scanner.Token) {
 	lval.token = t
 }
 
@@ -19,7 +18,7 @@ func (lval *yySymType) Token(t token.Token) {
 type Parser struct {
 	*scanner.Lexer
 	path            string
-	lastToken       *token.Token
+	lastToken       *scanner.Token
 	positionBuilder *position.Builder
 	errors          []*errors.Error
 	rootNode        node.Node

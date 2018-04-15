@@ -16,14 +16,14 @@ import (
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/scanner"
 )
 
 //line php5/php5.y:21
 type yySymType struct {
 	yys                     int
 	node                    node.Node
-	token                   token.Token
+	token                   scanner.Token
 	boolWithToken           boolWithToken
 	list                    []node.Node
 	foreachVariable         foreachVariable
@@ -345,7 +345,6 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line php5/php5.y:3825
-
 type foreachVariable struct {
 	node  node.Node
 	byRef bool
@@ -353,12 +352,12 @@ type foreachVariable struct {
 
 type nodesWithEndToken struct {
 	nodes    []node.Node
-	endToken token.Token
+	endToken scanner.Token
 }
 
 type boolWithToken struct {
 	value bool
-	token *token.Token
+	token *scanner.Token
 }
 
 type simpleIndirectReference struct {

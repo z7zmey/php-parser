@@ -8,7 +8,6 @@ import (
 	"github.com/z7zmey/php-parser/comment"
 
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/token"
 
 	"github.com/kylelemons/godebug/pretty"
 )
@@ -27,10 +26,10 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 }
 
 type lval struct {
-	Tkn token.Token
+	Tkn scanner.Token
 }
 
-func (lv *lval) Token(t token.Token) {
+func (lv *lval) Token(t scanner.Token) {
 	lv.Tkn = t
 }
 

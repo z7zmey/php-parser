@@ -10,7 +10,6 @@ import (
 
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
-	t "github.com/z7zmey/php-parser/token"
 )
 
 // Allocate Character classes anywhere in [0x80, 0xFF].
@@ -431,7 +430,7 @@ const T_POW = 57481
 
 // Lval parsers yySymType must implement this interface
 type Lval interface {
-	Token(tkn t.Token)
+	Token(tkn Token)
 }
 
 // Lexer php lexer
@@ -509,7 +508,7 @@ func (l *Lexer) getCurrentState() int {
 	return l.StateStack[len(l.StateStack)-1]
 }
 
-func (l *Lexer) newToken(chars []lex.Char) t.Token {
+func (l *Lexer) newToken(chars []lex.Char) Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
@@ -518,7 +517,7 @@ func (l *Lexer) newToken(chars []lex.Char) t.Token {
 	startPos := int(firstChar.Pos())
 	endPos := int(lastChar.Pos())
 
-	return t.NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
+	return NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(c comment.Comment) {

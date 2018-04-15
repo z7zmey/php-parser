@@ -5,7 +5,7 @@ import (
     "strings"
     "strconv"
 
-    "github.com/z7zmey/php-parser/token"
+    "github.com/z7zmey/php-parser/scanner"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
     "github.com/z7zmey/php-parser/node/name"
@@ -20,7 +20,7 @@ import (
 
 %union{
     node node.Node
-    token token.Token
+    token scanner.Token
     boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
@@ -3831,12 +3831,12 @@ type foreachVariable struct {
 
 type nodesWithEndToken struct {
 	nodes    []node.Node
-	endToken token.Token
+	endToken scanner.Token
 }
 
 type boolWithToken struct {
 	value bool
-	token *token.Token
+	token *scanner.Token
 }
 
 type simpleIndirectReference struct {

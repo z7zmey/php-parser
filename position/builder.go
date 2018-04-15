@@ -2,7 +2,7 @@ package position
 
 import (
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/scanner"
 )
 
 // Builder provide functions to constuct positions
@@ -99,7 +99,7 @@ func (b *Builder) NewNodePosition(n node.Node) *Position {
 }
 
 // NewTokenPosition returns new Position
-func (b *Builder) NewTokenPosition(t token.Token) *Position {
+func (b *Builder) NewTokenPosition(t scanner.Token) *Position {
 	return &Position{
 		t.StartLine,
 		t.EndLine,
@@ -109,7 +109,7 @@ func (b *Builder) NewTokenPosition(t token.Token) *Position {
 }
 
 // NewTokensPosition returns new Position
-func (b *Builder) NewTokensPosition(startToken token.Token, endToken token.Token) *Position {
+func (b *Builder) NewTokensPosition(startToken scanner.Token, endToken scanner.Token) *Position {
 	return &Position{
 		startToken.StartLine,
 		endToken.EndLine,
@@ -119,7 +119,7 @@ func (b *Builder) NewTokensPosition(startToken token.Token, endToken token.Token
 }
 
 // NewTokenNodePosition returns new Position
-func (b *Builder) NewTokenNodePosition(t token.Token, n node.Node) *Position {
+func (b *Builder) NewTokenNodePosition(t scanner.Token, n node.Node) *Position {
 	return &Position{
 		t.StartLine,
 		b.getNodeEndPos(n).endLine,
@@ -129,7 +129,7 @@ func (b *Builder) NewTokenNodePosition(t token.Token, n node.Node) *Position {
 }
 
 // NewNodeTokenPosition returns new Position
-func (b *Builder) NewNodeTokenPosition(n node.Node, t token.Token) *Position {
+func (b *Builder) NewNodeTokenPosition(n node.Node, t scanner.Token) *Position {
 	return &Position{
 		b.getNodeStartPos(n).startLine,
 		t.EndLine,
@@ -149,7 +149,7 @@ func (b *Builder) NewNodesPosition(startNode node.Node, endNode node.Node) *Posi
 }
 
 // NewNodeListTokenPosition returns new Position
-func (b *Builder) NewNodeListTokenPosition(list []node.Node, t token.Token) *Position {
+func (b *Builder) NewNodeListTokenPosition(list []node.Node, t scanner.Token) *Position {
 	return &Position{
 		b.getListStartPos(list).startLine,
 		t.EndLine,
@@ -159,7 +159,7 @@ func (b *Builder) NewNodeListTokenPosition(list []node.Node, t token.Token) *Pos
 }
 
 // NewTokenNodeListPosition returns new Position
-func (b *Builder) NewTokenNodeListPosition(t token.Token, list []node.Node) *Position {
+func (b *Builder) NewTokenNodeListPosition(t scanner.Token, list []node.Node) *Position {
 	return &Position{
 		t.StartLine,
 		b.getListEndPos(list).endLine,
@@ -179,7 +179,7 @@ func (b *Builder) NewNodeNodeListPosition(n node.Node, list []node.Node) *Positi
 }
 
 // NewOptionalListTokensPosition returns new Position
-func (b *Builder) NewOptionalListTokensPosition(list []node.Node, t token.Token, endToken token.Token) *Position {
+func (b *Builder) NewOptionalListTokensPosition(list []node.Node, t scanner.Token, endToken scanner.Token) *Position {
 	if list == nil {
 		return &Position{
 			t.StartLine,

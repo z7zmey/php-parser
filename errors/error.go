@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/z7zmey/php-parser/position"
-	"github.com/z7zmey/php-parser/token"
+	"github.com/z7zmey/php-parser/scanner"
 )
 
 // Error parsing error
@@ -14,7 +14,7 @@ type Error struct {
 }
 
 // NewError creates and returns new Error
-func NewError(msg string, t token.Token) *Error {
+func NewError(msg string, t scanner.Token) *Error {
 	return &Error{
 		Msg: msg,
 		Pos: position.Position{

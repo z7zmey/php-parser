@@ -1,4 +1,4 @@
-package token
+package scanner
 
 import (
 	"github.com/z7zmey/php-parser/comment"
