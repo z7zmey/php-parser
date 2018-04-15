@@ -19,7 +19,7 @@ type Parser struct {
 	*scanner.Lexer
 	path            string
 	lastToken       *scanner.Token
-	positionBuilder *parser.Builder
+	positionBuilder *parser.PositionBuilder
 	errors          []*errors.Error
 	rootNode        node.Node
 	comments        parser.Comments
@@ -63,7 +63,7 @@ func (l *Parser) Parse() int {
 	l.rootNode = nil
 	l.comments = parser.Comments{}
 	l.positions = parser.Positions{}
-	l.positionBuilder = &parser.Builder{
+	l.positionBuilder = &parser.PositionBuilder{
 		Positions: &l.positions,
 	}
 
