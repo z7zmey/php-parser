@@ -8,7 +8,7 @@ import (
 
 // Builder provide functions to constuct positions
 type Builder struct {
-	Positions *position.Positions
+	Positions *Positions
 }
 
 type startPos struct {

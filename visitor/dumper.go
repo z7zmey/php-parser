@@ -7,9 +7,8 @@ import (
 	"reflect"
 
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/parser"
 
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -18,8 +17,8 @@ import (
 type Dumper struct {
 	Writer     io.Writer
 	Indent     string
-	Comments   comment.Comments
-	Positions  position.Positions
+	Comments   parser.Comments
+	Positions  parser.Positions
 	NsResolver *NamespaceResolver
 }
 

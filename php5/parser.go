@@ -7,7 +7,6 @@ import (
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -23,8 +22,8 @@ type Parser struct {
 	positionBuilder *parser.Builder
 	errors          []*errors.Error
 	rootNode        node.Node
-	comments        comment.Comments
-	positions       position.Positions
+	comments        parser.Comments
+	positions       parser.Positions
 }
 
 // NewParser creates and returns new Parser
@@ -62,8 +61,8 @@ func (l *Parser) Parse() int {
 	// init
 	l.errors = nil
 	l.rootNode = nil
-	l.comments = comment.Comments{}
-	l.positions = position.Positions{}
+	l.comments = parser.Comments{}
+	l.positions = parser.Positions{}
 	l.positionBuilder = &parser.Builder{
 		Positions: &l.positions,
 	}
@@ -99,11 +98,11 @@ func (l *Parser) GetErrors() []*errors.Error {
 }
 
 // GetComments returns comments list
-func (l *Parser) GetComments() comment.Comments {
+func (l *Parser) GetComments() parser.Comments {
 	return l.comments
 }
 
 // GetPositions returns positions list
-func (l *Parser) GetPositions() position.Positions {
+func (l *Parser) GetPositions() parser.Positions {
 	return l.positions
 }

@@ -38,7 +38,7 @@ func TestNewTokensPosition(t *testing.T) {
 func TestNewNodePosition(t *testing.T) {
 	n := node.NewIdentifier("test node")
 
-	p := &position.Positions{}
+	p := &parser.Positions{}
 	p.AddPosition(n, &position.Position{
 		StartLine: 1,
 		EndLine:   1,
@@ -61,7 +61,7 @@ func TestNewTokenNodePosition(t *testing.T) {
 	tkn := scanner.NewToken([]byte(`foo`), 1, 1, 0, 3)
 	n := node.NewIdentifier("test node")
 
-	p := &position.Positions{}
+	p := &parser.Positions{}
 	p.AddPosition(n, &position.Position{
 		StartLine: 2,
 		EndLine:   2,
@@ -84,7 +84,7 @@ func TestNewNodeTokenPosition(t *testing.T) {
 	n := node.NewIdentifier("test node")
 	tkn := scanner.NewToken([]byte(`foo`), 2, 2, 10, 12)
 
-	p := &position.Positions{}
+	p := &parser.Positions{}
 	p.AddPosition(n, &position.Position{
 		StartLine: 1,
 		EndLine:   1,
@@ -108,7 +108,7 @@ func TestNewNodeListPosition(t *testing.T) {
 	n2 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -136,7 +136,7 @@ func TestNewNodesPosition(t *testing.T) {
 	n2 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -165,7 +165,7 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 	tkn := scanner.NewToken([]byte(`foo`), 3, 3, 20, 22)
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -194,7 +194,7 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 	n2 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 2,
 				EndLine:   2,
@@ -223,7 +223,7 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 	n3 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -271,7 +271,7 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 	n3 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -317,7 +317,7 @@ func TestNilNodeListPos(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
@@ -350,7 +350,7 @@ func TestEmptyNodeListPos(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
 
 	builder := parser.Builder{
-		Positions: &position.Positions{
+		Positions: &parser.Positions{
 			n1: &position.Position{
 				StartLine: 1,
 				EndLine:   1,
