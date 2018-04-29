@@ -53,7 +53,7 @@ func TestGlobalVars(t *testing.T) {
 									&name.NamePart{Value: "foo"},
 								},
 							},
-							Arguments: []node.Node{},
+							ArgumentList: &node.ArgumentList{},
 						},
 					},
 				},

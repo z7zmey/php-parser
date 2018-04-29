@@ -19,9 +19,9 @@ func TestMethodCall(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.MethodCall{
-					Variable:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Method:    &node.Identifier{Value: "foo"},
-					Arguments: []node.Node{},
+					Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Method:       &node.Identifier{Value: "foo"},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},

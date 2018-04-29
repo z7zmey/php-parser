@@ -10,19 +10,19 @@ type Class struct {
 	PhpDocComment string
 	ClassName     node.Node
 	Modifiers     []node.Node
-	Args          []node.Node
+	ArgumentList  *node.ArgumentList
 	Extends       node.Node
 	Implements    []node.Node
 	Stmts         []node.Node
 }
 
 // NewClass node constructor
-func NewClass(ClassName node.Node, Modifiers []node.Node, Args []node.Node, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) *Class {
+func NewClass(ClassName node.Node, Modifiers []node.Node, ArgumentList *node.ArgumentList, Extends node.Node, Implements []node.Node, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
 		PhpDocComment,
 		ClassName,
 		Modifiers,
-		Args,
+		ArgumentList,
 		Extends,
 		Implements,
 		Stmts,
@@ -57,13 +57,9 @@ func (n *Class) Walk(v walker.Visitor) {
 		}
 	}
 
-	if n.Args != nil {
-		vv := v.GetChildrenVisitor("Args")
-		for _, nn := range n.Args {
-			if nn != nil {
-				nn.Walk(vv)
-			}
-		}
+	if n.ArgumentList != nil {
+		vv := v.GetChildrenVisitor("ArgumentList")
+		n.ArgumentList.Walk(vv)
 	}
 
 	if n.Extends != nil {

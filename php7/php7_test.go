@@ -402,18 +402,22 @@ func TestPhp7(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
@@ -421,9 +425,11 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.MethodCall{
 					Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Method:   &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
@@ -431,9 +437,11 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.StaticCall{
 					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
 					Call:  &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
@@ -441,18 +449,22 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.StaticCall{
 					Class: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					Call:  &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
-					Arguments: []node.Node{
-						&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						},
 					},
 				},
 			},
@@ -460,9 +472,11 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.New{
 					Class: &stmt.Class{
 						PhpDocComment: "/** anonymous class */",
-						Args: []node.Node{
-							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						ArgumentList: &node.ArgumentList{
+							Arguments: []node.Node{
+								&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+								&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+							},
 						},
 						Stmts: []node.Node{},
 					},
@@ -730,9 +744,10 @@ func TestPhp7(t *testing.T) {
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.MethodCall{
-							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-							Method:    &node.Identifier{Value: "bar"},
-							Arguments: []node.Node{},
+							Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+							Method:   &node.Identifier{Value: "bar"},
+
+							ArgumentList: &node.ArgumentList{},
 						},
 					},
 				},
@@ -945,7 +960,8 @@ func TestPhp7(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &stmt.Class{
-						Args: []node.Node{},
+
+						ArgumentList: &node.ArgumentList{},
 						Extends: &name.Name{
 							Parts: []node.Node{
 								&name.NamePart{Value: "foo"},
@@ -2168,7 +2184,8 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2178,7 +2195,8 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2188,13 +2206,15 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-					Arguments: []node.Node{},
+					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2325,9 +2345,10 @@ func TestPhp7(t *testing.T) {
 			},
 			&stmt.Expression{
 				Expr: &expr.MethodCall{
-					Variable:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Method:    &node.Identifier{Value: "foo"},
-					Arguments: []node.Node{},
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Method:   &node.Identifier{Value: "foo"},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2337,7 +2358,8 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2347,7 +2369,8 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2357,16 +2380,20 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &stmt.Class{
 						PhpDocComment: "",
-						Args: []node.Node{
-							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+
+						ArgumentList: &node.ArgumentList{
+							Arguments: []node.Node{
+								&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+								&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+							},
 						},
 						Stmts: []node.Node{},
 					},
@@ -2488,8 +2515,9 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Call:      &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{},
+					Call: &node.Identifier{Value: "bar"},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2499,8 +2527,9 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Call:      &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{},
+					Call: &node.Identifier{Value: "bar"},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2510,8 +2539,9 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Call:      &node.Identifier{Value: "bar"},
-					Arguments: []node.Node{},
+					Call: &node.Identifier{Value: "bar"},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -2931,7 +2961,8 @@ func TestPhp7(t *testing.T) {
 							&name.NamePart{Value: "bar"},
 						},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Function{
@@ -3048,7 +3079,8 @@ func TestPhp7(t *testing.T) {
 					Function: &expr.New{
 						Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -3064,7 +3096,8 @@ func TestPhp7(t *testing.T) {
 						},
 						Dim: &scalar.Lnumber{Value: "0"},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -3075,13 +3108,15 @@ func TestPhp7(t *testing.T) {
 						},
 						Dim: &scalar.Lnumber{Value: "1"},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
-					Function:  &scalar.String{Value: "\"foo\""},
-					Arguments: []node.Node{},
+					Function: &scalar.String{Value: "\"foo\""},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -3097,22 +3132,25 @@ func TestPhp7(t *testing.T) {
 						},
 						Dim: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.Variable{
 					VarName: &expr.FunctionCall{
-						Function:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
-						Arguments: []node.Node{},
+						Function: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+
+						ArgumentList: &node.ArgumentList{},
 					},
 				},
 			},
 			&stmt.Expression{
 				Expr: &expr.StaticCall{
-					Class:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-					Call:      &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
-					Arguments: []node.Node{},
+					Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Call:  &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{
@@ -3122,7 +3160,8 @@ func TestPhp7(t *testing.T) {
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 						Dim:      &scalar.Lnumber{Value: "0"},
 					},
-					Arguments: []node.Node{},
+
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 			&stmt.Expression{

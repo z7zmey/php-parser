@@ -29,7 +29,7 @@ func TestFunctionCall(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -58,7 +58,7 @@ func TestFunctionCallRelative(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -87,12 +87,14 @@ func TestFunctionFullyQualified(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &expr.ShortArray{
-								Items: []node.Node{},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &expr.ShortArray{
+									Items: []node.Node{},
+								},
 							},
 						},
 					},
@@ -120,12 +122,14 @@ func TestFunctionCallVar(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &expr.Yield{
-								Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &expr.Yield{
+									Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								},
 							},
 						},
 					},
@@ -157,13 +161,15 @@ func TestFunctionCallExprArg(t *testing.T) {
 							&name.NamePart{Value: "ceil"},
 						},
 					},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &binary.Div{
-								Left:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-								Right: &scalar.Lnumber{Value: "3"},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &binary.Div{
+									Left:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+									Right: &scalar.Lnumber{Value: "3"},
+								},
 							},
 						},
 					},

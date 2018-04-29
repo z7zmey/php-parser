@@ -1097,7 +1097,7 @@ func (p *Printer) printExprFunctionCall(n node.Node) {
 
 	p.Print(nn.Function)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1146,7 +1146,7 @@ func (p *Printer) printExprMethodCall(n node.Node) {
 	io.WriteString(p.w, "->")
 	p.Print(nn.Method)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1156,9 +1156,9 @@ func (p *Printer) printExprNew(n node.Node) {
 	io.WriteString(p.w, "new ")
 	p.Print(nn.Class)
 
-	if nn.Arguments != nil {
+	if nn.ArgumentList != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.Arguments)
+		p.joinPrint(", ", nn.ArgumentList.Arguments)
 		io.WriteString(p.w, ")")
 	}
 }
@@ -1254,7 +1254,7 @@ func (p *Printer) printExprStaticCall(n node.Node) {
 	io.WriteString(p.w, "::")
 	p.Print(nn.Call)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1536,9 +1536,9 @@ func (p *Printer) printStmtClass(n node.Node) {
 		p.Print(nn.ClassName)
 	}
 
-	if nn.Args != nil {
+	if nn.ArgumentList != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.Args)
+		p.joinPrint(", ", nn.ArgumentList.Arguments)
 		io.WriteString(p.w, ")")
 	}
 

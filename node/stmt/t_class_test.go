@@ -2,9 +2,10 @@ package stmt_test
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
-	"testing"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -171,7 +172,7 @@ func TestAnonimousClass(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &stmt.Class{
-						Args: []node.Node{},
+						ArgumentList: &node.ArgumentList{},
 						Extends: &name.Name{
 							Parts: []node.Node{
 								&name.NamePart{Value: "foo"},

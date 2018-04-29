@@ -345,7 +345,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php7/php7.y:4114
+//line php7/php7.y:4125
 
 type foreachVariable struct {
 	node  node.Node
@@ -1452,8 +1452,8 @@ var yyPgo = [...]int{
 	872, 868, 13, 46, 866, 858, 100, 84, 199, 856,
 	855, 853, 5, 852, 83, 40, 845, 138, 43, 840,
 	837, 835, 825, 823, 119, 822, 819, 818, 817, 12,
-	815, 814, 44, 42, 32, 2, 15, 629, 8, 686,
-	20, 812, 809, 807, 41, 74, 536, 806, 121, 803,
+	815, 814, 44, 42, 32, 2, 15, 629, 41, 74,
+	8, 686, 20, 812, 809, 807, 536, 806, 121, 803,
 	802, 800, 71, 798, 33, 797, 795, 30, 37, 791,
 	789, 28, 787, 786, 545, 784, 18, 783, 776, 26,
 	773, 63, 1, 4, 768, 17, 767, 39, 765, 763,
@@ -1471,7 +1471,7 @@ var yyR1 = [...]int{
 	5, 5, 5, 5, 5, 5, 6, 6, 111, 111,
 	88, 88, 10, 10, 10, 9, 9, 9, 9, 9,
 	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-	79, 79, 16, 16, 18, 18, 7, 7, 98, 98,
+	81, 81, 16, 16, 18, 18, 7, 7, 98, 98,
 	97, 97, 104, 104, 17, 17, 20, 20, 19, 19,
 	92, 92, 112, 112, 22, 22, 22, 22, 22, 22,
 	22, 11, 11, 11, 11, 11, 11, 11, 11, 11,
@@ -1479,16 +1479,16 @@ var yyR1 = [...]int{
 	11, 11, 11, 11, 11, 90, 90, 89, 89, 26,
 	26, 103, 103, 27, 12, 1, 1, 2, 2, 13,
 	13, 122, 122, 77, 77, 14, 15, 29, 29, 116,
-	116, 117, 117, 80, 80, 80, 80, 125, 125, 126,
-	126, 25, 25, 82, 82, 82, 82, 101, 101, 101,
+	116, 117, 117, 82, 82, 82, 82, 125, 125, 126,
+	126, 25, 25, 84, 84, 84, 84, 101, 101, 101,
 	8, 8, 124, 124, 68, 68, 66, 66, 70, 70,
 	67, 67, 113, 113, 114, 114, 30, 30, 31, 31,
-	76, 76, 74, 74, 74, 75, 75, 84, 84, 110,
+	76, 76, 74, 74, 74, 75, 75, 78, 78, 110,
 	110, 32, 32, 96, 96, 34, 100, 100, 35, 35,
-	115, 115, 36, 36, 36, 36, 121, 121, 83, 83,
-	83, 102, 102, 37, 37, 38, 39, 39, 39, 39,
-	41, 41, 40, 81, 81, 119, 119, 118, 118, 120,
-	120, 78, 78, 78, 78, 78, 78, 99, 99, 42,
+	115, 115, 36, 36, 36, 36, 121, 121, 85, 85,
+	85, 102, 102, 37, 37, 38, 39, 39, 39, 39,
+	41, 41, 40, 83, 83, 119, 119, 118, 118, 120,
+	120, 80, 80, 80, 80, 80, 80, 99, 99, 42,
 	42, 91, 91, 69, 21, 93, 93, 43, 94, 94,
 	95, 95, 45, 44, 44, 33, 33, 33, 33, 33,
 	33, 33, 33, 33, 33, 33, 33, 33, 33, 33,
@@ -1500,7 +1500,7 @@ var yyR1 = [...]int{
 	33, 33, 33, 33, 33, 33, 33, 33, 33, 33,
 	33, 123, 3, 3, 106, 106, 105, 105, 52, 52,
 	53, 53, 53, 53, 46, 46, 47, 47, 50, 50,
-	87, 87, 87, 85, 85, 57, 57, 57, 51, 51,
+	87, 87, 87, 79, 79, 57, 57, 57, 51, 51,
 	51, 51, 51, 51, 51, 51, 51, 51, 51, 51,
 	51, 51, 51, 51, 58, 58, 58, 23, 23, 24,
 	24, 56, 59, 59, 59, 60, 60, 60, 61, 61,
@@ -1576,7 +1576,7 @@ var yyChk = [...]int{
 	-58, -53, -46, -56, -57, 91, 49, 50, 4, 5,
 	84, 85, 86, 8, 9, 66, 67, 81, 63, 64,
 	65, 80, 62, 74, 140, 12, 157, -10, -60, 60,
-	18, -88, 82, 146, 82, -88, 142, 10, -18, -79,
+	18, -88, 82, 146, 82, -88, 142, 10, -18, -81,
 	-104, -88, 82, 37, 38, -19, -20, -92, -21, 10,
 	-112, 146, -11, 37, 79, 146, 146, -24, -23, 98,
 	-24, -24, -96, -34, -48, -100, 37, -35, 12, -93,
@@ -1593,7 +1593,7 @@ var yyChk = [...]int{
 	-23, -87, 17, -86, -64, 12, 76, 77, -23, -23,
 	-23, 148, 78, 78, -47, -45, -46, -63, 52, -10,
 	-48, 146, 146, -23, -23, 146, -23, -23, 17, 75,
-	-86, -86, 17, 142, -48, -84, 146, -84, 146, 82,
+	-86, -86, 17, 142, -48, -78, 146, -78, 146, 82,
 	-88, 147, -88, 144, 142, -111, 144, -16, -104, -88,
 	82, 144, 158, 82, 29, -88, -20, 144, 158, 160,
 	-22, 143, 2, -11, -12, -13, -14, -15, 51, -23,
@@ -1616,21 +1616,21 @@ var yyChk = [...]int{
 	50, 35, 36, 37, 38, 39, 96, 97, 59, 30,
 	31, 32, 33, 34, 60, 61, 55, 56, 79, 53,
 	54, 52, 62, 63, 65, 64, 66, 67, 81, 80,
-	-54, -6, -48, -85, -84, 78, 148, 142, 57, 78,
-	-85, -107, -73, -23, -23, -23, 75, 75, 140, -23,
+	-54, -6, -48, -79, -78, 78, 148, 142, 57, 78,
+	-79, -107, -73, -23, -23, -23, 75, 75, 140, -23,
 	147, -110, -32, -23, 83, -109, 10, 144, -111, 143,
 	144, 144, 82, -88, -19, 82, -88, 142, 10, 82,
 	-21, -23, 146, 147, 146, 144, 158, 147, -34, -35,
 	-123, -23, -43, 145, -23, -7, 158, 29, 147, 143,
 	-123, 146, -29, -117, 56, -10, 142, -123, -121, -10,
-	-23, -23, -112, -23, 147, 149, 143, -84, -23, 147,
+	-23, -23, -112, -23, 147, 149, 143, -78, -23, 147,
 	160, -72, -23, 151, 59, -109, 147, 149, 147, -65,
 	10, 13, 152, 12, 10, 143, 143, 148, 143, -23,
-	149, -84, -23, -84, -48, -24, -23, -55, -48, -29,
+	149, -78, -23, -78, -48, -24, -23, -55, -48, -29,
 	-7, 158, 147, 147, 143, -7, 158, -23, 147, 143,
-	142, 82, -98, -17, -20, -79, 142, -123, 147, -124,
-	-11, 145, -23, -94, -23, -82, 142, 145, 146, -23,
-	147, -27, -80, -28, 151, 59, 148, -25, -11, 145,
+	142, 82, -98, -17, -20, -81, 142, -123, 147, -124,
+	-11, 145, -23, -94, -23, -84, 142, 145, 146, -23,
+	147, -27, -82, -28, 151, 59, 148, -25, -11, 145,
 	-90, 146, -113, -114, -30, -31, -76, -74, 150, 60,
 	61, -10, -117, -123, -121, -115, 142, 158, 147, 147,
 	95, -11, 145, 143, 160, -23, -28, 146, 147, 149,
@@ -1639,25 +1639,25 @@ var yyChk = [...]int{
 	144, -101, 144, -101, 144, -113, 144, 147, 58, -28,
 	146, -109, -112, -26, 41, 42, -113, 147, 158, -1,
 	151, -74, -123, 142, 143, -36, -119, -118, 44, -120,
-	47, -78, 103, 102, 101, 98, 99, 100, -115, -10,
+	47, -80, 103, 102, 101, 98, 99, 100, -115, -10,
 	-11, 145, 144, -112, -23, -109, 149, -123, -7, 158,
 	-97, 143, -17, -7, 22, 144, -94, 143, 32, 33,
-	-101, 31, -101, 147, -126, -11, 145, -80, -28, -109,
+	-101, 31, -101, 147, -126, -11, 145, -82, -28, -109,
 	149, 28, 146, 142, 147, -106, 44, -30, -2, 83,
-	142, -115, -99, -42, 12, 38, 37, -121, -78, 143,
+	142, -115, -99, -42, 12, 38, 37, -121, -80, 143,
 	-112, 147, 143, 142, 143, -20, -7, 143, 144, 147,
 	-23, -8, 145, 144, 143, 144, 31, -106, -112, 147,
 	147, 144, -89, -10, -112, -75, 145, -75, 146, 12,
 	-115, 143, 144, 158, -123, 160, -91, -69, -6, -3,
-	-83, 144, 142, -115, 143, -125, -11, 145, -8, -112,
+	-85, 144, 142, -115, 143, -125, -11, 145, -8, -112,
 	144, -75, 26, -126, 12, 159, 143, 142, -76, 142,
 	-105, -52, 12, 151, 160, 143, -42, -23, 144, 158,
 	160, -6, 143, -102, -37, -38, -39, -40, -41, -10,
 	-6, 79, 10, 143, -112, -112, 142, 144, 147, -10,
 	-112, -112, 147, 158, 12, -23, -123, -69, -23, -123,
 	143, -37, 144, 144, 45, 29, 78, 24, -112, 142,
-	143, 143, -52, -123, 146, -121, 10, -4, -78, -6,
-	144, 143, -112, -113, -6, 143, 147, -75, -81, 144,
+	143, 143, -52, -123, 146, -121, 10, -4, -80, -6,
+	144, 143, -112, -113, -6, 143, 147, -75, -83, 144,
 	142, -112, 143,
 }
 var yyDef = [...]int{
@@ -2133,7 +2133,7 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yylex.(*Parser).rootNode = stmt.NewStmtList(yyDollar[1].list)
 
@@ -2142,463 +2142,463 @@ yydefault:
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:302
+		//line php7/php7.y:303
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:303
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:305
+		//line php7/php7.y:306
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:306
+		//line php7/php7.y:307
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:307
+		//line php7/php7.y:308
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:308
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:320
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:322
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:326
+		//line php7/php7.y:327
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
@@ -2606,13 +2606,13 @@ yydefault:
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:332
+		//line php7/php7.y:333
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:337
+		//line php7/php7.y:338
 		{
 			namePart := name.NewNamePart(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{namePart}
@@ -2625,7 +2625,7 @@ yydefault:
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:348
+		//line php7/php7.y:349
 		{
 			namePart := name.NewNamePart(yyDollar[3].token.Value)
 			yyVAL.list = append(yyDollar[1].list, namePart)
@@ -2639,7 +2639,7 @@ yydefault:
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:363
+		//line php7/php7.y:364
 		{
 			yyVAL.node = name.NewName(yyDollar[1].list)
 
@@ -2648,7 +2648,7 @@ yydefault:
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:370
+		//line php7/php7.y:371
 		{
 			yyVAL.node = name.NewRelative(yyDollar[3].list)
 
@@ -2661,7 +2661,7 @@ yydefault:
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:381
+		//line php7/php7.y:382
 		{
 			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
 
@@ -2673,44 +2673,44 @@ yydefault:
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:394
+		//line php7/php7.y:395
 		{
 			// error
 			yyVAL.node = nil
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:399
+		//line php7/php7.y:400
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:401
+		//line php7/php7.y:402
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:403
+		//line php7/php7.y:404
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:405
+		//line php7/php7.y:406
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 90:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:407
+		//line php7/php7.y:408
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 91:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:409
+		//line php7/php7.y:410
 		{
 			yyVAL.node = stmt.NewHaltCompiler()
 
@@ -2725,7 +2725,7 @@ yydefault:
 		}
 	case 92:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:422
+		//line php7/php7.y:423
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewNamespace(name, nil)
@@ -2740,7 +2740,7 @@ yydefault:
 		}
 	case 93:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:435
+		//line php7/php7.y:436
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewNamespace(name, yyDollar[4].list)
@@ -2756,7 +2756,7 @@ yydefault:
 		}
 	case 94:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:449
+		//line php7/php7.y:450
 		{
 			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list)
 
@@ -2770,7 +2770,7 @@ yydefault:
 		}
 	case 95:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:461
+		//line php7/php7.y:462
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -2783,7 +2783,7 @@ yydefault:
 		}
 	case 96:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:472
+		//line php7/php7.y:473
 		{
 			yyVAL.node = yyDollar[3].node.(*stmt.GroupUse).SetUseType(yyDollar[2].node)
 
@@ -2796,7 +2796,7 @@ yydefault:
 		}
 	case 97:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:483
+		//line php7/php7.y:484
 		{
 			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list)
 
@@ -2809,7 +2809,7 @@ yydefault:
 		}
 	case 98:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:494
+		//line php7/php7.y:495
 		{
 			yyVAL.node = stmt.NewUseList(yyDollar[2].node, yyDollar[3].list)
 
@@ -2822,7 +2822,7 @@ yydefault:
 		}
 	case 99:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:505
+		//line php7/php7.y:506
 		{
 			yyVAL.node = stmt.NewConstList(yyDollar[2].list)
 
@@ -2835,7 +2835,7 @@ yydefault:
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:519
+		//line php7/php7.y:520
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -2847,7 +2847,7 @@ yydefault:
 		}
 	case 101:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:529
+		//line php7/php7.y:530
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -2859,7 +2859,7 @@ yydefault:
 		}
 	case 102:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:542
+		//line php7/php7.y:543
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
@@ -2878,7 +2878,7 @@ yydefault:
 		}
 	case 103:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:559
+		//line php7/php7.y:560
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
@@ -2898,7 +2898,7 @@ yydefault:
 		}
 	case 104:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:580
+		//line php7/php7.y:581
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
@@ -2917,7 +2917,7 @@ yydefault:
 		}
 	case 105:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:597
+		//line php7/php7.y:598
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
@@ -2937,19 +2937,19 @@ yydefault:
 		}
 	case 106:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:618
+		//line php7/php7.y:619
 		{
 			yyVAL.token = nil
 		}
 	case 107:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:620
+		//line php7/php7.y:621
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 108:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:625
+		//line php7/php7.y:626
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -2958,13 +2958,13 @@ yydefault:
 		}
 	case 109:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:632
+		//line php7/php7.y:633
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 110:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:637
+		//line php7/php7.y:638
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -2973,13 +2973,13 @@ yydefault:
 		}
 	case 111:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:644
+		//line php7/php7.y:645
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 112:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:649
+		//line php7/php7.y:650
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -2988,25 +2988,25 @@ yydefault:
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:656
+		//line php7/php7.y:657
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 114:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:661
+		//line php7/php7.y:662
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 115:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:663
+		//line php7/php7.y:664
 		{
 			yyVAL.node = yyDollar[2].node.(*stmt.Use).SetUseType(yyDollar[1].node)
 		}
 	case 116:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:668
+		//line php7/php7.y:669
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewUse(nil, name, nil)
@@ -3017,7 +3017,7 @@ yydefault:
 		}
 	case 117:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:677
+		//line php7/php7.y:678
 		{
 			name := name.NewName(yyDollar[1].list)
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
@@ -3034,13 +3034,13 @@ yydefault:
 		}
 	case 118:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:695
+		//line php7/php7.y:696
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 119:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:697
+		//line php7/php7.y:698
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -3049,7 +3049,7 @@ yydefault:
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:707
+		//line php7/php7.y:708
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -3058,13 +3058,13 @@ yydefault:
 		}
 	case 121:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:714
+		//line php7/php7.y:715
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 122:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:719
+		//line php7/php7.y:720
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
@@ -3072,50 +3072,50 @@ yydefault:
 		}
 	case 123:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:725
+		//line php7/php7.y:726
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:730
+		//line php7/php7.y:731
 		{
 			// error
 			yyVAL.node = nil
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:735
+		//line php7/php7.y:736
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:737
+		//line php7/php7.y:738
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:739
+		//line php7/php7.y:740
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 128:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:741
+		//line php7/php7.y:742
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:743
+		//line php7/php7.y:744
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 130:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:745
+		//line php7/php7.y:746
 		{
 			yyVAL.node = stmt.NewHaltCompiler()
 
@@ -3130,7 +3130,7 @@ yydefault:
 		}
 	case 131:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:760
+		//line php7/php7.y:761
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 
@@ -3143,19 +3143,19 @@ yydefault:
 		}
 	case 132:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:771
+		//line php7/php7.y:772
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 133:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:773
+		//line php7/php7.y:774
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 134:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:775
+		//line php7/php7.y:776
 		{
 			if yyDollar[5].altSyntaxNode.isAlt {
 				yyVAL.node = stmt.NewAltWhile(yyDollar[3].node, yyDollar[5].altSyntaxNode.node)
@@ -3173,7 +3173,7 @@ yydefault:
 		}
 	case 135:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:791
+		//line php7/php7.y:792
 		{
 			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[5].node)
 
@@ -3189,7 +3189,7 @@ yydefault:
 		}
 	case 136:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:805
+		//line php7/php7.y:806
 		{
 			if yyDollar[9].altSyntaxNode.isAlt {
 				yyVAL.node = stmt.NewAltFor(yyDollar[3].list, yyDollar[5].list, yyDollar[7].list, yyDollar[9].altSyntaxNode.node)
@@ -3209,7 +3209,7 @@ yydefault:
 		}
 	case 137:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:823
+		//line php7/php7.y:824
 		{
 			if yyDollar[5].nodesWithEndToken.endToken.Value == ";" {
 				yyVAL.node = stmt.NewAltSwitch(yyDollar[3].node, yyDollar[5].nodesWithEndToken.nodes)
@@ -3227,7 +3227,7 @@ yydefault:
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:839
+		//line php7/php7.y:840
 		{
 			yyVAL.node = stmt.NewBreak(yyDollar[2].node)
 
@@ -3240,7 +3240,7 @@ yydefault:
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:850
+		//line php7/php7.y:851
 		{
 			yyVAL.node = stmt.NewContinue(yyDollar[2].node)
 
@@ -3253,7 +3253,7 @@ yydefault:
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:861
+		//line php7/php7.y:862
 		{
 			yyVAL.node = stmt.NewReturn(yyDollar[2].node)
 
@@ -3266,7 +3266,7 @@ yydefault:
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:872
+		//line php7/php7.y:873
 		{
 			yyVAL.node = stmt.NewGlobal(yyDollar[2].list)
 
@@ -3279,7 +3279,7 @@ yydefault:
 		}
 	case 142:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:883
+		//line php7/php7.y:884
 		{
 			yyVAL.node = stmt.NewStatic(yyDollar[2].list)
 
@@ -3292,7 +3292,7 @@ yydefault:
 		}
 	case 143:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:894
+		//line php7/php7.y:895
 		{
 			yyVAL.node = stmt.NewEcho(yyDollar[2].list)
 
@@ -3305,7 +3305,7 @@ yydefault:
 		}
 	case 144:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:905
+		//line php7/php7.y:906
 		{
 			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value)
 
@@ -3317,7 +3317,7 @@ yydefault:
 		}
 	case 145:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:915
+		//line php7/php7.y:916
 		{
 			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
 
@@ -3329,7 +3329,7 @@ yydefault:
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:925
+		//line php7/php7.y:926
 		{
 			yyVAL.node = stmt.NewUnset(yyDollar[3].list)
 
@@ -3347,7 +3347,7 @@ yydefault:
 		}
 	case 147:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:941
+		//line php7/php7.y:942
 		{
 			if yyDollar[7].altSyntaxNode.isAlt {
 				yyVAL.node = stmt.NewAltForeach(yyDollar[3].node, nil, yyDollar[5].foreachVariable.node, yyDollar[7].altSyntaxNode.node, yyDollar[5].foreachVariable.byRef)
@@ -3366,7 +3366,7 @@ yydefault:
 		}
 	case 148:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:958
+		//line php7/php7.y:959
 		{
 			if yyDollar[9].altSyntaxNode.isAlt {
 				yyVAL.node = stmt.NewAltForeach(yyDollar[3].node, yyDollar[5].node, yyDollar[7].foreachVariable.node, yyDollar[9].altSyntaxNode.node, yyDollar[7].foreachVariable.byRef)
@@ -3386,7 +3386,7 @@ yydefault:
 		}
 	case 149:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:976
+		//line php7/php7.y:977
 		{
 			yyVAL.node = stmt.NewDeclare(yyDollar[3].list, yyDollar[5].node)
 
@@ -3400,7 +3400,7 @@ yydefault:
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:988
+		//line php7/php7.y:989
 		{
 			yyVAL.node = stmt.NewNop()
 
@@ -3412,7 +3412,7 @@ yydefault:
 		}
 	case 151:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:998
+		//line php7/php7.y:999
 		{
 			if yyDollar[6].node == nil {
 				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
@@ -3429,7 +3429,7 @@ yydefault:
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1013
+		//line php7/php7.y:1014
 		{
 			yyVAL.node = stmt.NewThrow(yyDollar[2].node)
 
@@ -3442,7 +3442,7 @@ yydefault:
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1024
+		//line php7/php7.y:1025
 		{
 			label := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewGoto(label)
@@ -3458,7 +3458,7 @@ yydefault:
 		}
 	case 154:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1038
+		//line php7/php7.y:1039
 		{
 			label := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewLabel(label)
@@ -3473,13 +3473,13 @@ yydefault:
 		}
 	case 155:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1053
+		//line php7/php7.y:1054
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 156:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1055
+		//line php7/php7.y:1056
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[5].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -3501,13 +3501,13 @@ yydefault:
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1077
+		//line php7/php7.y:1078
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1079
+		//line php7/php7.y:1080
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -3516,13 +3516,13 @@ yydefault:
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1089
+		//line php7/php7.y:1090
 		{
 			yyVAL.node = nil
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1091
+		//line php7/php7.y:1092
 		{
 			yyVAL.node = stmt.NewFinally(yyDollar[3].list)
 
@@ -3536,13 +3536,13 @@ yydefault:
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1106
+		//line php7/php7.y:1107
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1108
+		//line php7/php7.y:1109
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -3551,13 +3551,13 @@ yydefault:
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1118
+		//line php7/php7.y:1119
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:1123
+		//line php7/php7.y:1124
 		{
 			name := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewFunction(name, yyDollar[2].boolWithToken.value, yyDollar[6].list, yyDollar[8].node, yyDollar[10].list, yyDollar[4].str)
@@ -3579,31 +3579,31 @@ yydefault:
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1146
+		//line php7/php7.y:1147
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1148
+		//line php7/php7.y:1149
 		{
 			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1153
+		//line php7/php7.y:1154
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1155
+		//line php7/php7.y:1156
 		{
 			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1160
+		//line php7/php7.y:1161
 		{
 			name := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewClass(name, yyDollar[1].list, nil, yyDollar[4].node, yyDollar[5].list, yyDollar[8].list, yyDollar[6].str)
@@ -3626,7 +3626,7 @@ yydefault:
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:1181
+		//line php7/php7.y:1182
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewClass(name, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str)
@@ -3649,19 +3649,19 @@ yydefault:
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1205
+		//line php7/php7.y:1206
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1207
+		//line php7/php7.y:1208
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1212
+		//line php7/php7.y:1213
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -3673,7 +3673,7 @@ yydefault:
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1222
+		//line php7/php7.y:1223
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -3685,7 +3685,7 @@ yydefault:
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1235
+		//line php7/php7.y:1236
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewTrait(name, yyDollar[5].list, yyDollar[3].str)
@@ -3702,7 +3702,7 @@ yydefault:
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1253
+		//line php7/php7.y:1254
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewInterface(name, yyDollar[3].list, yyDollar[6].list, yyDollar[4].str)
@@ -3722,13 +3722,13 @@ yydefault:
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1274
+		//line php7/php7.y:1275
 		{
 			yyVAL.node = nil
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1276
+		//line php7/php7.y:1277
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -3737,13 +3737,13 @@ yydefault:
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1286
+		//line php7/php7.y:1287
 		{
 			yyVAL.list = nil
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1288
+		//line php7/php7.y:1289
 		{
 			yyVAL.list = yyDollar[2].list
 
@@ -3752,13 +3752,13 @@ yydefault:
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1298
+		//line php7/php7.y:1299
 		{
 			yyVAL.list = nil
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1300
+		//line php7/php7.y:1301
 		{
 			yyVAL.list = yyDollar[2].list
 
@@ -3767,13 +3767,13 @@ yydefault:
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1310
+		//line php7/php7.y:1311
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[1].node, false}
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1312
+		//line php7/php7.y:1313
 		{
 			yyVAL.foreachVariable = foreachVariable{yyDollar[2].node, true}
 
@@ -3785,7 +3785,7 @@ yydefault:
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1322
+		//line php7/php7.y:1323
 		{
 			list := expr.NewList(yyDollar[3].list)
 			yyVAL.foreachVariable = foreachVariable{list, false}
@@ -3800,7 +3800,7 @@ yydefault:
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1335
+		//line php7/php7.y:1336
 		{
 			list := expr.NewShortList(yyDollar[2].list)
 			yyVAL.foreachVariable = foreachVariable{list, false}
@@ -3814,13 +3814,13 @@ yydefault:
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1350
+		//line php7/php7.y:1351
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{yyDollar[1].node, false}
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1352
+		//line php7/php7.y:1353
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{stmt.NewStmtList(yyDollar[2].list), true}
 
@@ -3834,13 +3834,13 @@ yydefault:
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1367
+		//line php7/php7.y:1368
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{yyDollar[1].node, false}
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1369
+		//line php7/php7.y:1370
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{stmt.NewStmtList(yyDollar[2].list), true}
 
@@ -3854,13 +3854,13 @@ yydefault:
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1384
+		//line php7/php7.y:1385
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1386
+		//line php7/php7.y:1387
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 
@@ -3874,37 +3874,37 @@ yydefault:
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1400
+		//line php7/php7.y:1401
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1401
+		//line php7/php7.y:1402
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[3].list, yyDollar[4].token}
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1402
+		//line php7/php7.y:1403
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[4].token}
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1403
+		//line php7/php7.y:1404
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[3].list, yyDollar[5].token}
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1408
+		//line php7/php7.y:1409
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1410
+		//line php7/php7.y:1411
 		{
 			_case := stmt.NewCase(yyDollar[3].node, yyDollar[5].list)
 			yyVAL.list = append(yyDollar[1].list, _case)
@@ -3918,7 +3918,7 @@ yydefault:
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1422
+		//line php7/php7.y:1423
 		{
 			_default := stmt.NewDefault(yyDollar[4].list)
 			yyVAL.list = append(yyDollar[1].list, _default)
@@ -3932,25 +3932,25 @@ yydefault:
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1437
+		//line php7/php7.y:1438
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1439
+		//line php7/php7.y:1440
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1444
+		//line php7/php7.y:1445
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{yyDollar[1].node, false}
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1446
+		//line php7/php7.y:1447
 		{
 			yyVAL.altSyntaxNode = altSyntaxNode{stmt.NewStmtList(yyDollar[2].list), true}
 
@@ -3964,7 +3964,7 @@ yydefault:
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1461
+		//line php7/php7.y:1462
 		{
 			yyVAL.node = stmt.NewIf(yyDollar[3].node, yyDollar[5].node, nil, nil)
 
@@ -3978,7 +3978,7 @@ yydefault:
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1473
+		//line php7/php7.y:1474
 		{
 			_elseIf := stmt.NewElseIf(yyDollar[4].node, yyDollar[6].node)
 			yyVAL.node = yyDollar[1].node.(*stmt.If).AddElseIf(_elseIf)
@@ -3994,13 +3994,13 @@ yydefault:
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1490
+		//line php7/php7.y:1491
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1492
+		//line php7/php7.y:1493
 		{
 			_else := stmt.NewElse(yyDollar[3].node)
 			yyVAL.node = yyDollar[1].node.(*stmt.If).SetElse(_else)
@@ -4014,7 +4014,7 @@ yydefault:
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1507
+		//line php7/php7.y:1508
 		{
 			stmts := stmt.NewStmtList(yyDollar[6].list)
 			yyVAL.node = stmt.NewAltIf(yyDollar[3].node, stmts, nil, nil)
@@ -4031,7 +4031,7 @@ yydefault:
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1522
+		//line php7/php7.y:1523
 		{
 			stmts := stmt.NewStmtList(yyDollar[7].list)
 			_elseIf := stmt.NewAltElseIf(yyDollar[4].node, stmts)
@@ -4049,7 +4049,7 @@ yydefault:
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1541
+		//line php7/php7.y:1542
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4062,7 +4062,7 @@ yydefault:
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1552
+		//line php7/php7.y:1553
 		{
 			stmts := stmt.NewStmtList(yyDollar[4].list)
 			_else := stmt.NewAltElse(stmts)
@@ -4081,25 +4081,25 @@ yydefault:
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1572
+		//line php7/php7.y:1573
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1574
+		//line php7/php7.y:1575
 		{
 			yyVAL.list = nil
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1579
+		//line php7/php7.y:1580
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1581
+		//line php7/php7.y:1582
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4108,7 +4108,7 @@ yydefault:
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1591
+		//line php7/php7.y:1592
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[4].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4147,7 +4147,7 @@ yydefault:
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1628
+		//line php7/php7.y:1629
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[4].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4186,25 +4186,25 @@ yydefault:
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1668
+		//line php7/php7.y:1669
 		{
 			yyVAL.node = nil
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1670
+		//line php7/php7.y:1671
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1675
+		//line php7/php7.y:1676
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1677
+		//line php7/php7.y:1678
 		{
 			yyVAL.node = node.NewNullable(yyDollar[2].node)
 
@@ -4216,7 +4216,7 @@ yydefault:
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1690
+		//line php7/php7.y:1691
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4228,7 +4228,7 @@ yydefault:
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1700
+		//line php7/php7.y:1701
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4240,19 +4240,19 @@ yydefault:
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1710
+		//line php7/php7.y:1711
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1715
+		//line php7/php7.y:1716
 		{
 			yyVAL.node = nil
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1717
+		//line php7/php7.y:1718
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -4261,25 +4261,31 @@ yydefault:
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1727
+		//line php7/php7.y:1728
 		{
-			yyVAL.nodesWithEndToken = &nodesWithEndToken{[]node.Node{}, yyDollar[2].token}
+			yyVAL.node = node.NewArgumentList(nil)
+
+			// save position
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1729
+		//line php7/php7.y:1735
 		{
-			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[4].token}
+			yyVAL.node = node.NewArgumentList(yyDollar[2].list)
+
+			// save position
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1734
+		//line php7/php7.y:1745
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1736
+		//line php7/php7.y:1747
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4288,7 +4294,7 @@ yydefault:
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1746
+		//line php7/php7.y:1757
 		{
 			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
 
@@ -4297,7 +4303,7 @@ yydefault:
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1753
+		//line php7/php7.y:1764
 		{
 			yyVAL.node = node.NewArgument(yyDollar[2].node, true, false)
 
@@ -4309,7 +4315,7 @@ yydefault:
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1766
+		//line php7/php7.y:1777
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4318,19 +4324,19 @@ yydefault:
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1773
+		//line php7/php7.y:1784
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1778
+		//line php7/php7.y:1789
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1783
+		//line php7/php7.y:1794
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4339,13 +4345,13 @@ yydefault:
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1790
+		//line php7/php7.y:1801
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1795
+		//line php7/php7.y:1806
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4361,7 +4367,7 @@ yydefault:
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1809
+		//line php7/php7.y:1820
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4378,19 +4384,19 @@ yydefault:
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1827
+		//line php7/php7.y:1838
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1829
+		//line php7/php7.y:1840
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1834
+		//line php7/php7.y:1845
 		{
 			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
 
@@ -4402,7 +4408,7 @@ yydefault:
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1844
+		//line php7/php7.y:1855
 		{
 			yyVAL.node = stmt.NewClassConstList(yyDollar[1].list, yyDollar[3].list)
 
@@ -4415,7 +4421,7 @@ yydefault:
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1855
+		//line php7/php7.y:1866
 		{
 			yyVAL.node = stmt.NewTraitUse(yyDollar[2].list, yyDollar[3].nodesWithEndToken.nodes)
 
@@ -4427,7 +4433,7 @@ yydefault:
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line php7/php7.y:1865
+		//line php7/php7.y:1876
 		{
 			name := node.NewIdentifier(yyDollar[4].token.Value)
 			yyVAL.node = stmt.NewClassMethod(name, yyDollar[1].list, yyDollar[3].boolWithToken.value, yyDollar[7].list, yyDollar[9].node, yyDollar[10].nodesWithEndToken.nodes, yyDollar[5].str)
@@ -4447,13 +4453,13 @@ yydefault:
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1886
+		//line php7/php7.y:1897
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1888
+		//line php7/php7.y:1899
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4462,37 +4468,37 @@ yydefault:
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1898
+		//line php7/php7.y:1909
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[1].token}
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1900
+		//line php7/php7.y:1911
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[2].token}
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1902
+		//line php7/php7.y:1913
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1907
+		//line php7/php7.y:1918
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1909
+		//line php7/php7.y:1920
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1914
+		//line php7/php7.y:1925
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4501,7 +4507,7 @@ yydefault:
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1921
+		//line php7/php7.y:1932
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4510,7 +4516,7 @@ yydefault:
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1931
+		//line php7/php7.y:1942
 		{
 			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, yyDollar[3].list)
 
@@ -4522,7 +4528,7 @@ yydefault:
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1944
+		//line php7/php7.y:1955
 		{
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
@@ -4537,7 +4543,7 @@ yydefault:
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1957
+		//line php7/php7.y:1968
 		{
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
@@ -4552,7 +4558,7 @@ yydefault:
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1970
+		//line php7/php7.y:1981
 		{
 			alias := node.NewIdentifier(yyDollar[4].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, alias)
@@ -4567,7 +4573,7 @@ yydefault:
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1983
+		//line php7/php7.y:1994
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
 
@@ -4579,7 +4585,7 @@ yydefault:
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1996
+		//line php7/php7.y:2007
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewTraitMethodRef(nil, name)
@@ -4593,13 +4599,13 @@ yydefault:
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2008
+		//line php7/php7.y:2019
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2013
+		//line php7/php7.y:2024
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target)
@@ -4614,25 +4620,25 @@ yydefault:
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2028
+		//line php7/php7.y:2039
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{nil, yyDollar[1].token}
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2029
+		//line php7/php7.y:2040
 		{
 			yyVAL.nodesWithEndToken = &nodesWithEndToken{yyDollar[2].list, yyDollar[3].token}
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2034
+		//line php7/php7.y:2045
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2036
+		//line php7/php7.y:2047
 		{
 			modifier := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{modifier}
@@ -4645,31 +4651,31 @@ yydefault:
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2050
+		//line php7/php7.y:2061
 		{
 			yyVAL.list = nil
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2052
+		//line php7/php7.y:2063
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2057
+		//line php7/php7.y:2068
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2059
+		//line php7/php7.y:2070
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2064
+		//line php7/php7.y:2075
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4681,7 +4687,7 @@ yydefault:
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2074
+		//line php7/php7.y:2085
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4693,7 +4699,7 @@ yydefault:
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2084
+		//line php7/php7.y:2095
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4705,7 +4711,7 @@ yydefault:
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2094
+		//line php7/php7.y:2105
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4717,7 +4723,7 @@ yydefault:
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2104
+		//line php7/php7.y:2115
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4729,7 +4735,7 @@ yydefault:
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2114
+		//line php7/php7.y:2125
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4741,7 +4747,7 @@ yydefault:
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2127
+		//line php7/php7.y:2138
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4750,13 +4756,13 @@ yydefault:
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2134
+		//line php7/php7.y:2145
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2139
+		//line php7/php7.y:2150
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4772,7 +4778,7 @@ yydefault:
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2153
+		//line php7/php7.y:2164
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -4789,7 +4795,7 @@ yydefault:
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2171
+		//line php7/php7.y:2182
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4798,13 +4804,13 @@ yydefault:
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2178
+		//line php7/php7.y:2189
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2183
+		//line php7/php7.y:2194
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
@@ -4819,7 +4825,7 @@ yydefault:
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2199
+		//line php7/php7.y:2210
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
@@ -4834,7 +4840,7 @@ yydefault:
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2215
+		//line php7/php7.y:2226
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4843,31 +4849,31 @@ yydefault:
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2222
+		//line php7/php7.y:2233
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2227
+		//line php7/php7.y:2238
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2232
+		//line php7/php7.y:2243
 		{
 			yyVAL.list = nil
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2234
+		//line php7/php7.y:2245
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2239
+		//line php7/php7.y:2250
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -4876,16 +4882,16 @@ yydefault:
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2246
+		//line php7/php7.y:2257
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:2251
+		//line php7/php7.y:2262
 		{
-			if yyDollar[2].nodesWithEndToken != nil {
-				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].nodesWithEndToken.nodes, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str)
+			if yyDollar[2].node != nil {
+				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].node.(*node.ArgumentList), yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str)
 			} else {
 				yyVAL.node = stmt.NewClass(nil, nil, nil, yyDollar[3].node, yyDollar[4].list, yyDollar[7].list, yyDollar[5].str)
 			}
@@ -4906,11 +4912,11 @@ yydefault:
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2276
+		//line php7/php7.y:2287
 		{
-			if yyDollar[3].nodesWithEndToken != nil {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].nodesWithEndToken.nodes)
-				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].nodesWithEndToken.endToken))
+			if yyDollar[3].node != nil {
+				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].node.(*node.ArgumentList))
+				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
 			} else {
 				yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 				yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
@@ -4921,7 +4927,7 @@ yydefault:
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2289
+		//line php7/php7.y:2300
 		{
 			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 
@@ -4933,7 +4939,7 @@ yydefault:
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2302
+		//line php7/php7.y:2313
 		{
 			list := expr.NewList(yyDollar[3].list)
 			yyVAL.node = assign.NewAssign(list, yyDollar[6].node)
@@ -4950,7 +4956,7 @@ yydefault:
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2317
+		//line php7/php7.y:2328
 		{
 			shortList := expr.NewShortList(yyDollar[2].list)
 			yyVAL.node = assign.NewAssign(shortList, yyDollar[5].node)
@@ -4966,7 +4972,7 @@ yydefault:
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2331
+		//line php7/php7.y:2342
 		{
 			yyVAL.node = assign.NewAssign(yyDollar[1].node, yyDollar[3].node)
 
@@ -4978,7 +4984,7 @@ yydefault:
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2341
+		//line php7/php7.y:2352
 		{
 			yyVAL.node = assign.NewReference(yyDollar[1].node, yyDollar[4].node)
 
@@ -4991,7 +4997,7 @@ yydefault:
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2352
+		//line php7/php7.y:2363
 		{
 			yyVAL.node = expr.NewClone(yyDollar[2].node)
 
@@ -5003,7 +5009,7 @@ yydefault:
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2362
+		//line php7/php7.y:2373
 		{
 			yyVAL.node = assign.NewPlus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5015,7 +5021,7 @@ yydefault:
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2372
+		//line php7/php7.y:2383
 		{
 			yyVAL.node = assign.NewMinus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5027,7 +5033,7 @@ yydefault:
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2382
+		//line php7/php7.y:2393
 		{
 			yyVAL.node = assign.NewMul(yyDollar[1].node, yyDollar[3].node)
 
@@ -5039,7 +5045,7 @@ yydefault:
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2392
+		//line php7/php7.y:2403
 		{
 			yyVAL.node = assign.NewPow(yyDollar[1].node, yyDollar[3].node)
 
@@ -5051,7 +5057,7 @@ yydefault:
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2402
+		//line php7/php7.y:2413
 		{
 			yyVAL.node = assign.NewDiv(yyDollar[1].node, yyDollar[3].node)
 
@@ -5063,7 +5069,7 @@ yydefault:
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2412
+		//line php7/php7.y:2423
 		{
 			yyVAL.node = assign.NewConcat(yyDollar[1].node, yyDollar[3].node)
 
@@ -5075,7 +5081,7 @@ yydefault:
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2422
+		//line php7/php7.y:2433
 		{
 			yyVAL.node = assign.NewMod(yyDollar[1].node, yyDollar[3].node)
 
@@ -5087,7 +5093,7 @@ yydefault:
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2432
+		//line php7/php7.y:2443
 		{
 			yyVAL.node = assign.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5099,7 +5105,7 @@ yydefault:
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2442
+		//line php7/php7.y:2453
 		{
 			yyVAL.node = assign.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5111,7 +5117,7 @@ yydefault:
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2452
+		//line php7/php7.y:2463
 		{
 			yyVAL.node = assign.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5123,7 +5129,7 @@ yydefault:
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2462
+		//line php7/php7.y:2473
 		{
 			yyVAL.node = assign.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 
@@ -5135,7 +5141,7 @@ yydefault:
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2472
+		//line php7/php7.y:2483
 		{
 			yyVAL.node = assign.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 
@@ -5147,7 +5153,7 @@ yydefault:
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2482
+		//line php7/php7.y:2493
 		{
 			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
 
@@ -5159,7 +5165,7 @@ yydefault:
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2492
+		//line php7/php7.y:2503
 		{
 			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
 
@@ -5171,7 +5177,7 @@ yydefault:
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2502
+		//line php7/php7.y:2513
 		{
 			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
 
@@ -5183,7 +5189,7 @@ yydefault:
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2512
+		//line php7/php7.y:2523
 		{
 			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
 
@@ -5195,7 +5201,7 @@ yydefault:
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2522
+		//line php7/php7.y:2533
 		{
 			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5207,7 +5213,7 @@ yydefault:
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2532
+		//line php7/php7.y:2543
 		{
 			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5219,7 +5225,7 @@ yydefault:
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2542
+		//line php7/php7.y:2553
 		{
 			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5231,7 +5237,7 @@ yydefault:
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2552
+		//line php7/php7.y:2563
 		{
 			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5243,7 +5249,7 @@ yydefault:
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2562
+		//line php7/php7.y:2573
 		{
 			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5255,7 +5261,7 @@ yydefault:
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2572
+		//line php7/php7.y:2583
 		{
 			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5267,7 +5273,7 @@ yydefault:
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2582
+		//line php7/php7.y:2593
 		{
 			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5279,7 +5285,7 @@ yydefault:
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2592
+		//line php7/php7.y:2603
 		{
 			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5291,7 +5297,7 @@ yydefault:
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2602
+		//line php7/php7.y:2613
 		{
 			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
 
@@ -5303,7 +5309,7 @@ yydefault:
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2612
+		//line php7/php7.y:2623
 		{
 			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5315,7 +5321,7 @@ yydefault:
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2622
+		//line php7/php7.y:2633
 		{
 			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5327,7 +5333,7 @@ yydefault:
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2632
+		//line php7/php7.y:2643
 		{
 			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
 
@@ -5339,7 +5345,7 @@ yydefault:
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2642
+		//line php7/php7.y:2653
 		{
 			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
 
@@ -5351,7 +5357,7 @@ yydefault:
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2652
+		//line php7/php7.y:2663
 		{
 			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
 
@@ -5363,7 +5369,7 @@ yydefault:
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2662
+		//line php7/php7.y:2673
 		{
 			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
 
@@ -5375,7 +5381,7 @@ yydefault:
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2672
+		//line php7/php7.y:2683
 		{
 			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 
@@ -5387,7 +5393,7 @@ yydefault:
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2682
+		//line php7/php7.y:2693
 		{
 			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 
@@ -5399,7 +5405,7 @@ yydefault:
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2692
+		//line php7/php7.y:2703
 		{
 			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
 
@@ -5411,7 +5417,7 @@ yydefault:
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2702
+		//line php7/php7.y:2713
 		{
 			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
 
@@ -5423,7 +5429,7 @@ yydefault:
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2712
+		//line php7/php7.y:2723
 		{
 			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
 
@@ -5435,7 +5441,7 @@ yydefault:
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2722
+		//line php7/php7.y:2733
 		{
 			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
 
@@ -5447,7 +5453,7 @@ yydefault:
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2732
+		//line php7/php7.y:2743
 		{
 			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
 
@@ -5459,7 +5465,7 @@ yydefault:
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2742
+		//line php7/php7.y:2753
 		{
 			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
 
@@ -5471,7 +5477,7 @@ yydefault:
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2752
+		//line php7/php7.y:2763
 		{
 			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5483,7 +5489,7 @@ yydefault:
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2762
+		//line php7/php7.y:2773
 		{
 			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5495,7 +5501,7 @@ yydefault:
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2772
+		//line php7/php7.y:2783
 		{
 			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
 
@@ -5507,7 +5513,7 @@ yydefault:
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2782
+		//line php7/php7.y:2793
 		{
 			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5519,7 +5525,7 @@ yydefault:
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2792
+		//line php7/php7.y:2803
 		{
 			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
 
@@ -5531,7 +5537,7 @@ yydefault:
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2802
+		//line php7/php7.y:2813
 		{
 			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5543,7 +5549,7 @@ yydefault:
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2812
+		//line php7/php7.y:2823
 		{
 			yyVAL.node = binary.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
 
@@ -5555,7 +5561,7 @@ yydefault:
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2822
+		//line php7/php7.y:2833
 		{
 			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
 
@@ -5567,7 +5573,7 @@ yydefault:
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2832
+		//line php7/php7.y:2843
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -5577,13 +5583,13 @@ yydefault:
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2840
+		//line php7/php7.y:2851
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2842
+		//line php7/php7.y:2853
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
 
@@ -5596,7 +5602,7 @@ yydefault:
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2853
+		//line php7/php7.y:2864
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
 
@@ -5609,7 +5615,7 @@ yydefault:
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2864
+		//line php7/php7.y:2875
 		{
 			yyVAL.node = binary.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
 
@@ -5621,13 +5627,13 @@ yydefault:
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2874
+		//line php7/php7.y:2885
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2876
+		//line php7/php7.y:2887
 		{
 			yyVAL.node = cast.NewInt(yyDollar[2].node)
 
@@ -5639,7 +5645,7 @@ yydefault:
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2886
+		//line php7/php7.y:2897
 		{
 			yyVAL.node = cast.NewDouble(yyDollar[2].node)
 
@@ -5651,7 +5657,7 @@ yydefault:
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2896
+		//line php7/php7.y:2907
 		{
 			yyVAL.node = cast.NewString(yyDollar[2].node)
 
@@ -5663,7 +5669,7 @@ yydefault:
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2906
+		//line php7/php7.y:2917
 		{
 			yyVAL.node = cast.NewArray(yyDollar[2].node)
 
@@ -5675,7 +5681,7 @@ yydefault:
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2916
+		//line php7/php7.y:2927
 		{
 			yyVAL.node = cast.NewObject(yyDollar[2].node)
 
@@ -5687,7 +5693,7 @@ yydefault:
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2926
+		//line php7/php7.y:2937
 		{
 			yyVAL.node = cast.NewBool(yyDollar[2].node)
 
@@ -5699,7 +5705,7 @@ yydefault:
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2936
+		//line php7/php7.y:2947
 		{
 			yyVAL.node = cast.NewUnset(yyDollar[2].node)
 
@@ -5711,7 +5717,7 @@ yydefault:
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2946
+		//line php7/php7.y:2957
 		{
 			if strings.EqualFold(yyDollar[1].token.Value, "die") {
 				yyVAL.node = expr.NewDie(yyDollar[2].node)
@@ -5727,7 +5733,7 @@ yydefault:
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2960
+		//line php7/php7.y:2971
 		{
 			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
 
@@ -5739,13 +5745,13 @@ yydefault:
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2970
+		//line php7/php7.y:2981
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2972
+		//line php7/php7.y:2983
 		{
 			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
 
@@ -5758,7 +5764,7 @@ yydefault:
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2983
+		//line php7/php7.y:2994
 		{
 			yyVAL.node = expr.NewPrint(yyDollar[2].node)
 
@@ -5770,7 +5776,7 @@ yydefault:
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2993
+		//line php7/php7.y:3004
 		{
 			yyVAL.node = expr.NewYield(nil, nil)
 
@@ -5782,7 +5788,7 @@ yydefault:
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3003
+		//line php7/php7.y:3014
 		{
 			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
 
@@ -5794,7 +5800,7 @@ yydefault:
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3013
+		//line php7/php7.y:3024
 		{
 			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
 
@@ -5807,7 +5813,7 @@ yydefault:
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3024
+		//line php7/php7.y:3035
 		{
 			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node)
 
@@ -5819,7 +5825,7 @@ yydefault:
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:3034
+		//line php7/php7.y:3045
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].list, yyDollar[8].node, yyDollar[10].list, false, yyDollar[2].boolWithToken.value, yyDollar[3].str)
 
@@ -5838,7 +5844,7 @@ yydefault:
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line php7/php7.y:3051
+		//line php7/php7.y:3062
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[6].list, yyDollar[8].list, yyDollar[9].node, yyDollar[11].list, true, yyDollar[3].boolWithToken.value, yyDollar[4].str)
 
@@ -5858,38 +5864,38 @@ yydefault:
 		}
 	case 371:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3072
+		//line php7/php7.y:3083
 		{
 			yyVAL.str = yylex.(*Parser).PhpDocComment
 			yylex.(*Parser).PhpDocComment = ""
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3080
+		//line php7/php7.y:3091
 		{
 			yyVAL.boolWithToken = boolWithToken{false, nil}
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3082
+		//line php7/php7.y:3093
 		{
 			yyVAL.boolWithToken = boolWithToken{true, yyDollar[1].token}
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3087
+		//line php7/php7.y:3098
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3089
+		//line php7/php7.y:3100
 		{
 			yyVAL.list = yyDollar[3].list
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3094
+		//line php7/php7.y:3105
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -5898,13 +5904,13 @@ yydefault:
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3101
+		//line php7/php7.y:3112
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3106
+		//line php7/php7.y:3117
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -5920,7 +5926,7 @@ yydefault:
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3120
+		//line php7/php7.y:3131
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[2].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -5937,49 +5943,49 @@ yydefault:
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3138
+		//line php7/php7.y:3149
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes)
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
 
 			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3145
+		//line php7/php7.y:3156
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes)
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
 			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
 		}
 	case 382:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3155
+		//line php7/php7.y:3166
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes)
+			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
 			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3165
+		//line php7/php7.y:3176
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].nodesWithEndToken.nodes)
+			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
 
 			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].nodesWithEndToken.endToken))
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3175
+		//line php7/php7.y:3186
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -5991,67 +5997,67 @@ yydefault:
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3185
+		//line php7/php7.y:3196
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3190
+		//line php7/php7.y:3201
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3192
+		//line php7/php7.y:3203
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3197
+		//line php7/php7.y:3208
 		{
 			yyVAL.node = nil
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3199
+		//line php7/php7.y:3210
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3204
+		//line php7/php7.y:3215
 		{
 			yyVAL.list = []node.Node{}
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3206
+		//line php7/php7.y:3217
 		{
 			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token.Value)}
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3208
+		//line php7/php7.y:3219
 		{
 			yyVAL.list = yyDollar[1].list
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3213
+		//line php7/php7.y:3224
 		{
-			yyVAL.nodesWithEndToken = nil
+			yyVAL.node = nil
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3215
+		//line php7/php7.y:3226
 		{
-			yyVAL.nodesWithEndToken = yyDollar[1].nodesWithEndToken
+			yyVAL.node = yyDollar[1].node
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3220
+		//line php7/php7.y:3231
 		{
 			yyVAL.node = expr.NewArray(yyDollar[3].list)
 
@@ -6065,7 +6071,7 @@ yydefault:
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3232
+		//line php7/php7.y:3243
 		{
 			yyVAL.node = expr.NewShortArray(yyDollar[2].list)
 
@@ -6078,7 +6084,7 @@ yydefault:
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3243
+		//line php7/php7.y:3254
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
 
@@ -6090,7 +6096,7 @@ yydefault:
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3256
+		//line php7/php7.y:3267
 		{
 			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
 
@@ -6102,7 +6108,7 @@ yydefault:
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3266
+		//line php7/php7.y:3277
 		{
 			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value)
 
@@ -6114,7 +6120,7 @@ yydefault:
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3276
+		//line php7/php7.y:3287
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6126,7 +6132,7 @@ yydefault:
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3286
+		//line php7/php7.y:3297
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6138,7 +6144,7 @@ yydefault:
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3296
+		//line php7/php7.y:3307
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6150,7 +6156,7 @@ yydefault:
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3306
+		//line php7/php7.y:3317
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6162,7 +6168,7 @@ yydefault:
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3316
+		//line php7/php7.y:3327
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6174,7 +6180,7 @@ yydefault:
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3326
+		//line php7/php7.y:3337
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6186,7 +6192,7 @@ yydefault:
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3336
+		//line php7/php7.y:3347
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6198,7 +6204,7 @@ yydefault:
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3346
+		//line php7/php7.y:3357
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6210,7 +6216,7 @@ yydefault:
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3356
+		//line php7/php7.y:3367
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, []node.Node{encapsed})
@@ -6224,7 +6230,7 @@ yydefault:
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3368
+		//line php7/php7.y:3379
 		{
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, nil)
 
@@ -6236,7 +6242,7 @@ yydefault:
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3378
+		//line php7/php7.y:3389
 		{
 			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list)
 
@@ -6248,7 +6254,7 @@ yydefault:
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3388
+		//line php7/php7.y:3399
 		{
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, yyDollar[2].list)
 
@@ -6260,19 +6266,19 @@ yydefault:
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3398
+		//line php7/php7.y:3409
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3400
+		//line php7/php7.y:3411
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3405
+		//line php7/php7.y:3416
 		{
 			yyVAL.node = expr.NewConstFetch(yyDollar[1].node)
 
@@ -6281,7 +6287,7 @@ yydefault:
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3412
+		//line php7/php7.y:3423
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -6296,7 +6302,7 @@ yydefault:
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3425
+		//line php7/php7.y:3436
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -6311,43 +6317,43 @@ yydefault:
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3441
+		//line php7/php7.y:3452
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3443
+		//line php7/php7.y:3454
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3448
+		//line php7/php7.y:3459
 		{
 			yyVAL.node = nil
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3450
+		//line php7/php7.y:3461
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3455
+		//line php7/php7.y:3466
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3460
+		//line php7/php7.y:3471
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3462
+		//line php7/php7.y:3473
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -6357,19 +6363,19 @@ yydefault:
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3470
+		//line php7/php7.y:3481
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3475
+		//line php7/php7.y:3486
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3477
+		//line php7/php7.y:3488
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -6379,30 +6385,17 @@ yydefault:
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3485
+		//line php7/php7.y:3496
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3490
+		//line php7/php7.y:3501
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 429:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3492
-		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
-
-			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
-
-			// save comments
-			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
-			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
-		}
-	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:3503
 		{
@@ -6415,9 +6408,22 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
 		}
-	case 431:
+	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:3514
+		{
+			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+
+			// save position
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+
+			// save comments
+			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
+			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
+		}
+	case 431:
+		yyDollar = yyS[yypt-4 : yypt+1]
+		//line php7/php7.y:3525
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6430,37 +6436,37 @@ yydefault:
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3525
+		//line php7/php7.y:3536
 		{
-			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].nodesWithEndToken.nodes)
+			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
 			// save position
-			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].nodesWithEndToken.endToken))
+			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ObjectOperatorToken)
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3535
+		//line php7/php7.y:3546
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3540
+		//line php7/php7.y:3551
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3542
+		//line php7/php7.y:3553
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3544
+		//line php7/php7.y:3555
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6472,7 +6478,7 @@ yydefault:
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3557
+		//line php7/php7.y:3568
 		{
 			name := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			yyVAL.node = expr.NewVariable(name)
@@ -6486,7 +6492,7 @@ yydefault:
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3569
+		//line php7/php7.y:3580
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[3].node)
 
@@ -6500,7 +6506,7 @@ yydefault:
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3581
+		//line php7/php7.y:3592
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 
@@ -6512,7 +6518,7 @@ yydefault:
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3594
+		//line php7/php7.y:3605
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6524,7 +6530,7 @@ yydefault:
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3604
+		//line php7/php7.y:3615
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6536,13 +6542,13 @@ yydefault:
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3617
+		//line php7/php7.y:3628
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3619
+		//line php7/php7.y:3630
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6555,7 +6561,7 @@ yydefault:
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3630
+		//line php7/php7.y:3641
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6568,7 +6574,7 @@ yydefault:
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3641
+		//line php7/php7.y:3652
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6580,7 +6586,7 @@ yydefault:
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3651
+		//line php7/php7.y:3662
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6592,7 +6598,7 @@ yydefault:
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3661
+		//line php7/php7.y:3672
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6604,7 +6610,7 @@ yydefault:
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3674
+		//line php7/php7.y:3685
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -6616,7 +6622,7 @@ yydefault:
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3684
+		//line php7/php7.y:3695
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -6626,13 +6632,13 @@ yydefault:
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3692
+		//line php7/php7.y:3703
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3697
+		//line php7/php7.y:3708
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -6644,7 +6650,7 @@ yydefault:
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3707
+		//line php7/php7.y:3718
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -6654,13 +6660,13 @@ yydefault:
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3715
+		//line php7/php7.y:3726
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3720
+		//line php7/php7.y:3731
 		{
 			if yyDollar[1].list[len(yyDollar[1].list)-1] == nil {
 				yyVAL.list = yyDollar[1].list[:len(yyDollar[1].list)-1]
@@ -6670,19 +6676,19 @@ yydefault:
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3731
+		//line php7/php7.y:3742
 		{
 			yyVAL.node = nil
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3733
+		//line php7/php7.y:3744
 		{
 			yyVAL.node = yyDollar[1].node
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3738
+		//line php7/php7.y:3749
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -6691,13 +6697,13 @@ yydefault:
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3745
+		//line php7/php7.y:3756
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3750
+		//line php7/php7.y:3761
 		{
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node, false)
 
@@ -6709,7 +6715,7 @@ yydefault:
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3760
+		//line php7/php7.y:3771
 		{
 			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node, false)
 
@@ -6718,7 +6724,7 @@ yydefault:
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3767
+		//line php7/php7.y:3778
 		{
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[4].node, true)
 
@@ -6731,7 +6737,7 @@ yydefault:
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3778
+		//line php7/php7.y:3789
 		{
 			yyVAL.node = expr.NewArrayItem(nil, yyDollar[2].node, true)
 
@@ -6743,7 +6749,7 @@ yydefault:
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3788
+		//line php7/php7.y:3799
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[5].list)
@@ -6761,7 +6767,7 @@ yydefault:
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3804
+		//line php7/php7.y:3815
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[3].list)
@@ -6778,13 +6784,13 @@ yydefault:
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3822
+		//line php7/php7.y:3833
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3824
+		//line php7/php7.y:3835
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
 			yyVAL.list = append(yyDollar[1].list, encapsed)
@@ -6797,13 +6803,13 @@ yydefault:
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3835
+		//line php7/php7.y:3846
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3837
+		//line php7/php7.y:3848
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{encapsed, yyDollar[2].node}
@@ -6816,7 +6822,7 @@ yydefault:
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3851
+		//line php7/php7.y:3862
 		{
 			name := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			yyVAL.node = expr.NewVariable(name)
@@ -6830,7 +6836,7 @@ yydefault:
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3863
+		//line php7/php7.y:3874
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -6848,7 +6854,7 @@ yydefault:
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3879
+		//line php7/php7.y:3890
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			variable := expr.NewVariable(identifier)
@@ -6868,7 +6874,7 @@ yydefault:
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3897
+		//line php7/php7.y:3908
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 
@@ -6881,7 +6887,7 @@ yydefault:
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3908
+		//line php7/php7.y:3919
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = expr.NewVariable(name)
@@ -6897,7 +6903,7 @@ yydefault:
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3922
+		//line php7/php7.y:3933
 		{
 			identifier := node.NewIdentifier(yyDollar[2].token.Value)
 			variable := expr.NewVariable(identifier)
@@ -6917,13 +6923,13 @@ yydefault:
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3940
+		//line php7/php7.y:3951
 		{
 			yyVAL.node = yyDollar[2].node
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3946
+		//line php7/php7.y:3957
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
 
@@ -6935,7 +6941,7 @@ yydefault:
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3956
+		//line php7/php7.y:3967
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
@@ -6952,7 +6958,7 @@ yydefault:
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3971
+		//line php7/php7.y:3982
 		{
 			var lnumber *scalar.Lnumber
 			// TODO: add option to handle 64 bit integer
@@ -6983,7 +6989,7 @@ yydefault:
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4000
+		//line php7/php7.y:4011
 		{
 			identifier := node.NewIdentifier(strings.TrimLeft(yyDollar[1].token.Value, "$"))
 			yyVAL.node = expr.NewVariable(identifier)
@@ -6997,7 +7003,7 @@ yydefault:
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:4015
+		//line php7/php7.y:4026
 		{
 			yyVAL.node = expr.NewIsset(yyDollar[3].list)
 
@@ -7014,7 +7020,7 @@ yydefault:
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4030
+		//line php7/php7.y:4041
 		{
 			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 
@@ -7028,7 +7034,7 @@ yydefault:
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4042
+		//line php7/php7.y:4053
 		{
 			yyVAL.node = expr.NewInclude(yyDollar[2].node)
 
@@ -7040,7 +7046,7 @@ yydefault:
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4052
+		//line php7/php7.y:4063
 		{
 			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
 
@@ -7052,7 +7058,7 @@ yydefault:
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4062
+		//line php7/php7.y:4073
 		{
 			yyVAL.node = expr.NewEval(yyDollar[3].node)
 
@@ -7066,7 +7072,7 @@ yydefault:
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4074
+		//line php7/php7.y:4085
 		{
 			yyVAL.node = expr.NewRequire(yyDollar[2].node)
 
@@ -7078,7 +7084,7 @@ yydefault:
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4084
+		//line php7/php7.y:4095
 		{
 			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
 
@@ -7090,13 +7096,13 @@ yydefault:
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4097
+		//line php7/php7.y:4108
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4099
+		//line php7/php7.y:4110
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -7105,7 +7111,7 @@ yydefault:
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4109
+		//line php7/php7.y:4120
 		{
 			yyVAL.node = yyDollar[1].node
 		}

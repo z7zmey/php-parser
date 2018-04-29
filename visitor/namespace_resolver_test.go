@@ -43,9 +43,9 @@ func TestResolveStaticCall(t *testing.T) {
 				},
 			},
 			&expr.StaticCall{
-				Class:     nameBC,
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class: nameBC,
+				Call:  &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -134,8 +134,8 @@ func TestResolveNew(t *testing.T) {
 				},
 			},
 			&expr.New{
-				Class:     nameBC,
-				Arguments: []node.Node{},
+				Class: nameBC,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -242,8 +242,8 @@ func TestResolveFunctionCall(t *testing.T) {
 				},
 			},
 			&expr.FunctionCall{
-				Function:  nameB,
-				Arguments: []node.Node{},
+				Function: nameB,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -323,12 +323,12 @@ func TestResolveGroupUse(t *testing.T) {
 				Constant: nameC,
 			},
 			&expr.FunctionCall{
-				Function:  nameF,
-				Arguments: []node.Node{},
+				Function: nameF,
+				ArgumentList: &node.ArgumentList{},
 			},
 			&expr.FunctionCall{
-				Function:  nameE,
-				Arguments: []node.Node{},
+				Function: nameE,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -658,9 +658,9 @@ func TestResolveNamespaces(t *testing.T) {
 				},
 			},
 			&expr.StaticCall{
-				Class:     nameFG,
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class: nameFG,
+				Call:  &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 			&stmt.Namespace{
 				Stmts: []node.Node{},
@@ -678,12 +678,12 @@ func TestResolveNamespaces(t *testing.T) {
 					&expr.StaticCall{
 						Class:     relativeNameCE,
 						Call:      &node.Identifier{Value: "foo"},
-						Arguments: []node.Node{},
+						ArgumentList: &node.ArgumentList{},
 					},
 					&expr.StaticCall{
 						Class:     nameCF,
 						Call:      &node.Identifier{Value: "foo"},
-						Arguments: []node.Node{},
+						ArgumentList: &node.ArgumentList{},
 					},
 				},
 			},
@@ -708,9 +708,9 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	ast := &stmt.StmtList{
 		Stmts: []node.Node{
 			&expr.StaticCall{
-				Class:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+				Call:  &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}

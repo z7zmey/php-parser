@@ -99,11 +99,13 @@ func TestReferenceArgs(t *testing.T) {
 								&name.NamePart{Value: "Foo"},
 							},
 						},
-						Arguments: []node.Node{
-							&node.Argument{
-								Variadic:    false,
-								IsReference: false,
-								Expr:        &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						ArgumentList: &node.ArgumentList{
+							Arguments: []node.Node{
+								&node.Argument{
+									Variadic:    false,
+									IsReference: false,
+									Expr:        &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+								},
 							},
 						},
 					},
