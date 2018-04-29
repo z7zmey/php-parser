@@ -360,18 +360,18 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Switch{
-			Cond:  &expr.Variable{},
-			Cases: []node.Node{&stmt.Expression{}},
+			Cond:          &expr.Variable{},
+			CaseList: &stmt.CaseList{},
 		},
-		[]string{"Cond", "Cases"},
+		[]string{"Cond", "CaseList"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.AltSwitch{
-			Cond:  &expr.Variable{},
-			Cases: []node.Node{&stmt.Expression{}},
+			Cond:     &expr.Variable{},
+			CaseList: &stmt.CaseList{Cases: []node.Node{}},
 		},
-		[]string{"Cond", "Cases"},
+		[]string{"Cond", "CaseList"},
 		map[string]interface{}{},
 	},
 	{
@@ -477,6 +477,13 @@ var nodesToTest = []struct {
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.CaseList{
+			Cases: []node.Node{&stmt.Expression{}},
+		},
+		[]string{"Cases"},
 		map[string]interface{}{},
 	},
 	{
