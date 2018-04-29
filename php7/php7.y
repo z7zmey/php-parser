@@ -264,12 +264,13 @@ import (
 %type <node> isset_variable type return_type type_expr
 %type <node> class_modifier
 %type <node> argument_list ctor_arguments
+%type <node> trait_adaptations
 
 %type <node> member_modifier
 %type <node> use_type
 %type <foreachVariable> foreach_variable
 
-%type <nodesWithEndToken> method_body switch_case_list trait_adaptations
+%type <nodesWithEndToken> method_body switch_case_list
 
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
@@ -1864,10 +1865,20 @@ class_statement:
             }
     |   T_USE name_list trait_adaptations
             {
-                $$ = stmt.NewTraitUse($2, $3.nodes)
+                var adaptationList *stmt.TraitAdaptationList
+
+                switch n := $3.(type) {
+                case *stmt.TraitAdaptationList:
+                    adaptationList = n
+                default:
+                    adaptationList = nil
+                    yylex.(*Parser).comments.AddFromChildNode($$, $3)
+                }
+
+                $$ = stmt.NewTraitUse($2, adaptationList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -1906,11 +1917,35 @@ name_list:
 
 trait_adaptations:
         ';'
-            { $$ = &nodesWithEndToken{nil, $1} }
+            {
+                $$ = stmt.NewNop()
+
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.SemiColonToken)
+
+            }
     |   '{' '}'
-            { $$ = &nodesWithEndToken{nil, $2} }
+            {
+                $$ = stmt.NewTraitAdaptationList(nil)
+
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.CloseCurlyBracesToken)
+            }
     |   '{' trait_adaptation_list '}'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            {
+                $$ = stmt.NewTraitAdaptationList($2)
+
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
+            }
 ;
 
 trait_adaptation_list:

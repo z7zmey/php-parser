@@ -243,6 +243,7 @@ import (
 %type <node> trait_method_reference_fully_qualified trait_method_reference trait_modifiers member_modifier method
 %type <node> static_scalar_value static_operation
 %type <node> ctor_arguments function_call_parameter_list
+%type <node> trait_adaptations
 
 %type <list> top_statement_list namespace_name use_declarations use_function_declarations use_const_declarations
 %type <list> inner_statement_list global_var_list static_var_list encaps_list isset_variables non_empty_array_pair_list
@@ -259,7 +260,7 @@ import (
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
-%type <nodesWithEndToken> switch_case_list method_body trait_adaptations
+%type <nodesWithEndToken> switch_case_list method_body
 %type <boolWithToken> is_reference is_variadic
 %type <altSyntaxNode> while_statement for_statement foreach_statement
 
@@ -1550,8 +1551,16 @@ class_statement:
 trait_use_statement:
         T_USE trait_list trait_adaptations
             {
-                $$ = stmt.NewTraitUse($2, $3.nodes)
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
+                var adaptationList *stmt.TraitAdaptationList
+                switch n := $3.(type) {
+                case *stmt.TraitAdaptationList:
+                    adaptationList = n
+                default:
+                    adaptationList = nil
+                }
+
+                $$ = stmt.NewTraitUse($2, adaptationList)
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
 ;
@@ -1565,9 +1574,17 @@ trait_list:
 
 trait_adaptations:
         ';'
-            { $$ = &nodesWithEndToken{nil, $1} }
+            {
+                $$ = stmt.NewNop()
+
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+            }
     |   '{' trait_adaptation_list '}'
-            { $$ = &nodesWithEndToken{$2, $3} }
+            {
+                $$ = stmt.NewTraitAdaptationList($2)
+
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+            }
 ;
 
 trait_adaptation_list:

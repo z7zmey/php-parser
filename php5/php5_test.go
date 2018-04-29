@@ -1455,6 +1455,7 @@ func TestPhp5(t *testing.T) {
 								},
 							},
 						},
+						TraitAdaptationList: &stmt.TraitAdaptationList{},
 					},
 				},
 			},
@@ -1475,41 +1476,14 @@ func TestPhp5(t *testing.T) {
 								},
 							},
 						},
-						Adaptations: []node.Node{
-							&stmt.TraitUseAlias{
-								Ref: &stmt.TraitMethodRef{
-									Method: &node.Identifier{Value: "one"},
+						TraitAdaptationList: &stmt.TraitAdaptationList{
+							Adaptations: []node.Node{
+								&stmt.TraitUseAlias{
+									Ref: &stmt.TraitMethodRef{
+										Method: &node.Identifier{Value: "one"},
+									},
+									Modifier: &node.Identifier{Value: "public"},
 								},
-								Modifier: &node.Identifier{Value: "public"},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Class{
-				PhpDocComment: "",
-				ClassName:     &node.Identifier{Value: "Foo"},
-				Stmts: []node.Node{
-					&stmt.TraitUse{
-						Traits: []node.Node{
-							&name.Name{
-								Parts: []node.Node{
-									&name.NamePart{Value: "Bar"},
-								},
-							},
-							&name.Name{
-								Parts: []node.Node{
-									&name.NamePart{Value: "Baz"},
-								},
-							},
-						},
-						Adaptations: []node.Node{
-							&stmt.TraitUseAlias{
-								Ref: &stmt.TraitMethodRef{
-									Method: &node.Identifier{Value: "one"},
-								},
-								Modifier: &node.Identifier{Value: "public"},
-								Alias:    &node.Identifier{Value: "two"},
 							},
 						},
 					},
@@ -1532,39 +1506,72 @@ func TestPhp5(t *testing.T) {
 								},
 							},
 						},
-						Adaptations: []node.Node{
-							&stmt.TraitUsePrecedence{
-								Ref: &stmt.TraitMethodRef{
-									Trait: &name.Name{
-										Parts: []node.Node{
-											&name.NamePart{Value: "Bar"},
-										},
+						TraitAdaptationList: &stmt.TraitAdaptationList{
+							Adaptations: []node.Node{
+								&stmt.TraitUseAlias{
+									Ref: &stmt.TraitMethodRef{
+										Method: &node.Identifier{Value: "one"},
 									},
-									Method: &node.Identifier{Value: "one"},
-								},
-								Insteadof: []node.Node{
-									&name.Name{
-										Parts: []node.Node{
-											&name.NamePart{Value: "Baz"},
-										},
-									},
-									&name.Name{
-										Parts: []node.Node{
-											&name.NamePart{Value: "Quux"},
-										},
-									},
+									Modifier: &node.Identifier{Value: "public"},
+									Alias:    &node.Identifier{Value: "two"},
 								},
 							},
-							&stmt.TraitUseAlias{
-								Ref: &stmt.TraitMethodRef{
-									Trait: &name.Name{
-										Parts: []node.Node{
-											&name.NamePart{Value: "Baz"},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				PhpDocComment: "",
+				ClassName:     &node.Identifier{Value: "Foo"},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Traits: []node.Node{
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Bar"},
+								},
+							},
+							&name.Name{
+								Parts: []node.Node{
+									&name.NamePart{Value: "Baz"},
+								},
+							},
+						},
+						TraitAdaptationList: &stmt.TraitAdaptationList{
+							Adaptations: []node.Node{
+								&stmt.TraitUsePrecedence{
+									Ref: &stmt.TraitMethodRef{
+										Trait: &name.Name{
+											Parts: []node.Node{
+												&name.NamePart{Value: "Bar"},
+											},
+										},
+										Method: &node.Identifier{Value: "one"},
+									},
+									Insteadof: []node.Node{
+										&name.Name{
+											Parts: []node.Node{
+												&name.NamePart{Value: "Baz"},
+											},
+										},
+										&name.Name{
+											Parts: []node.Node{
+												&name.NamePart{Value: "Quux"},
+											},
 										},
 									},
-									Method: &node.Identifier{Value: "one"},
 								},
-								Alias: &node.Identifier{Value: "two"},
+								&stmt.TraitUseAlias{
+									Ref: &stmt.TraitMethodRef{
+										Trait: &name.Name{
+											Parts: []node.Node{
+												&name.NamePart{Value: "Baz"},
+											},
+										},
+										Method: &node.Identifier{Value: "one"},
+									},
+									Alias: &node.Identifier{Value: "two"},
+								},
 							},
 						},
 					},

@@ -92,10 +92,10 @@ var nodesToTest = []struct {
 			PhpDocComment: "/** */",
 			ClassName:     &node.Identifier{},
 			Modifiers:     []node.Node{&stmt.Expression{}},
-			ArgumentList: &node.ArgumentList{},
-			Extends:    &node.Identifier{},
-			Implements: []node.Node{&stmt.Expression{}},
-			Stmts:      []node.Node{&stmt.Expression{}},
+			ArgumentList:  &node.ArgumentList{},
+			Extends:       &node.Identifier{},
+			Implements:    []node.Node{&stmt.Expression{}},
+			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"ClassName", "Modifiers", "ArgumentList", "Extends", "Implements", "Stmts"},
 		map[string]interface{}{"PhpDocComment": "/** */"},
@@ -408,10 +408,10 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.TraitUse{
-			Traits:      []node.Node{&stmt.Expression{}},
-			Adaptations: []node.Node{&stmt.Expression{}},
+			Traits:              []node.Node{&stmt.Expression{}},
+			TraitAdaptationList: &stmt.TraitAdaptationList{},
 		},
-		[]string{"Traits", "Adaptations"},
+		[]string{"Traits", "TraitAdaptationList"},
 		map[string]interface{}{},
 	},
 	{
@@ -477,6 +477,13 @@ var nodesToTest = []struct {
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.TraitAdaptationList{
+			Adaptations: []node.Node{&stmt.TraitUsePrecedence{}},
+		},
+		[]string{"Adaptations"},
 		map[string]interface{}{},
 	},
 }
