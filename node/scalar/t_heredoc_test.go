@@ -19,7 +19,7 @@ test $var
 LBL;
 `
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{
@@ -51,7 +51,7 @@ test $var
 LBL;
 `
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{
@@ -83,7 +83,7 @@ test $var
 LBL;
 `
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{
@@ -112,7 +112,7 @@ func TestEmptyHeredoc(t *testing.T) {
 CAD;
 `
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{
@@ -139,7 +139,7 @@ func TestHeredocScalarString(t *testing.T) {
 CAD;
 `
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{

@@ -17,7 +17,7 @@ import (
 func TestArray(t *testing.T) {
 	src := `<? array();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Array{
@@ -41,7 +41,7 @@ func TestArray(t *testing.T) {
 func TestArrayItem(t *testing.T) {
 	src := `<? array(1);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Array{
@@ -70,7 +70,7 @@ func TestArrayItem(t *testing.T) {
 func TestArrayItems(t *testing.T) {
 	src := `<? array(1=>1, &$b,);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Array{

@@ -15,7 +15,7 @@ import (
 func TestStaticVar(t *testing.T) {
 	src := `<? static $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Static{
 				Vars: []node.Node{
@@ -41,7 +41,7 @@ func TestStaticVar(t *testing.T) {
 func TestStaticVars(t *testing.T) {
 	src := `<? static $a, $b = 1;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Static{
 				Vars: []node.Node{
@@ -71,7 +71,7 @@ func TestStaticVars(t *testing.T) {
 func TestStaticVars2(t *testing.T) {
 	src := `<? static $a = 1, $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Static{
 				Vars: []node.Node{

@@ -29,7 +29,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 func TestLNumber(t *testing.T) {
 	src := `<? 1234567890123456789;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Lnumber{Value: "1234567890123456789"},
@@ -51,7 +51,7 @@ func TestLNumber(t *testing.T) {
 func TestDNumber(t *testing.T) {
 	src := `<? 12345678901234567890;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Dnumber{Value: "12345678901234567890"},
@@ -73,7 +73,7 @@ func TestDNumber(t *testing.T) {
 func TestFloat(t *testing.T) {
 	src := `<? 0.;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Dnumber{Value: "0."},
@@ -95,7 +95,7 @@ func TestFloat(t *testing.T) {
 func TestBinaryLNumber(t *testing.T) {
 	src := `<? 0b0111111111111111111111111111111111111111111111111111111111111111;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Lnumber{Value: "0b0111111111111111111111111111111111111111111111111111111111111111"},
@@ -117,7 +117,7 @@ func TestBinaryLNumber(t *testing.T) {
 func TestBinaryDNumber(t *testing.T) {
 	src := `<? 0b1111111111111111111111111111111111111111111111111111111111111111;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Dnumber{Value: "0b1111111111111111111111111111111111111111111111111111111111111111"},
@@ -139,7 +139,7 @@ func TestBinaryDNumber(t *testing.T) {
 func TestHLNumber(t *testing.T) {
 	src := `<? 0x007111111111111111;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Lnumber{Value: "0x007111111111111111"},
@@ -161,7 +161,7 @@ func TestHLNumber(t *testing.T) {
 func TestHDNumber(t *testing.T) {
 	src := `<? 0x8111111111111111;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Dnumber{Value: "0x8111111111111111"},

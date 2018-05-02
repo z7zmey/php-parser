@@ -294,7 +294,7 @@ import (
 start:
         top_statement_list
             {
-                yylex.(*Parser).rootNode = stmt.NewStmtList($1)
+                yylex.(*Parser).rootNode = node.NewRoot($1)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
@@ -1950,7 +1950,7 @@ class_statement:
                 // save position
                 yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $10.endToken))
-                
+
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.FunctionToken)
                 if $3.value {

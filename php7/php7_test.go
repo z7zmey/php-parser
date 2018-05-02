@@ -397,7 +397,7 @@ func TestPhp7(t *testing.T) {
 		},
 	}
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
@@ -3241,7 +3241,7 @@ func TestPhp5Strings(t *testing.T) {
 		';
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\"test\""},
@@ -3285,7 +3285,7 @@ CAD;
 CAD;
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{

@@ -17,7 +17,7 @@ func TestTry(t *testing.T) {
 		try {}
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts:   []node.Node{},
@@ -42,7 +42,7 @@ func TestTryCatch(t *testing.T) {
 		try {} catch (Exception $e) {}
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts: []node.Node{},
@@ -81,7 +81,7 @@ func TestPhp7TryCatch(t *testing.T) {
 		try {} catch (Exception|RuntimeException $e) {}
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts: []node.Node{},
@@ -120,7 +120,7 @@ func TestTryCatchCatch(t *testing.T) {
 		try {} catch (Exception $e) {} catch (RuntimeException $e) {}
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts: []node.Node{},
@@ -172,7 +172,7 @@ func TestTryCatchFinally(t *testing.T) {
 		try {} catch (Exception $e) {} finally {}
 	`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts: []node.Node{},
@@ -212,7 +212,7 @@ func TestTryCatchFinally(t *testing.T) {
 func TestTryCatchCatchCatch(t *testing.T) {
 	src := `<? try {} catch (Exception $e) {} catch (\RuntimeException $e) {} catch (namespace\AdditionException $e) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Try{
 				Stmts: []node.Node{},

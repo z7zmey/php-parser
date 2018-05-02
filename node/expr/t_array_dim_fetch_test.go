@@ -31,7 +31,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 func TestArrayDimFetch(t *testing.T) {
 	src := `<? $a[1];`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{
@@ -56,7 +56,7 @@ func TestArrayDimFetch(t *testing.T) {
 func TestArrayDimFetchNested(t *testing.T) {
 	src := `<? $a[1][2];`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ArrayDimFetch{

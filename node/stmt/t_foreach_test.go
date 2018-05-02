@@ -15,7 +15,7 @@ import (
 func TestForeach(t *testing.T) {
 	src := `<? foreach ($a as $v) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -39,7 +39,7 @@ func TestForeach(t *testing.T) {
 func TestForeachExpr(t *testing.T) {
 	src := `<? foreach ([] as $v) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.ShortArray{Items: []node.Node{}},
@@ -63,7 +63,7 @@ func TestForeachExpr(t *testing.T) {
 func TestAltForeach(t *testing.T) {
 	src := `<? foreach ($a as $v) : endforeach;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.AltForeach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -87,7 +87,7 @@ func TestAltForeach(t *testing.T) {
 func TestForeachWithKey(t *testing.T) {
 	src := `<? foreach ($a as $k => $v) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -112,7 +112,7 @@ func TestForeachWithKey(t *testing.T) {
 func TestForeachExprWithKey(t *testing.T) {
 	src := `<? foreach ([] as $k => $v) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				Expr:     &expr.ShortArray{Items: []node.Node{}},
@@ -137,7 +137,7 @@ func TestForeachExprWithKey(t *testing.T) {
 func TestForeachWithRef(t *testing.T) {
 	src := `<? foreach ($a as $k => &$v) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				ByRef:    true,
@@ -163,7 +163,7 @@ func TestForeachWithRef(t *testing.T) {
 func TestForeachWithList(t *testing.T) {
 	src := `<? foreach ($a as $k => list($v)) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Foreach{
 				ByRef: false,

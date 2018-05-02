@@ -15,7 +15,7 @@ import (
 func TestInclude(t *testing.T) {
 	src := `<? include $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Include{
@@ -39,7 +39,7 @@ func TestInclude(t *testing.T) {
 func TestIncludeOnce(t *testing.T) {
 	src := `<? include_once $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.IncludeOnce{
@@ -63,7 +63,7 @@ func TestIncludeOnce(t *testing.T) {
 func TestRequire(t *testing.T) {
 	src := `<? require $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Require{
@@ -87,7 +87,7 @@ func TestRequire(t *testing.T) {
 func TestRequireOnce(t *testing.T) {
 	src := `<? require_once $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.RequireOnce{

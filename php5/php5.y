@@ -270,7 +270,7 @@ import (
 start:
         top_statement_list
             {
-                yylex.(*Parser).rootNode = stmt.NewStmtList($1)
+                yylex.(*Parser).rootNode = node.NewRoot($1)
                 yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
             }
 ;

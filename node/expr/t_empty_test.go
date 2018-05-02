@@ -15,7 +15,7 @@ import (
 func TestEmpty(t *testing.T) {
 	src := `<? empty($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Empty{

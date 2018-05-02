@@ -20,7 +20,7 @@ import (
 func TestFor(t *testing.T) {
 	src := `<? for($i = 0; $i < 10; $i++, $i++) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.For{
 				Init: []node.Node{
@@ -62,7 +62,7 @@ func TestFor(t *testing.T) {
 func TestAltFor(t *testing.T) {
 	src := `<? for(; $i < 10; $i++) : endfor;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.AltFor{
 				Cond: []node.Node{

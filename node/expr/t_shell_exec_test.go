@@ -17,7 +17,7 @@ import (
 func TestShellExec(t *testing.T) {
 	src := "<? `cmd $a`;"
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ShellExec{

@@ -17,7 +17,7 @@ import (
 func TestSimpleEcho(t *testing.T) {
 	src := `<? echo $a, 1;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Echo{
 				Exprs: []node.Node{
@@ -44,7 +44,7 @@ func TestSimpleEcho(t *testing.T) {
 func TestEcho(t *testing.T) {
 	src := `<? echo($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Echo{
 				Exprs: []node.Node{

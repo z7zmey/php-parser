@@ -15,7 +15,7 @@ import (
 func TestTernary(t *testing.T) {
 	src := `<? $a ? $b : $c;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
@@ -41,7 +41,7 @@ func TestTernary(t *testing.T) {
 func TestTernarySimple(t *testing.T) {
 	src := `<? $a ? : $c;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
@@ -66,7 +66,7 @@ func TestTernarySimple(t *testing.T) {
 func TestTernaryNestedTrue(t *testing.T) {
 	src := `<? $a ? $b ? $c : $d : $e;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{
@@ -96,7 +96,7 @@ func TestTernaryNestedTrue(t *testing.T) {
 func TestTernaryNestedCond(t *testing.T) {
 	src := `<? $a ? $b : $c ? $d : $e;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Ternary{

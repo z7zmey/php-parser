@@ -17,7 +17,7 @@ import (
 func TestNew(t *testing.T) {
 	src := `<? new Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -45,7 +45,7 @@ func TestNew(t *testing.T) {
 func TestNewRelative(t *testing.T) {
 	src := `<? new namespace\Foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -74,7 +74,7 @@ func TestNewRelative(t *testing.T) {
 func TestNewFullyQualified(t *testing.T) {
 	src := `<? new \Foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -103,7 +103,7 @@ func TestNewFullyQualified(t *testing.T) {
 func TestNewAnonymous(t *testing.T) {
 	src := `<? new class ($a, ...$b) {};`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{

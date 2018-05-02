@@ -15,7 +15,7 @@ import (
 func TestExit(t *testing.T) {
 	src := `<? exit;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Exit{},
@@ -37,7 +37,7 @@ func TestExit(t *testing.T) {
 func TestExitExpr(t *testing.T) {
 	src := `<? exit($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Exit{
@@ -61,7 +61,7 @@ func TestExitExpr(t *testing.T) {
 func TestDie(t *testing.T) {
 	src := `<? die;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Die{},
@@ -83,7 +83,7 @@ func TestDie(t *testing.T) {
 func TestDieExpr(t *testing.T) {
 	src := `<? die($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Die{

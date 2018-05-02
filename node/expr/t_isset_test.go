@@ -15,7 +15,7 @@ import (
 func TestIsset(t *testing.T) {
 	src := `<? isset($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Isset{
@@ -41,7 +41,7 @@ func TestIsset(t *testing.T) {
 func TestIssetVariables(t *testing.T) {
 	src := `<? isset($a, $b);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Isset{

@@ -2135,7 +2135,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:296
 		{
-			yylex.(*Parser).rootNode = stmt.NewStmtList(yyDollar[1].list)
+			yylex.(*Parser).rootNode = node.NewRoot(yyDollar[1].list)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))

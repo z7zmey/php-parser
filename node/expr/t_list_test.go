@@ -17,7 +17,7 @@ import (
 func TestEmptyList(t *testing.T) {
 	src := `<? list() = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -44,7 +44,7 @@ func TestEmptyList(t *testing.T) {
 func TestList(t *testing.T) {
 	src := `<? list($a) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -76,7 +76,7 @@ func TestList(t *testing.T) {
 func TestListArrayIndex(t *testing.T) {
 	src := `<? list($a[]) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -110,7 +110,7 @@ func TestListArrayIndex(t *testing.T) {
 func TestListList(t *testing.T) {
 	src := `<? list(list($a)) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{

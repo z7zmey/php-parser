@@ -39,7 +39,7 @@ func ExampleDumper() {
 	nodes.Walk(dumper)
 
 	// Unordered output:
-	//| [*stmt.StmtList]
+	//| [*node.Root]
 	//|   "Position": Pos{Line: 3-11 Pos: 10-143};
 	//|   "Stmts":
 	//|     [*stmt.Namespace]

@@ -15,7 +15,7 @@ import (
 func TestUnaryMinus(t *testing.T) {
 	src := `<? -$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.UnaryMinus{
@@ -39,7 +39,7 @@ func TestUnaryMinus(t *testing.T) {
 func TestUnaryPlus(t *testing.T) {
 	src := `<? +$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.UnaryPlus{

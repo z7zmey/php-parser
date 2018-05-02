@@ -15,7 +15,7 @@ import (
 func TestGlobal(t *testing.T) {
 	src := `<? global $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Global{
 				Vars: []node.Node{
@@ -39,7 +39,7 @@ func TestGlobal(t *testing.T) {
 func TestGlobalVars(t *testing.T) {
 	src := `<? global $a, $b, $$c, ${foo()};`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Global{
 				Vars: []node.Node{

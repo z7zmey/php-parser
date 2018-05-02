@@ -13,7 +13,7 @@ import (
 func TestHaltCompiler(t *testing.T) {
 	src := `<? __halt_compiler();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.HaltCompiler{},
 		},

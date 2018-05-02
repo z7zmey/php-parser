@@ -30,7 +30,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 func TestBitwiseAnd(t *testing.T) {
 	src := `<? $a & $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseAnd{
@@ -55,7 +55,7 @@ func TestBitwiseAnd(t *testing.T) {
 func TestBitwiseOr(t *testing.T) {
 	src := `<? $a | $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseOr{
@@ -80,7 +80,7 @@ func TestBitwiseOr(t *testing.T) {
 func TestBitwiseXor(t *testing.T) {
 	src := `<? $a ^ $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BitwiseXor{
@@ -105,7 +105,7 @@ func TestBitwiseXor(t *testing.T) {
 func TestBooleanAnd(t *testing.T) {
 	src := `<? $a && $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BooleanAnd{
@@ -130,7 +130,7 @@ func TestBooleanAnd(t *testing.T) {
 func TestBooleanOr(t *testing.T) {
 	src := `<? $a || $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.BooleanOr{
@@ -155,7 +155,7 @@ func TestBooleanOr(t *testing.T) {
 func TestCoalesce(t *testing.T) {
 	src := `<? $a ?? $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Coalesce{
@@ -175,7 +175,7 @@ func TestCoalesce(t *testing.T) {
 func TestConcat(t *testing.T) {
 	src := `<? $a . $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Concat{
@@ -200,7 +200,7 @@ func TestConcat(t *testing.T) {
 func TestDiv(t *testing.T) {
 	src := `<? $a / $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Div{
@@ -225,7 +225,7 @@ func TestDiv(t *testing.T) {
 func TestEqual(t *testing.T) {
 	src := `<? $a == $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Equal{
@@ -250,7 +250,7 @@ func TestEqual(t *testing.T) {
 func TestGreaterOrEqual(t *testing.T) {
 	src := `<? $a >= $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.GreaterOrEqual{
@@ -275,7 +275,7 @@ func TestGreaterOrEqual(t *testing.T) {
 func TestGreater(t *testing.T) {
 	src := `<? $a > $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Greater{
@@ -300,7 +300,7 @@ func TestGreater(t *testing.T) {
 func TestIdentical(t *testing.T) {
 	src := `<? $a === $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Identical{
@@ -325,7 +325,7 @@ func TestIdentical(t *testing.T) {
 func TestLogicalAnd(t *testing.T) {
 	src := `<? $a and $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalAnd{
@@ -350,7 +350,7 @@ func TestLogicalAnd(t *testing.T) {
 func TestLogicalOr(t *testing.T) {
 	src := `<? $a or $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalOr{
@@ -375,7 +375,7 @@ func TestLogicalOr(t *testing.T) {
 func TestLogicalXor(t *testing.T) {
 	src := `<? $a xor $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.LogicalXor{
@@ -400,7 +400,7 @@ func TestLogicalXor(t *testing.T) {
 func TestMinus(t *testing.T) {
 	src := `<? $a - $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Minus{
@@ -425,7 +425,7 @@ func TestMinus(t *testing.T) {
 func TestMod(t *testing.T) {
 	src := `<? $a % $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Mod{
@@ -450,7 +450,7 @@ func TestMod(t *testing.T) {
 func TestMul(t *testing.T) {
 	src := `<? $a * $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Mul{
@@ -475,7 +475,7 @@ func TestMul(t *testing.T) {
 func TestNotEqual(t *testing.T) {
 	src := `<? $a != $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.NotEqual{
@@ -500,7 +500,7 @@ func TestNotEqual(t *testing.T) {
 func TestNotIdentical(t *testing.T) {
 	src := `<? $a !== $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.NotIdentical{
@@ -525,7 +525,7 @@ func TestNotIdentical(t *testing.T) {
 func TestPlus(t *testing.T) {
 	src := `<? $a + $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Plus{
@@ -550,7 +550,7 @@ func TestPlus(t *testing.T) {
 func TestPow(t *testing.T) {
 	src := `<? $a ** $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Pow{
@@ -575,7 +575,7 @@ func TestPow(t *testing.T) {
 func TestShiftLeft(t *testing.T) {
 	src := `<? $a << $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.ShiftLeft{
@@ -600,7 +600,7 @@ func TestShiftLeft(t *testing.T) {
 func TestShiftRight(t *testing.T) {
 	src := `<? $a >> $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.ShiftRight{
@@ -625,7 +625,7 @@ func TestShiftRight(t *testing.T) {
 func TestSmallerOrEqual(t *testing.T) {
 	src := `<? $a <= $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.SmallerOrEqual{
@@ -650,7 +650,7 @@ func TestSmallerOrEqual(t *testing.T) {
 func TestSmaller(t *testing.T) {
 	src := `<? $a < $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Smaller{
@@ -675,7 +675,7 @@ func TestSmaller(t *testing.T) {
 func TestSpaceship(t *testing.T) {
 	src := `<? $a <=> $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &binary.Spaceship{

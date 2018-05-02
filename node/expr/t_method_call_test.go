@@ -15,7 +15,7 @@ import (
 func TestMethodCall(t *testing.T) {
 	src := `<? $a->foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.MethodCall{

@@ -16,7 +16,7 @@ import (
 func TestShortList(t *testing.T) {
 	src := `<? [$a] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -43,7 +43,7 @@ func TestShortList(t *testing.T) {
 func TestShortListArrayIndex(t *testing.T) {
 	src := `<? [$a[]] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -72,7 +72,7 @@ func TestShortListArrayIndex(t *testing.T) {
 func TestShortListList(t *testing.T) {
 	src := `<? [list($a)] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{

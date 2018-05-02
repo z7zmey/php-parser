@@ -30,27 +30,6 @@ func NewPrinter(w io.Writer, indentStr string) *Printer {
 	}
 }
 
-func (p *Printer) PrintFile(n *stmt.StmtList) {
-	if len(n.Stmts) > 0 {
-		firstStmt := n.Stmts[0]
-		n.Stmts = n.Stmts[1:]
-
-		switch fs := firstStmt.(type) {
-		case *stmt.InlineHtml:
-			io.WriteString(p.w, fs.Value)
-			io.WriteString(p.w, "<?php\n")
-		default:
-			io.WriteString(p.w, "<?php\n")
-			p.printIndent()
-			p.Print(fs)
-			io.WriteString(p.w, "\n")
-		}
-	}
-	p.indentDepth--
-	p.printNodes(n.Stmts)
-	io.WriteString(p.w, "\n")
-}
-
 func (p *Printer) Print(n node.Node) {
 	p.printNode(n)
 }
@@ -89,6 +68,8 @@ func (p *Printer) printNode(n node.Node) {
 
 	// node
 
+	case *node.Root:
+		p.printNodeRoot(n)
 	case *node.Identifier:
 		p.printNodeIdentifier(n)
 	case *node.Parameter:
@@ -432,6 +413,29 @@ func (p *Printer) printNode(n node.Node) {
 }
 
 // node
+
+func (p *Printer) printNodeRoot(n node.Node) {
+	v := n.(*node.Root)
+
+	if len(v.Stmts) > 0 {
+		firstStmt := v.Stmts[0]
+		v.Stmts = v.Stmts[1:]
+
+		switch fs := firstStmt.(type) {
+		case *stmt.InlineHtml:
+			io.WriteString(p.w, fs.Value)
+			io.WriteString(p.w, "<?php\n")
+		default:
+			io.WriteString(p.w, "<?php\n")
+			p.printIndent()
+			p.Print(fs)
+			io.WriteString(p.w, "\n")
+		}
+	}
+	p.indentDepth--
+	p.printNodes(v.Stmts)
+	io.WriteString(p.w, "\n")
+}
 
 func (p *Printer) printNodeIdentifier(n node.Node) {
 	v := n.(*node.Identifier).Value

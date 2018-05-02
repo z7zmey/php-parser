@@ -15,7 +15,7 @@ func TestMagicConstant(t *testing.T) {
 	// TODO: test all magic constants
 	src := `<? __DIR__;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.MagicConstant{Value: "__DIR__"},

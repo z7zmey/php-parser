@@ -14,7 +14,7 @@ import (
 func TestDoubleQuotedScalarString(t *testing.T) {
 	src := `<? "test";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\"test\""},
@@ -35,7 +35,7 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 	src := `<? "\$test";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\"\\$test\""},
@@ -59,7 +59,7 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 	test
 	";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "\"\n\ttest\n\t\""},
@@ -81,7 +81,7 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 func TestSingleQuotedScalarString(t *testing.T) {
 	src := `<? '$test';`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "'$test'"},
@@ -105,7 +105,7 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 	$test
 	';`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.String{Value: "'\n\t$test\n\t'"},
