@@ -26,7 +26,6 @@ import (
     list []node.Node
     foreachVariable foreachVariable
     str string
-    altSyntaxNode altSyntaxNode
 }
 
 %type <token> $unk
@@ -266,6 +265,7 @@ import (
 %type <node> trait_adaptations
 %type <node> switch_case_list
 %type <node> method_body
+%type <node> foreach_statement for_statement while_statement
 
 %type <node> member_modifier
 %type <node> use_type
@@ -283,8 +283,6 @@ import (
 %type <list> non_empty_member_modifiers name_list class_modifiers
 
 %type <str> backup_doc_comment
-
-%type <altSyntaxNode> while_statement for_statement foreach_statement
 
 %%
 
@@ -775,14 +773,17 @@ statement:
             { $$ = $1; }
     |   T_WHILE '(' expr ')' while_statement
             {
-                if ($5.isAlt) {
-                    $$ = stmt.NewAltWhile($3, $5.node)
-                } else {
-                    $$ = stmt.NewWhile($3, $5.node)
+                switch n := $5.(type) {
+                case *stmt.While :
+                    n.Cond = $3
+                case *stmt.AltWhile :
+                    n.Cond = $3
                 }
 
+                $$ = $5
+
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5.node))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.WhileToken)
@@ -805,14 +806,21 @@ statement:
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
-                if ($9.isAlt) {
-                    $$ = stmt.NewAltFor($3, $5, $7, $9.node)
-                } else {
-                    $$ = stmt.NewFor($3, $5, $7, $9.node)
+                switch n := $9.(type) {
+                case *stmt.For :
+                    n.Init = $3
+                    n.Cond = $5
+                    n.Loop = $7
+                case *stmt.AltFor :
+                    n.Init = $3
+                    n.Cond = $5
+                    n.Loop = $7
                 }
 
+                $$ = $9
+
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9.node))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForToken)
@@ -946,14 +954,21 @@ statement:
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
-                if ($7.isAlt) {
-                    $$ = stmt.NewAltForeach($3, nil, $5.node, $7.node, $5.byRef)
-                } else {
-                    $$ = stmt.NewForeach($3, nil, $5.node, $7.node, $5.byRef)
+                switch n := $7.(type) {
+                case *stmt.Foreach :
+                    n.Expr = $3
+                    n.ByRef = $5.byRef
+                    n.Variable = $5.node
+                case *stmt.AltForeach :
+                    n.Expr = $3
+                    n.ByRef = $5.byRef
+                    n.Variable = $5.node
                 }
 
+                $$ = $7
+
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7.node))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
@@ -963,14 +978,23 @@ statement:
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
-                if ($9.isAlt) {
-                    $$ = stmt.NewAltForeach($3, $5, $7.node, $9.node, $7.byRef)
-                } else {
-                    $$ = stmt.NewForeach($3, $5, $7.node, $9.node, $7.byRef)
+                switch n := $9.(type) {
+                case *stmt.Foreach :
+                    n.Expr = $3
+                    n.Key = $5
+                    n.ByRef = $7.byRef
+                    n.Variable = $7.node
+                case *stmt.AltForeach :
+                    n.Expr = $3
+                    n.Key = $5
+                    n.ByRef = $7.byRef
+                    n.Variable = $7.node
                 }
 
+                $$ = $9
+
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9.node))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
@@ -1354,35 +1378,49 @@ foreach_variable:
 
 for_statement:
         statement
-            { $$ = altSyntaxNode{$1, false} }
-    |   ':' inner_statement_list T_ENDFOR ';'
             {
-                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                $$ = stmt.NewFor(nil, nil, nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+            }
+    |   ':' inner_statement_list T_ENDFOR ';'
+            {
+                stmtList := stmt.NewStmtList($2)
+                $$ = stmt.NewAltFor(nil, nil, nil, stmtList)
+
+                // save position
+                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndforToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.EndforToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
 ;
 
 foreach_statement:
         statement
-            { $$ = altSyntaxNode{$1, false} }
-    |   ':' inner_statement_list T_ENDFOREACH ';'
             {
-                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                $$ = stmt.NewForeach(nil, nil, nil, $1, false)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+            }
+    |   ':' inner_statement_list T_ENDFOREACH ';'
+            {
+                stmtList := stmt.NewStmtList($2)
+                $$ = stmt.NewAltForeach(nil, nil, nil, stmtList, false)
+
+                // save position
+                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndforeachToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.EndforeachToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
 ;
 
@@ -1501,18 +1539,25 @@ case_separator:
 
 while_statement:
         statement
-            { $$ = altSyntaxNode{$1, false} }
-    |   ':' inner_statement_list T_ENDWHILE ';'
             {
-                $$ = altSyntaxNode{stmt.NewStmtList($2), true}
+                $$ = stmt.NewWhile(nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+            }
+    |   ':' inner_statement_list T_ENDWHILE ';'
+            {
+                stmtList := stmt.NewStmtList($2)
+                $$ = stmt.NewAltWhile(nil, stmtList)
+
+                // save position
+                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndwhileToken)
-                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.EndwhileToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
 ;
 
@@ -4248,9 +4293,4 @@ type foreachVariable struct {
 type boolWithToken struct {
 	value bool
 	token *scanner.Token
-}
-
-type altSyntaxNode struct {
-	node  node.Node
-	isAlt bool
 }
