@@ -21,7 +21,6 @@ import (
 %union{
     node node.Node
     token *scanner.Token
-    boolWithToken boolWithToken
     list []node.Node
     foreachVariable foreachVariable
     simpleIndirectReference simpleIndirectReference
@@ -261,7 +260,7 @@ import (
 
 %type <simpleIndirectReference> simple_indirect_reference
 %type <foreachVariable> foreach_variable foreach_optional_arg
-%type <boolWithToken> is_reference is_variadic
+%type <token> is_reference is_variadic
 
 %%
 
@@ -952,11 +951,11 @@ additional_catch:
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).comments.AddComments(identifier, $4.Comments())
-                
+
                 variable := expr.NewVariable(identifier)
                 yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).comments.AddComments(variable, $4.Comments())
-                
+
                 $$ = stmt.NewCatch([]node.Node{$3}, variable, $7)
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
@@ -987,16 +986,16 @@ class_declaration_statement:
 
 is_reference:
         /* empty */
-            { $$ = boolWithToken{false, nil} }
+            { $$ = nil }
     |   '&'
-            { $$ = boolWithToken{true, $1} }
+            { $$ = $1 }
 ;
 
 is_variadic:
         /* empty */
-            { $$ = boolWithToken{false, nil} }
+            { $$ = nil }
     |   T_ELLIPSIS
-            { $$ = boolWithToken{true, $1} }
+            { $$ = $1 }
 ;
 
 unticked_function_declaration_statement:
@@ -1006,7 +1005,7 @@ unticked_function_declaration_statement:
                 yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
                 yylex.(*Parser).comments.AddComments(name, $3.Comments())
 
-                $$ = stmt.NewFunction(name, $2.value, $5, nil, $8, "")
+                $$ = stmt.NewFunction(name, $2 != nil, $5, nil, $8, "")
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
@@ -1039,7 +1038,7 @@ unticked_class_declaration_statement:
                 name := node.NewIdentifier($2.Value)
                 yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 yylex.(*Parser).comments.AddComments(name, $2.Comments())
-                
+
                 $$ = stmt.NewInterface(name, $3, $5, "")
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
@@ -1374,17 +1373,17 @@ parameter:
                 yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).comments.AddComments($$, $4.Comments())
                 
-                $$ = node.NewParameter($1, variable, nil, $2.value, $3.value)
+                $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
                 
                 if $1 != nil {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                     yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
-                } else if $2.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($2.token, $4))
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
-                } else if $3.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($3.token, $4))
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                } else if $2 != nil {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($2, $4))
+                    yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                } else if $3 != nil {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
+                    yylex.(*Parser).comments.AddComments($$, $3.Comments())
                 } else {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                     yylex.(*Parser).comments.AddComments($$, $4.Comments())
@@ -1400,17 +1399,17 @@ parameter:
                 yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).comments.AddComments(variable, $4.Comments())
 
-                $$ = node.NewParameter($1, variable, $6, $2.value, $3.value)
+                $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
 
                 if $1 != nil {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
                     yylex.(*Parser).comments.AddComments($$, yylex.(*Parser).comments[$1])
-                } else if $2.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2.token, $6))
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
-                } else if $3.value == true {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3.token, $6))
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                } else if $2 != nil {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
+                    yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                } else if $3 != nil {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $6))
+                    yylex.(*Parser).comments.AddComments($$, $3.Comments())
                 } else {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
                     yylex.(*Parser).comments.AddComments($$, $4.Comments())
@@ -1632,7 +1631,7 @@ class_statement:
                 yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 yylex.(*Parser).comments.AddComments(name, $4.Comments())
                 
-                $$ = stmt.NewClassMethod(name, $1, $3.value, $6, nil, $8, "")
+                $$ = stmt.NewClassMethod(name, $1, $3 != nil, $6, nil, $8, "")
 
                 if $1 == nil {
                     yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $8))
@@ -1778,13 +1777,13 @@ method_body:
         ';' /* abstract method */ 
             {
                 $$ = stmt.NewNop()
-                
+
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
             }
     |   '{' inner_statement_list '}'
             {
                 $$ = stmt.NewStmtList($2)
-                
+
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
             }
 ;
@@ -2482,14 +2481,14 @@ expr_without_variable:
             }
     |   function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($4, $6, nil, $8, false, $2.value, "")
+                $$ = expr.NewClosure($4, $6, nil, $8, false, $2 != nil, "")
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
                 
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
             }
     |   T_STATIC function is_reference '(' parameter_list ')' lexical_vars '{' inner_statement_list '}'
             {
-                $$ = expr.NewClosure($5, $7, nil, $9, true, $3.value, "")
+                $$ = expr.NewClosure($5, $7, nil, $9, true, $3 != nil, "")
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $10))
                 
                 yylex.(*Parser).comments.AddComments($$, $1.Comments())
@@ -3996,11 +3995,6 @@ class_name_scalar:
 type foreachVariable struct {
 	node  node.Node
 	byRef bool
-}
-
-type boolWithToken struct {
-	value bool
-	token *scanner.Token
 }
 
 type simpleIndirectReference struct {
