@@ -35,9 +35,11 @@ func TestPrintFile(t *testing.T) {
 						&name.NamePart{Value: "Bar"},
 					},
 				},
-				Extends: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "Baz"},
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{
+						Parts: []node.Node{
+							&name.NamePart{Value: "Baz"},
+						},
 					},
 				},
 				Stmts: []node.Node{
@@ -2482,10 +2484,14 @@ func TestPrintStmtClass(t *testing.T) {
 			&stmt.Class{
 				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
 				ClassName: &node.Identifier{Value: "Foo"},
-				Extends:   &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				Implements: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+					},
 				},
 				Stmts: []node.Node{
 					&stmt.ClassConstList{
@@ -2533,10 +2539,14 @@ func TestPrintStmtAnonymousClass(t *testing.T) {
 						},
 					},
 				},
-				Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				Implements: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+					},
 				},
 				Stmts: []node.Node{
 					&stmt.ClassConstList{
@@ -3382,9 +3392,11 @@ func TestPrintInterface(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.Interface{
 				InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Extends: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+				Extends: &stmt.InterfaceExtends{
+					InterfaceNames: []node.Node{
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+					},
 				},
 				Stmts: []node.Node{
 					&stmt.ClassMethod{

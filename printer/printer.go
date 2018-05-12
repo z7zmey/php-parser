@@ -1553,12 +1553,12 @@ func (p *Printer) printStmtClass(n node.Node) {
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.Print(nn.Extends)
+		p.Print(nn.Extends.ClassName)
 	}
 
 	if nn.Implements != nil {
 		io.WriteString(p.w, " implements ")
-		p.joinPrint(", ", nn.Implements)
+		p.joinPrint(", ", nn.Implements.InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -1910,7 +1910,7 @@ func (p *Printer) printStmtInterface(n node.Node) {
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.joinPrint(", ", nn.Extends)
+		p.joinPrint(", ", nn.Extends.InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")

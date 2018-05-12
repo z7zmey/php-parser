@@ -72,9 +72,11 @@ func TestClassExtends(t *testing.T) {
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Extends: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "bar"},
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{
+						Parts: []node.Node{
+							&name.NamePart{Value: "bar"},
+						},
 					},
 				},
 				Stmts: []node.Node{},
@@ -103,10 +105,12 @@ func TestClassImplement(t *testing.T) {
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Implements: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "bar"},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
 						},
 					},
 				},
@@ -136,15 +140,17 @@ func TestClassImplements(t *testing.T) {
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Implements: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "bar"},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
 						},
-					},
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "baz"},
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "baz"},
+							},
 						},
 					},
 				},
@@ -173,20 +179,24 @@ func TestAnonimousClass(t *testing.T) {
 				Expr: &expr.New{
 					Class: &stmt.Class{
 						ArgumentList: &node.ArgumentList{},
-						Extends: &name.Name{
-							Parts: []node.Node{
-								&name.NamePart{Value: "foo"},
-							},
-						},
-						Implements: []node.Node{
-							&name.Name{
+						Extends: &stmt.ClassExtends{
+							ClassName: &name.Name{
 								Parts: []node.Node{
-									&name.NamePart{Value: "bar"},
+									&name.NamePart{Value: "foo"},
 								},
 							},
-							&name.Name{
-								Parts: []node.Node{
-									&name.NamePart{Value: "baz"},
+						},
+						Implements: &stmt.ClassImplements{
+							InterfaceNames: []node.Node{
+								&name.Name{
+									Parts: []node.Node{
+										&name.NamePart{Value: "bar"},
+									},
+								},
+								&name.Name{
+									Parts: []node.Node{
+										&name.NamePart{Value: "baz"},
+									},
 								},
 							},
 						},

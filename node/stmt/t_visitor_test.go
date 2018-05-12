@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/node/name"
+
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/stmt"
 
@@ -93,8 +95,8 @@ var nodesToTest = []struct {
 			ClassName:     &node.Identifier{},
 			Modifiers:     []node.Node{&stmt.Expression{}},
 			ArgumentList:  &node.ArgumentList{},
-			Extends:       &node.Identifier{},
-			Implements:    []node.Node{&stmt.Expression{}},
+			Extends:       &stmt.ClassExtends{},
+			Implements:    &stmt.ClassImplements{},
 			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"ClassName", "Modifiers", "ArgumentList", "Extends", "Implements", "Stmts"},
@@ -293,7 +295,7 @@ var nodesToTest = []struct {
 		&stmt.Interface{
 			PhpDocComment: "/** */",
 			InterfaceName: &node.Identifier{},
-			Extends:       []node.Node{&stmt.Expression{}},
+			Extends:       &stmt.InterfaceExtends{},
 			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"InterfaceName", "Extends", "Stmts"},
@@ -491,6 +493,31 @@ var nodesToTest = []struct {
 			Adaptations: []node.Node{&stmt.TraitUsePrecedence{}},
 		},
 		[]string{"Adaptations"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.ClassExtends{
+			ClassName: &name.Name{},
+		},
+		[]string{"ClassName"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.ClassImplements{
+			InterfaceNames: []node.Node{
+				&name.Name{},
+			},
+		},
+		[]string{"InterfaceNames"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.InterfaceExtends{
+			InterfaceNames: []node.Node{
+				&name.Name{},
+			},
+		},
+		[]string{"InterfaceNames"},
 		map[string]interface{}{},
 	},
 }

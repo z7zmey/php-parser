@@ -852,20 +852,8 @@ func TestPhp5(t *testing.T) {
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Extends: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "bar"},
-					},
-				},
-				Stmts: []node.Node{},
-			},
-			&stmt.Class{
-				ClassName: &node.Identifier{Value: "foo"},
-				Modifiers: []node.Node{
-					&node.Identifier{Value: "final"},
-				},
-				Implements: []node.Node{
-					&name.Name{
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{
 						Parts: []node.Node{
 							&name.NamePart{Value: "bar"},
 						},
@@ -878,15 +866,33 @@ func TestPhp5(t *testing.T) {
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Implements: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "bar"},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
 						},
 					},
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "baz"},
+				},
+				Stmts: []node.Node{},
+			},
+			&stmt.Class{
+				ClassName: &node.Identifier{Value: "foo"},
+				Modifiers: []node.Node{
+					&node.Identifier{Value: "final"},
+				},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
+						},
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "baz"},
+							},
 						},
 					},
 				},
@@ -1236,10 +1242,12 @@ func TestPhp5(t *testing.T) {
 			&stmt.Interface{
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{Value: "Foo"},
-				Extends: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Bar"},
+				Extends: &stmt.InterfaceExtends{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
 						},
 					},
 				},
@@ -1248,15 +1256,17 @@ func TestPhp5(t *testing.T) {
 			&stmt.Interface{
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{Value: "Foo"},
-				Extends: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Bar"},
+				Extends: &stmt.InterfaceExtends{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
 						},
-					},
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Baz"},
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Baz"},
+							},
 						},
 					},
 				},

@@ -98,7 +98,9 @@ nodes := &stmt.StmtList{
 		&stmt.Class{
 			Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
 			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-			Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			Extends: &stmt.ClassExtends{
+                ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+            },
 			Stmts: []node.Node{
 				&stmt.ClassMethod{
 					Modifiers:  []node.Node{&node.Identifier{Value: "public"}},

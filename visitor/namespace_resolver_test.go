@@ -411,9 +411,13 @@ func TestResolveClassName(t *testing.T) {
 	class := &stmt.Class{
 		PhpDocComment: "",
 		ClassName:     &node.Identifier{Value: "A"},
-		Extends:       nameAB,
-		Implements: []node.Node{
-			nameBC,
+		Extends: &stmt.ClassExtends{
+			ClassName: nameAB,
+		},
+		Implements: &stmt.ClassImplements{
+			InterfaceNames: []node.Node{
+				nameBC,
+			},
 		},
 	}
 
@@ -442,9 +446,11 @@ func TestResolveInterfaceName(t *testing.T) {
 	interfaceNode := &stmt.Interface{
 		PhpDocComment: "",
 		InterfaceName: &node.Identifier{Value: "A"},
-		Extends: []node.Node{
-			nameAB,
-			nameBC,
+		Extends: &stmt.InterfaceExtends{
+			InterfaceNames: []node.Node{
+				nameAB,
+				nameBC,
+			},
 		},
 	}
 
