@@ -1155,35 +1155,32 @@ func TestPhp7(t *testing.T) {
 				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
-				ByRef:    true,
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
-				Stmt:     &stmt.StmtList{Stmts: []node.Node{}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:  &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Variable: &expr.Reference{
+					Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+				},
+				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
-				ByRef: false,
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:  &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.List{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+							Val: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 						},
 					},
 				},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
 			},
 			&stmt.Foreach{
-				ByRef: false,
-				Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Key:  &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 				Variable: &expr.ShortList{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+							Val: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
 						},
 					},
 				},
@@ -2062,8 +2059,7 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.Array{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Val:   &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 					},
 				},
@@ -2072,13 +2068,11 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.Array{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Key:   &scalar.Lnumber{Value: "1"},
-							Val:   &scalar.Lnumber{Value: "1"},
+							Key: &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 						&expr.ArrayItem{
-							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
 					},
 				},
@@ -2147,12 +2141,10 @@ func TestPhp7(t *testing.T) {
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
-							ByRef:    false,
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						},
 						&expr.ClosureUse{
-							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -2339,8 +2331,7 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
@@ -2352,7 +2343,6 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.ArrayDimFetch{
 									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
@@ -2367,12 +2357,10 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.List{
 									Items: []node.Node{
 										&expr.ArrayItem{
-											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+											Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
@@ -2478,8 +2466,7 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.ShortArray{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Val:   &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 					},
 				},
@@ -2488,13 +2475,11 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.ShortArray{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Key:   &scalar.Lnumber{Value: "1"},
-							Val:   &scalar.Lnumber{Value: "1"},
+							Key: &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 						&expr.ArrayItem{
-							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
 					},
 				},
@@ -2504,8 +2489,7 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
@@ -2517,7 +2501,6 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.ArrayDimFetch{
 									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
@@ -2532,12 +2515,10 @@ func TestPhp7(t *testing.T) {
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.List{
 									Items: []node.Node{
 										&expr.ArrayItem{
-											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+											Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},
@@ -3133,8 +3114,7 @@ func TestPhp7(t *testing.T) {
 						Variable: &expr.ShortArray{
 							Items: []node.Node{
 								&expr.ArrayItem{
-									ByRef: false,
-									Val:   &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+									Val: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 								},
 							},
 						},
@@ -3169,8 +3149,7 @@ func TestPhp7(t *testing.T) {
 						Variable: &expr.ShortArray{
 							Items: []node.Node{
 								&expr.ArrayItem{
-									ByRef: false,
-									Val:   &scalar.Lnumber{Value: "1"},
+									Val: &scalar.Lnumber{Value: "1"},
 								},
 							},
 						},
@@ -3227,18 +3206,15 @@ func TestPhp7(t *testing.T) {
 				Expr: &expr.ShortArray{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: true,
-							Key:   &scalar.Lnumber{Value: "1"},
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+							Key: &scalar.Lnumber{Value: "1"},
+							Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 						},
 						&expr.ArrayItem{
-							ByRef: false,
-							Key:   &scalar.Lnumber{Value: "2"},
+							Key: &scalar.Lnumber{Value: "2"},
 							Val: &expr.List{
 								Items: []node.Node{
 									&expr.ArrayItem{
-										ByRef: false,
-										Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+										Val: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 									},
 								},
 							},

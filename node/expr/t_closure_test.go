@@ -66,12 +66,10 @@ func TestClosureUse(t *testing.T) {
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
-							ByRef:    false,
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 						},
 						&expr.ClosureUse{
-							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -115,11 +113,9 @@ func TestClosureUse2(t *testing.T) {
 					},
 					Uses: []node.Node{
 						&expr.ClosureUse{
-							ByRef:    true,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
 						},
 						&expr.ClosureUse{
-							ByRef:    false,
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},

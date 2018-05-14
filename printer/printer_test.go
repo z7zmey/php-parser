@@ -1245,9 +1245,8 @@ func TestPrintExprArrayItemWithKey(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.ArrayItem{
-		ByRef: false,
-		Key:   &scalar.String{Value: "'Hello'"},
-		Val:   &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+		Key: &scalar.String{Value: "'Hello'"},
+		Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 	})
 
 	expected := `'Hello' => $world`
@@ -1263,8 +1262,7 @@ func TestPrintExprArrayItem(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.ArrayItem{
-		ByRef: true,
-		Val:   &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+		Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "world"}}},
 	})
 
 	expected := `&$world`
@@ -1282,18 +1280,15 @@ func TestPrintExprArray(t *testing.T) {
 	p.Print(&expr.Array{
 		Items: []node.Node{
 			&expr.ArrayItem{
-				ByRef: false,
-				Key:   &scalar.String{Value: "'Hello'"},
-				Val:   &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+				Key: &scalar.String{Value: "'Hello'"},
+				Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 			},
 			&expr.ArrayItem{
-				ByRef: true,
-				Key:   &scalar.Lnumber{Value: "2"},
-				Val:   &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Key: &scalar.Lnumber{Value: "2"},
+				Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
 			},
 			&expr.ArrayItem{
-				ByRef: false,
-				Val:   &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Val: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 			},
 		},
 	})
@@ -1376,8 +1371,7 @@ func TestPrintExprClosureUse(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.ClosureUse{
-		ByRef:    true,
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
 	})
 
 	expected := `&$var`
@@ -1406,11 +1400,9 @@ func TestPrintExprClosure(t *testing.T) {
 				},
 				Uses: []node.Node{
 					&expr.ClosureUse{
-						ByRef:    true,
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 					},
 					&expr.ClosureUse{
-						ByRef:    false,
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
@@ -1795,6 +1787,22 @@ func TestPrintPropertyFetch(t *testing.T) {
 	}
 }
 
+func TestPrintExprReference(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.Print(&expr.Reference{
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+	})
+
+	expected := `&$foo`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrintRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -1854,9 +1862,8 @@ func TestPrintExprShortArray(t *testing.T) {
 				Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
 			},
 			&expr.ArrayItem{
-				ByRef: true,
-				Key:   &scalar.Lnumber{Value: "2"},
-				Val:   &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Key: &scalar.Lnumber{Value: "2"},
+				Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
 			},
 			&expr.ArrayItem{
 				Val: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
@@ -2200,10 +2207,9 @@ func TestPrintAltForeach(t *testing.T) {
 	p.Print(&stmt.Namespace{
 		Stmts: []node.Node{
 			&stmt.AltForeach{
-				ByRef:    true,
 				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 				Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}},
+				Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}}},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
 						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
@@ -3141,10 +3147,9 @@ func TestPrintStmtForeachNop(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&stmt.Foreach{
-		ByRef:    true,
 		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}}},
 		Stmt:     &stmt.Nop{},
 	})
 

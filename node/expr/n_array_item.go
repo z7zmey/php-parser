@@ -7,15 +7,13 @@ import (
 
 // ArrayItem node
 type ArrayItem struct {
-	ByRef bool
-	Key   node.Node
-	Val   node.Node
+	Key node.Node
+	Val node.Node
 }
 
 // NewArrayItem node constructor
-func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
+func NewArrayItem(Key node.Node, Val node.Node) *ArrayItem {
 	return &ArrayItem{
-		ByRef,
 		Key,
 		Val,
 	}
@@ -23,9 +21,7 @@ func NewArrayItem(Key node.Node, Val node.Node, ByRef bool) *ArrayItem {
 
 // Attributes returns node attributes as map
 func (n *ArrayItem) Attributes() map[string]interface{} {
-	return map[string]interface{}{
-		"ByRef": n.ByRef,
-	}
+	return nil
 }
 
 // Walk traverses nodes

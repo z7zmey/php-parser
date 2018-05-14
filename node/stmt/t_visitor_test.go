@@ -224,25 +224,23 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Foreach{
-			ByRef:    true,
 			Expr:     &stmt.Expression{},
 			Key:      &expr.Variable{},
 			Variable: &expr.Variable{},
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{"ByRef": true},
+		map[string]interface{}{},
 	},
 	{
 		&stmt.AltForeach{
-			ByRef:    true,
 			Expr:     &stmt.Expression{},
 			Key:      &expr.Variable{},
 			Variable: &expr.Variable{},
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{"ByRef": true},
+		map[string]interface{}{},
 	},
 	{
 		&stmt.Function{

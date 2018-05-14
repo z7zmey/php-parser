@@ -23,7 +23,6 @@ import (
     node             node.Node
     token            *scanner.Token
     list             []node.Node
-    foreachVariable  foreachVariable
     str              string
 
     ClassExtends     *stmt.ClassExtends
@@ -275,7 +274,7 @@ import (
 
 %type <node> member_modifier
 %type <node> use_type
-%type <foreachVariable> foreach_variable
+%type <node> foreach_variable
 
 
 %type <list> encaps_list backticks_expr namespace_name catch_name_list catch_list class_const_list
@@ -963,12 +962,10 @@ statement:
                 switch n := $7.(type) {
                 case *stmt.Foreach :
                     n.Expr = $3
-                    n.ByRef = $5.byRef
-                    n.Variable = $5.node
+                    n.Variable = $5
                 case *stmt.AltForeach :
                     n.Expr = $3
-                    n.ByRef = $5.byRef
-                    n.Variable = $5.node
+                    n.Variable = $5
                 }
 
                 $$ = $7
@@ -988,13 +985,11 @@ statement:
                 case *stmt.Foreach :
                     n.Expr = $3
                     n.Key = $5
-                    n.ByRef = $7.byRef
-                    n.Variable = $7.node
+                    n.Variable = $7
                 case *stmt.AltForeach :
                     n.Expr = $3
                     n.Key = $5
-                    n.ByRef = $7.byRef
-                    n.Variable = $7.node
+                    n.Variable = $7
                 }
 
                 $$ = $9
@@ -1339,41 +1334,41 @@ implements_list:
 
 foreach_variable:
         variable
-            { $$ = foreachVariable{$1, false} }
+            {
+                $$ = $1
+            }
     |   '&' variable
             {
-                $$ = foreachVariable{$2, true}
+                $$ = expr.NewReference($2)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($2, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken($2, $1, comment.AmpersandToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                list := expr.NewList($3)
-                $$ = foreachVariable{list, false}
+                $$ = expr.NewList($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
-                yylex.(*Parser).comments.AddFromToken(list, $2, comment.OpenParenthesisToken)
-                yylex.(*Parser).comments.AddFromToken(list, $4, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ListToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   '[' array_pair_list ']'
             {
-                list := expr.NewShortList($2)
-                $$ = foreachVariable{list, false}
+                $$ = expr.NewShortList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken(list, $1, comment.OpenSquareBracket)
-                yylex.(*Parser).comments.AddFromToken(list, $3, comment.CloseSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseSquareBracket)
             }
 ;
 
@@ -1404,7 +1399,7 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = stmt.NewForeach(nil, nil, nil, $1, false)
+                $$ = stmt.NewForeach(nil, nil, nil, $1)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
@@ -1412,7 +1407,7 @@ foreach_statement:
     |   ':' inner_statement_list T_ENDFOREACH ';'
             {
                 stmtList := stmt.NewStmtList($2)
-                $$ = stmt.NewAltForeach(nil, nil, nil, stmtList, false)
+                $$ = stmt.NewAltForeach(nil, nil, nil, stmtList)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
@@ -3273,7 +3268,7 @@ lexical_var:
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
                 variable := expr.NewVariable(identifier)
-                $$ = expr.NewClosureUse(variable, false)
+                $$ = expr.NewClosureUse(variable)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
@@ -3287,7 +3282,8 @@ lexical_var:
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($2.Value, "$"))
                 variable := expr.NewVariable(identifier)
-                $$ = expr.NewClosureUse(variable, true)
+                reference := expr.NewReference(variable)
+                $$ = expr.NewClosureUse(reference)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
@@ -3296,7 +3292,7 @@ lexical_var:
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
-                yylex.(*Parser).comments.AddFromToken(variable, $2, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken(reference, $2, comment.VariableToken)
             }
 ;
 
@@ -3915,7 +3911,7 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = expr.NewArrayItem($1, $3, false)
+                $$ = expr.NewArrayItem($1, $3)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
@@ -3925,37 +3921,39 @@ array_pair:
             }
     |   expr
             {
-                $$ = expr.NewArrayItem(nil, $1, false)
+                $$ = expr.NewArrayItem(nil, $1)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
-                $$ = expr.NewArrayItem($1, $4, true)
+                reference := expr.NewReference($4)
+                $$ = expr.NewArrayItem($1, reference)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
-                yylex.(*Parser).comments.AddFromToken($$, $3, comment.AmpersandToken)
+                yylex.(*Parser).comments.AddFromToken(reference, $3, comment.AmpersandToken)
             }
     |   '&' variable
             {
-                $$ = expr.NewArrayItem(nil, $2, true)
+                reference := expr.NewReference($2)
+                $$ = expr.NewArrayItem(nil, reference)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
+                yylex.(*Parser).comments.AddFromToken(reference, $1, comment.AmpersandToken)
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
                 // TODO: Cannot use list() as standalone expression
                 list := expr.NewList($5)
-                $$ = expr.NewArrayItem($1, list, false)
+                $$ = expr.NewArrayItem($1, list)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($3, $6))
@@ -3971,7 +3969,7 @@ array_pair:
             {
                 // TODO: Cannot use list() as standalone expression
                 list := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, list, false)
+                $$ = expr.NewArrayItem(nil, list)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
@@ -4279,8 +4277,3 @@ isset_variable:
 /////////////////////////////////////////////////////////////////////////
 
 %%
-
-type foreachVariable struct {
-	node  node.Node
-	byRef bool
-}
