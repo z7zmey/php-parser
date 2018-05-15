@@ -462,7 +462,7 @@ func Rune2Class(r rune) int {
 
 // NewLexer the Lexer constructor
 func NewLexer(src io.Reader, fName string) *Lexer {
-	file := token.NewFileSet().AddFile(fName, -1, 1<<31-1)
+	file := token.NewFileSet().AddFile(fName, -1, 1<<31-3)
 	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(Rune2Class))
 	if err != nil {
 		panic(err)
