@@ -1,9 +1,12 @@
 <!--
   Title: PHP Parser
   Description: A Parser for PHP written in Go.
-  Author: Slizov Vadim
-  Keywords: go golang php php-parser ast
+  Author: Slizov Vadym
+  Keywords: php parser go golang ast
   -->
+
+PHP Parser written in Go
+========================
 
 <img src="./parser.jpg" alt="PHP Parser written in Go" width="980"/>
 
@@ -14,26 +17,32 @@
 
 #### Try it online: [demo](https://php-parser.com)
 
-## Features:
+Features:
+---------
+
 - Fully support PHP 5 and PHP 7 syntax
 - Abstract syntax tree (AST) representation
 - Traversing AST
 - Namespace resolver
 - Able to parse syntax-invalid PHP files
 
-## Roadmap
+Roadmap
+-------
 
+- Saving comments and empty lines
 - Control Flow Graph (CFG)
 - PhpDocComment parser
 - Stabilize api
 
-## Install
+Install
+-------
 
 ```
 go get github.com/z7zmey/php-parser
 ```
 
-## CLI
+CLI
+---
 
 ```
 php-parser [-php5] <path> ...
@@ -41,7 +50,9 @@ php-parser [-php5] <path> ...
 
 Dump AST to stdout.
 
-## Example
+Example
+-------
+
 ```Golang
 package main
 
@@ -76,32 +87,51 @@ func main() {
 }
 ```
 
-## Namespace resolver
+Namespace resolver
+------------------
 
 Namespace resolver is a visitor that resolves nodes fully qualified name and saves into `map[node.Node]string` structure
 
 - For `Class`, `Interface`, `Trait`, `Function`, `Constant` nodes it saves name with current namespace.
 - For `Name`, `Relative`, `FullyQualified` nodes it resolves `use` aliases and saves a fully qualified name.
 
-## Parsing syntax-invalid PHP files
+Parsing syntax-invalid PHP files
+--------------------------------
 
 If we try to parse `$a$b;` then the parser triggers error 'syntax error: unexpected T_VARIABLE'. Token `$b` is unexpected, but parser recovers parsing process and returns `$b;` statement to AST, because it is syntactically correct.
 
-## Pretty printer
+Pretty printer
+--------------
 
 ```Golang
 nodes := &stmt.StmtList{
 	Stmts: []node.Node{
 		&stmt.Namespace{
-			NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			NamespaceName: &name.Name{
+				Parts: []node.Node{
+					&name.NamePart{Value: "Foo"},
+				},
+			},
 		},
 		&stmt.Class{
-			Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-			Extends: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			Modifiers: []node.Node{
+				&node.Identifier{Value: "abstract"},
+			},
+			ClassName: &name.Name{
+				Parts: []node.Node{
+					&name.NamePart{Value: "Bar"},
+				},
+			},
+			Extends: &name.Name{
+				Parts: []node.Node{
+					&name.NamePart{Value: "Baz"},
+				},
+			},
 			Stmts: []node.Node{
 				&stmt.ClassMethod{
-					Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+					Modifiers: []node.Node{
+						&node.Identifier{Value: "public"},
+					},
 					MethodName: &node.Identifier{Value: "greet"},
 					Stmts: []node.Node{
 						&stmt.Echo{
@@ -121,7 +151,8 @@ p := printer.NewPrinter(file, "    ")
 p.PrintFile(nodes)
 ```
 
-Output:
+It prints to stdout:
+
 ```PHP
 <?php
 namespace Foo;
