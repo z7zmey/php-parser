@@ -440,6 +440,7 @@ type Lexer struct {
 	StateStack    []int
 	PhpDocComment string
 	Comments      []comment.Comment
+	heredocLabel  []lex.Char
 }
 
 // Rune2Class returns the rune integer id
@@ -467,7 +468,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &Lexer{lx, []int{0}, "", nil}
+	return &Lexer{lx, []int{0}, "", nil, nil}
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {
