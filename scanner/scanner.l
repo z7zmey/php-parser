@@ -28,8 +28,6 @@ const (
 	BACKQUOTE
 )
 
-var heredocLabel []lex.Char
-
 func isValidFirstVarNameRune(r rune) bool {
     return r >= 'A' && r <= 'Z' || r == '_' || r >= 'a' && r <= 'z' || r >= '\u007f' && r <= 'ÿ'
 }
@@ -381,12 +379,12 @@ NEW_LINE        (\r|\n|\r\n)
             l.begin(HEREDOC)
     }
 
-    heredocLabel = make([]lex.Char, lblLast - lblFirst + 1)
-    copy(heredocLabel, tb[lblFirst:lblLast+1])
+    l.heredocLabel = make([]lex.Char, lblLast - lblFirst + 1)
+    copy(l.heredocLabel, tb[lblFirst:lblLast+1])
     
-    ungetCnt := len(heredocLabel)
+    ungetCnt := len(l.heredocLabel)
     searchLabelAhead := []lex.Char{}
-    for i := 0; i < len(heredocLabel); i++ {
+    for i := 0; i < len(l.heredocLabel); i++ {
         if c == -1 {
             break;
         }
@@ -394,7 +392,7 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    if bytes.Equal(l.charsToBytes(heredocLabel), l.charsToBytes(searchLabelAhead)) && ';' == rune(c) {
+    if bytes.Equal(l.charsToBytes(l.heredocLabel), l.charsToBytes(searchLabelAhead)) && ';' == rune(c) {
         ungetCnt++
         c = l.Next()
         if '\n' == rune(c) || '\r' == rune(c) {
@@ -417,15 +415,15 @@ NEW_LINE        (\r|\n|\r\n)
         }
 
         if '\n' == rune(c) || '\r' == rune(c) {
-            if bytes.Equal(append(l.charsToBytes(heredocLabel), ';'), searchLabel) {
+            if bytes.Equal(append(l.charsToBytes(l.heredocLabel), ';'), searchLabel) {
                 l.begin(HEREDOC_END)
-                tb = l.ungetChars(len(heredocLabel)+1)
+                tb = l.ungetChars(len(l.heredocLabel)+1)
                 break;
             }
 
-            if bytes.Equal(l.charsToBytes(heredocLabel), searchLabel) {
+            if bytes.Equal(l.charsToBytes(l.heredocLabel), searchLabel) {
                 l.begin(HEREDOC_END)
-                tb = l.ungetChars(len(heredocLabel))
+                tb = l.ungetChars(len(l.heredocLabel))
                 break;
             }
             
@@ -597,16 +595,16 @@ NEW_LINE        (\r|\n|\r\n)
                 fallthrough
 
             case '\n':
-                if bytes.Equal(append(l.charsToBytes(heredocLabel), ';'), searchLabel) { 
+                if bytes.Equal(append(l.charsToBytes(l.heredocLabel), ';'), searchLabel) { 
                     l.begin(HEREDOC_END)
-                    tb = l.ungetChars(len(heredocLabel)+1+nls)
+                    tb = l.ungetChars(len(l.heredocLabel)+1+nls)
                     lval.Token(l.newToken(tb)); 
                     return T_ENCAPSED_AND_WHITESPACE
                 }
 
-                if bytes.Equal(l.charsToBytes(heredocLabel), searchLabel) { 
+                if bytes.Equal(l.charsToBytes(l.heredocLabel), searchLabel) { 
                     l.begin(HEREDOC_END)
-                    tb = l.ungetChars(len(heredocLabel)+nls)
+                    tb = l.ungetChars(len(l.heredocLabel)+nls)
                     lval.Token(l.newToken(tb)); 
                     return T_ENCAPSED_AND_WHITESPACE
                 }
