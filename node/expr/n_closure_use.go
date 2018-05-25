@@ -7,13 +7,13 @@ import (
 
 // ClosureUse node
 type ClosureUse struct {
-	Variable node.Node
+	Uses []node.Node
 }
 
 // NewClosureUse node constructor
-func NewClosureUse(Variable node.Node) *ClosureUse {
+func NewClosureUse(Uses []node.Node) *ClosureUse {
 	return &ClosureUse{
-		Variable,
+		Uses,
 	}
 }
 
@@ -29,9 +29,13 @@ func (n *ClosureUse) Walk(v walker.Visitor) {
 		return
 	}
 
-	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+	if n.Uses != nil {
+		vv := v.GetChildrenVisitor("Uses")
+		for _, nn := range n.Uses {
+			if nn != nil {
+				nn.Walk(vv)
+			}
+		}
 	}
 
 	v.LeaveNode(n)

@@ -24,7 +24,6 @@ func TestClosure(t *testing.T) {
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
-					Uses:          []node.Node{},
 					Stmts:         []node.Node{},
 				},
 			},
@@ -64,12 +63,10 @@ func TestClosureUse(t *testing.T) {
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
-					Uses: []node.Node{
-						&expr.ClosureUse{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-						},
-						&expr.ClosureUse{
-							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+					ClosureUse: &expr.ClosureUse{
+						Uses: []node.Node{
+							&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -111,12 +108,10 @@ func TestClosureUse2(t *testing.T) {
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
-					Uses: []node.Node{
-						&expr.ClosureUse{
-							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
-						},
-						&expr.ClosureUse{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+					ClosureUse: &expr.ClosureUse{
+						Uses: []node.Node{
+							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+							&expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -146,7 +141,6 @@ func TestClosureReturnType(t *testing.T) {
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
-					Uses:          []node.Node{},
 					ReturnType: &name.Name{
 						Parts: []node.Node{&name.NamePart{Value: "void"}},
 					},

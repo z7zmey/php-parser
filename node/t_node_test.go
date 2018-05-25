@@ -298,7 +298,6 @@ func TestPhp7ParameterNode(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Closure{
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},
@@ -306,7 +305,6 @@ func TestPhp7ParameterNode(t *testing.T) {
 				Expr: &expr.Closure{
 					Static: true,
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},
@@ -368,7 +366,6 @@ func TestPhp5ParameterNode(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Closure{
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},
@@ -376,7 +373,6 @@ func TestPhp5ParameterNode(t *testing.T) {
 				Expr: &expr.Closure{
 					Static: true,
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},

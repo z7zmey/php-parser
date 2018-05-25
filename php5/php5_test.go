@@ -523,7 +523,6 @@ func TestPhp5(t *testing.T) {
 			&stmt.Expression{
 				Expr: &expr.Closure{
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},
@@ -531,7 +530,6 @@ func TestPhp5(t *testing.T) {
 				Expr: &expr.Closure{
 					Static: true,
 					Params: expectedParams,
-					Uses:   []node.Node{},
 					Stmts:  []node.Node{},
 				},
 			},
@@ -1987,7 +1985,6 @@ func TestPhp5(t *testing.T) {
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
-					Uses:          []node.Node{},
 					Stmts:         []node.Node{},
 				},
 			},
@@ -2008,12 +2005,10 @@ func TestPhp5(t *testing.T) {
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
-					Uses: []node.Node{
-						&expr.ClosureUse{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-						},
-						&expr.ClosureUse{
-							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+					ClosureUse: &expr.ClosureUse{
+						Uses: []node.Node{
+							&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -2036,12 +2031,10 @@ func TestPhp5(t *testing.T) {
 							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 						},
 					},
-					Uses: []node.Node{
-						&expr.ClosureUse{
-							Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
-						},
-						&expr.ClosureUse{
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+					ClosureUse: &expr.ClosureUse{
+						Uses: []node.Node{
+							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+							&expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 					Stmts: []node.Node{},
@@ -2052,7 +2045,6 @@ func TestPhp5(t *testing.T) {
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
-					Uses:          []node.Node{},
 					Stmts:         []node.Node{},
 				},
 			},

@@ -28,6 +28,7 @@ import (
     ClassExtends     *stmt.ClassExtends
     ClassImplements  *stmt.ClassImplements
     InterfaceExtends *stmt.InterfaceExtends
+    ClosureUse       *expr.ClosureUse
 }
 
 %type <token> $unk
@@ -271,6 +272,7 @@ import (
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
 %type <InterfaceExtends> interface_extends_list
+%type <ClosureUse> lexical_vars
 
 %type <node> member_modifier
 %type <node> use_type
@@ -281,7 +283,7 @@ import (
 %type <list> const_list echo_expr_list for_exprs non_empty_for_exprs global_var_list
 %type <list> unprefixed_use_declarations inline_use_declarations property_list static_var_list
 %type <list> case_list trait_adaptation_list unset_variables
-%type <list> use_declarations lexical_var_list lexical_vars isset_variables non_empty_array_pair_list
+%type <list> use_declarations lexical_var_list isset_variables non_empty_array_pair_list
 %type <list> array_pair_list non_empty_argument_list top_statement_list
 %type <list> inner_statement_list parameter_list non_empty_parameter_list class_statement_list
 %type <list> method_modifiers variable_modifiers
@@ -3246,9 +3248,19 @@ returns_ref:
 
 lexical_vars:
         /* empty */
-            { $$ = []node.Node{} }
+            { $$ = nil }
     |   T_USE '(' lexical_var_list ')'
-            { $$ = $3; }
+            {
+                $$ = expr.NewClosureUse($3)
+
+                // save position
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
+            }
 ;
 
 lexical_var_list:
@@ -3267,23 +3279,20 @@ lexical_var:
     T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
-                variable := expr.NewVariable(identifier)
-                $$ = expr.NewClosureUse(variable)
+                $$ = expr.NewVariable(identifier)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
             }
     |   '&' T_VARIABLE
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($2.Value, "$"))
                 variable := expr.NewVariable(identifier)
-                reference := expr.NewReference(variable)
-                $$ = expr.NewClosureUse(reference)
+                $$ = expr.NewReference(variable)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
@@ -3292,7 +3301,7 @@ lexical_var:
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
-                yylex.(*Parser).comments.AddFromToken(reference, $2, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken(variable, $2, comment.VariableToken)
             }
 ;
 

@@ -1006,7 +1006,10 @@ func (p *Printer) printExprClone(n node.Node) {
 
 func (p *Printer) printExprClosureUse(n node.Node) {
 	nn := n.(*expr.ClosureUse)
-	p.Print(nn.Variable)
+
+	io.WriteString(p.w, "use (")
+	p.joinPrint(", ", nn.Uses)
+	io.WriteString(p.w, ")")
 }
 
 func (p *Printer) printExprClosure(n node.Node) {
@@ -1026,10 +1029,9 @@ func (p *Printer) printExprClosure(n node.Node) {
 	p.joinPrint(", ", nn.Params)
 	io.WriteString(p.w, ")")
 
-	if nn.Uses != nil {
-		io.WriteString(p.w, " use (")
-		p.joinPrint(", ", nn.Uses)
-		io.WriteString(p.w, ")")
+	if nn.ClosureUse != nil {
+		io.WriteString(p.w, " ")
+		p.Print(nn.ClosureUse)
 	}
 
 	if nn.ReturnType != nil {

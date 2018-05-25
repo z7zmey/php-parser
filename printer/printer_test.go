@@ -1371,10 +1371,13 @@ func TestPrintExprClosureUse(t *testing.T) {
 
 	p := printer.NewPrinter(o, "    ")
 	p.Print(&expr.ClosureUse{
-		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
+		Uses: []node.Node{
+			&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
+			&expr.Variable{VarName: &node.Identifier{Value: "bar"}},
+		},
 	})
 
-	expected := `&$var`
+	expected := `use (&$foo, $bar)`
 	actual := o.String()
 
 	if expected != actual {
@@ -1398,12 +1401,10 @@ func TestPrintExprClosure(t *testing.T) {
 						Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 					},
 				},
-				Uses: []node.Node{
-					&expr.ClosureUse{
-						Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-					},
-					&expr.ClosureUse{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				ClosureUse: &expr.ClosureUse{
+					Uses: []node.Node{
+						&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 					},
 				},
 				ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
