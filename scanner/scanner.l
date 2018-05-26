@@ -60,7 +60,7 @@ NEW_LINE        (\r|\n|\r\n)
 %%
     c = l.Rule0()
 
-<INITIAL>[ \t\n\r]+                             lval.Token(l.newToken(l.Token()));
+<INITIAL>[ \t\n\r]+
 <INITIAL>.
     tb := []lex.Char{}
 
@@ -87,11 +87,11 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.newToken(tb))
     return T_INLINE_HTML
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);lval.Token(l.newToken(l.Token()));// return T_OPEN_TAG;
-<INITIAL>\<\?                                   l.begin(PHP);lval.Token(l.newToken(l.Token()));// return T_OPEN_TAG;
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);
+<INITIAL>\<\?                                   l.begin(PHP);
 <INITIAL>\<\?=                                  l.begin(PHP);lval.Token(l.newToken(l.Token())); return T_ECHO;
 
-<PHP>[ \t\n\r]+                                 lval.Token(l.newToken(l.Token()));// return T_WHITESPACE
+<PHP>[ \t\n\r]+
 <PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.begin(INITIAL);lval.Token(l.newToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.Token(l.newToken(l.Token())); return Rune2Class(';');
 
@@ -310,14 +310,11 @@ NEW_LINE        (\r|\n|\r\n)
         c = l.Next()
     }
 
-    lval.Token(l.newToken(l.Token()))
     if is_doc_comment {
         l.PhpDocComment = string(l.TokenBytes(nil))
         l.addComment(l.Token())
-        // return T_DOC_COMMENT
     } else {
         l.addComment(l.Token())
-        // return T_COMMENT
     }
 
 <PHP>{OPERATORS}                                lval.Token(l.newToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
@@ -328,7 +325,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>{VAR_NAME}                                 lval.Token(l.newToken(l.Token())); return T_STRING
 
 <PHP>->                                         l.begin(PROPERTY);lval.Token(l.newToken(l.Token())); return T_OBJECT_OPERATOR;
-<PROPERTY>[ \t\n\r]+                            lval.Token(l.newToken(l.Token())); // return T_WHITESPACE;
+<PROPERTY>[ \t\n\r]+
 <PROPERTY>->                                    lval.Token(l.newToken(l.Token())); return T_OBJECT_OPERATOR;
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.Token(l.newToken(l.Token())); return T_STRING;
 <PROPERTY>.                                     l.ungetChars(1);l.begin(PHP)

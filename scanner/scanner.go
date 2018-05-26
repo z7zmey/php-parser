@@ -7493,10 +7493,8 @@ yystate598:
 	}
 
 yyrule1: // [ \t\n\r]+
-	{
-		lval.Token(l.newToken(l.Token()))
-		goto yystate0
-	}
+
+	goto yystate0
 yyrule2: // .
 	{
 
@@ -7523,13 +7521,11 @@ yyrule2: // .
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
 		l.begin(PHP)
-		lval.Token(l.newToken(l.Token())) // return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
 		l.begin(PHP)
-		lval.Token(l.newToken(l.Token())) // return T_OPEN_TAG;
 		goto yystate0
 	}
 yyrule5: // \<\?=
@@ -7540,10 +7536,8 @@ yyrule5: // \<\?=
 		goto yystate0
 	}
 yyrule6: // [ \t\n\r]+
-	{
-		lval.Token(l.newToken(l.Token())) // return T_WHITESPACE
-		goto yystate0
-	}
+
+	goto yystate0
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?
 	{
 		l.begin(INITIAL)
@@ -8360,14 +8354,11 @@ yyrule127: // ([/][*])|([/][*][*])
 			}
 			c = l.Next()
 		}
-		lval.Token(l.newToken(l.Token()))
 		if is_doc_comment {
 			l.PhpDocComment = string(l.TokenBytes(nil))
 			l.addComment(l.Token())
-			// return T_DOC_COMMENT
 		} else {
 			l.addComment(l.Token())
-			// return T_COMMENT
 		}
 		goto yystate0
 	}
@@ -8412,10 +8403,8 @@ yyrule133: // ->
 		goto yystate0
 	}
 yyrule134: // [ \t\n\r]+
-	{
-		lval.Token(l.newToken(l.Token())) // return T_WHITESPACE;
-		goto yystate0
-	}
+
+	goto yystate0
 yyrule135: // ->
 	{
 		lval.Token(l.newToken(l.Token()))
