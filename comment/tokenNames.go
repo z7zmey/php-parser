@@ -16,8 +16,6 @@ const (
 	VariableToken
 	NumStringToken
 	InlineHTMLToken
-	CharacterToken
-	BadCharacterToken
 	EncapsedAndWhitespaceToken
 	ConstantEncapsedStringToken
 	EchoToken
@@ -52,13 +50,11 @@ const (
 	UnsetToken
 	IssetToken
 	EmptyToken
-	HalcompilerToken
 	ClassToken
 	TraitToken
 	InterfaceToken
 	ExtendsToken
 	ImplementsToken
-	ObjecoperatorToken
 	DoubleArrowToken
 	ListToken
 	ArrayToken
@@ -69,14 +65,7 @@ const (
 	FuncCToken
 	LineToken
 	FileToken
-	CommentToken
-	DocCommentToken
-	OpenTagToken
-	OpenTagWithEchoToken
-	CloseTagToken
-	WhitespaceToken
 	StartHeredocToken
-	EndHeredocToken
 	DollarOpenCurlyBracesToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
@@ -118,7 +107,6 @@ const (
 	UnsetCastToken
 	CoalesceToken
 	SpaceshipToken
-	NoelseToken
 	PlusEqualToken
 	MinusEqualToken
 	MulEqualToken
