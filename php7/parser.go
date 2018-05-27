@@ -3,7 +3,6 @@ package php7
 import (
 	"io"
 
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
@@ -72,16 +71,6 @@ func (l *Parser) Parse() int {
 	return yyParse(l)
 }
 
-func (l *Parser) listGetFirstNodeComments(list []node.Node) []*comment.Comment {
-	if len(list) == 0 {
-		return nil
-	}
-
-	node := list[0]
-
-	return l.comments[node]
-}
-
 // GetPath return path to file
 func (l *Parser) GetPath() string {
 	return l.path
@@ -105,4 +94,20 @@ func (l *Parser) GetComments() parser.Comments {
 // GetPositions returns positions list
 func (l *Parser) GetPositions() parser.Positions {
 	return l.positions
+}
+
+// GetPositions returns positions list
+func (l *Parser) setCommentsFromChildNode(n node.Node, c node.Node) {
+	l.comments.AddComments(n, l.comments[c])
+	delete(l.comments, c)
+}
+
+// helpers
+
+func lastNode(nn []node.Node) node.Node {
+	return nn[len(nn)-1]
+}
+
+func firstNode(nn []node.Node) node.Node {
+	return nn[0]
 }

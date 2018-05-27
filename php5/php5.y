@@ -143,6 +143,29 @@ import (
 %token <token> T_COALESCE
 %token <token> T_SPACESHIP
 %token <token> T_NOELSE
+%token <token> T_PLUS_EQUAL
+%token <token> T_MINUS_EQUAL
+%token <token> T_MUL_EQUAL
+%token <token> T_POW_EQUAL
+%token <token> T_DIV_EQUAL
+%token <token> T_CONCAT_EQUAL
+%token <token> T_MOD_EQUAL
+%token <token> T_AND_EQUAL
+%token <token> T_OR_EQUAL
+%token <token> T_XOR_EQUAL
+%token <token> T_SL_EQUAL
+%token <token> T_SR_EQUAL
+%token <token> T_BOOLEAN_OR
+%token <token> T_BOOLEAN_AND
+%token <token> T_POW
+%token <token> T_SL
+%token <token> T_SR
+%token <token> T_IS_IDENTICAL
+%token <token> T_IS_NOT_IDENTICAL
+%token <token> T_IS_EQUAL
+%token <token> T_IS_NOT_EQUAL
+%token <token> T_IS_SMALLER_OR_EQUAL
+%token <token> T_IS_GREATER_OR_EQUAL
 %token <token> '"'
 %token <token> '`'
 %token <token> '{'
@@ -161,6 +184,15 @@ import (
 %token <token> '~'
 %token <token> '@'
 %token <token> '$'
+%token <token> ','
+%token <token> '|'
+%token <token> '='
+%token <token> '^'
+%token <token> '*'
+%token <token> '/'
+%token <token> '%'
+%token <token> '<'
+%token <token> '>'
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
 %left ','

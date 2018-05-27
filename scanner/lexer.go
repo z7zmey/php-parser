@@ -370,32 +370,32 @@ const T_MINUS_EQUAL = 57460
 // T_MUL_EQUAL token
 const T_MUL_EQUAL = 57461
 
+// T_POW_EQUAL token
+const T_POW_EQUAL = 57462
+
 // T_DIV_EQUAL token
-const T_DIV_EQUAL = 57462
+const T_DIV_EQUAL = 57463
 
 // T_CONCAT_EQUAL token
-const T_CONCAT_EQUAL = 57463
+const T_CONCAT_EQUAL = 57464
 
 // T_MOD_EQUAL token
-const T_MOD_EQUAL = 57464
+const T_MOD_EQUAL = 57465
 
 // T_AND_EQUAL token
-const T_AND_EQUAL = 57465
+const T_AND_EQUAL = 57466
 
 // T_OR_EQUAL token
-const T_OR_EQUAL = 57466
+const T_OR_EQUAL = 57467
 
 // T_XOR_EQUAL token
-const T_XOR_EQUAL = 57467
+const T_XOR_EQUAL = 57468
 
 // T_SL_EQUAL token
-const T_SL_EQUAL = 57468
+const T_SL_EQUAL = 57469
 
 // T_SR_EQUAL token
-const T_SR_EQUAL = 57469
-
-// T_POW_EQUAL token
-const T_POW_EQUAL = 57470
+const T_SR_EQUAL = 57470
 
 // T_BOOLEAN_OR token
 const T_BOOLEAN_OR = 57471
@@ -403,32 +403,32 @@ const T_BOOLEAN_OR = 57471
 // T_BOOLEAN_AND token
 const T_BOOLEAN_AND = 57472
 
-// T_IS_EQUAL token
-const T_IS_EQUAL = 57473
-
-// T_IS_NOT_EQUAL token
-const T_IS_NOT_EQUAL = 57474
-
-// T_IS_IDENTICAL token
-const T_IS_IDENTICAL = 57475
-
-// T_IS_NOT_IDENTICAL token
-const T_IS_NOT_IDENTICAL = 57476
-
-// T_IS_SMALLER_OR_EQUAL token
-const T_IS_SMALLER_OR_EQUAL = 57477
-
-// T_IS_GREATER_OR_EQUAL token
-const T_IS_GREATER_OR_EQUAL = 57478
+// T_POW token
+const T_POW = 57473
 
 // T_SL token
-const T_SL = 57479
+const T_SL = 57474
 
 // T_SR token
-const T_SR = 57480
+const T_SR = 57475
 
-// T_POW token
-const T_POW = 57481
+// T_IS_IDENTICAL token
+const T_IS_IDENTICAL = 57476
+
+// T_IS_NOT_IDENTICAL token
+const T_IS_NOT_IDENTICAL = 57477
+
+// T_IS_EQUAL token
+const T_IS_EQUAL = 57478
+
+// T_IS_NOT_EQUAL token
+const T_IS_NOT_EQUAL = 57479
+
+// T_IS_SMALLER_OR_EQUAL token
+const T_IS_SMALLER_OR_EQUAL = 57480
+
+// T_IS_GREATER_OR_EQUAL token
+const T_IS_GREATER_OR_EQUAL = 57481
 
 // Lval parsers yySymType must implement this interface
 type Lval interface {
