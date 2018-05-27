@@ -193,6 +193,7 @@ import (
 %token <token> '%'
 %token <token> '<'
 %token <token> '>'
+%token <token> '.'
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
 %left ','

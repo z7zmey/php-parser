@@ -5,6 +5,7 @@ import (
     "strings"
     "strconv"
 
+    "github.com/z7zmey/php-parser/comment"
     "github.com/z7zmey/php-parser/scanner"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
@@ -193,6 +194,7 @@ import (
 %token <token> '%'
 %token <token> '<'
 %token <token> '>'
+%token <token> '.'
 
 %left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE
 %left ','
@@ -340,7 +342,7 @@ namespace_name:
                 yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(namePart, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(namePart, $1, comment.StringToken)
             }
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
@@ -351,8 +353,8 @@ namespace_name:
                 yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
-                yylex.(*Parser).comments.AddComments(namePart, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken(namePart, $3, comment.StringToken)
             }
 ;
 
@@ -372,8 +374,8 @@ name:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.NsSeparatorToken)
             }
     | T_NS_SEPARATOR namespace_name
             {
@@ -383,7 +385,7 @@ name:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
             }
 ;
 
@@ -411,10 +413,10 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -426,8 +428,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_NAMESPACE namespace_name '{' top_statement_list '}'
             {
@@ -439,9 +441,9 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.CloseCurlyBracesToken)
             }
     |   T_NAMESPACE '{' top_statement_list '}'
             {
@@ -451,9 +453,9 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
     |   T_USE mixed_group_use_declaration ';'
             {
@@ -463,8 +465,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_USE use_type group_use_declaration ';'
             {
@@ -474,8 +476,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
     |   T_USE use_declarations ';'
             {
@@ -485,8 +487,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_USE use_type use_declarations ';'
             {
@@ -496,8 +498,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
     |   T_CONST const_list ';'
             {
@@ -507,8 +509,8 @@ top_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
 ;
 
@@ -521,7 +523,7 @@ use_type:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FunctionToken)
             }
     |   T_CONST
             {
@@ -531,7 +533,7 @@ use_type:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstToken)
             }
 ;
 
@@ -546,12 +548,12 @@ group_use_declaration:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.OpenCurlyBracesToken)
                 if $5 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $5, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseCurlyBracesToken)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
             {
@@ -563,13 +565,13 @@ group_use_declaration:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.OpenCurlyBracesToken)
                 if $6 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $6, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -584,12 +586,12 @@ mixed_group_use_declaration:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.OpenCurlyBracesToken)
                 if $5 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $5, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseCurlyBracesToken)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
             {
@@ -601,13 +603,13 @@ mixed_group_use_declaration:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.NsSeparatorToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.OpenCurlyBracesToken)
                 if $6 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $6, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -624,7 +626,7 @@ inline_use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   inline_use_declaration
             { $$ = []node.Node{$1} }
@@ -636,7 +638,7 @@ unprefixed_use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   unprefixed_use_declaration
             { $$ = []node.Node{$1} }
@@ -648,7 +650,7 @@ use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   use_declaration
             { $$ = []node.Node{$1} }
@@ -683,8 +685,8 @@ unprefixed_use_declaration:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken(alias, $3, comment.StringToken)
             }
 ;
 
@@ -696,7 +698,7 @@ use_declaration:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
             }
 ;
 
@@ -706,7 +708,7 @@ const_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   const_decl
             { $$ = []node.Node{$1} }
@@ -747,10 +749,10 @@ inner_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
 
 statement:
@@ -762,8 +764,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
             }
     |   if_stmt
             { $$ = $1; }
@@ -781,9 +783,9 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5.node))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.WhileToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
@@ -793,11 +795,11 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.WhileToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.SemiColonToken)
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
@@ -811,11 +813,11 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9.node))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $8.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseParenthesisToken)
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
@@ -829,9 +831,9 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5.endToken))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.SwitchToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   T_BREAK optional_expr ';'
             {
@@ -841,8 +843,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.BreakToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_CONTINUE optional_expr ';'
             {
@@ -852,8 +854,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ContinueToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_RETURN optional_expr ';'
             {
@@ -863,8 +865,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ReturnToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_GLOBAL global_var_list ';'
             {
@@ -874,8 +876,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.GlobalToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_STATIC static_var_list ';'
             {
@@ -885,8 +887,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_ECHO echo_expr_list ';'
             {
@@ -896,8 +898,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.EchoToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_INLINE_HTML
             {
@@ -907,7 +909,7 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.InlineHTMLToken)
             }
     |   expr ';'
             {
@@ -917,7 +919,7 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SemiColonToken)
             }
     |   T_UNSET '(' unset_variables possible_comma ')' ';' 
             {
@@ -927,13 +929,13 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UnsetToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
                 if $4 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $4, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.SemiColonToken)
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
@@ -947,10 +949,10 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7.node))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseParenthesisToken)
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
@@ -964,11 +966,11 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9.node))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $8.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.DoubleArrowToken)
+                yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseParenthesisToken)
             }
     |   T_DECLARE '(' const_list ')' declare_statement
             {
@@ -978,9 +980,9 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DeclareToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   ';'
             {
@@ -990,7 +992,7 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.SemiColonToken)
             }
     |   T_TRY '{' inner_statement_list '}' catch_list finally_statement
             {
@@ -1003,9 +1005,9 @@ statement:
                 }
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.TryToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
     |   T_THROW expr ';'
             {
@@ -1015,8 +1017,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ThrowToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_GOTO T_STRING ';'
             {
@@ -1028,9 +1030,9 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(label, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.GotoToken)
+                yylex.(*Parser).comments.AddFromToken(label, $2, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   T_STRING ':'
             {
@@ -1042,8 +1044,8 @@ statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(label, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(label, $1, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ColonToken)
             }
 
 catch_list:
@@ -1062,12 +1064,12 @@ catch_list:
                 yylex.(*Parser).positions.AddPosition(catch, yylex.(*Parser).positionBuilder.NewTokensPosition($2, $9))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(catch, $2.Comments())
-                yylex.(*Parser).comments.AddComments(catch, $3.Comments())
-                yylex.(*Parser).comments.AddComments(variable, $5.Comments())
-                yylex.(*Parser).comments.AddComments(catch, $6.Comments())
-                yylex.(*Parser).comments.AddComments(catch, $7.Comments())
-                yylex.(*Parser).comments.AddComments(catch, $9.Comments())
+                yylex.(*Parser).comments.AddFromToken(catch, $2, comment.CatchToken)
+                yylex.(*Parser).comments.AddFromToken(catch, $3, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(variable, $5, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken(catch, $6, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(catch, $7, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken(catch, $9, comment.CloseCurlyBracesToken)
             }
 ;
 catch_name_list:
@@ -1078,7 +1080,7 @@ catch_name_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.VerticalBarToken)
             }
 ;
 
@@ -1093,9 +1095,9 @@ finally_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinallyToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -1107,7 +1109,7 @@ unset_variables:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
 ;
 
@@ -1127,15 +1129,15 @@ function_declaration_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FunctionToken)
                 if $2.token != nil {
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $2.token, comment.AmpersandToken)
                 }
-                yylex.(*Parser).comments.AddComments(name, $3.Comments())
-                yylex.(*Parser).comments.AddComments(name, $5.Comments())
-                yylex.(*Parser).comments.AddComments(name, $7.Comments())
-                yylex.(*Parser).comments.AddComments(name, $9.Comments())
-                yylex.(*Parser).comments.AddComments(name, $11.Comments())
+                yylex.(*Parser).comments.AddFromToken(name, $3, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $9, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $11, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -1164,16 +1166,16 @@ class_declaration_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $9))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(name, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ClassToken)
+                yylex.(*Parser).comments.AddFromToken(name, $3, comment.StringToken)
                 if $4 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, $4)
+                    yylex.(*Parser).comments.AddFromChildNode($$, $4)
                 }
                 if $5 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, firstNode($5))
+                    yylex.(*Parser).comments.AddFromChildNode($$, firstNode($5))
                 }
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
-                yylex.(*Parser).comments.AddComments($$, $9.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $9, comment.CloseCurlyBracesToken)
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
@@ -1185,16 +1187,16 @@ class_declaration_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(name, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassToken)
+                yylex.(*Parser).comments.AddFromToken(name, $2, comment.StringToken)
                 if $3 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, $3)
+                    yylex.(*Parser).comments.AddFromChildNode($$, $3)
                 }
                 if $4 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, firstNode($4))
+                    yylex.(*Parser).comments.AddFromChildNode($$, firstNode($4))
                 }
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $8.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -1214,7 +1216,7 @@ class_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AbstractToken)
             }
     |   T_FINAL
             {
@@ -1224,7 +1226,7 @@ class_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinalToken)
             }
 ;
 
@@ -1239,10 +1241,10 @@ trait_declaration_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(name, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.TraitToken)
+                yylex.(*Parser).comments.AddFromToken(name, $2, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -1257,13 +1259,13 @@ interface_declaration_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(name, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.InterfaceToken)
+                yylex.(*Parser).comments.AddFromToken(name, $2, comment.StringToken)
                 if $3 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, firstNode($3))
+                    yylex.(*Parser).comments.AddFromChildNode($$, firstNode($3))
                 }
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -1275,7 +1277,7 @@ extends_from:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExtendsToken)
             }
 ;
 
@@ -1287,7 +1289,7 @@ interface_extends_list:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(firstNode($$), $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(firstNode($$), $1, comment.ExtendsToken)
             }
 ;
 
@@ -1299,7 +1301,7 @@ implements_list:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(firstNode($$), $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(firstNode($$), $1, comment.ImplementsToken)
             }
 ;
 
@@ -1314,7 +1316,7 @@ foreach_variable:
                 yylex.(*Parser).positions.AddPosition($2, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($2, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($2, $1, comment.AmpersandToken)
             }
     |   T_LIST '(' array_pair_list ')'
             {
@@ -1325,9 +1327,9 @@ foreach_variable:
                 yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(list, $1.Comments())
-                yylex.(*Parser).comments.AddComments(list, $2.Comments())
-                yylex.(*Parser).comments.AddComments(list, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
+                yylex.(*Parser).comments.AddFromToken(list, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(list, $4, comment.CloseParenthesisToken)
             }
     |   '[' array_pair_list ']'
             {
@@ -1338,8 +1340,8 @@ foreach_variable:
                 yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(list, $1.Comments())
-                yylex.(*Parser).comments.AddComments(list, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken(list, $1, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken(list, $3, comment.CloseSquareBracket)
             }
 ;
 
@@ -1354,9 +1356,9 @@ for_statement:
                 yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$.node, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndforToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
             }
 ;
 
@@ -1371,9 +1373,9 @@ foreach_statement:
                 yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$.node, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndforeachToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
             }
 ;
 
@@ -1388,9 +1390,9 @@ declare_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.EnddeclareToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
 ;
 
@@ -1413,8 +1415,8 @@ case_list:
                 yylex.(*Parser).positions.AddPosition(_case, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(_case, $2.Comments())
-                yylex.(*Parser).comments.AddComments(_case, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(_case, $2, comment.CaseToken)
+                yylex.(*Parser).comments.AddFromToken(_case, $4, comment.CaseSeparatorToken)
             }
     |   case_list T_DEFAULT case_separator inner_statement_list
             {
@@ -1425,8 +1427,8 @@ case_list:
                 yylex.(*Parser).positions.AddPosition(_default, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(_default, $2.Comments())
-                yylex.(*Parser).comments.AddComments(_default, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken(_default, $2, comment.DefaultToken)
+                yylex.(*Parser).comments.AddFromToken(_default, $3, comment.CaseSeparatorToken)
             }
 ;
 
@@ -1448,9 +1450,9 @@ while_statement:
                 yylex.(*Parser).positions.AddPosition($$.node, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$.node, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$.node, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$.node, $1, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $3, comment.EndwhileToken)
+                yylex.(*Parser).comments.AddFromToken($$.node, $4, comment.SemiColonToken)
             }
 ;
 
@@ -1463,9 +1465,9 @@ if_stmt_without_else:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IfToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             { 
@@ -1477,9 +1479,9 @@ if_stmt_without_else:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(_elseIf, $2.Comments())
-                yylex.(*Parser).comments.AddComments(_elseIf, $3.Comments())
-                yylex.(*Parser).comments.AddComments(_elseIf, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $2, comment.ElseifToken)
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $3, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $5, comment.CloseParenthesisToken)
             }
 ;
 
@@ -1496,7 +1498,7 @@ if_stmt:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ElseToken)
             }
 ;
 
@@ -1511,10 +1513,10 @@ alt_if_stmt_without_else:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IfToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.ColonToken)
             }
     |   alt_if_stmt_without_else T_ELSEIF '(' expr ')' ':' inner_statement_list
             {
@@ -1527,10 +1529,10 @@ alt_if_stmt_without_else:
                 yylex.(*Parser).positions.AddPosition(_elseIf, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $7))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(_elseIf, $2.Comments())
-                yylex.(*Parser).comments.AddComments(_elseIf, $3.Comments())
-                yylex.(*Parser).comments.AddComments(_elseIf, $5.Comments())
-                yylex.(*Parser).comments.AddComments(_elseIf, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $2, comment.ElseifToken)
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $3, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $5, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(_elseIf, $6, comment.ColonToken)
             }
 ;
 
@@ -1543,8 +1545,8 @@ alt_if_stmt:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EndifToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   alt_if_stmt_without_else T_ELSE ':' inner_statement_list T_ENDIF ';'
             {
@@ -1558,10 +1560,10 @@ alt_if_stmt:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(_else, $2.Comments())
-                yylex.(*Parser).comments.AddComments(_else, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken(_else, $2, comment.ElseToken)
+                yylex.(*Parser).comments.AddFromToken(_else, $3, comment.ColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.EndifToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.SemiColonToken)
             }
 ;
 
@@ -1580,7 +1582,7 @@ non_empty_parameter_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
 ;
 
@@ -1615,12 +1617,12 @@ parameter:
 
                 // save comments
                 if $2.value {
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $2.token, comment.AmpersandToken)
                 }
                 if $3.value {
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $3.token, comment.EllipsisToken)
                 }
-                yylex.(*Parser).comments.AddComments(variable, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $4, comment.VariableToken)
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
@@ -1651,13 +1653,13 @@ parameter:
 
                 // save comments
                 if $2.value {
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $2.token, comment.AmpersandToken)
                 }
                 if $3.value {
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $3.token, comment.EllipsisToken)
                 }
-                yylex.(*Parser).comments.AddComments(variable, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $4, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.EqualToken)
             }
 ;
 
@@ -1679,7 +1681,7 @@ type_expr:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.QuestionMarkToken)
             }
 ;
 
@@ -1692,7 +1694,7 @@ type:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayToken)
             }
     |   T_CALLABLE
             {
@@ -1702,7 +1704,7 @@ type:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.CallableToken)
             }
     |   name
             { $$ = $1; }
@@ -1716,7 +1718,7 @@ return_type:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
             }
 ;
 
@@ -1735,7 +1737,7 @@ non_empty_argument_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
 ;
 
@@ -1755,7 +1757,7 @@ argument:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.EllipsisToken)
             }
 ;
 
@@ -1765,7 +1767,7 @@ global_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   global_var
             { $$ = []node.Node{$1} }
@@ -1782,7 +1784,7 @@ static_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   static_var
             { $$ = []node.Node{$1} }
@@ -1801,7 +1803,7 @@ static_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
             }
     |   T_VARIABLE '=' expr
             {
@@ -1815,8 +1817,8 @@ static_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
             }
 ;
 
@@ -1836,7 +1838,7 @@ class_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
             }
     |   method_modifiers T_CONST class_const_list ';'
             {
@@ -1846,8 +1848,8 @@ class_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ConstToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
             }
     |   T_USE name_list trait_adaptations
             {
@@ -1857,7 +1859,7 @@ class_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3.endToken))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
             }
     |   method_modifiers T_FUNCTION returns_ref identifier backup_doc_comment '(' parameter_list ')' return_type method_body
             {
@@ -1869,13 +1871,13 @@ class_statement:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $10.endToken))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.FunctionToken)
                 if $3.value {
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $3.token, comment.AmpersandToken)
                 }
-                yylex.(*Parser).comments.AddComments(name, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $8.Comments())
+                yylex.(*Parser).comments.AddFromToken(name, $4, comment.IdentifierToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseParenthesisToken)
             }
 ;
 
@@ -1887,7 +1889,7 @@ name_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
 ;
 
@@ -1913,14 +1915,14 @@ trait_adaptation:
                 $$ = $1;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SemiColonToken)
             }
     |   trait_alias ';'
             {
                 $$ = $1;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SemiColonToken)
             }
 ;
 
@@ -1933,7 +1935,7 @@ trait_precedence:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.InsteadofToken)
             }
 ;
 
@@ -1948,8 +1950,8 @@ trait_alias:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken(alias, $3, comment.StringToken)
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
@@ -1961,8 +1963,8 @@ trait_alias:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(alias, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken(alias, $3, comment.StringToken)
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
@@ -1974,8 +1976,8 @@ trait_alias:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(alias, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
+                yylex.(*Parser).comments.AddFromToken(alias, $4, comment.IdentifierToken)
             }
     |   trait_method_reference T_AS member_modifier
             {
@@ -1985,7 +1987,7 @@ trait_alias:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
             }
 ;
 
@@ -2000,7 +2002,7 @@ trait_method_reference:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(name, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(name, $1, comment.IdentifierToken)
             }
     |   absolute_trait_method_reference
             { $$ = $1; }
@@ -2017,8 +2019,8 @@ absolute_trait_method_reference:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
+                yylex.(*Parser).comments.AddFromToken(target, $3, comment.IdentifierToken)
             }
 ;
 
@@ -2039,7 +2041,7 @@ variable_modifiers:
                 yylex.(*Parser).positions.AddPosition(modifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(modifier, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(modifier, $1, comment.VarToken)
             }
 ;
 
@@ -2066,7 +2068,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.PublicToken)
             }
     |   T_PROTECTED
             {
@@ -2076,7 +2078,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ProtectedToken)
             }
     |   T_PRIVATE
             {
@@ -2086,7 +2088,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.PrivateToken)
             }
     |   T_STATIC
             {
@@ -2096,7 +2098,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
             }
     |   T_ABSTRACT
             {
@@ -2106,7 +2108,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AbstractToken)
             }
     |   T_FINAL
             {
@@ -2116,7 +2118,7 @@ member_modifier:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinalToken)
             }
 ;
 
@@ -2126,7 +2128,7 @@ property_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   property
             { $$ = []node.Node{$1} }
@@ -2145,7 +2147,7 @@ property:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
@@ -2159,8 +2161,8 @@ property:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
             }
 ;
 
@@ -2170,7 +2172,7 @@ class_const_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   class_const_decl
             { $$ = []node.Node{$1} }
@@ -2187,8 +2189,8 @@ class_const_decl:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(name, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(name, $1, comment.IdentifierToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
             }
 ;
 
@@ -2203,8 +2205,8 @@ const_decl:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(name, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(name, $1, comment.StringToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
             }
 ;
 
@@ -2214,7 +2216,7 @@ echo_expr_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   echo_expr
             { $$ = []node.Node{$1} }
@@ -2238,7 +2240,7 @@ non_empty_for_exprs:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   expr
             { $$ = []node.Node{$1} }
@@ -2257,15 +2259,15 @@ anonymous_class:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassToken)
                 if $3 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, $3)
+                    yylex.(*Parser).comments.AddFromChildNode($$, $3)
                 }
                 if $4 != nil {
-                    yylex.(*Parser).setCommentsFromChildNode($$, firstNode($4))
+                    yylex.(*Parser).comments.AddFromChildNode($$, firstNode($4))
                 }
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $8.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -2281,7 +2283,7 @@ new_expr:
                 }
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NewToken)
             }
     |   T_NEW anonymous_class
             {
@@ -2291,7 +2293,7 @@ new_expr:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NewToken)
             }
 ;
 
@@ -2306,10 +2308,10 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(list, $1.Comments())
-                yylex.(*Parser).comments.AddComments(list, $2.Comments())
-                yylex.(*Parser).comments.AddComments(list, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
+                yylex.(*Parser).comments.AddFromToken(list, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(list, $4, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.EqualToken)
             }
     |   '[' array_pair_list ']' '=' expr
             {
@@ -2321,9 +2323,9 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(shortList, $1.Comments())
-                yylex.(*Parser).comments.AddComments(shortList, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(shortList, $1, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken(shortList, $3, comment.CloseSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.EqualToken)
             }
     |   variable '=' expr
             {
@@ -2333,7 +2335,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
             }
     |   variable '=' '&' expr
             {
@@ -2343,8 +2345,8 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.AmpersandToken)
             }
     |   T_CLONE expr
             {
@@ -2354,7 +2356,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.CloneToken)
             }
     |   variable T_PLUS_EQUAL expr
             {
@@ -2364,7 +2366,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PlusEqualToken)
             }
     |   variable T_MINUS_EQUAL expr
             {
@@ -2374,7 +2376,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.MinusEqualToken)
             }
     |   variable T_MUL_EQUAL expr
             {
@@ -2384,7 +2386,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.MulEqualToken)
             }
     |   variable T_POW_EQUAL expr
             {
@@ -2394,7 +2396,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PowEqualToken)
             }
     |   variable T_DIV_EQUAL expr
             {
@@ -2404,7 +2406,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DivEqualToken)
             }
     |   variable T_CONCAT_EQUAL expr
             {
@@ -2414,7 +2416,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ConcatEqualToken)
             }
     |   variable T_MOD_EQUAL expr
             {
@@ -2424,7 +2426,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ModEqualToken)
             }
     |   variable T_AND_EQUAL expr
             {
@@ -2434,7 +2436,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AndEqualToken)
             }
     |   variable T_OR_EQUAL expr
             {
@@ -2444,7 +2446,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OrEqualToken)
             }
     |   variable T_XOR_EQUAL expr
             {
@@ -2454,7 +2456,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.XorEqualToken)
             }
     |   variable T_SL_EQUAL expr
             {
@@ -2464,7 +2466,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlEqualToken)
             }
     |   variable T_SR_EQUAL expr
             {
@@ -2474,7 +2476,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SrEqualToken)
             }
     |   variable T_INC
             {
@@ -2484,7 +2486,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IncToken)
             }
     |   T_INC variable
             {
@@ -2494,7 +2496,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                     
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncToken)
             }
     |   variable T_DEC
             {
@@ -2504,7 +2506,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DecToken)
             }
     |   T_DEC variable
             {
@@ -2514,7 +2516,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                     
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DecToken)
             }
     |   expr T_BOOLEAN_OR expr
             {
@@ -2524,7 +2526,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.BooleanOrToken)
             }
     |   expr T_BOOLEAN_AND expr
             {
@@ -2534,7 +2536,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.BooleanAndToken)
             }
     |   expr T_LOGICAL_OR expr
             {
@@ -2544,7 +2546,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalOrToken)
             }
     |   expr T_LOGICAL_AND expr
             {
@@ -2554,7 +2556,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalAndToken)
             }
     |   expr T_LOGICAL_XOR expr
             {
@@ -2564,7 +2566,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalXorToken)
             }
     |   expr '|' expr
             {
@@ -2574,7 +2576,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.VerticalBarToken)
             }
     |   expr '&' expr
             {
@@ -2584,7 +2586,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AmpersandToken)
             }
     |   expr '^' expr
             {
@@ -2594,12 +2596,17 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.CaretToken)
             }
     |   expr '.' expr
             {
                 $$ = binary.NewConcat($1, $3)
+                    
+                // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DotToken)
             }
     |   expr '+' expr
             {
@@ -2609,7 +2616,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PlusToken)
             }
     |   expr '-' expr
             {
@@ -2619,7 +2626,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.MinusToken)
             }
     |   expr '*' expr
             {
@@ -2629,7 +2636,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsteriskToken)
             }
     |   expr T_POW expr
             {
@@ -2639,7 +2646,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PowToken)
             }
     |   expr '/' expr
             {
@@ -2649,7 +2656,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlashToken)
             }
     |   expr '%' expr
             {
@@ -2659,7 +2666,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PercentToken)
             }
     |   expr T_SL expr
             {
@@ -2669,7 +2676,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlToken)
             }
     |   expr T_SR expr
             {
@@ -2679,7 +2686,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SrToken)
             }
     |   '+' expr %prec T_INC
             {
@@ -2689,7 +2696,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.PlusToken)
             }
     |   '-' expr %prec T_INC
             {
@@ -2699,7 +2706,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.MinusToken)
             }
     |   '!' expr
             {
@@ -2709,7 +2716,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExclamationMarkToken)
             }
     |   '~' expr
             {
@@ -2719,7 +2726,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.TildeToken)
             }
     |   expr T_IS_IDENTICAL expr
             {
@@ -2729,7 +2736,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsIdenticalToken)
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
@@ -2739,7 +2746,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsNotIdenticalToken)
             }
     |   expr T_IS_EQUAL expr
             {
@@ -2749,7 +2756,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsEqualToken)
             }
     |   expr T_IS_NOT_EQUAL expr
             {
@@ -2759,7 +2766,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsNotEqualToken)
             }
     |   expr '<' expr
             {
@@ -2769,7 +2776,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.LessToken)
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
@@ -2779,7 +2786,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsSmallerOrEqualToken)
             }
     |   expr '>' expr
             {
@@ -2789,7 +2796,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.GreaterToken)
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
@@ -2799,7 +2806,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsGreaterOrEqualToken)
             }
     |   expr T_SPACESHIP expr
             {
@@ -2809,7 +2816,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.SpaceshipToken)
             }
     |   expr T_INSTANCEOF class_name_reference
             {
@@ -2819,15 +2826,15 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.InstanceofToken)
             }
     |   '(' expr ')'
             {
                 $$ = $2;
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
             }
     |   new_expr
             { $$ = $1; }
@@ -2839,8 +2846,8 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.QuestionMarkToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.ColonToken)
             }
     |   expr '?' ':' expr
             {
@@ -2850,8 +2857,8 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.QuestionMarkToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.ColonToken)
             }
     |   expr T_COALESCE expr
             {
@@ -2861,7 +2868,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.CoalesceToken)
             }
     |   internal_functions_in_yacc
             { $$ = $1}
@@ -2873,7 +2880,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IntCastToken)
             }
     |   T_DOUBLE_CAST expr
             {
@@ -2883,7 +2890,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoubleCastToken)
             }
     |   T_STRING_CAST expr
             {
@@ -2893,7 +2900,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringCastToken)
             }
     |   T_ARRAY_CAST expr
             {
@@ -2903,7 +2910,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayCastToken)
             }
     |   T_OBJECT_CAST expr
             {
@@ -2913,7 +2920,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ObjectCastToken)
             }
     |   T_BOOL_CAST expr
             {
@@ -2923,7 +2930,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.BoolCastToken)
             }
     |   T_UNSET_CAST expr
             {
@@ -2933,7 +2940,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.UnsetCastToken)
             }
     |   T_EXIT exit_expr
             {
@@ -2947,7 +2954,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExitToken)
             }
     |   '@' expr
             {
@@ -2957,7 +2964,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AtToken)
             }
     |   scalar
             { $$ = $1; }
@@ -2969,8 +2976,8 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.BackquoteToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.BackquoteToken)
             }
     |   T_PRINT expr
             {
@@ -2980,7 +2987,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.PrintToken)
             }
     |   T_YIELD
             {
@@ -2990,7 +2997,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
             }
     |   T_YIELD expr
             {
@@ -3000,7 +3007,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
@@ -3010,8 +3017,8 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.DoubleArrowToken)
             }
     |   T_YIELD_FROM expr
             {
@@ -3021,7 +3028,7 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldFromToken)
             }
     |   T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
@@ -3031,14 +3038,14 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FunctionToken)
                 if $2.value {
-                    yylex.(*Parser).comments.AddComments($$, $2.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $2.token, comment.AmpersandToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
-                yylex.(*Parser).comments.AddComments($$, $9.Comments())
-                yylex.(*Parser).comments.AddComments($$, $11.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $9, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $11, comment.CloseCurlyBracesToken)
             }
     |   T_STATIC T_FUNCTION returns_ref backup_doc_comment '(' parameter_list ')' lexical_vars return_type '{' inner_statement_list '}'
             {
@@ -3048,15 +3055,15 @@ expr_without_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.FunctionToken)
                 if $3.value {
-                    yylex.(*Parser).comments.AddComments($$, $3.token.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $3.token, comment.AmpersandToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
-                yylex.(*Parser).comments.AddComments($$, $7.Comments())
-                yylex.(*Parser).comments.AddComments($$, $10.Comments())
-                yylex.(*Parser).comments.AddComments($$, $12.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $7, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $10, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $12, comment.CloseCurlyBracesToken)
             }
 ;
 
@@ -3088,7 +3095,7 @@ lexical_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   lexical_var
             { $$ = []node.Node{$1} }
@@ -3107,7 +3114,7 @@ lexical_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
             }
     |   '&' T_VARIABLE
             {
@@ -3121,8 +3128,8 @@ lexical_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
+                yylex.(*Parser).comments.AddFromToken(variable, $2, comment.VariableToken)
             }
 ;
 
@@ -3142,7 +3149,7 @@ function_call:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
@@ -3152,7 +3159,7 @@ function_call:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
     |   callable_expr argument_list
             {
@@ -3172,7 +3179,7 @@ class_name:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
             }
     |   name
             { $$ = $1; }
@@ -3217,9 +3224,9 @@ dereferencable_scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   '[' array_pair_list ']'
             {
@@ -3229,8 +3236,8 @@ dereferencable_scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseSquareBracket)
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
@@ -3240,7 +3247,7 @@ dereferencable_scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstantEncapsedStringToken)
             }
 ;
 
@@ -3253,7 +3260,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.LnumberToken)
             }
     |   T_DNUMBER
             {
@@ -3263,7 +3270,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DnumberToken)
             }
     |   T_LINE
             {
@@ -3273,7 +3280,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.LineToken)
             }
     |   T_FILE
             {
@@ -3283,7 +3290,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FileToken)
             }
     |   T_DIR
             {
@@ -3293,7 +3300,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DirToken)
             }
     |   T_TRAIT_C
             {
@@ -3303,7 +3310,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.TraitCToken)
             }
     |   T_METHOD_C
             {
@@ -3313,7 +3320,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.MethodCToken)
             }
     |   T_FUNC_C
             {
@@ -3323,7 +3330,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.FuncCToken)
             }
     |   T_NS_C
             {
@@ -3333,7 +3340,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsCToken)
             }
     |   T_CLASS_C
             {
@@ -3343,7 +3350,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassCToken)
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
             {
@@ -3355,7 +3362,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
@@ -3365,7 +3372,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
             }
     |   '"' encaps_list '"'
             {
@@ -3375,7 +3382,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoubleQuoteToken)
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
@@ -3385,7 +3392,7 @@ scalar:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
             }
     |   dereferencable_scalar
             { $$ = $1; }
@@ -3411,8 +3418,8 @@ constant:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
+                yylex.(*Parser).comments.AddFromToken(target, $3, comment.IdentifierToken)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
@@ -3424,8 +3431,8 @@ constant:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(target, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
+                yylex.(*Parser).comments.AddFromToken(target, $3, comment.IdentifierToken)
             }
 ;
 
@@ -3456,8 +3463,8 @@ dereferencable:
                 $$ = $2;
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
             }
     |   dereferencable_scalar
         { $$ = $1; }
@@ -3471,8 +3478,8 @@ callable_expr:
                 $$ = $2;
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
             }
     |   dereferencable_scalar
             { $$ = $1; }
@@ -3489,8 +3496,8 @@ callable_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseSquareBracket)
             }
     |   constant '[' optional_expr ']'
             {
@@ -3500,8 +3507,8 @@ callable_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseSquareBracket)
             }
     |   dereferencable '{' expr '}'
             {
@@ -3511,8 +3518,8 @@ callable_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
@@ -3522,7 +3529,7 @@ callable_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4.endToken))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
             }
     |   function_call
             { $$ = $1; }
@@ -3541,7 +3548,7 @@ variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
             }
 ;
 
@@ -3556,7 +3563,7 @@ simple_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
             }
     |   '$' '{' expr '}'
             {
@@ -3566,9 +3573,9 @@ simple_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
     |   '$' simple_variable
             {
@@ -3578,7 +3585,7 @@ simple_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarToken)
             }
 ;
 
@@ -3591,7 +3598,7 @@ static_member:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -3601,7 +3608,7 @@ static_member:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
 ;
 
@@ -3616,8 +3623,8 @@ new_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseSquareBracket)
             }
     |   new_variable '{' expr '}'
             {
@@ -3627,8 +3634,8 @@ new_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseCurlyBracesToken)
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
@@ -3638,7 +3645,7 @@ new_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -3648,7 +3655,7 @@ new_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
@@ -3658,7 +3665,7 @@ new_variable:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
             }
 ;
 
@@ -3671,15 +3678,15 @@ member_name:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IdentifierToken)
             }
     |   '{' expr '}'
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
             }
     |   simple_variable
             { $$ = $1 }
@@ -3694,15 +3701,15 @@ property_name:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringToken)
             }
     |   '{' expr '}'
             {
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
             }
     |   simple_variable
             { $$ = $1 }
@@ -3732,7 +3739,7 @@ non_empty_array_pair_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
     |   possible_array_pair
             { $$ = []node.Node{$1} }
@@ -3747,7 +3754,7 @@ array_pair:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
             }
     |   expr
             {
@@ -3764,8 +3771,8 @@ array_pair:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.AmpersandToken)
             }
     |   '&' variable
             {
@@ -3775,7 +3782,7 @@ array_pair:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
@@ -3788,10 +3795,10 @@ array_pair:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(list, $3.Comments())
-                yylex.(*Parser).comments.AddComments(list, $4.Comments())
-                yylex.(*Parser).comments.AddComments(list, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
+                yylex.(*Parser).comments.AddFromToken(list, $3, comment.ListToken)
+                yylex.(*Parser).comments.AddFromToken(list, $4, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(list, $6, comment.CloseParenthesisToken)
             }
     |   T_LIST '(' array_pair_list ')'
             {
@@ -3804,9 +3811,9 @@ array_pair:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(list, $1.Comments())
-                yylex.(*Parser).comments.AddComments(list, $2.Comments())
-                yylex.(*Parser).comments.AddComments(list, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
+                yylex.(*Parser).comments.AddFromToken(list, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken(list, $4, comment.CloseParenthesisToken)
             }
 ;
 
@@ -3822,7 +3829,7 @@ encaps_list:
                 yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(encapsed, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(encapsed, $2, comment.EncapsedAndWhitespaceToken)
             }
     |   encaps_var 
             { $$ = []node.Node{$1} }
@@ -3835,7 +3842,7 @@ encaps_list:
                 yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(encapsed, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken(encapsed, $1, comment.EncapsedAndWhitespaceToken)
             }
 ;
 
@@ -3850,7 +3857,7 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
@@ -3864,9 +3871,9 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseSquareBracket)
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
@@ -3882,9 +3889,9 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments(variable, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments(fetch, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
+                yylex.(*Parser).comments.AddFromToken(fetch, $3, comment.StringToken)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
@@ -3894,8 +3901,8 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
@@ -3907,9 +3914,9 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(name, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken(name, $2, comment.StringVarnameToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseCurlyBracesToken)
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
@@ -3923,11 +3930,11 @@ encaps_var:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments(variable, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $3.Comments())
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
-                yylex.(*Parser).comments.AddComments($$, $6.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
+                yylex.(*Parser).comments.AddFromToken(variable, $2, comment.StringVarnameToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.OpenSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.CloseSquareBracket)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.CloseCurlyBracesToken)
             }
     |   T_CURLY_OPEN variable '}'
             {
@@ -3943,7 +3950,7 @@ encaps_var_offset:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringToken)
             }
     |   T_NUM_STRING
             {
@@ -3958,7 +3965,7 @@ encaps_var_offset:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.NumStringToken)
             }
     |   '-' T_NUM_STRING
             {
@@ -3982,11 +3989,11 @@ encaps_var_offset:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.MinusToken)
                 if isInt {
-                    yylex.(*Parser).comments.AddComments(lnumber, $2.Comments())
+                    yylex.(*Parser).comments.AddFromToken(lnumber, $2, comment.NumStringToken)
                 } else {
-                    yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $2, comment.NumStringToken)
                 }
             }
     |   T_VARIABLE
@@ -3999,7 +4006,7 @@ encaps_var_offset:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
             }
 ;
 
@@ -4012,12 +4019,12 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IssetToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
                 if $4 != nil {
-                    yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                    yylex.(*Parser).comments.AddFromToken($$, $4, comment.CommaToken)
                 }
-                yylex.(*Parser).comments.AddComments($$, $5.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $5, comment.CloseParenthesisToken)
             }
     |   T_EMPTY '(' expr ')'
             {
@@ -4027,9 +4034,9 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.EmptyToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   T_INCLUDE expr
             {
@@ -4039,7 +4046,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncludeToken)
             }
     |   T_INCLUDE_ONCE expr
             {
@@ -4049,7 +4056,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncludeOnceToken)
             }
     |   T_EVAL '(' expr ')'
             {
@@ -4059,9 +4066,9 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
-                yylex.(*Parser).comments.AddComments($$, $2.Comments())
-                yylex.(*Parser).comments.AddComments($$, $4.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.EvalToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
     |   T_REQUIRE expr
             {
@@ -4071,7 +4078,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.RequireToken)
             }
     |   T_REQUIRE_ONCE expr
             {
@@ -4081,7 +4088,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                yylex.(*Parser).comments.AddComments($$, $1.Comments())
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.RequireOnceToken)
             }
 ;
 
@@ -4093,7 +4100,7 @@ isset_variables:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddComments(lastNode($1), $2.Comments())
+                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
             }
 ;
 
