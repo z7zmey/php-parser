@@ -1517,13 +1517,18 @@ func (p *Printer) printStmtClassMethod(n node.Node) {
 		p.Print(nn.ReturnType)
 	}
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "{\n")
-	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "}")
+	switch s := nn.Stmt.(type) {
+	case *stmt.StmtList:
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "{\n")
+		p.printNodes(s.Stmts)
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "}")
+	default:
+		p.Print(s)
+	}
 }
 
 func (p *Printer) printStmtClass(n node.Node) {

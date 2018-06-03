@@ -2,8 +2,9 @@ package stmt_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/node/name"
 	"testing"
+
+	"github.com/z7zmey/php-parser/node/name"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -22,7 +23,9 @@ func TestSimpleClassMethod(t *testing.T) {
 					&stmt.ClassMethod{
 						PhpDocComment: "",
 						MethodName:    &node.Identifier{Value: "bar"},
-						Stmts:         []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -56,7 +59,9 @@ func TestPrivateProtectedClassMethod(t *testing.T) {
 							&node.Identifier{Value: "final"},
 							&node.Identifier{Value: "private"},
 						},
-						Stmts: []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 					&stmt.ClassMethod{
 						PhpDocComment: "",
@@ -65,7 +70,9 @@ func TestPrivateProtectedClassMethod(t *testing.T) {
 						Modifiers: []node.Node{
 							&node.Identifier{Value: "protected"},
 						},
-						Stmts: []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -99,7 +106,9 @@ func TestPhp5ClassMethod(t *testing.T) {
 							&node.Identifier{Value: "public"},
 							&node.Identifier{Value: "static"},
 						},
-						Stmts: []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -133,7 +142,9 @@ func TestPhp7ClassMethod(t *testing.T) {
 								&name.NamePart{Value: "void"},
 							},
 						},
-						Stmts: []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -163,6 +174,7 @@ func TestAbstractClassMethod(t *testing.T) {
 							&node.Identifier{Value: "abstract"},
 							&node.Identifier{Value: "public"},
 						},
+						Stmt: &stmt.Nop{},
 					},
 				},
 			},
@@ -201,6 +213,7 @@ func TestPhp7AbstractClassMethod(t *testing.T) {
 								&name.NamePart{Value: "void"},
 							},
 						},
+						Stmt: &stmt.Nop{},
 					},
 				},
 			},

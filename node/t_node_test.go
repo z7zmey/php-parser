@@ -289,7 +289,9 @@ func TestPhp7ParameterNode(t *testing.T) {
 						MethodName: &node.Identifier{Value: "foo"},
 						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 						Params:     expectedParams,
-						Stmts:      []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -357,7 +359,9 @@ func TestPhp5ParameterNode(t *testing.T) {
 						MethodName: &node.Identifier{Value: "foo"},
 						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 						Params:     expectedParams,
-						Stmts:      []node.Node{},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},

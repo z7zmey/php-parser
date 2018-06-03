@@ -259,6 +259,41 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 	}
 }
 
+func TestNewNodeListNodePosition(t *testing.T) {
+	n1 := node.NewIdentifier("test node")
+	n2 := node.NewIdentifier("test node")
+	n3 := node.NewIdentifier("test node")
+
+	builder := parser.PositionBuilder{
+		Positions: &parser.Positions{
+			n1: &position.Position{
+				StartLine: 1,
+				EndLine:   1,
+				StartPos:  0,
+				EndPos:    8,
+			},
+			n2: &position.Position{
+				StartLine: 2,
+				EndLine:   2,
+				StartPos:  9,
+				EndPos:    17,
+			},
+			n3: &position.Position{
+				StartLine: 3,
+				EndLine:   3,
+				StartPos:  18,
+				EndPos:    26,
+			},
+		},
+	}
+
+	pos := builder.NewNodeListNodePosition([]node.Node{n1, n2}, n3)
+
+	if pos.String() != `Pos{Line: 1-3 Pos: 0-26}` {
+		t.Errorf("token value is not equal\n")
+	}
+}
+
 func TestNewOptionalListTokensPosition(t *testing.T) {
 	builder := parser.PositionBuilder{}
 

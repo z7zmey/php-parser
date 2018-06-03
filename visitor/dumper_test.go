@@ -63,8 +63,8 @@ func ExampleDumper() {
 	//|           "Stmts":
 	//|             [*stmt.ClassMethod]
 	//|               "Position": Pos{Line: 5-9 Pos: 45-134};
-	//|               "PhpDocComment": ;
 	//|               "ReturnsRef": false;
+	//|               "PhpDocComment": ;
 	//|               "MethodName":
 	//|                 [*node.Identifier]
 	//|                   "Position": Pos{Line: 5-5 Pos: 61-72};
@@ -104,16 +104,19 @@ func ExampleDumper() {
 	//|                             [*name.NamePart]
 	//|                               "Position": Pos{Line: 5-5 Pos: 86-89};
 	//|                               "Value": null;
-	//|               "Stmts":
-	//|                 [*stmt.Expression]
-	//|                   "Position": Pos{Line: 8-8 Pos: 124-128};
-	//|                   "Expr":
-	//|                     [*expr.Variable]
-	//|                       "Position": Pos{Line: 8-8 Pos: 124-127};
-	//|                       "Comments":
-	//|                         "// some comment\n" before "VariableToken"
-	//|                       "VarName":
-	//|                         [*node.Identifier]
+	//|               "Stmt":
+	//|                 [*stmt.StmtList]
+	//|                   "Position": Pos{Line: 6-9 Pos: 96-134};
+	//|                   "Stmts":
+	//|                     [*stmt.Expression]
+	//|                       "Position": Pos{Line: 8-8 Pos: 124-128};
+	//|                       "Expr":
+	//|                         [*expr.Variable]
 	//|                           "Position": Pos{Line: 8-8 Pos: 124-127};
-	//|                           "Value": var;
+	//|                           "Comments":
+	//|                             "// some comment\n" before "VariableToken"
+	//|                           "VarName":
+	//|                             [*node.Identifier]
+	//|                               "Position": Pos{Line: 8-8 Pos: 124-127};
+	//|                               "Value": var;
 }

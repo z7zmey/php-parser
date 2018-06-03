@@ -44,10 +44,12 @@ func TestPrintFile(t *testing.T) {
 					&stmt.ClassMethod{
 						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 						MethodName: &node.Identifier{Value: "greet"},
-						Stmts: []node.Node{
-							&stmt.Echo{
-								Exprs: []node.Node{
-									&scalar.String{Value: "'Hello world'"},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{
+								&stmt.Echo{
+									Exprs: []node.Node{
+										&scalar.String{Value: "'Hello world'"},
+									},
 								},
 							},
 						},
@@ -2453,8 +2455,10 @@ func TestPrintStmtClassMethod(t *testing.T) {
 			},
 		},
 		ReturnType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "void"}}},
-		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			},
 		},
 	})
 
@@ -3387,8 +3391,10 @@ func TestPrintInterface(t *testing.T) {
 						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 						MethodName: &node.Identifier{Value: "foo"},
 						Params:     []node.Node{},
-						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{
+								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							},
 						},
 					},
 				},
@@ -3833,8 +3839,10 @@ func TestPrintTrait(t *testing.T) {
 						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 						MethodName: &node.Identifier{Value: "foo"},
 						Params:     []node.Node{},
-						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						Stmt: &stmt.StmtList{
+							Stmts: []node.Node{
+								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+							},
 						},
 					},
 				},

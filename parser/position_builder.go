@@ -174,6 +174,16 @@ func (b *PositionBuilder) NewNodeNodeListPosition(n node.Node, list []node.Node)
 	)
 }
 
+// NewNodeListNodePosition returns new Position
+func (b *PositionBuilder) NewNodeListNodePosition(list []node.Node, n node.Node) *position.Position {
+	return position.NewPosition(
+		b.getListStartPos(list).startLine,
+		b.getNodeEndPos(n).endLine,
+		b.getListStartPos(list).startPos,
+		b.getNodeEndPos(n).endPos,
+	)
+}
+
 // NewOptionalListTokensPosition returns new Position
 func (b *PositionBuilder) NewOptionalListTokensPosition(list []node.Node, t *scanner.Token, endToken *scanner.Token) *position.Position {
 	if list == nil {

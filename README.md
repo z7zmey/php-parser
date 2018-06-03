@@ -103,10 +103,12 @@ nodes := &stmt.StmtList{
 				&stmt.ClassMethod{
 					Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 					MethodName: &node.Identifier{Value: "greet"},
-					Stmts: []node.Node{
-						&stmt.Echo{
-							Exprs: []node.Node{
-								&scalar.String{Value: "'Hello world'"},
+					Stmt: &stmt.StmtList{
+						Stmts: []node.Node{
+							&stmt.Echo{
+								Exprs: []node.Node{
+									&scalar.String{Value: "'Hello world'"},
+								},
 							},
 						},
 					},

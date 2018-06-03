@@ -544,7 +544,9 @@ func TestResolveMethodName(t *testing.T) {
 			},
 		},
 		ReturnType: &node.Nullable{Expr: nameBC},
-		Stmts:      []node.Node{},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{},
+		},
 	}
 
 	expected := map[node.Node]string{
