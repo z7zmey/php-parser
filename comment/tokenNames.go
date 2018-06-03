@@ -22,6 +22,8 @@ const (
 	DoToken
 	WhileToken
 	EndwhileToken
+	ForInitSemicolonToken
+	ForCondSemicolonToken
 	ForToken
 	EndforToken
 	ForeachToken
@@ -182,6 +184,8 @@ var TokenNames = map[TokenName]string{
 	DoToken:                     "DoToken",
 	WhileToken:                  "WhileToken",
 	EndwhileToken:               "EndwhileToken",
+	ForInitSemicolonToken:       "ForInitSemicolonToken",
+	ForCondSemicolonToken:       "ForCondSemicolonToken",
 	ForToken:                    "ForToken",
 	EndforToken:                 "EndforToken",
 	ForeachToken:                "ForeachToken",

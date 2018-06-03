@@ -832,8 +832,8 @@ statement:
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForToken)
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
-                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
-                yylex.(*Parser).comments.AddFromToken($$, $6, comment.SemiColonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.ForInitSemicolonToken)
+                yylex.(*Parser).comments.AddFromToken($$, $6, comment.ForCondSemicolonToken)
                 yylex.(*Parser).comments.AddFromToken($$, $8, comment.CloseParenthesisToken)
             }
     |   T_SWITCH '(' expr ')' switch_case_list

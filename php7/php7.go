@@ -3194,8 +3194,8 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ForToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
-			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
-			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.SemiColonToken)
+			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.ForInitSemicolonToken)
+			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.ForCondSemicolonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseParenthesisToken)
 		}
 	case 137:
