@@ -3109,16 +3109,30 @@ expr_without_variable:
     |   T_EXIT exit_expr
             {
                 if (strings.EqualFold($1.Value, "die")) {
-                    $$ = expr.NewDie($2)
+                    $$ = expr.NewDie(nil)
+                    if $2 != nil {
+                        $$.(*expr.Die).Expr = $2.(*expr.Exit).Expr
+                    }
                 } else {
-                    $$ = expr.NewExit($2)
+                    $$ = expr.NewExit(nil)
+                    if $2 != nil {
+                        $$.(*expr.Exit).Expr = $2.(*expr.Exit).Expr
+                    }
                 }
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                if $2 == nil {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                } else {
+                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                }
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExitToken)
+
+                if $2 != nil {
+                    yylex.(*Parser).comments.AddFromChildNode($$, $2)
+                }
             }
     |   '@' expr
             {
@@ -3368,7 +3382,16 @@ exit_expr:
         /* empty */
             { $$ = nil }
     |   '(' optional_expr ')'
-            { $$ = $2; }
+            {
+                $$ = expr.NewExit($2);
+
+                // save position
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
+            }
 ;
 
 backticks_expr:
