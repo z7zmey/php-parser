@@ -20,6 +20,10 @@ func NewToken(value []byte, startLine int, endLine int, startPos int, endPos int
 	return Token{string(value), startLine, endLine, startPos, endPos, nil}
 }
 
+func NewTokenString(value string, startLine int, endLine int, startPos int, endPos int) Token {
+	return Token{value, startLine, endLine, startPos, endPos, nil}
+}
+
 func (t Token) String() string {
 	return string(t.Value)
 }

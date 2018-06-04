@@ -1,6 +1,8 @@
 package position
 
 import (
+	"sync"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/token"
 )
@@ -80,119 +82,140 @@ func (b *Builder) getNodeEndPos(n node.Node) endPos {
 
 // NewNodeListPosition returns new Position
 func (b *Builder) NewNodeListPosition(list []node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getListStartPos(list).startLine,
 		b.getListEndPos(list).endLine,
 		b.getListStartPos(list).startPos,
 		b.getListEndPos(list).endPos,
-	}
+	)
 }
 
 // NewNodePosition returns new Position
 func (b *Builder) NewNodePosition(n node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getNodeStartPos(n).startLine,
 		b.getNodeEndPos(n).endLine,
 		b.getNodeStartPos(n).startPos,
 		b.getNodeEndPos(n).endPos,
-	}
+	)
+}
+
+type positionChunk struct {
+	idx  int
+	list [100]Position
+}
+
+var positionsPool = sync.Pool{
+	New: func() interface{} { return &positionChunk{} },
 }
 
 // NewTokenPosition returns new Position
 func (b *Builder) NewTokenPosition(t token.Token) *Position {
-	return &Position{
-		t.StartLine,
-		t.EndLine,
-		t.StartPos,
-		t.EndPos,
+	return b.newPosition(t.StartLine, t.EndLine, t.StartPos, t.EndPos)
+}
+
+func (b *Builder) newPosition(startLine, endLine, startPos, endPos int) *Position {
+	chunk := positionsPool.Get().(*positionChunk)
+
+	pos := &chunk.list[chunk.idx]
+	pos.StartLine = startLine
+	pos.EndLine = endLine
+	pos.StartPos = startPos
+	pos.EndPos = endPos
+
+	chunk.idx++
+	if chunk.idx < len(chunk.list) {
+		positionsPool.Put(chunk)
 	}
+
+	return pos
 }
 
 // NewTokensPosition returns new Position
 func (b *Builder) NewTokensPosition(startToken token.Token, endToken token.Token) *Position {
-	return &Position{
+	return b.newPosition(
 		startToken.StartLine,
 		endToken.EndLine,
 		startToken.StartPos,
 		endToken.EndPos,
-	}
+	)
 }
 
 // NewTokenNodePosition returns new Position
 func (b *Builder) NewTokenNodePosition(t token.Token, n node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		t.StartLine,
 		b.getNodeEndPos(n).endLine,
 		t.StartPos,
 		b.getNodeEndPos(n).endPos,
-	}
+	)
 }
 
 // NewNodeTokenPosition returns new Position
 func (b *Builder) NewNodeTokenPosition(n node.Node, t token.Token) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getNodeStartPos(n).startLine,
 		t.EndLine,
 		b.getNodeStartPos(n).startPos,
 		t.EndPos,
-	}
+	)
 }
 
 // NewNodesPosition returns new Position
 func (b *Builder) NewNodesPosition(startNode node.Node, endNode node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getNodeStartPos(startNode).startLine,
 		b.getNodeEndPos(endNode).endLine,
 		b.getNodeStartPos(startNode).startPos,
 		b.getNodeEndPos(endNode).endPos,
-	}
+	)
 }
 
 // NewNodeListTokenPosition returns new Position
 func (b *Builder) NewNodeListTokenPosition(list []node.Node, t token.Token) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getListStartPos(list).startLine,
 		t.EndLine,
 		b.getListStartPos(list).startPos,
 		t.EndPos,
-	}
+	)
 }
 
 // NewTokenNodeListPosition returns new Position
 func (b *Builder) NewTokenNodeListPosition(t token.Token, list []node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		t.StartLine,
 		b.getListEndPos(list).endLine,
 		t.StartPos,
 		b.getListEndPos(list).endPos,
-	}
+	)
 }
 
 // NewNodeNodeListPosition returns new Position
 func (b *Builder) NewNodeNodeListPosition(n node.Node, list []node.Node) *Position {
-	return &Position{
+	return b.newPosition(
 		b.getNodeStartPos(n).startLine,
 		b.getListEndPos(list).endLine,
 		b.getNodeStartPos(n).startPos,
 		b.getListEndPos(list).endPos,
-	}
+	)
 }
 
 // NewOptionalListTokensPosition returns new Position
 func (b *Builder) NewOptionalListTokensPosition(list []node.Node, t token.Token, endToken token.Token) *Position {
 	if list == nil {
-		return &Position{
+		return b.newPosition(
 			t.StartLine,
 			endToken.EndLine,
 			t.StartPos,
 			endToken.EndPos,
-		}
+		)
 	}
 
-	return &Position{
+	return b.newPosition(
 		b.getListStartPos(list).startLine,
 		endToken.EndLine,
 		b.getListStartPos(list).startPos,
 		endToken.EndPos,
-	}
+	)
 }

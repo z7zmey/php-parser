@@ -6,7 +6,10 @@ import (
 	"bytes"
 	"go/token"
 	"io"
+	"sync"
 	"unicode"
+	"unicode/utf8"
+	"unsafe"
 
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
@@ -510,6 +513,22 @@ func (l *Lexer) getCurrentState() int {
 	return l.StateStack[len(l.StateStack)-1]
 }
 
+// zero-allocation byte slice to string
+func b2s(buf []byte) string {
+	return *(*string)(unsafe.Pointer(&buf))
+}
+
+type bufStr struct {
+	off  int
+	data []byte
+}
+
+const initBufSize = 1024
+
+var bufferPool = sync.Pool{
+	New: func() interface{} { return &bufStr{data: make([]byte, initBufSize)} },
+}
+
 func (l *Lexer) newToken(chars []lex.Char) t.Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
@@ -519,7 +538,38 @@ func (l *Lexer) newToken(chars []lex.Char) t.Token {
 	startPos := int(firstChar.Pos())
 	endPos := int(lastChar.Pos())
 
-	return t.NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
+	charsBufSize := len(chars) * utf8.UTFMax
+
+	var str string
+
+	if charsBufSize >= initBufSize {
+		runes := make([]rune, 0, len(chars))
+		for _, c := range chars {
+			runes = append(runes, c.Rune)
+		}
+		str = string(runes)
+	} else {
+		var buf *bufStr
+		for {
+			buf = bufferPool.Get().(*bufStr)
+			if buf.off+charsBufSize < cap(buf.data) {
+				break
+			}
+		}
+
+		b := buf.data[buf.off:]
+		n := 0
+		for _, c := range chars {
+			n += utf8.EncodeRune(b[n:], c.Rune)
+		}
+		buf.off += n
+
+		str = b2s(b[0:n])
+
+		bufferPool.Put(buf)
+	}
+
+	return t.NewTokenString(str, startLine, endLine, startPos, endPos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(c comment.Comment) {
