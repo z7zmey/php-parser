@@ -1,3 +1,8 @@
 .vscode
 php-parser
 *example.php
+
+cpu.prof
+mem.prof
+php7.test
+php5.test

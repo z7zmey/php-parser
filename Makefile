@@ -32,3 +32,15 @@ compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
 
 ./php7/php7.go: ./php7/php7.y
 	goyacc -o $@ $<
+
+profile5:
+	GOGC=off go test -cpuprofile cpu.prof -memprofile mem.prof -bench=. -benchmem -benchtime=20s ./php5
+
+profile7:
+	GOGC=off go test -cpuprofile cpu.prof -memprofile mem.prof -bench=. -benchmem -benchtime=20s ./php7
+
+cpu_pprof:
+	go tool pprof cpu.prof
+
+mem_pprof:
+	go tool pprof mem.prof
