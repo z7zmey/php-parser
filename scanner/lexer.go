@@ -441,6 +441,7 @@ type Lexer struct {
 	PhpDocComment string
 	Comments      []comment.Comment
 	heredocLabel  []lex.Char
+	tokenBytesBuf *bytes.Buffer
 }
 
 // Rune2Class returns the rune integer id
@@ -468,7 +469,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &Lexer{lx, []int{0}, "", nil, nil}
+	return &Lexer{lx, []int{0}, "", nil, nil, &bytes.Buffer{}}
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {
@@ -527,11 +528,13 @@ func (l *Lexer) addComment(c comment.Comment) {
 }
 
 func (l *Lexer) charsToBytes(chars []lex.Char) []byte {
-	bytesBuf := bytes.Buffer{}
-
 	for _, c := range chars {
-		bytesBuf.WriteRune(c.Rune)
+		l.tokenBytesBuf.WriteRune(c.Rune)
 	}
 
-	return bytesBuf.Bytes()
+	r := l.tokenBytesBuf.Bytes()
+
+	l.tokenBytesBuf.Reset()
+
+	return r
 }
