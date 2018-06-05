@@ -10,7 +10,7 @@ import (
 )
 
 func TestToken(t *testing.T) {
-	tkn := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	tkn := token.NewToken(`foo`, 1, 1, 0, 3)
 
 	c := []comment.Comment{
 		comment.NewPlainComment("test comment"),

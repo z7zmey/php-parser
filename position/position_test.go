@@ -12,7 +12,7 @@ import (
 func TestNewTokenPosition(t *testing.T) {
 	builder := position.Builder{}
 
-	tkn := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	tkn := token.NewToken(`foo`, 1, 1, 0, 3)
 
 	pos := builder.NewTokenPosition(tkn)
 
@@ -24,8 +24,8 @@ func TestNewTokenPosition(t *testing.T) {
 func TestNewTokensPosition(t *testing.T) {
 	builder := position.Builder{}
 
-	token1 := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
-	token2 := token.NewToken([]byte(`foo`), 2, 2, 4, 6)
+	token1 := token.NewToken(`foo`, 1, 1, 0, 3)
+	token2 := token.NewToken(`foo`, 2, 2, 4, 6)
 
 	pos := builder.NewTokensPosition(token1, token2)
 
@@ -57,7 +57,7 @@ func TestNewNodePosition(t *testing.T) {
 }
 
 func TestNewTokenNodePosition(t *testing.T) {
-	tkn := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	tkn := token.NewToken(`foo`, 1, 1, 0, 3)
 	n := node.NewIdentifier("test node")
 
 	p := &position.Positions{}
@@ -81,7 +81,7 @@ func TestNewTokenNodePosition(t *testing.T) {
 
 func TestNewNodeTokenPosition(t *testing.T) {
 	n := node.NewIdentifier("test node")
-	tkn := token.NewToken([]byte(`foo`), 2, 2, 10, 12)
+	tkn := token.NewToken(`foo`, 2, 2, 10, 12)
 
 	p := &position.Positions{}
 	p.AddPosition(n, &position.Position{
@@ -161,7 +161,7 @@ func TestNewNodesPosition(t *testing.T) {
 func TestNewNodeListTokenPosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
 	n2 := node.NewIdentifier("test node")
-	tkn := token.NewToken([]byte(`foo`), 3, 3, 20, 22)
+	tkn := token.NewToken(`foo`, 3, 3, 20, 22)
 
 	builder := position.Builder{
 		Positions: &position.Positions{
@@ -188,7 +188,7 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 }
 
 func TestNewTokenNodeListPosition(t *testing.T) {
-	tkn := token.NewToken([]byte(`foo`), 1, 1, 0, 2)
+	tkn := token.NewToken(`foo`, 1, 1, 0, 2)
 	n1 := node.NewIdentifier("test node")
 	n2 := node.NewIdentifier("test node")
 
@@ -254,8 +254,8 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 func TestNewOptionalListTokensPosition(t *testing.T) {
 	builder := position.Builder{}
 
-	token1 := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
-	token2 := token.NewToken([]byte(`foo`), 2, 2, 4, 6)
+	token1 := token.NewToken(`foo`, 1, 1, 0, 3)
+	token2 := token.NewToken(`foo`, 2, 2, 4, 6)
 
 	pos := builder.NewOptionalListTokensPosition(nil, token1, token2)
 
@@ -292,8 +292,8 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		},
 	}
 
-	token1 := token.NewToken([]byte(`foo`), 4, 4, 27, 29)
-	token2 := token.NewToken([]byte(`foo`), 5, 5, 30, 32)
+	token1 := token.NewToken(`foo`, 4, 4, 27, 29)
+	token2 := token.NewToken(`foo`, 5, 5, 30, 32)
 
 	pos := builder.NewOptionalListTokensPosition([]node.Node{n2, n3}, token1, token2)
 
@@ -334,7 +334,7 @@ func TestNilNodeListPos(t *testing.T) {
 }
 
 func TestNilNodeListTokenPos(t *testing.T) {
-	token1 := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	token1 := token.NewToken(`foo`, 1, 1, 0, 3)
 
 	builder := position.Builder{}
 
@@ -367,7 +367,7 @@ func TestEmptyNodeListPos(t *testing.T) {
 }
 
 func TestEmptyNodeListTokenPos(t *testing.T) {
-	token1 := token.NewToken([]byte(`foo`), 1, 1, 0, 3)
+	token1 := token.NewToken(`foo`, 1, 1, 0, 3)
 
 	builder := position.Builder{}
 

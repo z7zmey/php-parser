@@ -440,7 +440,7 @@ type Lexer struct {
 	StateStack    []int
 	PhpDocComment string
 	Comments      []comment.Comment
-	heredocLabel  []lex.Char
+	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 }
 
@@ -469,7 +469,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &Lexer{lx, []int{0}, "", nil, nil, &bytes.Buffer{}}
+	return &Lexer{lx, []int{0}, "", nil, "", &bytes.Buffer{}}
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {
@@ -520,21 +520,19 @@ func (l *Lexer) newToken(chars []lex.Char) t.Token {
 	startPos := int(firstChar.Pos())
 	endPos := int(lastChar.Pos())
 
-	return t.NewToken(l.charsToBytes(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
+	return t.NewToken(l.tokenString(chars), startLine, endLine, startPos, endPos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(c comment.Comment) {
 	l.Comments = append(l.Comments, c)
 }
 
-func (l *Lexer) charsToBytes(chars []lex.Char) []byte {
+func (l *Lexer) tokenString(chars []lex.Char) string {
+	l.tokenBytesBuf.Reset()
+
 	for _, c := range chars {
 		l.tokenBytesBuf.WriteRune(c.Rune)
 	}
 
-	r := l.tokenBytesBuf.Bytes()
-
-	l.tokenBytesBuf.Reset()
-
-	return r
+	return string(l.tokenBytesBuf.Bytes())
 }

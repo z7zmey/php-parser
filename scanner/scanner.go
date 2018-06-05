@@ -9,7 +9,6 @@
 package scanner
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/cznic/golex/lex"
 	"github.com/z7zmey/php-parser/comment"
@@ -8530,19 +8529,18 @@ yyrule141: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 		default:
 			l.begin(HEREDOC)
 		}
-		l.heredocLabel = make([]lex.Char, lblLast-lblFirst+1)
-		copy(l.heredocLabel, tb[lblFirst:lblLast+1])
+		l.heredocLabel = l.tokenString(tb[lblFirst : lblLast+1])
 
 		ungetCnt := len(l.heredocLabel)
-		searchLabelAhead := []lex.Char{}
+		searchLabelAhead := []byte{}
 		for i := 0; i < len(l.heredocLabel); i++ {
 			if c == -1 {
 				break
 			}
-			searchLabelAhead = append(searchLabelAhead, l.Lookahead())
+			searchLabelAhead = append(searchLabelAhead, byte(rune(c)))
 			c = l.Next()
 		}
-		if bytes.Equal(l.charsToBytes(l.heredocLabel), l.charsToBytes(searchLabelAhead)) && ';' == rune(c) {
+		if l.heredocLabel == string(searchLabelAhead) && ';' == rune(c) {
 			ungetCnt++
 			c = l.Next()
 			if '\n' == rune(c) || '\r' == rune(c) {
@@ -8564,12 +8562,12 @@ yyrule142: // .|[ \t\n\r]
 				break
 			}
 			if '\n' == rune(c) || '\r' == rune(c) {
-				if bytes.Equal(append(l.charsToBytes(l.heredocLabel), ';'), searchLabel) {
+				if l.heredocLabel+";" == string(searchLabel) {
 					l.begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + 1)
 					break
 				}
-				if bytes.Equal(l.charsToBytes(l.heredocLabel), searchLabel) {
+				if l.heredocLabel == string(searchLabel) {
 					l.begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel))
 					break
@@ -8770,13 +8768,13 @@ yyrule152: // .|[ \t\n\r]
 				}
 				fallthrough
 			case '\n':
-				if bytes.Equal(append(l.charsToBytes(l.heredocLabel), ';'), searchLabel) {
+				if l.heredocLabel+";" == string(searchLabel) {
 					l.begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + 1 + nls)
 					lval.Token(l.newToken(tb))
 					return T_ENCAPSED_AND_WHITESPACE
 				}
-				if bytes.Equal(l.charsToBytes(l.heredocLabel), searchLabel) {
+				if l.heredocLabel == string(searchLabel) {
 					l.begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + nls)
 					lval.Token(l.newToken(tb))
