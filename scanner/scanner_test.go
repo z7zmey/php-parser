@@ -224,6 +224,7 @@ func TestTokens(t *testing.T) {
 		( integer )
 		( object )
 		( string )
+		( binary )
 		( unset )
 
 	`
@@ -407,6 +408,7 @@ func TestTokens(t *testing.T) {
 		scanner.T_INT_CAST,
 		scanner.T_INT_CAST,
 		scanner.T_OBJECT_CAST,
+		scanner.T_STRING_CAST,
 		scanner.T_STRING_CAST,
 		scanner.T_UNSET_CAST,
 	}

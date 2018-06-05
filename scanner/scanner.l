@@ -213,7 +213,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\([ \t]*(real|double|float)[ \t]*\)        lval.Token(l.newToken(l.Token())); return T_DOUBLE_CAST
 <PHP>\([ \t]*(int|integer)[ \t]*\)              lval.Token(l.newToken(l.Token())); return T_INT_CAST
 <PHP>\([ \t]*object[ \t]*\)                     lval.Token(l.newToken(l.Token())); return T_OBJECT_CAST
-<PHP>\([ \t]*string[ \t]*\)                     lval.Token(l.newToken(l.Token())); return T_STRING_CAST
+<PHP>\([ \t]*(string|binary)[ \t]*\)            lval.Token(l.newToken(l.Token())); return T_STRING_CAST
 <PHP>\([ \t]*unset[ \t]*\)                      lval.Token(l.newToken(l.Token())); return T_UNSET_CAST
 <PHP>new                                        lval.Token(l.newToken(l.Token())); return T_NEW
 <PHP>and                                        lval.Token(l.newToken(l.Token())); return T_LOGICAL_AND
