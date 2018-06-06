@@ -64,7 +64,11 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 	var parserWorker parser.Parser
 
 	for {
-		path := <-pathCh
+		path, ok := <-pathCh
+		if !ok {
+			return
+		}
+
 		src, _ := os.Open(path)
 
 		if *usePhp5 {
@@ -80,7 +84,11 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 
 func printer(result <-chan parser.Parser) {
 	for {
-		parserWorker := <-result
+		parserWorker, ok := <-result
+		if !ok {
+			return
+		}
+
 		fmt.Printf("==> %s\n", parserWorker.GetPath())
 
 		for _, e := range parserWorker.GetErrors() {

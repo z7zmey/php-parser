@@ -56,9 +56,6 @@ func (l *Parser) Error(msg string) {
 
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
-	yyDebug = 0
-	yyErrorVerbose = true
-
 	// init
 	l.errors = nil
 	l.rootNode = nil
