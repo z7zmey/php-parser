@@ -106,3 +106,13 @@ func (l *Parser) GetComments() parser.Comments {
 func (l *Parser) GetPositions() parser.Positions {
 	return l.positions
 }
+
+// helpers
+
+func lastNode(nn []node.Node) node.Node {
+	return nn[len(nn)-1]
+}
+
+func firstNode(nn []node.Node) node.Node {
+	return nn[0]
+}

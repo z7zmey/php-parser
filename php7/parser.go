@@ -96,11 +96,6 @@ func (l *Parser) GetPositions() parser.Positions {
 	return l.positions
 }
 
-func (l *Parser) setCommentsFromChildNode(n node.Node, c node.Node) {
-	l.comments.AddComments(n, l.comments[c])
-	delete(l.comments, c)
-}
-
 // helpers
 
 func lastNode(nn []node.Node) node.Node {

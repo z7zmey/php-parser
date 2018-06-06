@@ -1694,16 +1694,7 @@ parameter:
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
                 variable := expr.NewVariable(identifier)
-
-                if $1 != nil {
-                    $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
-                } else if $2 != nil {
-                    $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
-                } else if $3 != nil {
-                    $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
-                } else {
-                    $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
-                }
+                $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
@@ -1731,15 +1722,7 @@ parameter:
             {
                 identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
                 variable := expr.NewVariable(identifier)
-                if $1 != nil {
-                    $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
-                } else if $2 != nil {
-                    $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
-                } else if $3 != nil {
-                    $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
-                } else {
-                    $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
-                }
+                $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
@@ -1832,6 +1815,10 @@ argument_list:
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.CloseParenthesisToken)
             }
     |   '(' non_empty_argument_list possible_comma ')'
             {
@@ -1839,6 +1826,13 @@ argument_list:
 
                 // save position
                 yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
+                if $3 != nil {
+                    yylex.(*Parser).comments.AddFromToken($$, $3, comment.CommaToken)
+                }
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.CloseParenthesisToken)
             }
 ;
 
@@ -4138,6 +4132,7 @@ encaps_var:
                 $$ = $2;
             }
 ;
+
 encaps_var_offset:
         T_STRING
             {
