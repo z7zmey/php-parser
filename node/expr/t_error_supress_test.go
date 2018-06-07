@@ -15,7 +15,7 @@ import (
 func TestErrorSuppress(t *testing.T) {
 	src := `<? @$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ErrorSuppress{

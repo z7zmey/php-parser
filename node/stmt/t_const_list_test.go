@@ -15,7 +15,7 @@ import (
 func TestConstList(t *testing.T) {
 	src := `<? const FOO = 1, BAR = 2;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.ConstList{
 				Consts: []node.Node{

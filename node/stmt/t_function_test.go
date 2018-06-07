@@ -17,7 +17,7 @@ import (
 func TestSimpleFunction(t *testing.T) {
 	src := `<? function foo() {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Function{
 				ReturnsRef:    false,
@@ -42,7 +42,7 @@ func TestSimpleFunction(t *testing.T) {
 func TestFunctionReturn(t *testing.T) {
 	src := `<? function foo() {return;}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Function{
 				ReturnsRef:    false,
@@ -69,7 +69,7 @@ func TestFunctionReturn(t *testing.T) {
 func TestFunctionReturnVar(t *testing.T) {
 	src := `<? function foo(array $a, callable $b) {return $a;}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Function{
 				ReturnsRef:    false,
@@ -112,7 +112,7 @@ func TestFunctionReturnVar(t *testing.T) {
 func TestRefFunction(t *testing.T) {
 	src := `<? function &foo() {return 1;}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Function{
 				ReturnsRef:    true,
@@ -141,7 +141,7 @@ func TestRefFunction(t *testing.T) {
 func TestReturnTypeFunction(t *testing.T) {
 	src := `<? function &foo(): void {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Function{
 				ReturnsRef:    true,

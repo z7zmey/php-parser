@@ -17,7 +17,7 @@ import (
 func TestClassConstFetch(t *testing.T) {
 	src := `<? Foo::Bar;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{
@@ -46,7 +46,7 @@ func TestClassConstFetch(t *testing.T) {
 func TestStaticClassConstFetch(t *testing.T) {
 	src := `<? static::bar;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ClassConstFetch{

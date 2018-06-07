@@ -16,7 +16,7 @@ import (
 func TestYield(t *testing.T) {
 	src := `<? yield;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{},
@@ -38,7 +38,7 @@ func TestYield(t *testing.T) {
 func TestYieldVal(t *testing.T) {
 	src := `<? yield $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
@@ -62,7 +62,7 @@ func TestYieldVal(t *testing.T) {
 func TestYieldKeyVal(t *testing.T) {
 	src := `<? yield $a => $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
@@ -87,7 +87,7 @@ func TestYieldKeyVal(t *testing.T) {
 func TestYieldExpr(t *testing.T) {
 	src := `<? yield 1;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
@@ -111,7 +111,7 @@ func TestYieldExpr(t *testing.T) {
 func TestYieldKeyExpr(t *testing.T) {
 	src := `<? yield $a => 1;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Yield{
@@ -136,7 +136,7 @@ func TestYieldKeyExpr(t *testing.T) {
 func TestYieldFrom(t *testing.T) {
 	src := `<? yield from $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.YieldFrom{

@@ -17,7 +17,7 @@ import (
 func TestConstFetch(t *testing.T) {
 	src := `<? foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ConstFetch{
@@ -41,7 +41,7 @@ func TestConstFetch(t *testing.T) {
 func TestConstFetchRelative(t *testing.T) {
 	src := `<? namespace\foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ConstFetch{
@@ -65,7 +65,7 @@ func TestConstFetchRelative(t *testing.T) {
 func TestConstFetchFullyQualified(t *testing.T) {
 	src := `<? \foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ConstFetch{

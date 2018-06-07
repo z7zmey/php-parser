@@ -66,11 +66,13 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 
 	case *stmt.Class:
 		if n.Extends != nil {
-			nsr.ResolveName(n.Extends, "")
+			nsr.ResolveName(n.Extends.ClassName, "")
 		}
 
-		for _, interfaceName := range n.Implements {
-			nsr.ResolveName(interfaceName, "")
+		if n.Implements != nil {
+			for _, interfaceName := range n.Implements.InterfaceNames {
+				nsr.ResolveName(interfaceName, "")
+			}
 		}
 
 		if n.ClassName != nil {
@@ -78,8 +80,10 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 		}
 
 	case *stmt.Interface:
-		for _, interfaceName := range n.Extends {
-			nsr.ResolveName(interfaceName, "")
+		if n.Extends != nil {
+			for _, interfaceName := range n.Extends.InterfaceNames {
+				nsr.ResolveName(interfaceName, "")
+			}
 		}
 
 		nsr.AddNamespacedName(n, n.InterfaceName.(*node.Identifier).Value)
@@ -152,7 +156,7 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 			nsr.ResolveName(t, "")
 		}
 
-		for _, a := range n.Adaptations {
+		for _, a := range n.TraitAdaptationList.Adaptations {
 			switch aa := a.(type) {
 			case *stmt.TraitUsePrecedence:
 				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait

@@ -14,7 +14,7 @@ import (
 func TestUnset(t *testing.T) {
 	src := `<? unset($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{
@@ -38,7 +38,7 @@ func TestUnset(t *testing.T) {
 func TestUnsetVars(t *testing.T) {
 	src := `<? unset($a, $b);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{
@@ -63,7 +63,7 @@ func TestUnsetVars(t *testing.T) {
 func TestUnsetTrailingComma(t *testing.T) {
 	src := `<? unset($a, $b,);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Unset{
 				Vars: []node.Node{

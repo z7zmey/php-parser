@@ -17,7 +17,7 @@ import (
 func TestEmptyList(t *testing.T) {
 	src := `<? list() = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
@@ -44,15 +44,14 @@ func TestEmptyList(t *testing.T) {
 func TestList(t *testing.T) {
 	src := `<? list($a) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
@@ -76,14 +75,13 @@ func TestList(t *testing.T) {
 func TestListArrayIndex(t *testing.T) {
 	src := `<? list($a[]) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.ArrayDimFetch{
 									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
@@ -110,19 +108,17 @@ func TestListArrayIndex(t *testing.T) {
 func TestListList(t *testing.T) {
 	src := `<? list(list($a)) = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.List{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.List{
 									Items: []node.Node{
 										&expr.ArrayItem{
-											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+											Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},

@@ -5,10 +5,11 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/z7zmey/php-parser/comment"
 
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/token"
 
 	"github.com/kylelemons/godebug/pretty"
 )
@@ -27,10 +28,10 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 }
 
 type lval struct {
-	Tkn token.Token
+	Tkn *scanner.Token
 }
 
-func (lv *lval) Token(t token.Token) {
+func (lv *lval) Token(t *scanner.Token) {
 	lv.Tkn = t
 }
 
@@ -875,8 +876,8 @@ func TestSlashAfterVariable(t *testing.T) {
 func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("//test"),
+	expected := []*comment.Comment{
+		comment.NewComment("//test", position.NewPosition(1, 1, 7, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -892,8 +893,8 @@ func TestCommentEnd(t *testing.T) {
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("//test\n"),
+	expected := []*comment.Comment{
+		comment.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -909,8 +910,8 @@ func TestCommentNewLine(t *testing.T) {
 func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("//test\r"),
+	expected := []*comment.Comment{
+		comment.NewComment("//test\r", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -926,8 +927,8 @@ func TestCommentNewLine1(t *testing.T) {
 func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("#test\r\n"),
+	expected := []*comment.Comment{
+		comment.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -944,8 +945,8 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	src := `<?php
 	//test?> test`
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("//test"),
+	expected := []*comment.Comment{
+		comment.NewComment("//test", position.NewPosition(2, 2, 8, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -962,8 +963,8 @@ func TestInlineComment(t *testing.T) {
 	src := `<?php
 	/*test*/`
 
-	expected := []comment.Comment{
-		comment.NewPlainComment("/*test*/"),
+	expected := []*comment.Comment{
+		comment.NewComment("/*test*/", position.NewPosition(2, 2, 8, 15)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -980,8 +981,8 @@ func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
 	/**/`
 
-	expected := []comment.Comment{
-		comment.NewDocComment("/**/"),
+	expected := []*comment.Comment{
+		comment.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -998,8 +999,8 @@ func TestEmptyInlineComment2(t *testing.T) {
 	src := `<?php
 	/***/`
 
-	expected := []comment.Comment{
-		comment.NewDocComment("/***/"),
+	expected := []*comment.Comment{
+		comment.NewComment("/***/", position.NewPosition(2, 2, 8, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")

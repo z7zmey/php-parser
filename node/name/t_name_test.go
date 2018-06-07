@@ -31,14 +31,14 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 func TestName(t *testing.T) {
 	src := `<? foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &name.Name{
 						Parts: []node.Node{&name.NamePart{Value: "foo"}},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -58,14 +58,14 @@ func TestName(t *testing.T) {
 func TestFullyQualified(t *testing.T) {
 	src := `<? \foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &name.FullyQualified{
 						Parts: []node.Node{&name.NamePart{Value: "foo"}},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -85,14 +85,14 @@ func TestFullyQualified(t *testing.T) {
 func TestRelative(t *testing.T) {
 	src := `<? namespace\foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &name.Relative{
 						Parts: []node.Node{&name.NamePart{Value: "foo"}},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},

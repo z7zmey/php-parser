@@ -15,7 +15,7 @@ import (
 func TestBreakEmpty(t *testing.T) {
 	src := `<? while (1) { break; }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.While{
 				Cond: &scalar.Lnumber{Value: "1"},
@@ -42,7 +42,7 @@ func TestBreakEmpty(t *testing.T) {
 func TestBreakLight(t *testing.T) {
 	src := `<? while (1) { break 2; }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.While{
 				Cond: &scalar.Lnumber{Value: "1"},
@@ -71,7 +71,7 @@ func TestBreakLight(t *testing.T) {
 func TestBreak(t *testing.T) {
 	src := `<? while (1) : break(3); endwhile;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.AltWhile{
 				Cond: &scalar.Lnumber{Value: "1"},

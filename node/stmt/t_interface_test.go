@@ -14,7 +14,7 @@ import (
 func TestInterface(t *testing.T) {
 	src := `<? interface Foo {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Interface{
 				PhpDocComment: "",
@@ -38,15 +38,17 @@ func TestInterface(t *testing.T) {
 func TestInterfaceExtend(t *testing.T) {
 	src := `<? interface Foo extends Bar {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Interface{
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{Value: "Foo"},
-				Extends: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Bar"},
+				Extends: &stmt.InterfaceExtends{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
 						},
 					},
 				},
@@ -69,20 +71,22 @@ func TestInterfaceExtend(t *testing.T) {
 func TestInterfaceExtends(t *testing.T) {
 	src := `<? interface Foo extends Bar, Baz {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Interface{
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{Value: "Foo"},
-				Extends: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Bar"},
+				Extends: &stmt.InterfaceExtends{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Bar"},
+							},
 						},
-					},
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "Baz"},
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "Baz"},
+							},
 						},
 					},
 				},

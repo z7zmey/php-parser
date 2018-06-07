@@ -16,7 +16,7 @@ import (
 func TestSimpleVar(t *testing.T) {
 	src := `<? "test $var";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -43,7 +43,7 @@ func TestSimpleVar(t *testing.T) {
 func TestSimpleVarOneChar(t *testing.T) {
 	src := `<? "test $a";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -70,7 +70,7 @@ func TestSimpleVarOneChar(t *testing.T) {
 func TestSimpleVarEndsEcapsed(t *testing.T) {
 	src := `<? "test $var\"";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -98,7 +98,7 @@ func TestSimpleVarEndsEcapsed(t *testing.T) {
 func TestStringVarCurveOpen(t *testing.T) {
 	src := `<? "=$a{$b}";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -126,7 +126,7 @@ func TestStringVarCurveOpen(t *testing.T) {
 func TestSimpleVarPropertyFetch(t *testing.T) {
 	src := `<? "test $foo->bar()";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -157,7 +157,7 @@ func TestSimpleVarPropertyFetch(t *testing.T) {
 func TestDollarOpenCurlyBraces(t *testing.T) {
 	src := `<? "test ${foo}";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -184,7 +184,7 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 	src := `<? "test ${foo[0]}";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
@@ -214,16 +214,16 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 func TestCurlyOpenMethodCall(t *testing.T) {
 	src := `<? "test {$foo->bar()}";`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &scalar.Encapsed{
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "test "},
 						&expr.MethodCall{
-							Variable:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-							Method:    &node.Identifier{Value: "bar"},
-							Arguments: []node.Node{},
+							Variable:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+							Method:       &node.Identifier{Value: "bar"},
+							ArgumentList: &node.ArgumentList{},
 						},
 					},
 				},

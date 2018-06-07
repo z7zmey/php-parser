@@ -20,7 +20,7 @@ import (
 func TestFunctionCall(t *testing.T) {
 	src := `<? foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
@@ -29,7 +29,7 @@ func TestFunctionCall(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -49,7 +49,7 @@ func TestFunctionCall(t *testing.T) {
 func TestFunctionCallRelative(t *testing.T) {
 	src := `<? namespace\foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
@@ -58,7 +58,7 @@ func TestFunctionCallRelative(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -78,7 +78,7 @@ func TestFunctionCallRelative(t *testing.T) {
 func TestFunctionFullyQualified(t *testing.T) {
 	src := `<? \foo([]);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
@@ -87,12 +87,14 @@ func TestFunctionFullyQualified(t *testing.T) {
 							&name.NamePart{Value: "foo"},
 						},
 					},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &expr.ShortArray{
-								Items: []node.Node{},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &expr.ShortArray{
+									Items: []node.Node{},
+								},
 							},
 						},
 					},
@@ -115,17 +117,19 @@ func TestFunctionFullyQualified(t *testing.T) {
 func TestFunctionCallVar(t *testing.T) {
 	src := `<? $foo(yield $a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
 					Function: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &expr.Yield{
-								Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &expr.Yield{
+									Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								},
 							},
 						},
 					},
@@ -148,7 +152,7 @@ func TestFunctionCallVar(t *testing.T) {
 func TestFunctionCallExprArg(t *testing.T) {
 	src := `<? ceil($foo/3);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.FunctionCall{
@@ -157,13 +161,15 @@ func TestFunctionCallExprArg(t *testing.T) {
 							&name.NamePart{Value: "ceil"},
 						},
 					},
-					Arguments: []node.Node{
-						&node.Argument{
-							Variadic:    false,
-							IsReference: false,
-							Expr: &binary.Div{
-								Left:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-								Right: &scalar.Lnumber{Value: "3"},
+					ArgumentList: &node.ArgumentList{
+						Arguments: []node.Node{
+							&node.Argument{
+								Variadic:    false,
+								IsReference: false,
+								Expr: &binary.Div{
+									Left:  &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+									Right: &scalar.Lnumber{Value: "3"},
+								},
 							},
 						},
 					},

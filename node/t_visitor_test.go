@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/node/stmt"
+
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/walker"
 
@@ -43,6 +45,22 @@ var nodesToTest = []struct {
 		},
 		[]string{"VariableType", "Variable", "DefaultValue"},
 		map[string]interface{}{"ByRef": false, "Variadic": true},
+	},
+	{
+		&node.ArgumentList{
+			Arguments: []node.Node{
+				&node.Argument{},
+			},
+		},
+		[]string{"Arguments"},
+		map[string]interface{}{},
+	},
+	{
+		&node.Root{
+			Stmts: []node.Node{&stmt.Expression{}},
+		},
+		[]string{"Stmts"},
+		map[string]interface{}{},
 	},
 }
 

@@ -2,9 +2,10 @@ package stmt_test
 
 import (
 	"bytes"
+	"testing"
+
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
-	"testing"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -15,7 +16,7 @@ import (
 func TestSimpleClass(t *testing.T) {
 	src := `<? class foo{ }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
@@ -38,7 +39,7 @@ func TestSimpleClass(t *testing.T) {
 func TestAbstractClass(t *testing.T) {
 	src := `<? abstract class foo{ }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
@@ -64,16 +65,18 @@ func TestAbstractClass(t *testing.T) {
 func TestClassExtends(t *testing.T) {
 	src := `<? final class foo extends bar { }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Extends: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{Value: "bar"},
+				Extends: &stmt.ClassExtends{
+					ClassName: &name.Name{
+						Parts: []node.Node{
+							&name.NamePart{Value: "bar"},
+						},
 					},
 				},
 				Stmts: []node.Node{},
@@ -95,17 +98,19 @@ func TestClassExtends(t *testing.T) {
 func TestClassImplement(t *testing.T) {
 	src := `<? final class foo implements bar { }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Implements: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "bar"},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
 						},
 					},
 				},
@@ -128,22 +133,24 @@ func TestClassImplement(t *testing.T) {
 func TestClassImplements(t *testing.T) {
 	src := `<? final class foo implements bar, baz { }`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Class{
 				ClassName: &node.Identifier{Value: "foo"},
 				Modifiers: []node.Node{
 					&node.Identifier{Value: "final"},
 				},
-				Implements: []node.Node{
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "bar"},
+				Implements: &stmt.ClassImplements{
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "bar"},
+							},
 						},
-					},
-					&name.Name{
-						Parts: []node.Node{
-							&name.NamePart{Value: "baz"},
+						&name.Name{
+							Parts: []node.Node{
+								&name.NamePart{Value: "baz"},
+							},
 						},
 					},
 				},
@@ -166,26 +173,30 @@ func TestClassImplements(t *testing.T) {
 func TestAnonimousClass(t *testing.T) {
 	src := `<? new class() extends foo implements bar, baz { };`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &stmt.Class{
-						Args: []node.Node{},
-						Extends: &name.Name{
-							Parts: []node.Node{
-								&name.NamePart{Value: "foo"},
-							},
-						},
-						Implements: []node.Node{
-							&name.Name{
+						ArgumentList: &node.ArgumentList{},
+						Extends: &stmt.ClassExtends{
+							ClassName: &name.Name{
 								Parts: []node.Node{
-									&name.NamePart{Value: "bar"},
+									&name.NamePart{Value: "foo"},
 								},
 							},
-							&name.Name{
-								Parts: []node.Node{
-									&name.NamePart{Value: "baz"},
+						},
+						Implements: &stmt.ClassImplements{
+							InterfaceNames: []node.Node{
+								&name.Name{
+									Parts: []node.Node{
+										&name.NamePart{Value: "bar"},
+									},
+								},
+								&name.Name{
+									Parts: []node.Node{
+										&name.NamePart{Value: "baz"},
+									},
 								},
 							},
 						},

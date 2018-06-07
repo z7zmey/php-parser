@@ -43,9 +43,9 @@ func TestResolveStaticCall(t *testing.T) {
 				},
 			},
 			&expr.StaticCall{
-				Class:     nameBC,
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class:        nameBC,
+				Call:         &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -134,8 +134,8 @@ func TestResolveNew(t *testing.T) {
 				},
 			},
 			&expr.New{
-				Class:     nameBC,
-				Arguments: []node.Node{},
+				Class:        nameBC,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -242,8 +242,8 @@ func TestResolveFunctionCall(t *testing.T) {
 				},
 			},
 			&expr.FunctionCall{
-				Function:  nameB,
-				Arguments: []node.Node{},
+				Function:     nameB,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -323,12 +323,12 @@ func TestResolveGroupUse(t *testing.T) {
 				Constant: nameC,
 			},
 			&expr.FunctionCall{
-				Function:  nameF,
-				Arguments: []node.Node{},
+				Function:     nameF,
+				ArgumentList: &node.ArgumentList{},
 			},
 			&expr.FunctionCall{
-				Function:  nameE,
-				Arguments: []node.Node{},
+				Function:     nameE,
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}
@@ -368,20 +368,22 @@ func TestResolveTraitUse(t *testing.T) {
 					nameB,
 					relativeNameB,
 				},
-				Adaptations: []node.Node{
-					&stmt.TraitUsePrecedence{
-						Ref: &stmt.TraitMethodRef{
-							Trait:  fullyQualifiedNameB,
-							Method: &node.Identifier{Value: "foo"},
+				TraitAdaptationList: &stmt.TraitAdaptationList{
+					Adaptations: []node.Node{
+						&stmt.TraitUsePrecedence{
+							Ref: &stmt.TraitMethodRef{
+								Trait:  fullyQualifiedNameB,
+								Method: &node.Identifier{Value: "foo"},
+							},
+							Insteadof: []node.Node{fullyQualifiedNameBC},
 						},
-						Insteadof: []node.Node{fullyQualifiedNameBC},
-					},
-					&stmt.TraitUseAlias{
-						Ref: &stmt.TraitMethodRef{
-							Trait:  relativeNameBC,
-							Method: &node.Identifier{Value: "foo"},
+						&stmt.TraitUseAlias{
+							Ref: &stmt.TraitMethodRef{
+								Trait:  relativeNameBC,
+								Method: &node.Identifier{Value: "foo"},
+							},
+							Alias: &node.Identifier{Value: "bar"},
 						},
-						Alias: &node.Identifier{Value: "bar"},
 					},
 				},
 			},
@@ -409,9 +411,13 @@ func TestResolveClassName(t *testing.T) {
 	class := &stmt.Class{
 		PhpDocComment: "",
 		ClassName:     &node.Identifier{Value: "A"},
-		Extends:       nameAB,
-		Implements: []node.Node{
-			nameBC,
+		Extends: &stmt.ClassExtends{
+			ClassName: nameAB,
+		},
+		Implements: &stmt.ClassImplements{
+			InterfaceNames: []node.Node{
+				nameBC,
+			},
 		},
 	}
 
@@ -440,9 +446,11 @@ func TestResolveInterfaceName(t *testing.T) {
 	interfaceNode := &stmt.Interface{
 		PhpDocComment: "",
 		InterfaceName: &node.Identifier{Value: "A"},
-		Extends: []node.Node{
-			nameAB,
-			nameBC,
+		Extends: &stmt.InterfaceExtends{
+			InterfaceNames: []node.Node{
+				nameAB,
+				nameBC,
+			},
 		},
 	}
 
@@ -542,7 +550,9 @@ func TestResolveMethodName(t *testing.T) {
 			},
 		},
 		ReturnType: &node.Nullable{Expr: nameBC},
-		Stmts:      []node.Node{},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{},
+		},
 	}
 
 	expected := map[node.Node]string{
@@ -658,9 +668,9 @@ func TestResolveNamespaces(t *testing.T) {
 				},
 			},
 			&expr.StaticCall{
-				Class:     nameFG,
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class:        nameFG,
+				Call:         &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 			&stmt.Namespace{
 				Stmts: []node.Node{},
@@ -676,14 +686,14 @@ func TestResolveNamespaces(t *testing.T) {
 						},
 					},
 					&expr.StaticCall{
-						Class:     relativeNameCE,
-						Call:      &node.Identifier{Value: "foo"},
-						Arguments: []node.Node{},
+						Class:        relativeNameCE,
+						Call:         &node.Identifier{Value: "foo"},
+						ArgumentList: &node.ArgumentList{},
 					},
 					&expr.StaticCall{
-						Class:     nameCF,
-						Call:      &node.Identifier{Value: "foo"},
-						Arguments: []node.Node{},
+						Class:        nameCF,
+						Call:         &node.Identifier{Value: "foo"},
+						ArgumentList: &node.ArgumentList{},
 					},
 				},
 			},
@@ -708,9 +718,9 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	ast := &stmt.StmtList{
 		Stmts: []node.Node{
 			&expr.StaticCall{
-				Class:     &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-				Call:      &node.Identifier{Value: "foo"},
-				Arguments: []node.Node{},
+				Class:        &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+				Call:         &node.Identifier{Value: "foo"},
+				ArgumentList: &node.ArgumentList{},
 			},
 		},
 	}

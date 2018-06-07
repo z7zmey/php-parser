@@ -17,7 +17,7 @@ import (
 func TestNew(t *testing.T) {
 	src := `<? new Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -45,7 +45,7 @@ func TestNew(t *testing.T) {
 func TestNewRelative(t *testing.T) {
 	src := `<? new namespace\Foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -54,7 +54,7 @@ func TestNewRelative(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -74,7 +74,7 @@ func TestNewRelative(t *testing.T) {
 func TestNewFullyQualified(t *testing.T) {
 	src := `<? new \Foo();`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
@@ -83,7 +83,7 @@ func TestNewFullyQualified(t *testing.T) {
 							&name.NamePart{Value: "Foo"},
 						},
 					},
-					Arguments: []node.Node{},
+					ArgumentList: &node.ArgumentList{},
 				},
 			},
 		},
@@ -103,15 +103,17 @@ func TestNewFullyQualified(t *testing.T) {
 func TestNewAnonymous(t *testing.T) {
 	src := `<? new class ($a, ...$b) {};`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.New{
 					Class: &stmt.Class{
 						PhpDocComment: "",
-						Args: []node.Node{
-							&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						ArgumentList: &node.ArgumentList{
+							Arguments: []node.Node{
+								&node.Argument{Variadic: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+								&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+							},
 						},
 						Stmts: []node.Node{},
 					},

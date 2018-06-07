@@ -32,20 +32,18 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.ArrayItem{
-			ByRef: false,
-			Key:   &scalar.String{Value: "key"},
-			Val:   &scalar.Lnumber{Value: "1"},
+			Key: &scalar.String{Value: "key"},
+			Val: &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Key", "Val"},
-		map[string]interface{}{"ByRef": false},
+		map[string]interface{}{},
 	},
 	{
 		&expr.Array{
 			Items: []node.Node{
 				&expr.ArrayItem{
-					ByRef: false,
-					Key:   &scalar.String{Value: "key"},
-					Val:   &scalar.Lnumber{Value: "1"},
+					Key: &scalar.String{Value: "key"},
+					Val: &scalar.Lnumber{Value: "1"},
 				},
 			},
 		},
@@ -83,11 +81,12 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.ClosureUse{
-			ByRef:    false,
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Uses: []node.Node{
+				&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			},
 		},
-		[]string{"Variable"},
-		map[string]interface{}{"ByRef": false},
+		[]string{"Uses"},
+		map[string]interface{}{},
 	},
 	{
 		&expr.Closure{
@@ -95,11 +94,11 @@ var nodesToTest = []struct {
 			Static:        false,
 			PhpDocComment: "",
 			Params:        []node.Node{&node.Parameter{}},
-			Uses:          []node.Node{&expr.ClosureUse{}},
+			ClosureUse:    &expr.ClosureUse{},
 			ReturnType:    &name.Name{},
 			Stmts:         []node.Node{&stmt.Nop{}},
 		},
-		[]string{"Params", "Uses", "ReturnType", "Stmts"},
+		[]string{"Params", "ClosureUse", "ReturnType", "Stmts"},
 		map[string]interface{}{"ReturnsRef": true, "Static": false, "PhpDocComment": ""},
 	},
 	{
@@ -146,10 +145,10 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.FunctionCall{
-			Function:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Arguments: []node.Node{&node.Argument{}},
+			Function:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			ArgumentList: &node.ArgumentList{},
 		},
-		[]string{"Function", "Arguments"},
+		[]string{"Function", "ArgumentList"},
 		map[string]interface{}{},
 	},
 	{
@@ -194,19 +193,19 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.MethodCall{
-			Variable:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Method:    &node.Identifier{Value: "foo"},
-			Arguments: []node.Node{&node.Argument{}},
+			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Method:       &node.Identifier{Value: "foo"},
+			ArgumentList: &node.ArgumentList{},
 		},
-		[]string{"Variable", "Method", "Arguments"},
+		[]string{"Variable", "Method", "ArgumentList"},
 		map[string]interface{}{},
 	},
 	{
 		&expr.New{
-			Class:     &name.Name{},
-			Arguments: []node.Node{&node.Argument{}},
+			Class:        &name.Name{},
+			ArgumentList: &node.ArgumentList{},
 		},
-		[]string{"Class", "Arguments"},
+		[]string{"Class", "ArgumentList"},
 		map[string]interface{}{},
 	},
 	{
@@ -253,6 +252,13 @@ var nodesToTest = []struct {
 		map[string]interface{}{},
 	},
 	{
+		&expr.Reference{
+			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+		[]string{"Variable"},
+		map[string]interface{}{},
+	},
+	{
 		&expr.RequireOnce{
 			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		},
@@ -295,11 +301,11 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.StaticCall{
-			Class:     &name.Name{},
-			Call:      &node.Identifier{Value: "foo"},
-			Arguments: []node.Node{&node.Argument{}},
+			Class:        &name.Name{},
+			Call:         &node.Identifier{Value: "foo"},
+			ArgumentList: &node.ArgumentList{},
 		},
-		[]string{"Class", "Call", "Arguments"},
+		[]string{"Class", "Call", "ArgumentList"},
 		map[string]interface{}{},
 	},
 	{

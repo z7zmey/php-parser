@@ -15,7 +15,7 @@ import (
 func TestEval(t *testing.T) {
 	src := `<? eval($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Eval{

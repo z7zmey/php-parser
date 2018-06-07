@@ -30,7 +30,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 func TestArray(t *testing.T) {
 	src := `<? (array)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Array{
@@ -54,7 +54,7 @@ func TestArray(t *testing.T) {
 func TestBool(t *testing.T) {
 	src := `<? (boolean)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Bool{
@@ -78,7 +78,7 @@ func TestBool(t *testing.T) {
 func TestBoolShort(t *testing.T) {
 	src := `<? (bool)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Bool{
@@ -102,7 +102,7 @@ func TestBoolShort(t *testing.T) {
 func TestDouble(t *testing.T) {
 	src := `<? (double)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Double{
@@ -126,7 +126,7 @@ func TestDouble(t *testing.T) {
 func TestCastFloat(t *testing.T) {
 	src := `<? (float)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Double{
@@ -150,7 +150,7 @@ func TestCastFloat(t *testing.T) {
 func TestInt(t *testing.T) {
 	src := `<? (integer)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Int{
@@ -174,7 +174,7 @@ func TestInt(t *testing.T) {
 func TestIntShort(t *testing.T) {
 	src := `<? (int)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Int{
@@ -198,7 +198,7 @@ func TestIntShort(t *testing.T) {
 func TestObject(t *testing.T) {
 	src := `<? (object)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Object{
@@ -222,7 +222,7 @@ func TestObject(t *testing.T) {
 func TestString(t *testing.T) {
 	src := `<? (string)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.String{
@@ -246,7 +246,7 @@ func TestString(t *testing.T) {
 func TestUnset(t *testing.T) {
 	src := `<? (unset)$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &cast.Unset{

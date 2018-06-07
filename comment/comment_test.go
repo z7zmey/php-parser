@@ -3,25 +3,31 @@ package comment_test
 import (
 	"testing"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/z7zmey/php-parser/comment"
-	"github.com/z7zmey/php-parser/node"
 )
 
-func TestComments(t *testing.T) {
-	n := node.NewIdentifier("test")
+func TestCommentGetPosition(t *testing.T) {
+	expected := position.NewPosition(0, 0, 0, 0)
 
-	commentGroup := []comment.Comment{
-		comment.NewDocComment("/** hello world */"),
-		comment.NewPlainComment("// hello world"),
-	}
+	comment := comment.NewComment("/** hello world */", expected)
 
-	comments := comment.Comments{}
-	comments.AddComments(n, commentGroup)
+	actual := comment.Position()
 
-	if comments[n][0].String() != "/** hello world */" {
+	if expected != actual {
 		t.Errorf("expected and actual are not equal\n")
 	}
-	if comments[n][1].String() != "// hello world" {
+}
+
+func TestCommentPrint(t *testing.T) {
+	expected := "/** hello world */"
+
+	comment := comment.NewComment(expected, nil)
+
+	actual := comment.String()
+
+	if expected != actual {
 		t.Errorf("expected and actual are not equal\n")
 	}
 }

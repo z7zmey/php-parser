@@ -122,21 +122,27 @@ nodes := &stmt.StmtList{
 					&name.NamePart{Value: "Bar"},
 				},
 			},
-			Extends: &name.Name{
-				Parts: []node.Node{
-					&name.NamePart{Value: "Baz"},
-				},
-			},
+			Extends: &stmt.ClassExtends{
+                ClassName: &name.Name{
+                    Parts: []node.Node{
+                        &name.NamePart{
+                            Value: "Baz"
+                        },
+                    },
+                },
+            },
 			Stmts: []node.Node{
 				&stmt.ClassMethod{
 					Modifiers: []node.Node{
 						&node.Identifier{Value: "public"},
 					},
 					MethodName: &node.Identifier{Value: "greet"},
-					Stmts: []node.Node{
-						&stmt.Echo{
-							Exprs: []node.Node{
-								&scalar.String{Value: "'Hello world'"},
+					Stmt: &stmt.StmtList{
+						Stmts: []node.Node{
+							&stmt.Echo{
+								Exprs: []node.Node{
+									&scalar.String{Value: "'Hello world'"},
+								},
 							},
 						},
 					},

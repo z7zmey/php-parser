@@ -15,7 +15,7 @@ import (
 func TestVariable(t *testing.T) {
 	src := `<? $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -37,7 +37,7 @@ func TestVariable(t *testing.T) {
 func TestVariableVariable(t *testing.T) {
 	src := `<? $$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},

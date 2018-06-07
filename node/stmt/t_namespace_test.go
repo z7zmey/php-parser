@@ -14,7 +14,7 @@ import (
 func TestNamespace(t *testing.T) {
 	src := `<? namespace Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Namespace{
 				NamespaceName: &name.Name{
@@ -40,7 +40,7 @@ func TestNamespace(t *testing.T) {
 func TestNamespaceStmts(t *testing.T) {
 	src := `<? namespace Foo {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Namespace{
 				NamespaceName: &name.Name{
@@ -67,7 +67,7 @@ func TestNamespaceStmts(t *testing.T) {
 func TestAnonymousNamespace(t *testing.T) {
 	src := `<? namespace {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Namespace{
 				Stmts: []node.Node{},

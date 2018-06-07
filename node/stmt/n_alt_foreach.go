@@ -7,7 +7,6 @@ import (
 
 // AltForeach node
 type AltForeach struct {
-	ByRef    bool
 	Expr     node.Node
 	Key      node.Node
 	Variable node.Node
@@ -15,9 +14,8 @@ type AltForeach struct {
 }
 
 // NewAltForeach node constructor
-func NewAltForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *AltForeach {
+func NewAltForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node) *AltForeach {
 	return &AltForeach{
-		ByRef,
 		Expr,
 		Key,
 		Variable,
@@ -27,9 +25,7 @@ func NewAltForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.
 
 // Attributes returns node attributes as map
 func (n *AltForeach) Attributes() map[string]interface{} {
-	return map[string]interface{}{
-		"ByRef": n.ByRef,
-	}
+	return nil
 }
 
 // Walk traverses nodes

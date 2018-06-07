@@ -15,7 +15,7 @@ import (
 func TestPrint(t *testing.T) {
 	src := `<? print($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Print{

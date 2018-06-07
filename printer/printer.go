@@ -30,27 +30,6 @@ func NewPrinter(w io.Writer, indentStr string) *Printer {
 	}
 }
 
-func (p *Printer) PrintFile(n *stmt.StmtList) {
-	if len(n.Stmts) > 0 {
-		firstStmt := n.Stmts[0]
-		n.Stmts = n.Stmts[1:]
-
-		switch fs := firstStmt.(type) {
-		case *stmt.InlineHtml:
-			io.WriteString(p.w, fs.Value)
-			io.WriteString(p.w, "<?php\n")
-		default:
-			io.WriteString(p.w, "<?php\n")
-			p.printIndent()
-			p.Print(fs)
-			io.WriteString(p.w, "\n")
-		}
-	}
-	p.indentDepth--
-	p.printNodes(n.Stmts)
-	io.WriteString(p.w, "\n")
-}
-
 func (p *Printer) Print(n node.Node) {
 	p.printNode(n)
 }
@@ -89,6 +68,8 @@ func (p *Printer) printNode(n node.Node) {
 
 	// node
 
+	case *node.Root:
+		p.printNodeRoot(n)
 	case *node.Identifier:
 		p.printNodeIdentifier(n)
 	case *node.Parameter:
@@ -291,6 +272,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printExprPrint(n)
 	case *expr.PropertyFetch:
 		p.printExprPropertyFetch(n)
+	case *expr.Reference:
+		p.printExprReference(n)
 	case *expr.Require:
 		p.printExprRequire(n)
 	case *expr.RequireOnce:
@@ -432,6 +415,29 @@ func (p *Printer) printNode(n node.Node) {
 }
 
 // node
+
+func (p *Printer) printNodeRoot(n node.Node) {
+	v := n.(*node.Root)
+
+	if len(v.Stmts) > 0 {
+		firstStmt := v.Stmts[0]
+		v.Stmts = v.Stmts[1:]
+
+		switch fs := firstStmt.(type) {
+		case *stmt.InlineHtml:
+			io.WriteString(p.w, fs.Value)
+			io.WriteString(p.w, "<?php\n")
+		default:
+			io.WriteString(p.w, "<?php\n")
+			p.printIndent()
+			p.Print(fs)
+			io.WriteString(p.w, "\n")
+		}
+	}
+	p.indentDepth--
+	p.printNodes(v.Stmts)
+	io.WriteString(p.w, "\n")
+}
 
 func (p *Printer) printNodeIdentifier(n node.Node) {
 	v := n.(*node.Identifier).Value
@@ -960,10 +966,6 @@ func (p *Printer) printExprArrayItem(n node.Node) {
 		io.WriteString(p.w, " => ")
 	}
 
-	if nn.ByRef {
-		io.WriteString(p.w, "&")
-	}
-
 	p.Print(nn.Val)
 }
 
@@ -1005,11 +1007,9 @@ func (p *Printer) printExprClone(n node.Node) {
 func (p *Printer) printExprClosureUse(n node.Node) {
 	nn := n.(*expr.ClosureUse)
 
-	if nn.ByRef {
-		io.WriteString(p.w, "&")
-	}
-
-	p.Print(nn.Variable)
+	io.WriteString(p.w, "use (")
+	p.joinPrint(", ", nn.Uses)
+	io.WriteString(p.w, ")")
 }
 
 func (p *Printer) printExprClosure(n node.Node) {
@@ -1029,10 +1029,9 @@ func (p *Printer) printExprClosure(n node.Node) {
 	p.joinPrint(", ", nn.Params)
 	io.WriteString(p.w, ")")
 
-	if nn.Uses != nil {
-		io.WriteString(p.w, " use (")
-		p.joinPrint(", ", nn.Uses)
-		io.WriteString(p.w, ")")
+	if nn.ClosureUse != nil {
+		io.WriteString(p.w, " ")
+		p.Print(nn.ClosureUse)
 	}
 
 	if nn.ReturnType != nil {
@@ -1097,7 +1096,7 @@ func (p *Printer) printExprFunctionCall(n node.Node) {
 
 	p.Print(nn.Function)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1146,7 +1145,7 @@ func (p *Printer) printExprMethodCall(n node.Node) {
 	io.WriteString(p.w, "->")
 	p.Print(nn.Method)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1156,9 +1155,9 @@ func (p *Printer) printExprNew(n node.Node) {
 	io.WriteString(p.w, "new ")
 	p.Print(nn.Class)
 
-	if nn.Arguments != nil {
+	if nn.ArgumentList != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.Arguments)
+		p.joinPrint(", ", nn.ArgumentList.Arguments)
 		io.WriteString(p.w, ")")
 	}
 }
@@ -1205,6 +1204,13 @@ func (p *Printer) printExprPropertyFetch(n node.Node) {
 	p.Print(nn.Variable)
 	io.WriteString(p.w, "->")
 	p.Print(nn.Property)
+}
+
+func (p *Printer) printExprReference(n node.Node) {
+	nn := n.(*expr.Reference)
+
+	io.WriteString(p.w, "&")
+	p.Print(nn.Variable)
 }
 
 func (p *Printer) printExprRequire(n node.Node) {
@@ -1254,7 +1260,7 @@ func (p *Printer) printExprStaticCall(n node.Node) {
 	io.WriteString(p.w, "::")
 	p.Print(nn.Call)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Arguments)
+	p.joinPrint(", ", nn.ArgumentList.Arguments)
 	io.WriteString(p.w, ")")
 }
 
@@ -1378,10 +1384,6 @@ func (p *Printer) printStmtAltForeach(n node.Node) {
 		io.WriteString(p.w, " => ")
 	}
 
-	if nn.ByRef {
-		io.WriteString(p.w, "&")
-	}
-
 	p.Print(nn.Variable)
 
 	io.WriteString(p.w, ") :\n")
@@ -1428,7 +1430,7 @@ func (p *Printer) printStmtAltSwitch(n node.Node) {
 	p.Print(nn.Cond)
 	io.WriteString(p.w, ") :\n")
 
-	s := nn.Cases
+	s := nn.CaseList.Cases
 	p.printNodes(s)
 
 	io.WriteString(p.w, "\n")
@@ -1513,13 +1515,18 @@ func (p *Printer) printStmtClassMethod(n node.Node) {
 		p.Print(nn.ReturnType)
 	}
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "{\n")
-	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "}")
+	switch s := nn.Stmt.(type) {
+	case *stmt.StmtList:
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "{\n")
+		p.printNodes(s.Stmts)
+		io.WriteString(p.w, "\n")
+		p.printIndent()
+		io.WriteString(p.w, "}")
+	default:
+		p.Print(s)
+	}
 }
 
 func (p *Printer) printStmtClass(n node.Node) {
@@ -1536,20 +1543,20 @@ func (p *Printer) printStmtClass(n node.Node) {
 		p.Print(nn.ClassName)
 	}
 
-	if nn.Args != nil {
+	if nn.ArgumentList != nil {
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.Args)
+		p.joinPrint(", ", nn.ArgumentList.Arguments)
 		io.WriteString(p.w, ")")
 	}
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.Print(nn.Extends)
+		p.Print(nn.Extends.ClassName)
 	}
 
 	if nn.Implements != nil {
 		io.WriteString(p.w, " implements ")
-		p.joinPrint(", ", nn.Implements)
+		p.joinPrint(", ", nn.Implements.InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -1760,9 +1767,6 @@ func (p *Printer) printStmtForeach(n node.Node) {
 		io.WriteString(p.w, " => ")
 	}
 
-	if nn.ByRef {
-		io.WriteString(p.w, "&")
-	}
 	p.Print(nn.Variable)
 	io.WriteString(p.w, ")")
 
@@ -1901,7 +1905,7 @@ func (p *Printer) printStmtInterface(n node.Node) {
 
 	if nn.Extends != nil {
 		io.WriteString(p.w, " extends ")
-		p.joinPrint(", ", nn.Extends)
+		p.joinPrint(", ", nn.Extends.InterfaceNames)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -2009,7 +2013,7 @@ func (p *Printer) printStmtSwitch(n node.Node) {
 	io.WriteString(p.w, ")")
 
 	io.WriteString(p.w, " {\n")
-	p.printNodes(nn.Cases)
+	p.printNodes(nn.CaseList.Cases)
 	io.WriteString(p.w, "\n")
 	p.printIndent()
 	io.WriteString(p.w, "}")
@@ -2066,9 +2070,10 @@ func (p *Printer) printStmtTraitUse(n node.Node) {
 	io.WriteString(p.w, "use ")
 	p.joinPrint(", ", nn.Traits)
 
-	if nn.Adaptations != nil {
+	if nn.TraitAdaptationList != nil {
+		adaptations := nn.TraitAdaptationList.Adaptations
 		io.WriteString(p.w, " {\n")
-		p.printNodes(nn.Adaptations)
+		p.printNodes(adaptations)
 		io.WriteString(p.w, "\n")
 		p.printIndent()
 		io.WriteString(p.w, "}")

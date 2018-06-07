@@ -15,7 +15,7 @@ import (
 func TestDeclare(t *testing.T) {
 	src := `<? declare(ticks=1);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Declare{
 				Consts: []node.Node{
@@ -44,7 +44,7 @@ func TestDeclare(t *testing.T) {
 func TestDeclareStmts(t *testing.T) {
 	src := `<? declare(ticks=1, strict_types=1) {}`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Declare{
 				Consts: []node.Node{
@@ -80,7 +80,7 @@ func TestDeclareStmts(t *testing.T) {
 func TestAltDeclare(t *testing.T) {
 	src := `<? declare(ticks=1): enddeclare;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Declare{
 				Consts: []node.Node{

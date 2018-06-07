@@ -16,15 +16,14 @@ import (
 func TestShortList(t *testing.T) {
 	src := `<? [$a] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
-								Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 							},
 						},
 					},
@@ -43,14 +42,13 @@ func TestShortList(t *testing.T) {
 func TestShortListArrayIndex(t *testing.T) {
 	src := `<? [$a[]] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.ArrayDimFetch{
 									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 								},
@@ -72,19 +70,17 @@ func TestShortListArrayIndex(t *testing.T) {
 func TestShortListList(t *testing.T) {
 	src := `<? [list($a)] = $b;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &assign.Assign{
 					Variable: &expr.ShortList{
 						Items: []node.Node{
 							&expr.ArrayItem{
-								ByRef: false,
 								Val: &expr.List{
 									Items: []node.Node{
 										&expr.ArrayItem{
-											ByRef: false,
-											Val:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+											Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 										},
 									},
 								},

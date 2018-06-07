@@ -16,7 +16,7 @@ import (
 func TestStaticPropertyFetch(t *testing.T) {
 	src := `<? Foo::$bar;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.StaticPropertyFetch{
@@ -45,7 +45,7 @@ func TestStaticPropertyFetch(t *testing.T) {
 func TestStaticPropertyFetchRelative(t *testing.T) {
 	src := `<? namespace\Foo::$bar;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.StaticPropertyFetch{
@@ -74,7 +74,7 @@ func TestStaticPropertyFetchRelative(t *testing.T) {
 func TestStaticPropertyFetchFullyQualified(t *testing.T) {
 	src := `<? \Foo::$bar;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.StaticPropertyFetch{

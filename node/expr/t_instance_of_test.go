@@ -17,7 +17,7 @@ import (
 func TestInstanceOf(t *testing.T) {
 	src := `<? $a instanceof Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{
@@ -46,7 +46,7 @@ func TestInstanceOf(t *testing.T) {
 func TestInstanceOfRelative(t *testing.T) {
 	src := `<? $a instanceof namespace\Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{
@@ -75,7 +75,7 @@ func TestInstanceOfRelative(t *testing.T) {
 func TestInstanceOfFullyQualified(t *testing.T) {
 	src := `<? $a instanceof \Foo;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.InstanceOf{

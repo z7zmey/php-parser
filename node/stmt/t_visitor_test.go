@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/node/name"
+
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/stmt"
 
@@ -82,9 +84,9 @@ var nodesToTest = []struct {
 			Modifiers:     []node.Node{&stmt.Expression{}},
 			Params:        []node.Node{&stmt.Expression{}},
 			ReturnType:    &node.Identifier{},
-			Stmts:         []node.Node{&stmt.Expression{}},
+			Stmt:          &stmt.StmtList{},
 		},
-		[]string{"MethodName", "Modifiers", "Params", "ReturnType", "Stmts"},
+		[]string{"MethodName", "Modifiers", "Params", "ReturnType", "Stmt"},
 		map[string]interface{}{"ReturnsRef": true, "PhpDocComment": "/** */"},
 	},
 	{
@@ -92,12 +94,12 @@ var nodesToTest = []struct {
 			PhpDocComment: "/** */",
 			ClassName:     &node.Identifier{},
 			Modifiers:     []node.Node{&stmt.Expression{}},
-			Args:          []node.Node{&stmt.Expression{}},
-			Extends:       &node.Identifier{},
-			Implements:    []node.Node{&stmt.Expression{}},
+			ArgumentList:  &node.ArgumentList{},
+			Extends:       &stmt.ClassExtends{},
+			Implements:    &stmt.ClassImplements{},
 			Stmts:         []node.Node{&stmt.Expression{}},
 		},
-		[]string{"ClassName", "Modifiers", "Args", "Extends", "Implements", "Stmts"},
+		[]string{"ClassName", "Modifiers", "ArgumentList", "Extends", "Implements", "Stmts"},
 		map[string]interface{}{"PhpDocComment": "/** */"},
 	},
 	{
@@ -222,25 +224,23 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Foreach{
-			ByRef:    true,
 			Expr:     &stmt.Expression{},
 			Key:      &expr.Variable{},
 			Variable: &expr.Variable{},
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{"ByRef": true},
+		map[string]interface{}{},
 	},
 	{
 		&stmt.AltForeach{
-			ByRef:    true,
 			Expr:     &stmt.Expression{},
 			Key:      &expr.Variable{},
 			Variable: &expr.Variable{},
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{"ByRef": true},
+		map[string]interface{}{},
 	},
 	{
 		&stmt.Function{
@@ -293,7 +293,7 @@ var nodesToTest = []struct {
 		&stmt.Interface{
 			PhpDocComment: "/** */",
 			InterfaceName: &node.Identifier{},
-			Extends:       []node.Node{&stmt.Expression{}},
+			Extends:       &stmt.InterfaceExtends{},
 			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"InterfaceName", "Extends", "Stmts"},
@@ -360,18 +360,18 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.Switch{
-			Cond:  &expr.Variable{},
-			Cases: []node.Node{&stmt.Expression{}},
+			Cond:     &expr.Variable{},
+			CaseList: &stmt.CaseList{},
 		},
-		[]string{"Cond", "Cases"},
+		[]string{"Cond", "CaseList"},
 		map[string]interface{}{},
 	},
 	{
 		&stmt.AltSwitch{
-			Cond:  &expr.Variable{},
-			Cases: []node.Node{&stmt.Expression{}},
+			Cond:     &expr.Variable{},
+			CaseList: &stmt.CaseList{Cases: []node.Node{}},
 		},
-		[]string{"Cond", "Cases"},
+		[]string{"Cond", "CaseList"},
 		map[string]interface{}{},
 	},
 	{
@@ -408,10 +408,10 @@ var nodesToTest = []struct {
 	},
 	{
 		&stmt.TraitUse{
-			Traits:      []node.Node{&stmt.Expression{}},
-			Adaptations: []node.Node{&stmt.Expression{}},
+			Traits:              []node.Node{&stmt.Expression{}},
+			TraitAdaptationList: &stmt.TraitAdaptationList{},
 		},
-		[]string{"Traits", "Adaptations"},
+		[]string{"Traits", "TraitAdaptationList"},
 		map[string]interface{}{},
 	},
 	{
@@ -477,6 +477,45 @@ var nodesToTest = []struct {
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.CaseList{
+			Cases: []node.Node{&stmt.Expression{}},
+		},
+		[]string{"Cases"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.TraitAdaptationList{
+			Adaptations: []node.Node{&stmt.TraitUsePrecedence{}},
+		},
+		[]string{"Adaptations"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.ClassExtends{
+			ClassName: &name.Name{},
+		},
+		[]string{"ClassName"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.ClassImplements{
+			InterfaceNames: []node.Node{
+				&name.Name{},
+			},
+		},
+		[]string{"InterfaceNames"},
+		map[string]interface{}{},
+	},
+	{
+		&stmt.InterfaceExtends{
+			InterfaceNames: []node.Node{
+				&name.Name{},
+			},
+		},
+		[]string{"InterfaceNames"},
 		map[string]interface{}{},
 	},
 }

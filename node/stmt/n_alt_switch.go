@@ -7,15 +7,15 @@ import (
 
 // AltSwitch node
 type AltSwitch struct {
-	Cond  node.Node
-	Cases []node.Node
+	Cond     node.Node
+	CaseList *CaseList
 }
 
 // NewAltSwitch node constructor
-func NewAltSwitch(Cond node.Node, Cases []node.Node) *AltSwitch {
+func NewAltSwitch(Cond node.Node, CaseList *CaseList) *AltSwitch {
 	return &AltSwitch{
 		Cond,
-		Cases,
+		CaseList,
 	}
 }
 
@@ -36,13 +36,9 @@ func (n *AltSwitch) Walk(v walker.Visitor) {
 		n.Cond.Walk(vv)
 	}
 
-	if n.Cases != nil {
-		vv := v.GetChildrenVisitor("Cases")
-		for _, nn := range n.Cases {
-			if nn != nil {
-				nn.Walk(vv)
-			}
-		}
+	if n.CaseList != nil {
+		vv := v.GetChildrenVisitor("CaseList")
+		n.CaseList.Walk(vv)
 	}
 
 	v.LeaveNode(n)

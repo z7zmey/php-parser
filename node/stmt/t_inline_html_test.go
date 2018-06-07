@@ -13,7 +13,7 @@ import (
 func TestInlineHtml(t *testing.T) {
 	src := `<? ?> <div></div>`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Nop{},
 			&stmt.InlineHtml{Value: "<div></div>"},

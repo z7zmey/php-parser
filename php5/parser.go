@@ -6,12 +6,11 @@ import (
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/token"
 )
 
-func (lval *yySymType) Token(t token.Token) {
+func (lval *yySymType) Token(t *scanner.Token) {
 	lval.token = t
 }
 
@@ -19,12 +18,12 @@ func (lval *yySymType) Token(t token.Token) {
 type Parser struct {
 	*scanner.Lexer
 	path            string
-	lastToken       *token.Token
-	positionBuilder *position.Builder
+	currentToken    *scanner.Token
+	positionBuilder *parser.PositionBuilder
 	errors          []*errors.Error
 	rootNode        node.Node
-	comments        comment.Comments
-	positions       position.Positions
+	comments        parser.Comments
+	positions       parser.Positions
 }
 
 // NewParser creates and returns new Parser
@@ -46,12 +45,12 @@ func NewParser(src io.Reader, path string) *Parser {
 // Lex proxy to lexer Lex
 func (l *Parser) Lex(lval *yySymType) int {
 	t := l.Lexer.Lex(lval)
-	l.lastToken = &lval.token
+	l.currentToken = lval.token
 	return t
 }
 
 func (l *Parser) Error(msg string) {
-	l.errors = append(l.errors, errors.NewError(msg, *l.lastToken))
+	l.errors = append(l.errors, errors.NewError(msg, l.currentToken))
 }
 
 // Parse the php7 Parser entrypoint
@@ -59,9 +58,9 @@ func (l *Parser) Parse() int {
 	// init
 	l.errors = nil
 	l.rootNode = nil
-	l.comments = comment.Comments{}
-	l.positions = position.Positions{}
-	l.positionBuilder = &position.Builder{
+	l.comments = parser.Comments{}
+	l.positions = parser.Positions{}
+	l.positionBuilder = &parser.PositionBuilder{
 		Positions: &l.positions,
 	}
 
@@ -70,7 +69,7 @@ func (l *Parser) Parse() int {
 	return yyParse(l)
 }
 
-func (l *Parser) listGetFirstNodeComments(list []node.Node) []comment.Comment {
+func (l *Parser) listGetFirstNodeComments(list []node.Node) []*comment.Comment {
 	if len(list) == 0 {
 		return nil
 	}
@@ -96,11 +95,21 @@ func (l *Parser) GetErrors() []*errors.Error {
 }
 
 // GetComments returns comments list
-func (l *Parser) GetComments() comment.Comments {
+func (l *Parser) GetComments() parser.Comments {
 	return l.comments
 }
 
 // GetPositions returns positions list
-func (l *Parser) GetPositions() position.Positions {
+func (l *Parser) GetPositions() parser.Positions {
 	return l.positions
+}
+
+// helpers
+
+func lastNode(nn []node.Node) node.Node {
+	return nn[len(nn)-1]
+}
+
+func firstNode(nn []node.Node) node.Node {
+	return nn[0]
 }

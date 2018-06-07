@@ -17,7 +17,7 @@ import (
 func TestShortArray(t *testing.T) {
 	src := `<? [];`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ShortArray{
@@ -41,14 +41,13 @@ func TestShortArray(t *testing.T) {
 func TestShortArrayItem(t *testing.T) {
 	src := `<? [1];`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ShortArray{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Val:   &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 					},
 				},
@@ -70,19 +69,17 @@ func TestShortArrayItem(t *testing.T) {
 func TestShortArrayItems(t *testing.T) {
 	src := `<? [1=>1, &$b,];`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.ShortArray{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							ByRef: false,
-							Key:   &scalar.Lnumber{Value: "1"},
-							Val:   &scalar.Lnumber{Value: "1"},
+							Key: &scalar.Lnumber{Value: "1"},
+							Val: &scalar.Lnumber{Value: "1"},
 						},
 						&expr.ArrayItem{
-							ByRef: true,
-							Val:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
 					},
 				},

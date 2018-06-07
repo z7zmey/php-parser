@@ -15,7 +15,7 @@ import (
 func TestCloneBrackets(t *testing.T) {
 	src := `<? clone($a);`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Clone{
@@ -39,7 +39,7 @@ func TestCloneBrackets(t *testing.T) {
 func TestClone(t *testing.T) {
 	src := `<? clone $a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.Clone{

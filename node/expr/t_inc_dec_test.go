@@ -15,7 +15,7 @@ import (
 func TestPostDec(t *testing.T) {
 	src := `<? $a--;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PostDec{
@@ -39,7 +39,7 @@ func TestPostDec(t *testing.T) {
 func TestPostInc(t *testing.T) {
 	src := `<? $a++;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PostInc{
@@ -63,7 +63,7 @@ func TestPostInc(t *testing.T) {
 func TestPreDec(t *testing.T) {
 	src := `<? --$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PreDec{
@@ -87,7 +87,7 @@ func TestPreDec(t *testing.T) {
 func TestPreInc(t *testing.T) {
 	src := `<? ++$a;`
 
-	expected := &stmt.StmtList{
+	expected := &node.Root{
 		Stmts: []node.Node{
 			&stmt.Expression{
 				Expr: &expr.PreInc{

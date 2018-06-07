@@ -7,7 +7,6 @@ import (
 
 // Foreach node
 type Foreach struct {
-	ByRef    bool
 	Expr     node.Node
 	Key      node.Node
 	Variable node.Node
@@ -15,9 +14,8 @@ type Foreach struct {
 }
 
 // NewForeach node constructor
-func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node, ByRef bool) *Foreach {
+func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node) *Foreach {
 	return &Foreach{
-		ByRef,
 		Expr,
 		Key,
 		Variable,
@@ -27,9 +25,7 @@ func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Nod
 
 // Attributes returns node attributes as map
 func (n *Foreach) Attributes() map[string]interface{} {
-	return map[string]interface{}{
-		"ByRef": n.ByRef,
-	}
+	return nil
 }
 
 // Walk traverses nodes
