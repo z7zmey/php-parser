@@ -15,6 +15,8 @@ PHP Parser written in Go
 [![Exago](https://api.exago.io:443/badge/cov/github.com/z7zmey/php-parser)](https://exago.io/project/github.com/z7zmey/php-parser)
 [![GoDoc](https://godoc.org/github.com/z7zmey/php-parser?status.svg)](https://godoc.org/github.com/z7zmey/php-parser)
 
+This project uses [goyacc](https://godoc.org/golang.org/x/tools/cmd/goyacc) and [golex](https://github.com/cznic/golex) libraries to parse PHP sources into [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It can be used to write static analysis, refactoring, metrics, code style formatting tools.
+
 #### Try it online: [demo](https://php-parser.com)
 
 Features:
@@ -29,7 +31,7 @@ Features:
 Roadmap
 -------
 
-- Saving comments and empty lines
+- Pretty printer
 - Control Flow Graph (CFG)
 - PhpDocComment parser
 - Stabilize api
@@ -45,7 +47,7 @@ CLI
 ---
 
 ```
-php-parser [-php5] <path> ...
+php-parser [-php5 -noDump] <path> ...
 ```
 
 Dump AST to stdout.
@@ -100,8 +102,8 @@ Parsing syntax-invalid PHP files
 
 If we try to parse `$a$b;` then the parser triggers error 'syntax error: unexpected T_VARIABLE'. Token `$b` is unexpected, but parser recovers parsing process and returns `$b;` statement to AST, because it is syntactically correct.
 
-Pretty printer
---------------
+Pretty printer [work in progress]
+---------------------------------
 
 ```Golang
 nodes := &stmt.StmtList{
@@ -123,14 +125,14 @@ nodes := &stmt.StmtList{
 				},
 			},
 			Extends: &stmt.ClassExtends{
-                ClassName: &name.Name{
-                    Parts: []node.Node{
-                        &name.NamePart{
-                            Value: "Baz"
-                        },
-                    },
-                },
-            },
+				ClassName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{
+							Value: "Baz"
+						},
+					},
+				},
+			},
 			Stmts: []node.Node{
 				&stmt.ClassMethod{
 					Modifiers: []node.Node{
@@ -164,9 +166,9 @@ It prints to stdout:
 namespace Foo;
 abstract class Bar extends Baz
 {
-    public function greet()
-    {
-        echo 'Hello world';
-    }
+	public function greet()
+	{
+		echo 'Hello world';
+	}
 }
 ```
