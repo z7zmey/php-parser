@@ -1297,6 +1297,7 @@ unticked_class_declaration_statement:
 
                 // save position
                 yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(name, $2, comment.StringToken)
