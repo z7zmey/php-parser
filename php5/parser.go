@@ -113,3 +113,7 @@ func lastNode(nn []node.Node) node.Node {
 func firstNode(nn []node.Node) node.Node {
 	return nn[0]
 }
+
+func isDollar(r rune) bool {
+	return r == '$'
+}

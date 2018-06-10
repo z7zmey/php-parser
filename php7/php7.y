@@ -1087,7 +1087,7 @@ catch_list:
             { $$ = []node.Node{} }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($5.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($5.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 catch := stmt.NewCatch($4, variable, $8)
                 $$ = append($1, catch)
@@ -1692,7 +1692,7 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
 
@@ -1720,7 +1720,7 @@ parameter:
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($4.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
 
@@ -1900,7 +1900,7 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = stmt.NewStaticVar(variable, nil)
 
@@ -1914,7 +1914,7 @@ static_var:
             }
     |   T_VARIABLE '=' expr
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = stmt.NewStaticVar(variable, $3)
 
@@ -2301,7 +2301,7 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = stmt.NewProperty(variable, nil, $2)
 
@@ -2315,7 +2315,7 @@ property:
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = stmt.NewProperty(variable, $3, $4)
 
@@ -3286,7 +3286,7 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 $$ = expr.NewVariable(identifier)
 
                 // save position
@@ -3298,7 +3298,7 @@ lexical_var:
             }
     |   '&' T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($2.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($2.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = expr.NewReference(variable)
 
@@ -3744,7 +3744,7 @@ variable:
 simple_variable:
         T_VARIABLE
             {
-                name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                name := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 $$ = expr.NewVariable(name)
 
                 // save position
@@ -4040,7 +4040,7 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                name := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                name := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 $$ = expr.NewVariable(name)
 
                 // save position
@@ -4052,7 +4052,7 @@ encaps_var:
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 $$ = expr.NewArrayDimFetch(variable, $3)
 
@@ -4068,7 +4068,7 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 variable := expr.NewVariable(identifier)
                 fetch := node.NewIdentifier($3.Value)
                 $$ = expr.NewPropertyFetch(variable, fetch)
@@ -4190,7 +4190,7 @@ encaps_var_offset:
             }
     |   T_VARIABLE
             {
-                identifier := node.NewIdentifier(strings.TrimLeft($1.Value, "$"))
+                identifier := node.NewIdentifier(strings.TrimLeftFunc($1.Value, isDollar))
                 $$ = expr.NewVariable(identifier)
 
                 // save position
