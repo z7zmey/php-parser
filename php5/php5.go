@@ -7387,17 +7387,17 @@ yydefault:
 				switch nn := n.(type) {
 				case *expr.ArrayDimFetch:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 
 				case *expr.PropertyFetch:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 
 				case *expr.MethodCall:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 				}
 			}
@@ -7406,17 +7406,17 @@ yydefault:
 				switch nn := n.(type) {
 				case *expr.ArrayDimFetch:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 
 				case *expr.PropertyFetch:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 
 				case *expr.MethodCall:
 					nn.Variable = yyVAL.node
-					yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
+					yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition(yyVAL.node, nn))
 					yyVAL.node = nn
 				}
 			}
