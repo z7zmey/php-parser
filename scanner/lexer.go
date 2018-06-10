@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"go/token"
 	"io"
+	"sync"
 	"unicode"
 
 	"github.com/z7zmey/php-parser/position"
@@ -443,6 +444,7 @@ type Lexer struct {
 	Comments      []*comment.Comment
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
+	TokenPool     sync.Pool
 }
 
 // Rune2Class returns the rune integer id
@@ -470,7 +472,12 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 	if err != nil {
 		panic(err)
 	}
-	return &Lexer{lx, []int{0}, "", nil, "", &bytes.Buffer{}}
+
+	var TokenPool = sync.Pool{
+		New: func() interface{} { return &Token{} },
+	}
+
+	return &Lexer{lx, []int{0}, "", nil, "", &bytes.Buffer{}, TokenPool}
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {
@@ -523,7 +530,14 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 		int(lastChar.Pos()),
 	)
 
-	return NewToken(l.tokenString(chars), pos).SetComments(l.Comments)
+	token := l.TokenPool.Get().(*Token)
+	token.Position = pos
+	token.Comments = l.Comments
+	token.Value = l.tokenString(chars)
+
+	return token
+
+	// return NewToken(l.tokenString(chars), pos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(chars []lex.Char) {

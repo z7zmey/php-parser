@@ -8,35 +8,10 @@ import (
 // Token value returned by lexer
 type Token struct {
 	Value    string
-	position *position.Position
-	comments []*comment.Comment
-}
-
-// NewToken Token constructor
-func NewToken(value string, pos *position.Position) *Token {
-	return &Token{
-		Value:    value,
-		position: pos,
-		comments: nil,
-	}
+	Position *position.Position
+	Comments []*comment.Comment
 }
 
 func (t *Token) String() string {
 	return string(t.Value)
-}
-
-// Position returns token position
-func (t *Token) Position() *position.Position {
-	return t.position
-}
-
-// Comments returns attached comments
-func (t *Token) Comments() []*comment.Comment {
-	return t.comments
-}
-
-// SetComments attach comments
-func (t *Token) SetComments(comments []*comment.Comment) *Token {
-	t.comments = comments
-	return t
 }

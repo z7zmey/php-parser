@@ -13,15 +13,18 @@ import (
 
 func TestToken(t *testing.T) {
 	pos := position.NewPosition(1, 1, 0, 3)
-	tkn := scanner.NewToken(`foo`, pos)
+	tkn := &scanner.Token{
+		Value:    `foo`,
+		Position: pos,
+	}
 
 	c := []*comment.Comment{
 		comment.NewComment("test comment", nil),
 	}
 
-	tkn.SetComments(c)
+	tkn.Comments = c
 
-	if !reflect.DeepEqual(tkn.Comments(), c) {
+	if !reflect.DeepEqual(tkn.Comments, c) {
 		t.Errorf("comments are not equal\n")
 	}
 
@@ -29,7 +32,7 @@ func TestToken(t *testing.T) {
 		t.Errorf("token value is not equal\n")
 	}
 
-	if tkn.Position() != pos {
+	if tkn.Position != pos {
 		t.Errorf("token position is not equal\n")
 	}
 }

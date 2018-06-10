@@ -27,7 +27,10 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 
 func TestConstructor(t *testing.T) {
 	pos := position.NewPosition(1, 2, 3, 4)
-	token := scanner.NewToken(`test`, pos)
+	token := &scanner.Token{
+		Value:    `test`,
+		Position: pos,
+	}
 
 	actual := errors.NewError("message", token)
 
@@ -41,7 +44,10 @@ func TestConstructor(t *testing.T) {
 
 func TestPrint(t *testing.T) {
 	pos := position.NewPosition(1, 2, 3, 4)
-	token := scanner.NewToken(`test`, pos)
+	token := &scanner.Token{
+		Value:    `test`,
+		Position: pos,
+	}
 
 	Error := errors.NewError("message", token)
 

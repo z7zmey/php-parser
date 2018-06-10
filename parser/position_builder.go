@@ -101,25 +101,25 @@ func (b *PositionBuilder) NewNodePosition(n node.Node) *position.Position {
 
 // NewTokenPosition returns new Position
 func (b *PositionBuilder) NewTokenPosition(t *scanner.Token) *position.Position {
-	return t.Position()
+	return t.Position
 }
 
 // NewTokensPosition returns new Position
 func (b *PositionBuilder) NewTokensPosition(startToken *scanner.Token, endToken *scanner.Token) *position.Position {
 	return position.NewPosition(
-		startToken.Position().StartLine,
-		endToken.Position().EndLine,
-		startToken.Position().StartPos,
-		endToken.Position().EndPos,
+		startToken.Position.StartLine,
+		endToken.Position.EndLine,
+		startToken.Position.StartPos,
+		endToken.Position.EndPos,
 	)
 }
 
 // NewTokenNodePosition returns new Position
 func (b *PositionBuilder) NewTokenNodePosition(t *scanner.Token, n node.Node) *position.Position {
 	return position.NewPosition(
-		t.Position().StartLine,
+		t.Position.StartLine,
 		b.getNodeEndPos(n).endLine,
-		t.Position().StartPos,
+		t.Position.StartPos,
 		b.getNodeEndPos(n).endPos,
 	)
 }
@@ -128,9 +128,9 @@ func (b *PositionBuilder) NewTokenNodePosition(t *scanner.Token, n node.Node) *p
 func (b *PositionBuilder) NewNodeTokenPosition(n node.Node, t *scanner.Token) *position.Position {
 	return position.NewPosition(
 		b.getNodeStartPos(n).startLine,
-		t.Position().EndLine,
+		t.Position.EndLine,
 		b.getNodeStartPos(n).startPos,
-		t.Position().EndPos,
+		t.Position.EndPos,
 	)
 }
 
@@ -148,18 +148,18 @@ func (b *PositionBuilder) NewNodesPosition(startNode node.Node, endNode node.Nod
 func (b *PositionBuilder) NewNodeListTokenPosition(list []node.Node, t *scanner.Token) *position.Position {
 	return position.NewPosition(
 		b.getListStartPos(list).startLine,
-		t.Position().EndLine,
+		t.Position.EndLine,
 		b.getListStartPos(list).startPos,
-		t.Position().EndPos,
+		t.Position.EndPos,
 	)
 }
 
 // NewTokenNodeListPosition returns new Position
 func (b *PositionBuilder) NewTokenNodeListPosition(t *scanner.Token, list []node.Node) *position.Position {
 	return position.NewPosition(
-		t.Position().StartLine,
+		t.Position.StartLine,
 		b.getListEndPos(list).endLine,
-		t.Position().StartPos,
+		t.Position.StartPos,
 		b.getListEndPos(list).endPos,
 	)
 }
@@ -188,17 +188,17 @@ func (b *PositionBuilder) NewNodeListNodePosition(list []node.Node, n node.Node)
 func (b *PositionBuilder) NewOptionalListTokensPosition(list []node.Node, t *scanner.Token, endToken *scanner.Token) *position.Position {
 	if list == nil {
 		return position.NewPosition(
-			t.Position().StartLine,
-			endToken.Position().EndLine,
-			t.Position().StartPos,
-			endToken.Position().EndPos,
+			t.Position.StartLine,
+			endToken.Position.EndLine,
+			t.Position.StartPos,
+			endToken.Position.EndPos,
 		)
 	}
 
 	return position.NewPosition(
 		b.getListStartPos(list).startLine,
-		endToken.Position().EndLine,
+		endToken.Position.EndLine,
 		b.getListStartPos(list).startPos,
-		endToken.Position().EndPos,
+		endToken.Position.EndPos,
 	)
 }

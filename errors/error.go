@@ -17,7 +17,7 @@ type Error struct {
 func NewError(msg string, t *scanner.Token) *Error {
 	return &Error{
 		Msg: msg,
-		Pos: t.Position(),
+		Pos: t.Position,
 	}
 }
 

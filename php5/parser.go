@@ -117,3 +117,13 @@ func firstNode(nn []node.Node) node.Node {
 func isDollar(r rune) bool {
 	return r == '$'
 }
+
+func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {
+	for i := 1; i < len(yyDollar); i++ {
+		if yyDollar[i].token != nil {
+			p.TokenPool.Put(yyDollar[i].token)
+		}
+		yyDollar[i].token = nil
+	}
+	yyVAL.token = nil
+}

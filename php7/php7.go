@@ -346,7 +346,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php7/php7.y:4306
+//line php7/php7.y:5344
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -2120,480 +2120,486 @@ yydefault:
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:311
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:310
+		//line php7/php7.y:312
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:311
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:312
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:315
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:316
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:317
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:320
+		//line php7/php7.y:322
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:321
+		//line php7/php7.y:325
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:326
+		//line php7/php7.y:330
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:328
+		//line php7/php7.y:334
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:333
+		//line php7/php7.y:341
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 			}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:339
+		//line php7/php7.y:349
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:344
+		//line php7/php7.y:358
 		{
 			namePart := name.NewNamePart(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{namePart}
@@ -2603,10 +2609,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(namePart, yyDollar[1].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:355
+		//line php7/php7.y:371
 		{
 			namePart := name.NewNamePart(yyDollar[3].token.Value)
 			yyVAL.list = append(yyDollar[1].list, namePart)
@@ -2617,19 +2625,23 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.NsSeparatorToken)
 			yylex.(*Parser).comments.AddFromToken(namePart, yyDollar[3].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:370
+		//line php7/php7.y:388
 		{
 			yyVAL.node = name.NewName(yyDollar[1].list)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:377
+		//line php7/php7.y:397
 		{
 			yyVAL.node = name.NewRelative(yyDollar[3].list)
 
@@ -2639,10 +2651,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NamespaceToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.NsSeparatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:388
+		//line php7/php7.y:410
 		{
 			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
 
@@ -2651,47 +2665,61 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NsSeparatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:401
+		//line php7/php7.y:425
 		{
 			// error
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:406
+		//line php7/php7.y:432
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:408
+		//line php7/php7.y:438
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:410
+		//line php7/php7.y:444
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:412
+		//line php7/php7.y:450
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 90:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:414
+		//line php7/php7.y:456
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 91:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:416
+		//line php7/php7.y:462
 		{
 			yyVAL.node = stmt.NewHaltCompiler()
 
@@ -2703,10 +2731,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 92:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:429
+		//line php7/php7.y:477
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewNamespace(name, nil)
@@ -2718,10 +2748,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NamespaceToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 93:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:442
+		//line php7/php7.y:492
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewNamespace(name, yyDollar[4].list)
@@ -2734,10 +2766,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NamespaceToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 94:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:456
+		//line php7/php7.y:508
 		{
 			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list)
 
@@ -2748,10 +2782,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NamespaceToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 95:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:468
+		//line php7/php7.y:522
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -2761,10 +2797,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UseToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 96:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:479
+		//line php7/php7.y:535
 		{
 			yyVAL.node = yyDollar[3].node.(*stmt.GroupUse).SetUseType(yyDollar[2].node)
 
@@ -2774,10 +2812,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UseToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 97:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:490
+		//line php7/php7.y:548
 		{
 			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list)
 
@@ -2787,10 +2827,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UseToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 98:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:501
+		//line php7/php7.y:561
 		{
 			yyVAL.node = stmt.NewUseList(yyDollar[2].node, yyDollar[3].list)
 
@@ -2800,10 +2842,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UseToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 99:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:512
+		//line php7/php7.y:574
 		{
 			yyVAL.node = stmt.NewConstList(yyDollar[2].list)
 
@@ -2813,10 +2857,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ConstToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:526
+		//line php7/php7.y:590
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -2825,10 +2871,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FunctionToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 101:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:536
+		//line php7/php7.y:602
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -2837,10 +2885,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ConstToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 102:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:549
+		//line php7/php7.y:617
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
@@ -2856,10 +2906,12 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 103:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:566
+		//line php7/php7.y:636
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
@@ -2876,10 +2928,12 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 104:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:587
+		//line php7/php7.y:659
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
@@ -2895,10 +2949,12 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 105:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:604
+		//line php7/php7.y:678
 		{
 			name := name.NewName(yyDollar[2].list)
 			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
@@ -2915,79 +2971,97 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 106:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:625
+		//line php7/php7.y:701
 		{
 			yyVAL.token = nil
 		}
 	case 107:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:627
+		//line php7/php7.y:705
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 108:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:632
+		//line php7/php7.y:712
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 109:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:639
+		//line php7/php7.y:721
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 110:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:644
+		//line php7/php7.y:730
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 111:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:651
+		//line php7/php7.y:739
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 112:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:656
+		//line php7/php7.y:748
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:663
+		//line php7/php7.y:757
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 114:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:668
+		//line php7/php7.y:766
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 115:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:670
+		//line php7/php7.y:772
 		{
 			yyVAL.node = yyDollar[2].node.(*stmt.Use).SetUseType(yyDollar[1].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 116:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:675
+		//line php7/php7.y:781
 		{
 			name := name.NewName(yyDollar[1].list)
 			yyVAL.node = stmt.NewUse(nil, name, nil)
@@ -2995,10 +3069,12 @@ yydefault:
 			// save position
 			yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 117:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:684
+		//line php7/php7.y:792
 		{
 			name := name.NewName(yyDollar[1].list)
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
@@ -3012,91 +3088,117 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(alias, yyDollar[3].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 118:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:702
+		//line php7/php7.y:812
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 119:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:704
+		//line php7/php7.y:818
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NsSeparatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:714
+		//line php7/php7.y:830
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 121:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:721
+		//line php7/php7.y:839
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 122:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:726
+		//line php7/php7.y:848
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 			}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 123:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:732
+		//line php7/php7.y:856
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:737
+		//line php7/php7.y:865
 		{
 			// error
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:742
+		//line php7/php7.y:872
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:744
+		//line php7/php7.y:878
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:746
+		//line php7/php7.y:884
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 128:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:748
+		//line php7/php7.y:890
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:750
+		//line php7/php7.y:896
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 130:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:752
+		//line php7/php7.y:902
 		{
 			yyVAL.node = stmt.NewHaltCompiler()
 
@@ -3108,10 +3210,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 131:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:767
+		//line php7/php7.y:919
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 
@@ -3121,22 +3225,28 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 132:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:778
+		//line php7/php7.y:932
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 133:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:780
+		//line php7/php7.y:938
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 134:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:782
+		//line php7/php7.y:944
 		{
 			switch n := yyDollar[5].node.(type) {
 			case *stmt.While:
@@ -3154,10 +3264,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.WhileToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 135:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:801
+		//line php7/php7.y:965
 		{
 			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[5].node)
 
@@ -3170,10 +3282,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 136:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:815
+		//line php7/php7.y:981
 		{
 			switch n := yyDollar[9].node.(type) {
 			case *stmt.For:
@@ -3197,10 +3311,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.ForInitSemicolonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.ForCondSemicolonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 137:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:840
+		//line php7/php7.y:1008
 		{
 			switch n := yyDollar[5].node.(type) {
 			case *stmt.Switch:
@@ -3220,10 +3336,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.SwitchToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:861
+		//line php7/php7.y:1031
 		{
 			yyVAL.node = stmt.NewBreak(yyDollar[2].node)
 
@@ -3233,10 +3351,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.BreakToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:872
+		//line php7/php7.y:1044
 		{
 			yyVAL.node = stmt.NewContinue(yyDollar[2].node)
 
@@ -3246,10 +3366,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ContinueToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:883
+		//line php7/php7.y:1057
 		{
 			yyVAL.node = stmt.NewReturn(yyDollar[2].node)
 
@@ -3259,10 +3381,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ReturnToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:894
+		//line php7/php7.y:1070
 		{
 			yyVAL.node = stmt.NewGlobal(yyDollar[2].list)
 
@@ -3272,10 +3396,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.GlobalToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 142:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:905
+		//line php7/php7.y:1083
 		{
 			yyVAL.node = stmt.NewStatic(yyDollar[2].list)
 
@@ -3285,10 +3411,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StaticToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 143:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:916
+		//line php7/php7.y:1096
 		{
 			yyVAL.node = stmt.NewEcho(yyDollar[2].list)
 
@@ -3298,10 +3426,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.EchoToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 144:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:927
+		//line php7/php7.y:1109
 		{
 			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value)
 
@@ -3310,10 +3440,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.InlineHTMLToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 145:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:937
+		//line php7/php7.y:1121
 		{
 			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
 
@@ -3322,10 +3454,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:947
+		//line php7/php7.y:1133
 		{
 			yyVAL.node = stmt.NewUnset(yyDollar[3].list)
 
@@ -3340,10 +3474,12 @@ yydefault:
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 147:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:963
+		//line php7/php7.y:1151
 		{
 			switch n := yyDollar[7].node.(type) {
 			case *stmt.Foreach:
@@ -3364,10 +3500,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 148:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:985
+		//line php7/php7.y:1175
 		{
 			switch n := yyDollar[9].node.(type) {
 			case *stmt.Foreach:
@@ -3391,10 +3529,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.DoubleArrowToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 149:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1010
+		//line php7/php7.y:1202
 		{
 			yyVAL.node = stmt.NewDeclare(yyDollar[3].list, yyDollar[5].node)
 
@@ -3405,10 +3545,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DeclareToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1022
+		//line php7/php7.y:1216
 		{
 			yyVAL.node = stmt.NewNop()
 
@@ -3417,10 +3559,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 151:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1032
+		//line php7/php7.y:1228
 		{
 			if yyDollar[6].node == nil {
 				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
@@ -3434,10 +3578,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.TryToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1047
+		//line php7/php7.y:1245
 		{
 			yyVAL.node = stmt.NewThrow(yyDollar[2].node)
 
@@ -3447,10 +3593,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ThrowToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1058
+		//line php7/php7.y:1258
 		{
 			label := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewGoto(label)
@@ -3463,10 +3611,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.GotoToken)
 			yylex.(*Parser).comments.AddFromToken(label, yyDollar[2].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 154:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1072
+		//line php7/php7.y:1274
 		{
 			label := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewLabel(label)
@@ -3478,16 +3628,20 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(label, yyDollar[1].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 155:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1087
+		//line php7/php7.y:1291
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 156:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1089
+		//line php7/php7.y:1297
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[5].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -3506,31 +3660,39 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(catch, yyDollar[6].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(catch, yyDollar[7].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(catch, yyDollar[9].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1111
+		//line php7/php7.y:1321
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1113
+		//line php7/php7.y:1327
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.VerticalBarToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1123
+		//line php7/php7.y:1339
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1125
+		//line php7/php7.y:1345
 		{
 			yyVAL.node = stmt.NewFinally(yyDollar[3].list)
 
@@ -3541,31 +3703,39 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FinallyToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1140
+		//line php7/php7.y:1362
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1142
+		//line php7/php7.y:1368
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1152
+		//line php7/php7.y:1380
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:1157
+		//line php7/php7.y:1389
 		{
 			name := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewFunction(name, yyDollar[2].token != nil, yyDollar[6].list, yyDollar[8].node, yyDollar[10].list, yyDollar[4].str)
@@ -3584,34 +3754,36 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[9].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[11].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1181
+		//line php7/php7.y:1415
 		{
 			yyVAL.token = nil
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1183
+		//line php7/php7.y:1419
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1188
+		//line php7/php7.y:1426
 		{
 			yyVAL.token = nil
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1190
+		//line php7/php7.y:1430
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1195
+		//line php7/php7.y:1437
 		{
 			name := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewClass(name, yyDollar[1].list, nil, yyDollar[4].ClassExtends, yyDollar[5].ClassImplements, yyDollar[8].list, yyDollar[6].str)
@@ -3625,10 +3797,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[3].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[9].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:1210
+		//line php7/php7.y:1454
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewClass(name, nil, nil, yyDollar[3].ClassExtends, yyDollar[4].ClassImplements, yyDollar[7].list, yyDollar[5].str)
@@ -3642,22 +3816,28 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[2].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1228
+		//line php7/php7.y:1474
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1230
+		//line php7/php7.y:1480
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1235
+		//line php7/php7.y:1489
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -3666,10 +3846,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.AbstractToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1245
+		//line php7/php7.y:1501
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -3678,10 +3860,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FinalToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1258
+		//line php7/php7.y:1516
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewTrait(name, yyDollar[5].list, yyDollar[3].str)
@@ -3695,10 +3879,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[2].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1276
+		//line php7/php7.y:1536
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = stmt.NewInterface(name, yyDollar[3].InterfaceExtends, yyDollar[6].list, yyDollar[4].str)
@@ -3712,16 +3898,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[2].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1294
+		//line php7/php7.y:1556
 		{
 			yyVAL.ClassExtends = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1296
+		//line php7/php7.y:1562
 		{
 			yyVAL.ClassExtends = stmt.NewClassExtends(yyDollar[2].node)
 
@@ -3730,16 +3920,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.ClassExtends, yyDollar[1].token, comment.ExtendsToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1309
+		//line php7/php7.y:1577
 		{
 			yyVAL.InterfaceExtends = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1311
+		//line php7/php7.y:1583
 		{
 			yyVAL.InterfaceExtends = stmt.NewInterfaceExtends(yyDollar[2].list)
 
@@ -3748,16 +3942,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.InterfaceExtends, yyDollar[1].token, comment.ExtendsToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1324
+		//line php7/php7.y:1598
 		{
 			yyVAL.ClassImplements = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1326
+		//line php7/php7.y:1604
 		{
 			yyVAL.ClassImplements = stmt.NewClassImplements(yyDollar[2].list)
 
@@ -3766,16 +3964,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.ClassImplements, yyDollar[1].token, comment.ImplementsToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1339
+		//line php7/php7.y:1619
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1343
+		//line php7/php7.y:1625
 		{
 			yyVAL.node = expr.NewReference(yyDollar[2].node)
 
@@ -3784,10 +3986,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.AmpersandToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1353
+		//line php7/php7.y:1637
 		{
 			yyVAL.node = expr.NewList(yyDollar[3].list)
 
@@ -3798,10 +4002,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ListToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1365
+		//line php7/php7.y:1651
 		{
 			yyVAL.node = expr.NewShortList(yyDollar[2].list)
 
@@ -3811,19 +4017,23 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1379
+		//line php7/php7.y:1667
 		{
 			yyVAL.node = stmt.NewFor(nil, nil, nil, yyDollar[1].node)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1386
+		//line php7/php7.y:1676
 		{
 			stmtList := stmt.NewStmtList(yyDollar[2].list)
 			yyVAL.node = stmt.NewAltFor(nil, nil, nil, stmtList)
@@ -3836,19 +4046,23 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.EndforToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1403
+		//line php7/php7.y:1695
 		{
 			yyVAL.node = stmt.NewForeach(nil, nil, nil, yyDollar[1].node)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1410
+		//line php7/php7.y:1704
 		{
 			stmtList := stmt.NewStmtList(yyDollar[2].list)
 			yyVAL.node = stmt.NewAltForeach(nil, nil, nil, stmtList)
@@ -3861,16 +4075,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.EndforeachToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1427
+		//line php7/php7.y:1723
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1429
+		//line php7/php7.y:1729
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 
@@ -3881,10 +4099,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.EnddeclareToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1444
+		//line php7/php7.y:1746
 		{
 			caseList := stmt.NewCaseList(yyDollar[2].list)
 			yyVAL.node = stmt.NewSwitch(nil, caseList)
@@ -3896,10 +4116,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1457
+		//line php7/php7.y:1761
 		{
 			caseList := stmt.NewCaseList(yyDollar[3].list)
 			yyVAL.node = stmt.NewSwitch(nil, caseList)
@@ -3912,10 +4134,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[2].token, comment.SemiColonToken)
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1471
+		//line php7/php7.y:1777
 		{
 			caseList := stmt.NewCaseList(yyDollar[2].list)
 			yyVAL.node = stmt.NewAltSwitch(nil, caseList)
@@ -3928,10 +4152,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[1].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[3].token, comment.EndswitchToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1485
+		//line php7/php7.y:1793
 		{
 
 			caseList := stmt.NewCaseList(yyDollar[3].list)
@@ -3946,16 +4172,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[2].token, comment.SemiColonToken)
 			yylex.(*Parser).comments.AddFromToken(caseList, yyDollar[4].token, comment.EndswitchToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1504
+		//line php7/php7.y:1814
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1506
+		//line php7/php7.y:1820
 		{
 			_case := stmt.NewCase(yyDollar[3].node, yyDollar[5].list)
 			yyVAL.list = append(yyDollar[1].list, _case)
@@ -3966,10 +4196,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(_case, yyDollar[2].token, comment.CaseToken)
 			yylex.(*Parser).comments.AddFromToken(_case, yyDollar[4].token, comment.CaseSeparatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1518
+		//line php7/php7.y:1834
 		{
 			_default := stmt.NewDefault(yyDollar[4].list)
 			yyVAL.list = append(yyDollar[1].list, _default)
@@ -3980,31 +4212,35 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(_default, yyDollar[2].token, comment.DefaultToken)
 			yylex.(*Parser).comments.AddFromToken(_default, yyDollar[3].token, comment.CaseSeparatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1533
+		//line php7/php7.y:1851
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1535
+		//line php7/php7.y:1855
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1540
+		//line php7/php7.y:1862
 		{
 			yyVAL.node = stmt.NewWhile(nil, yyDollar[1].node)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1547
+		//line php7/php7.y:1871
 		{
 			stmtList := stmt.NewStmtList(yyDollar[2].list)
 			yyVAL.node = stmt.NewAltWhile(nil, stmtList)
@@ -4017,10 +4253,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.EndwhileToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1564
+		//line php7/php7.y:1890
 		{
 			yyVAL.node = stmt.NewIf(yyDollar[3].node, yyDollar[5].node, nil, nil)
 
@@ -4031,10 +4269,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IfToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1576
+		//line php7/php7.y:1904
 		{
 			_elseIf := stmt.NewElseIf(yyDollar[4].node, yyDollar[6].node)
 			yyVAL.node = yyDollar[1].node.(*stmt.If).AddElseIf(_elseIf)
@@ -4047,16 +4287,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[2].token, comment.ElseifToken)
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[3].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[5].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1593
+		//line php7/php7.y:1923
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1595
+		//line php7/php7.y:1929
 		{
 			_else := stmt.NewElse(yyDollar[3].node)
 			yyVAL.node = yyDollar[1].node.(*stmt.If).SetElse(_else)
@@ -4067,10 +4311,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ElseToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1610
+		//line php7/php7.y:1946
 		{
 			stmts := stmt.NewStmtList(yyDollar[6].list)
 			yyVAL.node = stmt.NewAltIf(yyDollar[3].node, stmts, nil, nil)
@@ -4084,10 +4330,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1625
+		//line php7/php7.y:1963
 		{
 			stmts := stmt.NewStmtList(yyDollar[7].list)
 			_elseIf := stmt.NewAltElseIf(yyDollar[4].node, stmts)
@@ -4102,10 +4350,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[3].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[5].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(_elseIf, yyDollar[6].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1644
+		//line php7/php7.y:1984
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4115,10 +4365,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EndifToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1655
+		//line php7/php7.y:1997
 		{
 			stmts := stmt.NewStmtList(yyDollar[4].list)
 			_else := stmt.NewAltElse(stmts)
@@ -4134,37 +4386,47 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(_else, yyDollar[3].token, comment.ColonToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.EndifToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1675
+		//line php7/php7.y:2019
 		{
 			yyVAL.list = yyDollar[1].list
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1677
+		//line php7/php7.y:2025
 		{
 			yyVAL.list = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1682
+		//line php7/php7.y:2034
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1684
+		//line php7/php7.y:2040
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1694
+		//line php7/php7.y:2052
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4191,10 +4453,12 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.EllipsisToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[4].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1722
+		//line php7/php7.y:2082
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4222,28 +4486,36 @@ yydefault:
 			}
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[4].token, comment.VariableToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1754
+		//line php7/php7.y:2116
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1756
+		//line php7/php7.y:2122
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1761
+		//line php7/php7.y:2131
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1763
+		//line php7/php7.y:2137
 		{
 			yyVAL.node = node.NewNullable(yyDollar[2].node)
 
@@ -4252,10 +4524,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.QuestionMarkToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1776
+		//line php7/php7.y:2152
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4264,10 +4538,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ArrayToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1786
+		//line php7/php7.y:2164
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4276,31 +4552,39 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.CallableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1796
+		//line php7/php7.y:2176
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1801
+		//line php7/php7.y:2185
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1803
+		//line php7/php7.y:2191
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1813
+		//line php7/php7.y:2203
 		{
 			yyVAL.node = node.NewArgumentList(nil)
 
@@ -4310,10 +4594,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1824
+		//line php7/php7.y:2216
 		{
 			yyVAL.node = node.NewArgumentList(yyDollar[2].list)
 
@@ -4326,34 +4612,42 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1841
+		//line php7/php7.y:2235
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1843
+		//line php7/php7.y:2241
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1853
+		//line php7/php7.y:2253
 		{
 			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1860
+		//line php7/php7.y:2262
 		{
 			yyVAL.node = node.NewArgument(yyDollar[2].node, true, false)
 
@@ -4362,46 +4656,58 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.EllipsisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1873
+		//line php7/php7.y:2277
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1880
+		//line php7/php7.y:2286
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1885
+		//line php7/php7.y:2295
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1890
+		//line php7/php7.y:2304
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1897
+		//line php7/php7.y:2313
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1902
+		//line php7/php7.y:2322
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4414,10 +4720,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1916
+		//line php7/php7.y:2338
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4431,22 +4739,28 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1934
+		//line php7/php7.y:2358
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1936
+		//line php7/php7.y:2364
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1941
+		//line php7/php7.y:2373
 		{
 			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
 
@@ -4455,10 +4769,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1951
+		//line php7/php7.y:2385
 		{
 			yyVAL.node = stmt.NewClassConstList(yyDollar[1].list, yyDollar[3].list)
 
@@ -4468,10 +4784,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ConstToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1962
+		//line php7/php7.y:2398
 		{
 			var adaptationList *stmt.TraitAdaptationList
 
@@ -4490,10 +4808,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UseToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line php7/php7.y:1982
+		//line php7/php7.y:2420
 		{
 			name := node.NewIdentifier(yyDollar[4].token.Value)
 			yyVAL.node = stmt.NewClassMethod(name, yyDollar[1].list, yyDollar[3].token != nil, yyDollar[7].list, yyDollar[9].node, yyDollar[10].node, yyDollar[5].str)
@@ -4514,25 +4834,31 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[4].token, comment.IdentifierToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2007
+		//line php7/php7.y:2447
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2009
+		//line php7/php7.y:2453
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2019
+		//line php7/php7.y:2465
 		{
 			yyVAL.node = stmt.NewNop()
 
@@ -4541,10 +4867,11 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.SemiColonToken)
 
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2029
+		//line php7/php7.y:2477
 		{
 			yyVAL.node = stmt.NewTraitAdaptationList(nil)
 
@@ -4553,10 +4880,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2039
+		//line php7/php7.y:2489
 		{
 			yyVAL.node = stmt.NewTraitAdaptationList(yyDollar[2].list)
 
@@ -4565,40 +4894,50 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2052
+		//line php7/php7.y:2504
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2054
+		//line php7/php7.y:2510
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2059
+		//line php7/php7.y:2519
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2066
+		//line php7/php7.y:2528
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2076
+		//line php7/php7.y:2540
 		{
 			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, yyDollar[3].list)
 
@@ -4607,10 +4946,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.InsteadofToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2089
+		//line php7/php7.y:2555
 		{
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
@@ -4622,10 +4963,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(alias, yyDollar[3].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2102
+		//line php7/php7.y:2570
 		{
 			alias := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
@@ -4637,10 +4980,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(alias, yyDollar[3].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2115
+		//line php7/php7.y:2585
 		{
 			alias := node.NewIdentifier(yyDollar[4].token.Value)
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, alias)
@@ -4652,10 +4997,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsToken)
 			yylex.(*Parser).comments.AddFromToken(alias, yyDollar[4].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2128
+		//line php7/php7.y:2600
 		{
 			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
 
@@ -4664,10 +5011,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2141
+		//line php7/php7.y:2615
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewTraitMethodRef(nil, name)
@@ -4678,16 +5027,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[1].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2153
+		//line php7/php7.y:2629
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2158
+		//line php7/php7.y:2638
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target)
@@ -4699,10 +5052,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
 			yylex.(*Parser).comments.AddFromToken(target, yyDollar[3].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2174
+		//line php7/php7.y:2656
 		{
 			yyVAL.node = stmt.NewNop()
 
@@ -4711,10 +5066,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.SemiColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2184
+		//line php7/php7.y:2668
 		{
 			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
 
@@ -4724,16 +5081,20 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2198
+		//line php7/php7.y:2684
 		{
 			yyVAL.list = yyDollar[1].list
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2200
+		//line php7/php7.y:2690
 		{
 			modifier := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{modifier}
@@ -4743,34 +5104,44 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(modifier, yyDollar[1].token, comment.VarToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2214
+		//line php7/php7.y:2706
 		{
 			yyVAL.list = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2216
+		//line php7/php7.y:2712
 		{
 			yyVAL.list = yyDollar[1].list
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2221
+		//line php7/php7.y:2721
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2223
+		//line php7/php7.y:2727
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2228
+		//line php7/php7.y:2736
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4779,10 +5150,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.PublicToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2238
+		//line php7/php7.y:2748
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4791,10 +5164,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ProtectedToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2248
+		//line php7/php7.y:2760
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4803,10 +5178,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.PrivateToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2258
+		//line php7/php7.y:2772
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4815,10 +5192,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StaticToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2268
+		//line php7/php7.y:2784
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4827,10 +5206,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.AbstractToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2278
+		//line php7/php7.y:2796
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -4839,25 +5220,31 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FinalToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2291
+		//line php7/php7.y:2811
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2298
+		//line php7/php7.y:2820
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2303
+		//line php7/php7.y:2829
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4870,10 +5257,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2317
+		//line php7/php7.y:2845
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -4887,25 +5276,31 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2335
+		//line php7/php7.y:2865
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2342
+		//line php7/php7.y:2874
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2347
+		//line php7/php7.y:2883
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
@@ -4917,10 +5312,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[1].token, comment.IdentifierToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2363
+		//line php7/php7.y:2901
 		{
 			name := node.NewIdentifier(yyDollar[1].token.Value)
 			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
@@ -4932,58 +5329,74 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[1].token, comment.StringToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2379
+		//line php7/php7.y:2919
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2386
+		//line php7/php7.y:2928
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2391
+		//line php7/php7.y:2937
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2396
+		//line php7/php7.y:2946
 		{
 			yyVAL.list = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2398
+		//line php7/php7.y:2952
 		{
 			yyVAL.list = yyDollar[1].list
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2403
+		//line php7/php7.y:2961
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2410
+		//line php7/php7.y:2970
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:2415
+		//line php7/php7.y:2979
 		{
 			if yyDollar[2].node != nil {
 				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].node.(*node.ArgumentList), yyDollar[3].ClassExtends, yyDollar[4].ClassImplements, yyDollar[7].list, yyDollar[5].str)
@@ -4998,10 +5411,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ClassToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[8].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2434
+		//line php7/php7.y:3000
 		{
 			if yyDollar[3].node != nil {
 				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].node.(*node.ArgumentList))
@@ -5013,10 +5428,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NewToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2447
+		//line php7/php7.y:3015
 		{
 			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
 
@@ -5025,10 +5442,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NewToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2460
+		//line php7/php7.y:3030
 		{
 			list := expr.NewList(yyDollar[3].list)
 			yyVAL.node = assign.NewAssign(list, yyDollar[6].node)
@@ -5042,10 +5461,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[4].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2475
+		//line php7/php7.y:3047
 		{
 			shortList := expr.NewShortList(yyDollar[2].list)
 			yyVAL.node = assign.NewAssign(shortList, yyDollar[5].node)
@@ -5058,10 +5479,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(shortList, yyDollar[1].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(shortList, yyDollar[3].token, comment.CloseSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2489
+		//line php7/php7.y:3063
 		{
 			yyVAL.node = assign.NewAssign(yyDollar[1].node, yyDollar[3].node)
 
@@ -5070,10 +5493,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2499
+		//line php7/php7.y:3075
 		{
 			yyVAL.node = assign.NewReference(yyDollar[1].node, yyDollar[4].node)
 
@@ -5083,10 +5508,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.EqualToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.AmpersandToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2510
+		//line php7/php7.y:3088
 		{
 			yyVAL.node = expr.NewClone(yyDollar[2].node)
 
@@ -5095,10 +5522,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.CloneToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2520
+		//line php7/php7.y:3100
 		{
 			yyVAL.node = assign.NewPlus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5107,10 +5536,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PlusEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2530
+		//line php7/php7.y:3112
 		{
 			yyVAL.node = assign.NewMinus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5119,10 +5550,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.MinusEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2540
+		//line php7/php7.y:3124
 		{
 			yyVAL.node = assign.NewMul(yyDollar[1].node, yyDollar[3].node)
 
@@ -5131,10 +5564,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.MulEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2550
+		//line php7/php7.y:3136
 		{
 			yyVAL.node = assign.NewPow(yyDollar[1].node, yyDollar[3].node)
 
@@ -5143,10 +5578,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PowEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2560
+		//line php7/php7.y:3148
 		{
 			yyVAL.node = assign.NewDiv(yyDollar[1].node, yyDollar[3].node)
 
@@ -5155,10 +5592,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.DivEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2570
+		//line php7/php7.y:3160
 		{
 			yyVAL.node = assign.NewConcat(yyDollar[1].node, yyDollar[3].node)
 
@@ -5167,10 +5606,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ConcatEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2580
+		//line php7/php7.y:3172
 		{
 			yyVAL.node = assign.NewMod(yyDollar[1].node, yyDollar[3].node)
 
@@ -5179,10 +5620,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ModEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2590
+		//line php7/php7.y:3184
 		{
 			yyVAL.node = assign.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5191,10 +5634,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AndEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2600
+		//line php7/php7.y:3196
 		{
 			yyVAL.node = assign.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5203,10 +5648,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OrEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2610
+		//line php7/php7.y:3208
 		{
 			yyVAL.node = assign.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5215,10 +5662,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.XorEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2620
+		//line php7/php7.y:3220
 		{
 			yyVAL.node = assign.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 
@@ -5227,10 +5676,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SlEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2630
+		//line php7/php7.y:3232
 		{
 			yyVAL.node = assign.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 
@@ -5239,10 +5690,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SrEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2640
+		//line php7/php7.y:3244
 		{
 			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
 
@@ -5251,10 +5704,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IncToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2650
+		//line php7/php7.y:3256
 		{
 			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
 
@@ -5263,10 +5718,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IncToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2660
+		//line php7/php7.y:3268
 		{
 			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
 
@@ -5275,10 +5732,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.DecToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2670
+		//line php7/php7.y:3280
 		{
 			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
 
@@ -5287,10 +5746,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DecToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2680
+		//line php7/php7.y:3292
 		{
 			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5299,10 +5760,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.BooleanOrToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2690
+		//line php7/php7.y:3304
 		{
 			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5311,10 +5774,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.BooleanAndToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2700
+		//line php7/php7.y:3316
 		{
 			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5323,10 +5788,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.LogicalOrToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2710
+		//line php7/php7.y:3328
 		{
 			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5335,10 +5802,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.LogicalAndToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2720
+		//line php7/php7.y:3340
 		{
 			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5347,10 +5816,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.LogicalXorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2730
+		//line php7/php7.y:3352
 		{
 			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
 
@@ -5359,10 +5830,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.VerticalBarToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2740
+		//line php7/php7.y:3364
 		{
 			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
 
@@ -5371,10 +5844,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AmpersandToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2750
+		//line php7/php7.y:3376
 		{
 			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
 
@@ -5383,10 +5858,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.CaretToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2760
+		//line php7/php7.y:3388
 		{
 			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
 
@@ -5395,10 +5872,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.DotToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2770
+		//line php7/php7.y:3400
 		{
 			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5407,10 +5886,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PlusToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2780
+		//line php7/php7.y:3412
 		{
 			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
 
@@ -5419,10 +5900,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.MinusToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2790
+		//line php7/php7.y:3424
 		{
 			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
 
@@ -5431,10 +5914,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.AsteriskToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2800
+		//line php7/php7.y:3436
 		{
 			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
 
@@ -5443,10 +5928,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PowToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2810
+		//line php7/php7.y:3448
 		{
 			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
 
@@ -5455,10 +5942,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SlashToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2820
+		//line php7/php7.y:3460
 		{
 			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
 
@@ -5467,10 +5956,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PercentToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2830
+		//line php7/php7.y:3472
 		{
 			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
 
@@ -5479,10 +5970,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SlToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2840
+		//line php7/php7.y:3484
 		{
 			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
 
@@ -5491,10 +5984,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SrToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2850
+		//line php7/php7.y:3496
 		{
 			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
 
@@ -5503,10 +5998,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.PlusToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2860
+		//line php7/php7.y:3508
 		{
 			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
 
@@ -5515,10 +6012,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.MinusToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2870
+		//line php7/php7.y:3520
 		{
 			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
 
@@ -5527,10 +6026,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ExclamationMarkToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2880
+		//line php7/php7.y:3532
 		{
 			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
 
@@ -5539,10 +6040,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.TildeToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2890
+		//line php7/php7.y:3544
 		{
 			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
 
@@ -5551,10 +6054,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsIdenticalToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2900
+		//line php7/php7.y:3556
 		{
 			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
 
@@ -5563,10 +6068,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsNotIdenticalToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2910
+		//line php7/php7.y:3568
 		{
 			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5575,10 +6082,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2920
+		//line php7/php7.y:3580
 		{
 			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5587,10 +6096,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsNotEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2930
+		//line php7/php7.y:3592
 		{
 			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
 
@@ -5599,10 +6110,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.LessToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2940
+		//line php7/php7.y:3604
 		{
 			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5611,10 +6124,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsSmallerOrEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2950
+		//line php7/php7.y:3616
 		{
 			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
 
@@ -5623,10 +6138,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.GreaterToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2960
+		//line php7/php7.y:3628
 		{
 			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
 
@@ -5635,10 +6152,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.IsGreaterOrEqualToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2970
+		//line php7/php7.y:3640
 		{
 			yyVAL.node = binary.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
 
@@ -5647,10 +6166,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.SpaceshipToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2980
+		//line php7/php7.y:3652
 		{
 			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
 
@@ -5659,26 +6180,32 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.InstanceofToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2990
+		//line php7/php7.y:3664
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2998
+		//line php7/php7.y:3674
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:3000
+		//line php7/php7.y:3680
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
 
@@ -5688,10 +6215,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.QuestionMarkToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3011
+		//line php7/php7.y:3693
 		{
 			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
 
@@ -5701,10 +6230,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.QuestionMarkToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.ColonToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3022
+		//line php7/php7.y:3706
 		{
 			yyVAL.node = binary.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
 
@@ -5713,16 +6244,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.CoalesceToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3032
+		//line php7/php7.y:3718
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3034
+		//line php7/php7.y:3724
 		{
 			yyVAL.node = cast.NewInt(yyDollar[2].node)
 
@@ -5731,10 +6266,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IntCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3044
+		//line php7/php7.y:3736
 		{
 			yyVAL.node = cast.NewDouble(yyDollar[2].node)
 
@@ -5743,10 +6280,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DoubleCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3054
+		//line php7/php7.y:3748
 		{
 			yyVAL.node = cast.NewString(yyDollar[2].node)
 
@@ -5755,10 +6294,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StringCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3064
+		//line php7/php7.y:3760
 		{
 			yyVAL.node = cast.NewArray(yyDollar[2].node)
 
@@ -5767,10 +6308,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ArrayCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3074
+		//line php7/php7.y:3772
 		{
 			yyVAL.node = cast.NewObject(yyDollar[2].node)
 
@@ -5779,10 +6322,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ObjectCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3084
+		//line php7/php7.y:3784
 		{
 			yyVAL.node = cast.NewBool(yyDollar[2].node)
 
@@ -5791,10 +6336,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.BoolCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3094
+		//line php7/php7.y:3796
 		{
 			yyVAL.node = cast.NewUnset(yyDollar[2].node)
 
@@ -5803,10 +6350,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.UnsetCastToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3104
+		//line php7/php7.y:3808
 		{
 			if strings.EqualFold(yyDollar[1].token.Value, "die") {
 				yyVAL.node = expr.NewDie(nil)
@@ -5833,10 +6382,12 @@ yydefault:
 			if yyDollar[2].node != nil {
 				yylex.(*Parser).comments.AddFromChildNode(yyVAL.node, yyDollar[2].node)
 			}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3132
+		//line php7/php7.y:3838
 		{
 			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
 
@@ -5845,16 +6396,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.AtToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3142
+		//line php7/php7.y:3850
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3144
+		//line php7/php7.y:3856
 		{
 			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
 
@@ -5864,10 +6419,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.BackquoteToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.BackquoteToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3155
+		//line php7/php7.y:3869
 		{
 			yyVAL.node = expr.NewPrint(yyDollar[2].node)
 
@@ -5876,10 +6433,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.PrintToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3165
+		//line php7/php7.y:3881
 		{
 			yyVAL.node = expr.NewYield(nil, nil)
 
@@ -5888,10 +6447,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.YieldToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3175
+		//line php7/php7.y:3893
 		{
 			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
 
@@ -5900,10 +6461,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.YieldToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3185
+		//line php7/php7.y:3905
 		{
 			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
 
@@ -5913,10 +6476,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.YieldToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.DoubleArrowToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3196
+		//line php7/php7.y:3918
 		{
 			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node)
 
@@ -5925,10 +6490,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.YieldFromToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:3206
+		//line php7/php7.y:3930
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].ClosureUse, yyDollar[8].node, yyDollar[10].list, false, yyDollar[2].token != nil, yyDollar[3].str)
 
@@ -5944,10 +6511,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[9].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[11].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line php7/php7.y:3223
+		//line php7/php7.y:3949
 		{
 			yyVAL.node = expr.NewClosure(yyDollar[6].list, yyDollar[8].ClosureUse, yyDollar[9].node, yyDollar[11].list, true, yyDollar[3].token != nil, yyDollar[4].str)
 
@@ -5964,35 +6533,41 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[7].token, comment.CloseParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[10].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[12].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 371:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3244
+		//line php7/php7.y:3972
 		{
 			yyVAL.str = yylex.(*Parser).PhpDocComment
 			yylex.(*Parser).PhpDocComment = ""
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3252
+		//line php7/php7.y:3982
 		{
 			yyVAL.token = nil
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3254
+		//line php7/php7.y:3986
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3259
+		//line php7/php7.y:3993
 		{
 			yyVAL.ClosureUse = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3261
+		//line php7/php7.y:3999
 		{
 			yyVAL.ClosureUse = expr.NewClosureUse(yyDollar[3].list)
 
@@ -6003,25 +6578,31 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.ClosureUse, yyDollar[1].token, comment.UseToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.ClosureUse, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.ClosureUse, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3276
+		//line php7/php7.y:4016
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3283
+		//line php7/php7.y:4025
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3288
+		//line php7/php7.y:4034
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			yyVAL.node = expr.NewVariable(identifier)
@@ -6032,10 +6613,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3300
+		//line php7/php7.y:4048
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[2].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -6049,19 +6632,23 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.AmpersandToken)
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[2].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3318
+		//line php7/php7.y:4068
 		{
 			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3325
+		//line php7/php7.y:4077
 		{
 			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
@@ -6070,10 +6657,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 382:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3335
+		//line php7/php7.y:4089
 		{
 			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
@@ -6082,19 +6671,23 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3345
+		//line php7/php7.y:4101
 		{
 			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3355
+		//line php7/php7.y:4113
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -6103,34 +6696,44 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StaticToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3365
+		//line php7/php7.y:4125
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3370
+		//line php7/php7.y:4134
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3372
+		//line php7/php7.y:4140
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3377
+		//line php7/php7.y:4149
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3379
+		//line php7/php7.y:4155
 		{
 			yyVAL.node = expr.NewExit(yyDollar[2].node)
 
@@ -6140,40 +6743,52 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3393
+		//line php7/php7.y:4171
 		{
 			yyVAL.list = []node.Node{}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3395
+		//line php7/php7.y:4177
 		{
 			yyVAL.list = []node.Node{scalar.NewEncapsedStringPart(yyDollar[1].token.Value)}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3397
+		//line php7/php7.y:4183
 		{
 			yyVAL.list = yyDollar[1].list
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3402
+		//line php7/php7.y:4192
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3404
+		//line php7/php7.y:4198
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3409
+		//line php7/php7.y:4207
 		{
 			yyVAL.node = expr.NewArray(yyDollar[3].list)
 
@@ -6184,10 +6799,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ArrayToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3421
+		//line php7/php7.y:4221
 		{
 			yyVAL.node = expr.NewShortArray(yyDollar[2].list)
 
@@ -6197,10 +6814,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3432
+		//line php7/php7.y:4234
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
 
@@ -6209,10 +6828,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ConstantEncapsedStringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3445
+		//line php7/php7.y:4249
 		{
 			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
 
@@ -6221,10 +6842,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.LnumberToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3455
+		//line php7/php7.y:4261
 		{
 			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value)
 
@@ -6233,10 +6856,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DnumberToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3465
+		//line php7/php7.y:4273
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6245,10 +6870,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.LineToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3475
+		//line php7/php7.y:4285
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6257,10 +6884,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FileToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3485
+		//line php7/php7.y:4297
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6269,10 +6898,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DirToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3495
+		//line php7/php7.y:4309
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6281,10 +6912,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.TraitCToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3505
+		//line php7/php7.y:4321
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6293,10 +6926,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.MethodCToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3515
+		//line php7/php7.y:4333
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6305,10 +6940,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.FuncCToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3525
+		//line php7/php7.y:4345
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6317,10 +6954,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NsCToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3535
+		//line php7/php7.y:4357
 		{
 			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
 
@@ -6329,10 +6968,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.ClassCToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3545
+		//line php7/php7.y:4369
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, []node.Node{encapsed})
@@ -6343,10 +6984,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StartHeredocToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3557
+		//line php7/php7.y:4383
 		{
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, nil)
 
@@ -6355,10 +6998,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StartHeredocToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3567
+		//line php7/php7.y:4395
 		{
 			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list)
 
@@ -6367,10 +7012,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DoubleQuoteToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3577
+		//line php7/php7.y:4407
 		{
 			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, yyDollar[2].list)
 
@@ -6379,31 +7026,39 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StartHeredocToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3587
+		//line php7/php7.y:4419
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3589
+		//line php7/php7.y:4425
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3594
+		//line php7/php7.y:4434
 		{
 			yyVAL.node = expr.NewConstFetch(yyDollar[1].node)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3601
+		//line php7/php7.y:4443
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -6415,10 +7070,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
 			yylex.(*Parser).comments.AddFromToken(target, yyDollar[3].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3614
+		//line php7/php7.y:4458
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -6430,90 +7087,116 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
 			yylex.(*Parser).comments.AddFromToken(target, yyDollar[3].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3630
+		//line php7/php7.y:4476
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3632
+		//line php7/php7.y:4482
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3637
+		//line php7/php7.y:4491
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3639
+		//line php7/php7.y:4497
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3644
+		//line php7/php7.y:4506
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3649
+		//line php7/php7.y:4515
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3651
+		//line php7/php7.y:4521
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3659
+		//line php7/php7.y:4531
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3664
+		//line php7/php7.y:4540
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3666
+		//line php7/php7.y:4546
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3674
+		//line php7/php7.y:4556
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3679
+		//line php7/php7.y:4565
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3681
+		//line php7/php7.y:4571
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6523,10 +7206,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3692
+		//line php7/php7.y:4584
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6536,10 +7221,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 431:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3703
+		//line php7/php7.y:4597
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6549,10 +7236,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3714
+		//line php7/php7.y:4610
 		{
 			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
 
@@ -6561,28 +7250,36 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ObjectOperatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3724
+		//line php7/php7.y:4622
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3729
+		//line php7/php7.y:4631
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3731
+		//line php7/php7.y:4637
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3733
+		//line php7/php7.y:4643
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6591,10 +7288,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ObjectOperatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3746
+		//line php7/php7.y:4658
 		{
 			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			yyVAL.node = expr.NewVariable(name)
@@ -6605,10 +7304,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3758
+		//line php7/php7.y:4672
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[3].node)
 
@@ -6619,10 +7320,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DollarToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3770
+		//line php7/php7.y:4686
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 
@@ -6631,10 +7334,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DollarToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3783
+		//line php7/php7.y:4701
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6643,10 +7348,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3793
+		//line php7/php7.y:4713
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6655,16 +7362,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3806
+		//line php7/php7.y:4728
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3808
+		//line php7/php7.y:4734
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6674,10 +7385,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3819
+		//line php7/php7.y:4747
 		{
 			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6687,10 +7400,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3830
+		//line php7/php7.y:4760
 		{
 			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6699,10 +7414,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ObjectOperatorToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3840
+		//line php7/php7.y:4772
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6711,10 +7428,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3850
+		//line php7/php7.y:4784
 		{
 			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
 
@@ -6723,10 +7442,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.PaamayimNekudotayimToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3863
+		//line php7/php7.y:4799
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -6735,26 +7456,32 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IdentifierToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3873
+		//line php7/php7.y:4811
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3881
+		//line php7/php7.y:4821
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3886
+		//line php7/php7.y:4830
 		{
 			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
 
@@ -6763,63 +7490,79 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3896
+		//line php7/php7.y:4842
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.OpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3904
+		//line php7/php7.y:4852
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3909
+		//line php7/php7.y:4861
 		{
 			if yyDollar[1].list[len(yyDollar[1].list)-1] == nil {
 				yyVAL.list = yyDollar[1].list[:len(yyDollar[1].list)-1]
 			} else {
 				yyVAL.list = yyDollar[1].list
 			}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3920
+		//line php7/php7.y:4874
 		{
 			yyVAL.node = nil
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3922
+		//line php7/php7.y:4880
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3927
+		//line php7/php7.y:4889
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3934
+		//line php7/php7.y:4898
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3939
+		//line php7/php7.y:4907
 		{
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
 
@@ -6828,19 +7571,23 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.DoubleArrowToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3949
+		//line php7/php7.y:4919
 		{
 			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node)
 
 			// save position
 			yylex.(*Parser).positions.AddPosition(yyVAL.node, yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3956
+		//line php7/php7.y:4928
 		{
 			reference := expr.NewReference(yyDollar[4].node)
 			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, reference)
@@ -6851,10 +7598,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.DoubleArrowToken)
 			yylex.(*Parser).comments.AddFromToken(reference, yyDollar[3].token, comment.AmpersandToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3968
+		//line php7/php7.y:4942
 		{
 			reference := expr.NewReference(yyDollar[2].node)
 			yyVAL.node = expr.NewArrayItem(nil, reference)
@@ -6864,10 +7613,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(reference, yyDollar[1].token, comment.AmpersandToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3979
+		//line php7/php7.y:4955
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[5].list)
@@ -6882,10 +7633,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[3].token, comment.ListToken)
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[4].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[6].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3995
+		//line php7/php7.y:4973
 		{
 			// TODO: Cannot use list() as standalone expression
 			list := expr.NewList(yyDollar[3].list)
@@ -6899,16 +7652,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[1].token, comment.ListToken)
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(list, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4013
+		//line php7/php7.y:4993
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4015
+		//line php7/php7.y:4999
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
 			yyVAL.list = append(yyDollar[1].list, encapsed)
@@ -6918,16 +7675,20 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(encapsed, yyDollar[2].token, comment.EncapsedAndWhitespaceToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4026
+		//line php7/php7.y:5012
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4028
+		//line php7/php7.y:5018
 		{
 			encapsed := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
 			yyVAL.list = []node.Node{encapsed, yyDollar[2].node}
@@ -6937,10 +7698,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(encapsed, yyDollar[1].token, comment.EncapsedAndWhitespaceToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4042
+		//line php7/php7.y:5034
 		{
 			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			yyVAL.node = expr.NewVariable(name)
@@ -6951,10 +7714,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4054
+		//line php7/php7.y:5048
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -6969,10 +7734,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseSquareBracket)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4070
+		//line php7/php7.y:5066
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			variable := expr.NewVariable(identifier)
@@ -6989,10 +7756,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(variable, yyDollar[1].token, comment.VariableToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.ObjectOperatorToken)
 			yylex.(*Parser).comments.AddFromToken(fetch, yyDollar[3].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4088
+		//line php7/php7.y:5086
 		{
 			yyVAL.node = expr.NewVariable(yyDollar[2].node)
 
@@ -7002,10 +7771,12 @@ yydefault:
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DollarOpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4099
+		//line php7/php7.y:5099
 		{
 			name := node.NewIdentifier(yyDollar[2].token.Value)
 			yyVAL.node = expr.NewVariable(name)
@@ -7018,10 +7789,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.DollarOpenCurlyBracesToken)
 			yylex.(*Parser).comments.AddFromToken(name, yyDollar[2].token, comment.StringVarnameToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:4113
+		//line php7/php7.y:5115
 		{
 			identifier := node.NewIdentifier(yyDollar[2].token.Value)
 			variable := expr.NewVariable(identifier)
@@ -7038,16 +7811,20 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[3].token, comment.OpenSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CloseSquareBracket)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[6].token, comment.CloseCurlyBracesToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4131
+		//line php7/php7.y:5135
 		{
 			yyVAL.node = yyDollar[2].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4138
+		//line php7/php7.y:5144
 		{
 			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
 
@@ -7056,10 +7833,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.StringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4148
+		//line php7/php7.y:5156
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
@@ -7073,10 +7852,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.NumStringToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4163
+		//line php7/php7.y:5173
 		{
 			var lnumber *scalar.Lnumber
 			// TODO: add option to handle 64 bit integer
@@ -7104,10 +7885,12 @@ yydefault:
 			} else {
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.NumStringToken)
 			}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4192
+		//line php7/php7.y:5204
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			yyVAL.node = expr.NewVariable(identifier)
@@ -7118,10 +7901,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.VariableToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:4207
+		//line php7/php7.y:5221
 		{
 			yyVAL.node = expr.NewIsset(yyDollar[3].list)
 
@@ -7135,10 +7920,12 @@ yydefault:
 				yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CommaToken)
 			}
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[5].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4222
+		//line php7/php7.y:5238
 		{
 			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 
@@ -7149,10 +7936,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.EmptyToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4234
+		//line php7/php7.y:5252
 		{
 			yyVAL.node = expr.NewInclude(yyDollar[2].node)
 
@@ -7161,10 +7950,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IncludeToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4244
+		//line php7/php7.y:5264
 		{
 			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
 
@@ -7173,10 +7964,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.IncludeOnceToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4254
+		//line php7/php7.y:5276
 		{
 			yyVAL.node = expr.NewEval(yyDollar[3].node)
 
@@ -7187,10 +7980,12 @@ yydefault:
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.EvalToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[2].token, comment.OpenParenthesisToken)
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[4].token, comment.CloseParenthesisToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4266
+		//line php7/php7.y:5290
 		{
 			yyVAL.node = expr.NewRequire(yyDollar[2].node)
 
@@ -7199,10 +7994,12 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.RequireToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4276
+		//line php7/php7.y:5302
 		{
 			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
 
@@ -7211,27 +8008,35 @@ yydefault:
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(yyVAL.node, yyDollar[1].token, comment.RequireOnceToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4289
+		//line php7/php7.y:5317
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4291
+		//line php7/php7.y:5323
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
 			yylex.(*Parser).comments.AddFromToken(lastNode(yyDollar[1].list), yyDollar[2].token, comment.CommaToken)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4301
+		//line php7/php7.y:5335
 		{
 			yyVAL.node = yyDollar[1].node
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	}
 	goto yystack /* stack new state and value */

@@ -15,7 +15,7 @@ func (c Comments) AddComments(node node.Node, comments []*comment.Comment) {
 }
 
 func (c Comments) AddFromToken(node node.Node, token *scanner.Token, tokenName comment.TokenName) {
-	comments := token.Comments()
+	comments := token.Comments
 
 	for _, cmt := range comments {
 		cmt.SetTokenName(tokenName)
