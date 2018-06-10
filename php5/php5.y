@@ -4624,17 +4624,17 @@ variable:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                     }
                 }
@@ -4643,17 +4643,17 @@ variable:
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
-                            yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
+                            yylex.(*Parser).positions.AddPosition(nn, yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
                     }
                 }
