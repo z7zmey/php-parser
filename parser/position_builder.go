@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"sync"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
@@ -8,7 +10,8 @@ import (
 
 // PositionBuilder provide functions to constuct positions
 type PositionBuilder struct {
-	Positions *Positions
+	Positions    *Positions
+	PositionPool *sync.Pool
 }
 
 type startPos struct {
@@ -81,124 +84,140 @@ func (b *PositionBuilder) getNodeEndPos(n node.Node) endPos {
 
 // NewNodeListPosition returns new Position
 func (b *PositionBuilder) NewNodeListPosition(list []node.Node) *position.Position {
-	return position.NewPosition(
-		b.getListStartPos(list).startLine,
-		b.getListEndPos(list).endLine,
-		b.getListStartPos(list).startPos,
-		b.getListEndPos(list).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getListStartPos(list).startLine
+	pos.EndLine = b.getListEndPos(list).endLine
+	pos.StartPos = b.getListStartPos(list).startPos
+	pos.EndPos = b.getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodePosition returns new Position
 func (b *PositionBuilder) NewNodePosition(n node.Node) *position.Position {
-	return position.NewPosition(
-		b.getNodeStartPos(n).startLine,
-		b.getNodeEndPos(n).endLine,
-		b.getNodeStartPos(n).startPos,
-		b.getNodeEndPos(n).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getNodeStartPos(n).startLine
+	pos.EndLine = b.getNodeEndPos(n).endLine
+	pos.StartPos = b.getNodeStartPos(n).startPos
+	pos.EndPos = b.getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewTokenPosition returns new Position
 func (b *PositionBuilder) NewTokenPosition(t *scanner.Token) *position.Position {
-	return t.Position
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewTokensPosition returns new Position
 func (b *PositionBuilder) NewTokensPosition(startToken *scanner.Token, endToken *scanner.Token) *position.Position {
-	return position.NewPosition(
-		startToken.Position.StartLine,
-		endToken.Position.EndLine,
-		startToken.Position.StartPos,
-		endToken.Position.EndPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = startToken.Position.StartLine
+	pos.EndLine = endToken.Position.EndLine
+	pos.StartPos = startToken.Position.StartPos
+	pos.EndPos = endToken.Position.EndPos
+
+	return pos
 }
 
 // NewTokenNodePosition returns new Position
 func (b *PositionBuilder) NewTokenNodePosition(t *scanner.Token, n node.Node) *position.Position {
-	return position.NewPosition(
-		t.Position.StartLine,
-		b.getNodeEndPos(n).endLine,
-		t.Position.StartPos,
-		b.getNodeEndPos(n).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = b.getNodeEndPos(n).endLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = b.getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewNodeTokenPosition returns new Position
 func (b *PositionBuilder) NewNodeTokenPosition(n node.Node, t *scanner.Token) *position.Position {
-	return position.NewPosition(
-		b.getNodeStartPos(n).startLine,
-		t.Position.EndLine,
-		b.getNodeStartPos(n).startPos,
-		t.Position.EndPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getNodeStartPos(n).startLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = b.getNodeStartPos(n).startPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewNodesPosition returns new Position
 func (b *PositionBuilder) NewNodesPosition(startNode node.Node, endNode node.Node) *position.Position {
-	return position.NewPosition(
-		b.getNodeStartPos(startNode).startLine,
-		b.getNodeEndPos(endNode).endLine,
-		b.getNodeStartPos(startNode).startPos,
-		b.getNodeEndPos(endNode).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getNodeStartPos(startNode).startLine
+	pos.EndLine = b.getNodeEndPos(endNode).endLine
+	pos.StartPos = b.getNodeStartPos(startNode).startPos
+	pos.EndPos = b.getNodeEndPos(endNode).endPos
+
+	return pos
 }
 
 // NewNodeListTokenPosition returns new Position
 func (b *PositionBuilder) NewNodeListTokenPosition(list []node.Node, t *scanner.Token) *position.Position {
-	return position.NewPosition(
-		b.getListStartPos(list).startLine,
-		t.Position.EndLine,
-		b.getListStartPos(list).startPos,
-		t.Position.EndPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getListStartPos(list).startLine
+	pos.EndLine = t.Position.EndLine
+	pos.StartPos = b.getListStartPos(list).startPos
+	pos.EndPos = t.Position.EndPos
+
+	return pos
 }
 
 // NewTokenNodeListPosition returns new Position
 func (b *PositionBuilder) NewTokenNodeListPosition(t *scanner.Token, list []node.Node) *position.Position {
-	return position.NewPosition(
-		t.Position.StartLine,
-		b.getListEndPos(list).endLine,
-		t.Position.StartPos,
-		b.getListEndPos(list).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = t.Position.StartLine
+	pos.EndLine = b.getListEndPos(list).endLine
+	pos.StartPos = t.Position.StartPos
+	pos.EndPos = b.getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodeNodeListPosition returns new Position
 func (b *PositionBuilder) NewNodeNodeListPosition(n node.Node, list []node.Node) *position.Position {
-	return position.NewPosition(
-		b.getNodeStartPos(n).startLine,
-		b.getListEndPos(list).endLine,
-		b.getNodeStartPos(n).startPos,
-		b.getListEndPos(list).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getNodeStartPos(n).startLine
+	pos.EndLine = b.getListEndPos(list).endLine
+	pos.StartPos = b.getNodeStartPos(n).startPos
+	pos.EndPos = b.getListEndPos(list).endPos
+
+	return pos
 }
 
 // NewNodeListNodePosition returns new Position
 func (b *PositionBuilder) NewNodeListNodePosition(list []node.Node, n node.Node) *position.Position {
-	return position.NewPosition(
-		b.getListStartPos(list).startLine,
-		b.getNodeEndPos(n).endLine,
-		b.getListStartPos(list).startPos,
-		b.getNodeEndPos(n).endPos,
-	)
+	pos := b.PositionPool.Get().(*position.Position)
+	pos.StartLine = b.getListStartPos(list).startLine
+	pos.EndLine = b.getNodeEndPos(n).endLine
+	pos.StartPos = b.getListStartPos(list).startPos
+	pos.EndPos = b.getNodeEndPos(n).endPos
+
+	return pos
 }
 
 // NewOptionalListTokensPosition returns new Position
 func (b *PositionBuilder) NewOptionalListTokensPosition(list []node.Node, t *scanner.Token, endToken *scanner.Token) *position.Position {
+	pos := b.PositionPool.Get().(*position.Position)
+
 	if list == nil {
-		return position.NewPosition(
-			t.Position.StartLine,
-			endToken.Position.EndLine,
-			t.Position.StartPos,
-			endToken.Position.EndPos,
-		)
+		pos.StartLine = t.Position.StartLine
+		pos.EndLine = endToken.Position.EndLine
+		pos.StartPos = t.Position.StartPos
+		pos.EndPos = endToken.Position.EndPos
+		return pos
 	}
 
-	return position.NewPosition(
-		b.getListStartPos(list).startLine,
-		endToken.Position.EndLine,
-		b.getListStartPos(list).startPos,
-		endToken.Position.EndPos,
-	)
+	pos.StartLine = b.getListStartPos(list).startLine
+	pos.EndLine = endToken.Position.EndLine
+	pos.StartPos = b.getListStartPos(list).startPos
+	pos.EndPos = endToken.Position.EndPos
+	return pos
 }

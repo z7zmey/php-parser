@@ -445,6 +445,7 @@ type Lexer struct {
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     sync.Pool
+	PositionPool  sync.Pool
 }
 
 // Rune2Class returns the rune integer id
@@ -473,11 +474,20 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		panic(err)
 	}
 
-	var TokenPool = sync.Pool{
-		New: func() interface{} { return &Token{} },
+	return &Lexer{
+		Lexer:         lx,
+		StateStack:    []int{0},
+		PhpDocComment: "",
+		Comments:      nil,
+		heredocLabel:  "",
+		tokenBytesBuf: &bytes.Buffer{},
+		TokenPool: sync.Pool{
+			New: func() interface{} { return &Token{} },
+		},
+		PositionPool: sync.Pool{
+			New: func() interface{} { return &position.Position{} },
+		},
 	}
-
-	return &Lexer{lx, []int{0}, "", nil, "", &bytes.Buffer{}, TokenPool}
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {
@@ -523,12 +533,12 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
-	pos := position.NewPosition(
-		l.File.Line(firstChar.Pos()),
-		l.File.Line(lastChar.Pos()),
-		int(firstChar.Pos()),
-		int(lastChar.Pos()),
-	)
+	pos := l.PositionPool.Get().(*position.Position)
+
+	pos.StartLine = l.File.Line(firstChar.Pos())
+	pos.EndLine = l.File.Line(lastChar.Pos())
+	pos.StartPos = int(firstChar.Pos())
+	pos.EndPos = int(lastChar.Pos())
 
 	token := l.TokenPool.Get().(*Token)
 	token.Position = pos
@@ -536,8 +546,6 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	token.Value = l.tokenString(chars)
 
 	return token
-
-	// return NewToken(l.tokenString(chars), pos).SetComments(l.Comments)
 }
 
 func (l *Lexer) addComment(chars []lex.Char) {
