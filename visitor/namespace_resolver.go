@@ -156,25 +156,26 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 			nsr.ResolveName(t, "")
 		}
 
-		for _, a := range n.TraitAdaptationList.Adaptations {
-			switch aa := a.(type) {
-			case *stmt.TraitUsePrecedence:
-				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
-				if refTrait != nil {
-					nsr.ResolveName(refTrait, "")
-				}
-				for _, insteadOf := range aa.Insteadof {
-					nsr.ResolveName(insteadOf, "")
-				}
+		if n.TraitAdaptationList != nil {
+			for _, a := range n.TraitAdaptationList.Adaptations {
+				switch aa := a.(type) {
+				case *stmt.TraitUsePrecedence:
+					refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
+					if refTrait != nil {
+						nsr.ResolveName(refTrait, "")
+					}
+					for _, insteadOf := range aa.Insteadof {
+						nsr.ResolveName(insteadOf, "")
+					}
 
-			case *stmt.TraitUseAlias:
-				refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
-				if refTrait != nil {
-					nsr.ResolveName(refTrait, "")
+				case *stmt.TraitUseAlias:
+					refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
+					if refTrait != nil {
+						nsr.ResolveName(refTrait, "")
+					}
 				}
 			}
 		}
-
 	}
 
 	return true

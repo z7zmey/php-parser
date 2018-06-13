@@ -348,6 +348,7 @@ func TestResolveGroupUse(t *testing.T) {
 func TestResolveTraitUse(t *testing.T) {
 	nameAB := &name.Name{Parts: []node.Node{&name.NamePart{Value: "A"}, &name.NamePart{Value: "B"}}}
 	nameB := &name.Name{Parts: []node.Node{&name.NamePart{Value: "B"}}}
+	nameD := &name.Name{Parts: []node.Node{&name.NamePart{Value: "D"}}}
 
 	fullyQualifiedNameB := &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "B"}}}
 	fullyQualifiedNameBC := &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "B"}, &name.NamePart{Value: "C"}}}
@@ -387,11 +388,17 @@ func TestResolveTraitUse(t *testing.T) {
 					},
 				},
 			},
+			&stmt.TraitUse{
+				Traits: []node.Node{
+					nameD,
+				},
+			},
 		},
 	}
 
 	expected := map[node.Node]string{
 		nameB:                "A\\B",
+		nameD:                "D",
 		relativeNameB:        "B",
 		fullyQualifiedNameB:  "B",
 		fullyQualifiedNameBC: "B\\C",
