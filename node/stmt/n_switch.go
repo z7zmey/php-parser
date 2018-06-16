@@ -7,7 +7,7 @@ import (
 
 // Switch node
 type Switch struct {
-	Cond          node.Node
+	Cond     node.Node
 	CaseList *CaseList
 }
 

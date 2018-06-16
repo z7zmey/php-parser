@@ -7,7 +7,7 @@ import (
 
 // New node
 type New struct {
-	Class             node.Node
+	Class        node.Node
 	ArgumentList *node.ArgumentList
 }
 
