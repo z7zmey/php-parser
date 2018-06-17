@@ -99,7 +99,7 @@ func ExampleDumper() {
 	//|                       "Constant":
 	//|                         [*name.Name]
 	//|                           "Position": Pos{Line: 5-5 Pos: 86-89};
-	//|                           "NamespacedName": Foo\null;
+	//|                           "NamespacedName": null;
 	//|                           "Parts":
 	//|                             [*name.NamePart]
 	//|                               "Position": Pos{Line: 5-5 Pos: 86-89};

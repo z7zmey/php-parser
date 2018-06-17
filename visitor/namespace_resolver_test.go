@@ -739,3 +739,254 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 
 	assertEqual(t, expected, nsResolver.ResolvedNames)
 }
+
+func TestDoNotResolveReservedConstants(t *testing.T) {
+	namespaceName := &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}}
+
+	constantTrue := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "True"},
+		},
+	}
+
+	constantFalse := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "False"},
+		},
+	}
+
+	constantNull := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "NULL"},
+		},
+	}
+
+	ast := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Namespace{
+				NamespaceName: namespaceName,
+			},
+			&stmt.Expression{
+				Expr: &expr.ConstFetch{
+					Constant: constantTrue,
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ConstFetch{
+					Constant: constantFalse,
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.ConstFetch{
+					Constant: constantNull,
+				},
+			},
+		},
+	}
+
+	expected := map[node.Node]string{
+		constantTrue:  "true",
+		constantFalse: "false",
+		constantNull:  "null",
+	}
+
+	nsResolver := visitor.NewNamespaceResolver()
+	ast.Walk(nsResolver)
+
+	assertEqual(t, expected, nsResolver.ResolvedNames)
+}
+
+func TestDoNotResolveReservedNames(t *testing.T) {
+
+	nameInt := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "int"},
+		},
+	}
+
+	nameFloat := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "float"},
+		},
+	}
+
+	nameBool := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "bool"},
+		},
+	}
+
+	nameString := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "string"},
+		},
+	}
+
+	nameVoid := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "void"},
+		},
+	}
+
+	nameIterable := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "iterable"},
+		},
+	}
+
+	nameObject := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "object"},
+		},
+	}
+
+	function := &stmt.Function{
+		FunctionName: &node.Identifier{Value: "bar"},
+		Params: []node.Node{
+			&node.Parameter{
+				VariableType: nameInt,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Int"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameFloat,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Float"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameBool,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Bool"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameString,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "String"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameVoid,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Void"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameIterable,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Iterable"},
+				},
+			},
+			&node.Parameter{
+				VariableType: nameObject,
+				Variable: &expr.Variable{
+					VarName: &node.Identifier{Value: "Object"},
+				},
+			},
+		},
+	}
+
+	ast := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Namespace{
+				NamespaceName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Foo"},
+					},
+				},
+			},
+			function,
+		},
+	}
+
+	expected := map[node.Node]string{
+		function:     "Foo\\bar",
+		nameInt:      "int",
+		nameFloat:    "float",
+		nameBool:     "bool",
+		nameString:   "string",
+		nameVoid:     "void",
+		nameIterable: "iterable",
+		nameObject:   "object",
+	}
+
+	nsResolver := visitor.NewNamespaceResolver()
+	ast.Walk(nsResolver)
+
+	assertEqual(t, expected, nsResolver.ResolvedNames)
+}
+
+func TestDoNotResolveReservedSpecialNames(t *testing.T) {
+
+	nameSelf := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "Self"},
+		},
+	}
+
+	nameStatic := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "Static"},
+		},
+	}
+
+	nameParent := &name.Name{
+		Parts: []node.Node{
+			&name.NamePart{Value: "Parent"},
+		},
+	}
+
+	cls := &stmt.Class{
+		ClassName: &node.Identifier{Value: "Bar"},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:        nameSelf,
+					Call:         &node.Identifier{Value: "func"},
+					ArgumentList: &node.ArgumentList{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:        nameStatic,
+					Call:         &node.Identifier{Value: "func"},
+					ArgumentList: &node.ArgumentList{},
+				},
+			},
+			&stmt.Expression{
+				Expr: &expr.StaticCall{
+					Class:        nameParent,
+					Call:         &node.Identifier{Value: "func"},
+					ArgumentList: &node.ArgumentList{},
+				},
+			},
+		},
+	}
+
+	ast := &stmt.StmtList{
+		Stmts: []node.Node{
+			&stmt.Namespace{
+				NamespaceName: &name.Name{
+					Parts: []node.Node{
+						&name.NamePart{Value: "Foo"},
+					},
+				},
+			},
+			cls,
+		},
+	}
+
+	expected := map[node.Node]string{
+		cls:        "Foo\\Bar",
+		nameSelf:   "self",
+		nameStatic: "static",
+		nameParent: "parent",
+	}
+
+	nsResolver := visitor.NewNamespaceResolver()
+	ast.Walk(nsResolver)
+
+	assertEqual(t, expected, nsResolver.ResolvedNames)
+}

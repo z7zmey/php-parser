@@ -286,6 +286,40 @@ func (ns *Namespace) ResolveName(nameNode node.Node, aliasType string) (string, 
 		return ns.Namespace + "\\" + concatNameParts(n.Parts), nil
 
 	case *name.Name:
+		if aliasType == "const" && len(n.Parts) == 1 {
+			part := strings.ToLower(n.Parts[0].(*name.NamePart).Value)
+			if part == "true" || part == "false" || part == "null" {
+				return part, nil
+			}
+		}
+
+		if aliasType == "" && len(n.Parts) == 1 {
+			part := strings.ToLower(n.Parts[0].(*name.NamePart).Value)
+
+			switch part {
+			case "self":
+				fallthrough
+			case "static":
+				fallthrough
+			case "parent":
+				fallthrough
+			case "int":
+				fallthrough
+			case "float":
+				fallthrough
+			case "bool":
+				fallthrough
+			case "string":
+				fallthrough
+			case "void":
+				fallthrough
+			case "iterable":
+				fallthrough
+			case "object":
+				return part, nil
+			}
+		}
+
 		aliasName, err := ns.ResolveAlias(nameNode, aliasType)
 		if err != nil {
 			// resolve as relative name if alias not found
