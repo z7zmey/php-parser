@@ -7,8 +7,8 @@ import (
 
 // StaticCall node
 type StaticCall struct {
-	Class             node.Node
-	Call              node.Node
+	Class        node.Node
+	Call         node.Node
 	ArgumentList *node.ArgumentList
 }
 
