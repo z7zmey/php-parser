@@ -38,22 +38,25 @@ func (n *Interface) Walk(v walker.Visitor) {
 	}
 
 	if n.InterfaceName != nil {
-		vv := v.GetChildrenVisitor("InterfaceName")
-		n.InterfaceName.Walk(vv)
+		v.EnterChildNode("InterfaceName", n)
+		n.InterfaceName.Walk(v)
+		v.LeaveChildNode("InterfaceName", n)
 	}
 
 	if n.Extends != nil {
-		vv := v.GetChildrenVisitor("Extends")
-		n.Extends.Walk(vv)
+		v.EnterChildNode("Extends", n)
+		n.Extends.Walk(v)
+		v.LeaveChildNode("Extends", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

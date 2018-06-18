@@ -32,13 +32,15 @@ func (n *ArrayDimFetch) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Dim != nil {
-		vv := v.GetChildrenVisitor("Dim")
-		n.Dim.Walk(vv)
+		v.EnterChildNode("Dim", n)
+		n.Dim.Walk(v)
+		v.LeaveChildNode("Dim", n)
 	}
 
 	v.LeaveNode(n)

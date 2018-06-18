@@ -32,13 +32,15 @@ func (n *TraitMethodRef) Walk(v walker.Visitor) {
 	}
 
 	if n.Trait != nil {
-		vv := v.GetChildrenVisitor("Trait")
-		n.Trait.Walk(vv)
+		v.EnterChildNode("Trait", n)
+		n.Trait.Walk(v)
+		v.LeaveChildNode("Trait", n)
 	}
 
 	if n.Method != nil {
-		vv := v.GetChildrenVisitor("Method")
-		n.Method.Walk(vv)
+		v.EnterChildNode("Method", n)
+		n.Method.Walk(v)
+		v.LeaveChildNode("Method", n)
 	}
 
 	v.LeaveNode(n)

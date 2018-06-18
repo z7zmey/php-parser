@@ -32,13 +32,15 @@ func (n *Switch) Walk(v walker.Visitor) {
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
+		v.EnterChildNode("Cond", n)
+		n.Cond.Walk(v)
+		v.LeaveChildNode("Cond", n)
 	}
 
 	if n.CaseList != nil {
-		vv := v.GetChildrenVisitor("CaseList")
-		n.CaseList.Walk(vv)
+		v.EnterChildNode("CaseList", n)
+		n.CaseList.Walk(v)
+		v.LeaveChildNode("CaseList", n)
 	}
 
 	v.LeaveNode(n)

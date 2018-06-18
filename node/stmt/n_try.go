@@ -34,26 +34,29 @@ func (n *Try) Walk(v walker.Visitor) {
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	if n.Catches != nil {
-		vv := v.GetChildrenVisitor("Catches")
+		v.EnterChildList("Catches", n)
 		for _, nn := range n.Catches {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Catches", n)
 	}
 
 	if n.Finally != nil {
-		vv := v.GetChildrenVisitor("Finally")
-		n.Finally.Walk(vv)
+		v.EnterChildNode("Finally", n)
+		n.Finally.Walk(v)
+		v.LeaveChildNode("Finally", n)
 	}
 
 	v.LeaveNode(n)

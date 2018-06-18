@@ -46,31 +46,35 @@ func (n *Closure) Walk(v walker.Visitor) {
 	}
 
 	if n.Params != nil {
-		vv := v.GetChildrenVisitor("Params")
+		v.EnterChildList("Params", n)
 		for _, nn := range n.Params {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Params", n)
 	}
 
 	if n.ClosureUse != nil {
-		vv := v.GetChildrenVisitor("ClosureUse")
-		n.ClosureUse.Walk(vv)
+		v.EnterChildNode("ClosureUse", n)
+		n.ClosureUse.Walk(v)
+		v.LeaveChildNode("ClosureUse", n)
 	}
 
 	if n.ReturnType != nil {
-		vv := v.GetChildrenVisitor("ReturnType")
-		n.ReturnType.Walk(vv)
+		v.EnterChildNode("ReturnType", n)
+		n.ReturnType.Walk(v)
+		v.LeaveChildNode("ReturnType", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

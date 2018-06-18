@@ -30,8 +30,9 @@ func (n *Goto) Walk(v walker.Visitor) {
 	}
 
 	if n.Label != nil {
-		vv := v.GetChildrenVisitor("Label")
-		n.Label.Walk(vv)
+		v.EnterChildNode("Label", n)
+		n.Label.Walk(v)
+		v.LeaveChildNode("Label", n)
 	}
 
 	v.LeaveNode(n)

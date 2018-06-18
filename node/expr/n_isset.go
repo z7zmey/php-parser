@@ -30,12 +30,13 @@ func (n *Isset) Walk(v walker.Visitor) {
 	}
 
 	if n.Variables != nil {
-		vv := v.GetChildrenVisitor("Variables")
+		v.EnterChildList("Variables", n)
 		for _, nn := range n.Variables {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Variables", n)
 	}
 
 	v.LeaveNode(n)

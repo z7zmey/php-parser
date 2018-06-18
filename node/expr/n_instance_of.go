@@ -32,13 +32,15 @@ func (n *InstanceOf) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	if n.Class != nil {
-		vv := v.GetChildrenVisitor("Class")
-		n.Class.Walk(vv)
+		v.EnterChildNode("Class", n)
+		n.Class.Walk(v)
+		v.LeaveChildNode("Class", n)
 	}
 
 	v.LeaveNode(n)

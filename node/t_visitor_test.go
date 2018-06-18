@@ -26,12 +26,12 @@ var nodesToTest = []struct {
 		map[string]interface{}{"Value": "foo"},
 	},
 	{
-		&node.Nullable{Expr: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
+		&node.Nullable{Expr: &expr.Variable{}},
 		[]string{"Expr"},
 		nil,
 	},
 	{
-		&node.Argument{Variadic: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
+		&node.Argument{Variadic: true, Expr: &expr.Variable{}},
 		[]string{"Expr"},
 		map[string]interface{}{"IsReference": false, "Variadic": true},
 	},
@@ -40,7 +40,7 @@ var nodesToTest = []struct {
 			ByRef:        false,
 			Variadic:     true,
 			VariableType: &node.Identifier{Value: "foo"},
-			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
+			Variable:     &expr.Variable{},
 			DefaultValue: &scalar.Lnumber{Value: "0"},
 		},
 		[]string{"VariableType", "Variable", "DefaultValue"},
@@ -70,11 +70,15 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestNameVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {

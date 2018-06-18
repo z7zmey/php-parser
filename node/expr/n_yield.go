@@ -32,13 +32,15 @@ func (n *Yield) Walk(v walker.Visitor) {
 	}
 
 	if n.Key != nil {
-		vv := v.GetChildrenVisitor("Key")
-		n.Key.Walk(vv)
+		v.EnterChildNode("Key", n)
+		n.Key.Walk(v)
+		v.LeaveChildNode("Key", n)
 	}
 
 	if n.Value != nil {
-		vv := v.GetChildrenVisitor("Value")
-		n.Value.Walk(vv)
+		v.EnterChildNode("Value", n)
+		n.Value.Walk(v)
+		v.LeaveChildNode("Value", n)
 	}
 
 	v.LeaveNode(n)

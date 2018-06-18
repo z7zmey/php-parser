@@ -38,18 +38,21 @@ func (n *Parameter) Walk(v walker.Visitor) {
 	}
 
 	if n.VariableType != nil {
-		vv := v.GetChildrenVisitor("VariableType")
-		n.VariableType.Walk(vv)
+		v.EnterChildNode("VariableType", n)
+		n.VariableType.Walk(v)
+		v.LeaveChildNode("VariableType", n)
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.DefaultValue != nil {
-		vv := v.GetChildrenVisitor("DefaultValue")
-		n.DefaultValue.Walk(vv)
+		v.EnterChildNode("DefaultValue", n)
+		n.DefaultValue.Walk(v)
+		v.LeaveChildNode("DefaultValue", n)
 	}
 
 	v.LeaveNode(n)

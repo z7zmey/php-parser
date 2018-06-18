@@ -32,13 +32,15 @@ func (n *New) Walk(v walker.Visitor) {
 	}
 
 	if n.Class != nil {
-		vv := v.GetChildrenVisitor("Class")
-		n.Class.Walk(vv)
+		v.EnterChildNode("Class", n)
+		n.Class.Walk(v)
+		v.LeaveChildNode("Class", n)
 	}
 
 	if n.ArgumentList != nil {
-		vv := v.GetChildrenVisitor("ArgumentList")
-		n.ArgumentList.Walk(vv)
+		v.EnterChildNode("ArgumentList", n)
+		n.ArgumentList.Walk(v)
+		v.LeaveChildNode("ArgumentList", n)
 	}
 
 	v.LeaveNode(n)

@@ -45,36 +45,41 @@ func (n *ClassMethod) Walk(v walker.Visitor) {
 	}
 
 	if n.MethodName != nil {
-		vv := v.GetChildrenVisitor("MethodName")
-		n.MethodName.Walk(vv)
+		v.EnterChildNode("MethodName", n)
+		n.MethodName.Walk(v)
+		v.LeaveChildNode("MethodName", n)
 	}
 
 	if n.Modifiers != nil {
-		vv := v.GetChildrenVisitor("Modifiers")
+		v.EnterChildList("Modifiers", n)
 		for _, nn := range n.Modifiers {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Modifiers", n)
 	}
 
 	if n.Params != nil {
-		vv := v.GetChildrenVisitor("Params")
+		v.EnterChildList("Params", n)
 		for _, nn := range n.Params {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Params", n)
 	}
 
 	if n.ReturnType != nil {
-		vv := v.GetChildrenVisitor("ReturnType")
-		n.ReturnType.Walk(vv)
+		v.EnterChildNode("ReturnType", n)
+		n.ReturnType.Walk(v)
+		v.LeaveChildNode("ReturnType", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

@@ -32,17 +32,19 @@ func (n *TraitUse) Walk(v walker.Visitor) {
 	}
 
 	if n.Traits != nil {
-		vv := v.GetChildrenVisitor("Traits")
+		v.EnterChildList("Traits", n)
 		for _, nn := range n.Traits {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Traits", n)
 	}
 
 	if n.TraitAdaptationList != nil {
-		vv := v.GetChildrenVisitor("TraitAdaptationList")
-		n.TraitAdaptationList.Walk(vv)
+		v.EnterChildNode("TraitAdaptationList", n)
+		n.TraitAdaptationList.Walk(v)
+		v.LeaveChildNode("TraitAdaptationList", n)
 	}
 
 	v.LeaveNode(n)

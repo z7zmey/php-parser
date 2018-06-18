@@ -30,8 +30,9 @@ func (n *ConstFetch) Walk(v walker.Visitor) {
 	}
 
 	if n.Constant != nil {
-		vv := v.GetChildrenVisitor("Constant")
-		n.Constant.Walk(vv)
+		v.EnterChildNode("Constant", n)
+		n.Constant.Walk(v)
+		v.LeaveChildNode("Constant", n)
 	}
 
 	v.LeaveNode(n)

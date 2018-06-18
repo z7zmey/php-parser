@@ -19,49 +19,49 @@ var nodesToTest = []struct {
 }{
 	{
 		&cast.Array{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.Bool{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.Double{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.Int{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.Object{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.String{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
 	},
 	{
 		&cast.Unset{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
 		map[string]interface{}{},
@@ -74,11 +74,15 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {

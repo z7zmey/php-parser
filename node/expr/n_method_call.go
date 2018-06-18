@@ -34,18 +34,21 @@ func (n *MethodCall) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Method != nil {
-		vv := v.GetChildrenVisitor("Method")
-		n.Method.Walk(vv)
+		v.EnterChildNode("Method", n)
+		n.Method.Walk(v)
+		v.LeaveChildNode("Method", n)
 	}
 
 	if n.ArgumentList != nil {
-		vv := v.GetChildrenVisitor("ArgumentList")
-		n.ArgumentList.Walk(vv)
+		v.EnterChildNode("ArgumentList", n)
+		n.ArgumentList.Walk(v)
+		v.LeaveChildNode("ArgumentList", n)
 	}
 
 	v.LeaveNode(n)

@@ -30,12 +30,13 @@ func (n *InterfaceExtends) Walk(v walker.Visitor) {
 	}
 
 	if n.InterfaceNames != nil {
-		vv := v.GetChildrenVisitor("InterfaceNames")
+		v.EnterChildList("InterfaceNames", n)
 		for _, nn := range n.InterfaceNames {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("InterfaceNames", n)
 	}
 
 	v.LeaveNode(n)

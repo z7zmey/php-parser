@@ -29,12 +29,13 @@ func (n *ArgumentList) Walk(v walker.Visitor) {
 	}
 
 	if n.Arguments != nil {
-		vv := v.GetChildrenVisitor("Arguments")
+		v.EnterChildList("Arguments", n)
 		for _, nn := range n.Arguments {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Arguments", n)
 	}
 
 	v.LeaveNode(n)

@@ -32,13 +32,15 @@ func (n *PropertyFetch) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Property != nil {
-		vv := v.GetChildrenVisitor("Property")
-		n.Property.Walk(vv)
+		v.EnterChildNode("Property", n)
+		n.Property.Walk(v)
+		v.LeaveChildNode("Property", n)
 	}
 
 	v.LeaveNode(n)

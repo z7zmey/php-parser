@@ -32,17 +32,19 @@ func (n *Namespace) Walk(v walker.Visitor) {
 	}
 
 	if n.NamespaceName != nil {
-		vv := v.GetChildrenVisitor("NamespaceName")
-		n.NamespaceName.Walk(vv)
+		v.EnterChildNode("NamespaceName", n)
+		n.NamespaceName.Walk(v)
+		v.LeaveChildNode("NamespaceName", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

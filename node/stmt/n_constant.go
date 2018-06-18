@@ -36,13 +36,15 @@ func (n *Constant) Walk(v walker.Visitor) {
 	}
 
 	if n.ConstantName != nil {
-		vv := v.GetChildrenVisitor("ConstantName")
-		n.ConstantName.Walk(vv)
+		v.EnterChildNode("ConstantName", n)
+		n.ConstantName.Walk(v)
+		v.LeaveChildNode("ConstantName", n)
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	v.LeaveNode(n)

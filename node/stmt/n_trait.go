@@ -36,17 +36,19 @@ func (n *Trait) Walk(v walker.Visitor) {
 	}
 
 	if n.TraitName != nil {
-		vv := v.GetChildrenVisitor("TraitName")
-		n.TraitName.Walk(vv)
+		v.EnterChildNode("TraitName", n)
+		n.TraitName.Walk(v)
+		v.LeaveChildNode("TraitName", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

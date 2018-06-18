@@ -35,8 +35,9 @@ func (n *Variable) Walk(v walker.Visitor) {
 	}
 
 	if n.VarName != nil {
-		vv := v.GetChildrenVisitor("VarName")
-		n.VarName.Walk(vv)
+		v.EnterChildNode("VarName", n)
+		n.VarName.Walk(v)
+		v.LeaveChildNode("VarName", n)
 	}
 
 	v.LeaveNode(n)

@@ -36,23 +36,27 @@ func (n *Foreach) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	if n.Key != nil {
-		vv := v.GetChildrenVisitor("Key")
-		n.Key.Walk(vv)
+		v.EnterChildNode("Key", n)
+		n.Key.Walk(v)
+		v.LeaveChildNode("Key", n)
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

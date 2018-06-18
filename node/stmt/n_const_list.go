@@ -30,12 +30,13 @@ func (n *ConstList) Walk(v walker.Visitor) {
 	}
 
 	if n.Consts != nil {
-		vv := v.GetChildrenVisitor("Consts")
+		v.EnterChildList("Consts", n)
 		for _, nn := range n.Consts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Consts", n)
 	}
 
 	v.LeaveNode(n)

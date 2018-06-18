@@ -34,18 +34,21 @@ func (n *TraitUseAlias) Walk(v walker.Visitor) {
 	}
 
 	if n.Ref != nil {
-		vv := v.GetChildrenVisitor("Ref")
-		n.Ref.Walk(vv)
+		v.EnterChildNode("Ref", n)
+		n.Ref.Walk(v)
+		v.LeaveChildNode("Ref", n)
 	}
 
 	if n.Modifier != nil {
-		vv := v.GetChildrenVisitor("Modifier")
-		n.Modifier.Walk(vv)
+		v.EnterChildNode("Modifier", n)
+		n.Modifier.Walk(v)
+		v.LeaveChildNode("Modifier", n)
 	}
 
 	if n.Alias != nil {
-		vv := v.GetChildrenVisitor("Alias")
-		n.Alias.Walk(vv)
+		v.EnterChildNode("Alias", n)
+		n.Alias.Walk(v)
+		v.LeaveChildNode("Alias", n)
 	}
 
 	v.LeaveNode(n)

@@ -30,11 +30,12 @@ func (n *Encapsed) Walk(v walker.Visitor) {
 	}
 
 	if n.Parts != nil {
-		vv := v.GetChildrenVisitor("Parts")
+		v.EnterChildList("Parts", n)
 		for _, nn := range n.Parts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Parts", n)
 	}
 }

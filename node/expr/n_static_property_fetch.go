@@ -32,13 +32,15 @@ func (n *StaticPropertyFetch) Walk(v walker.Visitor) {
 	}
 
 	if n.Class != nil {
-		vv := v.GetChildrenVisitor("Class")
-		n.Class.Walk(vv)
+		v.EnterChildNode("Class", n)
+		n.Class.Walk(v)
+		v.LeaveChildNode("Class", n)
 	}
 
 	if n.Property != nil {
-		vv := v.GetChildrenVisitor("Property")
-		n.Property.Walk(vv)
+		v.EnterChildNode("Property", n)
+		n.Property.Walk(v)
+		v.LeaveChildNode("Property", n)
 	}
 
 	v.LeaveNode(n)

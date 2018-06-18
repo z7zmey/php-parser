@@ -32,17 +32,19 @@ func (n *TraitUsePrecedence) Walk(v walker.Visitor) {
 	}
 
 	if n.Ref != nil {
-		vv := v.GetChildrenVisitor("Ref")
-		n.Ref.Walk(vv)
+		v.EnterChildNode("Ref", n)
+		n.Ref.Walk(v)
+		v.LeaveChildNode("Ref", n)
 	}
 
 	if n.Insteadof != nil {
-		vv := v.GetChildrenVisitor("Insteadof")
+		v.EnterChildList("Insteadof", n)
 		for _, nn := range n.Insteadof {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Insteadof", n)
 	}
 
 	v.LeaveNode(n)

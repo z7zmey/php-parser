@@ -30,12 +30,13 @@ func (n *ClosureUse) Walk(v walker.Visitor) {
 	}
 
 	if n.Uses != nil {
-		vv := v.GetChildrenVisitor("Uses")
+		v.EnterChildList("Uses", n)
 		for _, nn := range n.Uses {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Uses", n)
 	}
 
 	v.LeaveNode(n)

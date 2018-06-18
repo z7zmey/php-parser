@@ -20,112 +20,112 @@ var nodesToTest = []struct {
 }{
 	{
 		&assign.Reference{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Assign{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.BitwiseAnd{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.BitwiseOr{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.BitwiseXor{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Concat{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Div{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Minus{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Mod{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Mul{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Plus{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.Pow{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.ShiftLeft{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
 	},
 	{
 		&assign.ShiftRight{
-			Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Variable:   &expr.Variable{},
+			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
 		map[string]interface{}{},
@@ -138,11 +138,15 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {

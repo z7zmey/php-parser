@@ -40,22 +40,25 @@ func (n *GroupUse) Walk(v walker.Visitor) {
 	}
 
 	if n.UseType != nil {
-		vv := v.GetChildrenVisitor("UseType")
-		n.UseType.Walk(vv)
+		v.EnterChildNode("UseType", n)
+		n.UseType.Walk(v)
+		v.LeaveChildNode("UseType", n)
 	}
 
 	if n.Prefix != nil {
-		vv := v.GetChildrenVisitor("Prefix")
-		n.Prefix.Walk(vv)
+		v.EnterChildNode("Prefix", n)
+		n.Prefix.Walk(v)
+		v.LeaveChildNode("Prefix", n)
 	}
 
 	if n.UseList != nil {
-		vv := v.GetChildrenVisitor("UseList")
+		v.EnterChildList("UseList", n)
 		for _, nn := range n.UseList {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("UseList", n)
 	}
 
 	v.LeaveNode(n)

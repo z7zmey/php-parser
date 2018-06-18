@@ -30,8 +30,9 @@ func (n *Object) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	v.LeaveNode(n)

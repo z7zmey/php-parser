@@ -40,18 +40,21 @@ func (n *Use) Walk(v walker.Visitor) {
 	}
 
 	if n.UseType != nil {
-		vv := v.GetChildrenVisitor("UseType")
-		n.UseType.Walk(vv)
+		v.EnterChildNode("UseType", n)
+		n.UseType.Walk(v)
+		v.LeaveChildNode("UseType", n)
 	}
 
 	if n.Use != nil {
-		vv := v.GetChildrenVisitor("Use")
-		n.Use.Walk(vv)
+		v.EnterChildNode("Use", n)
+		n.Use.Walk(v)
+		v.LeaveChildNode("Use", n)
 	}
 
 	if n.Alias != nil {
-		vv := v.GetChildrenVisitor("Alias")
-		n.Alias.Walk(vv)
+		v.EnterChildNode("Alias", n)
+		n.Alias.Walk(v)
+		v.LeaveChildNode("Alias", n)
 	}
 
 	v.LeaveNode(n)

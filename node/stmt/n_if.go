@@ -54,27 +54,31 @@ func (n *If) Walk(v walker.Visitor) {
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
+		v.EnterChildNode("Cond", n)
+		n.Cond.Walk(v)
+		v.LeaveChildNode("Cond", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	if n.ElseIf != nil {
-		vv := v.GetChildrenVisitor("ElseIf")
+		v.EnterChildList("ElseIf", n)
 		for _, nn := range n.ElseIf {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("ElseIf", n)
 	}
 
 	if n.Else != nil {
-		vv := v.GetChildrenVisitor("Else")
-		n.Else.Walk(vv)
+		v.EnterChildNode("Else", n)
+		n.Else.Walk(v)
+		v.LeaveChildNode("Else", n)
 	}
 
 	v.LeaveNode(n)

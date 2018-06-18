@@ -29,7 +29,7 @@ func ExampleDumper() {
 	nsResolver := visitor.NewNamespaceResolver()
 	nodes.Walk(nsResolver)
 
-	dumper := visitor.Dumper{
+	dumper := &visitor.Dumper{
 		Writer:     os.Stdout,
 		Indent:     "| ",
 		Comments:   php7parser.GetComments(),

@@ -36,35 +36,39 @@ func (n *AltFor) Walk(v walker.Visitor) {
 	}
 
 	if n.Init != nil {
-		vv := v.GetChildrenVisitor("Init")
+		v.EnterChildList("Init", n)
 		for _, nn := range n.Init {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Init", n)
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
+		v.EnterChildList("Cond", n)
 		for _, nn := range n.Cond {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Cond", n)
 	}
 
 	if n.Loop != nil {
-		vv := v.GetChildrenVisitor("Loop")
+		v.EnterChildList("Loop", n)
 		for _, nn := range n.Loop {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Loop", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

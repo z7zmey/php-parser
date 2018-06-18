@@ -32,13 +32,15 @@ func (n *Assign) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Expression != nil {
-		vv := v.GetChildrenVisitor("Expression")
-		n.Expression.Walk(vv)
+		v.EnterChildNode("Expression", n)
+		n.Expression.Walk(v)
+		v.LeaveChildNode("Expression", n)
 	}
 
 	v.LeaveNode(n)

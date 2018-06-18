@@ -32,13 +32,15 @@ func (n *Coalesce) Walk(v walker.Visitor) {
 	}
 
 	if n.Left != nil {
-		vv := v.GetChildrenVisitor("Left")
-		n.Left.Walk(vv)
+		v.EnterChildNode("Left", n)
+		n.Left.Walk(v)
+		v.LeaveChildNode("Left", n)
 	}
 
 	if n.Right != nil {
-		vv := v.GetChildrenVisitor("Right")
-		n.Right.Walk(vv)
+		v.EnterChildNode("Right", n)
+		n.Right.Walk(v)
+		v.LeaveChildNode("Right", n)
 	}
 
 	v.LeaveNode(n)

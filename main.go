@@ -99,7 +99,7 @@ func printer(result <-chan parser.Parser) {
 			nsResolver := visitor.NewNamespaceResolver()
 			parserWorker.GetRootNode().Walk(nsResolver)
 
-			dumper := visitor.Dumper{
+			dumper := &visitor.Dumper{
 				Writer:     os.Stdout,
 				Indent:     "  | ",
 				Comments:   parserWorker.GetComments(),

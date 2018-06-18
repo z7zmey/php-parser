@@ -32,17 +32,19 @@ func (n *UseList) Walk(v walker.Visitor) {
 	}
 
 	if n.UseType != nil {
-		vv := v.GetChildrenVisitor("UseType")
-		n.UseType.Walk(vv)
+		v.EnterChildNode("UseType", n)
+		n.UseType.Walk(v)
+		v.LeaveChildNode("UseType", n)
 	}
 
 	if n.Uses != nil {
-		vv := v.GetChildrenVisitor("Uses")
+		v.EnterChildList("Uses", n)
 		for _, nn := range n.Uses {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Uses", n)
 	}
 
 	v.LeaveNode(n)

@@ -32,21 +32,23 @@ func (n *PropertyList) Walk(v walker.Visitor) {
 	}
 
 	if n.Modifiers != nil {
-		vv := v.GetChildrenVisitor("Modifiers")
+		v.EnterChildList("Modifiers", n)
 		for _, nn := range n.Modifiers {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Modifiers", n)
 	}
 
 	if n.Properties != nil {
-		vv := v.GetChildrenVisitor("Properties")
+		v.EnterChildList("Properties", n)
 		for _, nn := range n.Properties {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Properties", n)
 	}
 
 	v.LeaveNode(n)

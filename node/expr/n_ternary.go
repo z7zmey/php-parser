@@ -34,18 +34,21 @@ func (n *Ternary) Walk(v walker.Visitor) {
 	}
 
 	if n.Condition != nil {
-		vv := v.GetChildrenVisitor("Condition")
-		n.Condition.Walk(vv)
+		v.EnterChildNode("Condition", n)
+		n.Condition.Walk(v)
+		v.LeaveChildNode("Condition", n)
 	}
 
 	if n.IfTrue != nil {
-		vv := v.GetChildrenVisitor("IfTrue")
-		n.IfTrue.Walk(vv)
+		v.EnterChildNode("IfTrue", n)
+		n.IfTrue.Walk(v)
+		v.LeaveChildNode("IfTrue", n)
 	}
 
 	if n.IfFalse != nil {
-		vv := v.GetChildrenVisitor("IfFalse")
-		n.IfFalse.Walk(vv)
+		v.EnterChildNode("IfFalse", n)
+		n.IfFalse.Walk(v)
+		v.LeaveChildNode("IfFalse", n)
 	}
 
 	v.LeaveNode(n)

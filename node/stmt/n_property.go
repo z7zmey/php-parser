@@ -36,13 +36,15 @@ func (n *Property) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	v.LeaveNode(n)

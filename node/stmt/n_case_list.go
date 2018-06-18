@@ -30,12 +30,13 @@ func (n *CaseList) Walk(v walker.Visitor) {
 	}
 
 	if n.Cases != nil {
-		vv := v.GetChildrenVisitor("Cases")
+		v.EnterChildList("Cases", n)
 		for _, nn := range n.Cases {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Cases", n)
 	}
 
 	v.LeaveNode(n)

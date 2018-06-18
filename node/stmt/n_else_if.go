@@ -32,13 +32,15 @@ func (n *ElseIf) Walk(v walker.Visitor) {
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
+		v.EnterChildNode("Cond", n)
+		n.Cond.Walk(v)
+		v.LeaveChildNode("Cond", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

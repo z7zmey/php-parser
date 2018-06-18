@@ -30,12 +30,13 @@ func (n *TraitAdaptationList) Walk(v walker.Visitor) {
 	}
 
 	if n.Adaptations != nil {
-		vv := v.GetChildrenVisitor("Adaptations")
+		v.EnterChildList("Adaptations", n)
 		for _, nn := range n.Adaptations {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Adaptations", n)
 	}
 
 	v.LeaveNode(n)

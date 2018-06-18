@@ -30,12 +30,13 @@ func (n *Echo) Walk(v walker.Visitor) {
 	}
 
 	if n.Exprs != nil {
-		vv := v.GetChildrenVisitor("Exprs")
+		v.EnterChildList("Exprs", n)
 		for _, nn := range n.Exprs {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Exprs", n)
 	}
 
 	v.LeaveNode(n)

@@ -44,31 +44,35 @@ func (n *Function) Walk(v walker.Visitor) {
 	}
 
 	if n.FunctionName != nil {
-		vv := v.GetChildrenVisitor("FunctionName")
-		n.FunctionName.Walk(vv)
+		v.EnterChildNode("FunctionName", n)
+		n.FunctionName.Walk(v)
+		v.LeaveChildNode("FunctionName", n)
 	}
 
 	if n.Params != nil {
-		vv := v.GetChildrenVisitor("Params")
+		v.EnterChildList("Params", n)
 		for _, nn := range n.Params {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Params", n)
 	}
 
 	if n.ReturnType != nil {
-		vv := v.GetChildrenVisitor("ReturnType")
-		n.ReturnType.Walk(vv)
+		v.EnterChildNode("ReturnType", n)
+		n.ReturnType.Walk(v)
+		v.LeaveChildNode("ReturnType", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

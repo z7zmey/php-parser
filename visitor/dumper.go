@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 
 	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
@@ -24,7 +25,7 @@ type Dumper struct {
 }
 
 // EnterNode is invoked at every node in hierarchy
-func (d Dumper) EnterNode(w walker.Walkable) bool {
+func (d *Dumper) EnterNode(w walker.Walkable) bool {
 	n := w.(node.Node)
 
 	fmt.Fprintf(d.Writer, "%v[%v]\n", d.Indent, reflect.TypeOf(n))
@@ -59,13 +60,26 @@ func (d Dumper) EnterNode(w walker.Walkable) bool {
 	return true
 }
 
-// GetChildrenVisitor is invoked at every node parameter that contains children nodes
-func (d Dumper) GetChildrenVisitor(key string) walker.Visitor {
-	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
-	return Dumper{d.Writer, d.Indent + "    ", d.Comments, d.Positions, d.NsResolver}
+// LeaveNode is invoked after node process
+func (d *Dumper) LeaveNode(n walker.Walkable) {
+	// do nothing
 }
 
-// LeaveNode is invoked after node process
-func (d Dumper) LeaveNode(n walker.Walkable) {
-	// do nothing
+// GetChildrenVisitor is invoked at every node parameter that contains children nodes
+func (d *Dumper) EnterChildNode(key string, w walker.Walkable) {
+	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
+	d.Indent = d.Indent + "    "
+}
+
+func (d *Dumper) LeaveChildNode(key string, w walker.Walkable) {
+	d.Indent = strings.TrimSuffix(d.Indent, "    ")
+}
+
+func (d *Dumper) EnterChildList(key string, w walker.Walkable) {
+	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
+	d.Indent = d.Indent + "    "
+}
+
+func (d *Dumper) LeaveChildList(key string, w walker.Walkable) {
+	d.Indent = strings.TrimSuffix(d.Indent, "    ")
 }

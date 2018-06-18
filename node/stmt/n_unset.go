@@ -30,12 +30,13 @@ func (n *Unset) Walk(v walker.Visitor) {
 	}
 
 	if n.Vars != nil {
-		vv := v.GetChildrenVisitor("Vars")
+		v.EnterChildList("Vars", n)
 		for _, nn := range n.Vars {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Vars", n)
 	}
 
 	v.LeaveNode(n)

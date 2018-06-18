@@ -30,8 +30,9 @@ func (n *ClassExtends) Walk(v walker.Visitor) {
 	}
 
 	if n.ClassName != nil {
-		vv := v.GetChildrenVisitor("ClassName")
-		n.ClassName.Walk(vv)
+		v.EnterChildNode("ClassName", n)
+		n.ClassName.Walk(v)
+		v.LeaveChildNode("ClassName", n)
 	}
 
 	v.LeaveNode(n)
