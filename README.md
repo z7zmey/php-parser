@@ -47,8 +47,16 @@ CLI
 ---
 
 ```
-php-parser [-php5 -noDump] <path> ...
+php-parser [flags] <path> ...
 ```
+
+| flag  | type |                description                   |
+|-------|------|----------------------------------------------|
+|  -d   |string| dump format: [custom, go, json, pretty-json] |
+|  -p   | bool | show positions                               |
+|  -c   | bool | show comments                                |
+|  -r   | bool | resolve names                                |
+| -php5 | bool | parse as PHP5                                |
 
 Dump AST to stdout.
 

@@ -32,13 +32,13 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 
 	if d.Positions != nil {
 		if p := d.Positions[n]; p != nil {
-			fmt.Fprintf(d.Writer, "%v\"Position\": %s;\n", d.Indent+"  ", *p)
+			fmt.Fprintf(d.Writer, "%v\"Position\": %s\n", d.Indent+"  ", *p)
 		}
 	}
 
 	if d.NsResolver != nil {
 		if namespacedName, ok := d.NsResolver.ResolvedNames[n]; ok {
-			fmt.Fprintf(d.Writer, "%v\"NamespacedName\": %s;\n", d.Indent+"  ", namespacedName)
+			fmt.Fprintf(d.Writer, "%v\"NamespacedName\": %q\n", d.Indent+"  ", namespacedName)
 		}
 	}
 
@@ -53,7 +53,12 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 
 	if a := n.Attributes(); len(a) > 0 {
 		for key, attr := range a {
-			fmt.Fprintf(d.Writer, "%v\"%v\": %v;\n", d.Indent+"  ", key, attr)
+			switch attr.(type) {
+			case string:
+				fmt.Fprintf(d.Writer, "%v\"%v\": %q\n", d.Indent+"  ", key, attr)
+			default:
+				fmt.Fprintf(d.Writer, "%v\"%v\": %v\n", d.Indent+"  ", key, attr)
+			}
 		}
 	}
 

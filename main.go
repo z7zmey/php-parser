@@ -17,11 +17,18 @@ import (
 
 var wg sync.WaitGroup
 var usePhp5 *bool
-var noDump *bool
+var dumpType string
+var showPositions *bool
+var showComments *bool
+var showResolvedNs *bool
 
 func main() {
-	usePhp5 = flag.Bool("php5", false, "use PHP5 parserWorker")
-	noDump = flag.Bool("noDump", false, "disable dumping to stdout")
+	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
+	showPositions = flag.Bool("p", false, "show positions")
+	showComments = flag.Bool("c", false, "show comments")
+	showResolvedNs = flag.Bool("r", false, "resolve names")
+	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
+
 	flag.Parse()
 
 	pathCh := make(chan string)
@@ -95,19 +102,53 @@ func printer(result <-chan parser.Parser) {
 			fmt.Println(e)
 		}
 
-		if !*noDump {
-			nsResolver := visitor.NewNamespaceResolver()
+		var nsResolver *visitor.NamespaceResolver
+		if *showResolvedNs {
+			nsResolver = visitor.NewNamespaceResolver()
 			parserWorker.GetRootNode().Walk(nsResolver)
+		}
 
+		var comments parser.Comments
+		if *showComments {
+			comments = parserWorker.GetComments()
+		}
+
+		var positions parser.Positions
+		if *showPositions {
+			positions = parserWorker.GetPositions()
+		}
+
+		switch dumpType {
+		case "custom":
 			dumper := &visitor.Dumper{
 				Writer:     os.Stdout,
-				Indent:     "  | ",
-				Comments:   parserWorker.GetComments(),
-				Positions:  parserWorker.GetPositions(),
+				Indent:     "| ",
+				Comments:   comments,
+				Positions:  positions,
 				NsResolver: nsResolver,
 			}
 			parserWorker.GetRootNode().Walk(dumper)
+		case "json":
+			dumper := &visitor.JsonDumper{
+				Writer:     os.Stdout,
+				Comments:   comments,
+				Positions:  positions,
+				NsResolver: nsResolver,
+			}
+			parserWorker.GetRootNode().Walk(dumper)
+		case "pretty_json":
+			dumper := &visitor.PrettyJsonDumper{
+				Writer:     os.Stdout,
+				Comments:   comments,
+				Positions:  positions,
+				NsResolver: nsResolver,
+			}
+			parserWorker.GetRootNode().Walk(dumper)
+		case "go":
+			dumper := &visitor.GoDumper{Writer: os.Stdout}
+			parserWorker.GetRootNode().Walk(dumper)
 		}
+
 		wg.Done()
 	}
 }
