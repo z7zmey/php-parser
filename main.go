@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/php5"
@@ -18,6 +19,7 @@ import (
 var wg sync.WaitGroup
 var usePhp5 *bool
 var dumpType string
+var profiler string
 var showPositions *bool
 var showComments *bool
 var showResolvedNs *bool
@@ -28,8 +30,16 @@ func main() {
 	showComments = flag.Bool("c", false, "show comments")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
+	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem]")
 
 	flag.Parse()
+
+	switch profiler {
+	case "cpu":
+		defer profile.Start(profile.ProfilePath("."), profile.NoShutdownHook).Stop()
+	case "mem":
+		defer profile.Start(profile.MemProfile, profile.ProfilePath("."), profile.NoShutdownHook).Stop()
+	}
 
 	pathCh := make(chan string)
 	resultCh := make(chan parser.Parser)

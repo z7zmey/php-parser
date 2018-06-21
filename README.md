@@ -53,6 +53,7 @@ php-parser [flags] <path> ...
 | flag  | type |                description                   |
 |-------|------|----------------------------------------------|
 |  -d   |string| dump format: [custom, go, json, pretty-json] |
+| -prof |string| start profiler: [cpu, mem]                   |
 |  -p   | bool | show positions                               |
 |  -c   | bool | show comments                                |
 |  -r   | bool | resolve names                                |
