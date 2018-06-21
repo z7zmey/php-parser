@@ -100,13 +100,17 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 }
 
 func printer(result <-chan parser.Parser) {
+	var counter int
+
 	for {
 		parserWorker, ok := <-result
 		if !ok {
 			return
 		}
 
-		fmt.Printf("==> %s\n", parserWorker.GetPath())
+		counter++
+
+		fmt.Printf("==> [%d] %s\n", counter, parserWorker.GetPath())
 
 		for _, e := range parserWorker.GetErrors() {
 			fmt.Println(e)
