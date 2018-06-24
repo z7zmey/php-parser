@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr/assign"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -18,13 +19,53 @@ func TestEmptyList(t *testing.T) {
 	src := `<? list() = $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    15,
+				},
 				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    14,
+					},
 					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    9,
+						},
 						Items: []node.Node{},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  13,
+							EndPos:    14,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    14,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -45,17 +86,79 @@ func TestList(t *testing.T) {
 	src := `<? list($a) = $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
 					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    11,
+						},
 						Items: []node.Node{
 							&expr.ArrayItem{
-								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  9,
+									EndPos:    10,
+								},
+								Val: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  9,
+										EndPos:    10,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  9,
+											EndPos:    10,
+										},
+										Value: "a",
+									},
+								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  15,
+							EndPos:    16,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  15,
+								EndPos:    16,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -76,19 +179,87 @@ func TestListArrayIndex(t *testing.T) {
 	src := `<? list($a[]) = $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    18,
+					},
 					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    13,
+						},
 						Items: []node.Node{
 							&expr.ArrayItem{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  9,
+									EndPos:    12,
+								},
 								Val: &expr.ArrayDimFetch{
-									Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  9,
+										EndPos:    12,
+									},
+									Variable: &expr.Variable{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  9,
+											EndPos:    10,
+										},
+										VarName: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  9,
+												EndPos:    10,
+											},
+											Value: "a",
+										},
+									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    18,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -109,23 +280,97 @@ func TestListList(t *testing.T) {
 	src := `<? list(list($a)) = $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    23,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    23,
+				},
 				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    22,
+					},
 					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    17,
+						},
 						Items: []node.Node{
 							&expr.ArrayItem{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  9,
+									EndPos:    16,
+								},
 								Val: &expr.List{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  9,
+										EndPos:    16,
+									},
 									Items: []node.Node{
 										&expr.ArrayItem{
-											Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  14,
+												EndPos:    15,
+											},
+											Val: &expr.Variable{
+												Position: &position.Position{
+													StartLine: 1,
+													EndLine:   1,
+													StartPos:  14,
+													EndPos:    15,
+												},
+												VarName: &node.Identifier{
+													Position: &position.Position{
+														StartLine: 1,
+														EndLine:   1,
+														StartPos:  14,
+														EndPos:    15,
+													},
+													Value: "a",
+												},
+											},
 										},
 									},
 								},
 							},
 						},
 					},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    22,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  21,
+								EndPos:    22,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},

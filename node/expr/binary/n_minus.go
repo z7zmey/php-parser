@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Minus node
 type Minus struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewMinus node constructor
 func NewMinus(Variable node.Node, Expression node.Node) *Minus {
 	return &Minus{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *Minus) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Minus) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

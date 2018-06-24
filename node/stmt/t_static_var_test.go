@@ -10,17 +10,52 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestStaticVar(t *testing.T) {
 	src := `<? static $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  11,
+									EndPos:    12,
+								},
+								Value: "a",
+							},
+						},
 					},
 				},
 			},
@@ -42,15 +77,79 @@ func TestStaticVars(t *testing.T) {
 	src := `<? static $a, $b = 1;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    21,
+		},
 		Stmts: []node.Node{
 			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    21,
+				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  11,
+									EndPos:    12,
+								},
+								Value: "a",
+							},
+						},
 					},
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-						Expr:     &scalar.Lnumber{Value: "1"},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  15,
+							EndPos:    20,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  15,
+								EndPos:    16,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  15,
+									EndPos:    16,
+								},
+								Value: "b",
+							},
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  20,
+								EndPos:    20,
+							},
+							Value: "1",
+						},
 					},
 				},
 			},
@@ -72,15 +171,79 @@ func TestStaticVars2(t *testing.T) {
 	src := `<? static $a = 1, $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    21,
+		},
 		Stmts: []node.Node{
 			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    21,
+				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-						Expr:     &scalar.Lnumber{Value: "1"},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    16,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  11,
+									EndPos:    12,
+								},
+								Value: "a",
+							},
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    16,
+							},
+							Value: "1",
+						},
 					},
 					&stmt.StaticVar{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  19,
+							EndPos:    20,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  19,
+								EndPos:    20,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  19,
+									EndPos:    20,
+								},
+								Value: "b",
+							},
+						},
 					},
 				},
 			},

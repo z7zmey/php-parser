@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // CaseList node
 type CaseList struct {
-	Cases []node.Node
+	Position *position.Position
+	Cases    []node.Node
 }
 
 // NewCaseList node constructor
 func NewCaseList(Cases []node.Node) *CaseList {
 	return &CaseList{
-		Cases,
+		Cases: Cases,
 	}
+}
+
+// SetPosition sets node position
+func (n *CaseList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *CaseList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

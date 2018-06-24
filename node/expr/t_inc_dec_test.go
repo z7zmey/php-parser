@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,10 +17,44 @@ func TestPostDec(t *testing.T) {
 	src := `<? $a--;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    8,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    8,
+				},
 				Expr: &expr.PostDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    7,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -40,10 +75,44 @@ func TestPostInc(t *testing.T) {
 	src := `<? $a++;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    8,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    8,
+				},
 				Expr: &expr.PostInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    7,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -64,10 +133,44 @@ func TestPreDec(t *testing.T) {
 	src := `<? --$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    8,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    8,
+				},
 				Expr: &expr.PreDec{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    7,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  6,
+							EndPos:    7,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  6,
+								EndPos:    7,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -88,10 +191,44 @@ func TestPreInc(t *testing.T) {
 	src := `<? ++$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    8,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    8,
+				},
 				Expr: &expr.PreInc{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    7,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  6,
+							EndPos:    7,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  6,
+								EndPos:    7,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},

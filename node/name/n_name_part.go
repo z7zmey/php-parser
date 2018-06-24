@@ -1,17 +1,31 @@
 package name
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // NamePart node
 type NamePart struct {
-	Value string
+	Position *position.Position
+	Value    string
 }
 
 // NewNamePart node constructor
 func NewNamePart(Value string) *NamePart {
 	return &NamePart{
-		Value,
+		Value: Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *NamePart) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *NamePart) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

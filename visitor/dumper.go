@@ -20,7 +20,6 @@ type Dumper struct {
 	Writer     io.Writer
 	Indent     string
 	Comments   parser.Comments
-	Positions  parser.Positions
 	NsResolver *NamespaceResolver
 }
 
@@ -30,10 +29,8 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 
 	fmt.Fprintf(d.Writer, "%v[%v]\n", d.Indent, reflect.TypeOf(n))
 
-	if d.Positions != nil {
-		if p := d.Positions[n]; p != nil {
-			fmt.Fprintf(d.Writer, "%v\"Position\": %s\n", d.Indent+"  ", *p)
-		}
+	if n.GetPosition() != nil {
+		fmt.Fprintf(d.Writer, "%v\"Position\": %s\n", d.Indent+"  ", n.GetPosition())
 	}
 
 	if d.NsResolver != nil {

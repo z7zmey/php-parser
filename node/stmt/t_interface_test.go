@@ -2,8 +2,10 @@ package stmt_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/node/name"
 	"testing"
+
+	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -15,11 +17,31 @@ func TestInterface(t *testing.T) {
 	src := `<? interface Foo {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Interface{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				PhpDocComment: "",
-				InterfaceName: &node.Identifier{Value: "Foo"},
-				Stmts:         []node.Node{},
+				InterfaceName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
+					Value: "Foo",
+				},
+				Stmts: []node.Node{},
 			},
 		},
 	}
@@ -39,15 +61,55 @@ func TestInterfaceExtend(t *testing.T) {
 	src := `<? interface Foo extends Bar {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    31,
+		},
 		Stmts: []node.Node{
 			&stmt.Interface{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    31,
+				},
 				PhpDocComment: "",
-				InterfaceName: &node.Identifier{Value: "Foo"},
+				InterfaceName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
+					Value: "Foo",
+				},
 				Extends: &stmt.InterfaceExtends{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  18,
+						EndPos:    28,
+					},
 					InterfaceNames: []node.Node{
 						&name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  26,
+								EndPos:    28,
+							},
 							Parts: []node.Node{
-								&name.NamePart{Value: "Bar"},
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  26,
+										EndPos:    28,
+									},
+									Value: "Bar",
+								},
 							},
 						},
 					},
@@ -72,20 +134,74 @@ func TestInterfaceExtends(t *testing.T) {
 	src := `<? interface Foo extends Bar, Baz {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    36,
+		},
 		Stmts: []node.Node{
 			&stmt.Interface{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    36,
+				},
 				PhpDocComment: "",
-				InterfaceName: &node.Identifier{Value: "Foo"},
+				InterfaceName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
+					Value: "Foo",
+				},
 				Extends: &stmt.InterfaceExtends{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  18,
+						EndPos:    33,
+					},
 					InterfaceNames: []node.Node{
 						&name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  26,
+								EndPos:    28,
+							},
 							Parts: []node.Node{
-								&name.NamePart{Value: "Bar"},
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  26,
+										EndPos:    28,
+									},
+									Value: "Bar",
+								},
 							},
 						},
 						&name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  31,
+								EndPos:    33,
+							},
 							Parts: []node.Node{
-								&name.NamePart{Value: "Baz"},
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  31,
+										EndPos:    33,
+									},
+									Value: "Baz",
+								},
 							},
 						},
 					},

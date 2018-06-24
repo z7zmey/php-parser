@@ -2,21 +2,33 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // InstanceOf node
 type InstanceOf struct {
-	Expr  node.Node
-	Class node.Node
+	Position *position.Position
+	Expr     node.Node
+	Class    node.Node
 }
 
 // NewInstanceOf node constructor
 func NewInstanceOf(Expr node.Node, Class node.Node) *InstanceOf {
 	return &InstanceOf{
-		Expr,
-		Class,
+		Expr:  Expr,
+		Class: Class,
 	}
+}
+
+// SetPosition sets node position
+func (n *InstanceOf) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *InstanceOf) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

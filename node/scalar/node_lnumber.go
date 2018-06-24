@@ -1,17 +1,31 @@
 package scalar
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Lnumber node
 type Lnumber struct {
-	Value string
+	Position *position.Position
+	Value    string
 }
 
 // NewLnumber node constructor
 func NewLnumber(Value string) *Lnumber {
 	return &Lnumber{
-		Value,
+		Value: Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *Lnumber) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Lnumber) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

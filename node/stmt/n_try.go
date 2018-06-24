@@ -2,23 +2,35 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Try node
 type Try struct {
-	Stmts   []node.Node
-	Catches []node.Node
-	Finally node.Node
+	Position *position.Position
+	Stmts    []node.Node
+	Catches  []node.Node
+	Finally  node.Node
 }
 
 // NewTry node constructor
 func NewTry(Stmts []node.Node, Catches []node.Node, Finally node.Node) *Try {
 	return &Try{
-		Stmts,
-		Catches,
-		Finally,
+		Stmts:   Stmts,
+		Catches: Catches,
+		Finally: Finally,
 	}
+}
+
+// SetPosition sets node position
+func (n *Try) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Try) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

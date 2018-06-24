@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,10 +17,44 @@ func TestEval(t *testing.T) {
 	src := `<? eval($a);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &expr.Eval{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  9,
+							EndPos:    10,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  9,
+								EndPos:    10,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},

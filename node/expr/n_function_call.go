@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // FunctionCall node
 type FunctionCall struct {
+	Position     *position.Position
 	Function     node.Node
 	ArgumentList *node.ArgumentList
 }
@@ -14,9 +16,19 @@ type FunctionCall struct {
 // NewFunctionCall node constructor
 func NewFunctionCall(Function node.Node, ArgumentList *node.ArgumentList) *FunctionCall {
 	return &FunctionCall{
-		Function,
-		ArgumentList,
+		Function:     Function,
+		ArgumentList: ArgumentList,
 	}
+}
+
+// SetPosition sets node position
+func (n *FunctionCall) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *FunctionCall) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

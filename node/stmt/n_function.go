@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Function node
 type Function struct {
+	Position      *position.Position
 	ReturnsRef    bool
 	PhpDocComment string
 	FunctionName  node.Node
@@ -18,13 +20,23 @@ type Function struct {
 // NewFunction node constructor
 func NewFunction(FunctionName node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmts []node.Node, PhpDocComment string) *Function {
 	return &Function{
-		ReturnsRef,
-		PhpDocComment,
-		FunctionName,
-		Params,
-		ReturnType,
-		Stmts,
+		ReturnsRef:    ReturnsRef,
+		PhpDocComment: PhpDocComment,
+		FunctionName:  FunctionName,
+		Params:        Params,
+		ReturnType:    ReturnType,
+		Stmts:         Stmts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Function) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Function) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

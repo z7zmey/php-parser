@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,11 +17,45 @@ func TestIsset(t *testing.T) {
 	src := `<? isset($a);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &expr.Isset{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
 					Variables: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						&expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  10,
+									EndPos:    11,
+								},
+								Value: "a",
+							},
+						},
 					},
 				},
 			},
@@ -42,12 +77,62 @@ func TestIssetVariables(t *testing.T) {
 	src := `<? isset($a, $b);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &expr.Isset{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
 					Variables: []node.Node{
-						&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						&expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  10,
+									EndPos:    11,
+								},
+								Value: "a",
+							},
+						},
+						&expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  14,
+								EndPos:    15,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  14,
+									EndPos:    15,
+								},
+								Value: "b",
+							},
+						},
 					},
 				},
 			},

@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ShellExec node
 type ShellExec struct {
-	Parts []node.Node
+	Position *position.Position
+	Parts    []node.Node
 }
 
 // NewShellExec node constructor
 func NewShellExec(Parts []node.Node) *ShellExec {
 	return &ShellExec{
-		Parts,
+		Parts: Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *ShellExec) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ShellExec) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

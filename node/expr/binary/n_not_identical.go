@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // NotIdentical node
 type NotIdentical struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewNotIdentical node constructor
 func NewNotIdentical(Variable node.Node, Expression node.Node) *NotIdentical {
 	return &NotIdentical{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *NotIdentical) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *NotIdentical) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

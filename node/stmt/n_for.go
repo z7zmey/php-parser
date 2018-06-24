@@ -2,25 +2,37 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // For node
 type For struct {
-	Init []node.Node
-	Cond []node.Node
-	Loop []node.Node
-	Stmt node.Node
+	Position *position.Position
+	Init     []node.Node
+	Cond     []node.Node
+	Loop     []node.Node
+	Stmt     node.Node
 }
 
 // NewFor node constructor
 func NewFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *For {
 	return &For{
-		Init,
-		Cond,
-		Loop,
-		Stmt,
+		Init: Init,
+		Cond: Cond,
+		Loop: Loop,
+		Stmt: Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *For) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *For) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

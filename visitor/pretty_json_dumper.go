@@ -15,7 +15,6 @@ import (
 type PrettyJsonDumper struct {
 	Writer      io.Writer
 	Comments    parser.Comments
-	Positions   parser.Positions
 	NsResolver  *NamespaceResolver
 	depth       int
 	isChildNode bool
@@ -44,24 +43,22 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 	d.printIndent(d.Writer)
 	fmt.Fprintf(d.Writer, "%q: %q", "type", nodeType)
 
-	if d.Positions != nil {
-		if p := d.Positions[n]; p != nil {
-			fmt.Fprint(d.Writer, ",\n")
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: {\n", "position")
-			d.depth++
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %d,\n", "startPos", p.StartPos)
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %d,\n", "endPos", p.EndPos)
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %d,\n", "startLine", p.StartLine)
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %d\n", "endLine", p.EndLine)
-			d.depth--
-			d.printIndent(d.Writer)
-			fmt.Fprint(d.Writer, "}")
-		}
+	if p := n.GetPosition(); p != nil {
+		fmt.Fprint(d.Writer, ",\n")
+		d.printIndent(d.Writer)
+		fmt.Fprintf(d.Writer, "%q: {\n", "position")
+		d.depth++
+		d.printIndent(d.Writer)
+		fmt.Fprintf(d.Writer, "%q: %d,\n", "startPos", p.StartPos)
+		d.printIndent(d.Writer)
+		fmt.Fprintf(d.Writer, "%q: %d,\n", "endPos", p.EndPos)
+		d.printIndent(d.Writer)
+		fmt.Fprintf(d.Writer, "%q: %d,\n", "startLine", p.StartLine)
+		d.printIndent(d.Writer)
+		fmt.Fprintf(d.Writer, "%q: %d\n", "endLine", p.EndLine)
+		d.depth--
+		d.printIndent(d.Writer)
+		fmt.Fprint(d.Writer, "}")
 	}
 
 	if d.NsResolver != nil {

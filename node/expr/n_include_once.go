@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // IncludeOnce node
 type IncludeOnce struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewIncludeOnce node constructor
 func NewIncludeOnce(Expression node.Node) *IncludeOnce {
 	return &IncludeOnce{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *IncludeOnce) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *IncludeOnce) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

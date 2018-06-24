@@ -10,16 +10,45 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestGlobal(t *testing.T) {
 	src := `<? global $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Global{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					&expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -40,20 +69,121 @@ func TestGlobalVars(t *testing.T) {
 	src := `<? global $a, $b, $$c, ${foo()};`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    32,
+		},
 		Stmts: []node.Node{
 			&stmt.Global{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    32,
+				},
 				Vars: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-					&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
 					&expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "a",
+						},
+					},
+					&expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  15,
+							EndPos:    16,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  15,
+								EndPos:    16,
+							},
+							Value: "b",
+						},
+					},
+					&expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  19,
+							EndPos:    21,
+						},
+						VarName: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  20,
+								EndPos:    21,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  20,
+									EndPos:    21,
+								},
+								Value: "c",
+							},
+						},
+					},
+					&expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  24,
+							EndPos:    31,
+						},
 						VarName: &expr.FunctionCall{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  26,
+								EndPos:    30,
+							},
 							Function: &name.Name{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  26,
+									EndPos:    28,
+								},
 								Parts: []node.Node{
-									&name.NamePart{Value: "foo"},
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  26,
+											EndPos:    28,
+										},
+										Value: "foo",
+									},
 								},
 							},
-							ArgumentList: &node.ArgumentList{},
+							ArgumentList: &node.ArgumentList{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  29,
+									EndPos:    30,
+								},
+							},
 						},
 					},
 				},

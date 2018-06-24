@@ -2,21 +2,33 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // While node
 type While struct {
-	Cond node.Node
-	Stmt node.Node
+	Position *position.Position
+	Cond     node.Node
+	Stmt     node.Node
 }
 
 // NewWhile node constructor
 func NewWhile(Cond node.Node, Stmt node.Node) *While {
 	return &While{
-		Cond,
-		Stmt,
+		Cond: Cond,
+		Stmt: Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *While) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *While) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -42,6 +42,23 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 
 	d.depth++
 
+	if p := n.GetPosition(); p != nil {
+		printIndent(d.Writer, d.depth)
+		fmt.Fprint(d.Writer, "Position: &position.Position{\n")
+		d.depth++
+		printIndent(d.Writer, d.depth)
+		fmt.Fprintf(d.Writer, "StartLine: %d,\n", p.StartLine)
+		printIndent(d.Writer, d.depth)
+		fmt.Fprintf(d.Writer, "EndLine: %d,\n", p.EndLine)
+		printIndent(d.Writer, d.depth)
+		fmt.Fprintf(d.Writer, "StartPos: %d,\n", p.StartPos)
+		printIndent(d.Writer, d.depth)
+		fmt.Fprintf(d.Writer, "EndPos: %d,\n", p.EndPos)
+		d.depth--
+		printIndent(d.Writer, d.depth)
+		fmt.Fprint(d.Writer, "},\n")
+	}
+
 	if a := n.Attributes(); len(a) > 0 {
 		for key, attr := range a {
 			printIndent(d.Writer, d.depth)

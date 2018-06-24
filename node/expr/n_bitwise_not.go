@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // BitwiseNot node
 type BitwiseNot struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewBitwiseNot node constructor
 func NewBitwiseNot(Expression node.Node) *BitwiseNot {
 	return &BitwiseNot{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *BitwiseNot) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *BitwiseNot) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

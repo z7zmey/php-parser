@@ -1,17 +1,31 @@
 package stmt
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // InlineHtml node
 type InlineHtml struct {
-	Value string
+	Position *position.Position
+	Value    string
 }
 
 // NewInlineHtml node constructor
 func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
-		Value,
+		Value: Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *InlineHtml) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *InlineHtml) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

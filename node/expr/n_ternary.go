@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Ternary node
 type Ternary struct {
+	Position  *position.Position
 	Condition node.Node
 	IfTrue    node.Node
 	IfFalse   node.Node
@@ -15,10 +17,20 @@ type Ternary struct {
 // NewTernary node constructor
 func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
-		Condition,
-		IfTrue,
-		IfFalse,
+		Condition: Condition,
+		IfTrue:    IfTrue,
+		IfFalse:   IfFalse,
 	}
+}
+
+// SetPosition sets node position
+func (n *Ternary) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Ternary) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

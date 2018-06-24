@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitUsePrecedence node
 type TraitUsePrecedence struct {
+	Position  *position.Position
 	Ref       node.Node
 	Insteadof []node.Node
 }
@@ -14,9 +16,19 @@ type TraitUsePrecedence struct {
 // NewTraitUsePrecedence node constructor
 func NewTraitUsePrecedence(Ref node.Node, Insteadof []node.Node) *TraitUsePrecedence {
 	return &TraitUsePrecedence{
-		Ref,
-		Insteadof,
+		Ref:       Ref,
+		Insteadof: Insteadof,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitUsePrecedence) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitUsePrecedence) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -9,15 +9,36 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestDoubleQuotedScalarString(t *testing.T) {
 	src := `<? "test";`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    10,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"test\""},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    10,
+				},
+				Expr: &scalar.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    9,
+					},
+					Value: "\"test\"",
+				},
 			},
 		},
 	}
@@ -32,13 +53,34 @@ func TestDoubleQuotedScalarString(t *testing.T) {
 	actual = php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }
+
 func TestDoubleQuotedScalarStringWithEscapedVar(t *testing.T) {
 	src := `<? "\$test";`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"\\$test\""},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
+				Expr: &scalar.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Value: "\"\\$test\"",
+				},
 			},
 		},
 	}
@@ -60,9 +102,29 @@ func TestMultilineDoubleQuotedScalarString(t *testing.T) {
 	";`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.String{Value: "\"\n\ttest\n\t\""},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  4,
+					EndPos:    14,
+				},
+				Expr: &scalar.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Value: "\"\n\ttest\n\t\"",
+				},
 			},
 		},
 	}
@@ -82,9 +144,29 @@ func TestSingleQuotedScalarString(t *testing.T) {
 	src := `<? '$test';`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    11,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.String{Value: "'$test'"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    11,
+				},
+				Expr: &scalar.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    10,
+					},
+					Value: "'$test'",
+				},
 			},
 		},
 	}
@@ -106,9 +188,29 @@ func TestMultilineSingleQuotedScalarString(t *testing.T) {
 	';`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.String{Value: "'\n\t$test\n\t'"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  4,
+					EndPos:    15,
+				},
+				Expr: &scalar.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  4,
+						EndPos:    14,
+					},
+					Value: "'\n\t$test\n\t'",
+				},
 			},
 		},
 	}

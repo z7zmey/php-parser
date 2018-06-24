@@ -2,19 +2,31 @@ package cast
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Unset node
 type Unset struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewUnset node constructor
 func NewUnset(Expr node.Node) *Unset {
 	return &Unset{
-		Expr,
+		Expr: Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Unset) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Unset) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

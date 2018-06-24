@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassMethod node
 type ClassMethod struct {
+	Position      *position.Position
 	ReturnsRef    bool
 	PhpDocComment string
 	MethodName    node.Node
@@ -19,14 +21,24 @@ type ClassMethod struct {
 // NewClassMethod node constructor
 func NewClassMethod(MethodName node.Node, Modifiers []node.Node, ReturnsRef bool, Params []node.Node, ReturnType node.Node, Stmt node.Node, PhpDocComment string) *ClassMethod {
 	return &ClassMethod{
-		ReturnsRef,
-		PhpDocComment,
-		MethodName,
-		Modifiers,
-		Params,
-		ReturnType,
-		Stmt,
+		ReturnsRef:    ReturnsRef,
+		PhpDocComment: PhpDocComment,
+		MethodName:    MethodName,
+		Modifiers:     Modifiers,
+		Params:        Params,
+		ReturnType:    ReturnType,
+		Stmt:          Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassMethod) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassMethod) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

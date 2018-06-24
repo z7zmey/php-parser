@@ -9,15 +9,44 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestThrow(t *testing.T) {
 	src := `<? throw $e;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Throw{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
+				Expr: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  10,
+						EndPos:    11,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						Value: "e",
+					},
+				},
 			},
 		},
 	}

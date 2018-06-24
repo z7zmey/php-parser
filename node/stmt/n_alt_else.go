@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltElse node
 type AltElse struct {
-	Stmt node.Node
+	Position *position.Position
+	Stmt     node.Node
 }
 
 // NewAltElse node constructor
 func NewAltElse(Stmt node.Node) *AltElse {
 	return &AltElse{
-		Stmt,
+		Stmt: Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *AltElse) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *AltElse) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

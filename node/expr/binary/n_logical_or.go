@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // LogicalOr node
 type LogicalOr struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewLogicalOr node constructor
 func NewLogicalOr(Variable node.Node, Expression node.Node) *LogicalOr {
 	return &LogicalOr{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *LogicalOr) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *LogicalOr) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

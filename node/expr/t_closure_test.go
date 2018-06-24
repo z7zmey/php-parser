@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -18,9 +19,27 @@ func TestClosure(t *testing.T) {
 	src := `<? function(){};`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    16,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    16,
+				},
 				Expr: &expr.Closure{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    15,
+					},
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
@@ -45,28 +64,136 @@ func TestClosureUse(t *testing.T) {
 	src := `<? function($a, $b) use ($c, &$d) {};`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    37,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    37,
+				},
 				Expr: &expr.Closure{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    36,
+					},
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
 					Params: []node.Node{
 						&node.Parameter{
-							ByRef:    false,
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    14,
+							},
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+							ByRef:    false,
+							Variable: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  13,
+									EndPos:    14,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  13,
+										EndPos:    14,
+									},
+									Value: "a",
+								},
+							},
 						},
 						&node.Parameter{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Variable: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  17,
+									EndPos:    18,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  17,
+										EndPos:    18,
+									},
+									Value: "b",
+								},
+							},
 						},
 					},
 					ClosureUse: &expr.ClosureUse{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    33,
+						},
 						Uses: []node.Node{
-							&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+							&expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  26,
+									EndPos:    27,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  26,
+										EndPos:    27,
+									},
+									Value: "c",
+								},
+							},
+							&expr.Reference{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  30,
+									EndPos:    32,
+								},
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  31,
+										EndPos:    32,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  31,
+											EndPos:    32,
+										},
+										Value: "d",
+									},
+								},
+							},
 						},
 					},
 					Stmts: []node.Node{},
@@ -90,28 +217,136 @@ func TestClosureUse2(t *testing.T) {
 	src := `<? function($a, $b) use (&$c, $d) {};`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    37,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    37,
+				},
 				Expr: &expr.Closure{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    36,
+					},
 					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
 					Params: []node.Node{
 						&node.Parameter{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    14,
+							},
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+							Variable: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  13,
+									EndPos:    14,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  13,
+										EndPos:    14,
+									},
+									Value: "a",
+								},
+							},
 						},
 						&node.Parameter{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
 							ByRef:    false,
 							Variadic: false,
-							Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Variable: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  17,
+									EndPos:    18,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  17,
+										EndPos:    18,
+									},
+									Value: "b",
+								},
+							},
 						},
 					},
 					ClosureUse: &expr.ClosureUse{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    33,
+						},
 						Uses: []node.Node{
-							&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
-							&expr.Variable{VarName: &node.Identifier{Value: "d"}},
+							&expr.Reference{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  26,
+									EndPos:    28,
+								},
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  27,
+										EndPos:    28,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  27,
+											EndPos:    28,
+										},
+										Value: "c",
+									},
+								},
+							},
+							&expr.Variable{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  31,
+									EndPos:    32,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  31,
+										EndPos:    32,
+									},
+									Value: "d",
+								},
+							},
 						},
 					},
 					Stmts: []node.Node{},
@@ -135,14 +370,48 @@ func TestClosureReturnType(t *testing.T) {
 	src := `<? function(): void {};`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    23,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    23,
+				},
 				Expr: &expr.Closure{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    22,
+					},
+					PhpDocComment: "",
 					ReturnsRef:    false,
 					Static:        false,
-					PhpDocComment: "",
 					ReturnType: &name.Name{
-						Parts: []node.Node{&name.NamePart{Value: "void"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  16,
+							EndPos:    19,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  16,
+									EndPos:    19,
+								},
+								Value: "void",
+							},
+						},
 					},
 					Stmts: []node.Node{},
 				},

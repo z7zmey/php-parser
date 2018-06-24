@@ -1,9 +1,13 @@
 package node
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Parameter node
 type Parameter struct {
+	Position     *position.Position
 	ByRef        bool
 	Variadic     bool
 	VariableType Node
@@ -14,12 +18,22 @@ type Parameter struct {
 // NewParameter node constructor
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
-		ByRef,
-		Variadic,
-		VariableType,
-		Variable,
-		DefaultValue,
+		ByRef:        ByRef,
+		Variadic:     Variadic,
+		VariableType: VariableType,
+		Variable:     Variable,
+		DefaultValue: DefaultValue,
 	}
+}
+
+// SetPosition sets node position
+func (n *Parameter) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Parameter) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

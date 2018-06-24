@@ -23,7 +23,6 @@ type Parser struct {
 	errors          []*errors.Error
 	rootNode        node.Node
 	comments        parser.Comments
-	positions       parser.Positions
 }
 
 // NewParser creates and returns new Parser
@@ -33,7 +32,6 @@ func NewParser(src io.Reader, path string) *Parser {
 	return &Parser{
 		lexer,
 		path,
-		nil,
 		nil,
 		nil,
 		nil,
@@ -59,11 +57,7 @@ func (l *Parser) Parse() int {
 	l.errors = nil
 	l.rootNode = nil
 	l.comments = parser.Comments{}
-	l.positions = parser.Positions{}
-	l.positionBuilder = &parser.PositionBuilder{
-		Positions:    &l.positions,
-		PositionPool: &l.PositionPool,
-	}
+	l.positionBuilder = &parser.PositionBuilder{}
 
 	// parse
 
@@ -100,11 +94,6 @@ func (l *Parser) GetComments() parser.Comments {
 	return l.comments
 }
 
-// GetPositions returns positions list
-func (l *Parser) GetPositions() parser.Positions {
-	return l.positions
-}
-
 // helpers
 
 func lastNode(nn []node.Node) node.Node {
@@ -123,7 +112,6 @@ func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {
 	for i := 1; i < len(yyDollar); i++ {
 		if yyDollar[i].token != nil {
 			p.TokenPool.Put(yyDollar[i].token)
-			p.PositionPool.Put(yyDollar[i].token.Position)
 		}
 		yyDollar[i].token = nil
 	}

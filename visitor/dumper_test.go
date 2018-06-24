@@ -33,7 +33,6 @@ func ExampleDumper() {
 		Writer:     os.Stdout,
 		Indent:     "| ",
 		Comments:   php7parser.GetComments(),
-		Positions:  php7parser.GetPositions(),
 		NsResolver: nsResolver,
 	}
 	nodes.Walk(dumper)

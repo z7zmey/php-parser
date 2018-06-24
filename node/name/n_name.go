@@ -2,19 +2,31 @@ package name
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Name node
 type Name struct {
-	Parts []node.Node
+	Position *position.Position
+	Parts    []node.Node
 }
 
 // NewName node constructor
 func NewName(Parts []node.Node) *Name {
 	return &Name{
-		Parts,
+		Parts: Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Name) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Name) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

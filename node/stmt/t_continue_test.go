@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,12 +17,45 @@ func TestContinueEmpty(t *testing.T) {
 	src := `<? while (1) { continue; }`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    26,
+		},
 		Stmts: []node.Node{
 			&stmt.While{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    26,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    26,
+					},
 					Stmts: []node.Node{
-						&stmt.Continue{Expr: nil},
+						&stmt.Continue{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    24,
+							},
+						},
 					},
 				},
 			},
@@ -43,13 +77,53 @@ func TestContinueLight(t *testing.T) {
 	src := `<? while (1) { continue 2; }`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    28,
+		},
 		Stmts: []node.Node{
 			&stmt.While{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    28,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    28,
+					},
 					Stmts: []node.Node{
 						&stmt.Continue{
-							Expr: &scalar.Lnumber{Value: "2"},
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    26,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  25,
+									EndPos:    25,
+								},
+								Value: "2",
+							},
 						},
 					},
 				},
@@ -72,13 +146,53 @@ func TestContinue(t *testing.T) {
 	src := `<? while (1) { continue(3); }`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    29,
+		},
 		Stmts: []node.Node{
 			&stmt.While{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    29,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    29,
+					},
 					Stmts: []node.Node{
 						&stmt.Continue{
-							Expr: &scalar.Lnumber{Value: "3"},
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    27,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  25,
+									EndPos:    25,
+								},
+								Value: "3",
+							},
 						},
 					},
 				},

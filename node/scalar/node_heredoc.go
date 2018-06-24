@@ -2,21 +2,33 @@ package scalar
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Heredoc node
 type Heredoc struct {
-	Label string
-	Parts []node.Node
+	Position *position.Position
+	Label    string
+	Parts    []node.Node
 }
 
 // NewHeredoc node constructor
 func NewHeredoc(Label string, Parts []node.Node) *Heredoc {
 	return &Heredoc{
-		Label,
-		Parts,
+		Label: Label,
+		Parts: Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Heredoc) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Heredoc) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map
@@ -42,4 +54,6 @@ func (n *Heredoc) Walk(v walker.Visitor) {
 		}
 		v.LeaveChildList("Parts", n)
 	}
+
+	v.LeaveNode(n)
 }

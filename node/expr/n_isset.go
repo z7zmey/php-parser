@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Isset node
 type Isset struct {
+	Position  *position.Position
 	Variables []node.Node
 }
 
 // NewIsset node constructor
 func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
-		Variables,
+		Variables: Variables,
 	}
+}
+
+// SetPosition sets node position
+func (n *Isset) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Isset) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

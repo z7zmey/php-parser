@@ -2,11 +2,13 @@ package assign
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Assign node
 type Assign struct {
+	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
 }
@@ -14,9 +16,19 @@ type Assign struct {
 // NewAssign node constructor
 func NewAssign(Variable node.Node, Expression node.Node) *Assign {
 	return &Assign{
-		Variable,
-		Expression,
+		Variable:   Variable,
+		Expression: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *Assign) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Assign) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

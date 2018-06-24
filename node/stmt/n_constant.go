@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Constant node
 type Constant struct {
+	Position      *position.Position
 	PhpDocComment string
 	ConstantName  node.Node
 	Expr          node.Node
@@ -15,10 +17,20 @@ type Constant struct {
 // NewConstant node constructor
 func NewConstant(ConstantName node.Node, Expr node.Node, PhpDocComment string) *Constant {
 	return &Constant{
-		PhpDocComment,
-		ConstantName,
-		Expr,
+		PhpDocComment: PhpDocComment,
+		ConstantName:  ConstantName,
+		Expr:          Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Constant) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Constant) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

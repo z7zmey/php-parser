@@ -2,11 +2,13 @@ package assign
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ShiftRight node
 type ShiftRight struct {
+	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
 }
@@ -14,9 +16,19 @@ type ShiftRight struct {
 // NewShiftRight node constructor
 func NewShiftRight(Variable node.Node, Expression node.Node) *ShiftRight {
 	return &ShiftRight{
-		Variable,
-		Expression,
+		Variable:   Variable,
+		Expression: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *ShiftRight) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ShiftRight) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

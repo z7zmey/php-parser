@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Catch node
 type Catch struct {
+	Position *position.Position
 	Types    []node.Node
 	Variable node.Node
 	Stmts    []node.Node
@@ -15,10 +17,20 @@ type Catch struct {
 // NewCatch node constructor
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
-		Types,
-		Variable,
-		Stmts,
+		Types:    Types,
+		Variable: Variable,
+		Stmts:    Stmts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Catch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Catch) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Property node
 type Property struct {
+	Position      *position.Position
 	PhpDocComment string
 	Variable      node.Node
 	Expr          node.Node
@@ -15,10 +17,20 @@ type Property struct {
 // NewProperty node constructor
 func NewProperty(Variable node.Node, Expr node.Node, PhpDocComment string) *Property {
 	return &Property{
-		PhpDocComment,
-		Variable,
-		Expr,
+		PhpDocComment: PhpDocComment,
+		Variable:      Variable,
+		Expr:          Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Property) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Property) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

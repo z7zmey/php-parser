@@ -33,7 +33,6 @@ func ExampleJsonDumper() {
 	dumper := &visitor.JsonDumper{
 		Writer:     os.Stdout,
 		Comments:   php7parser.GetComments(),
-		Positions:  php7parser.GetPositions(),
 		NsResolver: nsResolver,
 	}
 	nodes.Walk(dumper)

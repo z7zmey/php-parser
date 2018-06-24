@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // List node
 type List struct {
-	Items []node.Node
+	Position *position.Position
+	Items    []node.Node
 }
 
 // NewList node constructor
 func NewList(Items []node.Node) *List {
 	return &List{
-		Items,
+		Items: Items,
 	}
+}
+
+// SetPosition sets node position
+func (n *List) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *List) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,19 +2,31 @@ package name
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Relative node
 type Relative struct {
-	Parts []node.Node
+	Position *position.Position
+	Parts    []node.Node
 }
 
 // NewRelative node constructor
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
-		Parts,
+		Parts: Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Relative) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Relative) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,10 +17,44 @@ func TestInclude(t *testing.T) {
 	src := `<? include $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
 				Expr: &expr.Include{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -40,10 +75,44 @@ func TestIncludeOnce(t *testing.T) {
 	src := `<? include_once $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				Expr: &expr.IncludeOnce{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    18,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    18,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -64,10 +133,44 @@ func TestRequire(t *testing.T) {
 	src := `<? require $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
 				Expr: &expr.Require{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -88,10 +191,44 @@ func TestRequireOnce(t *testing.T) {
 	src := `<? require_once $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				Expr: &expr.RequireOnce{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    18,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    18,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
@@ -20,14 +21,64 @@ LBL;
 `
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  7,
+			EndPos:    24,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  7,
+					EndPos:    24,
+				},
 				Expr: &scalar.Heredoc{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  7,
+						EndPos:    23,
+					},
 					Label: "LBL",
 					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "test "},
-						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
-						&scalar.EncapsedStringPart{Value: "\n"},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  11,
+								EndPos:    15,
+							},
+							Value: "test ",
+						},
+						&expr.Variable{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  16,
+								EndPos:    19,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 2,
+									EndLine:   2,
+									StartPos:  16,
+									EndPos:    19,
+								},
+								Value: "var",
+							},
+						},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  20,
+								EndPos:    20,
+							},
+							Value: "\n",
+						},
 					},
 				},
 			},
@@ -52,14 +103,64 @@ LBL;
 `
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  7,
+			EndPos:    26,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  7,
+					EndPos:    26,
+				},
 				Expr: &scalar.Heredoc{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  7,
+						EndPos:    25,
+					},
 					Label: "\"LBL\"",
 					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "test "},
-						&expr.Variable{VarName: &node.Identifier{Value: "var"}},
-						&scalar.EncapsedStringPart{Value: "\n"},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  13,
+								EndPos:    17,
+							},
+							Value: "test ",
+						},
+						&expr.Variable{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  18,
+								EndPos:    21,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 2,
+									EndLine:   2,
+									StartPos:  18,
+									EndPos:    21,
+								},
+								Value: "var",
+							},
+						},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  22,
+								EndPos:    22,
+							},
+							Value: "\n",
+						},
 					},
 				},
 			},
@@ -84,12 +185,38 @@ LBL;
 `
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  7,
+			EndPos:    26,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  7,
+					EndPos:    26,
+				},
 				Expr: &scalar.Heredoc{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  7,
+						EndPos:    25,
+					},
 					Label: "'LBL'",
 					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "test $var\n"},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  13,
+								EndPos:    22,
+							},
+							Value: "test $var\n",
+						},
 					},
 				},
 			},
@@ -113,9 +240,27 @@ CAD;
 `
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   2,
+			StartPos:  7,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   2,
+					StartPos:  7,
+					EndPos:    14,
+				},
 				Expr: &scalar.Heredoc{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   2,
+						StartPos:  7,
+						EndPos:    13,
+					},
 					Label: "CAD",
 				},
 			},
@@ -140,12 +285,38 @@ CAD;
 `
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   3,
+			StartPos:  7,
+			EndPos:    21,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   3,
+					StartPos:  7,
+					EndPos:    21,
+				},
 				Expr: &scalar.Heredoc{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   3,
+						StartPos:  7,
+						EndPos:    20,
+					},
 					Label: "CAD",
 					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "\thello\n"},
+						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 2,
+								EndLine:   2,
+								StartPos:  11,
+								EndPos:    17,
+							},
+							Value: "\thello\n",
+						},
 					},
 				},
 			},

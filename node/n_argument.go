@@ -1,9 +1,13 @@
 package node
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Argument node
 type Argument struct {
+	Position    *position.Position
 	Variadic    bool // if ... before variable
 	IsReference bool // if & before variable
 	Expr        Node // Exression
@@ -12,10 +16,20 @@ type Argument struct {
 // NewArgument node constructor
 func NewArgument(Expression Node, Variadic bool, IsReference bool) *Argument {
 	return &Argument{
-		Variadic,
-		IsReference,
-		Expression,
+		Variadic:    Variadic,
+		IsReference: IsReference,
+		Expr:        Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *Argument) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Argument) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

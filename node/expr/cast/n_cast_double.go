@@ -2,19 +2,31 @@ package cast
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Double node
 type Double struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewDouble node constructor
 func NewDouble(Expr node.Node) *Double {
 	return &Double{
-		Expr,
+		Expr: Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Double) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Double) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

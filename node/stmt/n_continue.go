@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Continue node
 type Continue struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewContinue node constructor
 func NewContinue(Expr node.Node) *Continue {
 	return &Continue{
-		Expr,
+		Expr: Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Continue) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Continue) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

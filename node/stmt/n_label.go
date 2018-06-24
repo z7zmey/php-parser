@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Label node
 type Label struct {
+	Position  *position.Position
 	LabelName node.Node
 }
 
 // NewLabel node constructor
 func NewLabel(LabelName node.Node) *Label {
 	return &Label{
-		LabelName,
+		LabelName: LabelName,
 	}
+}
+
+// SetPosition sets node position
+func (n *Label) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Label) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

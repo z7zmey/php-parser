@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ArrayDimFetch node
 type ArrayDimFetch struct {
+	Position *position.Position
 	Variable node.Node
 	Dim      node.Node
 }
@@ -14,9 +16,19 @@ type ArrayDimFetch struct {
 // NewArrayDimFetch node constructor
 func NewArrayDimFetch(Variable node.Node, Dim node.Node) *ArrayDimFetch {
 	return &ArrayDimFetch{
-		Variable,
-		Dim,
+		Variable: Variable,
+		Dim:      Dim,
 	}
+}
+
+// SetPosition sets node position
+func (n *ArrayDimFetch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ArrayDimFetch) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

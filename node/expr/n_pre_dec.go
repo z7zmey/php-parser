@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // PreDec node
 type PreDec struct {
+	Position *position.Position
 	Variable node.Node
 }
 
 // NewPreDec node constructor
 func NewPreDec(Variable node.Node) *PreDec {
 	return &PreDec{
-		Variable,
+		Variable: Variable,
 	}
+}
+
+// SetPosition sets node position
+func (n *PreDec) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *PreDec) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -445,7 +445,6 @@ type Lexer struct {
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     sync.Pool
-	PositionPool  sync.Pool
 }
 
 // Rune2Class returns the rune integer id
@@ -483,9 +482,6 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		tokenBytesBuf: &bytes.Buffer{},
 		TokenPool: sync.Pool{
 			New: func() interface{} { return &Token{} },
-		},
-		PositionPool: sync.Pool{
-			New: func() interface{} { return &position.Position{} },
 		},
 	}
 }
@@ -533,17 +529,14 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
-	pos := l.PositionPool.Get().(*position.Position)
-
-	pos.StartLine = l.File.Line(firstChar.Pos())
-	pos.EndLine = l.File.Line(lastChar.Pos())
-	pos.StartPos = int(firstChar.Pos())
-	pos.EndPos = int(lastChar.Pos())
-
 	token := l.TokenPool.Get().(*Token)
-	token.Position = pos
 	token.Comments = l.Comments
 	token.Value = l.tokenString(chars)
+
+	token.StartLine = l.File.Line(firstChar.Pos())
+	token.EndLine = l.File.Line(lastChar.Pos())
+	token.StartPos = int(firstChar.Pos())
+	token.EndPos = int(lastChar.Pos())
 
 	return token
 }

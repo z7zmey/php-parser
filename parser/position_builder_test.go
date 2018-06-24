@@ -1,7 +1,6 @@
 package parser_test
 
 import (
-	"sync"
 	"testing"
 
 	"github.com/z7zmey/php-parser/node"
@@ -12,16 +11,14 @@ import (
 )
 
 func TestNewTokenPosition(t *testing.T) {
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
-	tpos := position.NewPosition(1, 1, 0, 3)
 	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
 
 	pos := builder.NewTokenPosition(tkn)
@@ -32,21 +29,21 @@ func TestNewTokenPosition(t *testing.T) {
 }
 
 func TestNewTokensPosition(t *testing.T) {
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
-	tpos1 := position.NewPosition(1, 1, 0, 3)
 	token1 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos1,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
-	tpos2 := position.NewPosition(2, 2, 4, 6)
 	token2 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos2,
+		Value:     `foo`,
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  4,
+		EndPos:    6,
 	}
 
 	pos := builder.NewTokensPosition(token1, token2)
@@ -58,21 +55,14 @@ func TestNewTokensPosition(t *testing.T) {
 
 func TestNewNodePosition(t *testing.T) {
 	n := node.NewIdentifier("test node")
-
-	p := &parser.Positions{}
-	p.AddPosition(n, &position.Position{
+	n.SetPosition(&position.Position{
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
 		EndPos:    3,
 	})
 
-	builder := parser.PositionBuilder{
-		Positions: p,
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodePosition(n)
 
@@ -82,27 +72,22 @@ func TestNewNodePosition(t *testing.T) {
 }
 
 func TestNewTokenNodePosition(t *testing.T) {
-	tpos := position.NewPosition(1, 1, 0, 3)
 	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
 	n := node.NewIdentifier("test node")
-
-	p := &parser.Positions{}
-	p.AddPosition(n, &position.Position{
+	n.SetPosition(&position.Position{
 		StartLine: 2,
 		EndLine:   2,
 		StartPos:  4,
 		EndPos:    12,
 	})
 
-	builder := parser.PositionBuilder{
-		Positions: p,
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewTokenNodePosition(tkn, n)
 
@@ -113,26 +98,22 @@ func TestNewTokenNodePosition(t *testing.T) {
 
 func TestNewNodeTokenPosition(t *testing.T) {
 	n := node.NewIdentifier("test node")
-	tpos := position.NewPosition(2, 2, 10, 12)
-	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
-	}
-
-	p := &parser.Positions{}
-	p.AddPosition(n, &position.Position{
+	n.SetPosition(&position.Position{
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
 		EndPos:    9,
 	})
 
-	builder := parser.PositionBuilder{
-		Positions: p,
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
+	tkn := &scanner.Token{
+		Value:     `foo`,
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  10,
+		EndPos:    12,
 	}
+
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeTokenPosition(n, tkn)
 
@@ -143,27 +124,22 @@ func TestNewNodeTokenPosition(t *testing.T) {
 
 func TestNewNodeListPosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
-	n2 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    9,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    9,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  10,
-				EndPos:    19,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  10,
+		EndPos:    19,
+	})
+
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeListPosition([]node.Node{n1, n2})
 
@@ -174,27 +150,22 @@ func TestNewNodeListPosition(t *testing.T) {
 
 func TestNewNodesPosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
-	n2 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    9,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    9,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  10,
-				EndPos:    19,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  10,
+		EndPos:    19,
+	})
+
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodesPosition(n1, n2)
 
@@ -205,32 +176,30 @@ func TestNewNodesPosition(t *testing.T) {
 
 func TestNewNodeListTokenPosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    9,
+	})
+
 	n2 := node.NewIdentifier("test node")
-	tpos := position.NewPosition(3, 3, 20, 22)
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  10,
+		EndPos:    19,
+	})
+
 	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 3,
+		EndLine:   3,
+		StartPos:  20,
+		EndPos:    22,
 	}
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    9,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  10,
-				EndPos:    19,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeListTokenPosition([]node.Node{n1, n2}, tkn)
 
@@ -240,33 +209,31 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 }
 
 func TestNewTokenNodeListPosition(t *testing.T) {
-	tpos := position.NewPosition(1, 1, 0, 2)
 	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    2,
 	}
-	n1 := node.NewIdentifier("test node")
-	n2 := node.NewIdentifier("test node")
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  3,
-				EndPos:    10,
-			},
-			n2: &position.Position{
-				StartLine: 3,
-				EndLine:   3,
-				StartPos:  11,
-				EndPos:    20,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  3,
+		EndPos:    10,
+	})
+
+	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 3,
+		EndLine:   3,
+		StartPos:  11,
+		EndPos:    20,
+	})
+
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewTokenNodeListPosition(tkn, []node.Node{n1, n2})
 
@@ -277,34 +244,30 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 
 func TestNewNodeNodeListPosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
-	n2 := node.NewIdentifier("test node")
-	n3 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    8,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    8,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  9,
-				EndPos:    17,
-			},
-			n3: &position.Position{
-				StartLine: 3,
-				EndLine:   3,
-				StartPos:  18,
-				EndPos:    26,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  9,
+		EndPos:    17,
+	})
+
+	n3 := node.NewIdentifier("test node")
+	n3.SetPosition(&position.Position{
+		StartLine: 3,
+		EndLine:   3,
+		StartPos:  18,
+		EndPos:    26,
+	})
+
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeNodeListPosition(n1, []node.Node{n2, n3})
 
@@ -315,34 +278,28 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 
 func TestNewNodeListNodePosition(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    8,
+	})
 	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  9,
+		EndPos:    17,
+	})
 	n3 := node.NewIdentifier("test node")
+	n3.SetPosition(&position.Position{
+		StartLine: 3,
+		EndLine:   3,
+		StartPos:  18,
+		EndPos:    26,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    8,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  9,
-				EndPos:    17,
-			},
-			n3: &position.Position{
-				StartLine: 3,
-				EndLine:   3,
-				StartPos:  18,
-				EndPos:    26,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeListNodePosition([]node.Node{n1, n2}, n3)
 
@@ -352,21 +309,21 @@ func TestNewNodeListNodePosition(t *testing.T) {
 }
 
 func TestNewOptionalListTokensPosition(t *testing.T) {
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
-	tpos1 := position.NewPosition(1, 1, 0, 3)
 	token1 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos1,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
-	tpos2 := position.NewPosition(2, 2, 4, 6)
 	token2 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos2,
+		Value:     `foo`,
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  4,
+		EndPos:    6,
 	}
 
 	pos := builder.NewOptionalListTokensPosition(nil, token1, token2)
@@ -378,44 +335,42 @@ func TestNewOptionalListTokensPosition(t *testing.T) {
 
 func TestNewOptionalListTokensPosition2(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    8,
+	})
 	n2 := node.NewIdentifier("test node")
+	n2.SetPosition(&position.Position{
+		StartLine: 2,
+		EndLine:   2,
+		StartPos:  9,
+		EndPos:    17,
+	})
 	n3 := node.NewIdentifier("test node")
+	n3.SetPosition(&position.Position{
+		StartLine: 3,
+		EndLine:   3,
+		StartPos:  18,
+		EndPos:    26,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    8,
-			},
-			n2: &position.Position{
-				StartLine: 2,
-				EndLine:   2,
-				StartPos:  9,
-				EndPos:    17,
-			},
-			n3: &position.Position{
-				StartLine: 3,
-				EndLine:   3,
-				StartPos:  18,
-				EndPos:    26,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
-	tpos1 := position.NewPosition(4, 4, 27, 29)
 	token1 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos1,
+		Value:     `foo`,
+		StartLine: 4,
+		EndLine:   4,
+		StartPos:  27,
+		EndPos:    29,
 	}
-	tpos2 := position.NewPosition(5, 5, 30, 32)
 	token2 := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos2,
+		Value:     `foo`,
+		StartLine: 5,
+		EndLine:   5,
+		StartPos:  30,
+		EndPos:    32,
 	}
 
 	pos := builder.NewOptionalListTokensPosition([]node.Node{n2, n3}, token1, token2)
@@ -426,11 +381,7 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 }
 
 func TestNilNodePos(t *testing.T) {
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodesPosition(nil, nil)
 
@@ -441,20 +392,14 @@ func TestNilNodePos(t *testing.T) {
 
 func TestNilNodeListPos(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    8,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    8,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeNodeListPosition(n1, nil)
 
@@ -464,17 +409,15 @@ func TestNilNodeListPos(t *testing.T) {
 }
 
 func TestNilNodeListTokenPos(t *testing.T) {
-	tpos := position.NewPosition(1, 1, 0, 3)
 	token := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
 
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeListTokenPosition(nil, token)
 
@@ -485,20 +428,14 @@ func TestNilNodeListTokenPos(t *testing.T) {
 
 func TestEmptyNodeListPos(t *testing.T) {
 	n1 := node.NewIdentifier("test node")
+	n1.SetPosition(&position.Position{
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    8,
+	})
 
-	builder := parser.PositionBuilder{
-		Positions: &parser.Positions{
-			n1: &position.Position{
-				StartLine: 1,
-				EndLine:   1,
-				StartPos:  0,
-				EndPos:    8,
-			},
-		},
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeNodeListPosition(n1, []node.Node{})
 
@@ -508,17 +445,15 @@ func TestEmptyNodeListPos(t *testing.T) {
 }
 
 func TestEmptyNodeListTokenPos(t *testing.T) {
-	tpos := position.NewPosition(1, 1, 0, 3)
 	token := &scanner.Token{
-		Value:    `foo`,
-		Position: tpos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
 
-	builder := parser.PositionBuilder{
-		PositionPool: &sync.Pool{
-			New: func() interface{} { return &position.Position{} },
-		},
-	}
+	builder := parser.PositionBuilder{}
 
 	pos := builder.NewNodeListTokenPosition([]node.Node{}, token)
 

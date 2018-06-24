@@ -21,13 +21,11 @@ var wg sync.WaitGroup
 var usePhp5 *bool
 var dumpType string
 var profiler string
-var showPositions *bool
 var showComments *bool
 var showResolvedNs *bool
 
 func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
-	showPositions = flag.Bool("p", false, "show positions")
 	showComments = flag.Bool("c", false, "show comments")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
@@ -145,18 +143,12 @@ func printer(result <-chan parser.Parser) {
 			comments = parserWorker.GetComments()
 		}
 
-		var positions parser.Positions
-		if *showPositions {
-			positions = parserWorker.GetPositions()
-		}
-
 		switch dumpType {
 		case "custom":
 			dumper := &visitor.Dumper{
 				Writer:     os.Stdout,
 				Indent:     "| ",
 				Comments:   comments,
-				Positions:  positions,
 				NsResolver: nsResolver,
 			}
 			parserWorker.GetRootNode().Walk(dumper)
@@ -164,7 +156,6 @@ func printer(result <-chan parser.Parser) {
 			dumper := &visitor.JsonDumper{
 				Writer:     os.Stdout,
 				Comments:   comments,
-				Positions:  positions,
 				NsResolver: nsResolver,
 			}
 			parserWorker.GetRootNode().Walk(dumper)
@@ -172,7 +163,6 @@ func printer(result <-chan parser.Parser) {
 			dumper := &visitor.PrettyJsonDumper{
 				Writer:     os.Stdout,
 				Comments:   comments,
-				Positions:  positions,
 				NsResolver: nsResolver,
 			}
 			parserWorker.GetRootNode().Walk(dumper)

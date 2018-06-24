@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // UnaryMinus node
 type UnaryMinus struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewUnaryMinus node constructor
 func NewUnaryMinus(Expression node.Node) *UnaryMinus {
 	return &UnaryMinus{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *UnaryMinus) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *UnaryMinus) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

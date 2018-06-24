@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltForeach node
 type AltForeach struct {
+	Position *position.Position
 	Expr     node.Node
 	Key      node.Node
 	Variable node.Node
@@ -16,11 +18,21 @@ type AltForeach struct {
 // NewAltForeach node constructor
 func NewAltForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node) *AltForeach {
 	return &AltForeach{
-		Expr,
-		Key,
-		Variable,
-		Stmt,
+		Expr:     Expr,
+		Key:      Key,
+		Variable: Variable,
+		Stmt:     Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *AltForeach) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *AltForeach) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // MethodCall node
 type MethodCall struct {
+	Position     *position.Position
 	Variable     node.Node
 	Method       node.Node
 	ArgumentList *node.ArgumentList
@@ -15,10 +17,20 @@ type MethodCall struct {
 // NewMethodCall node constructor
 func NewMethodCall(Variable node.Node, Method node.Node, ArgumentList *node.ArgumentList) *MethodCall {
 	return &MethodCall{
-		Variable,
-		Method,
-		ArgumentList,
+		Variable:     Variable,
+		Method:       Method,
+		ArgumentList: ArgumentList,
 	}
+}
+
+// SetPosition sets node position
+func (n *MethodCall) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *MethodCall) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,21 +2,33 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Declare node
 type Declare struct {
-	Consts []node.Node
-	Stmt   node.Node
+	Position *position.Position
+	Consts   []node.Node
+	Stmt     node.Node
 }
 
 // NewDeclare node constructor
 func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
 	return &Declare{
-		Consts,
-		Stmt,
+		Consts: Consts,
+		Stmt:   Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *Declare) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Declare) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

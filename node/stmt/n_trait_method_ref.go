@@ -2,21 +2,33 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitMethodRef node
 type TraitMethodRef struct {
-	Trait  node.Node
-	Method node.Node
+	Position *position.Position
+	Trait    node.Node
+	Method   node.Node
 }
 
 // NewTraitMethodRef node constructor
 func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	return &TraitMethodRef{
-		Trait,
-		Method,
+		Trait:  Trait,
+		Method: Method,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitMethodRef) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitMethodRef) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

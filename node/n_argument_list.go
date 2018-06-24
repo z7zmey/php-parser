@@ -1,19 +1,31 @@
 package node
 
 import (
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ArgumentList node
 type ArgumentList struct {
+	Position  *position.Position
 	Arguments []Node
 }
 
 // NewArgumentList node constructor
 func NewArgumentList(Arguments []Node) *ArgumentList {
 	return &ArgumentList{
-		Arguments,
+		Arguments: Arguments,
 	}
+}
+
+// SetPosition sets node position
+func (n *ArgumentList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ArgumentList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

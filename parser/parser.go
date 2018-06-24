@@ -12,5 +12,4 @@ type Parser interface {
 	GetRootNode() node.Node
 	GetErrors() []*errors.Error
 	GetComments() Comments
-	GetPositions() Positions
 }

@@ -8,14 +8,28 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestHaltCompiler(t *testing.T) {
 	src := `<? __halt_compiler();`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    21,
+		},
 		Stmts: []node.Node{
-			&stmt.HaltCompiler{},
+			&stmt.HaltCompiler{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    21,
+				},
+			},
 		},
 	}
 

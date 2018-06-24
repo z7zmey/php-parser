@@ -2,23 +2,35 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // GroupUse node
 type GroupUse struct {
-	UseType node.Node
-	Prefix  node.Node
-	UseList []node.Node
+	Position *position.Position
+	UseType  node.Node
+	Prefix   node.Node
+	UseList  []node.Node
 }
 
 // NewGroupUse node constructor
 func NewGroupUse(UseType node.Node, Prefix node.Node, UseList []node.Node) *GroupUse {
 	return &GroupUse{
-		UseType,
-		Prefix,
-		UseList,
+		UseType: UseType,
+		Prefix:  Prefix,
+		UseList: UseList,
 	}
+}
+
+// SetPosition sets node position
+func (n *GroupUse) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *GroupUse) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

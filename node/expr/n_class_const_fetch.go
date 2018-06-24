@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassConstFetch node
 type ClassConstFetch struct {
+	Position     *position.Position
 	Class        node.Node
 	ConstantName node.Node
 }
@@ -14,9 +16,19 @@ type ClassConstFetch struct {
 // NewClassConstFetch node constructor
 func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
-		Class,
-		ConstantName,
+		Class:        Class,
+		ConstantName: ConstantName,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassConstFetch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassConstFetch) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

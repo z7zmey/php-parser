@@ -9,6 +9,7 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestMagicConstant(t *testing.T) {
@@ -16,9 +17,29 @@ func TestMagicConstant(t *testing.T) {
 	src := `<? __DIR__;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    11,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &scalar.MagicConstant{Value: "__DIR__"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    11,
+				},
+				Expr: &scalar.MagicConstant{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    10,
+					},
+					Value: "__DIR__",
+				},
 			},
 		},
 	}

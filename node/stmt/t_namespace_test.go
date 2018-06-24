@@ -2,8 +2,10 @@ package stmt_test
 
 import (
 	"bytes"
-	"github.com/z7zmey/php-parser/node/name"
 	"testing"
+
+	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -15,11 +17,37 @@ func TestNamespace(t *testing.T) {
 	src := `<? namespace Foo;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Namespace{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				NamespaceName: &name.Name{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
 					Parts: []node.Node{
-						&name.NamePart{Value: "Foo"},
+						&name.NamePart{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  14,
+								EndPos:    16,
+							},
+							Value: "Foo",
+						},
 					},
 				},
 			},
@@ -41,11 +69,37 @@ func TestNamespaceStmts(t *testing.T) {
 	src := `<? namespace Foo {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Namespace{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				NamespaceName: &name.Name{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
 					Parts: []node.Node{
-						&name.NamePart{Value: "Foo"},
+						&name.NamePart{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  14,
+								EndPos:    16,
+							},
+							Value: "Foo",
+						},
 					},
 				},
 				Stmts: []node.Node{},
@@ -68,8 +122,20 @@ func TestAnonymousNamespace(t *testing.T) {
 	src := `<? namespace {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Namespace{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    15,
+				},
 				Stmts: []node.Node{},
 			},
 		},

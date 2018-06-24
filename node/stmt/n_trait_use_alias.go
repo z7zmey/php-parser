@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitUseAlias node
 type TraitUseAlias struct {
+	Position *position.Position
 	Ref      node.Node
 	Modifier node.Node
 	Alias    node.Node
@@ -15,10 +17,20 @@ type TraitUseAlias struct {
 // NewTraitUseAlias node constructor
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) *TraitUseAlias {
 	return &TraitUseAlias{
-		Ref,
-		Modifier,
-		Alias,
+		Ref:      Ref,
+		Modifier: Modifier,
+		Alias:    Alias,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitUseAlias) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitUseAlias) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltSwitch node
 type AltSwitch struct {
+	Position *position.Position
 	Cond     node.Node
 	CaseList *CaseList
 }
@@ -14,9 +16,19 @@ type AltSwitch struct {
 // NewAltSwitch node constructor
 func NewAltSwitch(Cond node.Node, CaseList *CaseList) *AltSwitch {
 	return &AltSwitch{
-		Cond,
-		CaseList,
+		Cond:     Cond,
+		CaseList: CaseList,
 	}
+}
+
+// SetPosition sets node position
+func (n *AltSwitch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *AltSwitch) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

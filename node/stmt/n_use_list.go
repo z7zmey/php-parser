@@ -2,21 +2,33 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // UseList node
 type UseList struct {
-	UseType node.Node
-	Uses    []node.Node
+	Position *position.Position
+	UseType  node.Node
+	Uses     []node.Node
 }
 
 // NewUseList node constructor
 func NewUseList(UseType node.Node, Uses []node.Node) *UseList {
 	return &UseList{
-		UseType,
-		Uses,
+		UseType: UseType,
+		Uses:    Uses,
 	}
+}
+
+// SetPosition sets node position
+func (n *UseList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *UseList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,12 +17,45 @@ func TestBreakEmpty(t *testing.T) {
 	src := `<? while (1) { break; }`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    23,
+		},
 		Stmts: []node.Node{
 			&stmt.While{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    23,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    23,
+					},
 					Stmts: []node.Node{
-						&stmt.Break{nil},
+						&stmt.Break{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    21,
+							},
+						},
 					},
 				},
 			},
@@ -43,13 +77,53 @@ func TestBreakLight(t *testing.T) {
 	src := `<? while (1) { break 2; }`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    25,
+		},
 		Stmts: []node.Node{
 			&stmt.While{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    25,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    25,
+					},
 					Stmts: []node.Node{
 						&stmt.Break{
-							Expr: &scalar.Lnumber{Value: "2"},
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    23,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  22,
+									EndPos:    22,
+								},
+								Value: "2",
+							},
 						},
 					},
 				},
@@ -72,13 +146,53 @@ func TestBreak(t *testing.T) {
 	src := `<? while (1) : break(3); endwhile;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    34,
+		},
 		Stmts: []node.Node{
 			&stmt.AltWhile{
-				Cond: &scalar.Lnumber{Value: "1"},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    34,
+				},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  11,
+						EndPos:    11,
+					},
+					Value: "1",
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  16,
+						EndPos:    24,
+					},
 					Stmts: []node.Node{
 						&stmt.Break{
-							Expr: &scalar.Lnumber{Value: "3"},
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    24,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  22,
+									EndPos:    22,
+								},
+								Value: "3",
+							},
 						},
 					},
 				},

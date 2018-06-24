@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node/scalar"
@@ -32,11 +33,53 @@ func TestArrayDimFetch(t *testing.T) {
 	src := `<? $a[1];`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    9,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    9,
+				},
 				Expr: &expr.ArrayDimFetch{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Dim:      &scalar.Lnumber{Value: "1"},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    8,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  7,
+							EndPos:    7,
+						},
+						Value: "1",
+					},
 				},
 			},
 		},
@@ -57,14 +100,70 @@ func TestArrayDimFetchNested(t *testing.T) {
 	src := `<? $a[1][2];`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &expr.ArrayDimFetch{
-					Variable: &expr.ArrayDimFetch{
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-						Dim:      &scalar.Lnumber{Value: "1"},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
 					},
-					Dim: &scalar.Lnumber{Value: "2"},
+					Variable: &expr.ArrayDimFetch{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    8,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  4,
+									EndPos:    5,
+								},
+								Value: "a",
+							},
+						},
+						Dim: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  7,
+								EndPos:    7,
+							},
+							Value: "1",
+						},
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    10,
+						},
+						Value: "2",
+					},
 				},
 			},
 		},

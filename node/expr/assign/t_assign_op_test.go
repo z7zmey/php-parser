@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr/assign"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/kylelemons/godebug/pretty"
 
@@ -33,11 +34,61 @@ func TestReference(t *testing.T) {
 	src := `<? $a =& $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Reference{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -58,14 +109,68 @@ func TestReferenceNew(t *testing.T) {
 	src := `<? $a =& new Foo;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &assign.Reference{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
 					Expression: &expr.New{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    16,
+						},
 						Class: &name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  14,
+								EndPos:    16,
+							},
 							Parts: []node.Node{
-								&name.NamePart{Value: "Foo"},
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  14,
+										EndPos:    16,
+									},
+									Value: "Foo",
+								},
 							},
 						},
 					},
@@ -89,22 +194,104 @@ func TestReferenceArgs(t *testing.T) {
 	src := `<? $a =& new Foo($b);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    21,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    21,
+				},
 				Expr: &assign.Reference{
-					Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    20,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
 					Expression: &expr.New{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    20,
+						},
 						Class: &name.Name{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  14,
+								EndPos:    16,
+							},
 							Parts: []node.Node{
-								&name.NamePart{Value: "Foo"},
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  14,
+										EndPos:    16,
+									},
+									Value: "Foo",
+								},
 							},
 						},
 						ArgumentList: &node.ArgumentList{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    20,
+							},
 							Arguments: []node.Node{
 								&node.Argument{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  18,
+										EndPos:    19,
+									},
 									Variadic:    false,
 									IsReference: false,
-									Expr:        &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+									Expr: &expr.Variable{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  18,
+											EndPos:    19,
+										},
+										VarName: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 1,
+												EndLine:   1,
+												StartPos:  18,
+												EndPos:    19,
+											},
+											Value: "b",
+										},
+									},
 								},
 							},
 						},
@@ -129,11 +316,61 @@ func TestAssign(t *testing.T) {
 	src := `<? $a = $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    11,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    11,
+				},
 				Expr: &assign.Assign{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    10,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  9,
+							EndPos:    10,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  9,
+								EndPos:    10,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -154,11 +391,61 @@ func TestBitwiseAnd(t *testing.T) {
 	src := `<? $a &= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.BitwiseAnd{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -179,11 +466,61 @@ func TestBitwiseOr(t *testing.T) {
 	src := `<? $a |= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.BitwiseOr{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -204,11 +541,61 @@ func TestBitwiseXor(t *testing.T) {
 	src := `<? $a ^= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.BitwiseXor{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -229,11 +616,61 @@ func TestConcat(t *testing.T) {
 	src := `<? $a .= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Concat{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -254,11 +691,61 @@ func TestDiv(t *testing.T) {
 	src := `<? $a /= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Div{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -279,11 +766,61 @@ func TestMinus(t *testing.T) {
 	src := `<? $a -= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Minus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -304,11 +841,61 @@ func TestMod(t *testing.T) {
 	src := `<? $a %= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Mod{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -329,11 +916,61 @@ func TestMul(t *testing.T) {
 	src := `<? $a *= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Mul{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -354,11 +991,61 @@ func TestPlus(t *testing.T) {
 	src := `<? $a += $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &assign.Plus{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -379,11 +1066,61 @@ func TestPow(t *testing.T) {
 	src := `<? $a **= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &assign.Pow{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -404,11 +1141,61 @@ func TestShiftLeft(t *testing.T) {
 	src := `<? $a <<= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &assign.ShiftLeft{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -429,11 +1216,61 @@ func TestShiftRight(t *testing.T) {
 	src := `<? $a >>= $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &assign.ShiftRight{
-					Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},

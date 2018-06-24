@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // YieldFrom node
 type YieldFrom struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewYieldFrom node constructor
 func NewYieldFrom(Expression node.Node) *YieldFrom {
 	return &YieldFrom{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *YieldFrom) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *YieldFrom) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

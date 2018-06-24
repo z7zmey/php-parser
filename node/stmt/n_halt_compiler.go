@@ -1,14 +1,28 @@
 package stmt
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // HaltCompiler node
 type HaltCompiler struct {
+	Position *position.Position
 }
 
 // NewHaltCompiler node constructor
 func NewHaltCompiler() *HaltCompiler {
 	return &HaltCompiler{}
+}
+
+// SetPosition sets node position
+func (n *HaltCompiler) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *HaltCompiler) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

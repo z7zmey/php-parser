@@ -7,6 +7,7 @@ import (
 
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
@@ -32,13 +33,54 @@ func TestName(t *testing.T) {
 	src := `<? foo();`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    9,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    9,
+				},
 				Expr: &expr.FunctionCall{
-					Function: &name.Name{
-						Parts: []node.Node{&name.NamePart{Value: "foo"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    8,
 					},
-					ArgumentList: &node.ArgumentList{},
+					Function: &name.Name{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    6,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  4,
+									EndPos:    6,
+								},
+								Value: "foo",
+							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  7,
+							EndPos:    8,
+						},
+					},
 				},
 			},
 		},
@@ -59,13 +101,54 @@ func TestFullyQualified(t *testing.T) {
 	src := `<? \foo();`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    10,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    10,
+				},
 				Expr: &expr.FunctionCall{
-					Function: &name.FullyQualified{
-						Parts: []node.Node{&name.NamePart{Value: "foo"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    9,
 					},
-					ArgumentList: &node.ArgumentList{},
+					Function: &name.FullyQualified{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    7,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  5,
+									EndPos:    7,
+								},
+								Value: "foo",
+							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  8,
+							EndPos:    9,
+						},
+					},
 				},
 			},
 		},
@@ -86,13 +169,54 @@ func TestRelative(t *testing.T) {
 	src := `<? namespace\foo();`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
 				Expr: &expr.FunctionCall{
-					Function: &name.Relative{
-						Parts: []node.Node{&name.NamePart{Value: "foo"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    18,
 					},
-					ArgumentList: &node.ArgumentList{},
+					Function: &name.Relative{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    16,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  14,
+									EndPos:    16,
+								},
+								Value: "foo",
+							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    18,
+						},
+					},
 				},
 			},
 		},

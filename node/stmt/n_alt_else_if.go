@@ -2,21 +2,33 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltElseIf node
 type AltElseIf struct {
-	Cond node.Node
-	Stmt node.Node
+	Position *position.Position
+	Cond     node.Node
+	Stmt     node.Node
 }
 
 // NewAltElseIf node constructor
 func NewAltElseIf(Cond node.Node, Stmt node.Node) *AltElseIf {
 	return &AltElseIf{
-		Cond,
-		Stmt,
+		Cond: Cond,
+		Stmt: Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *AltElseIf) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *AltElseIf) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

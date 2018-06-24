@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // NotEqual node
 type NotEqual struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewNotEqual node constructor
 func NewNotEqual(Variable node.Node, Expression node.Node) *NotEqual {
 	return &NotEqual{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *NotEqual) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *NotEqual) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

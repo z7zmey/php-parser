@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // StaticCall node
 type StaticCall struct {
+	Position     *position.Position
 	Class        node.Node
 	Call         node.Node
 	ArgumentList *node.ArgumentList
@@ -15,10 +17,20 @@ type StaticCall struct {
 // NewStaticCall node constructor
 func NewStaticCall(Class node.Node, Call node.Node, ArgumentList *node.ArgumentList) *StaticCall {
 	return &StaticCall{
-		Class,
-		Call,
-		ArgumentList,
+		Class:        Class,
+		Call:         Call,
+		ArgumentList: ArgumentList,
 	}
+}
+
+// SetPosition sets node position
+func (n *StaticCall) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *StaticCall) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -2,11 +2,13 @@ package assign
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // BitwiseOr node
 type BitwiseOr struct {
+	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
 }
@@ -14,9 +16,19 @@ type BitwiseOr struct {
 // NewBitwiseOr node constructor
 func NewBitwiseOr(Variable node.Node, Expression node.Node) *BitwiseOr {
 	return &BitwiseOr{
-		Variable,
-		Expression,
+		Variable:   Variable,
+		Expression: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *BitwiseOr) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *BitwiseOr) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

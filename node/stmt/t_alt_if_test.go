@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
@@ -34,10 +35,46 @@ func TestAltIf(t *testing.T) {
 	`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 2,
+			EndLine:   3,
+			StartPos:  6,
+			EndPos:    23,
+		},
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+				Position: &position.Position{
+					StartLine: 2,
+					EndLine:   3,
+					StartPos:  6,
+					EndPos:    23,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 2,
+						EndLine:   2,
+						StartPos:  10,
+						EndPos:    11,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 2,
+							EndLine:   2,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
+					},
+					Stmts: []node.Node{},
+				},
 			},
 		},
 	}
@@ -61,14 +98,80 @@ func TestAltElseIf(t *testing.T) {
 	`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 2,
+			EndLine:   4,
+			StartPos:  6,
+			EndPos:    38,
+		},
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+				Position: &position.Position{
+					StartLine: 2,
+					EndLine:   4,
+					StartPos:  6,
+					EndPos:    38,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 2,
+						EndLine:   2,
+						StartPos:  10,
+						EndPos:    11,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 2,
+							EndLine:   2,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
+					},
+					Stmts: []node.Node{},
+				},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+						Position: &position.Position{
+							StartLine: 3,
+							EndLine:   -1,
+							StartPos:  18,
+							EndPos:    -1,
+						},
+						Cond: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   3,
+								StartPos:  26,
+								EndPos:    27,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 3,
+									EndLine:   3,
+									StartPos:  26,
+									EndPos:    27,
+								},
+								Value: "b",
+							},
+						},
+						Stmt: &stmt.StmtList{
+							Position: &position.Position{
+								StartLine: -1,
+								EndLine:   -1,
+								StartPos:  -1,
+								EndPos:    -1,
+							},
+							Stmts: []node.Node{},
+						},
 					},
 				},
 			},
@@ -94,12 +197,62 @@ func TestAltElse(t *testing.T) {
 	`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 2,
+			EndLine:   4,
+			StartPos:  6,
+			EndPos:    31,
+		},
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+				Position: &position.Position{
+					StartLine: 2,
+					EndLine:   4,
+					StartPos:  6,
+					EndPos:    31,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 2,
+						EndLine:   2,
+						StartPos:  10,
+						EndPos:    11,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 2,
+							EndLine:   2,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
+					},
+					Stmts: []node.Node{},
+				},
 				Else: &stmt.AltElse{
-					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+					Position: &position.Position{
+						StartLine: 3,
+						EndLine:   -1,
+						StartPos:  18,
+						EndPos:    -1,
+					},
+					Stmt: &stmt.StmtList{
+						Position: &position.Position{
+							StartLine: -1,
+							EndLine:   -1,
+							StartPos:  -1,
+							EndPos:    -1,
+						},
+						Stmts: []node.Node{},
+					},
 				},
 			},
 		},
@@ -126,22 +279,132 @@ func TestAltElseElseIf(t *testing.T) {
 	`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 2,
+			EndLine:   6,
+			StartPos:  6,
+			EndPos:    61,
+		},
 		Stmts: []node.Node{
 			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+				Position: &position.Position{
+					StartLine: 2,
+					EndLine:   6,
+					StartPos:  6,
+					EndPos:    61,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 2,
+						EndLine:   2,
+						StartPos:  10,
+						EndPos:    11,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 2,
+							EndLine:   2,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
+					},
+					Stmts: []node.Node{},
+				},
 				ElseIf: []node.Node{
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+						Position: &position.Position{
+							StartLine: 3,
+							EndLine:   -1,
+							StartPos:  18,
+							EndPos:    -1,
+						},
+						Cond: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 3,
+								EndLine:   3,
+								StartPos:  26,
+								EndPos:    27,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 3,
+									EndLine:   3,
+									StartPos:  26,
+									EndPos:    27,
+								},
+								Value: "b",
+							},
+						},
+						Stmt: &stmt.StmtList{
+							Position: &position.Position{
+								StartLine: -1,
+								EndLine:   -1,
+								StartPos:  -1,
+								EndPos:    -1,
+							},
+							Stmts: []node.Node{},
+						},
 					},
 					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-						Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+						Position: &position.Position{
+							StartLine: 4,
+							EndLine:   -1,
+							StartPos:  33,
+							EndPos:    -1,
+						},
+						Cond: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 4,
+								EndLine:   4,
+								StartPos:  41,
+								EndPos:    42,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 4,
+									EndLine:   4,
+									StartPos:  41,
+									EndPos:    42,
+								},
+								Value: "c",
+							},
+						},
+						Stmt: &stmt.StmtList{
+							Position: &position.Position{
+								StartLine: -1,
+								EndLine:   -1,
+								StartPos:  -1,
+								EndPos:    -1,
+							},
+							Stmts: []node.Node{},
+						},
 					},
 				},
 				Else: &stmt.AltElse{
-					Stmt: &stmt.StmtList{Stmts: []node.Node{}},
+					Position: &position.Position{
+						StartLine: 5,
+						EndLine:   -1,
+						StartPos:  48,
+						EndPos:    -1,
+					},
+					Stmt: &stmt.StmtList{
+						Position: &position.Position{
+							StartLine: -1,
+							EndLine:   -1,
+							StartPos:  -1,
+							EndPos:    -1,
+						},
+						Stmts: []node.Node{},
+					},
 				},
 			},
 		},

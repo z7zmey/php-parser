@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ConstList node
 type ConstList struct {
-	Consts []node.Node
+	Position *position.Position
+	Consts   []node.Node
 }
 
 // NewConstList node constructor
 func NewConstList(Consts []node.Node) *ConstList {
 	return &ConstList{
-		Consts,
+		Consts: Consts,
 	}
+}
+
+// SetPosition sets node position
+func (n *ConstList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ConstList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

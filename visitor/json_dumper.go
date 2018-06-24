@@ -15,7 +15,6 @@ import (
 type JsonDumper struct {
 	Writer     io.Writer
 	Comments   parser.Comments
-	Positions  parser.Positions
 	NsResolver *NamespaceResolver
 }
 
@@ -27,15 +26,14 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 
 	fmt.Fprintf(d.Writer, "{%q:%q", "type", nodeType)
 
-	if d.Positions != nil {
-		if p := d.Positions[n]; p != nil {
-			fmt.Fprintf(d.Writer, ",%q:{%q:%d,%q:%d,%q:%d,%q:%d}",
-				"position",
-				"startPos", p.StartPos,
-				"endPos", p.EndPos,
-				"startLine", p.StartLine,
-				"endLine", p.EndLine)
-		}
+	if p := n.GetPosition(); p != nil {
+		p := n.GetPosition()
+		fmt.Fprintf(d.Writer, ",%q:{%q:%d,%q:%d,%q:%d,%q:%d}",
+			"position",
+			"startPos", p.StartPos,
+			"endPos", p.EndPos,
+			"startLine", p.StartLine,
+			"endLine", p.EndLine)
 	}
 
 	if d.NsResolver != nil {

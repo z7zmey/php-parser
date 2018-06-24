@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClosureUse node
 type ClosureUse struct {
-	Uses []node.Node
+	Position *position.Position
+	Uses     []node.Node
 }
 
 // NewClosureUse node constructor
 func NewClosureUse(Uses []node.Node) *ClosureUse {
 	return &ClosureUse{
-		Uses,
+		Uses: Uses,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClosureUse) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClosureUse) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

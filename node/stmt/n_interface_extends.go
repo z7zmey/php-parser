@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // InterfaceExtends node
 type InterfaceExtends struct {
+	Position       *position.Position
 	InterfaceNames []node.Node
 }
 
 // NewInterfaceExtends node constructor
 func NewInterfaceExtends(InterfaceNames []node.Node) *InterfaceExtends {
 	return &InterfaceExtends{
-		InterfaceNames,
+		InterfaceNames: InterfaceNames,
 	}
+}
+
+// SetPosition sets node position
+func (n *InterfaceExtends) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *InterfaceExtends) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

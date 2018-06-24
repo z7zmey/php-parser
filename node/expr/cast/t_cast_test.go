@@ -13,6 +13,7 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
@@ -31,10 +32,44 @@ func TestArray(t *testing.T) {
 	src := `<? (array)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &cast.Array{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -55,10 +90,44 @@ func TestBool(t *testing.T) {
 	src := `<? (boolean)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    15,
+				},
 				Expr: &cast.Bool{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    14,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  13,
+							EndPos:    14,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    14,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -79,10 +148,44 @@ func TestBoolShort(t *testing.T) {
 	src := `<? (bool)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &cast.Bool{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -103,10 +206,44 @@ func TestDouble(t *testing.T) {
 	src := `<? (double)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
 				Expr: &cast.Double{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -127,10 +264,44 @@ func TestCastFloat(t *testing.T) {
 	src := `<? (float)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &cast.Double{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -151,10 +322,44 @@ func TestInt(t *testing.T) {
 	src := `<? (integer)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    15,
+				},
 				Expr: &cast.Int{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    14,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  13,
+							EndPos:    14,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  13,
+								EndPos:    14,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -175,10 +380,44 @@ func TestIntShort(t *testing.T) {
 	src := `<? (int)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    11,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    11,
+				},
 				Expr: &cast.Int{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    10,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  9,
+							EndPos:    10,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  9,
+								EndPos:    10,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -199,10 +438,44 @@ func TestObject(t *testing.T) {
 	src := `<? (object)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
 				Expr: &cast.Object{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -223,10 +496,102 @@ func TestString(t *testing.T) {
 	src := `<? (string)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
 				Expr: &cast.String{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual = php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}
+
+func TestBinaryString(t *testing.T) {
+	src := `<? (binary)$a;`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    14,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    14,
+				},
+				Expr: &cast.String{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    13,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    13,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    13,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -247,10 +612,44 @@ func TestUnset(t *testing.T) {
 	src := `<? (unset)$a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &cast.Unset{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  11,
+								EndPos:    12,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},

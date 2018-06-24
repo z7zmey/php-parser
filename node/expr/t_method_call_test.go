@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,12 +17,61 @@ func TestMethodCall(t *testing.T) {
 	src := `<? $a->foo();`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    13,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    13,
+				},
 				Expr: &expr.MethodCall{
-					Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Method:       &node.Identifier{Value: "foo"},
-					ArgumentList: &node.ArgumentList{},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    12,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    5,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  4,
+								EndPos:    5,
+							},
+							Value: "a",
+						},
+					},
+					Method: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  8,
+							EndPos:    10,
+						},
+						Value: "foo",
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  11,
+							EndPos:    12,
+						},
+					},
 				},
 			},
 		},

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
@@ -17,9 +18,28 @@ func TestYield(t *testing.T) {
 	src := `<? yield;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    9,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
-				Expr: &expr.Yield{},
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    9,
+				},
+				Expr: &expr.Yield{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    8,
+					},
+				},
 			},
 		},
 	}
@@ -39,10 +59,44 @@ func TestYieldVal(t *testing.T) {
 	src := `<? yield $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    12,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    12,
+				},
 				Expr: &expr.Yield{
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    11,
+					},
+					Value: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},
@@ -63,11 +117,61 @@ func TestYieldKeyVal(t *testing.T) {
 	src := `<? yield $a => $b;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    18,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    18,
+				},
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Value: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    17,
+					},
+					Key: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "a",
+						},
+					},
+					Value: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  16,
+							EndPos:    17,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  16,
+								EndPos:    17,
+							},
+							Value: "b",
+						},
+					},
 				},
 			},
 		},
@@ -88,10 +192,36 @@ func TestYieldExpr(t *testing.T) {
 	src := `<? yield 1;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    11,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    11,
+				},
 				Expr: &expr.Yield{
-					Value: &scalar.Lnumber{Value: "1"},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    10,
+					},
+					Value: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    10,
+						},
+						Value: "1",
+					},
 				},
 			},
 		},
@@ -112,11 +242,53 @@ func TestYieldKeyExpr(t *testing.T) {
 	src := `<? yield $a => 1;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &expr.Yield{
-					Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					Value: &scalar.Lnumber{Value: "1"},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
+					Key: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  10,
+							EndPos:    11,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  10,
+								EndPos:    11,
+							},
+							Value: "a",
+						},
+					},
+					Value: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  16,
+							EndPos:    16,
+						},
+						Value: "1",
+					},
 				},
 			},
 		},
@@ -137,10 +309,44 @@ func TestYieldFrom(t *testing.T) {
 	src := `<? yield from $a;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &expr.YieldFrom{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  15,
+							EndPos:    16,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  15,
+								EndPos:    16,
+							},
+							Value: "a",
+						},
+					},
 				},
 			},
 		},

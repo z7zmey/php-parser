@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Throw node
 type Throw struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewThrow node constructor
 func NewThrow(Expr node.Node) *Throw {
 	return &Throw{
-		Expr,
+		Expr: Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *Throw) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Throw) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

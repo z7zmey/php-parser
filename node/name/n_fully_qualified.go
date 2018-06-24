@@ -2,19 +2,31 @@ package name
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // FullyQualified node
 type FullyQualified struct {
-	Parts []node.Node
+	Position *position.Position
+	Parts    []node.Node
 }
 
 // NewFullyQualified node constructor
 func NewFullyQualified(Parts []node.Node) *FullyQualified {
 	return &FullyQualified{
-		Parts,
+		Parts: Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *FullyQualified) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *FullyQualified) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

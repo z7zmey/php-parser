@@ -1,17 +1,31 @@
 package scalar
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // String node
 type String struct {
-	Value string
+	Position *position.Position
+	Value    string
 }
 
 // NewString node constructor
 func NewString(Value string) *String {
 	return &String{
-		Value,
+		Value: Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *String) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *String) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

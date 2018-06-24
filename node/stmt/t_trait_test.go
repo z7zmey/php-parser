@@ -8,17 +8,38 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestTrait(t *testing.T) {
 	src := `<? trait Foo {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    15,
+		},
 		Stmts: []node.Node{
 			&stmt.Trait{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    15,
+				},
 				PhpDocComment: "",
-				TraitName:     &node.Identifier{Value: "Foo"},
-				Stmts:         []node.Node{},
+				TraitName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  10,
+						EndPos:    12,
+					},
+					Value: "Foo",
+				},
+				Stmts: []node.Node{},
 			},
 		},
 	}

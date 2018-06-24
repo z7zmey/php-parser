@@ -2,11 +2,13 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // StaticPropertyFetch node
 type StaticPropertyFetch struct {
+	Position *position.Position
 	Class    node.Node
 	Property node.Node
 }
@@ -14,9 +16,19 @@ type StaticPropertyFetch struct {
 // NewStaticPropertyFetch node constructor
 func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
-		Class,
-		Property,
+		Class:    Class,
+		Property: Property,
 	}
+}
+
+// SetPosition sets node position
+func (n *StaticPropertyFetch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *StaticPropertyFetch) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

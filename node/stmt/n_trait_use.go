@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitUse node
 type TraitUse struct {
+	Position            *position.Position
 	Traits              []node.Node
 	TraitAdaptationList *TraitAdaptationList
 }
@@ -14,9 +16,19 @@ type TraitUse struct {
 // NewTraitUse node constructor
 func NewTraitUse(Traits []node.Node, InnerAdaptationList *TraitAdaptationList) *TraitUse {
 	return &TraitUse{
-		Traits,
-		InnerAdaptationList,
+		Traits:              Traits,
+		TraitAdaptationList: InnerAdaptationList,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitUse) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitUse) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -1,17 +1,31 @@
 package node
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Nullable node
 type Nullable struct {
-	Expr Node
+	Position *position.Position
+	Expr     Node
 }
 
 // NewNullable node constructor
 func NewNullable(Expression Node) *Nullable {
 	return &Nullable{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *Nullable) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Nullable) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

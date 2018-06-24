@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Global node
 type Global struct {
-	Vars []node.Node
+	Position *position.Position
+	Vars     []node.Node
 }
 
 // NewGlobal node constructor
 func NewGlobal(Vars []node.Node) *Global {
 	return &Global{
-		Vars,
+		Vars: Vars,
 	}
+}
+
+// SetPosition sets node position
+func (n *Global) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Global) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

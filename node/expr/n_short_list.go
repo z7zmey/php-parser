@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ShortList node
 type ShortList struct {
-	Items []node.Node
+	Position *position.Position
+	Items    []node.Node
 }
 
 // NewShortList node constructor
 func NewShortList(Items []node.Node) *ShortList {
 	return &ShortList{
-		Items,
+		Items: Items,
 	}
+}
+
+// SetPosition sets node position
+func (n *ShortList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ShortList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

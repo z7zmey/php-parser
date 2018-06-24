@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,16 +17,57 @@ func TestDeclare(t *testing.T) {
 	src := `<? declare(ticks=1);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    20,
+		},
 		Stmts: []node.Node{
 			&stmt.Declare{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    20,
+				},
 				Consts: []node.Node{
 					&stmt.Constant{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    18,
+						},
 						PhpDocComment: "",
-						ConstantName:  &node.Identifier{Value: "ticks"},
-						Expr:          &scalar.Lnumber{Value: "1"},
+						ConstantName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    16,
+							},
+							Value: "ticks",
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  18,
+								EndPos:    18,
+							},
+							Value: "1",
+						},
 					},
 				},
-				Stmt: &stmt.Nop{},
+				Stmt: &stmt.Nop{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  20,
+						EndPos:    20,
+					},
+				},
 			},
 		},
 	}
@@ -45,21 +87,83 @@ func TestDeclareStmts(t *testing.T) {
 	src := `<? declare(ticks=1, strict_types=1) {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    38,
+		},
 		Stmts: []node.Node{
 			&stmt.Declare{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    38,
+				},
 				Consts: []node.Node{
 					&stmt.Constant{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    18,
+						},
 						PhpDocComment: "",
-						ConstantName:  &node.Identifier{Value: "ticks"},
-						Expr:          &scalar.Lnumber{Value: "1"},
+						ConstantName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    16,
+							},
+							Value: "ticks",
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  18,
+								EndPos:    18,
+							},
+							Value: "1",
+						},
 					},
 					&stmt.Constant{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    34,
+						},
 						PhpDocComment: "",
-						ConstantName:  &node.Identifier{Value: "strict_types"},
-						Expr:          &scalar.Lnumber{Value: "1"},
+						ConstantName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  21,
+								EndPos:    32,
+							},
+							Value: "strict_types",
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  34,
+								EndPos:    34,
+							},
+							Value: "1",
+						},
 					},
 				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  37,
+						EndPos:    38,
+					},
 					Stmts: []node.Node{},
 				},
 			},
@@ -81,16 +185,56 @@ func TestAltDeclare(t *testing.T) {
 	src := `<? declare(ticks=1): enddeclare;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    32,
+		},
 		Stmts: []node.Node{
 			&stmt.Declare{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    32,
+				},
 				Consts: []node.Node{
 					&stmt.Constant{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  12,
+							EndPos:    18,
+						},
 						PhpDocComment: "",
-						ConstantName:  &node.Identifier{Value: "ticks"},
-						Expr:          &scalar.Lnumber{Value: "1"},
+						ConstantName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  12,
+								EndPos:    16,
+							},
+							Value: "ticks",
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  18,
+								EndPos:    18,
+							},
+							Value: "1",
+						},
 					},
 				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  20,
+						EndPos:    32,
+					},
 					Stmts: []node.Node{},
 				},
 			},

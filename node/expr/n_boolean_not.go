@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // BooleanNot node
 type BooleanNot struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewBooleanNot node constructor
 func NewBooleanNot(Expression node.Node) *BooleanNot {
 	return &BooleanNot{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *BooleanNot) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *BooleanNot) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

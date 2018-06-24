@@ -1,19 +1,31 @@
 package node
 
 import (
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Root node
 type Root struct {
-	Stmts []Node
+	Position *position.Position
+	Stmts    []Node
 }
 
 // NewRoot node constructor
 func NewRoot(Stmts []Node) *Root {
 	return &Root{
-		Stmts,
+		Stmts: Stmts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Root) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Root) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

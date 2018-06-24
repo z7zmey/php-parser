@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // BooleanOr node
 type BooleanOr struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewBooleanOr node constructor
 func NewBooleanOr(Variable node.Node, Expression node.Node) *BooleanOr {
 	return &BooleanOr{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *BooleanOr) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *BooleanOr) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

@@ -301,7 +301,7 @@ start:
                 yylex.(*Parser).rootNode = node.NewRoot($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -360,7 +360,7 @@ namespace_name:
                 $$ = []node.Node{namePart}
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(namePart, $1, comment.StringToken)
@@ -373,7 +373,7 @@ namespace_name:
                 $$ = append($1, namePart)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(namePart, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.NsSeparatorToken)
@@ -389,7 +389,7 @@ name:
                 $$ = name.NewName($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -398,7 +398,7 @@ name:
                 $$ = name.NewRelative($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
@@ -411,7 +411,7 @@ name:
                 $$ = name.NewFullyQualified($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
@@ -463,7 +463,7 @@ top_statement:
                 $$ = stmt.NewHaltCompiler()
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
@@ -479,8 +479,8 @@ top_statement:
                 $$ = stmt.NewNamespace(name, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
@@ -494,8 +494,8 @@ top_statement:
                 $$ = stmt.NewNamespace(name, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
@@ -509,7 +509,7 @@ top_statement:
                 $$ = stmt.NewNamespace(nil, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NamespaceToken)
@@ -523,7 +523,7 @@ top_statement:
                 $$ = $2
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -536,7 +536,7 @@ top_statement:
                 $$ = $3.(*stmt.GroupUse).SetUseType($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -549,7 +549,7 @@ top_statement:
                 $$ = stmt.NewUseList(nil, $2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -562,7 +562,7 @@ top_statement:
                 $$ = stmt.NewUseList($2, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -575,7 +575,7 @@ top_statement:
                 $$ = stmt.NewConstList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstToken)
@@ -591,7 +591,7 @@ use_type:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FunctionToken)
@@ -603,7 +603,7 @@ use_type:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstToken)
@@ -619,8 +619,8 @@ group_use_declaration:
                 $$ = stmt.NewGroupUse(nil, name, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.NsSeparatorToken)
@@ -638,8 +638,8 @@ group_use_declaration:
                 $$ = stmt.NewGroupUse(nil, name, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
@@ -661,8 +661,8 @@ mixed_group_use_declaration:
                 $$ = stmt.NewGroupUse(nil, name, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.NsSeparatorToken)
@@ -680,8 +680,8 @@ mixed_group_use_declaration:
                 $$ = stmt.NewGroupUse(nil, name, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsSeparatorToken)
@@ -783,8 +783,8 @@ unprefixed_use_declaration:
                 $$ = stmt.NewUse(nil, name, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -795,9 +795,9 @@ unprefixed_use_declaration:
                 $$ = stmt.NewUse(nil, name, alias)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
-                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
@@ -903,7 +903,7 @@ inner_statement:
                 $$ = stmt.NewHaltCompiler()
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
@@ -920,7 +920,7 @@ statement:
                 $$ = stmt.NewStmtList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
@@ -952,7 +952,7 @@ statement:
                 $$ = $5
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.WhileToken)
@@ -966,7 +966,7 @@ statement:
                 $$ = stmt.NewDo($2, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoToken)
@@ -993,7 +993,7 @@ statement:
                 $$ = $9
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForToken)
@@ -1018,7 +1018,7 @@ statement:
                 $$ = $5
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.SwitchToken)
@@ -1032,7 +1032,7 @@ statement:
                 $$ = stmt.NewBreak($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.BreakToken)
@@ -1045,7 +1045,7 @@ statement:
                 $$ = stmt.NewContinue($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ContinueToken)
@@ -1058,7 +1058,7 @@ statement:
                 $$ = stmt.NewReturn($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ReturnToken)
@@ -1071,7 +1071,7 @@ statement:
                 $$ = stmt.NewGlobal($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.GlobalToken)
@@ -1084,7 +1084,7 @@ statement:
                 $$ = stmt.NewStatic($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
@@ -1097,7 +1097,7 @@ statement:
                 $$ = stmt.NewEcho($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.EchoToken)
@@ -1110,7 +1110,7 @@ statement:
                 $$ = stmt.NewInlineHtml($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.InlineHTMLToken)
@@ -1122,7 +1122,7 @@ statement:
                 $$ = stmt.NewExpression($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SemiColonToken)
@@ -1134,7 +1134,7 @@ statement:
                 $$ = stmt.NewUnset($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UnsetToken)
@@ -1161,7 +1161,7 @@ statement:
                 $$ = $7
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
@@ -1187,7 +1187,7 @@ statement:
                 $$ = $9
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ForeachToken)
@@ -1203,7 +1203,7 @@ statement:
                 $$ = stmt.NewDeclare($3, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DeclareToken)
@@ -1217,7 +1217,7 @@ statement:
                 $$ = stmt.NewNop()
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.SemiColonToken)
@@ -1228,10 +1228,10 @@ statement:
             {
                 if $6 == nil {
                     $$ = stmt.NewTry($3, $5, $6)
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $5))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $5))
                 } else {
                     $$ = stmt.NewTry($3, $5, $6)
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
                 }
 
                 // save comments
@@ -1246,7 +1246,7 @@ statement:
                 $$ = stmt.NewThrow($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ThrowToken)
@@ -1260,8 +1260,8 @@ statement:
                 $$ = stmt.NewGoto(label)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(label, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.GotoToken)
@@ -1276,8 +1276,8 @@ statement:
                 $$ = stmt.NewLabel(label)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(label, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(label, $1, comment.StringToken)
@@ -1301,9 +1301,9 @@ catch_list:
                 $$ = append($1, catch)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($5))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($5))
-                yylex.(*Parser).positions.AddPosition(catch, yylex.(*Parser).positionBuilder.NewTokensPosition($2, $9))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($5))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($5))
+                catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($2, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(catch, $2, comment.CatchToken)
@@ -1346,7 +1346,7 @@ finally_statement:
                 $$ = stmt.NewFinally($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinallyToken)
@@ -1391,8 +1391,8 @@ function_declaration_statement:
                 $$ = stmt.NewFunction(name, $2 != nil, $6, $8, $10, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
 
 
                 // save comments
@@ -1439,8 +1439,8 @@ class_declaration_statement:
                 $$ = stmt.NewClass(name, $1, nil, $4, $5, $8, $6)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $9))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $9))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ClassToken)
@@ -1456,8 +1456,8 @@ class_declaration_statement:
                 $$ = stmt.NewClass(name, nil, nil, $3, $4, $7, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassToken)
@@ -1490,7 +1490,7 @@ class_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AbstractToken)
@@ -1502,7 +1502,7 @@ class_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinalToken)
@@ -1518,8 +1518,8 @@ trait_declaration_statement:
                 $$ = stmt.NewTrait(name, $5, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.TraitToken)
@@ -1538,8 +1538,8 @@ interface_declaration_statement:
                 $$ = stmt.NewInterface(name, $3, $6, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.InterfaceToken)
@@ -1563,7 +1563,7 @@ extends_from:
                 $$ = stmt.NewClassExtends($2);
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExtendsToken)
@@ -1584,7 +1584,7 @@ interface_extends_list:
                 $$ = stmt.NewInterfaceExtends($2);
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExtendsToken)
@@ -1605,7 +1605,7 @@ implements_list:
                 $$ = stmt.NewClassImplements($2);
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ImplementsToken)
@@ -1626,7 +1626,7 @@ foreach_variable:
                 $$ = expr.NewReference($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($2, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
@@ -1638,7 +1638,7 @@ foreach_variable:
                 $$ = expr.NewList($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ListToken)
@@ -1652,7 +1652,7 @@ foreach_variable:
                 $$ = expr.NewShortList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenSquareBracket)
@@ -1668,7 +1668,7 @@ for_statement:
                 $$ = stmt.NewFor(nil, nil, nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1678,8 +1678,8 @@ for_statement:
                 $$ = stmt.NewAltFor(nil, nil, nil, stmtList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
@@ -1696,7 +1696,7 @@ foreach_statement:
                 $$ = stmt.NewForeach(nil, nil, nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1706,8 +1706,8 @@ foreach_statement:
                 $$ = stmt.NewAltForeach(nil, nil, nil, stmtList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
@@ -1730,7 +1730,7 @@ declare_statement:
                 $$ = stmt.NewStmtList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
@@ -1748,8 +1748,8 @@ switch_case_list:
                 $$ = stmt.NewSwitch(nil, caseList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(caseList, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(caseList, $1, comment.OpenCurlyBracesToken)
@@ -1763,8 +1763,8 @@ switch_case_list:
                 $$ = stmt.NewSwitch(nil, caseList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(caseList, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(caseList, $1, comment.OpenCurlyBracesToken)
@@ -1779,8 +1779,8 @@ switch_case_list:
                 $$ = stmt.NewAltSwitch(nil, caseList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(caseList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(caseList, $1, comment.ColonToken)
@@ -1796,8 +1796,8 @@ switch_case_list:
                 $$ = stmt.NewAltSwitch(nil, caseList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(caseList, yylex.(*Parser).positionBuilder.NewNodeListPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(caseList, $1, comment.ColonToken)
@@ -1822,7 +1822,7 @@ case_list:
                 $$ = append($1, _case)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(_case, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
+                _case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(_case, $2, comment.CaseToken)
@@ -1836,7 +1836,7 @@ case_list:
                 $$ = append($1, _default)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(_default, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
+                _default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(_default, $2, comment.DefaultToken)
@@ -1863,7 +1863,7 @@ while_statement:
                 $$ = stmt.NewWhile(nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1873,8 +1873,8 @@ while_statement:
                 $$ = stmt.NewAltWhile(nil, stmtList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmtList, yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ColonToken)
@@ -1891,7 +1891,7 @@ if_stmt_without_else:
                 $$ = stmt.NewIf($3, $5, nil, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IfToken)
@@ -1906,8 +1906,8 @@ if_stmt_without_else:
                 $$ = $1.(*stmt.If).AddElseIf(_elseIf)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(_elseIf, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
+                _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(_elseIf, $2, comment.ElseifToken)
@@ -1931,8 +1931,8 @@ if_stmt:
                 $$ = $1.(*stmt.If).SetElse(_else)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(_else, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                _else.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ElseToken)
@@ -1948,8 +1948,8 @@ alt_if_stmt_without_else:
                 $$ = stmt.NewAltIf($3, stmts, nil, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($6))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $6))
+                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($6))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IfToken)
@@ -1966,8 +1966,8 @@ alt_if_stmt_without_else:
                 $$ = $1.(*stmt.AltIf).AddElseIf(_elseIf)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($7))
-                yylex.(*Parser).positions.AddPosition(_elseIf, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $7))
+                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($7))
+                _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $7))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(_elseIf, $2, comment.ElseifToken)
@@ -1985,7 +1985,7 @@ alt_if_stmt:
                 $$ = $1
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.EndifToken)
@@ -2000,9 +2000,9 @@ alt_if_stmt:
                 $$ = $1.(*stmt.AltIf).SetElse(_else)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(stmts, yylex.(*Parser).positionBuilder.NewNodeListPosition($4))
-                yylex.(*Parser).positions.AddPosition(_else, yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
+                stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($4))
+                _else.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(_else, $2, comment.ElseToken)
@@ -2055,16 +2055,16 @@ parameter:
                 $$ = node.NewParameter($1, variable, nil, $2 != nil, $3 != nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 if $1 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 } else if $2 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($2, $4))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($2, $4))
                 } else if $3 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
                 } else {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 }
 
                 // save comments
@@ -2085,16 +2085,16 @@ parameter:
                 $$ = node.NewParameter($1, variable, $6, $2 != nil, $3 != nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 if $1 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
                 } else if $2 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $6))
                 } else if $3 != nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $6))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $6))
                 } else {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($4, $6))
                 }
 
                 // save comments
@@ -2138,7 +2138,7 @@ type_expr:
                 $$ = node.NewNullable($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.QuestionMarkToken)
@@ -2153,7 +2153,7 @@ type:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayToken)
@@ -2165,7 +2165,7 @@ type:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.CallableToken)
@@ -2204,7 +2204,7 @@ argument_list:
                 $$ = node.NewArgumentList(nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
@@ -2217,7 +2217,7 @@ argument_list:
                 $$ = node.NewArgumentList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
@@ -2254,7 +2254,7 @@ argument:
                 $$ = node.NewArgument($1, false, false)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2263,7 +2263,7 @@ argument:
                 $$ = node.NewArgument($2, true, false)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.EllipsisToken)
@@ -2325,9 +2325,9 @@ static_var:
                 $$ = stmt.NewStaticVar(variable, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -2341,9 +2341,9 @@ static_var:
                 $$ = stmt.NewStaticVar(variable, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -2374,7 +2374,7 @@ class_statement:
                 $$ = stmt.NewPropertyList($1, $2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $3, comment.SemiColonToken)
@@ -2386,7 +2386,7 @@ class_statement:
                 $$ = stmt.NewClassConstList($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition($1, $2, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ConstToken)
@@ -2409,7 +2409,7 @@ class_statement:
                 $$ = stmt.NewTraitUse($2, adaptationList)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -2422,11 +2422,11 @@ class_statement:
                 $$ = stmt.NewClassMethod(name, $1, $3 != nil, $7, $9, $10, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 if $1 == nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $10))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $10))
                 } else {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeListNodePosition($1, $10))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListNodePosition($1, $10))
                 }
 
                 // save comments
@@ -2465,7 +2465,7 @@ trait_adaptations:
             {
                 $$ = stmt.NewNop()
 
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.SemiColonToken)
@@ -2477,7 +2477,7 @@ trait_adaptations:
             {
                 $$ = stmt.NewTraitAdaptationList(nil)
 
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
@@ -2489,7 +2489,7 @@ trait_adaptations:
             {
                 $$ = stmt.NewTraitAdaptationList($2)
 
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
@@ -2541,7 +2541,7 @@ trait_precedence:
                 $$ = stmt.NewTraitUsePrecedence($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.InsteadofToken)
@@ -2557,8 +2557,8 @@ trait_alias:
                 $$ = stmt.NewTraitUseAlias($1, nil, alias)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
@@ -2572,8 +2572,8 @@ trait_alias:
                 $$ = stmt.NewTraitUseAlias($1, nil, alias)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
@@ -2587,8 +2587,8 @@ trait_alias:
                 $$ = stmt.NewTraitUseAlias($1, $3, alias)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(alias, yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
@@ -2601,7 +2601,7 @@ trait_alias:
                 $$ = stmt.NewTraitUseAlias($1, $3, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsToken)
@@ -2617,8 +2617,8 @@ trait_method_reference:
                 $$ = stmt.NewTraitMethodRef(nil, name)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(name, $1, comment.IdentifierToken)
@@ -2640,8 +2640,8 @@ absolute_trait_method_reference:
                 $$ = stmt.NewTraitMethodRef($1, target)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -2657,7 +2657,7 @@ method_body:
                 $$ = stmt.NewNop()
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.SemiColonToken)
@@ -2669,7 +2669,7 @@ method_body:
                 $$ = stmt.NewStmtList($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenCurlyBracesToken)
@@ -2692,7 +2692,7 @@ variable_modifiers:
                 $$ = []node.Node{modifier}
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(modifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                modifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(modifier, $1, comment.VarToken)
@@ -2737,7 +2737,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.PublicToken)
@@ -2749,7 +2749,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ProtectedToken)
@@ -2761,7 +2761,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.PrivateToken)
@@ -2773,7 +2773,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
@@ -2785,7 +2785,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AbstractToken)
@@ -2797,7 +2797,7 @@ member_modifier:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FinalToken)
@@ -2832,9 +2832,9 @@ property:
                 $$ = stmt.NewProperty(variable, nil, $2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -2848,9 +2848,9 @@ property:
                 $$ = stmt.NewProperty(variable, $3, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -2885,8 +2885,8 @@ class_const_decl:
                 $$ = stmt.NewConstant(name, $3, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(name, $1, comment.IdentifierToken)
@@ -2903,8 +2903,8 @@ const_decl:
                 $$ = stmt.NewConstant(name, $3, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(name, $1, comment.StringToken)
@@ -2984,7 +2984,7 @@ anonymous_class:
                 }
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassToken)
@@ -3000,10 +3000,10 @@ new_expr:
             {
                 if $3 != nil {
                     $$ = expr.NewNew($2, $3.(*node.ArgumentList))
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 } else {
                     $$ = expr.NewNew($2, nil)
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 }
 
                 // save comments
@@ -3016,7 +3016,7 @@ new_expr:
                 $$ = expr.NewNew($2, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NewToken)
@@ -3032,8 +3032,8 @@ expr_without_variable:
                 $$ = assign.NewAssign(list, $6)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
+                list.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
@@ -3049,8 +3049,8 @@ expr_without_variable:
                 $$ = assign.NewAssign(shortList, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(shortList, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
+                shortList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(shortList, $1, comment.OpenSquareBracket)
@@ -3064,7 +3064,7 @@ expr_without_variable:
                 $$ = assign.NewAssign($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
@@ -3076,7 +3076,7 @@ expr_without_variable:
                 $$ = assign.NewReference($1, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.EqualToken)
@@ -3089,7 +3089,7 @@ expr_without_variable:
                 $$ = expr.NewClone($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.CloneToken)
@@ -3101,7 +3101,7 @@ expr_without_variable:
                 $$ = assign.NewPlus($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PlusEqualToken)
@@ -3113,7 +3113,7 @@ expr_without_variable:
                 $$ = assign.NewMinus($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.MinusEqualToken)
@@ -3125,7 +3125,7 @@ expr_without_variable:
                 $$ = assign.NewMul($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.MulEqualToken)
@@ -3137,7 +3137,7 @@ expr_without_variable:
                 $$ = assign.NewPow($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PowEqualToken)
@@ -3149,7 +3149,7 @@ expr_without_variable:
                 $$ = assign.NewDiv($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DivEqualToken)
@@ -3161,7 +3161,7 @@ expr_without_variable:
                 $$ = assign.NewConcat($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ConcatEqualToken)
@@ -3173,7 +3173,7 @@ expr_without_variable:
                 $$ = assign.NewMod($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ModEqualToken)
@@ -3185,7 +3185,7 @@ expr_without_variable:
                 $$ = assign.NewBitwiseAnd($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AndEqualToken)
@@ -3197,7 +3197,7 @@ expr_without_variable:
                 $$ = assign.NewBitwiseOr($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OrEqualToken)
@@ -3209,7 +3209,7 @@ expr_without_variable:
                 $$ = assign.NewBitwiseXor($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.XorEqualToken)
@@ -3221,7 +3221,7 @@ expr_without_variable:
                 $$ = assign.NewShiftLeft($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlEqualToken)
@@ -3233,7 +3233,7 @@ expr_without_variable:
                 $$ = assign.NewShiftRight($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SrEqualToken)
@@ -3245,7 +3245,7 @@ expr_without_variable:
                 $$ = expr.NewPostInc($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IncToken)
@@ -3257,7 +3257,7 @@ expr_without_variable:
                 $$ = expr.NewPreInc($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncToken)
@@ -3269,7 +3269,7 @@ expr_without_variable:
                 $$ = expr.NewPostDec($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DecToken)
@@ -3281,7 +3281,7 @@ expr_without_variable:
                 $$ = expr.NewPreDec($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DecToken)
@@ -3293,7 +3293,7 @@ expr_without_variable:
                 $$ = binary.NewBooleanOr($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.BooleanOrToken)
@@ -3305,7 +3305,7 @@ expr_without_variable:
                 $$ = binary.NewBooleanAnd($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.BooleanAndToken)
@@ -3317,7 +3317,7 @@ expr_without_variable:
                 $$ = binary.NewLogicalOr($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalOrToken)
@@ -3329,7 +3329,7 @@ expr_without_variable:
                 $$ = binary.NewLogicalAnd($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalAndToken)
@@ -3341,7 +3341,7 @@ expr_without_variable:
                 $$ = binary.NewLogicalXor($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.LogicalXorToken)
@@ -3353,7 +3353,7 @@ expr_without_variable:
                 $$ = binary.NewBitwiseOr($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.VerticalBarToken)
@@ -3365,7 +3365,7 @@ expr_without_variable:
                 $$ = binary.NewBitwiseAnd($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AmpersandToken)
@@ -3377,7 +3377,7 @@ expr_without_variable:
                 $$ = binary.NewBitwiseXor($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.CaretToken)
@@ -3389,7 +3389,7 @@ expr_without_variable:
                 $$ = binary.NewConcat($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DotToken)
@@ -3401,7 +3401,7 @@ expr_without_variable:
                 $$ = binary.NewPlus($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PlusToken)
@@ -3413,7 +3413,7 @@ expr_without_variable:
                 $$ = binary.NewMinus($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.MinusToken)
@@ -3425,7 +3425,7 @@ expr_without_variable:
                 $$ = binary.NewMul($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.AsteriskToken)
@@ -3437,7 +3437,7 @@ expr_without_variable:
                 $$ = binary.NewPow($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PowToken)
@@ -3449,7 +3449,7 @@ expr_without_variable:
                 $$ = binary.NewDiv($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlashToken)
@@ -3461,7 +3461,7 @@ expr_without_variable:
                 $$ = binary.NewMod($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PercentToken)
@@ -3473,7 +3473,7 @@ expr_without_variable:
                 $$ = binary.NewShiftLeft($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SlToken)
@@ -3485,7 +3485,7 @@ expr_without_variable:
                 $$ = binary.NewShiftRight($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SrToken)
@@ -3497,7 +3497,7 @@ expr_without_variable:
                 $$ = expr.NewUnaryPlus($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.PlusToken)
@@ -3509,7 +3509,7 @@ expr_without_variable:
                 $$ = expr.NewUnaryMinus($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.MinusToken)
@@ -3521,7 +3521,7 @@ expr_without_variable:
                 $$ = expr.NewBooleanNot($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ExclamationMarkToken)
@@ -3533,7 +3533,7 @@ expr_without_variable:
                 $$ = expr.NewBitwiseNot($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.TildeToken)
@@ -3545,7 +3545,7 @@ expr_without_variable:
                 $$ = binary.NewIdentical($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsIdenticalToken)
@@ -3557,7 +3557,7 @@ expr_without_variable:
                 $$ = binary.NewNotIdentical($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsNotIdenticalToken)
@@ -3569,7 +3569,7 @@ expr_without_variable:
                 $$ = binary.NewEqual($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsEqualToken)
@@ -3581,7 +3581,7 @@ expr_without_variable:
                 $$ = binary.NewNotEqual($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsNotEqualToken)
@@ -3593,7 +3593,7 @@ expr_without_variable:
                 $$ = binary.NewSmaller($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.LessToken)
@@ -3605,7 +3605,7 @@ expr_without_variable:
                 $$ = binary.NewSmallerOrEqual($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsSmallerOrEqualToken)
@@ -3617,7 +3617,7 @@ expr_without_variable:
                 $$ = binary.NewGreater($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.GreaterToken)
@@ -3629,7 +3629,7 @@ expr_without_variable:
                 $$ = binary.NewGreaterOrEqual($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.IsGreaterOrEqualToken)
@@ -3641,7 +3641,7 @@ expr_without_variable:
                 $$ = binary.NewSpaceship($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SpaceshipToken)
@@ -3653,7 +3653,7 @@ expr_without_variable:
                 $$ = expr.NewInstanceOf($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.InstanceofToken)
@@ -3681,7 +3681,7 @@ expr_without_variable:
                 $$ = expr.NewTernary($1, $3, $5)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.QuestionMarkToken)
@@ -3694,7 +3694,7 @@ expr_without_variable:
                 $$ = expr.NewTernary($1, nil, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.QuestionMarkToken)
@@ -3707,7 +3707,7 @@ expr_without_variable:
                 $$ = binary.NewCoalesce($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.CoalesceToken)
@@ -3725,7 +3725,7 @@ expr_without_variable:
                 $$ = cast.NewInt($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IntCastToken)
@@ -3737,7 +3737,7 @@ expr_without_variable:
                 $$ = cast.NewDouble($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoubleCastToken)
@@ -3749,7 +3749,7 @@ expr_without_variable:
                 $$ = cast.NewString($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringCastToken)
@@ -3761,7 +3761,7 @@ expr_without_variable:
                 $$ = cast.NewArray($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayCastToken)
@@ -3773,7 +3773,7 @@ expr_without_variable:
                 $$ = cast.NewObject($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ObjectCastToken)
@@ -3785,7 +3785,7 @@ expr_without_variable:
                 $$ = cast.NewBool($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.BoolCastToken)
@@ -3797,7 +3797,7 @@ expr_without_variable:
                 $$ = cast.NewUnset($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UnsetCastToken)
@@ -3820,9 +3820,9 @@ expr_without_variable:
 
                 // save position
                 if $2 == nil {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 } else {
-                    yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 }
 
                 // save comments
@@ -3839,7 +3839,7 @@ expr_without_variable:
                 $$ = expr.NewErrorSuppress($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AtToken)
@@ -3857,7 +3857,7 @@ expr_without_variable:
                 $$ = expr.NewShellExec($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.BackquoteToken)
@@ -3870,7 +3870,7 @@ expr_without_variable:
                 $$ = expr.NewPrint($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.PrintToken)
@@ -3882,7 +3882,7 @@ expr_without_variable:
                 $$ = expr.NewYield(nil, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
@@ -3894,7 +3894,7 @@ expr_without_variable:
                 $$ = expr.NewYield(nil, $2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
@@ -3906,7 +3906,7 @@ expr_without_variable:
                 $$ = expr.NewYield($2, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldToken)
@@ -3919,7 +3919,7 @@ expr_without_variable:
                 $$ = expr.NewYieldFrom($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.YieldFromToken)
@@ -3931,7 +3931,7 @@ expr_without_variable:
                 $$ = expr.NewClosure($5, $7, $8, $10, false, $2 != nil, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
                 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FunctionToken)
@@ -3950,7 +3950,7 @@ expr_without_variable:
                 $$ = expr.NewClosure($6, $8, $9, $11, true, $3 != nil, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
                 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
@@ -4000,7 +4000,7 @@ lexical_vars:
                 $$ = expr.NewClosureUse($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.UseToken)
@@ -4036,8 +4036,8 @@ lexical_var:
                 $$ = expr.NewVariable(identifier)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
@@ -4051,9 +4051,9 @@ lexical_var:
                 $$ = expr.NewReference(variable)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.AmpersandToken)
@@ -4069,7 +4069,7 @@ function_call:
                 $$ = expr.NewFunctionCall($1, $2.(*node.ArgumentList))
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4078,7 +4078,7 @@ function_call:
                 $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4090,7 +4090,7 @@ function_call:
                 $$ = expr.NewStaticCall($1, $3, $4.(*node.ArgumentList))
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4102,7 +4102,7 @@ function_call:
                 $$ = expr.NewFunctionCall($1, $2.(*node.ArgumentList))
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4114,7 +4114,7 @@ class_name:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StaticToken)
@@ -4156,7 +4156,7 @@ exit_expr:
                 $$ = expr.NewExit($2);
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenParenthesisToken)
@@ -4208,7 +4208,7 @@ dereferencable_scalar:
                 $$ = expr.NewArray($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ArrayToken)
@@ -4222,7 +4222,7 @@ dereferencable_scalar:
                 $$ = expr.NewShortArray($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.OpenSquareBracket)
@@ -4235,7 +4235,7 @@ dereferencable_scalar:
                 $$ = scalar.NewString($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ConstantEncapsedStringToken)
@@ -4250,7 +4250,7 @@ scalar:
                 $$ = scalar.NewLnumber($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.LnumberToken)
@@ -4262,7 +4262,7 @@ scalar:
                 $$ = scalar.NewDnumber($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DnumberToken)
@@ -4274,7 +4274,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.LineToken)
@@ -4286,7 +4286,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FileToken)
@@ -4298,7 +4298,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DirToken)
@@ -4310,7 +4310,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.TraitCToken)
@@ -4322,7 +4322,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.MethodCToken)
@@ -4334,7 +4334,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.FuncCToken)
@@ -4346,7 +4346,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NsCToken)
@@ -4358,7 +4358,7 @@ scalar:
                 $$ = scalar.NewMagicConstant($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.ClassCToken)
@@ -4371,8 +4371,8 @@ scalar:
                 $$ = scalar.NewHeredoc($1.Value, []node.Node{encapsed})
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
@@ -4384,7 +4384,7 @@ scalar:
                 $$ = scalar.NewHeredoc($1.Value, nil)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
@@ -4396,7 +4396,7 @@ scalar:
                 $$ = scalar.NewEncapsed($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DoubleQuoteToken)
@@ -4408,7 +4408,7 @@ scalar:
                 $$ = scalar.NewHeredoc($1.Value, $2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StartHeredocToken)
@@ -4435,7 +4435,7 @@ constant:
                 $$ = expr.NewConstFetch($1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4445,8 +4445,8 @@ constant:
                 $$ = expr.NewClassConstFetch($1, target)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4460,8 +4460,8 @@ constant:
                 $$ = expr.NewClassConstFetch($1, target)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(target, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
+                target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4572,7 +4572,7 @@ callable_variable:
                 $$ = expr.NewArrayDimFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
@@ -4585,7 +4585,7 @@ callable_variable:
                 $$ = expr.NewArrayDimFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
@@ -4598,7 +4598,7 @@ callable_variable:
                 $$ = expr.NewArrayDimFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
@@ -4611,7 +4611,7 @@ callable_variable:
                 $$ = expr.NewMethodCall($1, $3, $4.(*node.ArgumentList))
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
@@ -4644,7 +4644,7 @@ variable:
                 $$ = expr.NewPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
@@ -4660,8 +4660,8 @@ simple_variable:
                 $$ = expr.NewVariable(name)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
@@ -4673,7 +4673,7 @@ simple_variable:
                 $$ = expr.NewVariable($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarToken)
@@ -4687,7 +4687,7 @@ simple_variable:
                 $$ = expr.NewVariable($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarToken)
@@ -4702,7 +4702,7 @@ static_member:
                 $$ = expr.NewStaticPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4714,7 +4714,7 @@ static_member:
                 $$ = expr.NewStaticPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4735,7 +4735,7 @@ new_variable:
                 $$ = expr.NewArrayDimFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenSquareBracket)
@@ -4748,7 +4748,7 @@ new_variable:
                 $$ = expr.NewArrayDimFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenCurlyBracesToken)
@@ -4761,7 +4761,7 @@ new_variable:
                 $$ = expr.NewPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.ObjectOperatorToken)
@@ -4773,7 +4773,7 @@ new_variable:
                 $$ = expr.NewStaticPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4785,7 +4785,7 @@ new_variable:
                 $$ = expr.NewStaticPropertyFetch($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.PaamayimNekudotayimToken)
@@ -4800,7 +4800,7 @@ member_name:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IdentifierToken)
@@ -4831,7 +4831,7 @@ property_name:
                 $$ = node.NewIdentifier($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringToken)
@@ -4908,7 +4908,7 @@ array_pair:
                 $$ = expr.NewArrayItem($1, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
@@ -4920,7 +4920,7 @@ array_pair:
                 $$ = expr.NewArrayItem(nil, $1)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4930,7 +4930,8 @@ array_pair:
                 $$ = expr.NewArrayItem($1, reference)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
+                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
@@ -4944,7 +4945,8 @@ array_pair:
                 $$ = expr.NewArrayItem(nil, reference)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(reference, $1, comment.AmpersandToken)
@@ -4958,8 +4960,8 @@ array_pair:
                 $$ = expr.NewArrayItem($1, list)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($3, $6))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
+                list.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $6))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.DoubleArrowToken)
@@ -4976,8 +4978,8 @@ array_pair:
                 $$ = expr.NewArrayItem(nil, list)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(list, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                list.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(list, $1, comment.ListToken)
@@ -5001,7 +5003,7 @@ encaps_list:
                 $$ = append($1, encapsed)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(encapsed, $2, comment.EncapsedAndWhitespaceToken)
@@ -5020,7 +5022,7 @@ encaps_list:
                 $$ = []node.Node{encapsed, $2}
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(encapsed, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(encapsed, $1, comment.EncapsedAndWhitespaceToken)
@@ -5036,8 +5038,8 @@ encaps_var:
                 $$ = expr.NewVariable(name)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
@@ -5051,9 +5053,9 @@ encaps_var:
                 $$ = expr.NewArrayDimFetch(variable, $3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -5070,10 +5072,10 @@ encaps_var:
                 $$ = expr.NewPropertyFetch(variable, fetch)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition(fetch, yylex.(*Parser).positionBuilder.NewTokenPosition($3))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                fetch.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken(variable, $1, comment.VariableToken)
@@ -5087,7 +5089,7 @@ encaps_var:
                 $$ = expr.NewVariable($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
@@ -5101,8 +5103,8 @@ encaps_var:
                 $$ = expr.NewVariable(name)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(name, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
+                name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
@@ -5118,9 +5120,9 @@ encaps_var:
                 $$ = expr.NewArrayDimFetch(variable, $4)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition(variable, yylex.(*Parser).positionBuilder.NewTokenPosition($2))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.DollarOpenCurlyBracesToken)
@@ -5145,7 +5147,7 @@ encaps_var_offset:
                 $$ = scalar.NewString($1.Value)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.StringToken)
@@ -5162,7 +5164,7 @@ encaps_var_offset:
                 }
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.NumStringToken)
@@ -5186,9 +5188,9 @@ encaps_var_offset:
 
                 // save position
                 if isInt {
-                    yylex.(*Parser).positions.AddPosition(lnumber, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                    lnumber.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 }
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.MinusToken)
@@ -5206,8 +5208,8 @@ encaps_var_offset:
                 $$ = expr.NewVariable(identifier)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition(identifier, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.VariableToken)
@@ -5222,7 +5224,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewIsset($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IssetToken)
@@ -5239,7 +5241,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewEmpty($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.EmptyToken)
@@ -5253,7 +5255,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewInclude($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncludeToken)
@@ -5265,7 +5267,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewIncludeOnce($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.IncludeOnceToken)
@@ -5277,7 +5279,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewEval($3)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.EvalToken)
@@ -5291,7 +5293,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewRequire($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.RequireToken)
@@ -5303,7 +5305,7 @@ internal_functions_in_yacc:
                 $$ = expr.NewRequireOnce($2)
 
                 // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $1, comment.RequireOnceToken)

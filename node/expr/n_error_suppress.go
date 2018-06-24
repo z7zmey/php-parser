@@ -2,19 +2,31 @@ package expr
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ErrorSuppress node
 type ErrorSuppress struct {
-	Expr node.Node
+	Position *position.Position
+	Expr     node.Node
 }
 
 // NewErrorSuppress node constructor
 func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	return &ErrorSuppress{
-		Expression,
+		Expr: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *ErrorSuppress) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ErrorSuppress) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

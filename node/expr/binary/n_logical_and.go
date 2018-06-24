@@ -2,21 +2,33 @@ package binary
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // LogicalAnd node
 type LogicalAnd struct {
-	Left  node.Node
-	Right node.Node
+	Position *position.Position
+	Left     node.Node
+	Right    node.Node
 }
 
 // NewLogicalAnd node constructor
 func NewLogicalAnd(Variable node.Node, Expression node.Node) *LogicalAnd {
 	return &LogicalAnd{
-		Variable,
-		Expression,
+		Left:  Variable,
+		Right: Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *LogicalAnd) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *LogicalAnd) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

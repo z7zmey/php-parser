@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // StaticVar node
 type StaticVar struct {
+	Position *position.Position
 	Variable node.Node
 	Expr     node.Node
 }
@@ -14,9 +16,19 @@ type StaticVar struct {
 // NewStaticVar node constructor
 func NewStaticVar(Variable node.Node, Expr node.Node) *StaticVar {
 	return &StaticVar{
-		Variable,
-		Expr,
+		Variable: Variable,
+		Expr:     Expr,
 	}
+}
+
+// SetPosition sets node position
+func (n *StaticVar) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *StaticVar) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

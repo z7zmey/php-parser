@@ -6,6 +6,7 @@ import (
 
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/php5"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node/expr"
 
@@ -18,10 +19,46 @@ func TestConstFetch(t *testing.T) {
 	src := `<? foo;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    7,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    7,
+				},
 				Expr: &expr.ConstFetch{
-					Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    6,
+					},
+					Constant: &name.Name{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    6,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  4,
+									EndPos:    6,
+								},
+								Value: "foo",
+							},
+						},
+					},
 				},
 			},
 		},
@@ -42,10 +79,46 @@ func TestConstFetchRelative(t *testing.T) {
 	src := `<? namespace\foo;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    17,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    17,
+				},
 				Expr: &expr.ConstFetch{
-					Constant: &name.Relative{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    16,
+					},
+					Constant: &name.Relative{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    16,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  14,
+									EndPos:    16,
+								},
+								Value: "foo",
+							},
+						},
+					},
 				},
 			},
 		},
@@ -66,10 +139,46 @@ func TestConstFetchFullyQualified(t *testing.T) {
 	src := `<? \foo;`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    8,
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    8,
+				},
 				Expr: &expr.ConstFetch{
-					Constant: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "foo"}}},
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    7,
+					},
+					Constant: &name.FullyQualified{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    7,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  5,
+									EndPos:    7,
+								},
+								Value: "foo",
+							},
+						},
+					},
 				},
 			},
 		},

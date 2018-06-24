@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
@@ -16,12 +17,38 @@ func TestDo(t *testing.T) {
 	src := `<? do {} while(1);`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    18,
+		},
 		Stmts: []node.Node{
 			&stmt.Do{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    18,
+				},
 				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  7,
+						EndPos:    8,
+					},
 					Stmts: []node.Node{},
 				},
-				Cond: &scalar.Lnumber{Value: "1"},
+				Cond: &scalar.Lnumber{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  16,
+						EndPos:    16,
+					},
+					Value: "1",
+				},
 			},
 		},
 	}

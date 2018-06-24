@@ -6,6 +6,7 @@ import (
 
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -18,12 +19,32 @@ func TestSimpleFunction(t *testing.T) {
 	src := `<? function foo() {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    20,
+		},
 		Stmts: []node.Node{
 			&stmt.Function{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    20,
+				},
 				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName:  &node.Identifier{Value: "foo"},
-				Stmts:         []node.Node{},
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  13,
+						EndPos:    15,
+					},
+					Value: "foo",
+				},
+				Stmts: []node.Node{},
 			},
 		},
 	}
@@ -43,13 +64,40 @@ func TestFunctionReturn(t *testing.T) {
 	src := `<? function foo() {return;}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    27,
+		},
 		Stmts: []node.Node{
 			&stmt.Function{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    27,
+				},
 				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName:  &node.Identifier{Value: "foo"},
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  13,
+						EndPos:    15,
+					},
+					Value: "foo",
+				},
 				Stmts: []node.Node{
-					&stmt.Return{},
+					&stmt.Return{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  20,
+							EndPos:    26,
+						},
+					},
 				},
 			},
 		},
@@ -70,28 +118,130 @@ func TestFunctionReturnVar(t *testing.T) {
 	src := `<? function foo(array $a, callable $b) {return $a;}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    51,
+		},
 		Stmts: []node.Node{
 			&stmt.Function{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    51,
+				},
 				ReturnsRef:    false,
 				PhpDocComment: "",
-				FunctionName:  &node.Identifier{Value: "foo"},
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  13,
+						EndPos:    15,
+					},
+					Value: "foo",
+				},
 				Params: []node.Node{
 					&node.Parameter{
-						ByRef:        false,
-						Variadic:     false,
-						VariableType: &node.Identifier{Value: "array"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    24,
+						},
+						ByRef:    false,
+						Variadic: false,
+						VariableType: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    21,
+							},
+							Value: "array",
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  23,
+								EndPos:    24,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  23,
+									EndPos:    24,
+								},
+								Value: "a",
+							},
+						},
 					},
 					&node.Parameter{
-						ByRef:        false,
-						Variadic:     false,
-						VariableType: &node.Identifier{Value: "callable"},
-						Variable:     &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  27,
+							EndPos:    37,
+						},
+						ByRef:    false,
+						Variadic: false,
+						VariableType: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  27,
+								EndPos:    34,
+							},
+							Value: "callable",
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  36,
+								EndPos:    37,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  36,
+									EndPos:    37,
+								},
+								Value: "b",
+							},
+						},
 					},
 				},
 				Stmts: []node.Node{
 					&stmt.Return{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  41,
+							EndPos:    50,
+						},
+						Expr: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  48,
+								EndPos:    49,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  48,
+									EndPos:    49,
+								},
+								Value: "a",
+							},
+						},
 					},
 				},
 			},
@@ -113,14 +263,48 @@ func TestRefFunction(t *testing.T) {
 	src := `<? function &foo() {return 1;}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    30,
+		},
 		Stmts: []node.Node{
 			&stmt.Function{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    30,
+				},
 				ReturnsRef:    true,
 				PhpDocComment: "",
-				FunctionName:  &node.Identifier{Value: "foo"},
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
+					Value: "foo",
+				},
 				Stmts: []node.Node{
 					&stmt.Return{
-						Expr: &scalar.Lnumber{Value: "1"},
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    29,
+						},
+						Expr: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  28,
+								EndPos:    28,
+							},
+							Value: "1",
+						},
 					},
 				},
 			},
@@ -142,14 +326,48 @@ func TestReturnTypeFunction(t *testing.T) {
 	src := `<? function &foo(): void {}`
 
 	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    27,
+		},
 		Stmts: []node.Node{
 			&stmt.Function{
-				ReturnsRef:    true,
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    27,
+				},
 				PhpDocComment: "",
-				FunctionName:  &node.Identifier{Value: "foo"},
+				ReturnsRef:    true,
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  14,
+						EndPos:    16,
+					},
+					Value: "foo",
+				},
 				ReturnType: &name.Name{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  21,
+						EndPos:    24,
+					},
 					Parts: []node.Node{
-						&name.NamePart{Value: "void"},
+						&name.NamePart{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  21,
+								EndPos:    24,
+							},
+							Value: "void",
+						},
 					},
 				},
 				Stmts: []node.Node{},

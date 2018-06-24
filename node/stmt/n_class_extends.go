@@ -2,19 +2,31 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassExtends node
 type ClassExtends struct {
+	Position  *position.Position
 	ClassName node.Node
 }
 
 // NewClassExtends node constructor
 func NewClassExtends(className node.Node) *ClassExtends {
 	return &ClassExtends{
-		className,
+		ClassName: className,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassExtends) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassExtends) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map

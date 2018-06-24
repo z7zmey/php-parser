@@ -2,11 +2,13 @@ package stmt
 
 import (
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // PropertyList node
 type PropertyList struct {
+	Position   *position.Position
 	Modifiers  []node.Node
 	Properties []node.Node
 }
@@ -14,9 +16,19 @@ type PropertyList struct {
 // NewPropertyList node constructor
 func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
-		Modifiers,
-		Properties,
+		Modifiers:  Modifiers,
+		Properties: Properties,
 	}
+}
+
+// SetPosition sets node position
+func (n *PropertyList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *PropertyList) GetPosition() *position.Position {
+	return n.Position
 }
 
 // Attributes returns node attributes as map
