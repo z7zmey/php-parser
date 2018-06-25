@@ -69,27 +69,25 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if d.Comments != nil {
-		if c := d.Comments[n]; len(c) > 0 {
-			fmt.Fprint(d.Writer, ",\n")
-			d.printIndent(d.Writer)
-			fmt.Fprint(d.Writer, "\"comments\": [\n")
-			d.depth++
-			for k, cc := range c {
-				if k == 0 {
-					d.printIndent(d.Writer)
-					fmt.Fprintf(d.Writer, "%q", cc)
-				} else {
-					fmt.Fprint(d.Writer, ",\n")
-					d.printIndent(d.Writer)
-					fmt.Fprintf(d.Writer, "%q", cc)
-				}
+	if c := n.GetComments(); len(c) > 0 {
+		fmt.Fprint(d.Writer, ",\n")
+		d.printIndent(d.Writer)
+		fmt.Fprint(d.Writer, "\"comments\": [\n")
+		d.depth++
+		for k, cc := range c {
+			if k == 0 {
+				d.printIndent(d.Writer)
+				fmt.Fprintf(d.Writer, "%q", cc)
+			} else {
+				fmt.Fprint(d.Writer, ",\n")
+				d.printIndent(d.Writer)
+				fmt.Fprintf(d.Writer, "%q", cc)
 			}
-			d.depth--
-			fmt.Fprint(d.Writer, "\n")
-			d.printIndent(d.Writer)
-			fmt.Fprint(d.Writer, "]")
 		}
+		d.depth--
+		fmt.Fprint(d.Writer, "\n")
+		d.printIndent(d.Writer)
+		fmt.Fprint(d.Writer, "]")
 	}
 
 	if a := n.Attributes(); len(a) > 0 {

@@ -6,35 +6,25 @@ import (
 
 // Comment aggrigates information about comment /**
 type Comment struct {
-	value     string
-	position  *position.Position
-	tokenName TokenName
+	Value     string
+	Position  *position.Position
+	TokenName TokenName
 }
 
 // NewComment - Comment constructor
 func NewComment(value string, pos *position.Position) *Comment {
 	return &Comment{
-		value,
-		pos,
-		UnknownToken,
+		Value:     value,
+		Position:  pos,
+		TokenName: UnknownToken,
 	}
 }
 
 // SetTokenName sets token name
 func (c *Comment) SetTokenName(tokenName TokenName) {
-	c.tokenName = tokenName
-}
-
-// TokenName returns token name
-func (c *Comment) TokenName() TokenName {
-	return c.tokenName
+	c.TokenName = tokenName
 }
 
 func (c *Comment) String() string {
-	return c.value
-}
-
-// Position returns comment position
-func (c *Comment) Position() *position.Position {
-	return c.position
+	return c.Value
 }

@@ -42,20 +42,18 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if d.Comments != nil {
-		if c := d.Comments[n]; len(c) > 0 {
-			fmt.Fprintf(d.Writer, ",%q:[", "comments")
+	if c := n.GetComments(); len(c) > 0 {
+		fmt.Fprintf(d.Writer, ",%q:[", "comments")
 
-			for k, cc := range c {
-				if k == 0 {
-					fmt.Fprintf(d.Writer, "%q", cc)
-				} else {
-					fmt.Fprintf(d.Writer, ",%q", cc)
-				}
+		for k, cc := range c {
+			if k == 0 {
+				fmt.Fprintf(d.Writer, "%q", cc)
+			} else {
+				fmt.Fprintf(d.Writer, ",%q", cc)
 			}
-
-			fmt.Fprint(d.Writer, "]")
 		}
+
+		fmt.Fprint(d.Writer, "]")
 	}
 
 	if a := n.Attributes(); len(a) > 0 {

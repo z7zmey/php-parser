@@ -59,6 +59,44 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 		fmt.Fprint(d.Writer, "},\n")
 	}
 
+	if cc := n.GetComments(); len(cc) > 0 {
+		printIndent(d.Writer, d.depth)
+		fmt.Fprint(d.Writer, "Comments: []*comment.Comment{\n")
+		d.depth++
+		for _, c := range cc {
+			printIndent(d.Writer, d.depth)
+			fmt.Fprint(d.Writer, "&comment.Comment{\n")
+			d.depth++
+
+			printIndent(d.Writer, d.depth)
+			fmt.Fprint(d.Writer, "Position: &position.Position{\n")
+			d.depth++
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "StartLine: %d,\n", c.Position.StartLine)
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "EndLine: %d,\n", c.Position.EndLine)
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "StartPos: %d,\n", c.Position.StartPos)
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "EndPos: %d,\n", c.Position.EndPos)
+			d.depth--
+			printIndent(d.Writer, d.depth)
+			fmt.Fprint(d.Writer, "},\n")
+
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "Value: %q,\n", c.Value)
+			printIndent(d.Writer, d.depth)
+			fmt.Fprintf(d.Writer, "TokenName: %q,\n", c.TokenName)
+
+			d.depth--
+			printIndent(d.Writer, d.depth)
+			fmt.Fprint(d.Writer, "},\n")
+		}
+		d.depth--
+		printIndent(d.Writer, d.depth)
+		fmt.Fprint(d.Writer, "},\n")
+	}
+
 	if a := n.Attributes(); len(a) > 0 {
 		for key, attr := range a {
 			printIndent(d.Writer, d.depth)

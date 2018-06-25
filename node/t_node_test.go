@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/position"
 
@@ -148,8 +149,8 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  11,
 									EndPos:    12,
 								},
-								IsReference: false,
 								Variadic:    false,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 2,
@@ -351,8 +352,8 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  54,
 									EndPos:    55,
 								},
-								Variadic:    false,
 								IsReference: false,
+								Variadic:    false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 4,
@@ -486,8 +487,8 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  81,
 									EndPos:    85,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 5,
@@ -565,8 +566,8 @@ func TestPhp7ArgumentNode(t *testing.T) {
 									StartPos:  101,
 									EndPos:    102,
 								},
-								IsReference: false,
 								Variadic:    false,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 6,
@@ -728,6 +729,18 @@ func TestPhp7ArgumentNode(t *testing.T) {
 						EndLine:   9,
 						StartPos:  162,
 						EndPos:    185,
+					},
+					Comments: []*comment.Comment{
+						{
+							Position: &position.Position{
+								StartLine: 8,
+								EndLine:   8,
+								StartPos:  137,
+								EndPos:    158,
+							},
+							Value:     "/** anonymous class */",
+							TokenName: 'O',
+						},
 					},
 					Class: &stmt.Class{
 						Position: &position.Position{

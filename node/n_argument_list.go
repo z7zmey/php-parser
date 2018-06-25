@@ -1,12 +1,14 @@
 package node
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ArgumentList node
 type ArgumentList struct {
+	Comments  []*comment.Comment
 	Position  *position.Position
 	Arguments []Node
 }
@@ -26,6 +28,18 @@ func (n *ArgumentList) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *ArgumentList) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *ArgumentList) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *ArgumentList) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map

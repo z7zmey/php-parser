@@ -214,6 +214,18 @@ func ExampleGoDumper() {
 	//												StartPos: 123,
 	//												EndPos: 126,
 	//											},
+	//											Comments: []*comment.Comment{
+	//												&comment.Comment{
+	//													Position: &position.Position{
+	//														StartLine: 7,
+	//														EndLine: 7,
+	//														StartPos: 103,
+	//														EndPos: 117,
+	//													},
+	//													Value: "//some comment\n",
+	//													TokenName: '\t',
+	//												},
+	//											},
 	//											VarName: &node.Identifier{
 	//												Position: &position.Position{
 	//													StartLine: 8,

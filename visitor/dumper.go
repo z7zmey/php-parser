@@ -39,12 +39,10 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if d.Comments != nil {
-		if c := d.Comments[n]; len(c) > 0 {
-			fmt.Fprintf(d.Writer, "%v\"Comments\":\n", d.Indent+"  ")
-			for _, cc := range c {
-				fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", cc, comment.TokenNames[cc.TokenName()])
-			}
+	if c := n.GetComments(); len(c) > 0 {
+		fmt.Fprintf(d.Writer, "%v\"Comments\":\n", d.Indent+"  ")
+		for _, cc := range c {
+			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", cc, comment.TokenNames[cc.TokenName])
 		}
 	}
 

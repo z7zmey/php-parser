@@ -1,6 +1,7 @@
 package assign
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -8,6 +9,7 @@ import (
 
 // Mul node
 type Mul struct {
+	Comments   []*comment.Comment
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -29,6 +31,17 @@ func (n *Mul) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *Mul) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *Mul) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *Mul) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map

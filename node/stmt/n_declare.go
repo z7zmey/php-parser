@@ -1,6 +1,7 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -8,6 +9,7 @@ import (
 
 // Declare node
 type Declare struct {
+	Comments []*comment.Comment
 	Position *position.Position
 	Consts   []node.Node
 	Stmt     node.Node
@@ -29,6 +31,17 @@ func (n *Declare) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *Declare) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *Declare) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *Declare) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map

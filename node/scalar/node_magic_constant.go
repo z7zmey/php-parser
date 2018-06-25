@@ -1,12 +1,14 @@
 package scalar
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // MagicConstant node
 type MagicConstant struct {
+	Comments []*comment.Comment
 	Position *position.Position
 	Value    string
 }
@@ -26,6 +28,17 @@ func (n *MagicConstant) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *MagicConstant) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *MagicConstant) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *MagicConstant) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map

@@ -1,6 +1,7 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -8,6 +9,7 @@ import (
 
 // ShortList node
 type ShortList struct {
+	Comments []*comment.Comment
 	Position *position.Position
 	Items    []node.Node
 }
@@ -27,6 +29,17 @@ func (n *ShortList) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *ShortList) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *ShortList) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *ShortList) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map

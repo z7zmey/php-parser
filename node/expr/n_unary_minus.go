@@ -1,6 +1,7 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -8,6 +9,7 @@ import (
 
 // UnaryMinus node
 type UnaryMinus struct {
+	Comments []*comment.Comment
 	Position *position.Position
 	Expr     node.Node
 }
@@ -27,6 +29,17 @@ func (n *UnaryMinus) SetPosition(p *position.Position) {
 // GetPosition returns node positions
 func (n *UnaryMinus) GetPosition() *position.Position {
 	return n.Position
+}
+
+func (n *UnaryMinus) AddComments(cc []*comment.Comment, tn comment.TokenName) {
+	for _, c := range cc {
+		c.SetTokenName(tn)
+	}
+	n.Comments = append(n.Comments, cc...)
+}
+
+func (n *UnaryMinus) GetComments() []*comment.Comment {
+	return n.Comments
 }
 
 // Attributes returns node attributes as map
