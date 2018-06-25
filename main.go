@@ -86,7 +86,8 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 			return
 		}
 
-		src, _ := os.Open(path)
+		src, err := os.Open(path)
+		checkErr(err)
 
 		if *usePhp5 {
 			parserWorker = php5.NewParser(src, path)
@@ -95,6 +96,9 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 		}
 
 		parserWorker.Parse()
+
+		src.Close()
+
 		result <- parserWorker
 	}
 }
