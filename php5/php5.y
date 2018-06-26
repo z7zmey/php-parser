@@ -6257,6 +6257,10 @@ array_pair_list:
             {
                 $$ = $1
 
+                if $2 != nil {
+                    $$ = append($1, nil)
+                }
+
                 // save comments
                 if $2 != nil {
                     yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)

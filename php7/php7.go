@@ -7517,8 +7517,8 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php7/php7.y:4861
 		{
-			if yyDollar[1].list[len(yyDollar[1].list)-1] == nil {
-				yyVAL.list = yyDollar[1].list[:len(yyDollar[1].list)-1]
+			if len(yyDollar[1].list) == 1 && yyDollar[1].list[0] == nil {
+				yyVAL.list = yyDollar[1].list[:0]
 			} else {
 				yyVAL.list = yyDollar[1].list
 			}

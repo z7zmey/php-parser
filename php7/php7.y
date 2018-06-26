@@ -4859,8 +4859,8 @@ property_name:
 array_pair_list:
         non_empty_array_pair_list
             {
-                if ($1[len($1)-1] == nil) {
-                    $$ = $1[:len($1)-1]
+                if (len($1) == 1 && $1[0] == nil) {
+                    $$ = $1[:0]
                 } else {
                     $$ = $1
                 }

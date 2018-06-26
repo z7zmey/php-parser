@@ -81,6 +81,7 @@ func TestShortArrayItems(t *testing.T) {
 						&expr.ArrayItem{
 							Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 						},
+						nil,
 					},
 				},
 			},

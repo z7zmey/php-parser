@@ -173,3 +173,37 @@ func TestListEmptyItem(t *testing.T) {
 	actual = php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }
+
+func TestListEmptyItems(t *testing.T) {
+	src := `<? list(, , $a, ) = $b;`
+
+	expected := &node.Root{
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Expr: &assign.Assign{
+					Variable: &expr.List{
+						Items: []node.Node{
+							nil,
+							nil,
+							&expr.ArrayItem{
+								Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+							},
+							nil,
+						},
+					},
+					Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual = php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}
