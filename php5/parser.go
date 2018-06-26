@@ -108,6 +108,9 @@ func (l *Parser) GetPositions() parser.Positions {
 // helpers
 
 func lastNode(nn []node.Node) node.Node {
+	if len(nn) == 0 {
+		return nil
+	}
 	return nn[len(nn)-1]
 }
 

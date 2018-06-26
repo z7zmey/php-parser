@@ -4890,7 +4890,9 @@ non_empty_array_pair_list:
                 $$ = append($1, $3)
 
                 // save comments
-                yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
+                if lastNode($1) != nil {
+                    yylex.(*Parser).comments.AddFromToken(lastNode($1), $2, comment.CommaToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
