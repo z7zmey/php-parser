@@ -6189,21 +6189,19 @@ assignment_list:
         assignment_list ',' assignment_list_element
             {
                 if len($1) == 0 {
-                    $1 = []node.Node{nil}
+                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
                 }
 
                 $$ = append($1, $3)
 
                 // save comments
-                if lastNode($1) != nil {
-                    lastNode($1).AddComments($2.Comments, comment.CommaToken)
-                }
+                lastNode($1).AddComments($2.Comments, comment.CommaToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   assignment_list_element
             {
-                if $1 == nil {
+                if $1.(*expr.ArrayItem).Key == nil && $1.(*expr.ArrayItem).Val == nil {
                     $$ = []node.Node{}
                 } else {
                     $$ = []node.Node{$1}
@@ -6242,7 +6240,7 @@ assignment_list_element:
             }
     |   /* empty */
             {
-                $$ = nil 
+                $$ = expr.NewArrayItem(nil, nil) 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6261,7 +6259,7 @@ array_pair_list:
                 $$ = $1
 
                 if $2 != nil {
-                    $$ = append($1, nil)
+                    $$ = append($1, expr.NewArrayItem(nil, nil))
                 }
 
                 // save comments

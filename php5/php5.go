@@ -347,6 +347,7 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line php5/php5.y:6795
+
 type simpleIndirectReference struct {
 	all  []*expr.Variable
 	last *expr.Variable
@@ -8741,15 +8742,15 @@ yydefault:
 		//line php5/php5.y:6190
 		{
 			if len(yyDollar[1].list) == 0 {
-				yyDollar[1].list = []node.Node{nil}
+				yyDollar[1].list = []node.Node{expr.NewArrayItem(nil, nil)}
 			}
 
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
 			// save comments
-			if lastNode(yyDollar[1].list) != nil {
-				lastNode(yyDollar[1].list).AddComments(yyDollar[2].token.Comments, comment.CommaToken)
-			}
+			// if lastNode($1) != nil {
+			lastNode(yyDollar[1].list).AddComments(yyDollar[2].token.Comments, comment.CommaToken)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8757,7 +8758,7 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 		//line php5/php5.y:6205
 		{
-			if yyDollar[1].node == nil {
+			if yyDollar[1].node.(*expr.ArrayItem).Key == nil && yyDollar[1].node.(*expr.ArrayItem).Val == nil {
 				yyVAL.list = []node.Node{}
 			} else {
 				yyVAL.list = []node.Node{yyDollar[1].node}
@@ -8798,7 +8799,7 @@ yydefault:
 		yyDollar = yyS[yypt-0 : yypt+1]
 		//line php5/php5.y:6244
 		{
-			yyVAL.node = nil
+			yyVAL.node = expr.NewArrayItem(nil, nil)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -8817,7 +8818,7 @@ yydefault:
 			yyVAL.list = yyDollar[1].list
 
 			if yyDollar[2].token != nil {
-				yyVAL.list = append(yyDollar[1].list, nil)
+				yyVAL.list = append(yyDollar[1].list, expr.NewArrayItem(nil, nil))
 			}
 
 			// save comments

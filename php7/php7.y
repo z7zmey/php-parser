@@ -4859,11 +4859,7 @@ property_name:
 array_pair_list:
         non_empty_array_pair_list
             {
-                if (len($1) == 1 && $1[0] == nil) {
-                    $$ = $1[:0]
-                } else {
-                    $$ = $1
-                }
+                $$ = $1
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4872,7 +4868,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = nil
+                $$ = expr.NewArrayItem(nil, nil)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4887,18 +4883,24 @@ possible_array_pair:
 non_empty_array_pair_list:
         non_empty_array_pair_list ',' possible_array_pair
             {
+                if len($1) == 0 {
+                    $1 = []node.Node{expr.NewArrayItem(nil, nil)}
+                }
+
                 $$ = append($1, $3)
 
                 // save comments
-                if lastNode($1) != nil {
-                    lastNode($1).AddComments($2.Comments, comment.CommaToken)
-                }
+                lastNode($1).AddComments($2.Comments, comment.CommaToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   possible_array_pair
             {
-                $$ = []node.Node{$1}
+                if $1.(*expr.ArrayItem).Key == nil && $1.(*expr.ArrayItem).Val == nil {
+                    $$ = []node.Node{}
+                } else {
+                    $$ = []node.Node{$1}
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

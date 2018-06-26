@@ -420,7 +420,7 @@ func TestListEmptyItem(t *testing.T) {
 							EndPos:    13,
 						},
 						Items: []node.Node{
-							nil,
+							&expr.ArrayItem{},
 							&expr.ArrayItem{
 								Position: &position.Position{
 									StartLine: 1,
@@ -514,8 +514,8 @@ func TestListEmptyItems(t *testing.T) {
 							EndPos:    17,
 						},
 						Items: []node.Node{
-							nil,
-							nil,
+							&expr.ArrayItem{},
+							&expr.ArrayItem{},
 							&expr.ArrayItem{
 								Position: &position.Position{
 									StartLine: 1,
@@ -541,7 +541,7 @@ func TestListEmptyItems(t *testing.T) {
 									},
 								},
 							},
-							nil,
+							&expr.ArrayItem{},
 						},
 					},
 					Expression: &expr.Variable{

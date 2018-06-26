@@ -202,7 +202,7 @@ func TestArrayItems(t *testing.T) {
 								},
 							},
 						},
-						nil,
+						&expr.ArrayItem{},
 					},
 				},
 			},
