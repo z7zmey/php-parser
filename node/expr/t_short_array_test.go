@@ -202,6 +202,7 @@ func TestShortArrayItems(t *testing.T) {
 								},
 							},
 						},
+						nil,
 					},
 				},
 			},

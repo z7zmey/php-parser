@@ -4859,8 +4859,8 @@ property_name:
 array_pair_list:
         non_empty_array_pair_list
             {
-                if ($1[len($1)-1] == nil) {
-                    $$ = $1[:len($1)-1]
+                if (len($1) == 1 && $1[0] == nil) {
+                    $$ = $1[:0]
                 } else {
                     $$ = $1
                 }
@@ -4890,7 +4890,9 @@ non_empty_array_pair_list:
                 $$ = append($1, $3)
 
                 // save comments
-                if $3 != nil {$3.AddComments($2.Comments, comment.CommaToken)}
+                if lastNode($1) != nil {
+                    lastNode($1).AddComments($2.Comments, comment.CommaToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

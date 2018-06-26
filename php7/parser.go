@@ -86,6 +86,9 @@ func (l *Parser) GetComments() parser.Comments {
 // helpers
 
 func lastNode(nn []node.Node) node.Node {
+	if len(nn) == 0 {
+		return nil
+	}
 	return nn[len(nn)-1]
 }
 

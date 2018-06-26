@@ -386,3 +386,193 @@ func TestListList(t *testing.T) {
 	actual = php5parser.GetRootNode()
 	assertEqual(t, expected, actual)
 }
+
+func TestListEmptyItem(t *testing.T) {
+	src := `<? list(, $a) = $b;`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    19,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    19,
+				},
+				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    18,
+					},
+					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    13,
+						},
+						Items: []node.Node{
+							nil,
+							&expr.ArrayItem{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  11,
+									EndPos:    12,
+								},
+								Val: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  11,
+										EndPos:    12,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  11,
+											EndPos:    12,
+										},
+										Value: "a",
+									},
+								},
+							},
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  17,
+							EndPos:    18,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  17,
+								EndPos:    18,
+							},
+							Value: "b",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual = php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}
+
+func TestListEmptyItems(t *testing.T) {
+	src := `<? list(, , $a, ) = $b;`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    23,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    23,
+				},
+				Expr: &assign.Assign{
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    22,
+					},
+					Variable: &expr.List{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  4,
+							EndPos:    17,
+						},
+						Items: []node.Node{
+							nil,
+							nil,
+							&expr.ArrayItem{
+								Position: &position.Position{
+									StartLine: 1,
+									EndLine:   1,
+									StartPos:  13,
+									EndPos:    14,
+								},
+								Val: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 1,
+										EndLine:   1,
+										StartPos:  13,
+										EndPos:    14,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 1,
+											EndLine:   1,
+											StartPos:  13,
+											EndPos:    14,
+										},
+										Value: "a",
+									},
+								},
+							},
+							nil,
+						},
+					},
+					Expression: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 1,
+							EndLine:   1,
+							StartPos:  21,
+							EndPos:    22,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  21,
+								EndPos:    22,
+							},
+							Value: "b",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual = php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}

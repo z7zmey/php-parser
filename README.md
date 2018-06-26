@@ -165,7 +165,7 @@ nodes := &stmt.StmtList{
 
 file := os.Stdout
 p := printer.NewPrinter(file, "    ")
-p.PrintFile(nodes)
+p.Print(nodes)
 ```
 
 It prints to stdout:

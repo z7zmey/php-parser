@@ -6188,10 +6188,16 @@ simple_indirect_reference:
 assignment_list:
         assignment_list ',' assignment_list_element
             {
+                if len($1) == 0 {
+                    $1 = []node.Node{nil}
+                }
+
                 $$ = append($1, $3)
 
                 // save comments
-                lastNode($1).AddComments($2.Comments, comment.CommaToken)
+                if lastNode($1) != nil {
+                    lastNode($1).AddComments($2.Comments, comment.CommaToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6253,6 +6259,10 @@ array_pair_list:
     |   non_empty_array_pair_list possible_comma
             {
                 $$ = $1
+
+                if $2 != nil {
+                    $$ = append($1, nil)
+                }
 
                 // save comments
                 if $2 != nil {
