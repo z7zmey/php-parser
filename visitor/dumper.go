@@ -7,9 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
 
 	"github.com/z7zmey/php-parser/walker"
 )
@@ -19,7 +18,6 @@ import (
 type Dumper struct {
 	Writer     io.Writer
 	Indent     string
-	Comments   parser.Comments
 	NsResolver *NamespaceResolver
 }
 
@@ -39,10 +37,10 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if c := n.GetComments(); len(c) > 0 {
-		fmt.Fprintf(d.Writer, "%v\"Comments\":\n", d.Indent+"  ")
-		for _, cc := range c {
-			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", cc, comment.TokenNames[cc.TokenName])
+	if mm := n.GetMeta(); len(mm) > 0 {
+		fmt.Fprintf(d.Writer, "%v\"Meta\":\n", d.Indent+"  ")
+		for _, m := range mm {
+			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, meta.TokenNames[m.GetTokenName()])
 		}
 	}
 

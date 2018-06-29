@@ -1,4 +1,3 @@
-//Package visitor contains walker.visitor implementations
 package visitor_test
 
 import (
@@ -21,20 +20,20 @@ func ExamplePrettyJsonDumper() {
 					$var;
 				}
 			}
-		}`
+
+			function foo() {}
+		}
+		`
 
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.WithMeta()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()
 
 	nsResolver := visitor.NewNamespaceResolver()
 	nodes.Walk(nsResolver)
 
-	dumper := &visitor.PrettyJsonDumper{
-		Writer:     os.Stdout,
-		Comments:   php7parser.GetComments(),
-		NsResolver: nsResolver,
-	}
+	dumper := visitor.NewPrettyJsonDumper(os.Stdout, nsResolver)
 	nodes.Walk(dumper)
 
 	// Unordered output:
@@ -42,19 +41,36 @@ func ExamplePrettyJsonDumper() {
 	//   "type": "*node.Root",
 	//   "position": {
 	//     "startPos": 10,
-	//     "endPos": 166,
+	//     "endPos": 188,
 	//     "startLine": 3,
-	//     "endLine": 12
+	//     "endLine": 14
 	//   },
 	//   "Stmts": [
 	//     {
 	//       "type": "*stmt.Namespace",
 	//       "position": {
 	//         "startPos": 10,
-	//         "endPos": 166,
+	//         "endPos": 188,
 	//         "startLine": 3,
-	//         "endLine": 12
+	//         "endLine": 14
 	//       },
+	//       "meta": [
+	//         {
+	//           "type": "*meta.WhiteSpace",
+	//           "value": "\n\n\t\t",
+	//           "tokenName": "NamespaceToken"
+	//         },
+	//         {
+	//           "type": "*meta.WhiteSpace",
+	//           "value": " ",
+	//           "tokenName": "OpenCurlyBracesToken"
+	//         },
+	//         {
+	//           "type": "*meta.WhiteSpace",
+	//           "value": "\n\t\t",
+	//           "tokenName": "CloseCurlyBracesToken"
+	//         }
+	//       ],
 	//       "NamespaceName": {
 	//         "type": "*name.Name",
 	//         "position": {
@@ -72,6 +88,13 @@ func ExamplePrettyJsonDumper() {
 	//               "startLine": 3,
 	//               "endLine": 3
 	//             },
+	//             "meta": [
+	//               {
+	//                 "type": "*meta.WhiteSpace",
+	//                 "value": " ",
+	//                 "tokenName": "StringToken"
+	//               }
+	//             ],
 	//             "Value": "Foo"
 	//           }
 	//         ]
@@ -86,6 +109,23 @@ func ExamplePrettyJsonDumper() {
 	//             "endLine": 11
 	//           },
 	//           "namespacedName": "Foo\\Bar",
+	//           "meta": [
+	//             {
+	//               "type": "*meta.WhiteSpace",
+	//               "value": "\n\t\t\t",
+	//               "tokenName": "ClassToken"
+	//             },
+	//             {
+	//               "type": "*meta.WhiteSpace",
+	//               "value": " ",
+	//               "tokenName": "OpenCurlyBracesToken"
+	//             },
+	//             {
+	//               "type": "*meta.WhiteSpace",
+	//               "value": "\n\t\t\t",
+	//               "tokenName": "CloseCurlyBracesToken"
+	//             }
+	//           ],
 	//           "PhpDocComment": "",
 	//           "ClassName": {
 	//             "type": "*node.Identifier",
@@ -95,6 +135,13 @@ func ExamplePrettyJsonDumper() {
 	//               "startLine": 4,
 	//               "endLine": 4
 	//             },
+	//             "meta": [
+	//               {
+	//                 "type": "*meta.WhiteSpace",
+	//                 "value": " ",
+	//                 "tokenName": "StringToken"
+	//               }
+	//             ],
 	//             "Value": "Bar"
 	//           },
 	//           "Stmts": [
@@ -106,6 +153,13 @@ func ExamplePrettyJsonDumper() {
 	//                 "startLine": 5,
 	//                 "endLine": 10
 	//               },
+	//               "meta": [
+	//                 {
+	//                   "type": "*meta.WhiteSpace",
+	//                   "value": " ",
+	//                   "tokenName": "FunctionToken"
+	//                 }
+	//               ],
 	//               "ReturnsRef": false,
 	//               "PhpDocComment": "",
 	//               "MethodName": {
@@ -116,6 +170,13 @@ func ExamplePrettyJsonDumper() {
 	//                   "startLine": 5,
 	//                   "endLine": 5
 	//                 },
+	//                 "meta": [
+	//                   {
+	//                     "type": "*meta.WhiteSpace",
+	//                     "value": " ",
+	//                     "tokenName": "IdentifierToken"
+	//                   }
+	//                 ],
 	//                 "Value": "FunctionName"
 	//               },
 	//               "Modifiers": [
@@ -127,6 +188,13 @@ func ExamplePrettyJsonDumper() {
 	//                     "startLine": 5,
 	//                     "endLine": 5
 	//                   },
+	//                   "meta": [
+	//                     {
+	//                       "type": "*meta.WhiteSpace",
+	//                       "value": "\n\t\t\t\t",
+	//                       "tokenName": "PublicToken"
+	//                     }
+	//                   ],
 	//                   "Value": "public"
 	//                 }
 	//               ],
@@ -139,6 +207,13 @@ func ExamplePrettyJsonDumper() {
 	//                     "startLine": 5,
 	//                     "endLine": 5
 	//                   },
+	//                   "meta": [
+	//                     {
+	//                       "type": "*meta.WhiteSpace",
+	//                       "value": " ",
+	//                       "tokenName": "EqualToken"
+	//                     }
+	//                   ],
 	//                   "ByRef": false,
 	//                   "Variadic": false,
 	//                   "VariableType": {
@@ -171,6 +246,13 @@ func ExamplePrettyJsonDumper() {
 	//                       "startLine": 5,
 	//                       "endLine": 5
 	//                     },
+	//                     "meta": [
+	//                       {
+	//                         "type": "*meta.WhiteSpace",
+	//                         "value": " ",
+	//                         "tokenName": "VariableToken"
+	//                       }
+	//                     ],
 	//                     "VarName": {
 	//                       "type": "*node.Identifier",
 	//                       "position": {
@@ -208,6 +290,13 @@ func ExamplePrettyJsonDumper() {
 	//                             "startLine": 5,
 	//                             "endLine": 5
 	//                           },
+	//                           "meta": [
+	//                             {
+	//                               "type": "*meta.WhiteSpace",
+	//                               "value": " ",
+	//                               "tokenName": "StringToken"
+	//                             }
+	//                           ],
 	//                           "Value": "null"
 	//                         }
 	//                       ]
@@ -223,6 +312,18 @@ func ExamplePrettyJsonDumper() {
 	//                   "startLine": 6,
 	//                   "endLine": 10
 	//                 },
+	//                 "meta": [
+	//                   {
+	//                     "type": "*meta.WhiteSpace",
+	//                     "value": "\n\t\t\t\t",
+	//                     "tokenName": "OpenCurlyBracesToken"
+	//                   },
+	//                   {
+	//                     "type": "*meta.WhiteSpace",
+	//                     "value": "\n\t\t\t\t",
+	//                     "tokenName": "CloseCurlyBracesToken"
+	//                   }
+	//                 ],
 	//                 "Stmts": [
 	//                   {
 	//                     "type": "*stmt.Expression",
@@ -240,9 +341,32 @@ func ExamplePrettyJsonDumper() {
 	//                         "startLine": 9,
 	//                         "endLine": 9
 	//                       },
-	//                       "comments": [
-	//                         "// some comment\n",
-	//                         "// second comment\n"
+	//                       "meta": [
+	//                         {
+	//                           "type": "*meta.WhiteSpace",
+	//                           "value": "\n\t\t\t\t\t",
+	//                           "tokenName": "VariableToken"
+	//                         },
+	//                         {
+	//                           "type": "*meta.Comment",
+	//                           "value": "// some comment\n",
+	//                           "tokenName": "VariableToken"
+	//                         },
+	//                         {
+	//                           "type": "*meta.WhiteSpace",
+	//                           "value": "\n\t\t\t\t\t",
+	//                           "tokenName": "VariableToken"
+	//                         },
+	//                         {
+	//                           "type": "*meta.Comment",
+	//                           "value": "// second comment\n",
+	//                           "tokenName": "VariableToken"
+	//                         },
+	//                         {
+	//                           "type": "*meta.WhiteSpace",
+	//                           "value": "\n\t\t\t\t\t",
+	//                           "tokenName": "VariableToken"
+	//                         }
 	//                       ],
 	//                       "VarName": {
 	//                         "type": "*node.Identifier",
@@ -259,6 +383,50 @@ func ExamplePrettyJsonDumper() {
 	//                 ]
 	//               }
 	//             }
+	//           ]
+	//         },
+	//         {
+	//           "type": "*stmt.Function",
+	//           "position": {
+	//             "startPos": 168,
+	//             "endPos": 184,
+	//             "startLine": 13,
+	//             "endLine": 13
+	//           },
+	//           "namespacedName": "Foo\\foo",
+	//           "meta": [
+	//             {
+	//               "type": "*meta.WhiteSpace",
+	//               "value": "\n\n\t\t\t",
+	//               "tokenName": "FunctionToken"
+	//             },
+	//             {
+	//               "type": "*meta.WhiteSpace",
+	//               "value": " ",
+	//               "tokenName": "OpenCurlyBracesToken"
+	//             }
+	//           ],
+	//           "ReturnsRef": false,
+	//           "PhpDocComment": "",
+	//           "FunctionName": {
+	//             "type": "*node.Identifier",
+	//             "position": {
+	//               "startPos": 177,
+	//               "endPos": 179,
+	//               "startLine": 13,
+	//               "endLine": 13
+	//             },
+	//             "meta": [
+	//               {
+	//                 "type": "*meta.WhiteSpace",
+	//                 "value": " ",
+	//                 "tokenName": "StringToken"
+	//               }
+	//             ],
+	//             "Value": "foo"
+	//           },
+	//           "Stmts": [
+	//
 	//           ]
 	//         }
 	//       ]

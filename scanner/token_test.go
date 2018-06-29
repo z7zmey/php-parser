@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 
 	"github.com/z7zmey/php-parser/scanner"
 )
@@ -18,13 +18,13 @@ func TestToken(t *testing.T) {
 		EndPos:    3,
 	}
 
-	c := []*comment.Comment{
-		comment.NewComment("test comment", nil),
+	c := []meta.Meta{
+		meta.NewComment("test comment", nil),
 	}
 
-	tkn.Comments = c
+	tkn.Meta = c
 
-	if !reflect.DeepEqual(tkn.Comments, c) {
+	if !reflect.DeepEqual(tkn.Meta, c) {
 		t.Errorf("comments are not equal\n")
 	}
 

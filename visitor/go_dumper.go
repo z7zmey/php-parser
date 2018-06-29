@@ -7,6 +7,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/z7zmey/php-parser/meta"
+
 	"github.com/z7zmey/php-parser/node"
 
 	"github.com/z7zmey/php-parser/walker"
@@ -59,34 +61,39 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 		fmt.Fprint(d.Writer, "},\n")
 	}
 
-	if cc := n.GetComments(); len(cc) > 0 {
+	if mm := n.GetMeta(); len(mm) > 0 {
 		printIndent(d.Writer, d.depth)
-		fmt.Fprint(d.Writer, "Comments: []*comment.Comment{\n")
+		fmt.Fprint(d.Writer, "Meta: []meta.Meta{\n")
 		d.depth++
-		for _, c := range cc {
+		for _, m := range mm {
 			printIndent(d.Writer, d.depth)
-			fmt.Fprint(d.Writer, "&comment.Comment{\n")
+			switch m.(type) {
+			case *meta.Comment:
+				fmt.Fprint(d.Writer, "&meta.Comment{\n")
+			case *meta.WhiteSpace:
+				fmt.Fprint(d.Writer, "&meta.WhiteSpace{\n")
+			}
 			d.depth++
 
 			printIndent(d.Writer, d.depth)
 			fmt.Fprint(d.Writer, "Position: &position.Position{\n")
 			d.depth++
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartLine: %d,\n", c.Position.StartLine)
+			fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.GetPosition().StartLine)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndLine: %d,\n", c.Position.EndLine)
+			fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.GetPosition().EndLine)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartPos: %d,\n", c.Position.StartPos)
+			fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.GetPosition().StartPos)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndPos: %d,\n", c.Position.EndPos)
+			fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.GetPosition().EndPos)
 			d.depth--
 			printIndent(d.Writer, d.depth)
 			fmt.Fprint(d.Writer, "},\n")
 
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "Value: %q,\n", c.Value)
+			fmt.Fprintf(d.Writer, "Value: %q,\n", m.String())
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "TokenName: %q,\n", c.TokenName)
+			fmt.Fprintf(d.Writer, "TokenName: %d,\n", m.GetTokenName())
 
 			d.depth--
 			printIndent(d.Writer, d.depth)

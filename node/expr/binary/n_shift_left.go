@@ -1,7 +1,7 @@
 package binary
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // ShiftLeft node
 type ShiftLeft struct {
-	Comments []*comment.Comment
+	Meta     []meta.Meta
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,15 +33,12 @@ func (n *ShiftLeft) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ShiftLeft) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *ShiftLeft) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *ShiftLeft) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *ShiftLeft) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

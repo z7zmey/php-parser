@@ -1,13 +1,13 @@
 package scanner
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 )
 
 // Token value returned by lexer
 type Token struct {
 	Value     string
-	Comments  []*comment.Comment
+	Meta      []meta.Meta
 	StartLine int
 	EndLine   int
 	StartPos  int

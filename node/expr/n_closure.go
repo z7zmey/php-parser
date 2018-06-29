@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Closure node
 type Closure struct {
-	Comments      []*comment.Comment
+	Meta          []meta.Meta
 	Position      *position.Position
 	ReturnsRef    bool
 	Static        bool
@@ -43,15 +43,12 @@ func (n *Closure) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Closure) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *Closure) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *Closure) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *Closure) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Concat node
 type Concat struct {
-	Comments   []*comment.Comment
+	Meta       []meta.Meta
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,15 +33,12 @@ func (n *Concat) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Concat) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *Concat) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *Concat) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *Concat) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

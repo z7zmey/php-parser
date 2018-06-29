@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"sort"
+
+	"github.com/z7zmey/php-parser/meta"
 
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
 
 	"github.com/z7zmey/php-parser/walker"
 )
 
 type JsonDumper struct {
 	Writer     io.Writer
-	Comments   parser.Comments
 	NsResolver *NamespaceResolver
 }
 
@@ -42,14 +43,19 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if c := n.GetComments(); len(c) > 0 {
-		fmt.Fprintf(d.Writer, ",%q:[", "comments")
+	if mm := n.GetMeta(); len(mm) > 0 {
+		fmt.Fprintf(d.Writer, ",%q:[", "meta")
 
-		for k, cc := range c {
-			if k == 0 {
-				fmt.Fprintf(d.Writer, "%q", cc)
-			} else {
-				fmt.Fprintf(d.Writer, ",%q", cc)
+		for k, m := range mm {
+			if k != 0 {
+				fmt.Fprint(d.Writer, ",")
+			}
+
+			switch m.(type) {
+			case *meta.Comment:
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.Comment", "value", m.String(), "tokenName", meta.TokenNames[m.GetTokenName()])
+			case *meta.WhiteSpace:
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpace", "value", m.String(), "tokenName", meta.TokenNames[m.GetTokenName()])
 			}
 		}
 
@@ -57,12 +63,20 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 	}
 
 	if a := n.Attributes(); len(a) > 0 {
-		for key, attr := range a {
+		var attributes []string
+		for key := range n.Attributes() {
+			attributes = append(attributes, key)
+		}
+
+		sort.Strings(attributes)
+
+		for _, attributeName := range attributes {
+			attr := a[attributeName]
 			switch attr.(type) {
 			case string:
-				fmt.Fprintf(d.Writer, ",\"%s\":%q", key, attr)
+				fmt.Fprintf(d.Writer, ",\"%s\":%q", attributeName, attr)
 			default:
-				fmt.Fprintf(d.Writer, ",\"%s\":%v", key, attr)
+				fmt.Fprintf(d.Writer, ",\"%s\":%v", attributeName, attr)
 			}
 		}
 	}

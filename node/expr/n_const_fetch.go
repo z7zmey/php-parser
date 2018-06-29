@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // ConstFetch node
 type ConstFetch struct {
-	Comments []*comment.Comment
+	Meta     []meta.Meta
 	Position *position.Position
 	Constant node.Node
 }
@@ -31,15 +31,12 @@ func (n *ConstFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ConstFetch) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *ConstFetch) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *ConstFetch) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *ConstFetch) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

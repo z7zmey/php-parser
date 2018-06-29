@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Constant node
 type Constant struct {
-	Comments      []*comment.Comment
+	Meta          []meta.Meta
 	Position      *position.Position
 	PhpDocComment string
 	ConstantName  node.Node
@@ -35,15 +35,12 @@ func (n *Constant) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Constant) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *Constant) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *Constant) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *Constant) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

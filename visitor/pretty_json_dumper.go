@@ -6,18 +6,27 @@ import (
 	"io"
 	"reflect"
 
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
-
 	"github.com/z7zmey/php-parser/walker"
 )
 
 type PrettyJsonDumper struct {
-	Writer      io.Writer
-	Comments    parser.Comments
-	NsResolver  *NamespaceResolver
-	depth       int
-	isChildNode bool
+	Writer         io.Writer
+	NsResolver     *NamespaceResolver
+	depth          int
+	isChildNode    bool
+	isNotFirstNode bool
+}
+
+func NewPrettyJsonDumper(Writer io.Writer, NsResolver *NamespaceResolver) *PrettyJsonDumper {
+	return &PrettyJsonDumper{
+		Writer:         Writer,
+		NsResolver:     NsResolver,
+		depth:          0,
+		isChildNode:    false,
+		isNotFirstNode: false,
+	}
 }
 
 func (d *PrettyJsonDumper) printIndent(w io.Writer) {
@@ -34,8 +43,12 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 
 	if d.isChildNode {
 		d.isChildNode = false
+	} else if d.isNotFirstNode {
+		fmt.Fprint(d.Writer, ",\n")
+		d.printIndent(d.Writer)
 	} else {
 		d.printIndent(d.Writer)
+		d.isNotFirstNode = true
 	}
 
 	fmt.Fprint(d.Writer, "{\n")
@@ -69,20 +82,33 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if c := n.GetComments(); len(c) > 0 {
+	if mm := n.GetMeta(); len(mm) > 0 {
 		fmt.Fprint(d.Writer, ",\n")
 		d.printIndent(d.Writer)
-		fmt.Fprint(d.Writer, "\"comments\": [\n")
+		fmt.Fprint(d.Writer, "\"meta\": [\n")
 		d.depth++
-		for k, cc := range c {
-			if k == 0 {
-				d.printIndent(d.Writer)
-				fmt.Fprintf(d.Writer, "%q", cc)
-			} else {
+		for k, m := range mm {
+			if k != 0 {
 				fmt.Fprint(d.Writer, ",\n")
-				d.printIndent(d.Writer)
-				fmt.Fprintf(d.Writer, "%q", cc)
 			}
+
+			d.printIndent(d.Writer)
+			fmt.Fprint(d.Writer, "{\n")
+			d.depth++
+			d.printIndent(d.Writer)
+			switch m.(type) {
+			case *meta.Comment:
+				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.Comment")
+			case *meta.WhiteSpace:
+				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.WhiteSpace")
+			}
+			d.printIndent(d.Writer)
+			fmt.Fprintf(d.Writer, "%q: %q,\n", "value", m.String())
+			d.printIndent(d.Writer)
+			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", meta.TokenNames[m.GetTokenName()])
+			d.depth--
+			d.printIndent(d.Writer)
+			fmt.Fprint(d.Writer, "}")
 		}
 		d.depth--
 		fmt.Fprint(d.Writer, "\n")
@@ -130,6 +156,8 @@ func (d *PrettyJsonDumper) EnterChildList(key string, w walker.Walkable) {
 	d.printIndent(d.Writer)
 	fmt.Fprintf(d.Writer, "%q: [\n", key)
 	d.depth++
+
+	d.isNotFirstNode = false
 }
 
 func (d *PrettyJsonDumper) LeaveChildList(key string, w walker.Walkable) {

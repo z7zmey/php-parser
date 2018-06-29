@@ -12,7 +12,7 @@ import (
 	"github.com/z7zmey/php-parser/position"
 
 	"github.com/cznic/golex/lex"
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 )
 
 // Allocate Character classes anywhere in [0x80, 0xFF].
@@ -441,10 +441,11 @@ type Lexer struct {
 	*lex.Lexer
 	StateStack    []int
 	PhpDocComment string
-	Comments      []*comment.Comment
+	Meta          []meta.Meta
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     sync.Pool
+	WithMeta      bool
 }
 
 // Rune2Class returns the rune integer id
@@ -477,7 +478,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		Lexer:         lx,
 		StateStack:    []int{0},
 		PhpDocComment: "",
-		Comments:      nil,
+		Meta:          nil,
 		heredocLabel:  "",
 		tokenBytesBuf: &bytes.Buffer{},
 		TokenPool: sync.Pool{
@@ -530,7 +531,7 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	lastChar := chars[len(chars)-1]
 
 	token := l.TokenPool.Get().(*Token)
-	token.Comments = l.Comments
+	token.Meta = l.Meta
 	token.Value = l.tokenString(chars)
 
 	token.StartLine = l.File.Line(firstChar.Pos())
@@ -541,7 +542,11 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	return token
 }
 
-func (l *Lexer) addComment(chars []lex.Char) {
+func (l *Lexer) addComments(chars []lex.Char) {
+	if !l.WithMeta {
+		return
+	}
+
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
@@ -552,8 +557,27 @@ func (l *Lexer) addComment(chars []lex.Char) {
 		int(lastChar.Pos()),
 	)
 
-	c := comment.NewComment(l.tokenString(chars), pos)
-	l.Comments = append(l.Comments, c)
+	c := meta.NewComment(l.tokenString(chars), pos)
+	l.Meta = append(l.Meta, c)
+}
+
+func (l *Lexer) addWhiteSpace(chars []lex.Char) {
+	if !l.WithMeta {
+		return
+	}
+
+	firstChar := chars[0]
+	lastChar := chars[len(chars)-1]
+
+	pos := position.NewPosition(
+		l.File.Line(firstChar.Pos()),
+		l.File.Line(lastChar.Pos()),
+		int(firstChar.Pos()),
+		int(lastChar.Pos()),
+	)
+
+	c := meta.NewWhiteSpace(l.tokenString(chars), pos)
+	l.Meta = append(l.Meta, c)
 }
 
 func (l *Lexer) tokenString(chars []lex.Char) string {

@@ -1,14 +1,14 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Parameter node
 type Parameter struct {
-	Comments     []*comment.Comment
+	Meta         []meta.Meta
 	Position     *position.Position
 	ByRef        bool
 	Variadic     bool
@@ -38,15 +38,12 @@ func (n *Parameter) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Parameter) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *Parameter) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *Parameter) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *Parameter) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

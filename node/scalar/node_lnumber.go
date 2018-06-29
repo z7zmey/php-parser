@@ -1,14 +1,14 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Lnumber node
 type Lnumber struct {
-	Comments []*comment.Comment
+	Meta     []meta.Meta
 	Position *position.Position
 	Value    string
 }
@@ -30,15 +30,12 @@ func (n *Lnumber) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Lnumber) AddComments(cc []*comment.Comment, tn comment.TokenName) {
-	for _, c := range cc {
-		c.SetTokenName(tn)
-	}
-	n.Comments = append(n.Comments, cc...)
+func (n *Lnumber) AddMeta(m []meta.Meta) {
+	n.Meta = append(n.Meta, m...)
 }
 
-func (n *Lnumber) GetComments() []*comment.Comment {
-	return n.Comments
+func (n *Lnumber) GetMeta() []meta.Meta {
+	return n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -32,7 +32,7 @@ func isValidFirstVarNameRune(r rune) bool {
 }
 
 func (l *Lexer) Lex(lval Lval) int {
-	l.Comments = nil
+	l.Meta = nil
 	c := l.Enter()
 
 yystate0:
@@ -7556,6 +7556,7 @@ yyrule2: // .
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
 		l.begin(PHP)
+		l.ungetChars(len(l.Token()) - 5)
 		goto yystate0
 	}
 yyrule4: // \<\?
@@ -7571,8 +7572,10 @@ yyrule5: // \<\?=
 		goto yystate0
 	}
 yyrule6: // [ \t\n\r]+
-
-	goto yystate0
+	{
+		l.addWhiteSpace(l.Token())
+		goto yystate0
+	}
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?
 	{
 		l.begin(INITIAL)
@@ -8367,7 +8370,7 @@ yyrule126: // (#|[/][/])
 			}
 			break
 		}
-		l.addComment(tb)
+		l.addComments(tb)
 		goto yystate0
 	}
 yyrule127: // ([/][*])|([/][*][*])
@@ -8391,9 +8394,9 @@ yyrule127: // ([/][*])|([/][*][*])
 		}
 		if is_doc_comment {
 			l.PhpDocComment = string(l.TokenBytes(nil))
-			l.addComment(l.Token())
+			l.addComments(l.Token())
 		} else {
-			l.addComment(l.Token())
+			l.addComments(l.Token())
 		}
 		goto yystate0
 	}

@@ -1,4 +1,3 @@
-// Package visitor contains walker.visitor implementations
 package visitor_test
 
 import (
@@ -23,6 +22,7 @@ func ExampleDumper() {
 		}`
 
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.WithMeta()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()
 
@@ -32,7 +32,6 @@ func ExampleDumper() {
 	dumper := &visitor.Dumper{
 		Writer:     os.Stdout,
 		Indent:     "| ",
-		Comments:   php7parser.GetComments(),
 		NsResolver: nsResolver,
 	}
 	nodes.Walk(dumper)
@@ -43,38 +42,58 @@ func ExampleDumper() {
 	// |   "Stmts":
 	// |     [*stmt.Namespace]
 	// |       "Position": Pos{Line: 3-11 Pos: 10-143}
+	// |       "Meta":
+	// |         "\n\n\t\t" before "NamespaceToken"
+	// |         " " before "OpenCurlyBracesToken"
+	// |         "\n\t\t" before "CloseCurlyBracesToken"
 	// |       "NamespaceName":
 	// |         [*name.Name]
 	// |           "Position": Pos{Line: 3-3 Pos: 20-22}
 	// |           "Parts":
 	// |             [*name.NamePart]
 	// |               "Position": Pos{Line: 3-3 Pos: 20-22}
+	// |               "Meta":
+	// |                 " " before "StringToken"
 	// |               "Value": "Foo"
 	// |       "Stmts":
 	// |         [*stmt.Class]
 	// |           "Position": Pos{Line: 4-10 Pos: 29-139}
 	// |           "NamespacedName": "Foo\\Bar"
+	// |           "Meta":
+	// |             "\n\t\t\t" before "ClassToken"
+	// |             " " before "OpenCurlyBracesToken"
+	// |             "\n\t\t\t" before "CloseCurlyBracesToken"
 	// |           "PhpDocComment": ""
 	// |           "ClassName":
 	// |             [*node.Identifier]
 	// |               "Position": Pos{Line: 4-4 Pos: 35-37}
+	// |               "Meta":
+	// |                 " " before "StringToken"
 	// |               "Value": "Bar"
 	// |           "Stmts":
 	// |             [*stmt.ClassMethod]
 	// |               "Position": Pos{Line: 5-9 Pos: 45-134}
+	// |               "Meta":
+	// |                 " " before "FunctionToken"
 	// |               "ReturnsRef": false
 	// |               "PhpDocComment": ""
 	// |               "MethodName":
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 61-72}
+	// |                   "Meta":
+	// |                     " " before "IdentifierToken"
 	// |                   "Value": "FunctionName"
 	// |               "Modifiers":
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 45-50}
+	// |                   "Meta":
+	// |                     "\n\t\t\t\t" before "PublicToken"
 	// |                   "Value": "public"
 	// |               "Params":
 	// |                 [*node.Parameter]
 	// |                   "Position": Pos{Line: 5-5 Pos: 74-89}
+	// |                   "Meta":
+	// |                     " " before "EqualToken"
 	// |                   "Variadic": false
 	// |                   "ByRef": false
 	// |                   "VariableType":
@@ -88,6 +107,8 @@ func ExampleDumper() {
 	// |                   "Variable":
 	// |                     [*expr.Variable]
 	// |                       "Position": Pos{Line: 5-5 Pos: 79-82}
+	// |                       "Meta":
+	// |                         " " before "VariableToken"
 	// |                       "VarName":
 	// |                         [*node.Identifier]
 	// |                           "Position": Pos{Line: 5-5 Pos: 79-82}
@@ -102,18 +123,25 @@ func ExampleDumper() {
 	// |                           "Parts":
 	// |                             [*name.NamePart]
 	// |                               "Position": Pos{Line: 5-5 Pos: 86-89}
+	// |                               "Meta":
+	// |                                 " " before "StringToken"
 	// |                               "Value": "null"
 	// |               "Stmt":
 	// |                 [*stmt.StmtList]
 	// |                   "Position": Pos{Line: 6-9 Pos: 96-134}
+	// |                   "Meta":
+	// |                     "\n\t\t\t\t" before "OpenCurlyBracesToken"
+	// |                     "\n\t\t\t\t" before "CloseCurlyBracesToken"
 	// |                   "Stmts":
 	// |                     [*stmt.Expression]
 	// |                       "Position": Pos{Line: 8-8 Pos: 124-128}
 	// |                       "Expr":
 	// |                         [*expr.Variable]
 	// |                           "Position": Pos{Line: 8-8 Pos: 124-127}
-	// |                           "Comments":
+	// |                           "Meta":
+	// |                             "\n\t\t\t\t\t" before "VariableToken"
 	// |                             "// some comment\n" before "VariableToken"
+	// |                             "\n\t\t\t\t\t" before "VariableToken"
 	// |                           "VarName":
 	// |                             [*node.Identifier]
 	// |                               "Position": Pos{Line: 8-8 Pos: 124-127}

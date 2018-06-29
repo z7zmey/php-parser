@@ -1,4 +1,4 @@
-package comment
+package meta
 
 // TokenName is used to specify a comment position
 type TokenName int

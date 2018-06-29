@@ -3,6 +3,8 @@ package php7
 import (
 	"io"
 
+	"github.com/z7zmey/php-parser/meta"
+
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
@@ -21,7 +23,6 @@ type Parser struct {
 	positionBuilder *parser.PositionBuilder
 	errors          []*errors.Error
 	rootNode        node.Node
-	comments        parser.Comments
 }
 
 // NewParser creates and returns new Parser
@@ -31,7 +32,6 @@ func NewParser(src io.Reader, path string) *Parser {
 	return &Parser{
 		lexer,
 		path,
-		nil,
 		nil,
 		nil,
 		nil,
@@ -50,12 +50,15 @@ func (l *Parser) Error(msg string) {
 	l.errors = append(l.errors, errors.NewError(msg, l.currentToken))
 }
 
+func (l *Parser) WithMeta() {
+	l.Lexer.WithMeta = true
+}
+
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
 	// init
 	l.errors = nil
 	l.rootNode = nil
-	l.comments = parser.Comments{}
 	l.positionBuilder = &parser.PositionBuilder{}
 
 	// parse
@@ -78,11 +81,6 @@ func (l *Parser) GetErrors() []*errors.Error {
 	return l.errors
 }
 
-// GetComments returns comments list
-func (l *Parser) GetComments() parser.Comments {
-	return l.comments
-}
-
 // helpers
 
 func lastNode(nn []node.Node) node.Node {
@@ -98,6 +96,14 @@ func firstNode(nn []node.Node) node.Node {
 
 func isDollar(r rune) bool {
 	return r == '$'
+}
+
+func addMeta(n node.Node, mm []meta.Meta, tn meta.TokenName) {
+	for _, m := range mm {
+		m.SetTokenName(tn)
+	}
+
+	n.AddMeta(mm)
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

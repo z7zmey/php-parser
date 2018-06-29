@@ -7,7 +7,7 @@ import (
 
 	"github.com/z7zmey/php-parser/position"
 
-	"github.com/z7zmey/php-parser/comment"
+	"github.com/z7zmey/php-parser/meta"
 
 	"github.com/z7zmey/php-parser/scanner"
 
@@ -415,6 +415,7 @@ func TestTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -503,6 +504,7 @@ func TestTeplateStringTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -588,6 +590,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -681,6 +684,7 @@ CAT;
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -754,6 +758,7 @@ CAT
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -786,6 +791,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 	actual := []int{}
 
@@ -876,16 +882,18 @@ func TestSlashAfterVariable(t *testing.T) {
 func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
-	expected := []*comment.Comment{
-		comment.NewComment("//test", position.NewPosition(1, 1, 7, 12)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
+		meta.NewComment("//test", position.NewPosition(1, 1, 7, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -893,16 +901,19 @@ func TestCommentEnd(t *testing.T) {
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
-	expected := []*comment.Comment{
-		comment.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
+		meta.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
+		meta.NewWhiteSpace("\n", position.NewPosition(1, 1, 13, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -910,16 +921,18 @@ func TestCommentNewLine(t *testing.T) {
 func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
-	expected := []*comment.Comment{
-		comment.NewComment("//test\r", position.NewPosition(1, 1, 7, 13)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
+		meta.NewComment("//test\r", position.NewPosition(1, 1, 7, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -927,16 +940,19 @@ func TestCommentNewLine1(t *testing.T) {
 func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
-	expected := []*comment.Comment{
-		comment.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
+		meta.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
+		meta.NewWhiteSpace("\n", position.NewPosition(1, 1, 13, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -945,16 +961,18 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	src := `<?php
 	//test?> test`
 
-	expected := []*comment.Comment{
-		comment.NewComment("//test", position.NewPosition(2, 2, 8, 13)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+		meta.NewComment("//test", position.NewPosition(2, 2, 8, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -963,16 +981,18 @@ func TestInlineComment(t *testing.T) {
 	src := `<?php
 	/*test*/`
 
-	expected := []*comment.Comment{
-		comment.NewComment("/*test*/", position.NewPosition(2, 2, 8, 15)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+		meta.NewComment("/*test*/", position.NewPosition(2, 2, 8, 15)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -981,16 +1001,18 @@ func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
 	/**/`
 
-	expected := []*comment.Comment{
-		comment.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+		meta.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -999,16 +1021,18 @@ func TestEmptyInlineComment2(t *testing.T) {
 	src := `<?php
 	/***/`
 
-	expected := []*comment.Comment{
-		comment.NewComment("/***/", position.NewPosition(2, 2, 8, 12)),
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+		meta.NewComment("/***/", position.NewPosition(2, 2, 8, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
 
-	actual := lexer.Comments
+	actual := lexer.Meta
 
 	assertEqual(t, expected, actual)
 }

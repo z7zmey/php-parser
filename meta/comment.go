@@ -1,4 +1,4 @@
-package comment
+package meta
 
 import (
 	"github.com/z7zmey/php-parser/position"
@@ -25,6 +25,15 @@ func (c *Comment) SetTokenName(tokenName TokenName) {
 	c.TokenName = tokenName
 }
 
+// GetTokenName returns token name
+func (c *Comment) GetTokenName() TokenName {
+	return c.TokenName
+}
+
 func (c *Comment) String() string {
 	return c.Value
+}
+
+func (c *Comment) GetPosition() *position.Position {
+	return c.Position
 }

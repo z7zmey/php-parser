@@ -31,7 +31,7 @@ func isValidFirstVarNameRune(r rune) bool {
 }
 
 func (l *Lexer) Lex(lval Lval) int {
-    l.Comments = nil
+    l.Meta = nil
     c := l.Enter()
 
 %}
@@ -84,11 +84,11 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.createToken(tb))
     return T_INLINE_HTML
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);l.ungetChars(len(l.Token())-5)
 <INITIAL>\<\?                                   l.begin(PHP);
 <INITIAL>\<\?=                                  l.begin(PHP);lval.Token(l.createToken(l.Token())); return T_ECHO;
 
-<PHP>[ \t\n\r]+
+<PHP>[ \t\n\r]+                                 l.addWhiteSpace(l.Token())
 <PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 
@@ -284,7 +284,7 @@ NEW_LINE        (\r|\n|\r\n)
         break;
     }
 
-    l.addComment(tb)
+    l.addComments(tb)
 
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
@@ -309,9 +309,9 @@ NEW_LINE        (\r|\n|\r\n)
 
     if is_doc_comment {
         l.PhpDocComment = string(l.TokenBytes(nil))
-        l.addComment(l.Token())
+        l.addComments(l.Token())
     } else {
-        l.addComment(l.Token())
+        l.addComments(l.Token())
     }
 
 <PHP>{OPERATORS}                                lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))

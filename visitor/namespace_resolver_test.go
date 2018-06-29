@@ -1,4 +1,3 @@
-// Package visitor contains walker.visitor implementations
 package visitor_test
 
 import (
