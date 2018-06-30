@@ -347,7 +347,6 @@ const yyErrCode = 2
 const yyInitialStackSize = 16
 
 //line php5/php5.y:6789
-
 type simpleIndirectReference struct {
 	all  []*expr.Variable
 	last *expr.Variable

@@ -21,7 +21,7 @@ bench:
 	go test -benchmem -bench=. ./php5
 	go test -benchmem -bench=. ./php7
 
-compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
+compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go fmt
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php7/php7.go
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./php5/php5.go
 	rm -f y.output
