@@ -2481,6 +2481,37 @@ func TestPrintStmtClassMethod(t *testing.T) {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
+func TestPrintStmtAbstractClassMethod(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o, "    ")
+	p.Print(&stmt.ClassMethod{
+		Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+		ReturnsRef: true,
+		MethodName: &node.Identifier{Value: "foo"},
+		Params: []node.Node{
+			&node.Parameter{
+				ByRef:        true,
+				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
+				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
+			},
+			&node.Parameter{
+				Variadic: true,
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+		ReturnType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "void"}}},
+		Stmt:       &stmt.Nop{},
+	})
+
+	expected := `public function &foo(?int &$a = null, ...$b): void;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
 
 func TestPrintStmtClass(t *testing.T) {
 	o := bytes.NewBufferString("")
