@@ -9,7 +9,7 @@ build:
 	go build
 
 run:
-	./php-parser $(PHPFILE)
+	./php-parser -d go $(PHPFILE)
 
 test:
 	go test ./...
@@ -36,17 +36,17 @@ compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go
 	goyacc -o $@ $<
 
 cpu_pprof:
-	GOGC=off go test -cpuprofile cpu.pprof -bench=. -benchtime=20s ./php7
+	go test -cpuprofile cpu.pprof -bench=. -benchtime=20s ./php7
 	go tool pprof ./php7.test cpu.pprof
 
 mem_pprof:
-	GOGC=off go test -memprofile mem.pprof -bench=. -benchtime=20s -benchmem ./php7
+	go test -memprofile mem.pprof -bench=. -benchtime=20s -benchmem ./php7
 	go tool pprof -alloc_objects ./php7.test mem.pprof
 
 cpu_pprof_php5:
-	GOGC=off go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./php5
+	go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./php5
 	go tool pprof ./php5.test cpu.prof
 
 mem_pprof_php5:
-	GOGC=off go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./php5
+	go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./php5
 	go tool pprof -alloc_objects ./php5.test mem.prof
