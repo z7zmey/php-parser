@@ -45,6 +45,13 @@ func ExamplePrettyJsonDumper() {
 	//     "startLine": 3,
 	//     "endLine": 14
 	//   },
+	//   "meta": [
+	//     {
+	//       "type": "*meta.WhiteSpace",
+	//       "value": "\n\t\t",
+	//       "tokenName": "NodeEnd"
+	//     }
+	//   ],
 	//   "Stmts": [
 	//     {
 	//       "type": "*stmt.Namespace",
@@ -139,7 +146,7 @@ func ExamplePrettyJsonDumper() {
 	//               {
 	//                 "type": "*meta.WhiteSpace",
 	//                 "value": " ",
-	//                 "tokenName": "StringToken"
+	//                 "tokenName": "IdentifierToken"
 	//               }
 	//             ],
 	//             "Value": "Bar"
@@ -192,7 +199,7 @@ func ExamplePrettyJsonDumper() {
 	//                     {
 	//                       "type": "*meta.WhiteSpace",
 	//                       "value": "\n\t\t\t\t",
-	//                       "tokenName": "PublicToken"
+	//                       "tokenName": "IdentifierToken"
 	//                     }
 	//                   ],
 	//                   "Value": "public"
@@ -354,7 +361,7 @@ func ExamplePrettyJsonDumper() {
 	//                         },
 	//                         {
 	//                           "type": "*meta.WhiteSpace",
-	//                           "value": "\n\t\t\t\t\t",
+	//                           "value": "\t\t\t\t\t",
 	//                           "tokenName": "VariableToken"
 	//                         },
 	//                         {
@@ -364,7 +371,7 @@ func ExamplePrettyJsonDumper() {
 	//                         },
 	//                         {
 	//                           "type": "*meta.WhiteSpace",
-	//                           "value": "\n\t\t\t\t\t",
+	//                           "value": "\t\t\t\t\t",
 	//                           "tokenName": "VariableToken"
 	//                         }
 	//                       ],
@@ -420,7 +427,7 @@ func ExamplePrettyJsonDumper() {
 	//               {
 	//                 "type": "*meta.WhiteSpace",
 	//                 "value": " ",
-	//                 "tokenName": "StringToken"
+	//                 "tokenName": "IdentifierToken"
 	//               }
 	//             ],
 	//             "Value": "foo"

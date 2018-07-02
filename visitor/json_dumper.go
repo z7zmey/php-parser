@@ -53,9 +53,9 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 
 			switch m.(type) {
 			case *meta.Comment:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.Comment", "value", m.String(), "tokenName", meta.TokenNames[m.GetTokenName()])
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.Comment", "value", m.String(), "tokenName", m.GetTokenName().String())
 			case *meta.WhiteSpace:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpace", "value", m.String(), "tokenName", meta.TokenNames[m.GetTokenName()])
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpace", "value", m.String(), "tokenName", m.GetTokenName().String())
 			}
 		}
 

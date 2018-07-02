@@ -6,6 +6,7 @@ fmt:
 	find . -type f -iregex '.*\.go' -exec gofmt -l -s -w '{}' +
 
 build:
+	go generate ./...
 	go build
 
 run:

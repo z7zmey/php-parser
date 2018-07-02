@@ -105,7 +105,7 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 			d.printIndent(d.Writer)
 			fmt.Fprintf(d.Writer, "%q: %q,\n", "value", m.String())
 			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", meta.TokenNames[m.GetTokenName()])
+			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", m.GetTokenName().String())
 			d.depth--
 			d.printIndent(d.Writer)
 			fmt.Fprint(d.Writer, "}")

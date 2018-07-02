@@ -68,7 +68,7 @@ func ExampleDumper() {
 	// |             [*node.Identifier]
 	// |               "Position": Pos{Line: 4-4 Pos: 35-37}
 	// |               "Meta":
-	// |                 " " before "StringToken"
+	// |                 " " before "IdentifierToken"
 	// |               "Value": "Bar"
 	// |           "Stmts":
 	// |             [*stmt.ClassMethod]
@@ -87,15 +87,15 @@ func ExampleDumper() {
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 45-50}
 	// |                   "Meta":
-	// |                     "\n\t\t\t\t" before "PublicToken"
+	// |                     "\n\t\t\t\t" before "IdentifierToken"
 	// |                   "Value": "public"
 	// |               "Params":
 	// |                 [*node.Parameter]
 	// |                   "Position": Pos{Line: 5-5 Pos: 74-89}
 	// |                   "Meta":
 	// |                     " " before "EqualToken"
-	// |                   "Variadic": false
 	// |                   "ByRef": false
+	// |                   "Variadic": false
 	// |                   "VariableType":
 	// |                     [*name.Name]
 	// |                       "Position": Pos{Line: 5-5 Pos: 74-77}
@@ -141,7 +141,7 @@ func ExampleDumper() {
 	// |                           "Meta":
 	// |                             "\n\t\t\t\t\t" before "VariableToken"
 	// |                             "// some comment\n" before "VariableToken"
-	// |                             "\n\t\t\t\t\t" before "VariableToken"
+	// |                             "\t\t\t\t\t" before "VariableToken"
 	// |                           "VarName":
 	// |                             [*node.Identifier]
 	// |                               "Position": Pos{Line: 8-8 Pos: 124-127}

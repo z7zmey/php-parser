@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/z7zmey/php-parser/meta"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
@@ -15,10 +17,10 @@ import (
 	"github.com/z7zmey/php-parser/printer"
 )
 
-func TestPrintFile(t *testing.T) {
+func TestPrinterPrintFile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "\t")
+	p := printer.NewPrinter(o)
 	p.Print(&node.Root{
 		Stmts: []node.Node{
 			&stmt.Namespace{
@@ -61,16 +63,7 @@ func TestPrintFile(t *testing.T) {
 		},
 	})
 
-	expected := `<?php
-namespace Foo;
-abstract class Bar extends Baz
-{
-	public function greet()
-	{
-		echo 'Hello world';
-	}
-}
-`
+	expected := `<?phpnamespaceFoo;abstractclassBarextendsBaz{publicfunctiongreet(){echo'Hello world';}}`
 	actual := o.String()
 
 	if expected != actual {
@@ -78,29 +71,24 @@ abstract class Bar extends Baz
 	}
 }
 
-func TestPrintFileInlineHtml(t *testing.T) {
+func TestPrinterPrintFileInlineHtml(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&node.Root{
 		Stmts: []node.Node{
 			&stmt.InlineHtml{Value: "<div>HTML</div>"},
 			&stmt.Expression{
-				Expr: &scalar.Heredoc{
-					Label: "\"LBL\"",
-					Parts: []node.Node{
-						&scalar.EncapsedStringPart{Value: "hello world\n"},
+				Expr: &expr.Variable{
+					VarName: &node.Identifier{
+						Value: "a",
 					},
 				},
 			},
 		},
 	})
 
-	expected := `<div>HTML</div><?php
-<<<"LBL"
-hello world
-LBL;
-`
+	expected := `<div>HTML</div><?php$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -110,52 +98,75 @@ LBL;
 
 // node
 
-func TestPrintIdentifier(t *testing.T) {
+func TestPrinterPrintIdentifier(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&node.Identifier{Value: "test"})
+	p := printer.NewPrinter(o)
+	n := &node.Identifier{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     "  ",
+				TokenName: meta.IdentifierToken,
+			},
+		},
+		Value: "test",
+	}
+	p.Print(n)
 
-	if o.String() != `test` {
+	if o.String() != `  test` {
 		t.Errorf("TestPrintIdentifier is failed\n")
 	}
 }
 
-func TestPrintParameter(t *testing.T) {
+func TestPrinterPrintParameter(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&node.Parameter{
-		ByRef:        false,
-		Variadic:     true,
-		VariableType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-		Variable:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		DefaultValue: &scalar.String{Value: "'default'"},
-	})
-
-	expected := "\\Foo ...$var = 'default'"
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintNullable(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&node.Nullable{
-		Expr: &node.Parameter{
-			ByRef:        false,
-			Variadic:     true,
-			VariableType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-			DefaultValue: &scalar.String{Value: "'default'"},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EllipsisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+		},
+		ByRef:    false,
+		Variadic: true,
+		VariableType: &name.FullyQualified{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.NsSeparatorToken,
+				},
+			},
+			Parts: []node.Node{
+				&name.NamePart{
+					Meta: []meta.Meta{
+						&meta.WhiteSpace{
+							Value:     " ",
+							TokenName: meta.StringToken,
+						},
+					},
+					Value: "Foo",
+				},
+			},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		DefaultValue: &scalar.String{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ConstantEncapsedStringToken,
+				},
+			},
+			Value: "'default'",
 		},
 	})
 
-	expected := "?\\Foo ...$var = 'default'"
+	expected := " \\ Foo ...$var = 'default'"
 	actual := o.String()
 
 	if expected != actual {
@@ -163,34 +174,134 @@ func TestPrintNullable(t *testing.T) {
 	}
 }
 
-func TestPrintArgument(t *testing.T) {
+func TestPrinterPrintNullable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
+	p.Print(&node.Nullable{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.QuestionMarkToken,
+			},
+		},
+		Expr: &node.Parameter{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.AmpersandToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.EqualToken,
+				},
+			},
+			ByRef:    true,
+			Variadic: false,
+			VariableType: &name.FullyQualified{
+				Meta: []meta.Meta{
+					&meta.WhiteSpace{
+						Value:     " ",
+						TokenName: meta.NsSeparatorToken,
+					},
+				},
+				Parts: []node.Node{
+					&name.NamePart{
+						Value: "Foo",
+					},
+				},
+			},
+			Variable: &expr.Variable{
+				Meta: []meta.Meta{
+					&meta.WhiteSpace{
+						Value:     " ",
+						TokenName: meta.VariableToken,
+					},
+				},
+				VarName: &node.Identifier{
+					Value: "var",
+				},
+			},
+			DefaultValue: &scalar.String{
+				Meta: []meta.Meta{
+					&meta.WhiteSpace{
+						Value:     " ",
+						TokenName: meta.ConstantEncapsedStringToken,
+					},
+				},
+				Value: "'default'",
+			},
+		},
+	})
+
+	expected := " ? \\Foo & $var = 'default'"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintArgument(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
 	p.Print(&node.Argument{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EllipsisToken,
+			},
+		},
 		IsReference: false,
 		Variadic:    true,
-		Expr:        &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{
+				Value: "var",
+			},
+		},
 	})
 
-	expected := "...$var"
+	expected := " ... $var"
 	actual := o.String()
 
 	if expected != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
-func TestPrintArgumentByRef(t *testing.T) {
+func TestPrinterPrintArgumentByRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&node.Argument{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+		},
 		IsReference: true,
 		Variadic:    false,
-		Expr:        &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{
+				Value: "var",
+			},
+		},
 	})
 
-	expected := "&$var"
+	expected := " & $var"
 	actual := o.String()
 
 	if expected != actual {
@@ -200,15 +311,33 @@ func TestPrintArgumentByRef(t *testing.T) {
 
 // name
 
-func TestPrintNameNamePart(t *testing.T) {
+func TestPrinterPrintNameNamePart(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&name.NamePart{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StringToken,
+			},
+			&meta.Comment{
+				Value:     "/*comment*/",
+				TokenName: meta.StringToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StringToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NsSeparatorToken,
+			},
+		},
 		Value: "foo",
 	})
 
-	expected := "foo"
+	expected := " /*comment*/ foo "
 	actual := o.String()
 
 	if expected != actual {
@@ -216,13 +345,33 @@ func TestPrintNameNamePart(t *testing.T) {
 	}
 }
 
-func TestPrintNameName(t *testing.T) {
+func TestPrinterPrintNameName(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&name.Name{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StringToken,
+			},
+		},
 		Parts: []node.Node{
 			&name.NamePart{
+				Meta: []meta.Meta{
+					&meta.Comment{
+						Value:     "/*comment*/",
+						TokenName: meta.StringToken,
+					},
+					&meta.WhiteSpace{
+						Value:     " ",
+						TokenName: meta.StringToken,
+					},
+					&meta.WhiteSpace{
+						Value:     " ",
+						TokenName: meta.NsSeparatorToken,
+					},
+				},
 				Value: "Foo",
 			},
 			&name.NamePart{
@@ -231,7 +380,7 @@ func TestPrintNameName(t *testing.T) {
 		},
 	})
 
-	expected := "Foo\\Bar"
+	expected := " /*comment*/ Foo \\Bar"
 	actual := o.String()
 
 	if expected != actual {
@@ -239,11 +388,17 @@ func TestPrintNameName(t *testing.T) {
 	}
 }
 
-func TestPrintNameFullyQualified(t *testing.T) {
+func TestPrinterPrintNameFullyQualified(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&name.FullyQualified{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NsSeparatorToken,
+			},
+		},
 		Parts: []node.Node{
 			&name.NamePart{
 				Value: "Foo",
@@ -254,7 +409,7 @@ func TestPrintNameFullyQualified(t *testing.T) {
 		},
 	})
 
-	expected := "\\Foo\\Bar"
+	expected := " \\Foo\\Bar"
 	actual := o.String()
 
 	if expected != actual {
@@ -262,11 +417,21 @@ func TestPrintNameFullyQualified(t *testing.T) {
 	}
 }
 
-func TestPrintNameRelative(t *testing.T) {
+func TestPrinterPrintNameRelative(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&name.Relative{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NamespaceToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NsSeparatorToken,
+			},
+		},
 		Parts: []node.Node{
 			&name.NamePart{
 				Value: "Foo",
@@ -277,7 +442,7 @@ func TestPrintNameRelative(t *testing.T) {
 		},
 	})
 
-	expected := "namespace\\Foo\\Bar"
+	expected := " namespace \\Foo\\Bar"
 	actual := o.String()
 
 	if expected != actual {
@@ -287,35 +452,21 @@ func TestPrintNameRelative(t *testing.T) {
 
 // scalar
 
-func TestPrintScalarLNumber(t *testing.T) {
+func TestPrinterPrintScalarLNumber(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.Lnumber{Value: "1"})
+	p := printer.NewPrinter(o)
+	p.Print(&scalar.Lnumber{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.LnumberToken,
+			},
+		},
+		Value: "1",
+	})
 
-	if o.String() != `1` {
-		t.Errorf("TestPrintScalarLNumber is failed\n")
-	}
-}
-
-func TestPrintScalarDNumber(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.Dnumber{Value: ".1"})
-
-	if o.String() != `.1` {
-		t.Errorf("TestPrintScalarDNumber is failed\n")
-	}
-}
-
-func TestPrintScalarString(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.String{Value: "'hello world'"})
-
-	expected := `'hello world'`
+	expected := " 1"
 	actual := o.String()
 
 	if expected != actual {
@@ -323,22 +474,80 @@ func TestPrintScalarString(t *testing.T) {
 	}
 }
 
-func TestPrintScalarEncapsedStringPart(t *testing.T) {
+func TestPrinterPrintScalarDNumber(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.EncapsedStringPart{Value: "hello world"})
+	p := printer.NewPrinter(o)
+	p.Print(&scalar.Dnumber{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DnumberToken,
+			},
+		},
+		Value: ".1",
+	})
 
-	if o.String() != `hello world` {
+	expected := " .1"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintScalarString(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&scalar.String{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ConstantEncapsedStringToken,
+			},
+		},
+		Value: "'hello world'",
+	})
+
+	expected := ` 'hello world'`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintScalarEncapsedStringPart(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&scalar.EncapsedStringPart{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EncapsedAndWhitespaceToken,
+			},
+		},
+		Value: "hello world",
+	})
+
+	if o.String() != ` hello world` {
 		t.Errorf("TestPrintScalarEncapsedStringPart is failed\n")
 	}
 }
 
-func TestPrintScalarEncapsed(t *testing.T) {
+func TestPrinterPrintScalarEncapsed(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&scalar.Encapsed{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleQuoteToken,
+			},
+		},
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
 			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
@@ -346,16 +555,22 @@ func TestPrintScalarEncapsed(t *testing.T) {
 		},
 	})
 
-	if o.String() != `"hello $var world"` {
+	if o.String() != ` "hello $var world"` {
 		t.Errorf("TestPrintScalarEncapsed is failed\n")
 	}
 }
 
-func TestPrintScalarHeredoc(t *testing.T) {
+func TestPrinterPrintScalarHeredoc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StartHeredocToken,
+			},
+		},
 		Label: "LBL",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
@@ -364,7 +579,7 @@ func TestPrintScalarHeredoc(t *testing.T) {
 		},
 	})
 
-	expected := `<<<LBL
+	expected := ` <<<LBL
 hello $var world
 LBL`
 	actual := o.String()
@@ -374,18 +589,24 @@ LBL`
 	}
 }
 
-func TestPrintScalarNowdoc(t *testing.T) {
+func TestPrinterPrintScalarNowdoc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StartHeredocToken,
+			},
+		},
 		Label: "'LBL'",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello world\n"},
 		},
 	})
 
-	expected := `<<<'LBL'
+	expected := ` <<<'LBL'
 hello world
 LBL`
 	actual := o.String()
@@ -395,26 +616,48 @@ LBL`
 	}
 }
 
-func TestPrintScalarMagicConstant(t *testing.T) {
+func TestPrinterPrintScalarMagicConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&scalar.MagicConstant{Value: "__DIR__"})
+	p := printer.NewPrinter(o)
+	p.Print(&scalar.MagicConstant{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.MagicConstantToken,
+			},
+		},
+		Value: "__DIR__",
+	})
 
-	if o.String() != `__DIR__` {
+	if o.String() != ` __DIR__` {
 		t.Errorf("TestPrintScalarMagicConstant is failed\n")
 	}
 }
 
 // assign
 
-func TestPrintAssign(t *testing.T) {
+func TestPrinterPrintAssign(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Assign{
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expression: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a = $b`
@@ -425,16 +668,34 @@ func TestPrintAssign(t *testing.T) {
 	}
 }
 
-func TestPrintReference(t *testing.T) {
+func TestPrinterPrintReference(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Reference{
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expression: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
-	expected := `$a =& $b`
+	expected := `$a = & $b`
 	actual := o.String()
 
 	if expected != actual {
@@ -442,13 +703,27 @@ func TestPrintReference(t *testing.T) {
 	}
 }
 
-func TestPrintAssignBitwiseAnd(t *testing.T) {
+func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseAnd{
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AndEqualToken,
+			},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expression: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a &= $b`
@@ -459,16 +734,22 @@ func TestPrintAssignBitwiseAnd(t *testing.T) {
 	}
 }
 
-func TestPrintAssignBitwiseOr(t *testing.T) {
+func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseOr{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OrEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a |= $b`
+	expected := `$a |=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -476,16 +757,22 @@ func TestPrintAssignBitwiseOr(t *testing.T) {
 	}
 }
 
-func TestPrintAssignBitwiseXor(t *testing.T) {
+func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseXor{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.XorEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a ^= $b`
+	expected := `$a ^=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -493,16 +780,22 @@ func TestPrintAssignBitwiseXor(t *testing.T) {
 	}
 }
 
-func TestPrintAssignConcat(t *testing.T) {
+func TestPrinterPrintAssignConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Concat{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ConcatEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a .= $b`
+	expected := `$a .=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -510,16 +803,22 @@ func TestPrintAssignConcat(t *testing.T) {
 	}
 }
 
-func TestPrintAssignDiv(t *testing.T) {
+func TestPrinterPrintAssignDiv(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Div{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DivEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a /= $b`
+	expected := `$a /=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -527,16 +826,22 @@ func TestPrintAssignDiv(t *testing.T) {
 	}
 }
 
-func TestPrintAssignMinus(t *testing.T) {
+func TestPrinterPrintAssignMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Minus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.MinusEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a -= $b`
+	expected := `$a -=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -544,16 +849,22 @@ func TestPrintAssignMinus(t *testing.T) {
 	}
 }
 
-func TestPrintAssignMod(t *testing.T) {
+func TestPrinterPrintAssignMod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Mod{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ModEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a %= $b`
+	expected := `$a %=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -561,16 +872,22 @@ func TestPrintAssignMod(t *testing.T) {
 	}
 }
 
-func TestPrintAssignMul(t *testing.T) {
+func TestPrinterPrintAssignMul(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Mul{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.MulEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a *= $b`
+	expected := `$a *=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -578,16 +895,22 @@ func TestPrintAssignMul(t *testing.T) {
 	}
 }
 
-func TestPrintAssignPlus(t *testing.T) {
+func TestPrinterPrintAssignPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Plus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PlusEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a += $b`
+	expected := `$a +=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -595,16 +918,22 @@ func TestPrintAssignPlus(t *testing.T) {
 	}
 }
 
-func TestPrintAssignPow(t *testing.T) {
+func TestPrinterPrintAssignPow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.Pow{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PowEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a **= $b`
+	expected := `$a **=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -612,16 +941,22 @@ func TestPrintAssignPow(t *testing.T) {
 	}
 }
 
-func TestPrintAssignShiftLeft(t *testing.T) {
+func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.ShiftLeft{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SlEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a <<= $b`
+	expected := `$a <<=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -629,16 +964,22 @@ func TestPrintAssignShiftLeft(t *testing.T) {
 	}
 }
 
-func TestPrintAssignShiftRight(t *testing.T) {
+func TestPrinterPrintAssignShiftRight(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&assign.ShiftRight{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SrEqualToken,
+			},
+		},
 		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a >>= $b`
+	expected := `$a >>=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -648,16 +989,22 @@ func TestPrintAssignShiftRight(t *testing.T) {
 
 // binary
 
-func TestPrintBinaryBitwiseAnd(t *testing.T) {
+func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseAnd{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a & $b`
+	expected := `$a &$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -665,16 +1012,22 @@ func TestPrintBinaryBitwiseAnd(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryBitwiseOr(t *testing.T) {
+func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseOr{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.VerticalBarToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a | $b`
+	expected := `$a |$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -682,16 +1035,22 @@ func TestPrintBinaryBitwiseOr(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryBitwiseXor(t *testing.T) {
+func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseXor{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaretToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a ^ $b`
+	expected := `$a ^$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -699,16 +1058,22 @@ func TestPrintBinaryBitwiseXor(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryBooleanAnd(t *testing.T) {
+func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.BooleanAnd{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.BooleanAndToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a && $b`
+	expected := `$a &&$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -716,16 +1081,22 @@ func TestPrintBinaryBooleanAnd(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryBooleanOr(t *testing.T) {
+func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.BooleanOr{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.BooleanOrToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a || $b`
+	expected := `$a ||$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -733,16 +1104,22 @@ func TestPrintBinaryBooleanOr(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryCoalesce(t *testing.T) {
+func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Coalesce{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CoalesceToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a ?? $b`
+	expected := `$a ??$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -750,16 +1127,22 @@ func TestPrintBinaryCoalesce(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryConcat(t *testing.T) {
+func TestPrinterPrintBinaryConcat(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Concat{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DotToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a . $b`
+	expected := `$a .$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -767,16 +1150,22 @@ func TestPrintBinaryConcat(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryDiv(t *testing.T) {
+func TestPrinterPrintBinaryDiv(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Div{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SlashToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a / $b`
+	expected := `$a /$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -784,16 +1173,22 @@ func TestPrintBinaryDiv(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryEqual(t *testing.T) {
+func TestPrinterPrintBinaryEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Equal{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsEqualToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a == $b`
+	expected := `$a ==$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -801,16 +1196,22 @@ func TestPrintBinaryEqual(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryGreaterOrEqual(t *testing.T) {
+func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.GreaterOrEqual{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsGreaterOrEqualToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a >= $b`
+	expected := `$a >=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -818,16 +1219,22 @@ func TestPrintBinaryGreaterOrEqual(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryGreater(t *testing.T) {
+func TestPrinterPrintBinaryGreater(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Greater{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.GreaterToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a > $b`
+	expected := `$a >$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -835,16 +1242,22 @@ func TestPrintBinaryGreater(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryIdentical(t *testing.T) {
+func TestPrinterPrintBinaryIdentical(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Identical{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsIdenticalToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a === $b`
+	expected := `$a ===$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -852,16 +1265,22 @@ func TestPrintBinaryIdentical(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryLogicalAnd(t *testing.T) {
+func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalAnd{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.LogicalAndToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a and $b`
+	expected := `$a and$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -869,16 +1288,22 @@ func TestPrintBinaryLogicalAnd(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryLogicalOr(t *testing.T) {
+func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalOr{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.LogicalOrToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a or $b`
+	expected := `$a or$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -886,16 +1311,22 @@ func TestPrintBinaryLogicalOr(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryLogicalXor(t *testing.T) {
+func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalXor{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.LogicalXorToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a xor $b`
+	expected := `$a xor$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -903,16 +1334,22 @@ func TestPrintBinaryLogicalXor(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryMinus(t *testing.T) {
+func TestPrinterPrintBinaryMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Minus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.MinusToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a - $b`
+	expected := `$a -$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -920,16 +1357,22 @@ func TestPrintBinaryMinus(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryMod(t *testing.T) {
+func TestPrinterPrintBinaryMod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Mod{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PercentToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a % $b`
+	expected := `$a %$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -937,16 +1380,22 @@ func TestPrintBinaryMod(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryMul(t *testing.T) {
+func TestPrinterPrintBinaryMul(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Mul{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AsteriskToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a * $b`
+	expected := `$a *$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -954,16 +1403,22 @@ func TestPrintBinaryMul(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryNotEqual(t *testing.T) {
+func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.NotEqual{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsNotEqualToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a != $b`
+	expected := `$a !=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -971,16 +1426,22 @@ func TestPrintBinaryNotEqual(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryNotIdentical(t *testing.T) {
+func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.NotIdentical{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsNotIdenticalToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a !== $b`
+	expected := `$a !==$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -988,16 +1449,22 @@ func TestPrintBinaryNotIdentical(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryPlus(t *testing.T) {
+func TestPrinterPrintBinaryPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Plus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PlusToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a + $b`
+	expected := `$a +$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1005,16 +1472,22 @@ func TestPrintBinaryPlus(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryPow(t *testing.T) {
+func TestPrinterPrintBinaryPow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Pow{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PowToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a ** $b`
+	expected := `$a **$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1022,16 +1495,22 @@ func TestPrintBinaryPow(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryShiftLeft(t *testing.T) {
+func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.ShiftLeft{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SlToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a << $b`
+	expected := `$a <<$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1039,16 +1518,22 @@ func TestPrintBinaryShiftLeft(t *testing.T) {
 	}
 }
 
-func TestPrintBinaryShiftRight(t *testing.T) {
+func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.ShiftRight{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SrToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a >> $b`
+	expected := `$a >>$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1056,16 +1541,22 @@ func TestPrintBinaryShiftRight(t *testing.T) {
 	}
 }
 
-func TestPrintBinarySmallerOrEqual(t *testing.T) {
+func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.SmallerOrEqual{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IsSmallerOrEqualToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a <= $b`
+	expected := `$a <=$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1073,16 +1564,22 @@ func TestPrintBinarySmallerOrEqual(t *testing.T) {
 	}
 }
 
-func TestPrintBinarySmaller(t *testing.T) {
+func TestPrinterPrintBinarySmaller(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Smaller{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.LessToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a < $b`
+	expected := `$a <$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1090,16 +1587,22 @@ func TestPrintBinarySmaller(t *testing.T) {
 	}
 }
 
-func TestPrintBinarySpaceship(t *testing.T) {
+func TestPrinterPrintBinarySpaceship(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&binary.Spaceship{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SpaceshipToken,
+			},
+		},
 		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a <=> $b`
+	expected := `$a <=>$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1109,15 +1612,21 @@ func TestPrintBinarySpaceship(t *testing.T) {
 
 // cast
 
-func TestPrintArray(t *testing.T) {
+func TestPrinterPrintArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Array{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ArrayCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(array)$var`
+	expected := ` (array)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1125,15 +1634,21 @@ func TestPrintArray(t *testing.T) {
 	}
 }
 
-func TestPrintBool(t *testing.T) {
+func TestPrinterPrintBool(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Bool{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.BoolCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(bool)$var`
+	expected := ` (bool)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1141,15 +1656,21 @@ func TestPrintBool(t *testing.T) {
 	}
 }
 
-func TestPrintDouble(t *testing.T) {
+func TestPrinterPrintDouble(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Double{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(float)$var`
+	expected := ` (float)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1157,15 +1678,21 @@ func TestPrintDouble(t *testing.T) {
 	}
 }
 
-func TestPrintInt(t *testing.T) {
+func TestPrinterPrintInt(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Int{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IntCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(int)$var`
+	expected := ` (int)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1173,15 +1700,21 @@ func TestPrintInt(t *testing.T) {
 	}
 }
 
-func TestPrintObject(t *testing.T) {
+func TestPrinterPrintObject(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Object{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ObjectCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(object)$var`
+	expected := ` (object)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1189,15 +1722,21 @@ func TestPrintObject(t *testing.T) {
 	}
 }
 
-func TestPrintString(t *testing.T) {
+func TestPrinterPrintString(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.String{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StringCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(string)$var`
+	expected := ` (string)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1205,15 +1744,21 @@ func TestPrintString(t *testing.T) {
 	}
 }
 
-func TestPrintUnset(t *testing.T) {
+func TestPrinterPrintUnset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&cast.Unset{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UnsetCastToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `(unset)$var`
+	expected := ` (unset)$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1223,16 +1768,26 @@ func TestPrintUnset(t *testing.T) {
 
 // expr
 
-func TestPrintExprArrayDimFetch(t *testing.T) {
+func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayDimFetch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenSquareBracket,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseSquareBracket,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		Dim:      &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := `$var[1]`
+	expected := `$var [1 ]`
 	actual := o.String()
 
 	if expected != actual {
@@ -1240,13 +1795,27 @@ func TestPrintExprArrayDimFetch(t *testing.T) {
 	}
 }
 
-func TestPrintExprArrayItemWithKey(t *testing.T) {
+func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayItem{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleArrowToken,
+			},
+		},
 		Key: &scalar.String{Value: "'Hello'"},
-		Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+		Val: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.VariableToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "world"},
+		},
 	})
 
 	expected := `'Hello' => $world`
@@ -1257,10 +1826,10 @@ func TestPrintExprArrayItemWithKey(t *testing.T) {
 	}
 }
 
-func TestPrintExprArrayItem(t *testing.T) {
+func TestPrinterPrintExprArrayItem(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayItem{
 		Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "world"}}},
 	})
@@ -1273,11 +1842,25 @@ func TestPrintExprArrayItem(t *testing.T) {
 	}
 }
 
-func TestPrintExprArray(t *testing.T) {
+func TestPrinterPrintExprArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Array{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ArrayToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Key: &scalar.String{Value: "'Hello'"},
@@ -1293,7 +1876,7 @@ func TestPrintExprArray(t *testing.T) {
 		},
 	})
 
-	expected := `array('Hello' => $world, 2 => &$var, $var)`
+	expected := ` array ('Hello'=>$world,2=>&$var,$var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1301,15 +1884,21 @@ func TestPrintExprArray(t *testing.T) {
 	}
 }
 
-func TestPrintExprBitwiseNot(t *testing.T) {
+func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.BitwiseNot{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.TildeToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `~$var`
+	expected := ` ~$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1317,15 +1906,21 @@ func TestPrintExprBitwiseNot(t *testing.T) {
 	}
 }
 
-func TestPrintExprBooleanNot(t *testing.T) {
+func TestPrinterPrintExprBooleanNot(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.BooleanNot{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ExclamationMarkToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `!$var`
+	expected := ` !$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1333,16 +1928,30 @@ func TestPrintExprBooleanNot(t *testing.T) {
 	}
 }
 
-func TestPrintExprClassConstFetch(t *testing.T) {
+func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ClassConstFetch{
-		Class:        &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		ConstantName: &node.Identifier{Value: "CONST"},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PaamayimNekudotayimToken,
+			},
+		},
+		Class: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		ConstantName: &node.Identifier{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.IdentifierToken,
+				},
+			},
+			Value: "CONST",
+		},
 	})
 
-	expected := `$var::CONST`
+	expected := `$var :: CONST`
 	actual := o.String()
 
 	if expected != actual {
@@ -1350,15 +1959,21 @@ func TestPrintExprClassConstFetch(t *testing.T) {
 	}
 }
 
-func TestPrintExprClone(t *testing.T) {
+func TestPrinterPrintExprClone(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Clone{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloneToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `clone $var`
+	expected := ` clone$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1366,18 +1981,32 @@ func TestPrintExprClone(t *testing.T) {
 	}
 }
 
-func TestPrintExprClosureUse(t *testing.T) {
+func TestPrinterPrintExprClosureUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ClosureUse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Uses: []node.Node{
 			&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
 			&expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 		},
 	})
 
-	expected := `use (&$foo, $bar)`
+	expected := ` use (&$foo,$bar )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1385,41 +2014,71 @@ func TestPrintExprClosureUse(t *testing.T) {
 	}
 }
 
-func TestPrintExprClosure(t *testing.T) {
+func TestPrinterPrintExprClosure(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&expr.Closure{
-				Static:     true,
-				ReturnsRef: true,
-				Params: []node.Node{
-					&node.Parameter{
-						ByRef:    true,
-						Variadic: false,
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-					},
-				},
-				ClosureUse: &expr.ClosureUse{
-					Uses: []node.Node{
-						&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-						&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-					},
-				},
-				ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Closure{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StaticToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.FunctionToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Static:     true,
+		ReturnsRef: true,
+		Params: []node.Node{
+			&node.Parameter{
+				ByRef:    true,
+				Variadic: false,
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			},
+		},
+		ClosureUse: &expr.ClosureUse{
+			Uses: []node.Node{
+				&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			},
+		},
+		ReturnType: &name.FullyQualified{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ColonToken,
 				},
 			},
+			Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 		},
 	})
 
-	expected := `namespace {
-    static function &(&$var) use (&$a, $b): \Foo {
-        $a;
-    }
-}`
+	expected := ` static function & (&$var )use(&$a,$b) :\Foo {$a; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -1427,10 +2086,10 @@ func TestPrintExprClosure(t *testing.T) {
 	}
 }
 
-func TestPrintExprConstFetch(t *testing.T) {
+func TestPrinterPrintExprConstFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ConstFetch{
 		Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}},
 	})
@@ -1443,13 +2102,33 @@ func TestPrintExprConstFetch(t *testing.T) {
 	}
 }
 
-func TestPrintDie(t *testing.T) {
+func TestPrinterPrintDie(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Die{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Die{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ExitToken,
+			},
+		},
+		Expr: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
+	})
 
-	expected := `die($var)`
+	expected := ` die ($var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1457,13 +2136,29 @@ func TestPrintDie(t *testing.T) {
 	}
 }
 
-func TestPrintEmpty(t *testing.T) {
+func TestPrinterPrintEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Empty{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Empty{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EmptyToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+	})
 
-	expected := `empty($var)`
+	expected := ` empty ($var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1471,13 +2166,21 @@ func TestPrintEmpty(t *testing.T) {
 	}
 }
 
-func TestPrintErrorSuppress(t *testing.T) {
+func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.ErrorSuppress{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.ErrorSuppress{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AtToken,
+			},
+		},
+		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+	})
 
-	expected := `@$var`
+	expected := ` @$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1485,13 +2188,29 @@ func TestPrintErrorSuppress(t *testing.T) {
 	}
 }
 
-func TestPrintEval(t *testing.T) {
+func TestPrinterPrintEval(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Eval{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Eval{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EvalToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+	})
 
-	expected := `eval($var)`
+	expected := ` eval ($var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1499,13 +2218,33 @@ func TestPrintEval(t *testing.T) {
 	}
 }
 
-func TestPrintExit(t *testing.T) {
+func TestPrinterPrintExit(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Exit{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Exit{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ExitToken,
+			},
+		},
+		Expr: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
+	})
 
-	expected := `exit($var)`
+	expected := ` exit ($var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1513,13 +2252,23 @@ func TestPrintExit(t *testing.T) {
 	}
 }
 
-func TestPrintFunctionCall(t *testing.T) {
+func TestPrinterPrintFunctionCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.FunctionCall{
 		Function: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		ArgumentList: &node.ArgumentList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
 			Arguments: []node.Node{
 				&node.Argument{
 					IsReference: true,
@@ -1536,7 +2285,7 @@ func TestPrintFunctionCall(t *testing.T) {
 		},
 	})
 
-	expected := `$var(&$a, ...$b, $c)`
+	expected := `$var (&$a,...$b,$c )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1544,13 +2293,21 @@ func TestPrintFunctionCall(t *testing.T) {
 	}
 }
 
-func TestPrintInclude(t *testing.T) {
+func TestPrinterPrintInclude(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Include{Expr: &scalar.String{Value: "'path'"}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Include{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IncludeToken,
+			},
+		},
+		Expr: &scalar.String{Value: "'path'"},
+	})
 
-	expected := `include 'path'`
+	expected := ` include'path'`
 	actual := o.String()
 
 	if expected != actual {
@@ -1558,13 +2315,20 @@ func TestPrintInclude(t *testing.T) {
 	}
 }
 
-func TestPrintIncludeOnce(t *testing.T) {
+func TestPrinterPrintIncludeOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.IncludeOnce{Expr: &scalar.String{Value: "'path'"}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.IncludeOnce{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IncludeOnceToken,
+			},
+		}, Expr: &scalar.String{Value: "'path'"},
+	})
 
-	expected := `include_once 'path'`
+	expected := ` include_once'path'`
 	actual := o.String()
 
 	if expected != actual {
@@ -1572,16 +2336,22 @@ func TestPrintIncludeOnce(t *testing.T) {
 	}
 }
 
-func TestPrintInstanceOf(t *testing.T) {
+func TestPrinterPrintInstanceOf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.InstanceOf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.InstanceofToken,
+			},
+		},
 		Expr:  &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 	})
 
-	expected := `$var instanceof Foo`
+	expected := `$var instanceofFoo`
 	actual := o.String()
 
 	if expected != actual {
@@ -1589,18 +2359,32 @@ func TestPrintInstanceOf(t *testing.T) {
 	}
 }
 
-func TestPrintIsset(t *testing.T) {
+func TestPrinterPrintIsset(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Isset{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IssetToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Variables: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 	})
 
-	expected := `isset($a, $b)`
+	expected := ` isset ($a,$b )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1608,11 +2392,25 @@ func TestPrintIsset(t *testing.T) {
 	}
 }
 
-func TestPrintList(t *testing.T) {
+func TestPrinterPrintList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.List{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ListToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -1632,7 +2430,7 @@ func TestPrintList(t *testing.T) {
 		},
 	})
 
-	expected := `list($a, list($b, $c))`
+	expected := ` list ($a,list($b,$c) )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1640,14 +2438,30 @@ func TestPrintList(t *testing.T) {
 	}
 }
 
-func TestPrintMethodCall(t *testing.T) {
+func TestPrinterPrintMethodCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.MethodCall{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ObjectOperatorToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 		Method:   &node.Identifier{Value: "bar"},
 		ArgumentList: &node.ArgumentList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
 			Arguments: []node.Node{
 				&node.Argument{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -1659,7 +2473,7 @@ func TestPrintMethodCall(t *testing.T) {
 		},
 	})
 
-	expected := `$foo->bar($a, $b)`
+	expected := `$foo ->bar ($a,$b )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1667,13 +2481,41 @@ func TestPrintMethodCall(t *testing.T) {
 	}
 }
 
-func TestPrintNew(t *testing.T) {
+func TestPrinterPrintNew(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.New{
-		Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NewToken,
+			},
+		},
+		Class: &name.Name{
+			Parts: []node.Node{
+				&name.NamePart{
+					Meta: []meta.Meta{
+						&meta.WhiteSpace{
+							Value:     " ",
+							TokenName: meta.StringToken,
+						},
+					},
+					Value: "Foo",
+				},
+			},
+		},
 		ArgumentList: &node.ArgumentList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
 			Arguments: []node.Node{
 				&node.Argument{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -1685,7 +2527,7 @@ func TestPrintNew(t *testing.T) {
 		},
 	})
 
-	expected := `new Foo($a, $b)`
+	expected := ` new Foo ($a,$b )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1693,15 +2535,21 @@ func TestPrintNew(t *testing.T) {
 	}
 }
 
-func TestPrintPostDec(t *testing.T) {
+func TestPrinterPrintPostDec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.PostDec{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DecToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `$var--`
+	expected := `$var --`
 	actual := o.String()
 
 	if expected != actual {
@@ -1709,15 +2557,21 @@ func TestPrintPostDec(t *testing.T) {
 	}
 }
 
-func TestPrintPostInc(t *testing.T) {
+func TestPrinterPrintPostInc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.PostInc{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IncToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `$var++`
+	expected := `$var ++`
 	actual := o.String()
 
 	if expected != actual {
@@ -1725,15 +2579,21 @@ func TestPrintPostInc(t *testing.T) {
 	}
 }
 
-func TestPrintPreDec(t *testing.T) {
+func TestPrinterPrintPreDec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.PreDec{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DecToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `--$var`
+	expected := ` --$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1741,15 +2601,21 @@ func TestPrintPreDec(t *testing.T) {
 	}
 }
 
-func TestPrintPreInc(t *testing.T) {
+func TestPrinterPrintPreInc(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.PreInc{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IncToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `++$var`
+	expected := ` ++$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -1757,13 +2623,33 @@ func TestPrintPreInc(t *testing.T) {
 	}
 }
 
-func TestPrintPrint(t *testing.T) {
+func TestPrinterPrintPrint(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Print{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Print{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PrintToken,
+			},
+		},
+		Expr: &expr.Variable{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
+	})
 
-	expected := `print($var)`
+	expected := ` print ($var )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1771,16 +2657,22 @@ func TestPrintPrint(t *testing.T) {
 	}
 }
 
-func TestPrintPropertyFetch(t *testing.T) {
+func TestPrinterPrintPropertyFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.PropertyFetch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ObjectOperatorToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 		Property: &node.Identifier{Value: "bar"},
 	})
 
-	expected := `$foo->bar`
+	expected := `$foo ->bar`
 	actual := o.String()
 
 	if expected != actual {
@@ -1788,15 +2680,21 @@ func TestPrintPropertyFetch(t *testing.T) {
 	}
 }
 
-func TestPrintExprReference(t *testing.T) {
+func TestPrinterPrintExprReference(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Reference{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 	})
 
-	expected := `&$foo`
+	expected := ` &$foo`
 	actual := o.String()
 
 	if expected != actual {
@@ -1804,13 +2702,21 @@ func TestPrintExprReference(t *testing.T) {
 	}
 }
 
-func TestPrintRequire(t *testing.T) {
+func TestPrinterPrintRequire(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Require{Expr: &scalar.String{Value: "'path'"}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Require{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.RequireToken,
+			},
+		},
+		Expr: &scalar.String{Value: "'path'"},
+	})
 
-	expected := `require 'path'`
+	expected := ` require'path'`
 	actual := o.String()
 
 	if expected != actual {
@@ -1818,13 +2724,21 @@ func TestPrintRequire(t *testing.T) {
 	}
 }
 
-func TestPrintRequireOnce(t *testing.T) {
+func TestPrinterPrintRequireOnce(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.RequireOnce{Expr: &scalar.String{Value: "'path'"}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.RequireOnce{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.RequireOnceToken,
+			},
+		},
+		Expr: &scalar.String{Value: "'path'"},
+	})
 
-	expected := `require_once 'path'`
+	expected := ` require_once'path'`
 	actual := o.String()
 
 	if expected != actual {
@@ -1832,11 +2746,17 @@ func TestPrintRequireOnce(t *testing.T) {
 	}
 }
 
-func TestPrintShellExec(t *testing.T) {
+func TestPrinterPrintShellExec(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ShellExec{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.BackquoteToken,
+			},
+		},
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
 			&expr.Variable{VarName: &node.Identifier{Value: "world"}},
@@ -1844,7 +2764,7 @@ func TestPrintShellExec(t *testing.T) {
 		},
 	})
 
-	expected := "`hello $world!`"
+	expected := " `hello $world!`"
 	actual := o.String()
 
 	if expected != actual {
@@ -1852,11 +2772,21 @@ func TestPrintShellExec(t *testing.T) {
 	}
 }
 
-func TestPrintExprShortArray(t *testing.T) {
+func TestPrinterPrintExprShortArray(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ShortArray{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenSquareBracket,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseSquareBracket,
+			},
+		},
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Key: &scalar.String{Value: "'Hello'"},
@@ -1872,7 +2802,7 @@ func TestPrintExprShortArray(t *testing.T) {
 		},
 	})
 
-	expected := `['Hello' => $world, 2 => &$var, $var]`
+	expected := ` ['Hello'=>$world,2=>&$var,$var ]`
 	actual := o.String()
 
 	if expected != actual {
@@ -1880,11 +2810,21 @@ func TestPrintExprShortArray(t *testing.T) {
 	}
 }
 
-func TestPrintShortList(t *testing.T) {
+func TestPrinterPrintShortList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.ShortList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenSquareBracket,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseSquareBracket,
+			},
+		},
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -1904,7 +2844,7 @@ func TestPrintShortList(t *testing.T) {
 		},
 	})
 
-	expected := `[$a, list($b, $c)]`
+	expected := ` [$a,list($b,$c) ]`
 	actual := o.String()
 
 	if expected != actual {
@@ -1912,14 +2852,30 @@ func TestPrintShortList(t *testing.T) {
 	}
 }
 
-func TestPrintStaticCall(t *testing.T) {
+func TestPrinterPrintStaticCall(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.StaticCall{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PaamayimNekudotayimToken,
+			},
+		},
 		Class: &node.Identifier{Value: "Foo"},
 		Call:  &node.Identifier{Value: "bar"},
 		ArgumentList: &node.ArgumentList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
 			Arguments: []node.Node{
 				&node.Argument{
 					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -1931,7 +2887,7 @@ func TestPrintStaticCall(t *testing.T) {
 		},
 	})
 
-	expected := `Foo::bar($a, $b)`
+	expected := `Foo ::bar ($a,$b )`
 	actual := o.String()
 
 	if expected != actual {
@@ -1939,16 +2895,22 @@ func TestPrintStaticCall(t *testing.T) {
 	}
 }
 
-func TestPrintStaticPropertyFetch(t *testing.T) {
+func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.StaticPropertyFetch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PaamayimNekudotayimToken,
+			},
+		},
 		Class:    &node.Identifier{Value: "Foo"},
 		Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
 	})
 
-	expected := `Foo::$bar`
+	expected := `Foo ::$bar`
 	actual := o.String()
 
 	if expected != actual {
@@ -1956,16 +2918,26 @@ func TestPrintStaticPropertyFetch(t *testing.T) {
 	}
 }
 
-func TestPrintTernary(t *testing.T) {
+func TestPrinterPrintTernary(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Ternary{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.QuestionMarkToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 	})
 
-	expected := `$a ?: $b`
+	expected := `$a ? :$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -1973,17 +2945,27 @@ func TestPrintTernary(t *testing.T) {
 	}
 }
 
-func TestPrintTernaryFull(t *testing.T) {
+func TestPrinterPrintTernaryFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Ternary{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.QuestionMarkToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 	})
 
-	expected := `$a ? $b : $c`
+	expected := `$a ?$b :$c`
 	actual := o.String()
 
 	if expected != actual {
@@ -1991,15 +2973,21 @@ func TestPrintTernaryFull(t *testing.T) {
 	}
 }
 
-func TestPrintUnaryMinus(t *testing.T) {
+func TestPrinterPrintUnaryMinus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.UnaryMinus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.MinusToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `-$var`
+	expected := ` -$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2007,15 +2995,21 @@ func TestPrintUnaryMinus(t *testing.T) {
 	}
 }
 
-func TestPrintUnaryPlus(t *testing.T) {
+func TestPrinterPrintUnaryPlus(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.UnaryPlus{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PlusToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `+$var`
+	expected := ` +$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2023,13 +3017,23 @@ func TestPrintUnaryPlus(t *testing.T) {
 	}
 }
 
-func TestPrintVariable(t *testing.T) {
+func TestPrinterPrintVariable(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&expr.Variable{VarName: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Variable{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.VariableToken,
+			},
+		},
+		VarName: &expr.Variable{
+			VarName: &node.Identifier{Value: "var"},
+		},
+	})
 
-	expected := `$$var`
+	expected := ` $$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2037,15 +3041,21 @@ func TestPrintVariable(t *testing.T) {
 	}
 }
 
-func TestPrintYieldFrom(t *testing.T) {
+func TestPrinterPrintYieldFrom(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.YieldFrom{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.YieldFromToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `yield from $var`
+	expected := ` yield from$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2053,15 +3063,21 @@ func TestPrintYieldFrom(t *testing.T) {
 	}
 }
 
-func TestPrintYield(t *testing.T) {
+func TestPrinterPrintYield(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Yield{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.YieldToken,
+			},
+		},
 		Value: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `yield $var`
+	expected := ` yield$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2069,16 +3085,26 @@ func TestPrintYield(t *testing.T) {
 	}
 }
 
-func TestPrintYieldFull(t *testing.T) {
+func TestPrinterPrintYieldFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&expr.Yield{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.YieldToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleArrowToken,
+			},
+		},
 		Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
 		Value: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `yield $k => $var`
+	expected := ` yield$k =>$var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2088,11 +3114,29 @@ func TestPrintYieldFull(t *testing.T) {
 
 // stmt
 
-func TestPrintAltElseIf(t *testing.T) {
+func TestPrinterPrintAltElseIf(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElseIf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseifToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
@@ -2101,8 +3145,7 @@ func TestPrintAltElseIf(t *testing.T) {
 		},
 	})
 
-	expected := `elseif ($a) :
-    $b;`
+	expected := ` elseif ($a ) :$b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2110,16 +3153,34 @@ func TestPrintAltElseIf(t *testing.T) {
 	}
 }
 
-func TestPrintAltElseIfEmpty(t *testing.T) {
+func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElseIf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseifToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.StmtList{},
 	})
 
-	expected := `elseif ($a) :`
+	expected := ` elseif ($a ) :`
 	actual := o.String()
 
 	if expected != actual {
@@ -2127,11 +3188,21 @@ func TestPrintAltElseIfEmpty(t *testing.T) {
 	}
 }
 
-func TestPrintAltElse(t *testing.T) {
+func TestPrinterPrintAltElse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
@@ -2139,8 +3210,7 @@ func TestPrintAltElse(t *testing.T) {
 		},
 	})
 
-	expected := `else :
-    $b;`
+	expected := ` else :$b;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2148,15 +3218,25 @@ func TestPrintAltElse(t *testing.T) {
 	}
 }
 
-func TestPrintAltElseEmpty(t *testing.T) {
+func TestPrinterPrintAltElseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		Stmt: &stmt.StmtList{},
 	})
 
-	expected := `else :`
+	expected := ` else :`
 	actual := o.String()
 
 	if expected != actual {
@@ -2164,36 +3244,187 @@ func TestPrintAltElseEmpty(t *testing.T) {
 	}
 }
 
-func TestPrintAltFor(t *testing.T) {
+func TestPrinterPrintAltFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.AltFor{
-				Init: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				},
-				Cond: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-				},
-				Loop: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.AltFor{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForInitSemicolonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForCondSemicolonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EndforToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Init: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+		Cond: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		Loop: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+	})
+
+	expected := ` for ($a ;$b ;$c ) :$d; endfor ;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintAltForeach(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.AltForeach{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForeachToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AsToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleArrowToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EndforeachToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
+		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+	})
+
+	expected := ` foreach ($var as$key =>&$val ) :$d; endforeach ;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintAltIf(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.AltIf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IfToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EndifToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+			},
+		},
+		ElseIf: []node.Node{
+			&stmt.AltElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
+				},
+			},
+			&stmt.AltElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				Stmt: &stmt.StmtList{},
+			},
+		},
+		Else: &stmt.AltElse{
+			Stmt: &stmt.StmtList{
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    for ($a; $b; $c) :
-        $d;
-    endfor;
-}`
+	expected := ` if ($a ) :$d;elseif($b):$b;elseif($c):else:$b; endif ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2201,144 +3432,52 @@ func TestPrintAltFor(t *testing.T) {
 	}
 }
 
-func TestPrintAltForeach(t *testing.T) {
+func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.AltForeach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
-				Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}}},
-				Stmt: &stmt.StmtList{
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.AltSwitch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SwitchToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SwitchSemicolonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EndswitchToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		CaseList: &stmt.CaseList{
+			Cases: []node.Node{
+				&stmt.Case{
+					Cond: &scalar.String{Value: "'a'"},
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 					},
 				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    foreach ($var as $key => &$val) :
-        $d;
-    endforeach;
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintAltIf(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.AltIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
-					},
-				},
-				ElseIf: []node.Node{
-					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-						Stmt: &stmt.StmtList{
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-							},
-						},
-					},
-					&stmt.AltElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-						Stmt: &stmt.StmtList{},
-					},
-				},
-				Else: &stmt.AltElse{
-					Stmt: &stmt.StmtList{
-						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-						},
-					},
-				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    if ($a) :
-        $d;
-    elseif ($b) :
-        $b;
-    elseif ($c) :
-    else :
-        $b;
-    endif;
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtAltSwitch(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.AltSwitch{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-				CaseList: &stmt.CaseList{
-					Cases: []node.Node{
-						&stmt.Case{
-							Cond: &scalar.String{Value: "'a'"},
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							},
-						},
-						&stmt.Case{
-							Cond: &scalar.String{Value: "'b'"},
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-							},
-						},
-					},
-				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    switch ($var) :
-        case 'a':
-            $a;
-        case 'b':
-            $b;
-    endswitch;
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintAltWhile(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.AltWhile{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{
+				&stmt.Case{
+					Cond: &scalar.String{Value: "'b'"},
 					Stmts: []node.Node{
 						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
@@ -2347,11 +3486,7 @@ func TestPrintAltWhile(t *testing.T) {
 		},
 	})
 
-	expected := `namespace {
-    while ($a) :
-        $b;
-    endwhile;
-}`
+	expected := ` switch ($var ) : ;case'a':$a;case'b':$b; endswitch ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2359,15 +3494,46 @@ func TestPrintAltWhile(t *testing.T) {
 	}
 }
 
-func TestPrintStmtBreak(t *testing.T) {
+func TestPrinterPrintAltWhile(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Break{
-		Expr: &scalar.Lnumber{Value: "1"},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.AltWhile{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.WhileToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EndwhileToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			},
+		},
 	})
 
-	expected := "break 1;"
+	expected := ` while ($a ) :$b; endwhile ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2375,19 +3541,66 @@ func TestPrintStmtBreak(t *testing.T) {
 	}
 }
 
-func TestPrintStmtCase(t *testing.T) {
+func TestPrinterPrintStmtBreak(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Break{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.BreakToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Expr: &scalar.Lnumber{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			Value: "1",
+		},
+	})
+
+	expected := " break (1 ) ;"
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtCase(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Case{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseSeparatorToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmts: []node.Node{
 			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 		},
 	})
 
-	expected := `case $a:
-    $a;`
+	expected := ` case$a :$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2395,16 +3608,26 @@ func TestPrintStmtCase(t *testing.T) {
 	}
 }
 
-func TestPrintStmtCaseEmpty(t *testing.T) {
+func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Case{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseSeparatorToken,
+			},
+		},
 		Cond:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmts: []node.Node{},
 	})
 
-	expected := "case $a:"
+	expected := " case$a :"
 	actual := o.String()
 
 	if expected != actual {
@@ -2412,30 +3635,44 @@ func TestPrintStmtCaseEmpty(t *testing.T) {
 	}
 }
 
-func TestPrintStmtCatch(t *testing.T) {
+func TestPrinterPrintStmtCatch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Catch{
-				Types: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
-				},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Catch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CatchToken,
 			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Types: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+			&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+		},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 		},
 	})
 
-	expected := `namespace {
-    catch (Exception | \RuntimeException $e) {
-        $a;
-    }
-}`
+	expected := ` catch (Exception|\RuntimeException$e ) {$a; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -2443,11 +3680,29 @@ func TestPrintStmtCatch(t *testing.T) {
 	}
 }
 
-func TestPrintStmtClassMethod(t *testing.T) {
+func TestPrinterPrintStmtClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassMethod{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.FunctionToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 		ReturnsRef: true,
 		MethodName: &node.Identifier{Value: "foo"},
@@ -2463,29 +3718,62 @@ func TestPrintStmtClassMethod(t *testing.T) {
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 			},
 		},
-		ReturnType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "void"}}},
+		ReturnType: &name.Name{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ColonToken,
+				},
+			},
+			Parts: []node.Node{&name.NamePart{Value: "void"}},
+		},
 		Stmt: &stmt.StmtList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenCurlyBracesToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseCurlyBracesToken,
+				},
+			},
 			Stmts: []node.Node{
 				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			},
 		},
 	})
 
-	expected := `public function &foo(?int &$a = null, ...$b): void
-{
-    $a;
-}`
+	expected := `public function &foo (?int&$a=null,...$b ) :void {$a; }`
 	actual := o.String()
 
 	if expected != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
-func TestPrintStmtAbstractClassMethod(t *testing.T) {
+func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassMethod{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.FunctionToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
 		ReturnsRef: true,
 		MethodName: &node.Identifier{Value: "foo"},
@@ -2501,11 +3789,19 @@ func TestPrintStmtAbstractClassMethod(t *testing.T) {
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
 			},
 		},
-		ReturnType: &name.Name{Parts: []node.Node{&name.NamePart{Value: "void"}}},
-		Stmt:       &stmt.Nop{},
+		ReturnType: &name.Name{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ColonToken,
+				},
+			},
+			Parts: []node.Node{&name.NamePart{Value: "void"}},
+		},
+		Stmt: &stmt.Nop{},
 	})
 
-	expected := `public function &foo(?int &$a = null, ...$b): void;`
+	expected := `public function &foo (?int&$a=null,...$b ) :void;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2513,45 +3809,62 @@ func TestPrintStmtAbstractClassMethod(t *testing.T) {
 	}
 }
 
-func TestPrintStmtClass(t *testing.T) {
+func TestPrinterPrintStmtClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Class{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ClassToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+		ClassName: &node.Identifier{Value: "Foo"},
+		Extends: &stmt.ClassExtends{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ExtendsToken,
+				},
+			},
+			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		},
+		Implements: &stmt.ClassImplements{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ImplementsToken,
+				},
+			},
+			InterfaceNames: []node.Node{
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+			},
+		},
 		Stmts: []node.Node{
-			&stmt.Class{
-				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-				ClassName: &node.Identifier{Value: "Foo"},
-				Extends: &stmt.ClassExtends{
-					ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				},
-				Implements: &stmt.ClassImplements{
-					InterfaceNames: []node.Node{
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
-					},
-				},
-				Stmts: []node.Node{
-					&stmt.ClassConstList{
-						Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-						Consts: []node.Node{
-							&stmt.Constant{
-								ConstantName: &node.Identifier{Value: "FOO"},
-								Expr:         &scalar.String{Value: "'bar'"},
-							},
-						},
+			&stmt.ClassConstList{
+				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "'bar'"},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    abstract class Foo extends Bar implements Baz, Quuz
-    {
-        public const FOO = 'bar';
-    }
-}`
+	expected := `abstract classFoo extendsBar implementsBaz,Quuz {publicconstFOO='bar'; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -2559,54 +3872,81 @@ func TestPrintStmtClass(t *testing.T) {
 	}
 }
 
-func TestPrintStmtAnonymousClass(t *testing.T) {
+func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Class{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ClassToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
+		ArgumentList: &node.ArgumentList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			Arguments: []node.Node{
+				&node.Argument{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				},
+				&node.Argument{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+			},
+		},
+		Extends: &stmt.ClassExtends{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ExtendsToken,
+				},
+			},
+			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		},
+		Implements: &stmt.ClassImplements{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ImplementsToken,
+				},
+			},
+			InterfaceNames: []node.Node{
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
+			},
+		},
 		Stmts: []node.Node{
-			&stmt.Class{
-				Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
-				ArgumentList: &node.ArgumentList{
-					Arguments: []node.Node{
-						&node.Argument{
-							Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-						},
-						&node.Argument{
-							Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-						},
-					},
-				},
-				Extends: &stmt.ClassExtends{
-					ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				},
-				Implements: &stmt.ClassImplements{
-					InterfaceNames: []node.Node{
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Quuz"}}},
-					},
-				},
-				Stmts: []node.Node{
-					&stmt.ClassConstList{
-						Modifiers: []node.Node{&node.Identifier{Value: "public"}},
-						Consts: []node.Node{
-							&stmt.Constant{
-								ConstantName: &node.Identifier{Value: "FOO"},
-								Expr:         &scalar.String{Value: "'bar'"},
-							},
-						},
+			&stmt.ClassConstList{
+				Modifiers: []node.Node{&node.Identifier{Value: "public"}},
+				Consts: []node.Node{
+					&stmt.Constant{
+						ConstantName: &node.Identifier{Value: "FOO"},
+						Expr:         &scalar.String{Value: "'bar'"},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    abstract class($a, $b) extends Bar implements Baz, Quuz
-    {
-        public const FOO = 'bar';
-    }
-}`
+	expected := `abstract class ($a,$b ) extendsBar implementsBaz,Quuz {publicconstFOO='bar'; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -2614,11 +3954,21 @@ func TestPrintStmtAnonymousClass(t *testing.T) {
 	}
 }
 
-func TestPrintStmtClassConstList(t *testing.T) {
+func TestPrinterPrintStmtClassConstList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassConstList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ConstToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Modifiers: []node.Node{&node.Identifier{Value: "public"}},
 		Consts: []node.Node{
 			&stmt.Constant{
@@ -2632,7 +3982,7 @@ func TestPrintStmtClassConstList(t *testing.T) {
 		},
 	})
 
-	expected := `public const FOO = 'a', BAR = 'b';`
+	expected := `public constFOO='a',BAR='b' ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2640,16 +3990,22 @@ func TestPrintStmtClassConstList(t *testing.T) {
 	}
 }
 
-func TestPrintStmtConstant(t *testing.T) {
+func TestPrinterPrintStmtConstant(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Constant{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+		},
 		ConstantName: &node.Identifier{Value: "FOO"},
 		Expr:         &scalar.String{Value: "'BAR'"},
 	})
 
-	expected := "FOO = 'BAR'"
+	expected := "FOO ='BAR'"
 	actual := o.String()
 
 	if expected != actual {
@@ -2657,15 +4013,37 @@ func TestPrintStmtConstant(t *testing.T) {
 	}
 }
 
-func TestPrintStmtContinue(t *testing.T) {
+func TestPrinterPrintStmtContinue(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Continue{
-		Expr: &scalar.Lnumber{Value: "1"},
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ContinueToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Expr: &scalar.Lnumber{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenParenthesisToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseParenthesisToken,
+				},
+			},
+			Value: "1",
+		},
 	})
 
-	expected := `continue 1;`
+	expected := ` continue (1 ) ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2673,33 +4051,39 @@ func TestPrintStmtContinue(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDeclareStmts(t *testing.T) {
+func TestPrinterPrintStmtDeclareStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Declare{
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "'bar'"},
-					},
-				},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Nop{},
-					},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Declare{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DeclareToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "'bar'"},
+			},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
 			},
 		},
 	})
 
-	expected := `{
-    declare(FOO = 'bar') {
-        ;
-    }
-}`
+	expected := ` declare (FOO='bar' ){;}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2707,28 +4091,35 @@ func TestPrintStmtDeclareStmts(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDeclareExpr(t *testing.T) {
+func TestPrinterPrintStmtDeclareExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Declare{
-				Consts: []node.Node{
-					&stmt.Constant{
-						ConstantName: &node.Identifier{Value: "FOO"},
-						Expr:         &scalar.String{Value: "'bar'"},
-					},
-				},
-				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Declare{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DeclareToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
 			},
 		},
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "'bar'"},
+			},
+		},
+		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := `{
-    declare(FOO = 'bar')
-        'bar';
-}`
+	expected := ` declare (FOO='bar' )'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2736,10 +4127,10 @@ func TestPrintStmtDeclareExpr(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDeclareNop(t *testing.T) {
+func TestPrinterPrintStmtDeclareNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Declare{
 		Consts: []node.Node{
 			&stmt.Constant{
@@ -2750,7 +4141,7 @@ func TestPrintStmtDeclareNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `declare(FOO = 'bar');`
+	expected := `declare(FOO='bar');`
 	actual := o.String()
 
 	if expected != actual {
@@ -2758,18 +4149,27 @@ func TestPrintStmtDeclareNop(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDefalut(t *testing.T) {
+func TestPrinterPrintStmtDefalut(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Default{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DefaultToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseSeparatorToken,
+			},
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 		},
 	})
 
-	expected := `default:
-    $a;`
+	expected := ` default :$a;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2777,15 +4177,25 @@ func TestPrintStmtDefalut(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDefalutEmpty(t *testing.T) {
+func TestPrinterPrintStmtDefalutEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Default{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DefaultToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CaseSeparatorToken,
+			},
+		},
 		Stmts: []node.Node{},
 	})
 
-	expected := `default:`
+	expected := ` default :`
 	actual := o.String()
 
 	if expected != actual {
@@ -2793,26 +4203,83 @@ func TestPrintStmtDefalutEmpty(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDo_Expression(t *testing.T) {
+func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Do{
-				Cond: &scalar.Lnumber{Value: "1"},
-				Stmt: &stmt.Expression{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Do{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.WhileToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Cond: &scalar.Lnumber{Value: "1"},
+		Stmt: &stmt.Expression{
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		},
+	})
+
+	expected := ` do$a; while (1 ) ;`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Do{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.WhileToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Cond: &scalar.Lnumber{Value: "1"},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			},
 		},
 	})
 
-	expected := `namespace {
-    do
-        $a;
-    while (1);
-}`
+	expected := ` do{$a;} while (1 ) ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2820,47 +4287,28 @@ func TestPrintStmtDo_Expression(t *testing.T) {
 	}
 }
 
-func TestPrintStmtDo_StmtList(t *testing.T) {
+func TestPrinterPrintStmtEcho(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Do{
-				Cond: &scalar.Lnumber{Value: "1"},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-					},
-				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    do {
-        $a;
-    } while (1);
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtEcho(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Echo{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EchoToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Exprs: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 	})
 
-	expected := `echo $a, $b;`
+	expected := ` echo$a,$b ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2868,11 +4316,25 @@ func TestPrintStmtEcho(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseIfStmts(t *testing.T) {
+func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseifToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
@@ -2881,9 +4343,7 @@ func TestPrintStmtElseIfStmts(t *testing.T) {
 		},
 	})
 
-	expected := `elseif ($a) {
-    ;
-}`
+	expected := ` elseif ($a ){;}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2891,17 +4351,30 @@ func TestPrintStmtElseIfStmts(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseIfExpr(t *testing.T) {
+func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseifToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := `elseif ($a)
-    'bar';`
+	expected := ` elseif ($a )'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2909,16 +4382,16 @@ func TestPrintStmtElseIfExpr(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseIfNop(t *testing.T) {
+func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `elseif ($a);`
+	expected := `elseif($a);`
 	actual := o.String()
 
 	if expected != actual {
@@ -2926,11 +4399,17 @@ func TestPrintStmtElseIfNop(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseStmts(t *testing.T) {
+func TestPrinterPrintStmtElseStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Else{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseToken,
+			},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Nop{},
@@ -2938,9 +4417,7 @@ func TestPrintStmtElseStmts(t *testing.T) {
 		},
 	})
 
-	expected := `else {
-    ;
-}`
+	expected := ` else{;}`
 	actual := o.String()
 
 	if expected != actual {
@@ -2948,16 +4425,21 @@ func TestPrintStmtElseStmts(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseExpr(t *testing.T) {
+func TestPrinterPrintStmtElseExpr(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Else{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ElseToken,
+			},
+		},
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := `else
-    'bar';`
+	expected := ` else'bar';`
 	actual := o.String()
 
 	if expected != actual {
@@ -2965,10 +4447,10 @@ func TestPrintStmtElseExpr(t *testing.T) {
 	}
 }
 
-func TestPrintStmtElseNop(t *testing.T) {
+func TestPrinterPrintStmtElseNop(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Else{
 		Stmt: &stmt.Nop{},
 	})
@@ -2981,13 +4463,21 @@ func TestPrintStmtElseNop(t *testing.T) {
 	}
 }
 
-func TestPrintExpression(t *testing.T) {
+func TestPrinterPrintExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}})
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Expression{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+	})
 
-	expected := `$a;`
+	expected := `$a ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -2995,25 +4485,31 @@ func TestPrintExpression(t *testing.T) {
 	}
 }
 
-func TestPrintStmtFinally(t *testing.T) {
+func TestPrinterPrintStmtFinally(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Finally{
-				Stmts: []node.Node{
-					&stmt.Nop{},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Finally{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.FinallyToken,
 			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Stmts: []node.Node{
+			&stmt.Nop{},
 		},
 	})
 
-	expected := `namespace {
-    finally {
-        ;
-    }
-}`
+	expected := ` finally {; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3021,126 +4517,53 @@ func TestPrintStmtFinally(t *testing.T) {
 	}
 }
 
-func TestPrintStmtForStmts(t *testing.T) {
+func TestPrinterPrintStmtFor(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.For{
-				Init: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-				},
-				Cond: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "d"}},
-				},
-				Loop: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "e"}},
-					&expr.Variable{VarName: &node.Identifier{Value: "f"}},
-				},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Nop{},
-					},
-				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    for ($a, $b; $c, $d; $e, $f) {
-        ;
-    }
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtForExpr(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.For{
-				Init: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				},
-				Cond: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "b"}},
-				},
-				Loop: []node.Node{
-					&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-				},
-				Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
-			},
-		},
-	})
-
-	expected := `namespace {
-    for ($a; $b; $c)
-        'bar';
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtForNop(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.For{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForInitSemicolonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForCondSemicolonToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Init: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		},
-		Cond: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
-		Loop: []node.Node{
+		Cond: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "d"}},
 		},
-		Stmt: &stmt.Nop{},
-	})
-
-	expected := `for ($a; $b; $c);`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtForeachStmts(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Nop{},
-					},
-				},
+		Loop: []node.Node{
+			&expr.Variable{VarName: &node.Identifier{Value: "e"}},
+			&expr.Variable{VarName: &node.Identifier{Value: "f"}},
+		},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
 			},
 		},
 	})
 
-	expected := `namespace {
-    foreach ($a as $b) {
-        ;
-    }
-}`
+	expected := ` for ($a,$b ;$c,$d ;$e,$f ){;}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3148,80 +4571,44 @@ func TestPrintStmtForeachStmts(t *testing.T) {
 	}
 }
 
-func TestPrintStmtForeachExpr(t *testing.T) {
+func TestPrinterPrintStmtForeach(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Foreach{
-				Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
-				Stmt:     &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
-			},
-		},
-	})
-
-	expected := `namespace {
-    foreach ($a as $k => $v)
-        'bar';
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtForeachNop(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Foreach{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ForeachToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AsToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.DoubleArrowToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}}},
-		Stmt:     &stmt.Nop{},
-	})
-
-	expected := `foreach ($a as $k => &$v);`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtFunction(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Function{
-				ReturnsRef:   true,
-				FunctionName: &node.Identifier{Value: "foo"},
-				Params: []node.Node{
-					&node.Parameter{
-						ByRef:    true,
-						Variadic: false,
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-					},
-				},
-				ReturnType: &name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Stmts: []node.Node{
-					&stmt.Nop{},
-				},
+		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Nop{},
 			},
 		},
 	})
 
-	expected := `namespace {
-    function &foo(&$var): \Foo {
-        ;
-    }
-}`
+	expected := ` foreach ($a as$k =>$v ){;}`
 	actual := o.String()
 
 	if expected != actual {
@@ -3229,18 +4616,90 @@ func TestPrintStmtFunction(t *testing.T) {
 	}
 }
 
-func TestPrintStmtGlobal(t *testing.T) {
+func TestPrinterPrintStmtFunction(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Function{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.FunctionToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AmpersandToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		ReturnsRef:   true,
+		FunctionName: &node.Identifier{Value: "foo"},
+		Params: []node.Node{
+			&node.Parameter{
+				ByRef:    true,
+				Variadic: false,
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			},
+		},
+		ReturnType: &name.FullyQualified{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ColonToken,
+				},
+			},
+			Parts: []node.Node{&name.NamePart{Value: "Foo"}},
+		},
+		Stmts: []node.Node{
+			&stmt.Nop{},
+		},
+	})
+
+	expected := ` function &foo (&$var ) :\Foo {; }`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtGlobal(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Global{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.GlobalToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Vars: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 	})
 
-	expected := `global $a, $b;`
+	expected := ` global$a,$b ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3248,15 +4707,25 @@ func TestPrintStmtGlobal(t *testing.T) {
 	}
 }
 
-func TestPrintStmtGoto(t *testing.T) {
+func TestPrinterPrintStmtGoto(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Goto{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.GotoToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Label: &node.Identifier{Value: "FOO"},
 	})
 
-	expected := `goto FOO;`
+	expected := ` gotoFOO ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3264,11 +4733,33 @@ func TestPrintStmtGoto(t *testing.T) {
 	}
 }
 
-func TestPrintStmtGroupUse(t *testing.T) {
+func TestPrinterPrintStmtGroupUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.GroupUse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NsSeparatorToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		UseType: &node.Identifier{Value: "function"},
 		Prefix:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		UseList: []node.Node{
@@ -3282,7 +4773,7 @@ func TestPrintStmtGroupUse(t *testing.T) {
 		},
 	})
 
-	expected := `use function Foo\{Bar as Baz, Quuz};`
+	expected := ` usefunctionFoo \ {BarasBaz,Quuz } ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3290,66 +4781,32 @@ func TestPrintStmtGroupUse(t *testing.T) {
 	}
 }
 
-func TestPrintHaltCompiler(t *testing.T) {
+func TestPrinterPrintHaltCompiler(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.HaltCompiler{})
-
-	expected := `__halt_compiler();`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintIfExpression(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.Expression{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-				},
-				ElseIf: []node.Node{
-					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
-						Stmt: &stmt.StmtList{
-							Stmts: []node.Node{
-								&stmt.Expression{
-									Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
-								},
-							},
-						},
-					},
-					&stmt.ElseIf{
-						Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
-						Stmt: &stmt.Nop{},
-					},
-				},
-				Else: &stmt.Else{
-					Stmt: &stmt.Expression{
-						Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
-					},
-				},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.HaltCompiler{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.HaltCompilerToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
 			},
 		},
 	})
 
-	expected := `namespace {
-    if ($a)
-        $b;
-    elseif ($c) {
-        $d;
-    }
-    elseif ($e);
-    else
-        $f;
-}`
+	expected := ` __halt_compiler ( ) ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3357,30 +4814,53 @@ func TestPrintIfExpression(t *testing.T) {
 	}
 }
 
-func TestPrintIfStmtList(t *testing.T) {
+func TestPrinterPrintIfExpression(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.If{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.If{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IfToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.Expression{
+			Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		},
+		ElseIf: []node.Node{
+			&stmt.ElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
 						&stmt.Expression{
-							Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
 						},
 					},
 				},
 			},
+			&stmt.ElseIf{
+				Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Stmt: &stmt.Nop{},
+			},
+		},
+		Else: &stmt.Else{
+			Stmt: &stmt.Expression{
+				Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
+			},
 		},
 	})
 
-	expected := `namespace {
-    if ($a) {
-        $b;
-    }
-}`
+	expected := ` if ($a )$b;elseif($c){$d;}elseif($e);else$f;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3388,16 +4868,53 @@ func TestPrintIfStmtList(t *testing.T) {
 	}
 }
 
-func TestPrintIfNop(t *testing.T) {
+func TestPrinterPrintIfStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.If{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.IfToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{
+					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				},
+			},
+		},
+	})
+
+	expected := ` if ($a ){$b;}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintIfNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.If{
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `if ($a);`
+	expected := `if($a);`
 	actual := o.String()
 
 	if expected != actual {
@@ -3405,15 +4922,21 @@ func TestPrintIfNop(t *testing.T) {
 	}
 }
 
-func TestPrintInlineHtml(t *testing.T) {
+func TestPrinterPrintInlineHtml(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.InlineHtml{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.InlineHTMLToken,
+			},
+		},
 		Value: "test",
 	})
 
-	expected := `?>test<?php`
+	expected := ` ?>test<?php`
 	actual := o.String()
 
 	if expected != actual {
@@ -3421,45 +4944,53 @@ func TestPrintInlineHtml(t *testing.T) {
 	}
 }
 
-func TestPrintInterface(t *testing.T) {
+func TestPrinterPrintInterface(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Interface{
-				InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Extends: &stmt.InterfaceExtends{
-					InterfaceNames: []node.Node{
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-						&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
-					},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Interface{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.InterfaceToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+		Extends: &stmt.InterfaceExtends{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.ExtendsToken,
 				},
-				Stmts: []node.Node{
-					&stmt.ClassMethod{
-						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-						MethodName: &node.Identifier{Value: "foo"},
-						Params:     []node.Node{},
-						Stmt: &stmt.StmtList{
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							},
-						},
+			},
+			InterfaceNames: []node.Node{
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+				&name.Name{Parts: []node.Node{&name.NamePart{Value: "Baz"}}},
+			},
+		},
+		Stmts: []node.Node{
+			&stmt.ClassMethod{
+				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+				MethodName: &node.Identifier{Value: "foo"},
+				Params:     []node.Node{},
+				Stmt: &stmt.StmtList{
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    interface Foo extends Bar, Baz
-    {
-        public function foo()
-        {
-            $a;
-        }
-    }
-}`
+	expected := ` interfaceFoo extendsBar,Baz {publicfunctionfoo(){$a;} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3467,15 +4998,21 @@ func TestPrintInterface(t *testing.T) {
 	}
 }
 
-func TestPrintLabel(t *testing.T) {
+func TestPrinterPrintLabel(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Label{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ColonToken,
+			},
+		},
 		LabelName: &node.Identifier{Value: "FOO"},
 	})
 
-	expected := `FOO:`
+	expected := `FOO :`
 	actual := o.String()
 
 	if expected != actual {
@@ -3483,15 +5020,25 @@ func TestPrintLabel(t *testing.T) {
 	}
 }
 
-func TestPrintNamespace(t *testing.T) {
+func TestPrinterPrintNamespace(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Namespace{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NamespaceToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 	})
 
-	expected := `namespace Foo;`
+	expected := ` namespaceFoo ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3499,26 +5046,53 @@ func TestPrintNamespace(t *testing.T) {
 	}
 }
 
-func TestPrintNamespaceWithStmts(t *testing.T) {
+func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.StmtList{
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Namespace{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.NamespaceToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Stmts: []node.Node{
-			&stmt.Namespace{
-				NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				},
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+	})
+
+	expected := ` namespaceFoo {$a; }`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintNop(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Nop{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
 			},
 		},
 	})
 
-	expected := `{
-    namespace Foo {
-        $a;
-    }
-}`
+	expected := ` ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3526,25 +5100,17 @@ func TestPrintNamespaceWithStmts(t *testing.T) {
 	}
 }
 
-func TestPrintNop(t *testing.T) {
+func TestPrinterPrintPropertyList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Nop{})
-
-	expected := `;`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintPropertyList(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.PropertyList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Modifiers: []node.Node{
 			&node.Identifier{Value: "public"},
 			&node.Identifier{Value: "static"},
@@ -3559,7 +5125,7 @@ func TestPrintPropertyList(t *testing.T) {
 		},
 	})
 
-	expected := `public static $a, $b;`
+	expected := `publicstatic$a,$b ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3567,16 +5133,22 @@ func TestPrintPropertyList(t *testing.T) {
 	}
 }
 
-func TestPrintProperty(t *testing.T) {
+func TestPrinterPrintProperty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Property{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expr:     &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := `$a = 1`
+	expected := `$a =1`
 	actual := o.String()
 
 	if expected != actual {
@@ -3584,15 +5156,25 @@ func TestPrintProperty(t *testing.T) {
 	}
 }
 
-func TestPrintReturn(t *testing.T) {
+func TestPrinterPrintReturn(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Return{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ReturnToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := `return 1;`
+	expected := ` return1 ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3600,16 +5182,22 @@ func TestPrintReturn(t *testing.T) {
 	}
 }
 
-func TestPrintStaticVar(t *testing.T) {
+func TestPrinterPrintStaticVar(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.StaticVar{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.EqualToken,
+			},
+		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expr:     &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := `$a = 1`
+	expected := `$a =1`
 	actual := o.String()
 
 	if expected != actual {
@@ -3617,11 +5205,21 @@ func TestPrintStaticVar(t *testing.T) {
 	}
 }
 
-func TestPrintStatic(t *testing.T) {
+func TestPrinterPrintStatic(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Static{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.StaticToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Vars: []node.Node{
 			&stmt.StaticVar{
 				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -3632,7 +5230,7 @@ func TestPrintStatic(t *testing.T) {
 		},
 	})
 
-	expected := `static $a, $b;`
+	expected := ` static$a,$b ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3640,21 +5238,28 @@ func TestPrintStatic(t *testing.T) {
 	}
 }
 
-func TestPrintStmtList(t *testing.T) {
+func TestPrinterPrintStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.StmtList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 		},
 	})
 
-	expected := `{
-    $a;
-    $b;
-}`
+	expected := ` {$a;$b; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3662,11 +5267,21 @@ func TestPrintStmtList(t *testing.T) {
 	}
 }
 
-func TestPrintStmtListNested(t *testing.T) {
+func TestPrinterPrintStmtListNested(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.StmtList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
 		Stmts: []node.Node{
 			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 			&stmt.StmtList{
@@ -3682,15 +5297,7 @@ func TestPrintStmtListNested(t *testing.T) {
 		},
 	})
 
-	expected := `{
-    $a;
-    {
-        $b;
-        {
-            $c;
-        }
-    }
-}`
+	expected := ` {$a;{$b;{$c;}} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3698,42 +5305,55 @@ func TestPrintStmtListNested(t *testing.T) {
 	}
 }
 
-func TestPrintStmtSwitch(t *testing.T) {
+func TestPrinterPrintStmtSwitch(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.StmtList{
-		Stmts: []node.Node{
-			&stmt.Switch{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-				CaseList: &stmt.CaseList{
-					Cases: []node.Node{
-						&stmt.Case{
-							Cond: &scalar.String{Value: "'a'"},
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							},
-						},
-						&stmt.Case{
-							Cond: &scalar.String{Value: "'b'"},
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-							},
-						},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Switch{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SwitchToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		CaseList: &stmt.CaseList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenCurlyBracesToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseCurlyBracesToken,
+				},
+			},
+			Cases: []node.Node{
+				&stmt.Case{
+					Cond: &scalar.String{Value: "'a'"},
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+					},
+				},
+				&stmt.Case{
+					Cond: &scalar.String{Value: "'b'"},
+					Stmts: []node.Node{
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `{
-    switch ($var) {
-        case 'a':
-            $a;
-        case 'b':
-            $b;
-    }
-}`
+	expected := ` switch ($var ) {case'a':$a;case'b':$b; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3741,15 +5361,25 @@ func TestPrintStmtSwitch(t *testing.T) {
 	}
 }
 
-func TestPrintStmtThrow(t *testing.T) {
+func TestPrinterPrintStmtThrow(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Throw{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ThrowToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := `throw $var;`
+	expected := ` throw$var ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3757,16 +5387,37 @@ func TestPrintStmtThrow(t *testing.T) {
 	}
 }
 
-func TestPrintStmtTraitMethodRef(t *testing.T) {
+func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitMethodRef{
+		Method: &node.Identifier{Value: "a"},
+	})
+
+	expected := `a`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+func TestPrinterPrintStmtTraitMethodRefFull(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.TraitMethodRef{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.PaamayimNekudotayimToken,
+			},
+		},
 		Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Method: &node.Identifier{Value: "a"},
 	})
 
-	expected := `Foo::a`
+	expected := `Foo ::a`
 	actual := o.String()
 
 	if expected != actual {
@@ -3774,11 +5425,21 @@ func TestPrintStmtTraitMethodRef(t *testing.T) {
 	}
 }
 
-func TestPrintStmtTraitUseAlias(t *testing.T) {
+func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUseAlias{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AsToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Ref: &stmt.TraitMethodRef{
 			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 			Method: &node.Identifier{Value: "a"},
@@ -3787,7 +5448,7 @@ func TestPrintStmtTraitUseAlias(t *testing.T) {
 		Alias:    &node.Identifier{Value: "b"},
 	})
 
-	expected := `Foo::a as public b;`
+	expected := `Foo::a aspublicb ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3795,11 +5456,21 @@ func TestPrintStmtTraitUseAlias(t *testing.T) {
 	}
 }
 
-func TestPrintStmtTraitUsePrecedence(t *testing.T) {
+func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUsePrecedence{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.InsteadofToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Ref: &stmt.TraitMethodRef{
 			Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 			Method: &node.Identifier{Value: "a"},
@@ -3810,7 +5481,7 @@ func TestPrintStmtTraitUsePrecedence(t *testing.T) {
 		},
 	})
 
-	expected := `Foo::a insteadof Bar, Baz;`
+	expected := `Foo::a insteadofBar,Baz ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3818,56 +5489,32 @@ func TestPrintStmtTraitUsePrecedence(t *testing.T) {
 	}
 }
 
-func TestPrintStmtTraitUse(t *testing.T) {
+func TestPrinterPrintStmtTraitUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UseToken,
+			},
+		},
 		Traits: []node.Node{
 			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 		},
-	})
-
-	expected := `use Foo, Bar;`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintStmtTraitAdaptations(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.TraitUse{
-				Traits: []node.Node{
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
-				},
-				TraitAdaptationList: &stmt.TraitAdaptationList{
-					Adaptations: []node.Node{
-						&stmt.TraitUseAlias{
-							Ref: &stmt.TraitMethodRef{
-								Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-								Method: &node.Identifier{Value: "a"},
-							},
-							Alias: &node.Identifier{Value: "b"},
-						},
-					},
+		TraitAdaptationList: &stmt.Nop{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.SemiColonToken,
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    use Foo, Bar {
-        Foo::a as b;
-    }
-}`
+	expected := ` useFoo,Bar ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3875,39 +5522,45 @@ func TestPrintStmtTraitAdaptations(t *testing.T) {
 	}
 }
 
-func TestPrintTrait(t *testing.T) {
+func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.Trait{
-				TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
-				Stmts: []node.Node{
-					&stmt.ClassMethod{
-						Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
-						MethodName: &node.Identifier{Value: "foo"},
-						Params:     []node.Node{},
-						Stmt: &stmt.StmtList{
-							Stmts: []node.Node{
-								&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-							},
-						},
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.TraitUse{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UseToken,
+			},
+		},
+		Traits: []node.Node{
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
+		},
+		TraitAdaptationList: &stmt.TraitAdaptationList{
+			Meta: []meta.Meta{
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.OpenCurlyBracesToken,
+				},
+				&meta.WhiteSpace{
+					Value:     " ",
+					TokenName: meta.CloseCurlyBracesToken,
+				},
+			},
+			Adaptations: []node.Node{
+				&stmt.TraitUseAlias{
+					Ref: &stmt.TraitMethodRef{
+						Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+						Method: &node.Identifier{Value: "a"},
 					},
+					Alias: &node.Identifier{Value: "b"},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    trait Foo
-    {
-        public function foo()
-        {
-            $a;
-        }
-    }
-}`
+	expected := ` useFoo,Bar {Foo::aasb; }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3915,48 +5568,41 @@ func TestPrintTrait(t *testing.T) {
 	}
 }
 
-func TestPrintStmtTry(t *testing.T) {
+func TestPrinterPrintTrait(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Trait{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.TraitToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		TraitName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Stmts: []node.Node{
-			&stmt.Try{
-				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				},
-				Catches: []node.Node{
-					&stmt.Catch{
-						Types: []node.Node{
-							&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
-							&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
-						},
-						Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
-						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
-						},
-					},
-				},
-				Finally: &stmt.Finally{
+			&stmt.ClassMethod{
+				Modifiers:  []node.Node{&node.Identifier{Value: "public"}},
+				MethodName: &node.Identifier{Value: "foo"},
+				Params:     []node.Node{},
+				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Nop{},
+						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
 					},
 				},
 			},
 		},
 	})
 
-	expected := `namespace {
-    try {
-        $a;
-    }
-    catch (Exception | \RuntimeException $e) {
-        $b;
-    }
-    finally {
-        ;
-    }
-}`
+	expected := ` traitFoo {publicfunctionfoo(){$a;} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3964,18 +5610,85 @@ func TestPrintStmtTry(t *testing.T) {
 	}
 }
 
-func TestPrintStmtUset(t *testing.T) {
+func TestPrinterPrintStmtTry(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.Try{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.TryToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenCurlyBracesToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+		},
+		Catches: []node.Node{
+			&stmt.Catch{
+				Types: []node.Node{
+					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
+					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
+				},
+				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Stmts: []node.Node{
+					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				},
+			},
+		},
+		Finally: &stmt.Finally{
+			Stmts: []node.Node{
+				&stmt.Nop{},
+			},
+		},
+	})
+
+	expected := ` try {$a; }catch(Exception|\RuntimeException$e){$b;}finally{;}`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtUnset(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Unset{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UnsetToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		Vars: []node.Node{
 			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
 		},
 	})
 
-	expected := `unset($a, $b);`
+	expected := ` unset ($a,$b ) ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -3983,11 +5696,21 @@ func TestPrintStmtUset(t *testing.T) {
 	}
 }
 
-func TestPrintStmtUseList(t *testing.T) {
+func TestPrinterPrintStmtUseList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.UseList{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.UseToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+		},
 		UseType: &node.Identifier{Value: "function"},
 		Uses: []node.Node{
 			&stmt.Use{
@@ -4000,7 +5723,7 @@ func TestPrintStmtUseList(t *testing.T) {
 		},
 	})
 
-	expected := `use function Foo as Bar, Baz;`
+	expected := ` usefunctionFooasBar,Baz ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -4008,17 +5731,23 @@ func TestPrintStmtUseList(t *testing.T) {
 	}
 }
 
-func TestPrintUse(t *testing.T) {
+func TestPrinterPrintUse(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.Use{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.AsToken,
+			},
+		},
 		UseType: &node.Identifier{Value: "function"},
 		Use:     &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Alias:   &node.Identifier{Value: "Bar"},
 	})
 
-	expected := `function Foo as Bar`
+	expected := `functionFoo asBar`
 	actual := o.String()
 
 	if expected != actual {
@@ -4026,69 +5755,34 @@ func TestPrintUse(t *testing.T) {
 	}
 }
 
-func TestPrintWhileStmtList(t *testing.T) {
+func TestPrinterPrintWhileStmtList(t *testing.T) {
 	o := bytes.NewBufferString("")
 
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.While{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.StmtList{
-					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-					},
-				},
-			},
-		},
-	})
-
-	expected := `namespace {
-    while ($a) {
-        $a;
-    }
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintWhileExpression(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
-	p.Print(&stmt.Namespace{
-		Stmts: []node.Node{
-			&stmt.While{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-				Stmt: &stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-			},
-		},
-	})
-
-	expected := `namespace {
-    while ($a)
-        $a;
-}`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
-func TestPrintWhileNop(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o, "    ")
+	p := printer.NewPrinter(o)
 	p.Print(&stmt.While{
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.WhileToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Stmt: &stmt.Nop{},
+		Stmt: &stmt.StmtList{
+			Stmts: []node.Node{
+				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			},
+		},
 	})
 
-	expected := `while ($a);`
+	expected := ` while ($a ){$a;}`
 	actual := o.String()
 
 	if expected != actual {

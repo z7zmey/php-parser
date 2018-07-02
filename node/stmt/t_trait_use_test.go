@@ -70,6 +70,14 @@ func TestTraitUse(t *testing.T) {
 								},
 							},
 						},
+						TraitAdaptationList: &stmt.Nop{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  23,
+								EndPos:    23,
+							},
+						},
 					},
 				},
 			},
@@ -161,6 +169,14 @@ func TestTraitsUse(t *testing.T) {
 										Value: "Baz",
 									},
 								},
+							},
+						},
+						TraitAdaptationList: &stmt.Nop{
+							Position: &position.Position{
+								StartLine: 1,
+								EndLine:   1,
+								StartPos:  28,
+								EndPos:    28,
 							},
 						},
 					},

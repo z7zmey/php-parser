@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/z7zmey/php-parser/meta"
 	"github.com/z7zmey/php-parser/node"
 
 	"github.com/z7zmey/php-parser/walker"
@@ -40,7 +39,7 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 	if mm := n.GetMeta(); len(mm) > 0 {
 		fmt.Fprintf(d.Writer, "%v\"Meta\":\n", d.Indent+"  ")
 		for _, m := range mm {
-			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, meta.TokenNames[m.GetTokenName()])
+			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, m.GetTokenName().String())
 		}
 	}
 

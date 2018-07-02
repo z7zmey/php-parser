@@ -904,7 +904,6 @@ func TestCommentNewLine(t *testing.T) {
 	expected := []meta.Meta{
 		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
 		meta.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
-		meta.NewWhiteSpace("\n", position.NewPosition(1, 1, 13, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -913,7 +912,7 @@ func TestCommentNewLine(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -932,7 +931,7 @@ func TestCommentNewLine1(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -943,7 +942,6 @@ func TestCommentNewLine2(t *testing.T) {
 	expected := []meta.Meta{
 		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
 		meta.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
-		meta.NewWhiteSpace("\n", position.NewPosition(1, 1, 13, 13)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -952,7 +950,7 @@ func TestCommentNewLine2(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -972,7 +970,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -992,7 +990,7 @@ func TestInlineComment(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
 	assertEqual(t, expected, actual)
 }
@@ -1032,7 +1030,88 @@ func TestEmptyInlineComment2(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lv.Tkn.Meta
 
+	assertEqual(t, expected, actual)
+}
+
+func TestMethodCallTokens(t *testing.T) {
+	src := `<?php
+	$a -> bar ( '' ) ;`
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
+	lv := &lval{}
+
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+	}
+	lexer.Lex(lv)
+	actual := lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 10, 10)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 13, 13)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 17, 17)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 19, 19)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 22, 22)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 24, 24)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+}
+
+func TestYieldFromTokens(t *testing.T) {
+	src := `<?php
+	yield from $a`
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
+	lv := &lval{}
+
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+	}
+	lexer.Lex(lv)
+	actual := lv.Tkn.Meta
+	assertEqual(t, expected, actual)
+
+	expected = []meta.Meta{
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 18, 18)),
+	}
+	lexer.Lex(lv)
+	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 }

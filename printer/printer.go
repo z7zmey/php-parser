@@ -4,6 +4,8 @@ import (
 	"io"
 	"strings"
 
+	"github.com/z7zmey/php-parser/meta"
+
 	"github.com/z7zmey/php-parser/node/stmt"
 
 	"github.com/z7zmey/php-parser/node"
@@ -16,17 +18,13 @@ import (
 )
 
 type Printer struct {
-	w           io.Writer
-	indentStr   string
-	indentDepth int
+	w io.Writer
 }
 
 // NewPrinter -  Constructor for Printer
-func NewPrinter(w io.Writer, indentStr string) *Printer {
+func NewPrinter(w io.Writer) *Printer {
 	return &Printer{
-		w:           w,
-		indentStr:   indentStr,
-		indentDepth: 0,
+		w: w,
 	}
 }
 
@@ -45,21 +43,20 @@ func (p *Printer) joinPrint(glue string, nn []node.Node) {
 }
 
 func (p *Printer) printNodes(nn []node.Node) {
-	p.indentDepth++
-	l := len(nn) - 1
-	for k, n := range nn {
-		p.printIndent()
+	for _, n := range nn {
 		p.Print(n)
-		if k < l {
-			io.WriteString(p.w, "\n")
-		}
 	}
-	p.indentDepth--
 }
 
-func (p *Printer) printIndent() {
-	for i := 0; i < p.indentDepth; i++ {
-		io.WriteString(p.w, p.indentStr)
+func (p *Printer) printMeta(n node.Node, tn meta.TokenName) {
+	if n == nil {
+		return
+	}
+
+	for _, m := range n.GetMeta() {
+		if m.GetTokenName() == tn {
+			io.WriteString(p.w, m.String())
+		}
 	}
 }
 
@@ -417,87 +414,124 @@ func (p *Printer) printNode(n node.Node) {
 // node
 
 func (p *Printer) printNodeRoot(n node.Node) {
-	v := n.(*node.Root)
+	nn := n.(*node.Root)
+	p.printMeta(nn, meta.NodeStart)
 
-	if len(v.Stmts) > 0 {
-		firstStmt := v.Stmts[0]
-		v.Stmts = v.Stmts[1:]
+	var stmts []node.Node
+
+	if len(nn.Stmts) > 0 {
+		firstStmt := nn.Stmts[0]
+		stmts = nn.Stmts[1:]
 
 		switch fs := firstStmt.(type) {
 		case *stmt.InlineHtml:
 			io.WriteString(p.w, fs.Value)
-			io.WriteString(p.w, "<?php\n")
+			io.WriteString(p.w, "<?php")
 		default:
-			io.WriteString(p.w, "<?php\n")
-			p.printIndent()
+			io.WriteString(p.w, "<?php")
 			p.Print(fs)
-			io.WriteString(p.w, "\n")
 		}
 	}
-	p.indentDepth--
-	p.printNodes(v.Stmts)
-	io.WriteString(p.w, "\n")
+	p.printNodes(stmts)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNodeIdentifier(n node.Node) {
-	v := n.(*node.Identifier).Value
-	io.WriteString(p.w, v)
+	nn := n.(*node.Identifier)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.IdentifierToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNodeParameter(n node.Node) {
 	nn := n.(*node.Parameter)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.UnknownToken)
 
 	if nn.VariableType != nil {
 		p.Print(nn.VariableType)
-		io.WriteString(p.w, " ")
 	}
 
 	if nn.ByRef {
+		p.printMeta(nn, meta.AmpersandToken)
 		io.WriteString(p.w, "&")
 	}
 
 	if nn.Variadic {
+		p.printMeta(nn, meta.EllipsisToken)
 		io.WriteString(p.w, "...")
 	}
 
 	p.Print(nn.Variable)
 
 	if nn.DefaultValue != nil {
-		io.WriteString(p.w, " = ")
+		p.printMeta(nn, meta.EqualToken)
+		io.WriteString(p.w, "=")
 		p.Print(nn.DefaultValue)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNodeNullable(n node.Node) {
 	nn := n.(*node.Nullable)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.QuestionMarkToken)
 
 	io.WriteString(p.w, "?")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNodeArgument(n node.Node) {
 	nn := n.(*node.Argument)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.UnknownToken)
 
 	if nn.IsReference {
+		p.printMeta(nn, meta.AmpersandToken)
 		io.WriteString(p.w, "&")
 	}
 
 	if nn.Variadic {
+		p.printMeta(nn, meta.EllipsisToken)
 		io.WriteString(p.w, "...")
 	}
 
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // name
 
 func (p *Printer) printNameNamePart(n node.Node) {
-	v := n.(*name.NamePart).Value
-	io.WriteString(p.w, v)
+	nn := n.(*name.NamePart)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.StringToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NsSeparatorToken)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNameName(n node.Node) {
 	nn := n.(*name.Name)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.StringToken)
 
 	for k, part := range nn.Parts {
 		if k > 0 {
@@ -506,62 +540,108 @@ func (p *Printer) printNameName(n node.Node) {
 
 		p.Print(part)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNameFullyQualified(n node.Node) {
 	nn := n.(*name.FullyQualified)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.NsSeparatorToken)
 
 	for _, part := range nn.Parts {
 		io.WriteString(p.w, "\\")
 		p.Print(part)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNameRelative(n node.Node) {
 	nn := n.(*name.Relative)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.NamespaceToken)
 	io.WriteString(p.w, "namespace")
-	for _, part := range nn.Parts {
+	for k, part := range nn.Parts {
+		if k == 0 {
+			p.printMeta(nn, meta.NsSeparatorToken)
+		}
 		io.WriteString(p.w, "\\")
 		p.Print(part)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // scalar
 
 func (p *Printer) printScalarLNumber(n node.Node) {
-	v := n.(*scalar.Lnumber).Value
-	io.WriteString(p.w, v)
+	nn := n.(*scalar.Lnumber)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.LnumberToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarDNumber(n node.Node) {
-	v := n.(*scalar.Dnumber).Value
-	io.WriteString(p.w, v)
+	nn := n.(*scalar.Dnumber)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.DnumberToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarString(n node.Node) {
-	v := n.(*scalar.String).Value
+	nn := n.(*scalar.String)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, v)
+	p.printMeta(nn, meta.ConstantEncapsedStringToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarEncapsedStringPart(n node.Node) {
-	v := n.(*scalar.EncapsedStringPart).Value
-	io.WriteString(p.w, v)
+	nn := n.(*scalar.EncapsedStringPart)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.EncapsedAndWhitespaceToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarEncapsed(n node.Node) {
+	nn := n.(*scalar.Encapsed)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.DoubleQuoteToken)
 	io.WriteString(p.w, "\"")
 
-	for _, nn := range n.(*scalar.Encapsed).Parts {
-		p.Print(nn)
+	for _, part := range nn.Parts {
+		p.Print(part)
 	}
 
 	io.WriteString(p.w, "\"")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarHeredoc(n node.Node) {
 	nn := n.(*scalar.Heredoc)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.StartHeredocToken)
 
 	io.WriteString(p.w, "<<<")
 	io.WriteString(p.w, nn.Label)
@@ -572,1611 +652,2228 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 	}
 
 	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarMagicConstant(n node.Node) {
-	v := n.(*scalar.MagicConstant).Value
-	io.WriteString(p.w, v)
+	nn := n.(*scalar.MagicConstant)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.MagicConstantToken)
+
+	io.WriteString(p.w, nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // Assign
 
 func (p *Printer) printAssign(n node.Node) {
 	nn := n.(*assign.Assign)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " = ")
+	p.printMeta(nn, meta.EqualToken)
+	io.WriteString(p.w, "=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printReference(n node.Node) {
 	nn := n.(*assign.Reference)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " =& ")
+	p.printMeta(nn, meta.EqualToken)
+	io.WriteString(p.w, "=")
+	p.printMeta(nn, meta.AmpersandToken)
+	io.WriteString(p.w, "&")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignBitwiseAnd(n node.Node) {
 	nn := n.(*assign.BitwiseAnd)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " &= ")
+	p.printMeta(nn, meta.AndEqualToken)
+	io.WriteString(p.w, "&")
+	io.WriteString(p.w, "=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignBitwiseOr(n node.Node) {
 	nn := n.(*assign.BitwiseOr)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " |= ")
+	p.printMeta(nn, meta.OrEqualToken)
+	io.WriteString(p.w, "|=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignBitwiseXor(n node.Node) {
 	nn := n.(*assign.BitwiseXor)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " ^= ")
+	p.printMeta(nn, meta.XorEqualToken)
+	io.WriteString(p.w, "^=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignConcat(n node.Node) {
 	nn := n.(*assign.Concat)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " .= ")
+	p.printMeta(nn, meta.ConcatEqualToken)
+	io.WriteString(p.w, ".=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignDiv(n node.Node) {
 	nn := n.(*assign.Div)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " /= ")
+	p.printMeta(nn, meta.DivEqualToken)
+	io.WriteString(p.w, "/=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignMinus(n node.Node) {
 	nn := n.(*assign.Minus)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " -= ")
+	p.printMeta(nn, meta.MinusEqualToken)
+	io.WriteString(p.w, "-=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignMod(n node.Node) {
 	nn := n.(*assign.Mod)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " %= ")
+	p.printMeta(nn, meta.ModEqualToken)
+	io.WriteString(p.w, "%=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignMul(n node.Node) {
 	nn := n.(*assign.Mul)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " *= ")
+	p.printMeta(nn, meta.MulEqualToken)
+	io.WriteString(p.w, "*=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignPlus(n node.Node) {
 	nn := n.(*assign.Plus)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " += ")
+	p.printMeta(nn, meta.PlusEqualToken)
+	io.WriteString(p.w, "+=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignPow(n node.Node) {
 	nn := n.(*assign.Pow)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " **= ")
+	p.printMeta(nn, meta.PowEqualToken)
+	io.WriteString(p.w, "**=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignShiftLeft(n node.Node) {
 	nn := n.(*assign.ShiftLeft)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " <<= ")
+	p.printMeta(nn, meta.SlEqualToken)
+	io.WriteString(p.w, "<<=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printAssignShiftRight(n node.Node) {
 	nn := n.(*assign.ShiftRight)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, " >>= ")
+	p.printMeta(nn, meta.SrEqualToken)
+	io.WriteString(p.w, ">>=")
 	p.Print(nn.Expression)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // binary
 
 func (p *Printer) printBinaryBitwiseAnd(n node.Node) {
 	nn := n.(*binary.BitwiseAnd)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " & ")
+	p.printMeta(nn, meta.AmpersandToken)
+	io.WriteString(p.w, "&")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryBitwiseOr(n node.Node) {
 	nn := n.(*binary.BitwiseOr)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " | ")
+	p.printMeta(nn, meta.VerticalBarToken)
+	io.WriteString(p.w, "|")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryBitwiseXor(n node.Node) {
 	nn := n.(*binary.BitwiseXor)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " ^ ")
+	p.printMeta(nn, meta.CaretToken)
+	io.WriteString(p.w, "^")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryBooleanAnd(n node.Node) {
 	nn := n.(*binary.BooleanAnd)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " && ")
+	p.printMeta(nn, meta.BooleanAndToken)
+	io.WriteString(p.w, "&&")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryBooleanOr(n node.Node) {
 	nn := n.(*binary.BooleanOr)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " || ")
+	p.printMeta(nn, meta.BooleanOrToken)
+	io.WriteString(p.w, "||")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryCoalesce(n node.Node) {
 	nn := n.(*binary.Coalesce)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " ?? ")
+	p.printMeta(nn, meta.CoalesceToken)
+	io.WriteString(p.w, "??")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryConcat(n node.Node) {
 	nn := n.(*binary.Concat)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " . ")
+	p.printMeta(nn, meta.DotToken)
+	io.WriteString(p.w, ".")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryDiv(n node.Node) {
 	nn := n.(*binary.Div)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " / ")
+	p.printMeta(nn, meta.SlashToken)
+	io.WriteString(p.w, "/")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryEqual(n node.Node) {
 	nn := n.(*binary.Equal)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " == ")
+	p.printMeta(nn, meta.IsEqualToken)
+	io.WriteString(p.w, "==")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryGreaterOrEqual(n node.Node) {
 	nn := n.(*binary.GreaterOrEqual)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " >= ")
+	p.printMeta(nn, meta.IsGreaterOrEqualToken)
+	io.WriteString(p.w, ">=")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryGreater(n node.Node) {
 	nn := n.(*binary.Greater)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " > ")
+	p.printMeta(nn, meta.GreaterToken)
+	io.WriteString(p.w, ">")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryIdentical(n node.Node) {
 	nn := n.(*binary.Identical)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " === ")
+	p.printMeta(nn, meta.IsIdenticalToken)
+	io.WriteString(p.w, "===")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryLogicalAnd(n node.Node) {
 	nn := n.(*binary.LogicalAnd)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " and ")
+	p.printMeta(nn, meta.LogicalAndToken)
+	io.WriteString(p.w, "and")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryLogicalOr(n node.Node) {
 	nn := n.(*binary.LogicalOr)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " or ")
+	p.printMeta(nn, meta.LogicalOrToken)
+	io.WriteString(p.w, "or")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryLogicalXor(n node.Node) {
 	nn := n.(*binary.LogicalXor)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " xor ")
+	p.printMeta(nn, meta.LogicalXorToken)
+	io.WriteString(p.w, "xor")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryMinus(n node.Node) {
 	nn := n.(*binary.Minus)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " - ")
+	p.printMeta(nn, meta.MinusToken)
+	io.WriteString(p.w, "-")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryMod(n node.Node) {
 	nn := n.(*binary.Mod)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " % ")
+	p.printMeta(nn, meta.PercentToken)
+	io.WriteString(p.w, "%")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryMul(n node.Node) {
 	nn := n.(*binary.Mul)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " * ")
+	p.printMeta(nn, meta.AsteriskToken)
+	io.WriteString(p.w, "*")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryNotEqual(n node.Node) {
 	nn := n.(*binary.NotEqual)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " != ")
+	p.printMeta(nn, meta.IsNotEqualToken)
+	io.WriteString(p.w, "!=")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryNotIdentical(n node.Node) {
 	nn := n.(*binary.NotIdentical)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " !== ")
+	p.printMeta(nn, meta.IsNotIdenticalToken)
+	io.WriteString(p.w, "!==")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryPlus(n node.Node) {
 	nn := n.(*binary.Plus)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " + ")
+	p.printMeta(nn, meta.PlusToken)
+	io.WriteString(p.w, "+")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryPow(n node.Node) {
 	nn := n.(*binary.Pow)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " ** ")
+	p.printMeta(nn, meta.PowToken)
+	io.WriteString(p.w, "**")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryShiftLeft(n node.Node) {
 	nn := n.(*binary.ShiftLeft)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " << ")
+	p.printMeta(nn, meta.SlToken)
+	io.WriteString(p.w, "<<")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinaryShiftRight(n node.Node) {
 	nn := n.(*binary.ShiftRight)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " >> ")
+	p.printMeta(nn, meta.SrToken)
+	io.WriteString(p.w, ">>")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinarySmallerOrEqual(n node.Node) {
 	nn := n.(*binary.SmallerOrEqual)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " <= ")
+	p.printMeta(nn, meta.IsSmallerOrEqualToken)
+	io.WriteString(p.w, "<=")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinarySmaller(n node.Node) {
 	nn := n.(*binary.Smaller)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " < ")
+	p.printMeta(nn, meta.LessToken)
+	io.WriteString(p.w, "<")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBinarySpaceship(n node.Node) {
 	nn := n.(*binary.Spaceship)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Left)
-	io.WriteString(p.w, " <=> ")
+	p.printMeta(nn, meta.SpaceshipToken)
+	io.WriteString(p.w, "<=>")
 	p.Print(nn.Right)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // cast
 
 func (p *Printer) printArray(n node.Node) {
 	nn := n.(*cast.Array)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.ArrayCastToken)
 	io.WriteString(p.w, "(array)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBool(n node.Node) {
 	nn := n.(*cast.Bool)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.BoolCastToken)
 	io.WriteString(p.w, "(bool)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printDouble(n node.Node) {
 	nn := n.(*cast.Double)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.DoubleCastToken)
 	io.WriteString(p.w, "(float)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printInt(n node.Node) {
 	nn := n.(*cast.Int)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.IntCastToken)
 	io.WriteString(p.w, "(int)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printObject(n node.Node) {
 	nn := n.(*cast.Object)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.ObjectCastToken)
 	io.WriteString(p.w, "(object)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printString(n node.Node) {
 	nn := n.(*cast.String)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.StringCastToken)
 	io.WriteString(p.w, "(string)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printUnset(n node.Node) {
 	nn := n.(*cast.Unset)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.UnsetCastToken)
 	io.WriteString(p.w, "(unset)")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // expr
 
 func (p *Printer) printExprArrayDimFetch(n node.Node) {
 	nn := n.(*expr.ArrayDimFetch)
+	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.OpenSquareBracket)
 	io.WriteString(p.w, "[")
 	p.Print(nn.Dim)
+	p.printMeta(nn, meta.CloseSquareBracket)
 	io.WriteString(p.w, "]")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprArrayItem(n node.Node) {
 	nn := n.(*expr.ArrayItem)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
-		io.WriteString(p.w, " => ")
+		p.printMeta(nn, meta.DoubleArrowToken)
+		io.WriteString(p.w, "=>")
 	}
 
 	p.Print(nn.Val)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprArray(n node.Node) {
 	nn := n.(*expr.Array)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "array(")
-	p.joinPrint(", ", nn.Items)
+	p.printMeta(nn, meta.ArrayToken)
+	io.WriteString(p.w, "array")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Items)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprBitwiseNot(n node.Node) {
 	nn := n.(*expr.BitwiseNot)
+	p.printMeta(nn, meta.NodeStart)
+	p.printMeta(nn, meta.TildeToken)
 	io.WriteString(p.w, "~")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprBooleanNot(n node.Node) {
 	nn := n.(*expr.BooleanNot)
+	p.printMeta(nn, meta.NodeStart)
+	p.printMeta(nn, meta.ExclamationMarkToken)
 	io.WriteString(p.w, "!")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprClassConstFetch(n node.Node) {
 	nn := n.(*expr.ClassConstFetch)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Class)
+	p.printMeta(nn, meta.PaamayimNekudotayimToken)
 	io.WriteString(p.w, "::")
-	io.WriteString(p.w, nn.ConstantName.(*node.Identifier).Value)
+	p.Print(nn.ConstantName)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprClone(n node.Node) {
 	nn := n.(*expr.Clone)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "clone ")
+	p.printMeta(nn, meta.CloneToken)
+	io.WriteString(p.w, "clone")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprClosureUse(n node.Node) {
 	nn := n.(*expr.ClosureUse)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "use (")
-	p.joinPrint(", ", nn.Uses)
+	p.printMeta(nn, meta.UseToken)
+	io.WriteString(p.w, "use")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Uses)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprClosure(n node.Node) {
 	nn := n.(*expr.Closure)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Static {
-		io.WriteString(p.w, "static ")
+		p.printMeta(nn, meta.StaticToken)
+		io.WriteString(p.w, "static")
 	}
 
-	io.WriteString(p.w, "function ")
+	p.printMeta(nn, meta.FunctionToken)
+	io.WriteString(p.w, "function")
 
 	if nn.ReturnsRef {
+		p.printMeta(nn, meta.AmpersandToken)
 		io.WriteString(p.w, "&")
 	}
 
+	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Params)
+	p.joinPrint(",", nn.Params)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
 	if nn.ClosureUse != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.ClosureUse)
 	}
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ": ")
+		p.printMeta(nn.ReturnType, meta.ColonToken)
+		io.WriteString(p.w, ":")
 		p.Print(nn.ReturnType)
 	}
 
-	io.WriteString(p.w, " {\n")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprConstFetch(n node.Node) {
 	nn := n.(*expr.ConstFetch)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Constant)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprDie(n node.Node) {
 	nn := n.(*expr.Die)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "die(")
+	p.printMeta(nn, meta.ExitToken)
+	io.WriteString(p.w, "die")
+	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
+	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprEmpty(n node.Node) {
 	nn := n.(*expr.Empty)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "empty(")
+	p.printMeta(nn, meta.EmptyToken)
+	io.WriteString(p.w, "empty")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprErrorSuppress(n node.Node) {
 	nn := n.(*expr.ErrorSuppress)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.AtToken)
 	io.WriteString(p.w, "@")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprEval(n node.Node) {
 	nn := n.(*expr.Eval)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "eval(")
+	p.printMeta(nn, meta.EvalToken)
+	io.WriteString(p.w, "eval")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprExit(n node.Node) {
 	nn := n.(*expr.Exit)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "exit(")
+	p.printMeta(nn, meta.ExitToken)
+	io.WriteString(p.w, "exit")
+	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
+	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprFunctionCall(n node.Node) {
 	nn := n.(*expr.FunctionCall)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Function)
+	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.ArgumentList.Arguments)
+	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprInclude(n node.Node) {
 	nn := n.(*expr.Include)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "include ")
+	p.printMeta(nn, meta.IncludeToken)
+	io.WriteString(p.w, "include")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprIncludeOnce(n node.Node) {
 	nn := n.(*expr.IncludeOnce)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "include_once ")
+	p.printMeta(nn, meta.IncludeOnceToken)
+	io.WriteString(p.w, "include_once")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprInstanceOf(n node.Node) {
 	nn := n.(*expr.InstanceOf)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Expr)
-	io.WriteString(p.w, " instanceof ")
+	p.printMeta(nn, meta.InstanceofToken)
+	io.WriteString(p.w, "instanceof")
 	p.Print(nn.Class)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprIsset(n node.Node) {
 	nn := n.(*expr.Isset)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "isset(")
-	p.joinPrint(", ", nn.Variables)
+	p.printMeta(nn, meta.IssetToken)
+	io.WriteString(p.w, "isset")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Variables)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprList(n node.Node) {
 	nn := n.(*expr.List)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "list(")
-	p.joinPrint(", ", nn.Items)
+	p.printMeta(nn, meta.ListToken)
+	io.WriteString(p.w, "list")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Items)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprMethodCall(n node.Node) {
 	nn := n.(*expr.MethodCall)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.ObjectOperatorToken)
 	io.WriteString(p.w, "->")
 	p.Print(nn.Method)
+	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.ArgumentList.Arguments)
+	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprNew(n node.Node) {
 	nn := n.(*expr.New)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "new ")
+	p.printMeta(nn, meta.NewToken)
+	io.WriteString(p.w, "new")
 	p.Print(nn.Class)
 
 	if nn.ArgumentList != nil {
+		p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.ArgumentList.Arguments)
+		p.joinPrint(",", nn.ArgumentList.Arguments)
+		p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 		io.WriteString(p.w, ")")
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPostDec(n node.Node) {
 	nn := n.(*expr.PostDec)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.DecToken)
 	io.WriteString(p.w, "--")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPostInc(n node.Node) {
 	nn := n.(*expr.PostInc)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.IncToken)
 	io.WriteString(p.w, "++")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPreDec(n node.Node) {
 	nn := n.(*expr.PreDec)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.DecToken)
 	io.WriteString(p.w, "--")
 	p.Print(nn.Variable)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPreInc(n node.Node) {
 	nn := n.(*expr.PreInc)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.IncToken)
 	io.WriteString(p.w, "++")
 	p.Print(nn.Variable)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPrint(n node.Node) {
 	nn := n.(*expr.Print)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "print(")
+	p.printMeta(nn, meta.PrintToken)
+	io.WriteString(p.w, "print")
+	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
+	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprPropertyFetch(n node.Node) {
 	nn := n.(*expr.PropertyFetch)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.ObjectOperatorToken)
 	io.WriteString(p.w, "->")
 	p.Print(nn.Property)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprReference(n node.Node) {
 	nn := n.(*expr.Reference)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.AmpersandToken)
 	io.WriteString(p.w, "&")
 	p.Print(nn.Variable)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprRequire(n node.Node) {
 	nn := n.(*expr.Require)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "require ")
+	p.printMeta(nn, meta.RequireToken)
+	io.WriteString(p.w, "require")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprRequireOnce(n node.Node) {
 	nn := n.(*expr.RequireOnce)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "require_once ")
+	p.printMeta(nn, meta.RequireOnceToken)
+	io.WriteString(p.w, "require_once")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprShellExec(n node.Node) {
 	nn := n.(*expr.ShellExec)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.BackquoteToken)
 	io.WriteString(p.w, "`")
 	for _, part := range nn.Parts {
 		p.Print(part)
 	}
 	io.WriteString(p.w, "`")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprShortArray(n node.Node) {
 	nn := n.(*expr.ShortArray)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.OpenSquareBracket)
 	io.WriteString(p.w, "[")
-	p.joinPrint(", ", nn.Items)
+	p.joinPrint(",", nn.Items)
+	p.printMeta(nn, meta.CloseSquareBracket)
 	io.WriteString(p.w, "]")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprShortList(n node.Node) {
 	nn := n.(*expr.ShortList)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.OpenSquareBracket)
 	io.WriteString(p.w, "[")
-	p.joinPrint(", ", nn.Items)
+	p.joinPrint(",", nn.Items)
+	p.printMeta(nn, meta.CloseSquareBracket)
 	io.WriteString(p.w, "]")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprStaticCall(n node.Node) {
 	nn := n.(*expr.StaticCall)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Class)
+	p.printMeta(nn, meta.PaamayimNekudotayimToken)
 	io.WriteString(p.w, "::")
 	p.Print(nn.Call)
+	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.ArgumentList.Arguments)
+	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprStaticPropertyFetch(n node.Node) {
 	nn := n.(*expr.StaticPropertyFetch)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Class)
+	p.printMeta(nn, meta.PaamayimNekudotayimToken)
 	io.WriteString(p.w, "::")
 	p.Print(nn.Property)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprTernary(n node.Node) {
 	nn := n.(*expr.Ternary)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Condition)
-	io.WriteString(p.w, " ?")
+	p.printMeta(nn, meta.QuestionMarkToken)
+	io.WriteString(p.w, "?")
 
 	if nn.IfTrue != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.IfTrue)
-		io.WriteString(p.w, " ")
 	}
 
-	io.WriteString(p.w, ": ")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 	p.Print(nn.IfFalse)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprUnaryMinus(n node.Node) {
 	nn := n.(*expr.UnaryMinus)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.MinusToken)
 	io.WriteString(p.w, "-")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprUnaryPlus(n node.Node) {
 	nn := n.(*expr.UnaryPlus)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.PlusToken)
 	io.WriteString(p.w, "+")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprVariable(n node.Node) {
+	nn := n.(*expr.Variable)
+	p.printMeta(nn, meta.NodeStart)
+	p.printMeta(nn, meta.VariableToken)
 	io.WriteString(p.w, "$")
-	p.Print(n.(*expr.Variable).VarName)
+	p.Print(nn.VarName)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprYieldFrom(n node.Node) {
 	nn := n.(*expr.YieldFrom)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "yield from ")
+	p.printMeta(nn, meta.YieldFromToken)
+	io.WriteString(p.w, "yield from")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprYield(n node.Node) {
 	nn := n.(*expr.Yield)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "yield ")
+	p.printMeta(nn, meta.YieldToken)
+	io.WriteString(p.w, "yield")
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
-		io.WriteString(p.w, " => ")
+		p.printMeta(nn, meta.DoubleArrowToken)
+		io.WriteString(p.w, "=>")
 	}
 
 	p.Print(nn.Value)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 // smtm
 
 func (p *Printer) printStmtAltElseIf(n node.Node) {
 	nn := n.(*stmt.AltElseIf)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "elseif (")
+	p.printMeta(nn, meta.ElseifToken)
+	io.WriteString(p.w, "elseif")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
-		io.WriteString(p.w, "\n")
 		p.printNodes(s)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltElse(n node.Node) {
 	nn := n.(*stmt.AltElse)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "else :")
+	p.printMeta(nn, meta.ElseToken)
+	io.WriteString(p.w, "else")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	if s := nn.Stmt.(*stmt.StmtList).Stmts; len(s) > 0 {
-		io.WriteString(p.w, "\n")
 		p.printNodes(s)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltFor(n node.Node) {
 	nn := n.(*stmt.AltFor)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "for (")
-	p.joinPrint(", ", nn.Init)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Cond)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Loop)
-	io.WriteString(p.w, ") :\n")
+	p.printMeta(nn, meta.ForToken)
+	io.WriteString(p.w, "for")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Init)
+	p.printMeta(nn, meta.ForInitSemicolonToken)
+	io.WriteString(p.w, ";")
+	p.joinPrint(",", nn.Cond)
+	p.printMeta(nn, meta.ForCondSemicolonToken)
+	io.WriteString(p.w, ";")
+	p.joinPrint(",", nn.Loop)
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
 
-	io.WriteString(p.w, "endfor;")
+	p.printMeta(nn, meta.EndforToken)
+	io.WriteString(p.w, "endfor")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltForeach(n node.Node) {
 	nn := n.(*stmt.AltForeach)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "foreach (")
+	p.printMeta(nn, meta.ForeachToken)
+	io.WriteString(p.w, "foreach")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
-	io.WriteString(p.w, " as ")
+	p.printMeta(nn, meta.AsToken)
+	io.WriteString(p.w, "as")
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
-		io.WriteString(p.w, " => ")
+		p.printMeta(nn, meta.DoubleArrowToken)
+		io.WriteString(p.w, "=>")
 	}
 
 	p.Print(nn.Variable)
 
-	io.WriteString(p.w, ") :\n")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endforeach;")
+	p.printMeta(nn, meta.EndforeachToken)
+	io.WriteString(p.w, "endforeach")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltIf(n node.Node) {
 	nn := n.(*stmt.AltIf)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "if (")
+	p.printMeta(nn, meta.IfToken)
+	io.WriteString(p.w, "if")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :\n")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
 
 	for _, elseif := range nn.ElseIf {
-		io.WriteString(p.w, "\n")
-		p.printIndent()
 		p.Print(elseif)
 	}
 
 	if nn.Else != nil {
-		io.WriteString(p.w, "\n")
-		p.printIndent()
 		p.Print(nn.Else)
 	}
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endif;")
+	p.printMeta(nn, meta.EndifToken)
+	io.WriteString(p.w, "endif")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltSwitch(n node.Node) {
 	nn := n.(*stmt.AltSwitch)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "switch (")
+	p.printMeta(nn, meta.SwitchToken)
+	io.WriteString(p.w, "switch")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :\n")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
+	p.printMeta(nn, meta.SwitchSemicolonToken)
+	io.WriteString(p.w, ";")
 
 	s := nn.CaseList.Cases
 	p.printNodes(s)
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endswitch;")
+	p.printMeta(nn, meta.EndswitchToken)
+	io.WriteString(p.w, "endswitch")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtAltWhile(n node.Node) {
 	nn := n.(*stmt.AltWhile)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "while (")
+	p.printMeta(nn, meta.WhileToken)
+	io.WriteString(p.w, "while")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
-	io.WriteString(p.w, ") :\n")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.ColonToken)
+	io.WriteString(p.w, ":")
 
 	s := nn.Stmt.(*stmt.StmtList)
 	p.printNodes(s.Stmts)
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "endwhile;")
+	p.printMeta(nn, meta.EndwhileToken)
+	io.WriteString(p.w, "endwhile")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtBreak(n node.Node) {
 	nn := n.(*stmt.Break)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.BreakToken)
 	io.WriteString(p.w, "break")
 	if nn.Expr != nil {
-		io.WriteString(p.w, " ")
+		p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+		io.WriteString(p.w, "(")
 		p.Print(nn.Expr)
+		p.printMeta(nn.Expr, meta.CloseParenthesisToken)
+		io.WriteString(p.w, ")")
 	}
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtCase(n node.Node) {
 	nn := n.(*stmt.Case)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "case ")
+	p.printMeta(nn, meta.CaseToken)
+	io.WriteString(p.w, "case")
 	p.Print(nn.Cond)
+	p.printMeta(nn, meta.CaseSeparatorToken)
 	io.WriteString(p.w, ":")
 
 	if len(nn.Stmts) > 0 {
-		io.WriteString(p.w, "\n")
 		p.printNodes(nn.Stmts)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtCatch(n node.Node) {
 	nn := n.(*stmt.Catch)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "catch (")
-	p.joinPrint(" | ", nn.Types)
-	io.WriteString(p.w, " ")
+	p.printMeta(nn, meta.CatchToken)
+	io.WriteString(p.w, "catch")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint("|", nn.Types)
 	p.Print(nn.Variable)
-	io.WriteString(p.w, ") {\n")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtClassMethod(n node.Node) {
 	nn := n.(*stmt.ClassMethod)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Modifiers != nil {
-		p.joinPrint(" ", nn.Modifiers)
-		io.WriteString(p.w, " ")
+		p.joinPrint("", nn.Modifiers)
 	}
-	io.WriteString(p.w, "function ")
+	p.printMeta(nn, meta.FunctionToken)
+	io.WriteString(p.w, "function")
 
 	if nn.ReturnsRef {
+		p.printMeta(nn, meta.AmpersandToken)
 		io.WriteString(p.w, "&")
 	}
 
 	p.Print(nn.MethodName)
+	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Params)
+	p.joinPrint(",", nn.Params)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ": ")
+		p.printMeta(nn.ReturnType, meta.ColonToken)
+		io.WriteString(p.w, ":")
 		p.Print(nn.ReturnType)
 	}
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.StmtList:
-		io.WriteString(p.w, "\n")
-		p.printIndent()
-		io.WriteString(p.w, "{\n")
-		p.printNodes(s.Stmts)
-		io.WriteString(p.w, "\n")
-		p.printIndent()
-		io.WriteString(p.w, "}")
-	default:
-		p.Print(s)
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtClass(n node.Node) {
 	nn := n.(*stmt.Class)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Modifiers != nil {
-		p.joinPrint(" ", nn.Modifiers)
-		io.WriteString(p.w, " ")
+		p.joinPrint("", nn.Modifiers)
 	}
+	p.printMeta(nn, meta.ClassToken)
 	io.WriteString(p.w, "class")
 
 	if nn.ClassName != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.ClassName)
 	}
 
 	if nn.ArgumentList != nil {
+		p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 		io.WriteString(p.w, "(")
-		p.joinPrint(", ", nn.ArgumentList.Arguments)
+		p.joinPrint(",", nn.ArgumentList.Arguments)
+		p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 		io.WriteString(p.w, ")")
 	}
 
 	if nn.Extends != nil {
-		io.WriteString(p.w, " extends ")
+		p.printMeta(nn.Extends, meta.ExtendsToken)
+		io.WriteString(p.w, "extends")
 		p.Print(nn.Extends.ClassName)
 	}
 
 	if nn.Implements != nil {
-		io.WriteString(p.w, " implements ")
-		p.joinPrint(", ", nn.Implements.InterfaceNames)
+		p.printMeta(nn.Implements, meta.ImplementsToken)
+		io.WriteString(p.w, "implements")
+		p.joinPrint(",", nn.Implements.InterfaceNames)
 	}
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "{\n")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtClassConstList(n node.Node) {
 	nn := n.(*stmt.ClassConstList)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Modifiers != nil {
-		p.joinPrint(" ", nn.Modifiers)
-		io.WriteString(p.w, " ")
+		p.joinPrint("", nn.Modifiers)
 	}
-	io.WriteString(p.w, "const ")
+	p.printMeta(nn, meta.ConstToken)
+	io.WriteString(p.w, "const")
 
-	p.joinPrint(", ", nn.Consts)
+	p.joinPrint(",", nn.Consts)
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtConstant(n node.Node) {
 	nn := n.(*stmt.Constant)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.ConstantName)
-	io.WriteString(p.w, " = ")
+	p.printMeta(nn, meta.EqualToken)
+	io.WriteString(p.w, "=")
 	p.Print(nn.Expr)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtContinue(n node.Node) {
 	nn := n.(*stmt.Continue)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.ContinueToken)
 	io.WriteString(p.w, "continue")
+
 	if nn.Expr != nil {
-		io.WriteString(p.w, " ")
+		p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+		io.WriteString(p.w, "(")
 		p.Print(nn.Expr)
+		p.printMeta(nn.Expr, meta.CloseParenthesisToken)
+		io.WriteString(p.w, ")")
 	}
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtDeclare(n node.Node) {
 	nn := n.(*stmt.Declare)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "declare(")
-	p.joinPrint(", ", nn.Consts)
+	p.printMeta(nn, meta.DeclareToken)
+	io.WriteString(p.w, "declare")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Consts)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtDefault(n node.Node) {
 	nn := n.(*stmt.Default)
-	io.WriteString(p.w, "default:")
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.DefaultToken)
+	io.WriteString(p.w, "default")
+	p.printMeta(nn, meta.CaseSeparatorToken)
+	io.WriteString(p.w, ":")
 
 	if len(nn.Stmts) > 0 {
-		io.WriteString(p.w, "\n")
 		p.printNodes(nn.Stmts)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtDo(n node.Node) {
 	nn := n.(*stmt.Do)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.DoToken)
 	io.WriteString(p.w, "do")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-		io.WriteString(p.w, " ")
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-		io.WriteString(p.w, "\n")
-		p.printIndent()
-	}
+	p.Print(nn.Stmt)
 
-	io.WriteString(p.w, "while (")
+	p.printMeta(nn, meta.WhileToken)
+	io.WriteString(p.w, "while")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
-	io.WriteString(p.w, ");")
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtEcho(n node.Node) {
 	nn := n.(*stmt.Echo)
-	io.WriteString(p.w, "echo ")
-	p.joinPrint(", ", nn.Exprs)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.EchoToken)
+	io.WriteString(p.w, "echo")
+	p.joinPrint(",", nn.Exprs)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtElseif(n node.Node) {
 	nn := n.(*stmt.ElseIf)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "elseif (")
+	p.printMeta(nn, meta.ElseifToken)
+	io.WriteString(p.w, "elseif")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtElse(n node.Node) {
 	nn := n.(*stmt.Else)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(nn, meta.ElseToken)
 	io.WriteString(p.w, "else")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtExpression(n node.Node) {
 	nn := n.(*stmt.Expression)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Expr)
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtFinally(n node.Node) {
 	nn := n.(*stmt.Finally)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "finally {\n")
+	p.printMeta(nn, meta.FinallyToken)
+	io.WriteString(p.w, "finally")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtFor(n node.Node) {
 	nn := n.(*stmt.For)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "for (")
-	p.joinPrint(", ", nn.Init)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Cond)
-	io.WriteString(p.w, "; ")
-	p.joinPrint(", ", nn.Loop)
+	p.printMeta(nn, meta.ForToken)
+	io.WriteString(p.w, "for")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Init)
+	p.printMeta(nn, meta.ForInitSemicolonToken)
+	io.WriteString(p.w, ";")
+	p.joinPrint(",", nn.Cond)
+	p.printMeta(nn, meta.ForCondSemicolonToken)
+	io.WriteString(p.w, ";")
+	p.joinPrint(",", nn.Loop)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtForeach(n node.Node) {
 	nn := n.(*stmt.Foreach)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "foreach (")
+	p.printMeta(nn, meta.ForeachToken)
+	io.WriteString(p.w, "foreach")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
-	io.WriteString(p.w, " as ")
+	p.printMeta(nn, meta.AsToken)
+	io.WriteString(p.w, "as")
 
 	if nn.Key != nil {
 		p.Print(nn.Key)
-		io.WriteString(p.w, " => ")
+		p.printMeta(nn, meta.DoubleArrowToken)
+		io.WriteString(p.w, "=>")
 	}
 
 	p.Print(nn.Variable)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtFunction(n node.Node) {
 	nn := n.(*stmt.Function)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "function ")
+	p.printMeta(nn, meta.FunctionToken)
+	io.WriteString(p.w, "function")
 
 	if nn.ReturnsRef {
+		p.printMeta(nn, meta.AmpersandToken)
 		io.WriteString(p.w, "&")
 	}
 
 	p.Print(nn.FunctionName)
 
+	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
-	p.joinPrint(", ", nn.Params)
+	p.joinPrint(",", nn.Params)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
 	if nn.ReturnType != nil {
-		io.WriteString(p.w, ": ")
+		p.printMeta(nn.ReturnType, meta.ColonToken)
+		io.WriteString(p.w, ":")
 		p.Print(nn.ReturnType)
 	}
 
-	io.WriteString(p.w, " {\n")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtGlobal(n node.Node) {
 	nn := n.(*stmt.Global)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "global ")
-	p.joinPrint(", ", nn.Vars)
+	p.printMeta(nn, meta.GlobalToken)
+	io.WriteString(p.w, "global")
+	p.joinPrint(",", nn.Vars)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtGoto(n node.Node) {
 	nn := n.(*stmt.Goto)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "goto ")
+	p.printMeta(nn, meta.GotoToken)
+	io.WriteString(p.w, "goto")
 	p.Print(nn.Label)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtGroupUse(n node.Node) {
 	nn := n.(*stmt.GroupUse)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "use ")
+	p.printMeta(nn, meta.UseToken)
+	io.WriteString(p.w, "use")
 
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
-		io.WriteString(p.w, " ")
 	}
 
 	p.Print(nn.Prefix)
-	io.WriteString(p.w, "\\{")
-	p.joinPrint(", ", nn.UseList)
-	io.WriteString(p.w, "};")
+	p.printMeta(nn, meta.NsSeparatorToken)
+	io.WriteString(p.w, "\\")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
+	p.joinPrint(",", nn.UseList)
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
+	io.WriteString(p.w, "}")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtHaltCompiler(n node.Node) {
-	io.WriteString(p.w, "__halt_compiler();")
+	nn := n.(*stmt.HaltCompiler)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(n, meta.HaltCompilerToken)
+	io.WriteString(p.w, "__halt_compiler")
+	p.printMeta(n, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.printMeta(n, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(n, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtIf(n node.Node) {
 	nn := n.(*stmt.If)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "if (")
+	p.printMeta(n, meta.IfToken)
+	io.WriteString(p.w, "if")
+	p.printMeta(n, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
+	p.printMeta(n, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
 
 	if nn.ElseIf != nil {
-		io.WriteString(p.w, "\n")
-		p.indentDepth--
 		p.printNodes(nn.ElseIf)
-		p.indentDepth++
 	}
 
 	if nn.Else != nil {
-		io.WriteString(p.w, "\n")
-		p.printIndent()
 		p.Print(nn.Else)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtInlineHTML(n node.Node) {
 	nn := n.(*stmt.InlineHtml)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(n, meta.InlineHTMLToken)
 	io.WriteString(p.w, "?>")
 	io.WriteString(p.w, nn.Value)
 	io.WriteString(p.w, "<?php")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtInterface(n node.Node) {
 	nn := n.(*stmt.Interface)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(n, meta.InterfaceToken)
 	io.WriteString(p.w, "interface")
 
 	if nn.InterfaceName != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.InterfaceName)
 	}
 
 	if nn.Extends != nil {
-		io.WriteString(p.w, " extends ")
-		p.joinPrint(", ", nn.Extends.InterfaceNames)
+		p.printMeta(nn.Extends, meta.ExtendsToken)
+		io.WriteString(p.w, "extends")
+		p.joinPrint(",", nn.Extends.InterfaceNames)
 	}
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "{\n")
+	p.printMeta(n, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(n, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtLabel(n node.Node) {
 	nn := n.(*stmt.Label)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.LabelName)
+	p.printMeta(n, meta.ColonToken)
 	io.WriteString(p.w, ":")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtNamespace(n node.Node) {
 	nn := n.(*stmt.Namespace)
+	p.printMeta(nn, meta.NodeStart)
 
+	p.printMeta(n, meta.NamespaceToken)
 	io.WriteString(p.w, "namespace")
 
 	if nn.NamespaceName != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.NamespaceName)
 	}
 
 	if nn.Stmts != nil {
-		io.WriteString(p.w, " {\n")
+		p.printMeta(n, meta.OpenCurlyBracesToken)
+		io.WriteString(p.w, "{")
 		p.printNodes(nn.Stmts)
-		io.WriteString(p.w, "\n")
-		p.printIndent()
+		p.printMeta(n, meta.CloseCurlyBracesToken)
 		io.WriteString(p.w, "}")
 	} else {
+		p.printMeta(n, meta.SemiColonToken)
 		io.WriteString(p.w, ";")
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtNop(n node.Node) {
+	p.printMeta(n, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
 }
 
 func (p *Printer) printStmtPropertyList(n node.Node) {
 	nn := n.(*stmt.PropertyList)
+	p.printMeta(nn, meta.NodeStart)
 
-	p.joinPrint(" ", nn.Modifiers)
-	io.WriteString(p.w, " ")
-	p.joinPrint(", ", nn.Properties)
+	p.joinPrint("", nn.Modifiers)
+	p.joinPrint(",", nn.Properties)
+	p.printMeta(n, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtProperty(n node.Node) {
 	nn := n.(*stmt.Property)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Variable)
 
 	if nn.Expr != nil {
-		io.WriteString(p.w, " = ")
+		p.printMeta(n, meta.EqualToken)
+		io.WriteString(p.w, "=")
 		p.Print(nn.Expr)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtReturn(n node.Node) {
 	nn := n.(*stmt.Return)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "return ")
+	p.printMeta(nn, meta.ReturnToken)
+	io.WriteString(p.w, "return")
 	p.Print(nn.Expr)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtStaticVar(n node.Node) {
 	nn := n.(*stmt.StaticVar)
+	p.printMeta(nn, meta.NodeStart)
+
 	p.Print(nn.Variable)
 
 	if nn.Expr != nil {
-		io.WriteString(p.w, " = ")
+		p.printMeta(nn, meta.EqualToken)
+		io.WriteString(p.w, "=")
 		p.Print(nn.Expr)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtStatic(n node.Node) {
 	nn := n.(*stmt.Static)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "static ")
-	p.joinPrint(", ", nn.Vars)
+	p.printMeta(nn, meta.StaticToken)
+	io.WriteString(p.w, "static")
+	p.joinPrint(",", nn.Vars)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtStmtList(n node.Node) {
 	nn := n.(*stmt.StmtList)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "{\n")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtSwitch(n node.Node) {
 	nn := n.(*stmt.Switch)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "switch (")
+	p.printMeta(nn, meta.SwitchToken)
+	io.WriteString(p.w, "switch")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	io.WriteString(p.w, " {\n")
+	p.printMeta(nn.CaseList, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.CaseList.Cases)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn.CaseList, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtThrow(n node.Node) {
 	nn := n.(*stmt.Throw)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "throw ")
+	p.printMeta(nn, meta.ThrowToken)
+	io.WriteString(p.w, "throw")
 	p.Print(nn.Expr)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTraitMethodRef(n node.Node) {
 	nn := n.(*stmt.TraitMethodRef)
+	p.printMeta(nn, meta.NodeStart)
 
-	p.Print(nn.Trait)
-	io.WriteString(p.w, "::")
+	if nn.Trait != nil {
+		p.Print(nn.Trait)
+		p.printMeta(nn, meta.PaamayimNekudotayimToken)
+		io.WriteString(p.w, "::")
+	}
 	p.Print(nn.Method)
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTraitUseAlias(n node.Node) {
 	nn := n.(*stmt.TraitUseAlias)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Ref)
-	io.WriteString(p.w, " as")
+	p.printMeta(nn, meta.AsToken)
+	io.WriteString(p.w, "as")
 
 	if nn.Modifier != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.Modifier)
 	}
 
 	if nn.Alias != nil {
-		io.WriteString(p.w, " ")
 		p.Print(nn.Alias)
 	}
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTraitUsePrecedence(n node.Node) {
 	nn := n.(*stmt.TraitUsePrecedence)
+	p.printMeta(nn, meta.NodeStart)
 
 	p.Print(nn.Ref)
-	io.WriteString(p.w, " insteadof ")
-	p.joinPrint(", ", nn.Insteadof)
+	p.printMeta(nn, meta.InsteadofToken)
+	io.WriteString(p.w, "insteadof")
+	p.joinPrint(",", nn.Insteadof)
 
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTraitUse(n node.Node) {
 	nn := n.(*stmt.TraitUse)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "use ")
-	p.joinPrint(", ", nn.Traits)
+	p.printMeta(nn, meta.UseToken)
+	io.WriteString(p.w, "use")
+	p.joinPrint(",", nn.Traits)
 
-	if nn.TraitAdaptationList != nil {
-		adaptations := nn.TraitAdaptationList.Adaptations
-		io.WriteString(p.w, " {\n")
-		p.printNodes(adaptations)
-		io.WriteString(p.w, "\n")
-		p.printIndent()
+	if adaptationList, ok := nn.TraitAdaptationList.(*stmt.TraitAdaptationList); ok {
+		p.printMeta(adaptationList, meta.OpenCurlyBracesToken)
+		io.WriteString(p.w, "{")
+		p.printNodes(adaptationList.Adaptations)
+		p.printMeta(adaptationList, meta.CloseCurlyBracesToken)
 		io.WriteString(p.w, "}")
 	} else {
+		p.printMeta(nn.TraitAdaptationList, meta.SemiColonToken)
 		io.WriteString(p.w, ";")
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTrait(n node.Node) {
 	nn := n.(*stmt.Trait)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "trait ")
+	p.printMeta(nn, meta.TraitToken)
+	io.WriteString(p.w, "trait")
 	p.Print(nn.TraitName)
 
-	io.WriteString(p.w, "\n")
-	p.printIndent()
-	io.WriteString(p.w, "{\n")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtTry(n node.Node) {
 	nn := n.(*stmt.Try)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "try {\n")
+	p.printMeta(nn, meta.TryToken)
+	io.WriteString(p.w, "try")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
+	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
-	io.WriteString(p.w, "\n")
-	p.printIndent()
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
 
 	if nn.Catches != nil {
-		io.WriteString(p.w, "\n")
-		p.indentDepth--
 		p.printNodes(nn.Catches)
-		p.indentDepth++
 	}
 
 	if nn.Finally != nil {
-		io.WriteString(p.w, "\n")
-		p.printIndent()
 		p.Print(nn.Finally)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtUnset(n node.Node) {
 	nn := n.(*stmt.Unset)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "unset(")
-	p.joinPrint(", ", nn.Vars)
-	io.WriteString(p.w, ");")
+	p.printMeta(nn, meta.UnsetToken)
+	io.WriteString(p.w, "unset")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
+	p.joinPrint(",", nn.Vars)
+	p.printMeta(nn, meta.CloseParenthesisToken)
+	io.WriteString(p.w, ")")
+	p.printMeta(nn, meta.SemiColonToken)
+	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtUseList(n node.Node) {
 	nn := n.(*stmt.UseList)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "use ")
+	p.printMeta(nn, meta.UseToken)
+	io.WriteString(p.w, "use")
 
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
-		io.WriteString(p.w, " ")
 	}
 
-	p.joinPrint(", ", nn.Uses)
+	p.joinPrint(",", nn.Uses)
+	p.printMeta(nn, meta.SemiColonToken)
 	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtUse(n node.Node) {
 	nn := n.(*stmt.Use)
+	p.printMeta(nn, meta.NodeStart)
 
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
-		io.WriteString(p.w, " ")
 	}
 
 	p.Print(nn.Use)
 
 	if nn.Alias != nil {
-		io.WriteString(p.w, " as ")
+		p.printMeta(nn, meta.AsToken)
+		io.WriteString(p.w, "as")
 		p.Print(nn.Alias)
 	}
+
+	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtWhile(n node.Node) {
 	nn := n.(*stmt.While)
+	p.printMeta(nn, meta.NodeStart)
 
-	io.WriteString(p.w, "while (")
+	p.printMeta(nn, meta.WhileToken)
+	io.WriteString(p.w, "while")
+	p.printMeta(nn, meta.OpenParenthesisToken)
+	io.WriteString(p.w, "(")
 	p.Print(nn.Cond)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	switch s := nn.Stmt.(type) {
-	case *stmt.Nop:
-		p.Print(s)
-		break
-	case *stmt.StmtList:
-		io.WriteString(p.w, " ")
-		p.Print(s)
-	default:
-		io.WriteString(p.w, "\n")
-		p.indentDepth++
-		p.printIndent()
-		p.Print(s)
-		p.indentDepth--
-	}
+	p.Print(nn.Stmt)
+
+	p.printMeta(nn, meta.NodeEnd)
 }

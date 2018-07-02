@@ -464,8 +464,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  14,
 									EndPos:    18,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 2,
@@ -561,8 +561,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  33,
 									EndPos:    37,
 								},
-								Variadic:    true,
 								IsReference: false,
+								Variadic:    true,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 3,
@@ -640,8 +640,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  53,
 									EndPos:    54,
 								},
-								IsReference: false,
 								Variadic:    false,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 4,
@@ -667,8 +667,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  57,
 									EndPos:    61,
 								},
-								Variadic:    true,
 								IsReference: false,
+								Variadic:    true,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 4,
@@ -775,8 +775,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  80,
 									EndPos:    84,
 								},
-								Variadic:    true,
 								IsReference: false,
+								Variadic:    true,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 5,
@@ -881,8 +881,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  104,
 									EndPos:    108,
 								},
-								Variadic:    true,
 								IsReference: false,
+								Variadic:    true,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 6,
@@ -1862,8 +1862,8 @@ func TestPhp7(t *testing.T) {
 								StartPos:  446,
 								EndPos:    457,
 							},
-							ByRef:    true,
 							Variadic: true,
+							ByRef:    true,
 							VariableType: &name.Name{
 								Position: &position.Position{
 									StartLine: 20,
@@ -2011,8 +2011,8 @@ func TestPhp7(t *testing.T) {
 								StartPos:  498,
 								EndPos:    509,
 							},
-							Variadic: true,
 							ByRef:    true,
+							Variadic: true,
 							VariableType: &name.Name{
 								Position: &position.Position{
 									StartLine: 21,
@@ -3743,8 +3743,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  1549,
 							EndPos:    1580,
 						},
-						PhpDocComment: "",
 						ReturnsRef:    true,
+						PhpDocComment: "",
 						MethodName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 73,
@@ -3811,8 +3811,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  1597,
 							EndPos:    1634,
 						},
-						ReturnsRef:    true,
 						PhpDocComment: "",
+						ReturnsRef:    true,
 						MethodName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 74,
@@ -6749,6 +6749,14 @@ func TestPhp7(t *testing.T) {
 								},
 							},
 						},
+						TraitAdaptationList: &stmt.Nop{
+							Position: &position.Position{
+								StartLine: 147,
+								EndLine:   147,
+								StartPos:  3164,
+								EndPos:    3164,
+							},
+						},
 					},
 				},
 			},
@@ -9277,9 +9285,9 @@ func TestPhp7(t *testing.T) {
 						StartPos:  4157,
 						EndPos:    4189,
 					},
-					PhpDocComment: "",
 					ReturnsRef:    false,
 					Static:        false,
+					PhpDocComment: "",
 					Params: []node.Node{
 						&node.Parameter{
 							Position: &position.Position{
@@ -14978,8 +14986,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5933,
 					EndPos:    5975,
 				},
-				PhpDocComment: "",
 				ReturnsRef:    false,
+				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 329,
@@ -15033,8 +15041,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5955,
 							EndPos:    5963,
 						},
-						Variadic: true,
 						ByRef:    false,
+						Variadic: true,
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 329,
@@ -15108,8 +15116,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5979,
 					EndPos:    6016,
 				},
-				ReturnsRef:    false,
 				PhpDocComment: "",
+				ReturnsRef:    false,
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 330,

@@ -191,7 +191,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>use                                        lval.Token(l.createToken(l.Token())); return T_USE
 <PHP>var                                        lval.Token(l.createToken(l.Token())); return T_VAR
 <PHP>while                                      lval.Token(l.createToken(l.Token())); return T_WHILE
-<PHP>yield[ \t\n\r]+from[^a-zA-Z0-9_\x80-\xff]  lval.Token(l.createToken(l.Token())); return T_YIELD_FROM
+<PHP>yield[ \t\n\r]+from                        lval.Token(l.createToken(l.Token())); return T_YIELD_FROM
 <PHP>yield                                      lval.Token(l.createToken(l.Token())); return T_YIELD
 <PHP>include                                    lval.Token(l.createToken(l.Token())); return T_INCLUDE
 <PHP>include_once                               lval.Token(l.createToken(l.Token())); return T_INCLUDE_ONCE
@@ -266,6 +266,7 @@ NEW_LINE        (\r|\n|\r\n)
                 }
                 
             case '\n':
+                c = l.Next()
 
             case '?':
                 c = l.Next()
@@ -322,7 +323,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>{VAR_NAME}                                 lval.Token(l.createToken(l.Token())); return T_STRING
 
 <PHP>->                                         l.begin(PROPERTY);lval.Token(l.createToken(l.Token())); return T_OBJECT_OPERATOR;
-<PROPERTY>[ \t\n\r]+
+<PROPERTY>[ \t\n\r]+                            l.addWhiteSpace(l.Token())
 <PROPERTY>->                                    lval.Token(l.createToken(l.Token())); return T_OBJECT_OPERATOR;
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.Token(l.createToken(l.Token())); return T_STRING;
 <PROPERTY>.                                     l.ungetChars(1);l.begin(PHP)
@@ -650,6 +651,13 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR_NAME>.                          l.ungetChars(1);l.popState();l.pushState(PHP)
 
 %%
-    if c, ok := l.Abort(); ok { return int(c) }
+    if _, ok := l.Abort(); ok {
+        // always return same $end token
+        if l.lastToken == nil {
+            l.lastToken = l.createToken(l.Token())
+        }
+        lval.Token(l.lastToken);
+        return -1
+    }
     goto yyAction
 }

@@ -12,11 +12,11 @@ type TraitUse struct {
 	Meta                []meta.Meta
 	Position            *position.Position
 	Traits              []node.Node
-	TraitAdaptationList *TraitAdaptationList
+	TraitAdaptationList node.Node
 }
 
 // NewTraitUse node constructor
-func NewTraitUse(Traits []node.Node, InnerAdaptationList *TraitAdaptationList) *TraitUse {
+func NewTraitUse(Traits []node.Node, InnerAdaptationList node.Node) *TraitUse {
 	return &TraitUse{
 		Traits:              Traits,
 		TraitAdaptationList: InnerAdaptationList,

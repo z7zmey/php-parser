@@ -38,6 +38,7 @@ type Lexer struct {
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     sync.Pool
 	WithMeta      bool
+	lastToken     *Token
 }
 
 // Rune2Class returns the rune integer id
