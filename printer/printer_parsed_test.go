@@ -246,7 +246,7 @@ func TestParseAndPrintPropertyFetchPrint(t *testing.T) {
 func TestParseAndPrintForeachReferenceShellExec(t *testing.T) {
 	src := `<?php
 	foreach ( $a as $k => & $v ) {
-		` + "` $v cmd `" + ` ;
+		` + "` {$v} cmd `" + ` ;
 	}`
 
 	actual := print(parse(src))
@@ -714,7 +714,7 @@ func TestParseAndPrintScalar(t *testing.T) {
 	.2 ;
 	0.2 ;
 	'Hello' ;
-	"Hello $world";
+	"Hello {$world}";
 	`
 
 	actual := print(parse(src))

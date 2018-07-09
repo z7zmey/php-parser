@@ -551,10 +551,18 @@ func (p *PrettyPrinter) printScalarEncapsedStringPart(n node.Node) {
 }
 
 func (p *PrettyPrinter) printScalarEncapsed(n node.Node) {
+	nn := n.(*scalar.Encapsed)
 	io.WriteString(p.w, "\"")
 
-	for _, nn := range n.(*scalar.Encapsed).Parts {
-		p.Print(nn)
+	for _, part := range nn.Parts {
+		switch part.(type) {
+		case *scalar.EncapsedStringPart:
+			p.Print(part)
+		default:
+			io.WriteString(p.w, "{")
+			p.Print(part)
+			io.WriteString(p.w, "}")
+		}
 	}
 
 	io.WriteString(p.w, "\"")
@@ -567,8 +575,15 @@ func (p *PrettyPrinter) printScalarHeredoc(n node.Node) {
 	io.WriteString(p.w, nn.Label)
 	io.WriteString(p.w, "\n")
 
-	for _, nn := range nn.Parts {
-		p.Print(nn)
+	for _, part := range nn.Parts {
+		switch part.(type) {
+		case *scalar.EncapsedStringPart:
+			p.Print(part)
+		default:
+			io.WriteString(p.w, "{")
+			p.Print(part)
+			io.WriteString(p.w, "}")
+		}
 	}
 
 	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
@@ -1232,7 +1247,14 @@ func (p *PrettyPrinter) printExprShellExec(n node.Node) {
 
 	io.WriteString(p.w, "`")
 	for _, part := range nn.Parts {
-		p.Print(part)
+		switch part.(type) {
+		case *scalar.EncapsedStringPart:
+			p.Print(part)
+		default:
+			io.WriteString(p.w, "{")
+			p.Print(part)
+			io.WriteString(p.w, "}")
+		}
 	}
 	io.WriteString(p.w, "`")
 }
