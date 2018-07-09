@@ -128,17 +128,11 @@ var nodesToTest = []struct {
 	},
 	{
 		&expr.Exit{
+			Die:  true,
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
-	},
-	{
-		&expr.Die{
-			Expr: &expr.Variable{},
-		},
-		[]string{"Expr"},
-		map[string]interface{}{},
+		map[string]interface{}{"Die": true},
 	},
 	{
 		&expr.FunctionCall{

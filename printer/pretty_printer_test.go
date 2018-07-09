@@ -1443,20 +1443,6 @@ func TestPrintExprConstFetch(t *testing.T) {
 	}
 }
 
-func TestPrintDie(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&expr.Die{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
-
-	expected := `die($var)`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrintEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -1503,9 +1489,23 @@ func TestPrintExit(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrettyPrinter(o, "    ")
-	p.Print(&expr.Exit{Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+	p.Print(&expr.Exit{Die: false, Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
 
 	expected := `exit($var)`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrintDie(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrettyPrinter(o, "    ")
+	p.Print(&expr.Exit{Die: true, Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}}})
+
+	expected := `die($var)`
 	actual := o.String()
 
 	if expected != actual {

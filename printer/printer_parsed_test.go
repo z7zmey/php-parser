@@ -317,7 +317,7 @@ func TestParseAndPrintYield(t *testing.T) {
 	}
 }
 
-func TestParseAndPrintAltIfExitDie(t *testing.T) {
+func TestParseAndPrintAltIf(t *testing.T) {
 	src := `<?php
 	if ( 1 ) :
 		exit ( 1 ) ;
@@ -326,6 +326,21 @@ func TestParseAndPrintAltIfExitDie(t *testing.T) {
 	else :
 		;
 	endif ;`
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
+func TestParseAndPrintExitDie(t *testing.T) {
+	src := `<?php
+	exit ( ) ;
+	exit ( 1 );
+	die ( ) ;
+	die ( 1 );
+	`
 
 	actual := print(parse(src))
 

@@ -21,7 +21,6 @@ var nodes = []node.Node{
 	&expr.ClosureUse{},
 	&expr.Closure{},
 	&expr.ConstFetch{},
-	&expr.Die{},
 	&expr.Empty{},
 	&expr.ErrorSuppress{},
 	&expr.Eval{},

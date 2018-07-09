@@ -4026,23 +4026,22 @@ expr_without_variable:
             }
     |   T_EXIT exit_expr
             {
-                if (strings.EqualFold($1.Value, "die")) {
-                    $$ = expr.NewDie(nil)
-                    if $2 != nil {
-                        $$.(*expr.Die).Expr = $2.(*expr.Exit).Expr
-                    }
+                var e *expr.Exit;
+                if $2 != nil {
+                    e = $2.(*expr.Exit)
                 } else {
-                    $$ = expr.NewExit(nil)
-                    if $2 != nil {
-                        $$.(*expr.Exit).Expr = $2.(*expr.Exit).Expr
-                    }
+                    e = expr.NewExit(nil)
+                }
+
+                $$ = e
+
+                if (strings.EqualFold($1.Value, "die")) {
+                    e.Die = true
                 }
 
                 // save position
                 if $2 == nil {
                     $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
-                } else if yylex.(*Parser).currentToken.Value == ")" {
-                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, yylex.(*Parser).currentToken))
                 } else {
                     $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 }
@@ -4696,7 +4695,11 @@ exit_expr:
                 $$ = expr.NewExit($1);
 
                 // save position
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                if yylex.(*Parser).currentToken.Value == ")" {
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yylex.(*Parser).currentToken))
+                } else {
+                    $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

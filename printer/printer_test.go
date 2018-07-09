@@ -2102,40 +2102,6 @@ func TestPrinterPrintExprConstFetch(t *testing.T) {
 	}
 }
 
-func TestPrinterPrintDie(t *testing.T) {
-	o := bytes.NewBufferString("")
-
-	p := printer.NewPrinter(o)
-	p.Print(&expr.Die{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.ExitToken,
-			},
-		},
-		Expr: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.OpenParenthesisToken,
-				},
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.CloseParenthesisToken,
-				},
-			},
-			VarName: &node.Identifier{Value: "var"},
-		},
-	})
-
-	expected := ` die ($var )`
-	actual := o.String()
-
-	if expected != actual {
-		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
-	}
-}
-
 func TestPrinterPrintEmpty(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -2228,23 +2194,55 @@ func TestPrinterPrintExit(t *testing.T) {
 				Value:     " ",
 				TokenName: meta.ExitToken,
 			},
-		},
-		Expr: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.OpenParenthesisToken,
-				},
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.CloseParenthesisToken,
-				},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
 			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Die: false,
+		Expr: &expr.Variable{
 			VarName: &node.Identifier{Value: "var"},
 		},
 	})
 
 	expected := ` exit ($var )`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintDie(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&expr.Exit{
+		Die: true,
+		Meta: []meta.Meta{
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.ExitToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.OpenParenthesisToken,
+			},
+			&meta.WhiteSpace{
+				Value:     " ",
+				TokenName: meta.CloseParenthesisToken,
+			},
+		},
+		Expr: &expr.Variable{
+			VarName: &node.Identifier{Value: "var"},
+		},
+	})
+
+	expected := ` die ($var )`
 	actual := o.String()
 
 	if expected != actual {

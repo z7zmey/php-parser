@@ -9650,6 +9650,7 @@ func TestPhp7(t *testing.T) {
 					EndPos:    4286,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 200,
 						EndLine:   200,
@@ -9666,6 +9667,7 @@ func TestPhp7(t *testing.T) {
 					EndPos:    4298,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 201,
 						EndLine:   201,
@@ -9698,7 +9700,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  4302,
 					EndPos:    4305,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 202,
 						EndLine:   202,
@@ -9714,7 +9717,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  4309,
 					EndPos:    4316,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 203,
 						EndLine:   203,

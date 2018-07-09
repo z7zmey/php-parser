@@ -9151,6 +9151,7 @@ func TestPhp5(t *testing.T) {
 					EndPos:    4137,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 191,
 						EndLine:   191,
@@ -9167,6 +9168,7 @@ func TestPhp5(t *testing.T) {
 					EndPos:    4149,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 192,
 						EndLine:   192,
@@ -9199,7 +9201,8 @@ func TestPhp5(t *testing.T) {
 					StartPos:  4153,
 					EndPos:    4158,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 193,
 						EndLine:   193,
@@ -9215,7 +9218,8 @@ func TestPhp5(t *testing.T) {
 					StartPos:  4162,
 					EndPos:    4169,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 194,
 						EndLine:   194,

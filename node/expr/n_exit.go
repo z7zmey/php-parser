@@ -10,6 +10,7 @@ import (
 // Exit node
 type Exit struct {
 	Meta     []meta.Meta
+	Die      bool
 	Position *position.Position
 	Expr     node.Node
 }
@@ -41,7 +42,9 @@ func (n *Exit) GetMeta() []meta.Meta {
 
 // Attributes returns node attributes as map
 func (n *Exit) Attributes() map[string]interface{} {
-	return nil
+	return map[string]interface{}{
+		"Die": n.Die,
+	}
 }
 
 // Walk traverses nodes

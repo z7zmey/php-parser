@@ -3802,16 +3802,17 @@ expr_without_variable:
             }
     |   T_EXIT exit_expr
             {
-                if (strings.EqualFold($1.Value, "die")) {
-                    $$ = expr.NewDie(nil)
-                    if $2 != nil {
-                        $$.(*expr.Die).Expr = $2.(*expr.Exit).Expr
-                    }
+                var e *expr.Exit;
+                if $2 != nil {
+                    e = $2.(*expr.Exit)
                 } else {
-                    $$ = expr.NewExit(nil)
-                    if $2 != nil {
-                        $$.(*expr.Exit).Expr = $2.(*expr.Exit).Expr
-                    }
+                    e = expr.NewExit(nil)
+                }
+
+                $$ = e
+
+                if (strings.EqualFold($1.Value, "die")) {
+                    e.Die = true
                 }
 
                 // save position
@@ -4151,8 +4152,8 @@ exit_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                addMeta($2, $1.Meta, meta.OpenParenthesisToken)
-                addMeta($2, $3.Meta, meta.CloseParenthesisToken)
+                addMeta($$, $1.Meta, meta.OpenParenthesisToken)
+                addMeta($$, $3.Meta, meta.CloseParenthesisToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

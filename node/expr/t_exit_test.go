@@ -32,6 +32,7 @@ func TestExit(t *testing.T) {
 					EndPos:    8,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -54,6 +55,48 @@ func TestExit(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestExitEmpty(t *testing.T) {
+	src := `<? exit();`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    10,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    10,
+				},
+				Expr: &expr.Exit{
+					Die: false,
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    9,
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	// php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	// php5parser.Parse()
+	// actual = php5parser.GetRootNode()
+	// assertEqual(t, expected, actual)
+}
+
 func TestExitExpr(t *testing.T) {
 	src := `<? exit($a);`
 
@@ -73,6 +116,7 @@ func TestExitExpr(t *testing.T) {
 					EndPos:    12,
 				},
 				Expr: &expr.Exit{
+					Die: false,
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
@@ -130,12 +174,55 @@ func TestDie(t *testing.T) {
 					StartPos:  4,
 					EndPos:    7,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
 						StartPos:  4,
 						EndPos:    6,
+					},
+				},
+			},
+		},
+	}
+
+	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser.Parse()
+	actual := php7parser.GetRootNode()
+	assertEqual(t, expected, actual)
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual = php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}
+
+func TestDieEmpty(t *testing.T) {
+	src := `<? die();`
+
+	expected := &node.Root{
+		Position: &position.Position{
+			StartLine: 1,
+			EndLine:   1,
+			StartPos:  4,
+			EndPos:    9,
+		},
+		Stmts: []node.Node{
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 1,
+					EndLine:   1,
+					StartPos:  4,
+					EndPos:    9,
+				},
+				Expr: &expr.Exit{
+					Die: true,
+					Position: &position.Position{
+						StartLine: 1,
+						EndLine:   1,
+						StartPos:  4,
+						EndPos:    8,
 					},
 				},
 			},
@@ -171,7 +258,8 @@ func TestDieExpr(t *testing.T) {
 					StartPos:  4,
 					EndPos:    11,
 				},
-				Expr: &expr.Die{
+				Expr: &expr.Exit{
+					Die: true,
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,

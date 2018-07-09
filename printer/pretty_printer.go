@@ -234,8 +234,6 @@ func (p *PrettyPrinter) printNode(n node.Node) {
 		p.printExprClosure(n)
 	case *expr.ConstFetch:
 		p.printExprConstFetch(n)
-	case *expr.Die:
-		p.printExprDie(n)
 	case *expr.Empty:
 		p.printExprEmpty(n)
 	case *expr.ErrorSuppress:
@@ -1067,14 +1065,6 @@ func (p *PrettyPrinter) printExprConstFetch(n node.Node) {
 	p.Print(nn.Constant)
 }
 
-func (p *PrettyPrinter) printExprDie(n node.Node) {
-	nn := n.(*expr.Die)
-
-	io.WriteString(p.w, "die(")
-	p.Print(nn.Expr)
-	io.WriteString(p.w, ")")
-}
-
 func (p *PrettyPrinter) printExprEmpty(n node.Node) {
 	nn := n.(*expr.Empty)
 
@@ -1101,7 +1091,11 @@ func (p *PrettyPrinter) printExprEval(n node.Node) {
 func (p *PrettyPrinter) printExprExit(n node.Node) {
 	nn := n.(*expr.Exit)
 
-	io.WriteString(p.w, "exit(")
+	if nn.Die {
+		io.WriteString(p.w, "die(")
+	} else {
+		io.WriteString(p.w, "exit(")
+	}
 	p.Print(nn.Expr)
 	io.WriteString(p.w, ")")
 }

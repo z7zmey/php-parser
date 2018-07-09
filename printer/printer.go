@@ -231,8 +231,6 @@ func (p *Printer) printNode(n node.Node) {
 		p.printExprClosure(n)
 	case *expr.ConstFetch:
 		p.printExprConstFetch(n)
-	case *expr.Die:
-		p.printExprDie(n)
 	case *expr.Empty:
 		p.printExprEmpty(n)
 	case *expr.ErrorSuppress:
@@ -1401,21 +1399,6 @@ func (p *Printer) printExprConstFetch(n node.Node) {
 	p.printMeta(nn, meta.NodeEnd)
 }
 
-func (p *Printer) printExprDie(n node.Node) {
-	nn := n.(*expr.Die)
-	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.ExitToken)
-	io.WriteString(p.w, "die")
-	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
-	io.WriteString(p.w, "(")
-	p.Print(nn.Expr)
-	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
-	io.WriteString(p.w, ")")
-
-	p.printMeta(nn, meta.NodeEnd)
-}
-
 func (p *Printer) printExprEmpty(n node.Node) {
 	nn := n.(*expr.Empty)
 	p.printMeta(nn, meta.NodeStart)
@@ -1462,11 +1445,15 @@ func (p *Printer) printExprExit(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.ExitToken)
-	io.WriteString(p.w, "exit")
-	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
+	if nn.Die {
+		io.WriteString(p.w, "die")
+	} else {
+		io.WriteString(p.w, "exit")
+	}
+	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
-	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
+	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
 	p.printMeta(nn, meta.NodeEnd)
