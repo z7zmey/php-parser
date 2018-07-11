@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/karrick/godirwalk"
@@ -23,6 +27,11 @@ var dumpType string
 var profiler string
 var withMeta *bool
 var showResolvedNs *bool
+
+type file struct {
+	path    string
+	content []byte
+}
 
 func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
@@ -42,27 +51,29 @@ func main() {
 		defer profile.Start(profile.TraceProfile, profile.ProfilePath("."), profile.NoShutdownHook).Stop()
 	}
 
-	pathCh := make(chan string)
-	resultCh := make(chan parser.Parser)
+	numCpu := runtime.NumCPU()
+
+	fileCh := make(chan *file, numCpu)
+	resultCh := make(chan parser.Parser, numCpu)
 
 	// run 4 concurrent parserWorkers
-	for i := 0; i < 4; i++ {
-		go parserWorker(pathCh, resultCh)
+	for i := 0; i < numCpu; i++ {
+		go parserWorker(fileCh, resultCh)
 	}
 
 	// run printer goroutine
 	go printer(resultCh)
 
 	// process files
-	processPath(flag.Args(), pathCh)
+	processPath(flag.Args(), fileCh)
 
 	// wait the all files done
 	wg.Wait()
-	close(pathCh)
+	close(fileCh)
 	close(resultCh)
 }
 
-func processPath(pathList []string, pathCh chan<- string) {
+func processPath(pathList []string, fileCh chan<- *file) {
 	for _, path := range pathList {
 		real, err := realpath.Realpath(path)
 		checkErr(err)
@@ -72,14 +83,18 @@ func processPath(pathList []string, pathCh chan<- string) {
 
 		if !s.IsDir() {
 			wg.Add(1)
-			pathCh <- real
+			content, err := ioutil.ReadFile(real)
+			checkErr(err)
+			fileCh <- &file{real, content}
 		} else {
 			godirwalk.Walk(real, &godirwalk.Options{
 				Unsorted: true,
 				Callback: func(osPathname string, de *godirwalk.Dirent) error {
 					if !de.IsDir() && filepath.Ext(osPathname) == ".php" {
 						wg.Add(1)
-						pathCh <- osPathname
+						content, err := ioutil.ReadFile(osPathname)
+						checkErr(err)
+						fileCh <- &file{osPathname, content}
 					}
 					return nil
 				},
@@ -91,22 +106,21 @@ func processPath(pathList []string, pathCh chan<- string) {
 	}
 }
 
-func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
+func parserWorker(fileCh <-chan *file, result chan<- parser.Parser) {
 	var parserWorker parser.Parser
 
 	for {
-		path, ok := <-pathCh
+		f, ok := <-fileCh
 		if !ok {
 			return
 		}
 
-		src, err := os.Open(path)
-		checkErr(err)
+		src := bytes.NewReader(f.content)
 
 		if *usePhp5 {
-			parserWorker = php5.NewParser(src, path)
+			parserWorker = php5.NewParser(src, f.path)
 		} else {
-			parserWorker = php7.NewParser(src, path)
+			parserWorker = php7.NewParser(src, f.path)
 		}
 
 		if *withMeta {
@@ -115,8 +129,6 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 
 		parserWorker.Parse()
 
-		src.Close()
-
 		result <- parserWorker
 	}
 }
@@ -124,18 +136,21 @@ func parserWorker(pathCh <-chan string, result chan<- parser.Parser) {
 func printer(result <-chan parser.Parser) {
 	var counter int
 
+	w := bufio.NewWriter(os.Stdout)
+
 	for {
 		parserWorker, ok := <-result
 		if !ok {
+			w.Flush()
 			return
 		}
 
 		counter++
 
-		fmt.Printf("==> [%d] %s\n", counter, parserWorker.GetPath())
+		fmt.Fprintf(w, "==> [%d] %s\n", counter, parserWorker.GetPath())
 
 		for _, e := range parserWorker.GetErrors() {
-			fmt.Println(e)
+			fmt.Fprintln(w, e)
 		}
 
 		var nsResolver *visitor.NamespaceResolver
