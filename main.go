@@ -29,7 +29,7 @@ func main() {
 	withMeta = flag.Bool("meta", false, "show meta")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
-	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem]")
+	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 
 	flag.Parse()
 
@@ -38,6 +38,8 @@ func main() {
 		defer profile.Start(profile.ProfilePath("."), profile.NoShutdownHook).Stop()
 	case "mem":
 		defer profile.Start(profile.MemProfile, profile.ProfilePath("."), profile.NoShutdownHook).Stop()
+	case "trace":
+		defer profile.Start(profile.TraceProfile, profile.ProfilePath("."), profile.NoShutdownHook).Stop()
 	}
 
 	pathCh := make(chan string)

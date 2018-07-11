@@ -55,7 +55,7 @@ php-parser [flags] <path> ...
 |  -d   |string| dump format: [custom, go, json, pretty-json] |
 |  -p   | bool | show positions                               |
 |  -r   | bool | resolve names                                |
-| -prof |string| start profiler: [cpu, mem]                   |
+| -prof |string| start profiler: [cpu, mem, trace]            |
 | -meta | bool | show meta info                               |
 | -php5 | bool | parse as PHP5                                |
 
