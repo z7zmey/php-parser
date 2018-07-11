@@ -15,8 +15,6 @@ import (
     "github.com/z7zmey/php-parser/node/expr/assign"
     "github.com/z7zmey/php-parser/node/expr/binary"
     "github.com/z7zmey/php-parser/node/expr/cast"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 %}
@@ -4827,7 +4825,6 @@ property_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                spew.Dump($1.Meta)
                 addMeta($$, $1.Meta, meta.IdentifierToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
