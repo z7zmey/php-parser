@@ -6,7 +6,6 @@ import (
 	"bytes"
 	t "go/token"
 	"io"
-	"sync"
 	"unicode"
 
 	"github.com/z7zmey/php-parser/position"
@@ -36,7 +35,7 @@ type Lexer struct {
 	Meta          []meta.Meta
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
-	TokenPool     sync.Pool
+	TokenPool     *TokenPool
 	WithMeta      bool
 	lastToken     *Token
 }
@@ -74,9 +73,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		Meta:          nil,
 		heredocLabel:  "",
 		tokenBytesBuf: &bytes.Buffer{},
-		TokenPool: sync.Pool{
-			New: func() interface{} { return &Token{} },
-		},
+		TokenPool:     &TokenPool{},
 	}
 }
 
@@ -123,7 +120,7 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	firstChar := chars[0]
 	lastChar := chars[len(chars)-1]
 
-	token := l.TokenPool.Get().(*Token)
+	token := l.TokenPool.Get()
 	token.Meta = l.Meta
 	token.Value = l.tokenString(chars)
 
