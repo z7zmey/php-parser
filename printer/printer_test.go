@@ -575,7 +575,7 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
 			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
-			&scalar.EncapsedStringPart{Value: " world\n"},
+			&scalar.EncapsedStringPart{Value: " world"},
 		},
 	})
 
@@ -602,7 +602,7 @@ func TestPrinterPrintScalarNowdoc(t *testing.T) {
 		},
 		Label: "'LBL'",
 		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello world\n"},
+			&scalar.EncapsedStringPart{Value: "hello world"},
 		},
 	})
 

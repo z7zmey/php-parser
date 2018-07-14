@@ -665,6 +665,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 		}
 	}
 
+	io.WriteString(p.w, "\n")
 	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
 
 	p.printMeta(nn, meta.NodeEnd)

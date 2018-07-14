@@ -230,194 +230,194 @@ func TestTokens(t *testing.T) {
 
 	`
 
-	expected := []int{
-		scanner.T_INLINE_HTML,
-		scanner.Rune2Class(';'),
-		scanner.T_ECHO,
-		scanner.Rune2Class(';'),
+	expected := []string{
+		scanner.T_INLINE_HTML.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		scanner.T_ECHO.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_DNUMBER,
-		scanner.T_DNUMBER,
-		scanner.T_DNUMBER,
-		scanner.T_DNUMBER,
+		scanner.T_DNUMBER.String(),
+		scanner.T_DNUMBER.String(),
+		scanner.T_DNUMBER.String(),
+		scanner.T_DNUMBER.String(),
 
-		scanner.T_LNUMBER,
-		scanner.T_DNUMBER,
+		scanner.T_LNUMBER.String(),
+		scanner.T_DNUMBER.String(),
 
-		scanner.T_LNUMBER,
-		scanner.T_DNUMBER,
+		scanner.T_LNUMBER.String(),
+		scanner.T_DNUMBER.String(),
 
-		scanner.T_LNUMBER,
-		scanner.T_DNUMBER,
+		scanner.T_LNUMBER.String(),
+		scanner.T_DNUMBER.String(),
 
-		scanner.T_ABSTRACT,
-		scanner.T_ARRAY,
-		scanner.T_AS,
-		scanner.T_BREAK,
-		scanner.T_CALLABLE,
-		scanner.T_CASE,
-		scanner.T_CATCH,
-		scanner.T_CLASS,
-		scanner.T_CLONE,
-		scanner.T_CONST,
-		scanner.T_CONTINUE,
-		scanner.T_DECLARE,
-		scanner.T_DEFAULT,
-		scanner.T_DO,
-		scanner.T_ECHO,
-		scanner.T_ELSE,
-		scanner.T_ELSEIF,
-		scanner.T_EMPTY,
-		scanner.T_ENDDECLARE,
-		scanner.T_ENDFOR,
-		scanner.T_ENDFOREACH,
-		scanner.T_ENDIF,
-		scanner.T_ENDSWITCH,
-		scanner.T_ENDWHILE,
-		scanner.T_EVAL,
-		scanner.T_EXIT,
-		scanner.T_EXTENDS,
-		scanner.T_FINAL,
-		scanner.T_FINALLY,
-		scanner.T_FOR,
-		scanner.T_FOREACH,
-		scanner.T_FUNCTION,
-		scanner.T_FUNCTION,
-		scanner.T_GLOBAL,
-		scanner.T_GOTO,
-		scanner.T_IF,
-		scanner.T_ISSET,
-		scanner.T_IMPLEMENTS,
-		scanner.T_INSTANCEOF,
-		scanner.T_INSTEADOF,
-		scanner.T_INTERFACE,
-		scanner.T_LIST,
-		scanner.T_NAMESPACE,
-		scanner.T_PRIVATE,
-		scanner.T_PUBLIC,
-		scanner.T_PRINT,
-		scanner.T_PROTECTED,
-		scanner.T_RETURN,
-		scanner.T_STATIC,
-		scanner.T_SWITCH,
-		scanner.T_THROW,
-		scanner.T_TRAIT,
-		scanner.T_TRY,
-		scanner.T_UNSET,
-		scanner.T_USE,
-		scanner.T_VAR,
-		scanner.T_WHILE,
-		scanner.T_YIELD_FROM,
-		scanner.T_YIELD,
-		scanner.T_INCLUDE,
-		scanner.T_INCLUDE_ONCE,
-		scanner.T_REQUIRE,
-		scanner.T_REQUIRE_ONCE,
+		scanner.T_ABSTRACT.String(),
+		scanner.T_ARRAY.String(),
+		scanner.T_AS.String(),
+		scanner.T_BREAK.String(),
+		scanner.T_CALLABLE.String(),
+		scanner.T_CASE.String(),
+		scanner.T_CATCH.String(),
+		scanner.T_CLASS.String(),
+		scanner.T_CLONE.String(),
+		scanner.T_CONST.String(),
+		scanner.T_CONTINUE.String(),
+		scanner.T_DECLARE.String(),
+		scanner.T_DEFAULT.String(),
+		scanner.T_DO.String(),
+		scanner.T_ECHO.String(),
+		scanner.T_ELSE.String(),
+		scanner.T_ELSEIF.String(),
+		scanner.T_EMPTY.String(),
+		scanner.T_ENDDECLARE.String(),
+		scanner.T_ENDFOR.String(),
+		scanner.T_ENDFOREACH.String(),
+		scanner.T_ENDIF.String(),
+		scanner.T_ENDSWITCH.String(),
+		scanner.T_ENDWHILE.String(),
+		scanner.T_EVAL.String(),
+		scanner.T_EXIT.String(),
+		scanner.T_EXTENDS.String(),
+		scanner.T_FINAL.String(),
+		scanner.T_FINALLY.String(),
+		scanner.T_FOR.String(),
+		scanner.T_FOREACH.String(),
+		scanner.T_FUNCTION.String(),
+		scanner.T_FUNCTION.String(),
+		scanner.T_GLOBAL.String(),
+		scanner.T_GOTO.String(),
+		scanner.T_IF.String(),
+		scanner.T_ISSET.String(),
+		scanner.T_IMPLEMENTS.String(),
+		scanner.T_INSTANCEOF.String(),
+		scanner.T_INSTEADOF.String(),
+		scanner.T_INTERFACE.String(),
+		scanner.T_LIST.String(),
+		scanner.T_NAMESPACE.String(),
+		scanner.T_PRIVATE.String(),
+		scanner.T_PUBLIC.String(),
+		scanner.T_PRINT.String(),
+		scanner.T_PROTECTED.String(),
+		scanner.T_RETURN.String(),
+		scanner.T_STATIC.String(),
+		scanner.T_SWITCH.String(),
+		scanner.T_THROW.String(),
+		scanner.T_TRAIT.String(),
+		scanner.T_TRY.String(),
+		scanner.T_UNSET.String(),
+		scanner.T_USE.String(),
+		scanner.T_VAR.String(),
+		scanner.T_WHILE.String(),
+		scanner.T_YIELD_FROM.String(),
+		scanner.T_YIELD.String(),
+		scanner.T_INCLUDE.String(),
+		scanner.T_INCLUDE_ONCE.String(),
+		scanner.T_REQUIRE.String(),
+		scanner.T_REQUIRE_ONCE.String(),
 
-		scanner.T_CLASS_C,
-		scanner.T_DIR,
-		scanner.T_FILE,
-		scanner.T_FUNC_C,
-		scanner.T_LINE,
-		scanner.T_NS_C,
-		scanner.T_METHOD_C,
-		scanner.T_TRAIT_C,
-		scanner.T_HALT_COMPILER,
+		scanner.T_CLASS_C.String(),
+		scanner.T_DIR.String(),
+		scanner.T_FILE.String(),
+		scanner.T_FUNC_C.String(),
+		scanner.T_LINE.String(),
+		scanner.T_NS_C.String(),
+		scanner.T_METHOD_C.String(),
+		scanner.T_TRAIT_C.String(),
+		scanner.T_HALT_COMPILER.String(),
 
-		scanner.T_NEW,
-		scanner.T_LOGICAL_AND,
-		scanner.T_LOGICAL_OR,
-		scanner.T_LOGICAL_XOR,
+		scanner.T_NEW.String(),
+		scanner.T_LOGICAL_AND.String(),
+		scanner.T_LOGICAL_OR.String(),
+		scanner.T_LOGICAL_XOR.String(),
 
-		scanner.T_NS_SEPARATOR,
-		scanner.T_ELLIPSIS,
-		scanner.T_PAAMAYIM_NEKUDOTAYIM,
-		scanner.T_BOOLEAN_AND,
-		scanner.T_BOOLEAN_OR,
-		scanner.T_AND_EQUAL,
-		scanner.T_OR_EQUAL,
-		scanner.T_CONCAT_EQUAL,
-		scanner.T_MUL_EQUAL,
-		scanner.T_POW_EQUAL,
-		scanner.T_DIV_EQUAL,
-		scanner.T_PLUS_EQUAL,
-		scanner.T_MINUS_EQUAL,
-		scanner.T_XOR_EQUAL,
-		scanner.T_MOD_EQUAL,
-		scanner.T_DEC,
-		scanner.T_INC,
-		scanner.T_DOUBLE_ARROW,
-		scanner.T_SPACESHIP,
-		scanner.T_IS_NOT_EQUAL,
-		scanner.T_IS_NOT_EQUAL,
-		scanner.T_IS_NOT_IDENTICAL,
-		scanner.T_IS_EQUAL,
-		scanner.T_IS_IDENTICAL,
-		scanner.T_SL_EQUAL,
-		scanner.T_SR_EQUAL,
-		scanner.T_IS_GREATER_OR_EQUAL,
-		scanner.T_IS_SMALLER_OR_EQUAL,
-		scanner.T_POW,
-		scanner.T_SL,
-		scanner.T_SR,
-		scanner.T_COALESCE,
+		scanner.T_NS_SEPARATOR.String(),
+		scanner.T_ELLIPSIS.String(),
+		scanner.T_PAAMAYIM_NEKUDOTAYIM.String(),
+		scanner.T_BOOLEAN_AND.String(),
+		scanner.T_BOOLEAN_OR.String(),
+		scanner.T_AND_EQUAL.String(),
+		scanner.T_OR_EQUAL.String(),
+		scanner.T_CONCAT_EQUAL.String(),
+		scanner.T_MUL_EQUAL.String(),
+		scanner.T_POW_EQUAL.String(),
+		scanner.T_DIV_EQUAL.String(),
+		scanner.T_PLUS_EQUAL.String(),
+		scanner.T_MINUS_EQUAL.String(),
+		scanner.T_XOR_EQUAL.String(),
+		scanner.T_MOD_EQUAL.String(),
+		scanner.T_DEC.String(),
+		scanner.T_INC.String(),
+		scanner.T_DOUBLE_ARROW.String(),
+		scanner.T_SPACESHIP.String(),
+		scanner.T_IS_NOT_EQUAL.String(),
+		scanner.T_IS_NOT_EQUAL.String(),
+		scanner.T_IS_NOT_IDENTICAL.String(),
+		scanner.T_IS_EQUAL.String(),
+		scanner.T_IS_IDENTICAL.String(),
+		scanner.T_SL_EQUAL.String(),
+		scanner.T_SR_EQUAL.String(),
+		scanner.T_IS_GREATER_OR_EQUAL.String(),
+		scanner.T_IS_SMALLER_OR_EQUAL.String(),
+		scanner.T_POW.String(),
+		scanner.T_SL.String(),
+		scanner.T_SR.String(),
+		scanner.T_COALESCE.String(),
 
-		scanner.Rune2Class(';'),
-		scanner.Rune2Class(':'),
-		scanner.Rune2Class(','),
-		scanner.Rune2Class('.'),
-		scanner.Rune2Class('['),
-		scanner.Rune2Class(']'),
-		scanner.Rune2Class('('),
-		scanner.Rune2Class(')'),
-		scanner.Rune2Class('|'),
-		scanner.Rune2Class('/'),
-		scanner.Rune2Class('^'),
-		scanner.Rune2Class('&'),
-		scanner.Rune2Class('+'),
-		scanner.Rune2Class('-'),
-		scanner.Rune2Class('*'),
-		scanner.Rune2Class('='),
-		scanner.Rune2Class('%'),
-		scanner.Rune2Class('!'),
-		scanner.Rune2Class('~'),
-		scanner.Rune2Class('$'),
-		scanner.Rune2Class('<'),
-		scanner.Rune2Class('>'),
-		scanner.Rune2Class('?'),
-		scanner.Rune2Class('@'),
-		scanner.Rune2Class('{'),
-		scanner.Rune2Class('}'),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		scanner.LexerToken(scanner.Rune2Class(':')).String(),
+		scanner.LexerToken(scanner.Rune2Class(',')).String(),
+		scanner.LexerToken(scanner.Rune2Class('.')).String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.LexerToken(scanner.Rune2Class('(')).String(),
+		scanner.LexerToken(scanner.Rune2Class(')')).String(),
+		scanner.LexerToken(scanner.Rune2Class('|')).String(),
+		scanner.LexerToken(scanner.Rune2Class('/')).String(),
+		scanner.LexerToken(scanner.Rune2Class('^')).String(),
+		scanner.LexerToken(scanner.Rune2Class('&')).String(),
+		scanner.LexerToken(scanner.Rune2Class('+')).String(),
+		scanner.LexerToken(scanner.Rune2Class('-')).String(),
+		scanner.LexerToken(scanner.Rune2Class('*')).String(),
+		scanner.LexerToken(scanner.Rune2Class('=')).String(),
+		scanner.LexerToken(scanner.Rune2Class('%')).String(),
+		scanner.LexerToken(scanner.Rune2Class('!')).String(),
+		scanner.LexerToken(scanner.Rune2Class('~')).String(),
+		scanner.LexerToken(scanner.Rune2Class('$')).String(),
+		scanner.LexerToken(scanner.Rune2Class('<')).String(),
+		scanner.LexerToken(scanner.Rune2Class('>')).String(),
+		scanner.LexerToken(scanner.Rune2Class('?')).String(),
+		scanner.LexerToken(scanner.Rune2Class('@')).String(),
+		scanner.LexerToken(scanner.Rune2Class('{')).String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
 
-		scanner.T_VARIABLE,
-		scanner.T_STRING,
+		scanner.T_VARIABLE.String(),
+		scanner.T_STRING.String(),
 
-		scanner.T_OBJECT_OPERATOR,
-		scanner.T_OBJECT_OPERATOR,
-		scanner.T_STRING,
+		scanner.T_OBJECT_OPERATOR.String(),
+		scanner.T_OBJECT_OPERATOR.String(),
+		scanner.T_STRING.String(),
 
-		scanner.T_CONSTANT_ENCAPSED_STRING,
-		scanner.T_CONSTANT_ENCAPSED_STRING,
-		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
 
-		scanner.T_ARRAY_CAST,
-		scanner.T_BOOL_CAST,
-		scanner.T_BOOL_CAST,
-		scanner.T_DOUBLE_CAST,
-		scanner.T_DOUBLE_CAST,
-		scanner.T_DOUBLE_CAST,
-		scanner.T_INT_CAST,
-		scanner.T_INT_CAST,
-		scanner.T_OBJECT_CAST,
-		scanner.T_STRING_CAST,
-		scanner.T_STRING_CAST,
-		scanner.T_UNSET_CAST,
+		scanner.T_ARRAY_CAST.String(),
+		scanner.T_BOOL_CAST.String(),
+		scanner.T_BOOL_CAST.String(),
+		scanner.T_DOUBLE_CAST.String(),
+		scanner.T_DOUBLE_CAST.String(),
+		scanner.T_DOUBLE_CAST.String(),
+		scanner.T_INT_CAST.String(),
+		scanner.T_INT_CAST.String(),
+		scanner.T_OBJECT_CAST.String(),
+		scanner.T_STRING_CAST.String(),
+		scanner.T_STRING_CAST.String(),
+		scanner.T_UNSET_CAST.String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -425,7 +425,7 @@ func TestTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -448,65 +448,65 @@ func TestTeplateStringTokens(t *testing.T) {
 		"$0$foo"
 	`
 
-	expected := []int{
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('"'),
+	expected := []string{
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
-		scanner.T_STRING_VARNAME,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		scanner.T_STRING_VARNAME.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('"'),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -514,7 +514,7 @@ func TestTeplateStringTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -534,65 +534,65 @@ func TestBackquoteStringTokens(t *testing.T) {
 		` + "`$0$foo`" + `
 	`
 
-	expected := []int{
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('`'),
+	expected := []string{
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
-		scanner.T_STRING_VARNAME,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		scanner.T_STRING_VARNAME.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 
-		scanner.Rune2Class('`'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('`'),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('`')).String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -600,7 +600,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -630,63 +630,64 @@ CAT;
 CAT;
 	`
 
-	expected := []int{
-		scanner.T_START_HEREDOC,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+	expected := []string{
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_OBJECT_OPERATOR,
-		scanner.T_STRING,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('['),
-		scanner.T_NUM_STRING,
-		scanner.Rune2Class(']'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('['),
-		scanner.T_NUM_STRING,
-		scanner.Rune2Class(']'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('['),
-		scanner.T_NUM_STRING,
-		scanner.Rune2Class(']'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('['),
-		scanner.T_STRING,
-		scanner.Rune2Class(']'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('['),
-		scanner.T_VARIABLE,
-		scanner.Rune2Class(']'),
-		scanner.T_ENCAPSED_AND_WHITESPACE, scanner.T_CURLY_OPEN,
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES,
-		scanner.T_STRING_VARNAME,
-		scanner.Rune2Class('}'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_OBJECT_OPERATOR.String(),
+		scanner.T_STRING.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_NUM_STRING.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_NUM_STRING.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_NUM_STRING.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_STRING.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		scanner.T_STRING_VARNAME.String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -694,7 +695,7 @@ CAT;
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -723,44 +724,42 @@ $foo$bar\
 CAT
 `
 
-	expected := []int{
-		scanner.T_START_HEREDOC,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+	expected := []string{
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
-		scanner.Rune2Class(';'),
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
 
-		scanner.T_START_HEREDOC,
-		scanner.T_VARIABLE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_END_HEREDOC,
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_END_HEREDOC.String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -768,7 +767,46 @@ CAT
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
+	}
+
+	assertEqual(t, expected, actual)
+}
+
+func TestHereDocTokens3(t *testing.T) {
+	src := `<?php
+
+	<<<"CAT"
+\\{$a['b']}
+CAT;
+	`
+
+	expected := []string{
+
+		scanner.T_START_HEREDOC.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_CURLY_OPEN.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('[')).String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.LexerToken(scanner.Rune2Class(']')).String(),
+		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		scanner.T_END_HEREDOC.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
+	lv := &lval{}
+	actual := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -780,20 +818,20 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 		$a ?> test
 	`
 
-	expected := []int{
-		scanner.T_VARIABLE,
-		scanner.Rune2Class(';'),
-		scanner.T_INLINE_HTML,
+	expected := []string{
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		scanner.T_INLINE_HTML.String(),
 
-		scanner.T_VARIABLE,
-		scanner.Rune2Class(';'),
-		scanner.T_INLINE_HTML,
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		scanner.T_INLINE_HTML.String(),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lexer.WithMeta = true
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
@@ -801,7 +839,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -810,12 +848,12 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 func TestStringTokensAfterVariable(t *testing.T) {
 	src := `<?php "test \"$var\""`
 
-	expected := []int{
-		scanner.Rune2Class('"'),
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.T_VARIABLE,
-		scanner.T_ENCAPSED_AND_WHITESPACE,
-		scanner.Rune2Class('"'),
+	expected := []string{
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.T_VARIABLE.String(),
+		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
+		scanner.LexerToken(scanner.Rune2Class('"')).String(),
 	}
 
 	expectedTokens := []string{
@@ -828,7 +866,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 	actualTokens := []string{}
 
 	for {
@@ -838,7 +876,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)
@@ -848,10 +886,10 @@ func TestStringTokensAfterVariable(t *testing.T) {
 func TestSlashAfterVariable(t *testing.T) {
 	src := `<?php $foo/3`
 
-	expected := []int{
-		scanner.T_VARIABLE,
-		scanner.Rune2Class('/'),
-		scanner.T_LNUMBER,
+	expected := []string{
+		scanner.T_VARIABLE.String(),
+		scanner.LexerToken(scanner.Rune2Class('/')).String(),
+		scanner.T_LNUMBER.String(),
 	}
 
 	expectedTokens := []string{
@@ -862,7 +900,7 @@ func TestSlashAfterVariable(t *testing.T) {
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
 	lv := &lval{}
-	actual := []int{}
+	actual := []string{}
 	actualTokens := []string{}
 
 	for {
@@ -872,7 +910,7 @@ func TestSlashAfterVariable(t *testing.T) {
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, token)
+		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
 	assertEqual(t, expected, actual)

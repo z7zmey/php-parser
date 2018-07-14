@@ -124,6 +124,8 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	token.Meta = l.Meta
 	token.Value = l.tokenString(chars)
 
+	// fmt.Println(l.tokenString(chars))
+
 	token.StartLine = l.File.Line(firstChar.Pos())
 	token.EndLine = l.File.Line(lastChar.Pos())
 	token.StartPos = int(firstChar.Pos())
