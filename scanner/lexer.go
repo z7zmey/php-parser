@@ -462,8 +462,10 @@ func Rune2Class(r rune) int {
 	if unicode.IsGraphic(r) {
 		return classUnicodeGraphic
 	}
-	// return classOther
-	return -1
+	if r == lex.RuneEOF {
+		return int(r)
+	}
+	return classOther
 }
 
 // NewLexer the Lexer constructor
