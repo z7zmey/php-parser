@@ -8379,6 +8379,7 @@ yyrule127: // ([/][*])|([/][*][*])
 			is_doc_comment = true
 			l.PhpDocComment = ""
 		}
+		c = l.Next()
 		for {
 			if c == -1 {
 				break // TODO: Unterminated comment starting line %d
