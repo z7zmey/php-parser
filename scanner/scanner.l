@@ -327,7 +327,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.Token(l.createToken(l.Token())); return T_STRING;
 <PROPERTY>.                                     l.ungetChars(1);l.begin(PHP)
 
-<PHP>[\']([^\\\']*([\\].)*)*[\']                lval.Token(l.createToken(l.Token())); return T_CONSTANT_ENCAPSED_STRING;
+<PHP>[\']([^\\\']*(\\(.|\n))*)*[\']             lval.Token(l.createToken(l.Token())); return T_CONSTANT_ENCAPSED_STRING;
 
 <PHP>`                                          l.begin(BACKQUOTE); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
 <BACKQUOTE>`                                    l.begin(PHP); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
