@@ -1024,9 +1024,27 @@ func TestInlineComment(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestInlineComment2(t *testing.T) {
+	src := `<?php
+	/*/*/`
+
+	expected := []*comment.Comment{
+		comment.NewComment("/*/*/", position.NewPosition(2, 2, 8, 12)),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Comments
+
+	assertEqual(t, expected, actual)
+}
+
 func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
-	/**/`
+	/**/ `
 
 	expected := []*comment.Comment{
 		comment.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),

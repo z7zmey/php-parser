@@ -286,6 +286,8 @@ NEW_LINE        (\r|\n|\r\n)
 
     l.addComment(tb)
 
+<PHP>[/][*][*][/]
+    l.addComment(l.Token())
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false
