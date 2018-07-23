@@ -294,6 +294,7 @@ NEW_LINE        (\r|\n|\r\n)
         l.PhpDocComment = ""
     }
 
+    c = l.Next()
     for {
         if c == -1 {
             break; // TODO: Unterminated comment starting line %d
