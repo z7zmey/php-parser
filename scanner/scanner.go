@@ -777,7 +777,7 @@ yystate29:
 	switch {
 	default:
 		goto yyabort
-	case c >= '\x01' && c <= '\t' || c >= '\v' && c <= 'ÿ':
+	case c >= '\x01' && c <= 'ÿ':
 		goto yystate27
 	}
 
@@ -8459,7 +8459,7 @@ yyrule137: // .
 		l.begin(PHP)
 		goto yystate0
 	}
-yyrule138: // [\']([^\\\']*([\\].)*)*[\']
+yyrule138: // [\']([^\\\']*(\\(.|\n))*)*[\']
 	{
 		lval.Token(l.createToken(l.Token()))
 		return T_CONSTANT_ENCAPSED_STRING
