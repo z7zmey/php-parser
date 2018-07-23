@@ -120,7 +120,6 @@ func TestPhp5(t *testing.T) {
 		function foo() {}
 
 		function foo() {
-			__halt_compiler();
 			function bar() {}
 			class Baz {}
 			return $a;
@@ -132,7 +131,6 @@ func TestPhp5(t *testing.T) {
 		global $a, $b, $$c, ${foo()};
 		a: 
 		goto a;
-		__halt_compiler();
 		if ($a) {}
 		if ($a) {} elseif ($b) {}
 		if ($a) {} else {}
@@ -411,6 +409,7 @@ func TestPhp5(t *testing.T) {
 		${$a};
 		$foo::{$bar}();
 		$foo::bar;
+		__halt_compiler(); this needs to be last because anything after it is ignored }1423(80(''3
 	`
 
 	expectedParams := []node.Node{
@@ -1093,7 +1092,6 @@ func TestPhp5(t *testing.T) {
 				PhpDocComment: "",
 				FunctionName:  &node.Identifier{Value: "foo"},
 				Stmts: []node.Node{
-					&stmt.HaltCompiler{},
 					&stmt.Function{
 						ReturnsRef:    false,
 						PhpDocComment: "",
@@ -1171,7 +1169,6 @@ func TestPhp5(t *testing.T) {
 			&stmt.Goto{
 				Label: &node.Identifier{Value: "a"},
 			},
-			&stmt.HaltCompiler{},
 			&stmt.If{
 				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -3634,6 +3631,7 @@ func TestPhp5(t *testing.T) {
 					ConstantName: &node.Identifier{Value: "bar"},
 				},
 			},
+			&stmt.HaltCompiler{},
 		},
 	}
 

@@ -252,6 +252,7 @@ import (
 %type <node> method_body
 %type <node> foreach_statement for_statement while_statement
 %type <node> foreach_variable foreach_optional_arg
+%type <node> halt_compiler
 
 %type <ClassExtends> extends_from
 %type <ClassImplements> implements_list
@@ -283,6 +284,16 @@ start:
                 yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+    |   top_statement_list halt_compiler
+            {
+                $1 = append($1, $2)
+
+                yylex.(*Parser).rootNode = node.NewRoot($1)
+                yylex.(*Parser).positions.AddPosition(yylex.(*Parser).rootNode, yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+                return 0
             }
 ;
 
@@ -356,21 +367,6 @@ top_statement:
     |   class_declaration_statement
             {
                 $$ = $1 
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-            }
-    |   T_HALT_COMPILER '(' ')' ';'
-            {
-                $$ = stmt.NewHaltCompiler()
-
-                // save position
-                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-
-                // save comments
-                yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
-                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
-                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
-                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -473,6 +469,24 @@ top_statement:
 
                 // save comments
                 yylex.(*Parser).comments.AddFromToken($$, $2, comment.SemiColonToken)
+
+                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+            }
+;
+
+halt_compiler:
+        T_HALT_COMPILER '(' ')' ';'
+            {
+                $$ = stmt.NewHaltCompiler()
+
+                // save position
+                yylex.(*Parser).positions.AddPosition($$, yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+
+                // save comments
+                yylex.(*Parser).comments.AddFromToken($$, $1, comment.HaltCompilerToken)
+                yylex.(*Parser).comments.AddFromToken($$, $2, comment.OpenParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $3, comment.CloseParenthesisToken)
+                yylex.(*Parser).comments.AddFromToken($$, $4, comment.SemiColonToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

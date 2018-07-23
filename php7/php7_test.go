@@ -137,7 +137,6 @@ func TestPhp7(t *testing.T) {
 		global $a, $b;
 		a: 
 		goto a;
-		__halt_compiler();
 		if ($a) {}
 		if ($a) {} elseif ($b) {}
 		if ($a) {} else {}
@@ -353,7 +352,6 @@ func TestPhp7(t *testing.T) {
 		\foo\bar();
 
 		function foo(&$a, ...$b) {
-			__halt_compiler();
 			function bar() {}
 			class Baz {}
 			trait Quux{}
@@ -379,6 +377,7 @@ func TestPhp7(t *testing.T) {
 		$foo->{$bar[0]};
 
 		[1=>&$a, 2=>list($b)];
+		__halt_compiler(); this needs to be last because anything after it is ignored }1423(80(''3
 	`
 
 	expectedParams := []node.Node{
@@ -1231,7 +1230,6 @@ func TestPhp7(t *testing.T) {
 			&stmt.Goto{
 				Label: &node.Identifier{Value: "a"},
 			},
-			&stmt.HaltCompiler{},
 			&stmt.If{
 				Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 				Stmt: &stmt.StmtList{Stmts: []node.Node{}},
@@ -2998,7 +2996,6 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 				Stmts: []node.Node{
-					&stmt.HaltCompiler{},
 					&stmt.Function{
 						FunctionName: &node.Identifier{Value: "bar"},
 						Stmts:        []node.Node{},
@@ -3218,6 +3215,7 @@ func TestPhp7(t *testing.T) {
 					},
 				},
 			},
+			&stmt.HaltCompiler{},
 		},
 	}
 
