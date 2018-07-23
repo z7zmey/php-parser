@@ -430,6 +430,53 @@ func TestTokens(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestSingleQuoteStringTokens(t *testing.T) {
+	src := `<?php
+		'str $var str'
+		
+		'\''
+		
+		'\'
+		'
+		
+		'\
+		\''
+		
+		'\\'
+		
+		'\\
+		'
+
+		'\	
+		\''
+	`
+
+	expected := []int{
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+		scanner.T_CONSTANT_ENCAPSED_STRING,
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []int{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, token)
+	}
+
+	assertEqual(t, expected, actual)
+}
+
 func TestTeplateStringTokens(t *testing.T) {
 	src := `<?php
 		"foo $a"
