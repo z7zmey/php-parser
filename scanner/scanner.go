@@ -25,6 +25,7 @@ const (
 	NOWDOC
 	HEREDOC
 	BACKQUOTE
+	HALT_COMPILER
 )
 
 func isValidFirstVarNameRune(r rune) bool {
@@ -65,6 +66,8 @@ yystate0:
 		goto yystart595
 	case 10: // start condition: BACKQUOTE
 		goto yystart599
+	case 11: // start condition: HALT_COMPILER
+		goto yystart604
 	}
 
 	goto yystate0 // silence unused label error
@@ -405,6 +408,8 @@ yyAction:
 		goto yyrule166
 	case 167:
 		goto yyrule167
+	case 168:
+		goto yyrule168
 	}
 	goto yystate1 // silence unused label error
 yystate1:
@@ -7540,6 +7545,23 @@ yystate603:
 		goto yystate549
 	}
 
+	goto yystate604 // silence unused label error
+yystate604:
+	c = l.Next()
+yystart604:
+	switch {
+	default:
+		goto yyabort
+	case c >= '\x01' && c <= 'ÿ':
+		goto yystate605
+	}
+
+yystate605:
+	c = l.Next()
+	yyrule = 168
+	l.Mark()
+	goto yyrule168
+
 yyrule1: // [ \t\n\r]+
 
 	goto yystate0
@@ -7568,17 +7590,17 @@ yyrule2: // .
 	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		goto yystate0
 	}
 yyrule5: // \<\?=
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		lval.Token(l.createToken(l.Token()))
 		return T_ECHO
 		goto yystate0
@@ -7588,14 +7610,14 @@ yyrule6: // [ \t\n\r]+
 	goto yystate0
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?
 	{
-		l.begin(INITIAL)
+		l.Begin(INITIAL)
 		lval.Token(l.createToken(l.Token()))
 		return Rune2Class(';')
 		goto yystate0
 	}
 yyrule8: // \?\>{NEW_LINE}?
 	{
-		l.begin(INITIAL)
+		l.Begin(INITIAL)
 		lval.Token(l.createToken(l.Token()))
 		return Rune2Class(';')
 		goto yystate0
@@ -8452,7 +8474,7 @@ yyrule133: // {VAR_NAME}
 	}
 yyrule134: // ->
 	{
-		l.begin(PROPERTY)
+		l.Begin(PROPERTY)
 		lval.Token(l.createToken(l.Token()))
 		return T_OBJECT_OPERATOR
 		goto yystate0
@@ -8468,7 +8490,7 @@ yyrule136: // ->
 	}
 yyrule137: // {VAR_NAME}
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		lval.Token(l.createToken(l.Token()))
 		return T_STRING
 		goto yystate0
@@ -8476,7 +8498,7 @@ yyrule137: // {VAR_NAME}
 yyrule138: // .
 	{
 		l.ungetChars(1)
-		l.begin(PHP)
+		l.Begin(PHP)
 		goto yystate0
 	}
 yyrule139: // [\']([^\\\']*(\\(.|\n))*)*[\']
@@ -8487,14 +8509,14 @@ yyrule139: // [\']([^\\\']*(\\(.|\n))*)*[\']
 	}
 yyrule140: // `
 	{
-		l.begin(BACKQUOTE)
+		l.Begin(BACKQUOTE)
 		lval.Token(l.createToken(l.Token()))
 		return Rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
 	}
 yyrule141: // `
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		lval.Token(l.createToken(l.Token()))
 		return Rune2Class(rune(l.TokenBytes(nil)[0]))
 		goto yystate0
@@ -8526,13 +8548,13 @@ yyrule142: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 		case '\'':
 			lblFirst++
 			lblLast--
-			l.begin(NOWDOC)
+			l.Begin(NOWDOC)
 		case '"':
 			lblFirst++
 			lblLast--
-			l.begin(HEREDOC)
+			l.Begin(HEREDOC)
 		default:
-			l.begin(HEREDOC)
+			l.Begin(HEREDOC)
 		}
 		l.heredocLabel = l.tokenString(tb[lblFirst : lblLast+1])
 
@@ -8549,7 +8571,7 @@ yyrule142: // [b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["]))
 			ungetCnt++
 			c = l.Next()
 			if '\n' == rune(c) || '\r' == rune(c) {
-				l.begin(HEREDOC_END)
+				l.Begin(HEREDOC_END)
 			}
 		}
 		l.ungetChars(ungetCnt)
@@ -8568,12 +8590,12 @@ yyrule143: // .|[ \t\n\r]
 			}
 			if '\n' == rune(c) || '\r' == rune(c) {
 				if l.heredocLabel+";" == string(searchLabel) {
-					l.begin(HEREDOC_END)
+					l.Begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + 1)
 					break
 				}
 				if l.heredocLabel == string(searchLabel) {
-					l.begin(HEREDOC_END)
+					l.Begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel))
 					break
 				}
@@ -8589,14 +8611,14 @@ yyrule143: // .|[ \t\n\r]
 	}
 yyrule144: // {VAR_NAME}\;
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		lval.Token(l.createToken(l.ungetChars(1)))
 		return T_END_HEREDOC
 		goto yystate0
 	}
 yyrule145: // {VAR_NAME}
 	{
-		l.begin(PHP)
+		l.Begin(PHP)
 		lval.Token(l.createToken(l.Token()))
 		return T_END_HEREDOC
 		goto yystate0
@@ -8774,13 +8796,13 @@ yyrule153: // .|[ \t\n\r]
 				fallthrough
 			case '\n':
 				if l.heredocLabel+";" == string(searchLabel) {
-					l.begin(HEREDOC_END)
+					l.Begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + 1 + nls)
 					lval.Token(l.createToken(tb))
 					return T_ENCAPSED_AND_WHITESPACE
 				}
 				if l.heredocLabel == string(searchLabel) {
-					l.begin(HEREDOC_END)
+					l.Begin(HEREDOC_END)
 					tb = l.ungetChars(len(l.heredocLabel) + nls)
 					lval.Token(l.createToken(tb))
 					return T_ENCAPSED_AND_WHITESPACE
@@ -8909,6 +8931,11 @@ yyrule167: // .
 		l.ungetChars(1)
 		l.popState()
 		l.pushState(PHP)
+		goto yystate0
+	}
+yyrule168: // .|[ \t\n\r]
+	{
+		// do nothing
 		goto yystate0
 	}
 	panic("unreachable")

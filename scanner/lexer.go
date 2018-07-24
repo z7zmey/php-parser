@@ -521,7 +521,7 @@ func (l *Lexer) popState() {
 	l.StateStack = l.StateStack[:len-1]
 }
 
-func (l *Lexer) begin(state int) {
+func (l *Lexer) Begin(state int) {
 	len := len(l.StateStack)
 	l.StateStack = l.StateStack[:len-1]
 	l.StateStack = append(l.StateStack, state)
