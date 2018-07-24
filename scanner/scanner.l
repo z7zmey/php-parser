@@ -13,17 +13,18 @@ import (
 )
 
 const (
-	INITIAL = iota
-	PHP
-	STRING
-	STRING_VAR
-	STRING_VAR_INDEX
-	STRING_VAR_NAME
-	PROPERTY
-	HEREDOC_END
-	NOWDOC
-	HEREDOC
-	BACKQUOTE
+    INITIAL = iota
+    PHP
+    STRING
+    STRING_VAR
+    STRING_VAR_INDEX
+    STRING_VAR_NAME
+    PROPERTY
+    HEREDOC_END
+    NOWDOC
+    HEREDOC
+    BACKQUOTE
+    HALT_COMPILER
 )
 
 func isValidFirstVarNameRune(r rune) bool {
@@ -36,7 +37,7 @@ func (l *Lexer) Lex(lval Lval) int {
 
 %}
 
-%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC BACKQUOTE
+%s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC BACKQUOTE HALT_COMPILER
 
 %yyb last == '\n' || last = '\0'
 %yyt l.getCurrentState()
@@ -84,13 +85,13 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.createToken(tb))
     return int(T_INLINE_HTML)
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.begin(PHP);l.ungetChars(len(l.Token())-5)
-<INITIAL>\<\?                                   l.begin(PHP);
-<INITIAL>\<\?=                                  l.begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_ECHO);
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.Begin(PHP);l.ungetChars(len(l.Token())-5)
+<INITIAL>\<\?                                   l.Begin(PHP);
+<INITIAL>\<\?=                                  l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_ECHO);
 
 <PHP>[ \t\n\r]+                                 l.addWhiteSpace(l.Token())
-<PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
-<PHP>\?\>{NEW_LINE}?                            l.begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
+<PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
+<PHP>\?\>{NEW_LINE}?                            l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 
 <PHP>{DNUM}|{EXPONENT_DNUM}                     lval.Token(l.createToken(l.Token())); return int(T_DNUMBER)
 <PHP>{BNUM}
@@ -287,6 +288,8 @@ NEW_LINE        (\r|\n|\r\n)
 
     l.addComments(tb)
 
+<PHP>[/][*][*][/]
+    l.addComments(l.Token())
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false
@@ -295,6 +298,7 @@ NEW_LINE        (\r|\n|\r\n)
         l.PhpDocComment = ""
     }
 
+    c = l.Next()
     for {
         if c == -1 {
             break; // TODO: Unterminated comment starting line %d
@@ -322,16 +326,16 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>\${VAR_NAME}                               lval.Token(l.createToken(l.Token())); return int(T_VARIABLE)
 <PHP>{VAR_NAME}                                 lval.Token(l.createToken(l.Token())); return int(T_STRING)
 
-<PHP>->                                         l.begin(PROPERTY);lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
+<PHP>->                                         l.Begin(PROPERTY);lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
 <PROPERTY>[ \t\n\r]+                            l.addWhiteSpace(l.Token())
 <PROPERTY>->                                    lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
-<PROPERTY>{VAR_NAME}                            l.begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_STRING);
-<PROPERTY>.                                     l.ungetChars(1);l.begin(PHP)
+<PROPERTY>{VAR_NAME}                            l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_STRING);
+<PROPERTY>.                                     l.ungetChars(1);l.Begin(PHP)
 
-<PHP>[\']([^\\\']*([\\].)*)*[\']                lval.Token(l.createToken(l.Token())); return int(T_CONSTANT_ENCAPSED_STRING);
+<PHP>[\']([^\\\']*(\\(.|\n))*)*[\']             lval.Token(l.createToken(l.Token())); return int(T_CONSTANT_ENCAPSED_STRING);
 
-<PHP>`                                          l.begin(BACKQUOTE); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
-<BACKQUOTE>`                                    l.begin(PHP); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
+<PHP>`                                          l.Begin(BACKQUOTE); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
+<BACKQUOTE>`                                    l.Begin(PHP); lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
 
 <PHP>[b]?\<\<\<[ \t]*({VAR_NAME}|([']{VAR_NAME}['])|(["]{VAR_NAME}["])){NEW_LINE}
     tb := l.Token()
@@ -362,13 +366,13 @@ NEW_LINE        (\r|\n|\r\n)
         case '\'' : 
             lblFirst++
             lblLast--
-            l.begin(NOWDOC)
+            l.Begin(NOWDOC)
         case '"' : 
             lblFirst++
             lblLast--
-            l.begin(HEREDOC)
+            l.Begin(HEREDOC)
         default:
-            l.begin(HEREDOC)
+            l.Begin(HEREDOC)
     }
 
     l.heredocLabel = l.tokenString(tb[lblFirst:lblLast+1])
@@ -387,7 +391,7 @@ NEW_LINE        (\r|\n|\r\n)
         ungetCnt++
         c = l.Next()
         if '\n' == rune(c) || '\r' == rune(c) {
-            l.begin(HEREDOC_END)
+            l.Begin(HEREDOC_END)
         }
     }
 
@@ -407,14 +411,14 @@ NEW_LINE        (\r|\n|\r\n)
 
         if '\n' == rune(c) || '\r' == rune(c) {
             if l.heredocLabel + ";" == string(searchLabel) {
-                l.begin(HEREDOC_END)
+                l.Begin(HEREDOC_END)
                 tb = l.ungetChars(len(l.heredocLabel)+1)
                 tb = tb[:len(tb)-1]
                 break;
             }
 
             if l.heredocLabel == string(searchLabel) {
-                l.begin(HEREDOC_END)
+                l.Begin(HEREDOC_END)
                 tb = l.ungetChars(len(l.heredocLabel))
                 tb = tb[:len(tb)-1]
                 break;
@@ -431,8 +435,8 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.createToken(tb) )
     return int(T_ENCAPSED_AND_WHITESPACE)
 
-<HEREDOC_END>{VAR_NAME}\;                       l.begin(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_END_HEREDOC)
-<HEREDOC_END>{VAR_NAME}                         l.begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_END_HEREDOC)
+<HEREDOC_END>{VAR_NAME}\;                       l.Begin(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_END_HEREDOC)
+<HEREDOC_END>{VAR_NAME}                         l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_END_HEREDOC)
 
 <PHP>[b]?[\"]
     binPrefix := l.Token()[0].Rune == 'b'
@@ -586,23 +590,23 @@ NEW_LINE        (\r|\n|\r\n)
 
             case '\n':
                 if l.heredocLabel + ";" == string(searchLabel) {
-                    l.begin(HEREDOC_END)
+                    l.Begin(HEREDOC_END)
                     l.ungetChars(len(l.heredocLabel)+1+nls)
-                    
+
                     i := len(tb) - len(l.heredocLabel) - 3 - nls
                     if  i < 1 {
                         break HEREDOC_FOR;
                     }
                     tb = tb[:i]
-                    
+
                     lval.Token(l.createToken(tb)); 
                     return int(T_ENCAPSED_AND_WHITESPACE)
                 }
 
                 if l.heredocLabel == string(searchLabel) { 
-                    l.begin(HEREDOC_END)
+                    l.Begin(HEREDOC_END)
                     l.ungetChars(len(l.heredocLabel)+nls)
-                    
+
                     i := len(tb) - len(l.heredocLabel) - 2 - nls
                     if  i < 1 {
                         break HEREDOC_FOR;
@@ -643,7 +647,7 @@ NEW_LINE        (\r|\n|\r\n)
         if c == -1 {
             break;
         }
-        
+
         currentChar = l.Last
         tb = append(tb, currentChar)
         c = l.Next()
@@ -666,6 +670,8 @@ NEW_LINE        (\r|\n|\r\n)
 
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_STRING_VARNAME)
 <STRING_VAR_NAME>.                          l.ungetChars(1);l.popState();l.pushState(PHP)
+
+<HALT_COMPILER>.|[ \t\n\r]                  // do nothing
 
 %%
     if _, ok := l.Abort(); ok {

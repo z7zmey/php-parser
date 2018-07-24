@@ -431,6 +431,53 @@ func TestTokens(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestSingleQuoteStringTokens(t *testing.T) {
+	src := `<?php
+		'str $var str'
+		
+		'\''
+		
+		'\'
+		'
+		
+		'\
+		\''
+		
+		'\\'
+		
+		'\\
+		'
+
+		'\	
+		\''
+	`
+
+	expected := []string{
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+	actual := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token < 0 {
+			break
+		}
+
+		actual = append(actual, scanner.LexerToken(token).String())
+	}
+
+	assertEqual(t, expected, actual)
+}
+
 func TestTeplateStringTokens(t *testing.T) {
 	src := `<?php
 		"foo $a"
@@ -1033,13 +1080,34 @@ func TestInlineComment(t *testing.T) {
 	assertEqual(t, expected, actual)
 }
 
+func TestInlineComment2(t *testing.T) {
+	src := `<?php
+	/*/*/`
+
+	expected := []meta.Meta{
+		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+		meta.NewComment("/*/*/", position.NewPosition(2, 2, 8, 12)),
+	}
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer.WithMeta = true
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	actual := lexer.Meta
+
+	assertEqual(t, expected, actual)
+}
+
 func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
-	/**/`
+	/**/ `
 
 	expected := []meta.Meta{
 		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
 		meta.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
+		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 12, 12)),
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")

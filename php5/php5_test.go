@@ -121,7 +121,6 @@ func TestPhp5(t *testing.T) {
 		function foo() {}
 
 		function foo() {
-			__halt_compiler();
 			function bar() {}
 			class Baz {}
 			return $a;
@@ -133,7 +132,6 @@ func TestPhp5(t *testing.T) {
 		global $a, $b, $$c, ${foo()};
 		a: 
 		goto a;
-		__halt_compiler();
 		if ($a) {}
 		if ($a) {} elseif ($b) {}
 		if ($a) {} else {}
@@ -412,6 +410,10 @@ func TestPhp5(t *testing.T) {
 		${$a};
 		$foo::{$bar}();
 		$foo::bar;
+
+		__halt_compiler();
+
+		parsing process must be terminated
 	`
 
 	expected := &node.Root{
@@ -419,7 +421,7 @@ func TestPhp5(t *testing.T) {
 			StartLine: 2,
 			EndLine:   379,
 			StartPos:  6,
-			EndPos:    6965,
+			EndPos:    6944,
 		},
 		Stmts: []node.Node{
 			&stmt.Expression{
@@ -567,8 +569,8 @@ func TestPhp5(t *testing.T) {
 									StartPos:  29,
 									EndPos:    30,
 								},
-								IsReference: false,
 								Variadic:    false,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 3,
@@ -700,8 +702,8 @@ func TestPhp5(t *testing.T) {
 									StartPos:  57,
 									EndPos:    61,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 4,
@@ -914,8 +916,8 @@ func TestPhp5(t *testing.T) {
 									StartPos:  104,
 									EndPos:    108,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 6,
@@ -1044,8 +1046,8 @@ func TestPhp5(t *testing.T) {
 					StartPos:  137,
 					EndPos:    180,
 				},
-				PhpDocComment: "",
 				ReturnsRef:    false,
+				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 9,
@@ -1383,8 +1385,8 @@ func TestPhp5(t *testing.T) {
 								StartPos:  259,
 								EndPos:    271,
 							},
-							Variadic: false,
 							ByRef:    false,
+							Variadic: false,
 							VariableType: &name.Name{
 								Position: &position.Position{
 									StartLine: 11,
@@ -1456,8 +1458,8 @@ func TestPhp5(t *testing.T) {
 								StartPos:  274,
 								EndPos:    285,
 							},
-							ByRef:    true,
 							Variadic: true,
+							ByRef:    true,
 							VariableType: &name.Name{
 								Position: &position.Position{
 									StartLine: 11,
@@ -4593,9 +4595,9 @@ func TestPhp5(t *testing.T) {
 			&stmt.Function{
 				Position: &position.Position{
 					StartLine: 88,
-					EndLine:   93,
+					EndLine:   92,
 					StartPos:  2062,
-					EndPos:    2154,
+					EndPos:    2132,
 				},
 				ReturnsRef:    false,
 				PhpDocComment: "",
@@ -4609,29 +4611,21 @@ func TestPhp5(t *testing.T) {
 					Value: "foo",
 				},
 				Stmts: []node.Node{
-					&stmt.HaltCompiler{
+					&stmt.Function{
 						Position: &position.Position{
 							StartLine: 89,
 							EndLine:   89,
 							StartPos:  2082,
-							EndPos:    2099,
-						},
-					},
-					&stmt.Function{
-						Position: &position.Position{
-							StartLine: 90,
-							EndLine:   90,
-							StartPos:  2104,
-							EndPos:    2120,
+							EndPos:    2098,
 						},
 						ReturnsRef:    false,
 						PhpDocComment: "",
 						FunctionName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 90,
-								EndLine:   90,
-								StartPos:  2113,
-								EndPos:    2115,
+								StartLine: 89,
+								EndLine:   89,
+								StartPos:  2091,
+								EndPos:    2093,
 							},
 							Value: "bar",
 						},
@@ -4639,18 +4633,18 @@ func TestPhp5(t *testing.T) {
 					},
 					&stmt.Class{
 						Position: &position.Position{
-							StartLine: 91,
-							EndLine:   91,
-							StartPos:  2125,
-							EndPos:    2136,
+							StartLine: 90,
+							EndLine:   90,
+							StartPos:  2103,
+							EndPos:    2114,
 						},
 						PhpDocComment: "",
 						ClassName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 91,
-								EndLine:   91,
-								StartPos:  2131,
-								EndPos:    2133,
+								StartLine: 90,
+								EndLine:   90,
+								StartPos:  2109,
+								EndPos:    2111,
 							},
 							Value: "Baz",
 						},
@@ -4658,27 +4652,130 @@ func TestPhp5(t *testing.T) {
 					},
 					&stmt.Return{
 						Position: &position.Position{
-							StartLine: 92,
-							EndLine:   92,
-							StartPos:  2141,
-							EndPos:    2150,
+							StartLine: 91,
+							EndLine:   91,
+							StartPos:  2119,
+							EndPos:    2128,
 						},
 						Expr: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 92,
-								EndLine:   92,
-								StartPos:  2148,
-								EndPos:    2149,
+								StartLine: 91,
+								EndLine:   91,
+								StartPos:  2126,
+								EndPos:    2127,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 92,
-									EndLine:   92,
-									StartPos:  2148,
-									EndPos:    2149,
+									StartLine: 91,
+									EndLine:   91,
+									StartPos:  2126,
+									EndPos:    2127,
 								},
 								Value: "a",
 							},
+						},
+					},
+				},
+			},
+			&stmt.Function{
+				Position: &position.Position{
+					StartLine: 94,
+					EndLine:   94,
+					StartPos:  2139,
+					EndPos:    2183,
+				},
+				ReturnsRef:    false,
+				PhpDocComment: "",
+				FunctionName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 94,
+						EndLine:   94,
+						StartPos:  2148,
+						EndPos:    2150,
+					},
+					Value: "foo",
+				},
+				Params: []node.Node{
+					&node.Parameter{
+						Position: &position.Position{
+							StartLine: 94,
+							EndLine:   94,
+							StartPos:  2152,
+							EndPos:    2159,
+						},
+						ByRef:    false,
+						Variadic: false,
+						VariableType: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 94,
+								EndLine:   94,
+								StartPos:  2152,
+								EndPos:    2156,
+							},
+							Value: "array",
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 94,
+								EndLine:   94,
+								StartPos:  2158,
+								EndPos:    2159,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 94,
+									EndLine:   94,
+									StartPos:  2158,
+									EndPos:    2159,
+								},
+								Value: "a",
+							},
+						},
+					},
+					&node.Parameter{
+						Position: &position.Position{
+							StartLine: 94,
+							EndLine:   94,
+							StartPos:  2162,
+							EndPos:    2172,
+						},
+						ByRef:    false,
+						Variadic: false,
+						VariableType: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 94,
+								EndLine:   94,
+								StartPos:  2162,
+								EndPos:    2169,
+							},
+							Value: "callable",
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 94,
+								EndLine:   94,
+								StartPos:  2171,
+								EndPos:    2172,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 94,
+									EndLine:   94,
+									StartPos:  2171,
+									EndPos:    2172,
+								},
+								Value: "b",
+							},
+						},
+					},
+				},
+				Stmts: []node.Node{
+					&stmt.Return{
+						Position: &position.Position{
+							StartLine: 94,
+							EndLine:   94,
+							StartPos:  2176,
+							EndPos:    2182,
 						},
 					},
 				},
@@ -4687,137 +4784,34 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 95,
 					EndLine:   95,
-					StartPos:  2161,
-					EndPos:    2205,
-				},
-				ReturnsRef:    false,
-				PhpDocComment: "",
-				FunctionName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 95,
-						EndLine:   95,
-						StartPos:  2170,
-						EndPos:    2172,
-					},
-					Value: "foo",
-				},
-				Params: []node.Node{
-					&node.Parameter{
-						Position: &position.Position{
-							StartLine: 95,
-							EndLine:   95,
-							StartPos:  2174,
-							EndPos:    2181,
-						},
-						ByRef:    false,
-						Variadic: false,
-						VariableType: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 95,
-								EndLine:   95,
-								StartPos:  2174,
-								EndPos:    2178,
-							},
-							Value: "array",
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 95,
-								EndLine:   95,
-								StartPos:  2180,
-								EndPos:    2181,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 95,
-									EndLine:   95,
-									StartPos:  2180,
-									EndPos:    2181,
-								},
-								Value: "a",
-							},
-						},
-					},
-					&node.Parameter{
-						Position: &position.Position{
-							StartLine: 95,
-							EndLine:   95,
-							StartPos:  2184,
-							EndPos:    2194,
-						},
-						ByRef:    false,
-						Variadic: false,
-						VariableType: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 95,
-								EndLine:   95,
-								StartPos:  2184,
-								EndPos:    2191,
-							},
-							Value: "callable",
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 95,
-								EndLine:   95,
-								StartPos:  2193,
-								EndPos:    2194,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 95,
-									EndLine:   95,
-									StartPos:  2193,
-									EndPos:    2194,
-								},
-								Value: "b",
-							},
-						},
-					},
-				},
-				Stmts: []node.Node{
-					&stmt.Return{
-						Position: &position.Position{
-							StartLine: 95,
-							EndLine:   95,
-							StartPos:  2198,
-							EndPos:    2204,
-						},
-					},
-				},
-			},
-			&stmt.Function{
-				Position: &position.Position{
-					StartLine: 96,
-					EndLine:   96,
-					StartPos:  2209,
-					EndPos:    2235,
+					StartPos:  2187,
+					EndPos:    2213,
 				},
 				ReturnsRef:    true,
 				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 96,
-						EndLine:   96,
-						StartPos:  2219,
-						EndPos:    2221,
+						StartLine: 95,
+						EndLine:   95,
+						StartPos:  2197,
+						EndPos:    2199,
 					},
 					Value: "foo",
 				},
 				Stmts: []node.Node{
 					&stmt.Return{
 						Position: &position.Position{
-							StartLine: 96,
-							EndLine:   96,
-							StartPos:  2226,
-							EndPos:    2234,
+							StartLine: 95,
+							EndLine:   95,
+							StartPos:  2204,
+							EndPos:    2212,
 						},
 						Expr: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 96,
-								EndLine:   96,
-								StartPos:  2233,
-								EndPos:    2233,
+								StartLine: 95,
+								EndLine:   95,
+								StartPos:  2211,
+								EndPos:    2211,
 							},
 							Value: "1",
 						},
@@ -4826,19 +4820,19 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Function{
 				Position: &position.Position{
-					StartLine: 97,
-					EndLine:   97,
-					StartPos:  2239,
-					EndPos:    2256,
+					StartLine: 96,
+					EndLine:   96,
+					StartPos:  2217,
+					EndPos:    2234,
 				},
 				ReturnsRef:    true,
 				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 97,
-						EndLine:   97,
-						StartPos:  2249,
-						EndPos:    2251,
+						StartLine: 96,
+						EndLine:   96,
+						StartPos:  2227,
+						EndPos:    2229,
 					},
 					Value: "foo",
 				},
@@ -4846,66 +4840,66 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Global{
 				Position: &position.Position{
-					StartLine: 98,
-					EndLine:   98,
-					StartPos:  2260,
-					EndPos:    2288,
+					StartLine: 97,
+					EndLine:   97,
+					StartPos:  2238,
+					EndPos:    2266,
 				},
 				Vars: []node.Node{
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 98,
-							EndLine:   98,
-							StartPos:  2267,
-							EndPos:    2268,
+							StartLine: 97,
+							EndLine:   97,
+							StartPos:  2245,
+							EndPos:    2246,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 98,
-								EndLine:   98,
-								StartPos:  2267,
-								EndPos:    2268,
+								StartLine: 97,
+								EndLine:   97,
+								StartPos:  2245,
+								EndPos:    2246,
 							},
 							Value: "a",
 						},
 					},
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 98,
-							EndLine:   98,
-							StartPos:  2271,
-							EndPos:    2272,
+							StartLine: 97,
+							EndLine:   97,
+							StartPos:  2249,
+							EndPos:    2250,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 98,
-								EndLine:   98,
-								StartPos:  2271,
-								EndPos:    2272,
+								StartLine: 97,
+								EndLine:   97,
+								StartPos:  2249,
+								EndPos:    2250,
 							},
 							Value: "b",
 						},
 					},
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 98,
-							EndLine:   98,
-							StartPos:  2275,
-							EndPos:    2277,
+							StartLine: 97,
+							EndLine:   97,
+							StartPos:  2253,
+							EndPos:    2255,
 						},
 						VarName: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 98,
-								EndLine:   98,
-								StartPos:  2276,
-								EndPos:    2277,
+								StartLine: 97,
+								EndLine:   97,
+								StartPos:  2254,
+								EndPos:    2255,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 98,
-									EndLine:   98,
-									StartPos:  2276,
-									EndPos:    2277,
+									StartLine: 97,
+									EndLine:   97,
+									StartPos:  2254,
+									EndPos:    2255,
 								},
 								Value: "c",
 							},
@@ -4913,32 +4907,32 @@ func TestPhp5(t *testing.T) {
 					},
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 98,
-							EndLine:   98,
-							StartPos:  2280,
-							EndPos:    2287,
+							StartLine: 97,
+							EndLine:   97,
+							StartPos:  2258,
+							EndPos:    2265,
 						},
 						VarName: &expr.FunctionCall{
 							Position: &position.Position{
-								StartLine: 98,
-								EndLine:   98,
-								StartPos:  2282,
-								EndPos:    2286,
+								StartLine: 97,
+								EndLine:   97,
+								StartPos:  2260,
+								EndPos:    2264,
 							},
 							Function: &name.Name{
 								Position: &position.Position{
-									StartLine: 98,
-									EndLine:   98,
-									StartPos:  2282,
-									EndPos:    2284,
+									StartLine: 97,
+									EndLine:   97,
+									StartPos:  2260,
+									EndPos:    2262,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 98,
-											EndLine:   98,
-											StartPos:  2282,
-											EndPos:    2284,
+											StartLine: 97,
+											EndLine:   97,
+											StartPos:  2260,
+											EndPos:    2262,
 										},
 										Value: "foo",
 									},
@@ -4946,10 +4940,10 @@ func TestPhp5(t *testing.T) {
 							},
 							ArgumentList: &node.ArgumentList{
 								Position: &position.Position{
-									StartLine: 98,
-									EndLine:   98,
-									StartPos:  2285,
-									EndPos:    2286,
+									StartLine: 97,
+									EndLine:   97,
+									StartPos:  2263,
+									EndPos:    2264,
 								},
 							},
 						},
@@ -4958,100 +4952,213 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Label{
 				Position: &position.Position{
-					StartLine: 99,
-					EndLine:   99,
-					StartPos:  2292,
-					EndPos:    2293,
+					StartLine: 98,
+					EndLine:   98,
+					StartPos:  2270,
+					EndPos:    2271,
 				},
 				LabelName: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 99,
-						EndLine:   99,
-						StartPos:  2292,
-						EndPos:    2292,
+						StartLine: 98,
+						EndLine:   98,
+						StartPos:  2270,
+						EndPos:    2270,
 					},
 					Value: "a",
 				},
 			},
 			&stmt.Goto{
 				Position: &position.Position{
-					StartLine: 100,
-					EndLine:   100,
-					StartPos:  2298,
-					EndPos:    2304,
+					StartLine: 99,
+					EndLine:   99,
+					StartPos:  2276,
+					EndPos:    2282,
 				},
 				Label: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 100,
-						EndLine:   100,
-						StartPos:  2303,
-						EndPos:    2303,
+						StartLine: 99,
+						EndLine:   99,
+						StartPos:  2281,
+						EndPos:    2281,
 					},
 					Value: "a",
 				},
 			},
-			&stmt.HaltCompiler{
-				Position: &position.Position{
-					StartLine: 101,
-					EndLine:   101,
-					StartPos:  2308,
-					EndPos:    2325,
-				},
-			},
 			&stmt.If{
 				Position: &position.Position{
-					StartLine: 102,
-					EndLine:   102,
-					StartPos:  2329,
-					EndPos:    2338,
+					StartLine: 100,
+					EndLine:   100,
+					StartPos:  2286,
+					EndPos:    2295,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
-						StartLine: 102,
-						EndLine:   102,
-						StartPos:  2333,
-						EndPos:    2334,
+						StartLine: 100,
+						EndLine:   100,
+						StartPos:  2290,
+						EndPos:    2291,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 102,
-							EndLine:   102,
-							StartPos:  2333,
-							EndPos:    2334,
+							StartLine: 100,
+							EndLine:   100,
+							StartPos:  2290,
+							EndPos:    2291,
 						},
 						Value: "a",
 					},
 				},
 				Stmt: &stmt.StmtList{
 					Position: &position.Position{
-						StartLine: 102,
-						EndLine:   102,
-						StartPos:  2337,
-						EndPos:    2338,
+						StartLine: 100,
+						EndLine:   100,
+						StartPos:  2294,
+						EndPos:    2295,
 					},
 					Stmts: []node.Node{},
 				},
 			},
 			&stmt.If{
 				Position: &position.Position{
+					StartLine: 101,
+					EndLine:   101,
+					StartPos:  2299,
+					EndPos:    2323,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 101,
+						EndLine:   101,
+						StartPos:  2303,
+						EndPos:    2304,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 101,
+							EndLine:   101,
+							StartPos:  2303,
+							EndPos:    2304,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 101,
+						EndLine:   101,
+						StartPos:  2307,
+						EndPos:    2308,
+					},
+					Stmts: []node.Node{},
+				},
+				ElseIf: []node.Node{
+					&stmt.ElseIf{
+						Position: &position.Position{
+							StartLine: 101,
+							EndLine:   101,
+							StartPos:  2310,
+							EndPos:    2323,
+						},
+						Cond: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 101,
+								EndLine:   101,
+								StartPos:  2318,
+								EndPos:    2319,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 101,
+									EndLine:   101,
+									StartPos:  2318,
+									EndPos:    2319,
+								},
+								Value: "b",
+							},
+						},
+						Stmt: &stmt.StmtList{
+							Position: &position.Position{
+								StartLine: 101,
+								EndLine:   101,
+								StartPos:  2322,
+								EndPos:    2323,
+							},
+							Stmts: []node.Node{},
+						},
+					},
+				},
+			},
+			&stmt.If{
+				Position: &position.Position{
+					StartLine: 102,
+					EndLine:   102,
+					StartPos:  2327,
+					EndPos:    2344,
+				},
+				Cond: &expr.Variable{
+					Position: &position.Position{
+						StartLine: 102,
+						EndLine:   102,
+						StartPos:  2331,
+						EndPos:    2332,
+					},
+					VarName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 102,
+							EndLine:   102,
+							StartPos:  2331,
+							EndPos:    2332,
+						},
+						Value: "a",
+					},
+				},
+				Stmt: &stmt.StmtList{
+					Position: &position.Position{
+						StartLine: 102,
+						EndLine:   102,
+						StartPos:  2335,
+						EndPos:    2336,
+					},
+					Stmts: []node.Node{},
+				},
+				Else: &stmt.Else{
+					Position: &position.Position{
+						StartLine: 102,
+						EndLine:   102,
+						StartPos:  2338,
+						EndPos:    2344,
+					},
+					Stmt: &stmt.StmtList{
+						Position: &position.Position{
+							StartLine: 102,
+							EndLine:   102,
+							StartPos:  2343,
+							EndPos:    2344,
+						},
+						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.If{
+				Position: &position.Position{
 					StartLine: 103,
 					EndLine:   103,
-					StartPos:  2342,
-					EndPos:    2366,
+					StartPos:  2348,
+					EndPos:    2395,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 103,
 						EndLine:   103,
-						StartPos:  2346,
-						EndPos:    2347,
+						StartPos:  2352,
+						EndPos:    2353,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 103,
 							EndLine:   103,
-							StartPos:  2346,
-							EndPos:    2347,
+							StartPos:  2352,
+							EndPos:    2353,
 						},
 						Value: "a",
 					},
@@ -5060,8 +5167,8 @@ func TestPhp5(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 103,
 						EndLine:   103,
-						StartPos:  2350,
-						EndPos:    2351,
+						StartPos:  2356,
+						EndPos:    2357,
 					},
 					Stmts: []node.Node{},
 				},
@@ -5070,22 +5177,22 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 103,
 							EndLine:   103,
-							StartPos:  2353,
-							EndPos:    2366,
+							StartPos:  2359,
+							EndPos:    2372,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 103,
 								EndLine:   103,
-								StartPos:  2361,
-								EndPos:    2362,
+								StartPos:  2367,
+								EndPos:    2368,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 103,
 									EndLine:   103,
-									StartPos:  2361,
-									EndPos:    2362,
+									StartPos:  2367,
+									EndPos:    2368,
 								},
 								Value: "b",
 							},
@@ -5094,11 +5201,62 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 103,
 								EndLine:   103,
-								StartPos:  2365,
-								EndPos:    2366,
+								StartPos:  2371,
+								EndPos:    2372,
 							},
 							Stmts: []node.Node{},
 						},
+					},
+					&stmt.ElseIf{
+						Position: &position.Position{
+							StartLine: 103,
+							EndLine:   103,
+							StartPos:  2374,
+							EndPos:    2387,
+						},
+						Cond: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 103,
+								EndLine:   103,
+								StartPos:  2382,
+								EndPos:    2383,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 103,
+									EndLine:   103,
+									StartPos:  2382,
+									EndPos:    2383,
+								},
+								Value: "c",
+							},
+						},
+						Stmt: &stmt.StmtList{
+							Position: &position.Position{
+								StartLine: 103,
+								EndLine:   103,
+								StartPos:  2386,
+								EndPos:    2387,
+							},
+							Stmts: []node.Node{},
+						},
+					},
+				},
+				Else: &stmt.Else{
+					Position: &position.Position{
+						StartLine: 103,
+						EndLine:   103,
+						StartPos:  2389,
+						EndPos:    2395,
+					},
+					Stmt: &stmt.StmtList{
+						Position: &position.Position{
+							StartLine: 103,
+							EndLine:   103,
+							StartPos:  2394,
+							EndPos:    2395,
+						},
+						Stmts: []node.Node{},
 					},
 				},
 			},
@@ -5106,22 +5264,22 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 104,
 					EndLine:   104,
-					StartPos:  2370,
-					EndPos:    2387,
+					StartPos:  2399,
+					EndPos:    2447,
 				},
 				Cond: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 104,
 						EndLine:   104,
-						StartPos:  2374,
-						EndPos:    2375,
+						StartPos:  2403,
+						EndPos:    2404,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 104,
 							EndLine:   104,
-							StartPos:  2374,
-							EndPos:    2375,
+							StartPos:  2403,
+							EndPos:    2404,
 						},
 						Value: "a",
 					},
@@ -5130,127 +5288,42 @@ func TestPhp5(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 104,
 						EndLine:   104,
-						StartPos:  2378,
-						EndPos:    2379,
-					},
-					Stmts: []node.Node{},
-				},
-				Else: &stmt.Else{
-					Position: &position.Position{
-						StartLine: 104,
-						EndLine:   104,
-						StartPos:  2381,
-						EndPos:    2387,
-					},
-					Stmt: &stmt.StmtList{
-						Position: &position.Position{
-							StartLine: 104,
-							EndLine:   104,
-							StartPos:  2386,
-							EndPos:    2387,
-						},
-						Stmts: []node.Node{},
-					},
-				},
-			},
-			&stmt.If{
-				Position: &position.Position{
-					StartLine: 105,
-					EndLine:   105,
-					StartPos:  2391,
-					EndPos:    2438,
-				},
-				Cond: &expr.Variable{
-					Position: &position.Position{
-						StartLine: 105,
-						EndLine:   105,
-						StartPos:  2395,
-						EndPos:    2396,
-					},
-					VarName: &node.Identifier{
-						Position: &position.Position{
-							StartLine: 105,
-							EndLine:   105,
-							StartPos:  2395,
-							EndPos:    2396,
-						},
-						Value: "a",
-					},
-				},
-				Stmt: &stmt.StmtList{
-					Position: &position.Position{
-						StartLine: 105,
-						EndLine:   105,
-						StartPos:  2399,
-						EndPos:    2400,
+						StartPos:  2407,
+						EndPos:    2408,
 					},
 					Stmts: []node.Node{},
 				},
 				ElseIf: []node.Node{
 					&stmt.ElseIf{
 						Position: &position.Position{
-							StartLine: 105,
-							EndLine:   105,
-							StartPos:  2402,
-							EndPos:    2415,
+							StartLine: 104,
+							EndLine:   104,
+							StartPos:  2410,
+							EndPos:    2423,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 105,
-								EndLine:   105,
-								StartPos:  2410,
-								EndPos:    2411,
+								StartLine: 104,
+								EndLine:   104,
+								StartPos:  2418,
+								EndPos:    2419,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 105,
-									EndLine:   105,
-									StartPos:  2410,
-									EndPos:    2411,
+									StartLine: 104,
+									EndLine:   104,
+									StartPos:  2418,
+									EndPos:    2419,
 								},
 								Value: "b",
 							},
 						},
 						Stmt: &stmt.StmtList{
 							Position: &position.Position{
-								StartLine: 105,
-								EndLine:   105,
-								StartPos:  2414,
-								EndPos:    2415,
-							},
-							Stmts: []node.Node{},
-						},
-					},
-					&stmt.ElseIf{
-						Position: &position.Position{
-							StartLine: 105,
-							EndLine:   105,
-							StartPos:  2417,
-							EndPos:    2430,
-						},
-						Cond: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 105,
-								EndLine:   105,
-								StartPos:  2425,
-								EndPos:    2426,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 105,
-									EndLine:   105,
-									StartPos:  2425,
-									EndPos:    2426,
-								},
-								Value: "c",
-							},
-						},
-						Stmt: &stmt.StmtList{
-							Position: &position.Position{
-								StartLine: 105,
-								EndLine:   105,
-								StartPos:  2429,
-								EndPos:    2430,
+								StartLine: 104,
+								EndLine:   104,
+								StartPos:  2422,
+								EndPos:    2423,
 							},
 							Stmts: []node.Node{},
 						},
@@ -5258,144 +5331,57 @@ func TestPhp5(t *testing.T) {
 				},
 				Else: &stmt.Else{
 					Position: &position.Position{
-						StartLine: 105,
-						EndLine:   105,
-						StartPos:  2432,
-						EndPos:    2438,
-					},
-					Stmt: &stmt.StmtList{
-						Position: &position.Position{
-							StartLine: 105,
-							EndLine:   105,
-							StartPos:  2437,
-							EndPos:    2438,
-						},
-						Stmts: []node.Node{},
-					},
-				},
-			},
-			&stmt.If{
-				Position: &position.Position{
-					StartLine: 106,
-					EndLine:   106,
-					StartPos:  2442,
-					EndPos:    2490,
-				},
-				Cond: &expr.Variable{
-					Position: &position.Position{
-						StartLine: 106,
-						EndLine:   106,
-						StartPos:  2446,
+						StartLine: 104,
+						EndLine:   104,
+						StartPos:  2425,
 						EndPos:    2447,
-					},
-					VarName: &node.Identifier{
-						Position: &position.Position{
-							StartLine: 106,
-							EndLine:   106,
-							StartPos:  2446,
-							EndPos:    2447,
-						},
-						Value: "a",
-					},
-				},
-				Stmt: &stmt.StmtList{
-					Position: &position.Position{
-						StartLine: 106,
-						EndLine:   106,
-						StartPos:  2450,
-						EndPos:    2451,
-					},
-					Stmts: []node.Node{},
-				},
-				ElseIf: []node.Node{
-					&stmt.ElseIf{
-						Position: &position.Position{
-							StartLine: 106,
-							EndLine:   106,
-							StartPos:  2453,
-							EndPos:    2466,
-						},
-						Cond: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 106,
-								EndLine:   106,
-								StartPos:  2461,
-								EndPos:    2462,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 106,
-									EndLine:   106,
-									StartPos:  2461,
-									EndPos:    2462,
-								},
-								Value: "b",
-							},
-						},
-						Stmt: &stmt.StmtList{
-							Position: &position.Position{
-								StartLine: 106,
-								EndLine:   106,
-								StartPos:  2465,
-								EndPos:    2466,
-							},
-							Stmts: []node.Node{},
-						},
-					},
-				},
-				Else: &stmt.Else{
-					Position: &position.Position{
-						StartLine: 106,
-						EndLine:   106,
-						StartPos:  2468,
-						EndPos:    2490,
 					},
 					Stmt: &stmt.If{
 						Position: &position.Position{
-							StartLine: 106,
-							EndLine:   106,
-							StartPos:  2473,
-							EndPos:    2490,
+							StartLine: 104,
+							EndLine:   104,
+							StartPos:  2430,
+							EndPos:    2447,
 						},
 						Cond: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 106,
-								EndLine:   106,
-								StartPos:  2477,
-								EndPos:    2478,
+								StartLine: 104,
+								EndLine:   104,
+								StartPos:  2434,
+								EndPos:    2435,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 106,
-									EndLine:   106,
-									StartPos:  2477,
-									EndPos:    2478,
+									StartLine: 104,
+									EndLine:   104,
+									StartPos:  2434,
+									EndPos:    2435,
 								},
 								Value: "c",
 							},
 						},
 						Stmt: &stmt.StmtList{
 							Position: &position.Position{
-								StartLine: 106,
-								EndLine:   106,
-								StartPos:  2481,
-								EndPos:    2482,
+								StartLine: 104,
+								EndLine:   104,
+								StartPos:  2438,
+								EndPos:    2439,
 							},
 							Stmts: []node.Node{},
 						},
 						Else: &stmt.Else{
 							Position: &position.Position{
-								StartLine: 106,
-								EndLine:   106,
-								StartPos:  2484,
-								EndPos:    2490,
+								StartLine: 104,
+								EndLine:   104,
+								StartPos:  2441,
+								EndPos:    2447,
 							},
 							Stmt: &stmt.StmtList{
 								Position: &position.Position{
-									StartLine: 106,
-									EndLine:   106,
-									StartPos:  2489,
-									EndPos:    2490,
+									StartLine: 104,
+									EndLine:   104,
+									StartPos:  2446,
+									EndPos:    2447,
 								},
 								Stmts: []node.Node{},
 							},
@@ -5405,127 +5391,127 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Nop{
 				Position: &position.Position{
-					StartLine: 107,
-					EndLine:   107,
-					StartPos:  2494,
-					EndPos:    2495,
+					StartLine: 105,
+					EndLine:   105,
+					StartPos:  2451,
+					EndPos:    2452,
 				},
 			},
 			&stmt.InlineHtml{
 				Position: &position.Position{
-					StartLine: 107,
-					EndLine:   107,
-					StartPos:  2497,
-					EndPos:    2508,
+					StartLine: 105,
+					EndLine:   105,
+					StartPos:  2454,
+					EndPos:    2465,
 				},
 				Value: "<div></div> ",
 			},
 			&stmt.Interface{
 				Position: &position.Position{
+					StartLine: 106,
+					EndLine:   106,
+					StartPos:  2471,
+					EndPos:    2486,
+				},
+				PhpDocComment: "",
+				InterfaceName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 106,
+						EndLine:   106,
+						StartPos:  2481,
+						EndPos:    2483,
+					},
+					Value: "Foo",
+				},
+				Stmts: []node.Node{},
+			},
+			&stmt.Interface{
+				Position: &position.Position{
+					StartLine: 107,
+					EndLine:   107,
+					StartPos:  2490,
+					EndPos:    2517,
+				},
+				PhpDocComment: "",
+				InterfaceName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 107,
+						EndLine:   107,
+						StartPos:  2500,
+						EndPos:    2502,
+					},
+					Value: "Foo",
+				},
+				Extends: &stmt.InterfaceExtends{
+					Position: &position.Position{
+						StartLine: 107,
+						EndLine:   107,
+						StartPos:  2504,
+						EndPos:    2514,
+					},
+					InterfaceNames: []node.Node{
+						&name.Name{
+							Position: &position.Position{
+								StartLine: 107,
+								EndLine:   107,
+								StartPos:  2512,
+								EndPos:    2514,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 107,
+										EndLine:   107,
+										StartPos:  2512,
+										EndPos:    2514,
+									},
+									Value: "Bar",
+								},
+							},
+						},
+					},
+				},
+				Stmts: []node.Node{},
+			},
+			&stmt.Interface{
+				Position: &position.Position{
 					StartLine: 108,
 					EndLine:   108,
-					StartPos:  2514,
-					EndPos:    2529,
+					StartPos:  2521,
+					EndPos:    2553,
 				},
 				PhpDocComment: "",
 				InterfaceName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 108,
 						EndLine:   108,
-						StartPos:  2524,
-						EndPos:    2526,
-					},
-					Value: "Foo",
-				},
-				Stmts: []node.Node{},
-			},
-			&stmt.Interface{
-				Position: &position.Position{
-					StartLine: 109,
-					EndLine:   109,
-					StartPos:  2533,
-					EndPos:    2560,
-				},
-				PhpDocComment: "",
-				InterfaceName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 109,
-						EndLine:   109,
-						StartPos:  2543,
-						EndPos:    2545,
+						StartPos:  2531,
+						EndPos:    2533,
 					},
 					Value: "Foo",
 				},
 				Extends: &stmt.InterfaceExtends{
 					Position: &position.Position{
-						StartLine: 109,
-						EndLine:   109,
-						StartPos:  2547,
-						EndPos:    2557,
+						StartLine: 108,
+						EndLine:   108,
+						StartPos:  2535,
+						EndPos:    2550,
 					},
 					InterfaceNames: []node.Node{
 						&name.Name{
 							Position: &position.Position{
-								StartLine: 109,
-								EndLine:   109,
-								StartPos:  2555,
-								EndPos:    2557,
+								StartLine: 108,
+								EndLine:   108,
+								StartPos:  2543,
+								EndPos:    2545,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
-										StartLine: 109,
-										EndLine:   109,
-										StartPos:  2555,
-										EndPos:    2557,
-									},
-									Value: "Bar",
-								},
-							},
-						},
-					},
-				},
-				Stmts: []node.Node{},
-			},
-			&stmt.Interface{
-				Position: &position.Position{
-					StartLine: 110,
-					EndLine:   110,
-					StartPos:  2564,
-					EndPos:    2596,
-				},
-				PhpDocComment: "",
-				InterfaceName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 110,
-						EndLine:   110,
-						StartPos:  2574,
-						EndPos:    2576,
-					},
-					Value: "Foo",
-				},
-				Extends: &stmt.InterfaceExtends{
-					Position: &position.Position{
-						StartLine: 110,
-						EndLine:   110,
-						StartPos:  2578,
-						EndPos:    2593,
-					},
-					InterfaceNames: []node.Node{
-						&name.Name{
-							Position: &position.Position{
-								StartLine: 110,
-								EndLine:   110,
-								StartPos:  2586,
-								EndPos:    2588,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 110,
-										EndLine:   110,
-										StartPos:  2586,
-										EndPos:    2588,
+										StartLine: 108,
+										EndLine:   108,
+										StartPos:  2543,
+										EndPos:    2545,
 									},
 									Value: "Bar",
 								},
@@ -5533,18 +5519,18 @@ func TestPhp5(t *testing.T) {
 						},
 						&name.Name{
 							Position: &position.Position{
-								StartLine: 110,
-								EndLine:   110,
-								StartPos:  2591,
-								EndPos:    2593,
+								StartLine: 108,
+								EndLine:   108,
+								StartPos:  2548,
+								EndPos:    2550,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
-										StartLine: 110,
-										EndLine:   110,
-										StartPos:  2591,
-										EndPos:    2593,
+										StartLine: 108,
+										EndLine:   108,
+										StartPos:  2548,
+										EndPos:    2550,
 									},
 									Value: "Baz",
 								},
@@ -5556,25 +5542,25 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Namespace{
 				Position: &position.Position{
-					StartLine: 111,
-					EndLine:   111,
-					StartPos:  2600,
-					EndPos:    2613,
+					StartLine: 109,
+					EndLine:   109,
+					StartPos:  2557,
+					EndPos:    2570,
 				},
 				NamespaceName: &name.Name{
 					Position: &position.Position{
-						StartLine: 111,
-						EndLine:   111,
-						StartPos:  2610,
-						EndPos:    2612,
+						StartLine: 109,
+						EndLine:   109,
+						StartPos:  2567,
+						EndPos:    2569,
 					},
 					Parts: []node.Node{
 						&name.NamePart{
 							Position: &position.Position{
-								StartLine: 111,
-								EndLine:   111,
-								StartPos:  2610,
-								EndPos:    2612,
+								StartLine: 109,
+								EndLine:   109,
+								StartPos:  2567,
+								EndPos:    2569,
 							},
 							Value: "Foo",
 						},
@@ -5583,34 +5569,34 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Namespace{
 				Position: &position.Position{
-					StartLine: 112,
-					EndLine:   112,
-					StartPos:  2617,
-					EndPos:    2636,
+					StartLine: 110,
+					EndLine:   110,
+					StartPos:  2574,
+					EndPos:    2593,
 				},
 				NamespaceName: &name.Name{
 					Position: &position.Position{
-						StartLine: 112,
-						EndLine:   112,
-						StartPos:  2627,
-						EndPos:    2633,
+						StartLine: 110,
+						EndLine:   110,
+						StartPos:  2584,
+						EndPos:    2590,
 					},
 					Parts: []node.Node{
 						&name.NamePart{
 							Position: &position.Position{
-								StartLine: 112,
-								EndLine:   112,
-								StartPos:  2627,
-								EndPos:    2629,
+								StartLine: 110,
+								EndLine:   110,
+								StartPos:  2584,
+								EndPos:    2586,
 							},
 							Value: "Foo",
 						},
 						&name.NamePart{
 							Position: &position.Position{
-								StartLine: 112,
-								EndLine:   112,
-								StartPos:  2631,
-								EndPos:    2633,
+								StartLine: 110,
+								EndLine:   110,
+								StartPos:  2588,
+								EndPos:    2590,
 							},
 							Value: "Bar",
 						},
@@ -5620,27 +5606,205 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Namespace{
 				Position: &position.Position{
-					StartLine: 113,
-					EndLine:   113,
-					StartPos:  2640,
-					EndPos:    2651,
+					StartLine: 111,
+					EndLine:   111,
+					StartPos:  2597,
+					EndPos:    2608,
 				},
 				Stmts: []node.Node{},
 			},
 			&stmt.Class{
 				Position: &position.Position{
+					StartLine: 112,
+					EndLine:   112,
+					StartPos:  2612,
+					EndPos:    2630,
+				},
+				PhpDocComment: "",
+				ClassName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 112,
+						EndLine:   112,
+						StartPos:  2618,
+						EndPos:    2620,
+					},
+					Value: "foo",
+				},
+				Stmts: []node.Node{
+					&stmt.PropertyList{
+						Position: &position.Position{
+							StartLine: 112,
+							EndLine:   112,
+							StartPos:  2623,
+							EndPos:    2629,
+						},
+						Modifiers: []node.Node{
+							&node.Identifier{
+								Position: &position.Position{
+									StartLine: 112,
+									EndLine:   112,
+									StartPos:  2623,
+									EndPos:    2625,
+								},
+								Value: "var",
+							},
+						},
+						Properties: []node.Node{
+							&stmt.Property{
+								Position: &position.Position{
+									StartLine: 112,
+									EndLine:   112,
+									StartPos:  2627,
+									EndPos:    2628,
+								},
+								PhpDocComment: "",
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 112,
+										EndLine:   112,
+										StartPos:  2627,
+										EndPos:    2628,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 112,
+											EndLine:   112,
+											StartPos:  2627,
+											EndPos:    2628,
+										},
+										Value: "a",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				Position: &position.Position{
+					StartLine: 113,
+					EndLine:   113,
+					StartPos:  2634,
+					EndPos:    2670,
+				},
+				PhpDocComment: "",
+				ClassName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 113,
+						EndLine:   113,
+						StartPos:  2640,
+						EndPos:    2642,
+					},
+					Value: "foo",
+				},
+				Stmts: []node.Node{
+					&stmt.PropertyList{
+						Position: &position.Position{
+							StartLine: 113,
+							EndLine:   113,
+							StartPos:  2645,
+							EndPos:    2669,
+						},
+						Modifiers: []node.Node{
+							&node.Identifier{
+								Position: &position.Position{
+									StartLine: 113,
+									EndLine:   113,
+									StartPos:  2645,
+									EndPos:    2650,
+								},
+								Value: "public",
+							},
+							&node.Identifier{
+								Position: &position.Position{
+									StartLine: 113,
+									EndLine:   113,
+									StartPos:  2652,
+									EndPos:    2657,
+								},
+								Value: "static",
+							},
+						},
+						Properties: []node.Node{
+							&stmt.Property{
+								Position: &position.Position{
+									StartLine: 113,
+									EndLine:   113,
+									StartPos:  2659,
+									EndPos:    2660,
+								},
+								PhpDocComment: "",
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 113,
+										EndLine:   113,
+										StartPos:  2659,
+										EndPos:    2660,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 113,
+											EndLine:   113,
+											StartPos:  2659,
+											EndPos:    2660,
+										},
+										Value: "a",
+									},
+								},
+							},
+							&stmt.Property{
+								Position: &position.Position{
+									StartLine: 113,
+									EndLine:   113,
+									StartPos:  2663,
+									EndPos:    2668,
+								},
+								PhpDocComment: "",
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 113,
+										EndLine:   113,
+										StartPos:  2663,
+										EndPos:    2664,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 113,
+											EndLine:   113,
+											StartPos:  2663,
+											EndPos:    2664,
+										},
+										Value: "b",
+									},
+								},
+								Expr: &scalar.Lnumber{
+									Position: &position.Position{
+										StartLine: 113,
+										EndLine:   113,
+										StartPos:  2668,
+										EndPos:    2668,
+									},
+									Value: "1",
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				Position: &position.Position{
 					StartLine: 114,
 					EndLine:   114,
-					StartPos:  2655,
-					EndPos:    2673,
+					StartPos:  2674,
+					EndPos:    2710,
 				},
 				PhpDocComment: "",
 				ClassName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 114,
 						EndLine:   114,
-						StartPos:  2661,
-						EndPos:    2663,
+						StartPos:  2680,
+						EndPos:    2682,
 					},
 					Value: "foo",
 				},
@@ -5649,18 +5813,27 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 114,
 							EndLine:   114,
-							StartPos:  2666,
-							EndPos:    2672,
+							StartPos:  2685,
+							EndPos:    2709,
 						},
 						Modifiers: []node.Node{
 							&node.Identifier{
 								Position: &position.Position{
 									StartLine: 114,
 									EndLine:   114,
-									StartPos:  2666,
-									EndPos:    2668,
+									StartPos:  2685,
+									EndPos:    2690,
 								},
-								Value: "var",
+								Value: "public",
+							},
+							&node.Identifier{
+								Position: &position.Position{
+									StartLine: 114,
+									EndLine:   114,
+									StartPos:  2692,
+									EndPos:    2697,
+								},
+								Value: "static",
 							},
 						},
 						Properties: []node.Node{
@@ -5668,245 +5841,58 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 114,
 									EndLine:   114,
-									StartPos:  2670,
-									EndPos:    2671,
+									StartPos:  2699,
+									EndPos:    2704,
 								},
 								PhpDocComment: "",
 								Variable: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 114,
 										EndLine:   114,
-										StartPos:  2670,
-										EndPos:    2671,
+										StartPos:  2699,
+										EndPos:    2700,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 114,
 											EndLine:   114,
-											StartPos:  2670,
-											EndPos:    2671,
-										},
-										Value: "a",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Class{
-				Position: &position.Position{
-					StartLine: 115,
-					EndLine:   115,
-					StartPos:  2677,
-					EndPos:    2713,
-				},
-				PhpDocComment: "",
-				ClassName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 115,
-						EndLine:   115,
-						StartPos:  2683,
-						EndPos:    2685,
-					},
-					Value: "foo",
-				},
-				Stmts: []node.Node{
-					&stmt.PropertyList{
-						Position: &position.Position{
-							StartLine: 115,
-							EndLine:   115,
-							StartPos:  2688,
-							EndPos:    2712,
-						},
-						Modifiers: []node.Node{
-							&node.Identifier{
-								Position: &position.Position{
-									StartLine: 115,
-									EndLine:   115,
-									StartPos:  2688,
-									EndPos:    2693,
-								},
-								Value: "public",
-							},
-							&node.Identifier{
-								Position: &position.Position{
-									StartLine: 115,
-									EndLine:   115,
-									StartPos:  2695,
-									EndPos:    2700,
-								},
-								Value: "static",
-							},
-						},
-						Properties: []node.Node{
-							&stmt.Property{
-								Position: &position.Position{
-									StartLine: 115,
-									EndLine:   115,
-									StartPos:  2702,
-									EndPos:    2703,
-								},
-								PhpDocComment: "",
-								Variable: &expr.Variable{
-									Position: &position.Position{
-										StartLine: 115,
-										EndLine:   115,
-										StartPos:  2702,
-										EndPos:    2703,
-									},
-									VarName: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 115,
-											EndLine:   115,
-											StartPos:  2702,
-											EndPos:    2703,
-										},
-										Value: "a",
-									},
-								},
-							},
-							&stmt.Property{
-								Position: &position.Position{
-									StartLine: 115,
-									EndLine:   115,
-									StartPos:  2706,
-									EndPos:    2711,
-								},
-								PhpDocComment: "",
-								Variable: &expr.Variable{
-									Position: &position.Position{
-										StartLine: 115,
-										EndLine:   115,
-										StartPos:  2706,
-										EndPos:    2707,
-									},
-									VarName: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 115,
-											EndLine:   115,
-											StartPos:  2706,
-											EndPos:    2707,
-										},
-										Value: "b",
-									},
-								},
-								Expr: &scalar.Lnumber{
-									Position: &position.Position{
-										StartLine: 115,
-										EndLine:   115,
-										StartPos:  2711,
-										EndPos:    2711,
-									},
-									Value: "1",
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Class{
-				Position: &position.Position{
-					StartLine: 116,
-					EndLine:   116,
-					StartPos:  2717,
-					EndPos:    2753,
-				},
-				PhpDocComment: "",
-				ClassName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 116,
-						EndLine:   116,
-						StartPos:  2723,
-						EndPos:    2725,
-					},
-					Value: "foo",
-				},
-				Stmts: []node.Node{
-					&stmt.PropertyList{
-						Position: &position.Position{
-							StartLine: 116,
-							EndLine:   116,
-							StartPos:  2728,
-							EndPos:    2752,
-						},
-						Modifiers: []node.Node{
-							&node.Identifier{
-								Position: &position.Position{
-									StartLine: 116,
-									EndLine:   116,
-									StartPos:  2728,
-									EndPos:    2733,
-								},
-								Value: "public",
-							},
-							&node.Identifier{
-								Position: &position.Position{
-									StartLine: 116,
-									EndLine:   116,
-									StartPos:  2735,
-									EndPos:    2740,
-								},
-								Value: "static",
-							},
-						},
-						Properties: []node.Node{
-							&stmt.Property{
-								Position: &position.Position{
-									StartLine: 116,
-									EndLine:   116,
-									StartPos:  2742,
-									EndPos:    2747,
-								},
-								PhpDocComment: "",
-								Variable: &expr.Variable{
-									Position: &position.Position{
-										StartLine: 116,
-										EndLine:   116,
-										StartPos:  2742,
-										EndPos:    2743,
-									},
-									VarName: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 116,
-											EndLine:   116,
-											StartPos:  2742,
-											EndPos:    2743,
+											StartPos:  2699,
+											EndPos:    2700,
 										},
 										Value: "a",
 									},
 								},
 								Expr: &scalar.Lnumber{
 									Position: &position.Position{
-										StartLine: 116,
-										EndLine:   116,
-										StartPos:  2747,
-										EndPos:    2747,
+										StartLine: 114,
+										EndLine:   114,
+										StartPos:  2704,
+										EndPos:    2704,
 									},
 									Value: "1",
 								},
 							},
 							&stmt.Property{
 								Position: &position.Position{
-									StartLine: 116,
-									EndLine:   116,
-									StartPos:  2750,
-									EndPos:    2751,
+									StartLine: 114,
+									EndLine:   114,
+									StartPos:  2707,
+									EndPos:    2708,
 								},
 								PhpDocComment: "",
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 116,
-										EndLine:   116,
-										StartPos:  2750,
-										EndPos:    2751,
+										StartLine: 114,
+										EndLine:   114,
+										StartPos:  2707,
+										EndPos:    2708,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 116,
-											EndLine:   116,
-											StartPos:  2750,
-											EndPos:    2751,
+											StartLine: 114,
+											EndLine:   114,
+											StartPos:  2707,
+											EndPos:    2708,
 										},
 										Value: "b",
 									},
@@ -5918,32 +5904,32 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 117,
-					EndLine:   117,
-					StartPos:  2757,
-					EndPos:    2774,
+					StartLine: 115,
+					EndLine:   115,
+					StartPos:  2714,
+					EndPos:    2731,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 117,
-							EndLine:   117,
-							StartPos:  2764,
-							EndPos:    2765,
+							StartLine: 115,
+							EndLine:   115,
+							StartPos:  2721,
+							EndPos:    2722,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 117,
-								EndLine:   117,
-								StartPos:  2764,
-								EndPos:    2765,
+								StartLine: 115,
+								EndLine:   115,
+								StartPos:  2721,
+								EndPos:    2722,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 117,
-									EndLine:   117,
-									StartPos:  2764,
-									EndPos:    2765,
+									StartLine: 115,
+									EndLine:   115,
+									StartPos:  2721,
+									EndPos:    2722,
 								},
 								Value: "a",
 							},
@@ -5951,34 +5937,34 @@ func TestPhp5(t *testing.T) {
 					},
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 117,
-							EndLine:   117,
-							StartPos:  2768,
-							EndPos:    2773,
+							StartLine: 115,
+							EndLine:   115,
+							StartPos:  2725,
+							EndPos:    2730,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 117,
-								EndLine:   117,
-								StartPos:  2768,
-								EndPos:    2769,
+								StartLine: 115,
+								EndLine:   115,
+								StartPos:  2725,
+								EndPos:    2726,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 117,
-									EndLine:   117,
-									StartPos:  2768,
-									EndPos:    2769,
+									StartLine: 115,
+									EndLine:   115,
+									StartPos:  2725,
+									EndPos:    2726,
 								},
 								Value: "b",
 							},
 						},
 						Expr: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 117,
-								EndLine:   117,
-								StartPos:  2773,
-								EndPos:    2773,
+								StartLine: 115,
+								EndLine:   115,
+								StartPos:  2730,
+								EndPos:    2730,
 							},
 							Value: "1",
 						},
@@ -5987,66 +5973,66 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 118,
-					EndLine:   118,
-					StartPos:  2778,
-					EndPos:    2795,
+					StartLine: 116,
+					EndLine:   116,
+					StartPos:  2735,
+					EndPos:    2752,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 118,
-							EndLine:   118,
-							StartPos:  2785,
-							EndPos:    2790,
+							StartLine: 116,
+							EndLine:   116,
+							StartPos:  2742,
+							EndPos:    2747,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 118,
-								EndLine:   118,
-								StartPos:  2785,
-								EndPos:    2786,
+								StartLine: 116,
+								EndLine:   116,
+								StartPos:  2742,
+								EndPos:    2743,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 118,
-									EndLine:   118,
-									StartPos:  2785,
-									EndPos:    2786,
+									StartLine: 116,
+									EndLine:   116,
+									StartPos:  2742,
+									EndPos:    2743,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 118,
-								EndLine:   118,
-								StartPos:  2790,
-								EndPos:    2790,
+								StartLine: 116,
+								EndLine:   116,
+								StartPos:  2747,
+								EndPos:    2747,
 							},
 							Value: "1",
 						},
 					},
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 118,
-							EndLine:   118,
-							StartPos:  2793,
-							EndPos:    2794,
+							StartLine: 116,
+							EndLine:   116,
+							StartPos:  2750,
+							EndPos:    2751,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 118,
-								EndLine:   118,
-								StartPos:  2793,
-								EndPos:    2794,
+								StartLine: 116,
+								EndLine:   116,
+								StartPos:  2750,
+								EndPos:    2751,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 118,
-									EndLine:   118,
-									StartPos:  2793,
-									EndPos:    2794,
+									StartLine: 116,
+									EndLine:   116,
+									StartPos:  2750,
+									EndPos:    2751,
 								},
 								Value: "b",
 							},
@@ -6056,41 +6042,41 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.AltSwitch{
 				Position: &position.Position{
-					StartLine: 120,
-					EndLine:   124,
-					StartPos:  2800,
-					EndPos:    2858,
+					StartLine: 118,
+					EndLine:   122,
+					StartPos:  2757,
+					EndPos:    2815,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
-						StartLine: 120,
-						EndLine:   120,
-						StartPos:  2808,
-						EndPos:    2808,
+						StartLine: 118,
+						EndLine:   118,
+						StartPos:  2765,
+						EndPos:    2765,
 					},
 					Value: "1",
 				},
 				CaseList: &stmt.CaseList{
 					Position: &position.Position{
-						StartLine: 121,
+						StartLine: 119,
 						EndLine:   -1,
-						StartPos:  2816,
+						StartPos:  2773,
 						EndPos:    -1,
 					},
 					Cases: []node.Node{
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 121,
+								StartLine: 119,
 								EndLine:   -1,
-								StartPos:  2816,
+								StartPos:  2773,
 								EndPos:    -1,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 121,
-									EndLine:   121,
-									StartPos:  2821,
-									EndPos:    2821,
+									StartLine: 119,
+									EndLine:   119,
+									StartPos:  2778,
+									EndPos:    2778,
 								},
 								Value: "1",
 							},
@@ -6098,26 +6084,26 @@ func TestPhp5(t *testing.T) {
 						},
 						&stmt.Default{
 							Position: &position.Position{
-								StartLine: 122,
+								StartLine: 120,
 								EndLine:   -1,
-								StartPos:  2827,
+								StartPos:  2784,
 								EndPos:    -1,
 							},
 							Stmts: []node.Node{},
 						},
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 123,
+								StartLine: 121,
 								EndLine:   -1,
-								StartPos:  2839,
+								StartPos:  2796,
 								EndPos:    -1,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 123,
-									EndLine:   123,
-									StartPos:  2844,
-									EndPos:    2844,
+									StartLine: 121,
+									EndLine:   121,
+									StartPos:  2801,
+									EndPos:    2801,
 								},
 								Value: "2",
 							},
@@ -6128,41 +6114,41 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.AltSwitch{
 				Position: &position.Position{
-					StartLine: 126,
-					EndLine:   129,
-					StartPos:  2863,
-					EndPos:    2910,
+					StartLine: 124,
+					EndLine:   127,
+					StartPos:  2820,
+					EndPos:    2867,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
-						StartLine: 126,
-						EndLine:   126,
-						StartPos:  2871,
-						EndPos:    2871,
+						StartLine: 124,
+						EndLine:   124,
+						StartPos:  2828,
+						EndPos:    2828,
 					},
 					Value: "1",
 				},
 				CaseList: &stmt.CaseList{
 					Position: &position.Position{
-						StartLine: 127,
+						StartLine: 125,
 						EndLine:   -1,
-						StartPos:  2880,
+						StartPos:  2837,
 						EndPos:    -1,
 					},
 					Cases: []node.Node{
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 127,
+								StartLine: 125,
 								EndLine:   -1,
-								StartPos:  2880,
+								StartPos:  2837,
 								EndPos:    -1,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 127,
-									EndLine:   127,
-									StartPos:  2885,
-									EndPos:    2885,
+									StartLine: 125,
+									EndLine:   125,
+									StartPos:  2842,
+									EndPos:    2842,
 								},
 								Value: "1",
 							},
@@ -6170,17 +6156,17 @@ func TestPhp5(t *testing.T) {
 						},
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 128,
+								StartLine: 126,
 								EndLine:   -1,
-								StartPos:  2891,
+								StartPos:  2848,
 								EndPos:    -1,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 128,
-									EndLine:   128,
-									StartPos:  2896,
-									EndPos:    2896,
+									StartLine: 126,
+									EndLine:   126,
+									StartPos:  2853,
+									EndPos:    2853,
 								},
 								Value: "2",
 							},
@@ -6191,78 +6177,78 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Switch{
 				Position: &position.Position{
-					StartLine: 131,
-					EndLine:   134,
-					StartPos:  2917,
-					EndPos:    2968,
+					StartLine: 129,
+					EndLine:   132,
+					StartPos:  2874,
+					EndPos:    2925,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
-						StartLine: 131,
-						EndLine:   131,
-						StartPos:  2925,
+						StartLine: 129,
+						EndLine:   129,
+						StartPos:  2882,
+						EndPos:    2882,
+					},
+					Value: "1",
+				},
+				CaseList: &stmt.CaseList{
+					Position: &position.Position{
+						StartLine: 129,
+						EndLine:   132,
+						StartPos:  2885,
 						EndPos:    2925,
 					},
-					Value: "1",
-				},
-				CaseList: &stmt.CaseList{
-					Position: &position.Position{
-						StartLine: 131,
-						EndLine:   134,
-						StartPos:  2928,
-						EndPos:    2968,
-					},
 					Cases: []node.Node{
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 132,
-								EndLine:   132,
-								StartPos:  2933,
-								EndPos:    2946,
+								StartLine: 130,
+								EndLine:   130,
+								StartPos:  2890,
+								EndPos:    2903,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 132,
-									EndLine:   132,
-									StartPos:  2938,
-									EndPos:    2938,
+									StartLine: 130,
+									EndLine:   130,
+									StartPos:  2895,
+									EndPos:    2895,
 								},
 								Value: "1",
 							},
 							Stmts: []node.Node{
 								&stmt.Break{
 									Position: &position.Position{
-										StartLine: 132,
-										EndLine:   132,
-										StartPos:  2941,
-										EndPos:    2946,
+										StartLine: 130,
+										EndLine:   130,
+										StartPos:  2898,
+										EndPos:    2903,
 									},
 								},
 							},
 						},
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 133,
-								EndLine:   133,
-								StartPos:  2951,
-								EndPos:    2964,
+								StartLine: 131,
+								EndLine:   131,
+								StartPos:  2908,
+								EndPos:    2921,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 133,
-									EndLine:   133,
-									StartPos:  2956,
-									EndPos:    2956,
+									StartLine: 131,
+									EndLine:   131,
+									StartPos:  2913,
+									EndPos:    2913,
 								},
 								Value: "2",
 							},
 							Stmts: []node.Node{
 								&stmt.Break{
 									Position: &position.Position{
-										StartLine: 133,
-										EndLine:   133,
-										StartPos:  2959,
-										EndPos:    2964,
+										StartLine: 131,
+										EndLine:   131,
+										StartPos:  2916,
+										EndPos:    2921,
 									},
 								},
 							},
@@ -6272,78 +6258,78 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Switch{
 				Position: &position.Position{
-					StartLine: 136,
-					EndLine:   139,
-					StartPos:  2975,
-					EndPos:    3027,
+					StartLine: 134,
+					EndLine:   137,
+					StartPos:  2932,
+					EndPos:    2984,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
-						StartLine: 136,
-						EndLine:   136,
-						StartPos:  2983,
-						EndPos:    2983,
+						StartLine: 134,
+						EndLine:   134,
+						StartPos:  2940,
+						EndPos:    2940,
 					},
 					Value: "1",
 				},
 				CaseList: &stmt.CaseList{
 					Position: &position.Position{
-						StartLine: 136,
-						EndLine:   139,
-						StartPos:  2986,
-						EndPos:    3027,
+						StartLine: 134,
+						EndLine:   137,
+						StartPos:  2943,
+						EndPos:    2984,
 					},
 					Cases: []node.Node{
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 137,
-								EndLine:   137,
-								StartPos:  2992,
-								EndPos:    3005,
+								StartLine: 135,
+								EndLine:   135,
+								StartPos:  2949,
+								EndPos:    2962,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 137,
-									EndLine:   137,
-									StartPos:  2997,
-									EndPos:    2997,
+									StartLine: 135,
+									EndLine:   135,
+									StartPos:  2954,
+									EndPos:    2954,
 								},
 								Value: "1",
 							},
 							Stmts: []node.Node{
 								&stmt.Break{
 									Position: &position.Position{
-										StartLine: 137,
-										EndLine:   137,
-										StartPos:  3000,
-										EndPos:    3005,
+										StartLine: 135,
+										EndLine:   135,
+										StartPos:  2957,
+										EndPos:    2962,
 									},
 								},
 							},
 						},
 						&stmt.Case{
 							Position: &position.Position{
-								StartLine: 138,
-								EndLine:   138,
-								StartPos:  3010,
-								EndPos:    3023,
+								StartLine: 136,
+								EndLine:   136,
+								StartPos:  2967,
+								EndPos:    2980,
 							},
 							Cond: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 138,
-									EndLine:   138,
-									StartPos:  3015,
-									EndPos:    3015,
+									StartLine: 136,
+									EndLine:   136,
+									StartPos:  2972,
+									EndPos:    2972,
 								},
 								Value: "2",
 							},
 							Stmts: []node.Node{
 								&stmt.Break{
 									Position: &position.Position{
-										StartLine: 138,
-										EndLine:   138,
-										StartPos:  3018,
-										EndPos:    3023,
+										StartLine: 136,
+										EndLine:   136,
+										StartPos:  2975,
+										EndPos:    2980,
 									},
 								},
 							},
@@ -6353,24 +6339,24 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Throw{
 				Position: &position.Position{
-					StartLine: 140,
-					EndLine:   140,
-					StartPos:  3031,
-					EndPos:    3039,
+					StartLine: 138,
+					EndLine:   138,
+					StartPos:  2988,
+					EndPos:    2996,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
-						StartLine: 140,
-						EndLine:   140,
-						StartPos:  3037,
-						EndPos:    3038,
+						StartLine: 138,
+						EndLine:   138,
+						StartPos:  2994,
+						EndPos:    2995,
 					},
 					VarName: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 140,
-							EndLine:   140,
-							StartPos:  3037,
-							EndPos:    3038,
+							StartLine: 138,
+							EndLine:   138,
+							StartPos:  2994,
+							EndPos:    2995,
 						},
 						Value: "e",
 					},
@@ -6378,18 +6364,18 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Trait{
 				Position: &position.Position{
-					StartLine: 141,
-					EndLine:   141,
-					StartPos:  3043,
-					EndPos:    3054,
+					StartLine: 139,
+					EndLine:   139,
+					StartPos:  3000,
+					EndPos:    3011,
 				},
 				PhpDocComment: "",
 				TraitName: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 141,
-						EndLine:   141,
-						StartPos:  3049,
-						EndPos:    3051,
+						StartLine: 139,
+						EndLine:   139,
+						StartPos:  3006,
+						EndPos:    3008,
 					},
 					Value: "Foo",
 				},
@@ -6397,44 +6383,44 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Class{
 				Position: &position.Position{
-					StartLine: 142,
-					EndLine:   142,
-					StartPos:  3058,
-					EndPos:    3079,
+					StartLine: 140,
+					EndLine:   140,
+					StartPos:  3015,
+					EndPos:    3036,
 				},
 				PhpDocComment: "",
 				ClassName: &node.Identifier{
 					Position: &position.Position{
-						StartLine: 142,
-						EndLine:   142,
-						StartPos:  3064,
-						EndPos:    3066,
+						StartLine: 140,
+						EndLine:   140,
+						StartPos:  3021,
+						EndPos:    3023,
 					},
 					Value: "Foo",
 				},
 				Stmts: []node.Node{
 					&stmt.TraitUse{
 						Position: &position.Position{
-							StartLine: 142,
-							EndLine:   142,
-							StartPos:  3070,
-							EndPos:    3077,
+							StartLine: 140,
+							EndLine:   140,
+							StartPos:  3027,
+							EndPos:    3034,
 						},
 						Traits: []node.Node{
 							&name.Name{
 								Position: &position.Position{
-									StartLine: 142,
-									EndLine:   142,
-									StartPos:  3074,
-									EndPos:    3076,
+									StartLine: 140,
+									EndLine:   140,
+									StartPos:  3031,
+									EndPos:    3033,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 142,
-											EndLine:   142,
-											StartPos:  3074,
-											EndPos:    3076,
+											StartLine: 140,
+											EndLine:   140,
+											StartPos:  3031,
+											EndPos:    3033,
 										},
 										Value: "Bar",
 									},
@@ -6443,10 +6429,198 @@ func TestPhp5(t *testing.T) {
 						},
 						TraitAdaptationList: &stmt.Nop{
 							Position: &position.Position{
+								StartLine: 140,
+								EndLine:   140,
+								StartPos:  3034,
+								EndPos:    3034,
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				Position: &position.Position{
+					StartLine: 141,
+					EndLine:   141,
+					StartPos:  3040,
+					EndPos:    3068,
+				},
+				PhpDocComment: "",
+				ClassName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 141,
+						EndLine:   141,
+						StartPos:  3046,
+						EndPos:    3048,
+					},
+					Value: "Foo",
+				},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Position: &position.Position{
+							StartLine: 141,
+							EndLine:   141,
+							StartPos:  3052,
+							EndPos:    3066,
+						},
+						Traits: []node.Node{
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 141,
+									EndLine:   141,
+									StartPos:  3056,
+									EndPos:    3058,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 141,
+											EndLine:   141,
+											StartPos:  3056,
+											EndPos:    3058,
+										},
+										Value: "Bar",
+									},
+								},
+							},
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 141,
+									EndLine:   141,
+									StartPos:  3061,
+									EndPos:    3063,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 141,
+											EndLine:   141,
+											StartPos:  3061,
+											EndPos:    3063,
+										},
+										Value: "Baz",
+									},
+								},
+							},
+						},
+						TraitAdaptationList: &stmt.TraitAdaptationList{
+							Position: &position.Position{
+								StartLine: 141,
+								EndLine:   141,
+								StartPos:  3065,
+								EndPos:    3066,
+							},
+						},
+					},
+				},
+			},
+			&stmt.Class{
+				Position: &position.Position{
+					StartLine: 142,
+					EndLine:   142,
+					StartPos:  3072,
+					EndPos:    3116,
+				},
+				PhpDocComment: "",
+				ClassName: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 142,
+						EndLine:   142,
+						StartPos:  3078,
+						EndPos:    3080,
+					},
+					Value: "Foo",
+				},
+				Stmts: []node.Node{
+					&stmt.TraitUse{
+						Position: &position.Position{
+							StartLine: 142,
+							EndLine:   142,
+							StartPos:  3084,
+							EndPos:    3114,
+						},
+						Traits: []node.Node{
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 142,
+									EndLine:   142,
+									StartPos:  3088,
+									EndPos:    3090,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 142,
+											EndLine:   142,
+											StartPos:  3088,
+											EndPos:    3090,
+										},
+										Value: "Bar",
+									},
+								},
+							},
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 142,
+									EndLine:   142,
+									StartPos:  3093,
+									EndPos:    3095,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 142,
+											EndLine:   142,
+											StartPos:  3093,
+											EndPos:    3095,
+										},
+										Value: "Baz",
+									},
+								},
+							},
+						},
+						TraitAdaptationList: &stmt.TraitAdaptationList{
+							Position: &position.Position{
 								StartLine: 142,
 								EndLine:   142,
-								StartPos:  3077,
-								EndPos:    3077,
+								StartPos:  3097,
+								EndPos:    3114,
+							},
+							Adaptations: []node.Node{
+								&stmt.TraitUseAlias{
+									Position: &position.Position{
+										StartLine: 142,
+										EndLine:   142,
+										StartPos:  3099,
+										EndPos:    3111,
+									},
+									Ref: &stmt.TraitMethodRef{
+										Position: &position.Position{
+											StartLine: 142,
+											EndLine:   142,
+											StartPos:  3099,
+											EndPos:    3101,
+										},
+										Method: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 142,
+												EndLine:   142,
+												StartPos:  3099,
+												EndPos:    3101,
+											},
+											Value: "one",
+										},
+									},
+									Modifier: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 142,
+											EndLine:   142,
+											StartPos:  3106,
+											EndPos:    3111,
+										},
+										Value: "public",
+									},
+								},
 							},
 						},
 					},
@@ -6456,16 +6630,16 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 143,
 					EndLine:   143,
-					StartPos:  3083,
-					EndPos:    3111,
+					StartPos:  3120,
+					EndPos:    3168,
 				},
 				PhpDocComment: "",
 				ClassName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 143,
 						EndLine:   143,
-						StartPos:  3089,
-						EndPos:    3091,
+						StartPos:  3126,
+						EndPos:    3128,
 					},
 					Value: "Foo",
 				},
@@ -6474,24 +6648,24 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 143,
 							EndLine:   143,
-							StartPos:  3095,
-							EndPos:    3109,
+							StartPos:  3132,
+							EndPos:    3166,
 						},
 						Traits: []node.Node{
 							&name.Name{
 								Position: &position.Position{
 									StartLine: 143,
 									EndLine:   143,
-									StartPos:  3099,
-									EndPos:    3101,
+									StartPos:  3136,
+									EndPos:    3138,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 143,
 											EndLine:   143,
-											StartPos:  3099,
-											EndPos:    3101,
+											StartPos:  3136,
+											EndPos:    3138,
 										},
 										Value: "Bar",
 									},
@@ -6501,16 +6675,16 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 143,
 									EndLine:   143,
-									StartPos:  3104,
-									EndPos:    3106,
+									StartPos:  3141,
+									EndPos:    3143,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 143,
 											EndLine:   143,
-											StartPos:  3104,
-											EndPos:    3106,
+											StartPos:  3141,
+											EndPos:    3143,
 										},
 										Value: "Baz",
 									},
@@ -6521,8 +6695,53 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 143,
 								EndLine:   143,
-								StartPos:  3108,
-								EndPos:    3109,
+								StartPos:  3145,
+								EndPos:    3166,
+							},
+							Adaptations: []node.Node{
+								&stmt.TraitUseAlias{
+									Position: &position.Position{
+										StartLine: 143,
+										EndLine:   143,
+										StartPos:  3147,
+										EndPos:    3163,
+									},
+									Ref: &stmt.TraitMethodRef{
+										Position: &position.Position{
+											StartLine: 143,
+											EndLine:   143,
+											StartPos:  3147,
+											EndPos:    3149,
+										},
+										Method: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 143,
+												EndLine:   143,
+												StartPos:  3147,
+												EndPos:    3149,
+											},
+											Value: "one",
+										},
+									},
+									Modifier: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 143,
+											EndLine:   143,
+											StartPos:  3154,
+											EndPos:    3159,
+										},
+										Value: "public",
+									},
+									Alias: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 143,
+											EndLine:   143,
+											StartPos:  3161,
+											EndPos:    3163,
+										},
+										Value: "two",
+									},
+								},
 							},
 						},
 					},
@@ -6532,16 +6751,16 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 144,
 					EndLine:   144,
-					StartPos:  3115,
-					EndPos:    3159,
+					StartPos:  3172,
+					EndPos:    3248,
 				},
 				PhpDocComment: "",
 				ClassName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 144,
 						EndLine:   144,
-						StartPos:  3121,
-						EndPos:    3123,
+						StartPos:  3178,
+						EndPos:    3180,
 					},
 					Value: "Foo",
 				},
@@ -6550,24 +6769,24 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 144,
 							EndLine:   144,
-							StartPos:  3127,
-							EndPos:    3157,
+							StartPos:  3184,
+							EndPos:    3246,
 						},
 						Traits: []node.Node{
 							&name.Name{
 								Position: &position.Position{
 									StartLine: 144,
 									EndLine:   144,
-									StartPos:  3131,
-									EndPos:    3133,
+									StartPos:  3188,
+									EndPos:    3190,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 144,
 											EndLine:   144,
-											StartPos:  3131,
-											EndPos:    3133,
+											StartPos:  3188,
+											EndPos:    3190,
 										},
 										Value: "Bar",
 									},
@@ -6577,16 +6796,16 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 144,
 									EndLine:   144,
-									StartPos:  3136,
-									EndPos:    3138,
+									StartPos:  3193,
+									EndPos:    3195,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 144,
 											EndLine:   144,
-											StartPos:  3136,
-											EndPos:    3138,
+											StartPos:  3193,
+											EndPos:    3195,
 										},
 										Value: "Baz",
 									},
@@ -6597,271 +6816,38 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 144,
 								EndLine:   144,
-								StartPos:  3140,
-								EndPos:    3157,
-							},
-							Adaptations: []node.Node{
-								&stmt.TraitUseAlias{
-									Position: &position.Position{
-										StartLine: 144,
-										EndLine:   144,
-										StartPos:  3142,
-										EndPos:    3154,
-									},
-									Ref: &stmt.TraitMethodRef{
-										Position: &position.Position{
-											StartLine: 144,
-											EndLine:   144,
-											StartPos:  3142,
-											EndPos:    3144,
-										},
-										Method: &node.Identifier{
-											Position: &position.Position{
-												StartLine: 144,
-												EndLine:   144,
-												StartPos:  3142,
-												EndPos:    3144,
-											},
-											Value: "one",
-										},
-									},
-									Modifier: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 144,
-											EndLine:   144,
-											StartPos:  3149,
-											EndPos:    3154,
-										},
-										Value: "public",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Class{
-				Position: &position.Position{
-					StartLine: 145,
-					EndLine:   145,
-					StartPos:  3163,
-					EndPos:    3211,
-				},
-				PhpDocComment: "",
-				ClassName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 145,
-						EndLine:   145,
-						StartPos:  3169,
-						EndPos:    3171,
-					},
-					Value: "Foo",
-				},
-				Stmts: []node.Node{
-					&stmt.TraitUse{
-						Position: &position.Position{
-							StartLine: 145,
-							EndLine:   145,
-							StartPos:  3175,
-							EndPos:    3209,
-						},
-						Traits: []node.Node{
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 145,
-									EndLine:   145,
-									StartPos:  3179,
-									EndPos:    3181,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 145,
-											EndLine:   145,
-											StartPos:  3179,
-											EndPos:    3181,
-										},
-										Value: "Bar",
-									},
-								},
-							},
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 145,
-									EndLine:   145,
-									StartPos:  3184,
-									EndPos:    3186,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 145,
-											EndLine:   145,
-											StartPos:  3184,
-											EndPos:    3186,
-										},
-										Value: "Baz",
-									},
-								},
-							},
-						},
-						TraitAdaptationList: &stmt.TraitAdaptationList{
-							Position: &position.Position{
-								StartLine: 145,
-								EndLine:   145,
-								StartPos:  3188,
-								EndPos:    3209,
-							},
-							Adaptations: []node.Node{
-								&stmt.TraitUseAlias{
-									Position: &position.Position{
-										StartLine: 145,
-										EndLine:   145,
-										StartPos:  3190,
-										EndPos:    3206,
-									},
-									Ref: &stmt.TraitMethodRef{
-										Position: &position.Position{
-											StartLine: 145,
-											EndLine:   145,
-											StartPos:  3190,
-											EndPos:    3192,
-										},
-										Method: &node.Identifier{
-											Position: &position.Position{
-												StartLine: 145,
-												EndLine:   145,
-												StartPos:  3190,
-												EndPos:    3192,
-											},
-											Value: "one",
-										},
-									},
-									Modifier: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 145,
-											EndLine:   145,
-											StartPos:  3197,
-											EndPos:    3202,
-										},
-										Value: "public",
-									},
-									Alias: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 145,
-											EndLine:   145,
-											StartPos:  3204,
-											EndPos:    3206,
-										},
-										Value: "two",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Class{
-				Position: &position.Position{
-					StartLine: 146,
-					EndLine:   146,
-					StartPos:  3215,
-					EndPos:    3291,
-				},
-				PhpDocComment: "",
-				ClassName: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 146,
-						EndLine:   146,
-						StartPos:  3221,
-						EndPos:    3223,
-					},
-					Value: "Foo",
-				},
-				Stmts: []node.Node{
-					&stmt.TraitUse{
-						Position: &position.Position{
-							StartLine: 146,
-							EndLine:   146,
-							StartPos:  3227,
-							EndPos:    3289,
-						},
-						Traits: []node.Node{
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 146,
-									EndLine:   146,
-									StartPos:  3231,
-									EndPos:    3233,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 146,
-											EndLine:   146,
-											StartPos:  3231,
-											EndPos:    3233,
-										},
-										Value: "Bar",
-									},
-								},
-							},
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 146,
-									EndLine:   146,
-									StartPos:  3236,
-									EndPos:    3238,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 146,
-											EndLine:   146,
-											StartPos:  3236,
-											EndPos:    3238,
-										},
-										Value: "Baz",
-									},
-								},
-							},
-						},
-						TraitAdaptationList: &stmt.TraitAdaptationList{
-							Position: &position.Position{
-								StartLine: 146,
-								EndLine:   146,
-								StartPos:  3240,
-								EndPos:    3289,
+								StartPos:  3197,
+								EndPos:    3246,
 							},
 							Adaptations: []node.Node{
 								&stmt.TraitUsePrecedence{
 									Position: &position.Position{
-										StartLine: 146,
-										EndLine:   146,
-										StartPos:  3242,
-										EndPos:    3269,
+										StartLine: 144,
+										EndLine:   144,
+										StartPos:  3199,
+										EndPos:    3226,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
-											StartLine: 146,
-											EndLine:   146,
-											StartPos:  3242,
-											EndPos:    3249,
+											StartLine: 144,
+											EndLine:   144,
+											StartPos:  3199,
+											EndPos:    3206,
 										},
 										Trait: &name.Name{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3242,
-												EndPos:    3244,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3199,
+												EndPos:    3201,
 											},
 											Parts: []node.Node{
 												&name.NamePart{
 													Position: &position.Position{
-														StartLine: 146,
-														EndLine:   146,
-														StartPos:  3242,
-														EndPos:    3244,
+														StartLine: 144,
+														EndLine:   144,
+														StartPos:  3199,
+														EndPos:    3201,
 													},
 													Value: "Bar",
 												},
@@ -6869,10 +6855,10 @@ func TestPhp5(t *testing.T) {
 										},
 										Method: &node.Identifier{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3247,
-												EndPos:    3249,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3204,
+												EndPos:    3206,
 											},
 											Value: "one",
 										},
@@ -6880,18 +6866,18 @@ func TestPhp5(t *testing.T) {
 									Insteadof: []node.Node{
 										&name.Name{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3261,
-												EndPos:    3263,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3218,
+												EndPos:    3220,
 											},
 											Parts: []node.Node{
 												&name.NamePart{
 													Position: &position.Position{
-														StartLine: 146,
-														EndLine:   146,
-														StartPos:  3261,
-														EndPos:    3263,
+														StartLine: 144,
+														EndLine:   144,
+														StartPos:  3218,
+														EndPos:    3220,
 													},
 													Value: "Baz",
 												},
@@ -6899,18 +6885,18 @@ func TestPhp5(t *testing.T) {
 										},
 										&name.Name{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3266,
-												EndPos:    3269,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3223,
+												EndPos:    3226,
 											},
 											Parts: []node.Node{
 												&name.NamePart{
 													Position: &position.Position{
-														StartLine: 146,
-														EndLine:   146,
-														StartPos:  3266,
-														EndPos:    3269,
+														StartLine: 144,
+														EndLine:   144,
+														StartPos:  3223,
+														EndPos:    3226,
 													},
 													Value: "Quux",
 												},
@@ -6920,32 +6906,32 @@ func TestPhp5(t *testing.T) {
 								},
 								&stmt.TraitUseAlias{
 									Position: &position.Position{
-										StartLine: 146,
-										EndLine:   146,
-										StartPos:  3272,
-										EndPos:    3286,
+										StartLine: 144,
+										EndLine:   144,
+										StartPos:  3229,
+										EndPos:    3243,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
-											StartLine: 146,
-											EndLine:   146,
-											StartPos:  3272,
-											EndPos:    3279,
+											StartLine: 144,
+											EndLine:   144,
+											StartPos:  3229,
+											EndPos:    3236,
 										},
 										Trait: &name.Name{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3272,
-												EndPos:    3274,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3229,
+												EndPos:    3231,
 											},
 											Parts: []node.Node{
 												&name.NamePart{
 													Position: &position.Position{
-														StartLine: 146,
-														EndLine:   146,
-														StartPos:  3272,
-														EndPos:    3274,
+														StartLine: 144,
+														EndLine:   144,
+														StartPos:  3229,
+														EndPos:    3231,
 													},
 													Value: "Baz",
 												},
@@ -6953,20 +6939,20 @@ func TestPhp5(t *testing.T) {
 										},
 										Method: &node.Identifier{
 											Position: &position.Position{
-												StartLine: 146,
-												EndLine:   146,
-												StartPos:  3277,
-												EndPos:    3279,
+												StartLine: 144,
+												EndLine:   144,
+												StartPos:  3234,
+												EndPos:    3236,
 											},
 											Value: "one",
 										},
 									},
 									Alias: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 146,
-											EndLine:   146,
-											StartPos:  3284,
-											EndPos:    3286,
+											StartLine: 144,
+											EndLine:   144,
+											StartPos:  3241,
+											EndPos:    3243,
 										},
 										Value: "two",
 									},
@@ -6978,9 +6964,9 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Try{
 				Position: &position.Position{
-					StartLine: 148,
+					StartLine: 146,
 					EndLine:   -1,
-					StartPos:  3296,
+					StartPos:  3253,
 					EndPos:    -1,
 				},
 				Stmts:   []node.Node{},
@@ -6988,10 +6974,173 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Try{
 				Position: &position.Position{
+					StartLine: 147,
+					EndLine:   147,
+					StartPos:  3262,
+					EndPos:    3291,
+				},
+				Stmts: []node.Node{},
+				Catches: []node.Node{
+					&stmt.Catch{
+						Position: &position.Position{
+							StartLine: 147,
+							EndLine:   147,
+							StartPos:  3269,
+							EndPos:    3291,
+						},
+						Types: []node.Node{
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 147,
+									EndLine:   147,
+									StartPos:  3276,
+									EndPos:    3284,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 147,
+											EndLine:   147,
+											StartPos:  3276,
+											EndPos:    3284,
+										},
+										Value: "Exception",
+									},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 147,
+								EndLine:   147,
+								StartPos:  3286,
+								EndPos:    3287,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 147,
+									EndLine:   147,
+									StartPos:  3286,
+									EndPos:    3287,
+								},
+								Value: "e",
+							},
+						},
+						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Try{
+				Position: &position.Position{
+					StartLine: 148,
+					EndLine:   148,
+					StartPos:  3295,
+					EndPos:    3355,
+				},
+				Stmts: []node.Node{},
+				Catches: []node.Node{
+					&stmt.Catch{
+						Position: &position.Position{
+							StartLine: 148,
+							EndLine:   148,
+							StartPos:  3302,
+							EndPos:    3324,
+						},
+						Types: []node.Node{
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 148,
+									EndLine:   148,
+									StartPos:  3309,
+									EndPos:    3317,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 148,
+											EndLine:   148,
+											StartPos:  3309,
+											EndPos:    3317,
+										},
+										Value: "Exception",
+									},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 148,
+								EndLine:   148,
+								StartPos:  3319,
+								EndPos:    3320,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 148,
+									EndLine:   148,
+									StartPos:  3319,
+									EndPos:    3320,
+								},
+								Value: "e",
+							},
+						},
+						Stmts: []node.Node{},
+					},
+					&stmt.Catch{
+						Position: &position.Position{
+							StartLine: 148,
+							EndLine:   148,
+							StartPos:  3326,
+							EndPos:    3355,
+						},
+						Types: []node.Node{
+							&name.Name{
+								Position: &position.Position{
+									StartLine: 148,
+									EndLine:   148,
+									StartPos:  3333,
+									EndPos:    3348,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 148,
+											EndLine:   148,
+											StartPos:  3333,
+											EndPos:    3348,
+										},
+										Value: "RuntimeException",
+									},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 148,
+								EndLine:   148,
+								StartPos:  3350,
+								EndPos:    3351,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 148,
+									EndLine:   148,
+									StartPos:  3350,
+									EndPos:    3351,
+								},
+								Value: "e",
+							},
+						},
+						Stmts: []node.Node{},
+					},
+				},
+			},
+			&stmt.Try{
+				Position: &position.Position{
 					StartLine: 149,
 					EndLine:   149,
-					StartPos:  3305,
-					EndPos:    3334,
+					StartPos:  3359,
+					EndPos:    3462,
 				},
 				Stmts: []node.Node{},
 				Catches: []node.Node{
@@ -6999,24 +7148,24 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 149,
 							EndLine:   149,
-							StartPos:  3312,
-							EndPos:    3334,
+							StartPos:  3366,
+							EndPos:    3388,
 						},
 						Types: []node.Node{
 							&name.Name{
 								Position: &position.Position{
 									StartLine: 149,
 									EndLine:   149,
-									StartPos:  3319,
-									EndPos:    3327,
+									StartPos:  3373,
+									EndPos:    3381,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 149,
 											EndLine:   149,
-											StartPos:  3319,
-											EndPos:    3327,
+											StartPos:  3373,
+											EndPos:    3381,
 										},
 										Value: "Exception",
 									},
@@ -7027,15 +7176,109 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 149,
 								EndLine:   149,
-								StartPos:  3329,
-								EndPos:    3330,
+								StartPos:  3383,
+								EndPos:    3384,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 149,
 									EndLine:   149,
-									StartPos:  3329,
-									EndPos:    3330,
+									StartPos:  3383,
+									EndPos:    3384,
+								},
+								Value: "e",
+							},
+						},
+						Stmts: []node.Node{},
+					},
+					&stmt.Catch{
+						Position: &position.Position{
+							StartLine: 149,
+							EndLine:   149,
+							StartPos:  3390,
+							EndPos:    3420,
+						},
+						Types: []node.Node{
+							&name.FullyQualified{
+								Position: &position.Position{
+									StartLine: 149,
+									EndLine:   149,
+									StartPos:  3397,
+									EndPos:    3413,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 149,
+											EndLine:   149,
+											StartPos:  3398,
+											EndPos:    3413,
+										},
+										Value: "RuntimeException",
+									},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 149,
+								EndLine:   149,
+								StartPos:  3415,
+								EndPos:    3416,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 149,
+									EndLine:   149,
+									StartPos:  3415,
+									EndPos:    3416,
+								},
+								Value: "e",
+							},
+						},
+						Stmts: []node.Node{},
+					},
+					&stmt.Catch{
+						Position: &position.Position{
+							StartLine: 149,
+							EndLine:   149,
+							StartPos:  3422,
+							EndPos:    3462,
+						},
+						Types: []node.Node{
+							&name.Relative{
+								Position: &position.Position{
+									StartLine: 149,
+									EndLine:   149,
+									StartPos:  3429,
+									EndPos:    3455,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 149,
+											EndLine:   149,
+											StartPos:  3439,
+											EndPos:    3455,
+										},
+										Value: "AdditionException",
+									},
+								},
+							},
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 149,
+								EndLine:   149,
+								StartPos:  3457,
+								EndPos:    3458,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 149,
+									EndLine:   149,
+									StartPos:  3457,
+									EndPos:    3458,
 								},
 								Value: "e",
 							},
@@ -7048,8 +7291,8 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 150,
 					EndLine:   150,
-					StartPos:  3338,
-					EndPos:    3398,
+					StartPos:  3466,
+					EndPos:    3506,
 				},
 				Stmts: []node.Node{},
 				Catches: []node.Node{
@@ -7057,24 +7300,24 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 150,
 							EndLine:   150,
-							StartPos:  3345,
-							EndPos:    3367,
+							StartPos:  3473,
+							EndPos:    3495,
 						},
 						Types: []node.Node{
 							&name.Name{
 								Position: &position.Position{
 									StartLine: 150,
 									EndLine:   150,
-									StartPos:  3352,
-									EndPos:    3360,
+									StartPos:  3480,
+									EndPos:    3488,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 150,
 											EndLine:   150,
-											StartPos:  3352,
-											EndPos:    3360,
+											StartPos:  3480,
+											EndPos:    3488,
 										},
 										Value: "Exception",
 									},
@@ -7085,272 +7328,15 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 150,
 								EndLine:   150,
-								StartPos:  3362,
-								EndPos:    3363,
+								StartPos:  3490,
+								EndPos:    3491,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 150,
 									EndLine:   150,
-									StartPos:  3362,
-									EndPos:    3363,
-								},
-								Value: "e",
-							},
-						},
-						Stmts: []node.Node{},
-					},
-					&stmt.Catch{
-						Position: &position.Position{
-							StartLine: 150,
-							EndLine:   150,
-							StartPos:  3369,
-							EndPos:    3398,
-						},
-						Types: []node.Node{
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 150,
-									EndLine:   150,
-									StartPos:  3376,
-									EndPos:    3391,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 150,
-											EndLine:   150,
-											StartPos:  3376,
-											EndPos:    3391,
-										},
-										Value: "RuntimeException",
-									},
-								},
-							},
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 150,
-								EndLine:   150,
-								StartPos:  3393,
-								EndPos:    3394,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 150,
-									EndLine:   150,
-									StartPos:  3393,
-									EndPos:    3394,
-								},
-								Value: "e",
-							},
-						},
-						Stmts: []node.Node{},
-					},
-				},
-			},
-			&stmt.Try{
-				Position: &position.Position{
-					StartLine: 151,
-					EndLine:   151,
-					StartPos:  3402,
-					EndPos:    3505,
-				},
-				Stmts: []node.Node{},
-				Catches: []node.Node{
-					&stmt.Catch{
-						Position: &position.Position{
-							StartLine: 151,
-							EndLine:   151,
-							StartPos:  3409,
-							EndPos:    3431,
-						},
-						Types: []node.Node{
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3416,
-									EndPos:    3424,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 151,
-											EndLine:   151,
-											StartPos:  3416,
-											EndPos:    3424,
-										},
-										Value: "Exception",
-									},
-								},
-							},
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 151,
-								EndLine:   151,
-								StartPos:  3426,
-								EndPos:    3427,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3426,
-									EndPos:    3427,
-								},
-								Value: "e",
-							},
-						},
-						Stmts: []node.Node{},
-					},
-					&stmt.Catch{
-						Position: &position.Position{
-							StartLine: 151,
-							EndLine:   151,
-							StartPos:  3433,
-							EndPos:    3463,
-						},
-						Types: []node.Node{
-							&name.FullyQualified{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3440,
-									EndPos:    3456,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 151,
-											EndLine:   151,
-											StartPos:  3441,
-											EndPos:    3456,
-										},
-										Value: "RuntimeException",
-									},
-								},
-							},
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 151,
-								EndLine:   151,
-								StartPos:  3458,
-								EndPos:    3459,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3458,
-									EndPos:    3459,
-								},
-								Value: "e",
-							},
-						},
-						Stmts: []node.Node{},
-					},
-					&stmt.Catch{
-						Position: &position.Position{
-							StartLine: 151,
-							EndLine:   151,
-							StartPos:  3465,
-							EndPos:    3505,
-						},
-						Types: []node.Node{
-							&name.Relative{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3472,
-									EndPos:    3498,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 151,
-											EndLine:   151,
-											StartPos:  3482,
-											EndPos:    3498,
-										},
-										Value: "AdditionException",
-									},
-								},
-							},
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 151,
-								EndLine:   151,
-								StartPos:  3500,
-								EndPos:    3501,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 151,
-									EndLine:   151,
-									StartPos:  3500,
-									EndPos:    3501,
-								},
-								Value: "e",
-							},
-						},
-						Stmts: []node.Node{},
-					},
-				},
-			},
-			&stmt.Try{
-				Position: &position.Position{
-					StartLine: 152,
-					EndLine:   152,
-					StartPos:  3509,
-					EndPos:    3549,
-				},
-				Stmts: []node.Node{},
-				Catches: []node.Node{
-					&stmt.Catch{
-						Position: &position.Position{
-							StartLine: 152,
-							EndLine:   152,
-							StartPos:  3516,
-							EndPos:    3538,
-						},
-						Types: []node.Node{
-							&name.Name{
-								Position: &position.Position{
-									StartLine: 152,
-									EndLine:   152,
-									StartPos:  3523,
-									EndPos:    3531,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 152,
-											EndLine:   152,
-											StartPos:  3523,
-											EndPos:    3531,
-										},
-										Value: "Exception",
-									},
-								},
-							},
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 152,
-								EndLine:   152,
-								StartPos:  3533,
-								EndPos:    3534,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 152,
-									EndLine:   152,
-									StartPos:  3533,
-									EndPos:    3534,
+									StartPos:  3490,
+									EndPos:    3491,
 								},
 								Value: "e",
 							},
@@ -7360,52 +7346,52 @@ func TestPhp5(t *testing.T) {
 				},
 				Finally: &stmt.Finally{
 					Position: &position.Position{
-						StartLine: 152,
-						EndLine:   152,
-						StartPos:  3540,
-						EndPos:    3549,
+						StartLine: 150,
+						EndLine:   150,
+						StartPos:  3497,
+						EndPos:    3506,
 					},
 					Stmts: []node.Node{},
 				},
 			},
 			&stmt.Unset{
 				Position: &position.Position{
-					StartLine: 154,
-					EndLine:   154,
-					StartPos:  3554,
-					EndPos:    3567,
+					StartLine: 152,
+					EndLine:   152,
+					StartPos:  3511,
+					EndPos:    3524,
 				},
 				Vars: []node.Node{
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 154,
-							EndLine:   154,
-							StartPos:  3560,
-							EndPos:    3561,
+							StartLine: 152,
+							EndLine:   152,
+							StartPos:  3517,
+							EndPos:    3518,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 154,
-								EndLine:   154,
-								StartPos:  3560,
-								EndPos:    3561,
+								StartLine: 152,
+								EndLine:   152,
+								StartPos:  3517,
+								EndPos:    3518,
 							},
 							Value: "a",
 						},
 					},
 					&expr.Variable{
 						Position: &position.Position{
-							StartLine: 154,
-							EndLine:   154,
-							StartPos:  3564,
-							EndPos:    3565,
+							StartLine: 152,
+							EndLine:   152,
+							StartPos:  3521,
+							EndPos:    3522,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 154,
-								EndLine:   154,
-								StartPos:  3564,
-								EndPos:    3565,
+								StartLine: 152,
+								EndLine:   152,
+								StartPos:  3521,
+								EndPos:    3522,
 							},
 							Value: "b",
 						},
@@ -7414,33 +7400,33 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.UseList{
 				Position: &position.Position{
-					StartLine: 156,
-					EndLine:   156,
-					StartPos:  3572,
-					EndPos:    3579,
+					StartLine: 154,
+					EndLine:   154,
+					StartPos:  3529,
+					EndPos:    3536,
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
-							StartLine: 156,
-							EndLine:   156,
-							StartPos:  3576,
-							EndPos:    3578,
+							StartLine: 154,
+							EndLine:   154,
+							StartPos:  3533,
+							EndPos:    3535,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
-								StartLine: 156,
-								EndLine:   156,
-								StartPos:  3576,
-								EndPos:    3578,
+								StartLine: 154,
+								EndLine:   154,
+								StartPos:  3533,
+								EndPos:    3535,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
-										StartLine: 156,
-										EndLine:   156,
-										StartPos:  3576,
-										EndPos:    3578,
+										StartLine: 154,
+										EndLine:   154,
+										StartPos:  3533,
+										EndPos:    3535,
 									},
 									Value: "Foo",
 								},
@@ -7451,35 +7437,145 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.UseList{
 				Position: &position.Position{
+					StartLine: 155,
+					EndLine:   155,
+					StartPos:  3540,
+					EndPos:    3548,
+				},
+				Uses: []node.Node{
+					&stmt.Use{
+						Position: &position.Position{
+							StartLine: 155,
+							EndLine:   155,
+							StartPos:  3545,
+							EndPos:    3547,
+						},
+						Use: &name.Name{
+							Position: &position.Position{
+								StartLine: 155,
+								EndLine:   155,
+								StartPos:  3545,
+								EndPos:    3547,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 155,
+										EndLine:   155,
+										StartPos:  3545,
+										EndPos:    3547,
+									},
+									Value: "Foo",
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.UseList{
+				Position: &position.Position{
+					StartLine: 156,
+					EndLine:   156,
+					StartPos:  3552,
+					EndPos:    3567,
+				},
+				Uses: []node.Node{
+					&stmt.Use{
+						Position: &position.Position{
+							StartLine: 156,
+							EndLine:   156,
+							StartPos:  3557,
+							EndPos:    3566,
+						},
+						Use: &name.Name{
+							Position: &position.Position{
+								StartLine: 156,
+								EndLine:   156,
+								StartPos:  3557,
+								EndPos:    3559,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 156,
+										EndLine:   156,
+										StartPos:  3557,
+										EndPos:    3559,
+									},
+									Value: "Foo",
+								},
+							},
+						},
+						Alias: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 156,
+								EndLine:   156,
+								StartPos:  3564,
+								EndPos:    3566,
+							},
+							Value: "Bar",
+						},
+					},
+				},
+			},
+			&stmt.UseList{
+				Position: &position.Position{
 					StartLine: 157,
 					EndLine:   157,
-					StartPos:  3583,
-					EndPos:    3591,
+					StartPos:  3571,
+					EndPos:    3583,
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 157,
 							EndLine:   157,
-							StartPos:  3588,
-							EndPos:    3590,
+							StartPos:  3575,
+							EndPos:    3577,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 157,
 								EndLine:   157,
-								StartPos:  3588,
-								EndPos:    3590,
+								StartPos:  3575,
+								EndPos:    3577,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 157,
 										EndLine:   157,
-										StartPos:  3588,
-										EndPos:    3590,
+										StartPos:  3575,
+										EndPos:    3577,
 									},
 									Value: "Foo",
+								},
+							},
+						},
+					},
+					&stmt.Use{
+						Position: &position.Position{
+							StartLine: 157,
+							EndLine:   157,
+							StartPos:  3580,
+							EndPos:    3582,
+						},
+						Use: &name.Name{
+							Position: &position.Position{
+								StartLine: 157,
+								EndLine:   157,
+								StartPos:  3580,
+								EndPos:    3582,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 157,
+										EndLine:   157,
+										StartPos:  3580,
+										EndPos:    3582,
+									},
+									Value: "Bar",
 								},
 							},
 						},
@@ -7490,33 +7586,60 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 158,
 					EndLine:   158,
-					StartPos:  3595,
-					EndPos:    3610,
+					StartPos:  3587,
+					EndPos:    3606,
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 158,
 							EndLine:   158,
-							StartPos:  3600,
-							EndPos:    3609,
+							StartPos:  3591,
+							EndPos:    3593,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 158,
 								EndLine:   158,
-								StartPos:  3600,
-								EndPos:    3602,
+								StartPos:  3591,
+								EndPos:    3593,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 158,
 										EndLine:   158,
-										StartPos:  3600,
-										EndPos:    3602,
+										StartPos:  3591,
+										EndPos:    3593,
 									},
 									Value: "Foo",
+								},
+							},
+						},
+					},
+					&stmt.Use{
+						Position: &position.Position{
+							StartLine: 158,
+							EndLine:   158,
+							StartPos:  3596,
+							EndPos:    3605,
+						},
+						Use: &name.Name{
+							Position: &position.Position{
+								StartLine: 158,
+								EndLine:   158,
+								StartPos:  3596,
+								EndPos:    3598,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 158,
+										EndLine:   158,
+										StartPos:  3596,
+										EndPos:    3598,
+									},
+									Value: "Bar",
 								},
 							},
 						},
@@ -7524,10 +7647,10 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 158,
 								EndLine:   158,
-								StartPos:  3607,
-								EndPos:    3609,
+								StartPos:  3603,
+								EndPos:    3605,
 							},
-							Value: "Bar",
+							Value: "Baz",
 						},
 					},
 				},
@@ -7536,37 +7659,19 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 159,
 					EndLine:   159,
-					StartPos:  3614,
-					EndPos:    3626,
+					StartPos:  3610,
+					EndPos:    3632,
+				},
+				UseType: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 159,
+						EndLine:   159,
+						StartPos:  3614,
+						EndPos:    3621,
+					},
+					Value: "function",
 				},
 				Uses: []node.Node{
-					&stmt.Use{
-						Position: &position.Position{
-							StartLine: 159,
-							EndLine:   159,
-							StartPos:  3618,
-							EndPos:    3620,
-						},
-						Use: &name.Name{
-							Position: &position.Position{
-								StartLine: 159,
-								EndLine:   159,
-								StartPos:  3618,
-								EndPos:    3620,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 159,
-										EndLine:   159,
-										StartPos:  3618,
-										EndPos:    3620,
-									},
-									Value: "Foo",
-								},
-							},
-						},
-					},
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 159,
@@ -7589,6 +7694,33 @@ func TestPhp5(t *testing.T) {
 										StartPos:  3623,
 										EndPos:    3625,
 									},
+									Value: "Foo",
+								},
+							},
+						},
+					},
+					&stmt.Use{
+						Position: &position.Position{
+							StartLine: 159,
+							EndLine:   159,
+							StartPos:  3629,
+							EndPos:    3631,
+						},
+						Use: &name.Name{
+							Position: &position.Position{
+								StartLine: 159,
+								EndLine:   159,
+								StartPos:  3629,
+								EndPos:    3631,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 159,
+										EndLine:   159,
+										StartPos:  3629,
+										EndPos:    3631,
+									},
 									Value: "Bar",
 								},
 							},
@@ -7600,58 +7732,76 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 160,
 					EndLine:   160,
-					StartPos:  3630,
-					EndPos:    3649,
+					StartPos:  3636,
+					EndPos:    3672,
+				},
+				UseType: &node.Identifier{
+					Position: &position.Position{
+						StartLine: 160,
+						EndLine:   160,
+						StartPos:  3640,
+						EndPos:    3647,
+					},
+					Value: "function",
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 160,
 							EndLine:   160,
-							StartPos:  3634,
-							EndPos:    3636,
+							StartPos:  3649,
+							EndPos:    3658,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 160,
 								EndLine:   160,
-								StartPos:  3634,
-								EndPos:    3636,
+								StartPos:  3649,
+								EndPos:    3651,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 160,
 										EndLine:   160,
-										StartPos:  3634,
-										EndPos:    3636,
+										StartPos:  3649,
+										EndPos:    3651,
 									},
 									Value: "Foo",
 								},
 							},
+						},
+						Alias: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 160,
+								EndLine:   160,
+								StartPos:  3656,
+								EndPos:    3658,
+							},
+							Value: "foo",
 						},
 					},
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 160,
 							EndLine:   160,
-							StartPos:  3639,
-							EndPos:    3648,
+							StartPos:  3662,
+							EndPos:    3671,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 160,
 								EndLine:   160,
-								StartPos:  3639,
-								EndPos:    3641,
+								StartPos:  3662,
+								EndPos:    3664,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 160,
 										EndLine:   160,
-										StartPos:  3639,
-										EndPos:    3641,
+										StartPos:  3662,
+										EndPos:    3664,
 									},
 									Value: "Bar",
 								},
@@ -7661,10 +7811,10 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 160,
 								EndLine:   160,
-								StartPos:  3646,
-								EndPos:    3648,
+								StartPos:  3669,
+								EndPos:    3671,
 							},
-							Value: "Baz",
+							Value: "bar",
 						},
 					},
 				},
@@ -7673,40 +7823,40 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 161,
 					EndLine:   161,
-					StartPos:  3653,
-					EndPos:    3675,
+					StartPos:  3676,
+					EndPos:    3695,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 161,
 						EndLine:   161,
-						StartPos:  3657,
-						EndPos:    3664,
+						StartPos:  3680,
+						EndPos:    3684,
 					},
-					Value: "function",
+					Value: "const",
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 161,
 							EndLine:   161,
-							StartPos:  3666,
-							EndPos:    3668,
+							StartPos:  3686,
+							EndPos:    3688,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 161,
 								EndLine:   161,
-								StartPos:  3666,
-								EndPos:    3668,
+								StartPos:  3686,
+								EndPos:    3688,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 161,
 										EndLine:   161,
-										StartPos:  3666,
-										EndPos:    3668,
+										StartPos:  3686,
+										EndPos:    3688,
 									},
 									Value: "Foo",
 								},
@@ -7717,23 +7867,23 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 161,
 							EndLine:   161,
-							StartPos:  3672,
-							EndPos:    3674,
+							StartPos:  3692,
+							EndPos:    3694,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 161,
 								EndLine:   161,
-								StartPos:  3672,
-								EndPos:    3674,
+								StartPos:  3692,
+								EndPos:    3694,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 161,
 										EndLine:   161,
-										StartPos:  3672,
-										EndPos:    3674,
+										StartPos:  3692,
+										EndPos:    3694,
 									},
 									Value: "Bar",
 								},
@@ -7746,40 +7896,40 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 162,
 					EndLine:   162,
-					StartPos:  3679,
-					EndPos:    3715,
+					StartPos:  3699,
+					EndPos:    3732,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 162,
 						EndLine:   162,
-						StartPos:  3683,
-						EndPos:    3690,
+						StartPos:  3703,
+						EndPos:    3707,
 					},
-					Value: "function",
+					Value: "const",
 				},
 				Uses: []node.Node{
 					&stmt.Use{
 						Position: &position.Position{
 							StartLine: 162,
 							EndLine:   162,
-							StartPos:  3692,
-							EndPos:    3701,
+							StartPos:  3709,
+							EndPos:    3718,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 162,
 								EndLine:   162,
-								StartPos:  3692,
-								EndPos:    3694,
+								StartPos:  3709,
+								EndPos:    3711,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
 										StartLine: 162,
 										EndLine:   162,
-										StartPos:  3692,
-										EndPos:    3694,
+										StartPos:  3709,
+										EndPos:    3711,
 									},
 									Value: "Foo",
 								},
@@ -7789,8 +7939,8 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 162,
 								EndLine:   162,
-								StartPos:  3699,
-								EndPos:    3701,
+								StartPos:  3716,
+								EndPos:    3718,
 							},
 							Value: "foo",
 						},
@@ -7799,198 +7949,34 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 162,
 							EndLine:   162,
-							StartPos:  3705,
-							EndPos:    3714,
-						},
-						Use: &name.Name{
-							Position: &position.Position{
-								StartLine: 162,
-								EndLine:   162,
-								StartPos:  3705,
-								EndPos:    3707,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 162,
-										EndLine:   162,
-										StartPos:  3705,
-										EndPos:    3707,
-									},
-									Value: "Bar",
-								},
-							},
-						},
-						Alias: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 162,
-								EndLine:   162,
-								StartPos:  3712,
-								EndPos:    3714,
-							},
-							Value: "bar",
-						},
-					},
-				},
-			},
-			&stmt.UseList{
-				Position: &position.Position{
-					StartLine: 163,
-					EndLine:   163,
-					StartPos:  3719,
-					EndPos:    3738,
-				},
-				UseType: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 163,
-						EndLine:   163,
-						StartPos:  3723,
-						EndPos:    3727,
-					},
-					Value: "const",
-				},
-				Uses: []node.Node{
-					&stmt.Use{
-						Position: &position.Position{
-							StartLine: 163,
-							EndLine:   163,
-							StartPos:  3729,
+							StartPos:  3722,
 							EndPos:    3731,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
-								StartLine: 163,
-								EndLine:   163,
+								StartLine: 162,
+								EndLine:   162,
+								StartPos:  3722,
+								EndPos:    3724,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 162,
+										EndLine:   162,
+										StartPos:  3722,
+										EndPos:    3724,
+									},
+									Value: "Bar",
+								},
+							},
+						},
+						Alias: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 162,
+								EndLine:   162,
 								StartPos:  3729,
 								EndPos:    3731,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 163,
-										EndLine:   163,
-										StartPos:  3729,
-										EndPos:    3731,
-									},
-									Value: "Foo",
-								},
-							},
-						},
-					},
-					&stmt.Use{
-						Position: &position.Position{
-							StartLine: 163,
-							EndLine:   163,
-							StartPos:  3735,
-							EndPos:    3737,
-						},
-						Use: &name.Name{
-							Position: &position.Position{
-								StartLine: 163,
-								EndLine:   163,
-								StartPos:  3735,
-								EndPos:    3737,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 163,
-										EndLine:   163,
-										StartPos:  3735,
-										EndPos:    3737,
-									},
-									Value: "Bar",
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.UseList{
-				Position: &position.Position{
-					StartLine: 164,
-					EndLine:   164,
-					StartPos:  3742,
-					EndPos:    3775,
-				},
-				UseType: &node.Identifier{
-					Position: &position.Position{
-						StartLine: 164,
-						EndLine:   164,
-						StartPos:  3746,
-						EndPos:    3750,
-					},
-					Value: "const",
-				},
-				Uses: []node.Node{
-					&stmt.Use{
-						Position: &position.Position{
-							StartLine: 164,
-							EndLine:   164,
-							StartPos:  3752,
-							EndPos:    3761,
-						},
-						Use: &name.Name{
-							Position: &position.Position{
-								StartLine: 164,
-								EndLine:   164,
-								StartPos:  3752,
-								EndPos:    3754,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 164,
-										EndLine:   164,
-										StartPos:  3752,
-										EndPos:    3754,
-									},
-									Value: "Foo",
-								},
-							},
-						},
-						Alias: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 164,
-								EndLine:   164,
-								StartPos:  3759,
-								EndPos:    3761,
-							},
-							Value: "foo",
-						},
-					},
-					&stmt.Use{
-						Position: &position.Position{
-							StartLine: 164,
-							EndLine:   164,
-							StartPos:  3765,
-							EndPos:    3774,
-						},
-						Use: &name.Name{
-							Position: &position.Position{
-								StartLine: 164,
-								EndLine:   164,
-								StartPos:  3765,
-								EndPos:    3767,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 164,
-										EndLine:   164,
-										StartPos:  3765,
-										EndPos:    3767,
-									},
-									Value: "Bar",
-								},
-							},
-						},
-						Alias: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 164,
-								EndLine:   164,
-								StartPos:  3772,
-								EndPos:    3774,
 							},
 							Value: "bar",
 						},
@@ -7999,41 +7985,41 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 166,
-					EndLine:   166,
-					StartPos:  3780,
-					EndPos:    3785,
+					StartLine: 164,
+					EndLine:   164,
+					StartPos:  3737,
+					EndPos:    3742,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 166,
-						EndLine:   166,
-						StartPos:  3780,
-						EndPos:    3784,
+						StartLine: 164,
+						EndLine:   164,
+						StartPos:  3737,
+						EndPos:    3741,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 166,
-							EndLine:   166,
-							StartPos:  3780,
-							EndPos:    3781,
+							StartLine: 164,
+							EndLine:   164,
+							StartPos:  3737,
+							EndPos:    3738,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 166,
-								EndLine:   166,
-								StartPos:  3780,
-								EndPos:    3781,
+								StartLine: 164,
+								EndLine:   164,
+								StartPos:  3737,
+								EndPos:    3738,
 							},
 							Value: "a",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
-							StartLine: 166,
-							EndLine:   166,
-							StartPos:  3783,
-							EndPos:    3783,
+							StartLine: 164,
+							EndLine:   164,
+							StartPos:  3740,
+							EndPos:    3740,
 						},
 						Value: "1",
 					},
@@ -8041,58 +8027,58 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 167,
-					EndLine:   167,
-					StartPos:  3789,
-					EndPos:    3797,
+					StartLine: 165,
+					EndLine:   165,
+					StartPos:  3746,
+					EndPos:    3754,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 167,
-						EndLine:   167,
-						StartPos:  3789,
-						EndPos:    3796,
+						StartLine: 165,
+						EndLine:   165,
+						StartPos:  3746,
+						EndPos:    3753,
 					},
 					Variable: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 167,
-							EndLine:   167,
-							StartPos:  3789,
-							EndPos:    3793,
+							StartLine: 165,
+							EndLine:   165,
+							StartPos:  3746,
+							EndPos:    3750,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 167,
-								EndLine:   167,
-								StartPos:  3789,
-								EndPos:    3790,
+								StartLine: 165,
+								EndLine:   165,
+								StartPos:  3746,
+								EndPos:    3747,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 167,
-									EndLine:   167,
-									StartPos:  3789,
-									EndPos:    3790,
+									StartLine: 165,
+									EndLine:   165,
+									StartPos:  3746,
+									EndPos:    3747,
 								},
 								Value: "a",
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 167,
-								EndLine:   167,
-								StartPos:  3792,
-								EndPos:    3792,
+								StartLine: 165,
+								EndLine:   165,
+								StartPos:  3749,
+								EndPos:    3749,
 							},
 							Value: "1",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
-							StartLine: 167,
-							EndLine:   167,
-							StartPos:  3795,
-							EndPos:    3795,
+							StartLine: 165,
+							EndLine:   165,
+							StartPos:  3752,
+							EndPos:    3752,
 						},
 						Value: "2",
 					},
@@ -8100,49 +8086,49 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 168,
-					EndLine:   168,
-					StartPos:  3801,
-					EndPos:    3808,
+					StartLine: 166,
+					EndLine:   166,
+					StartPos:  3758,
+					EndPos:    3765,
 				},
 				Expr: &expr.Array{
 					Position: &position.Position{
-						StartLine: 168,
-						EndLine:   168,
-						StartPos:  3801,
-						EndPos:    3807,
+						StartLine: 166,
+						EndLine:   166,
+						StartPos:  3758,
+						EndPos:    3764,
 					},
 					Items: []node.Node{},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 169,
-					EndLine:   169,
-					StartPos:  3812,
-					EndPos:    3820,
+					StartLine: 167,
+					EndLine:   167,
+					StartPos:  3769,
+					EndPos:    3777,
 				},
 				Expr: &expr.Array{
 					Position: &position.Position{
-						StartLine: 169,
-						EndLine:   169,
-						StartPos:  3812,
-						EndPos:    3819,
+						StartLine: 167,
+						EndLine:   167,
+						StartPos:  3769,
+						EndPos:    3776,
 					},
 					Items: []node.Node{
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 169,
-								EndLine:   169,
-								StartPos:  3818,
-								EndPos:    3818,
+								StartLine: 167,
+								EndLine:   167,
+								StartPos:  3775,
+								EndPos:    3775,
 							},
 							Val: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 169,
-									EndLine:   169,
-									StartPos:  3818,
-									EndPos:    3818,
+									StartLine: 167,
+									EndLine:   167,
+									StartPos:  3775,
+									EndPos:    3775,
 								},
 								Value: "1",
 							},
@@ -8152,72 +8138,72 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 170,
-					EndLine:   170,
-					StartPos:  3824,
-					EndPos:    3841,
+					StartLine: 168,
+					EndLine:   168,
+					StartPos:  3781,
+					EndPos:    3798,
 				},
 				Expr: &expr.Array{
 					Position: &position.Position{
-						StartLine: 170,
-						EndLine:   170,
-						StartPos:  3824,
-						EndPos:    3840,
+						StartLine: 168,
+						EndLine:   168,
+						StartPos:  3781,
+						EndPos:    3797,
 					},
 					Items: []node.Node{
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 170,
-								EndLine:   170,
-								StartPos:  3830,
-								EndPos:    3833,
+								StartLine: 168,
+								EndLine:   168,
+								StartPos:  3787,
+								EndPos:    3790,
 							},
 							Key: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 170,
-									EndLine:   170,
-									StartPos:  3830,
-									EndPos:    3830,
+									StartLine: 168,
+									EndLine:   168,
+									StartPos:  3787,
+									EndPos:    3787,
 								},
 								Value: "1",
 							},
 							Val: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 170,
-									EndLine:   170,
-									StartPos:  3833,
-									EndPos:    3833,
+									StartLine: 168,
+									EndLine:   168,
+									StartPos:  3790,
+									EndPos:    3790,
 								},
 								Value: "1",
 							},
 						},
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 170,
-								EndLine:   170,
-								StartPos:  3836,
-								EndPos:    3838,
+								StartLine: 168,
+								EndLine:   168,
+								StartPos:  3793,
+								EndPos:    3795,
 							},
 							Val: &expr.Reference{
 								Position: &position.Position{
-									StartLine: 170,
-									EndLine:   170,
-									StartPos:  3836,
-									EndPos:    3838,
+									StartLine: 168,
+									EndLine:   168,
+									StartPos:  3793,
+									EndPos:    3795,
 								},
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 170,
-										EndLine:   170,
-										StartPos:  3837,
-										EndPos:    3838,
+										StartLine: 168,
+										EndLine:   168,
+										StartPos:  3794,
+										EndPos:    3795,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 170,
-											EndLine:   170,
-											StartPos:  3837,
-											EndPos:    3838,
+											StartLine: 168,
+											EndLine:   168,
+											StartPos:  3794,
+											EndPos:    3795,
 										},
 										Value: "b",
 									},
@@ -8230,60 +8216,229 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 171,
-					EndLine:   171,
-					StartPos:  3845,
-					EndPos:    3859,
+					StartLine: 169,
+					EndLine:   169,
+					StartPos:  3802,
+					EndPos:    3816,
 				},
 				Expr: &expr.Array{
 					Position: &position.Position{
-						StartLine: 171,
-						EndLine:   171,
-						StartPos:  3845,
-						EndPos:    3858,
+						StartLine: 169,
+						EndLine:   169,
+						StartPos:  3802,
+						EndPos:    3815,
 					},
 					Items: []node.Node{
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 171,
-								EndLine:   171,
-								StartPos:  3851,
-								EndPos:    3857,
+								StartLine: 169,
+								EndLine:   169,
+								StartPos:  3808,
+								EndPos:    3814,
 							},
 							Key: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 171,
-									EndLine:   171,
-									StartPos:  3851,
-									EndPos:    3851,
+									StartLine: 169,
+									EndLine:   169,
+									StartPos:  3808,
+									EndPos:    3808,
 								},
 								Value: "3",
 							},
 							Val: &expr.Reference{
 								Position: &position.Position{
-									StartLine: 171,
-									EndLine:   171,
-									StartPos:  3855,
-									EndPos:    3857,
+									StartLine: 169,
+									EndLine:   169,
+									StartPos:  3812,
+									EndPos:    3814,
 								},
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 171,
-										EndLine:   171,
-										StartPos:  3856,
-										EndPos:    3857,
+										StartLine: 169,
+										EndLine:   169,
+										StartPos:  3813,
+										EndPos:    3814,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 171,
-											EndLine:   171,
-											StartPos:  3856,
-											EndPos:    3857,
+											StartLine: 169,
+											EndLine:   169,
+											StartPos:  3813,
+											EndPos:    3814,
 										},
 										Value: "b",
 									},
 								},
 							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 170,
+					EndLine:   170,
+					StartPos:  3820,
+					EndPos:    3848,
+				},
+				Expr: &expr.Array{
+					Position: &position.Position{
+						StartLine: 170,
+						EndLine:   170,
+						StartPos:  3820,
+						EndPos:    3847,
+					},
+					Items: []node.Node{
+						&expr.ArrayItem{
+							Position: &position.Position{
+								StartLine: 170,
+								EndLine:   170,
+								StartPos:  3826,
+								EndPos:    3828,
+							},
+							Val: &expr.Reference{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3826,
+									EndPos:    3828,
+								},
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 170,
+										EndLine:   170,
+										StartPos:  3827,
+										EndPos:    3828,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 170,
+											EndLine:   170,
+											StartPos:  3827,
+											EndPos:    3828,
+										},
+										Value: "b",
+									},
+								},
+							},
+						},
+						&expr.ArrayItem{
+							Position: &position.Position{
+								StartLine: 170,
+								EndLine:   170,
+								StartPos:  3831,
+								EndPos:    3834,
+							},
+							Key: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3831,
+									EndPos:    3831,
+								},
+								Value: "1",
+							},
+							Val: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3834,
+									EndPos:    3834,
+								},
+								Value: "1",
+							},
+						},
+						&expr.ArrayItem{
+							Position: &position.Position{
+								StartLine: 170,
+								EndLine:   170,
+								StartPos:  3837,
+								EndPos:    3837,
+							},
+							Val: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3837,
+									EndPos:    3837,
+								},
+								Value: "1",
+							},
+						},
+						&expr.ArrayItem{
+							Position: &position.Position{
+								StartLine: 170,
+								EndLine:   170,
+								StartPos:  3840,
+								EndPos:    3846,
+							},
+							Key: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3840,
+									EndPos:    3840,
+								},
+								Value: "3",
+							},
+							Val: &expr.Reference{
+								Position: &position.Position{
+									StartLine: 170,
+									EndLine:   170,
+									StartPos:  3844,
+									EndPos:    3846,
+								},
+								Variable: &expr.Variable{
+									Position: &position.Position{
+										StartLine: 170,
+										EndLine:   170,
+										StartPos:  3845,
+										EndPos:    3846,
+									},
+									VarName: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 170,
+											EndLine:   170,
+											StartPos:  3845,
+											EndPos:    3846,
+										},
+										Value: "b",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 171,
+					EndLine:   171,
+					StartPos:  3852,
+					EndPos:    3855,
+				},
+				Expr: &expr.BitwiseNot{
+					Position: &position.Position{
+						StartLine: 171,
+						EndLine:   171,
+						StartPos:  3852,
+						EndPos:    3854,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 171,
+							EndLine:   171,
+							StartPos:  3853,
+							EndPos:    3854,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 171,
+								EndLine:   171,
+								StartPos:  3853,
+								EndPos:    3854,
+							},
+							Value: "a",
 						},
 					},
 				},
@@ -8292,165 +8447,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 172,
 					EndLine:   172,
-					StartPos:  3863,
-					EndPos:    3891,
+					StartPos:  3859,
+					EndPos:    3862,
 				},
-				Expr: &expr.Array{
+				Expr: &expr.BooleanNot{
 					Position: &position.Position{
 						StartLine: 172,
 						EndLine:   172,
-						StartPos:  3863,
-						EndPos:    3890,
-					},
-					Items: []node.Node{
-						&expr.ArrayItem{
-							Position: &position.Position{
-								StartLine: 172,
-								EndLine:   172,
-								StartPos:  3869,
-								EndPos:    3871,
-							},
-							Val: &expr.Reference{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3869,
-									EndPos:    3871,
-								},
-								Variable: &expr.Variable{
-									Position: &position.Position{
-										StartLine: 172,
-										EndLine:   172,
-										StartPos:  3870,
-										EndPos:    3871,
-									},
-									VarName: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 172,
-											EndLine:   172,
-											StartPos:  3870,
-											EndPos:    3871,
-										},
-										Value: "b",
-									},
-								},
-							},
-						},
-						&expr.ArrayItem{
-							Position: &position.Position{
-								StartLine: 172,
-								EndLine:   172,
-								StartPos:  3874,
-								EndPos:    3877,
-							},
-							Key: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3874,
-									EndPos:    3874,
-								},
-								Value: "1",
-							},
-							Val: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3877,
-									EndPos:    3877,
-								},
-								Value: "1",
-							},
-						},
-						&expr.ArrayItem{
-							Position: &position.Position{
-								StartLine: 172,
-								EndLine:   172,
-								StartPos:  3880,
-								EndPos:    3880,
-							},
-							Val: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3880,
-									EndPos:    3880,
-								},
-								Value: "1",
-							},
-						},
-						&expr.ArrayItem{
-							Position: &position.Position{
-								StartLine: 172,
-								EndLine:   172,
-								StartPos:  3883,
-								EndPos:    3889,
-							},
-							Key: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3883,
-									EndPos:    3883,
-								},
-								Value: "3",
-							},
-							Val: &expr.Reference{
-								Position: &position.Position{
-									StartLine: 172,
-									EndLine:   172,
-									StartPos:  3887,
-									EndPos:    3889,
-								},
-								Variable: &expr.Variable{
-									Position: &position.Position{
-										StartLine: 172,
-										EndLine:   172,
-										StartPos:  3888,
-										EndPos:    3889,
-									},
-									VarName: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 172,
-											EndLine:   172,
-											StartPos:  3888,
-											EndPos:    3889,
-										},
-										Value: "b",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 173,
-					EndLine:   173,
-					StartPos:  3895,
-					EndPos:    3898,
-				},
-				Expr: &expr.BitwiseNot{
-					Position: &position.Position{
-						StartLine: 173,
-						EndLine:   173,
-						StartPos:  3895,
-						EndPos:    3897,
+						StartPos:  3859,
+						EndPos:    3861,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 173,
-							EndLine:   173,
-							StartPos:  3896,
-							EndPos:    3897,
+							StartLine: 172,
+							EndLine:   172,
+							StartPos:  3860,
+							EndPos:    3861,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 173,
-								EndLine:   173,
-								StartPos:  3896,
-								EndPos:    3897,
+								StartLine: 172,
+								EndLine:   172,
+								StartPos:  3860,
+								EndPos:    3861,
 							},
 							Value: "a",
 						},
@@ -8461,29 +8480,73 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 174,
 					EndLine:   174,
-					StartPos:  3902,
-					EndPos:    3905,
+					StartPos:  3867,
+					EndPos:    3875,
 				},
-				Expr: &expr.BooleanNot{
+				Expr: &expr.ClassConstFetch{
 					Position: &position.Position{
 						StartLine: 174,
 						EndLine:   174,
-						StartPos:  3902,
-						EndPos:    3904,
+						StartPos:  3867,
+						EndPos:    3874,
 					},
-					Expr: &expr.Variable{
+					Class: &name.Name{
 						Position: &position.Position{
 							StartLine: 174,
 							EndLine:   174,
-							StartPos:  3903,
-							EndPos:    3904,
+							StartPos:  3867,
+							EndPos:    3869,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 174,
+									EndLine:   174,
+									StartPos:  3867,
+									EndPos:    3869,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+					ConstantName: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 174,
+							EndLine:   174,
+							StartPos:  3872,
+							EndPos:    3874,
+						},
+						Value: "Bar",
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 175,
+					EndLine:   175,
+					StartPos:  3879,
+					EndPos:    3888,
+				},
+				Expr: &expr.Clone{
+					Position: &position.Position{
+						StartLine: 175,
+						EndLine:   175,
+						StartPos:  3879,
+						EndPos:    3886,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 175,
+							EndLine:   175,
+							StartPos:  3885,
+							EndPos:    3886,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 174,
-								EndLine:   174,
-								StartPos:  3903,
-								EndPos:    3904,
+								StartLine: 175,
+								EndLine:   175,
+								StartPos:  3885,
+								EndPos:    3886,
 							},
 							Value: "a",
 						},
@@ -8494,43 +8557,32 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 176,
 					EndLine:   176,
-					StartPos:  3910,
-					EndPos:    3918,
+					StartPos:  3892,
+					EndPos:    3900,
 				},
-				Expr: &expr.ClassConstFetch{
+				Expr: &expr.Clone{
 					Position: &position.Position{
 						StartLine: 176,
 						EndLine:   176,
-						StartPos:  3910,
-						EndPos:    3917,
+						StartPos:  3892,
+						EndPos:    3899,
 					},
-					Class: &name.Name{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 176,
 							EndLine:   176,
-							StartPos:  3910,
-							EndPos:    3912,
+							StartPos:  3898,
+							EndPos:    3899,
 						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 176,
-									EndLine:   176,
-									StartPos:  3910,
-									EndPos:    3912,
-								},
-								Value: "Foo",
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 176,
+								EndLine:   176,
+								StartPos:  3898,
+								EndPos:    3899,
 							},
+							Value: "a",
 						},
-					},
-					ConstantName: &node.Identifier{
-						Position: &position.Position{
-							StartLine: 176,
-							EndLine:   176,
-							StartPos:  3915,
-							EndPos:    3917,
-						},
-						Value: "Bar",
 					},
 				},
 			},
@@ -8538,81 +8590,15 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 177,
 					EndLine:   177,
-					StartPos:  3922,
-					EndPos:    3931,
-				},
-				Expr: &expr.Clone{
-					Position: &position.Position{
-						StartLine: 177,
-						EndLine:   177,
-						StartPos:  3922,
-						EndPos:    3929,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 177,
-							EndLine:   177,
-							StartPos:  3928,
-							EndPos:    3929,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 177,
-								EndLine:   177,
-								StartPos:  3928,
-								EndPos:    3929,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 178,
-					EndLine:   178,
-					StartPos:  3935,
-					EndPos:    3943,
-				},
-				Expr: &expr.Clone{
-					Position: &position.Position{
-						StartLine: 178,
-						EndLine:   178,
-						StartPos:  3935,
-						EndPos:    3942,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 178,
-							EndLine:   178,
-							StartPos:  3941,
-							EndPos:    3942,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 178,
-								EndLine:   178,
-								StartPos:  3941,
-								EndPos:    3942,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 179,
-					EndLine:   179,
-					StartPos:  3947,
-					EndPos:    3959,
+					StartPos:  3904,
+					EndPos:    3916,
 				},
 				Expr: &expr.Closure{
 					Position: &position.Position{
-						StartLine: 179,
-						EndLine:   179,
-						StartPos:  3947,
-						EndPos:    3958,
+						StartLine: 177,
+						EndLine:   177,
+						StartPos:  3904,
+						EndPos:    3915,
 					},
 					ReturnsRef:    false,
 					Static:        false,
@@ -8622,44 +8608,44 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 180,
-					EndLine:   180,
-					StartPos:  3963,
-					EndPos:    3996,
+					StartLine: 178,
+					EndLine:   178,
+					StartPos:  3920,
+					EndPos:    3953,
 				},
 				Expr: &expr.Closure{
 					Position: &position.Position{
-						StartLine: 180,
-						EndLine:   180,
-						StartPos:  3963,
-						EndPos:    3995,
+						StartLine: 178,
+						EndLine:   178,
+						StartPos:  3920,
+						EndPos:    3952,
 					},
+					ReturnsRef:    false,
 					Static:        false,
 					PhpDocComment: "",
-					ReturnsRef:    false,
 					Params: []node.Node{
 						&node.Parameter{
 							Position: &position.Position{
-								StartLine: 180,
-								EndLine:   180,
-								StartPos:  3972,
-								EndPos:    3973,
+								StartLine: 178,
+								EndLine:   178,
+								StartPos:  3929,
+								EndPos:    3930,
 							},
-							ByRef:    false,
 							Variadic: false,
+							ByRef:    false,
 							Variable: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 180,
-									EndLine:   180,
-									StartPos:  3972,
-									EndPos:    3973,
+									StartLine: 178,
+									EndLine:   178,
+									StartPos:  3929,
+									EndPos:    3930,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 180,
-										EndLine:   180,
-										StartPos:  3972,
-										EndPos:    3973,
+										StartLine: 178,
+										EndLine:   178,
+										StartPos:  3929,
+										EndPos:    3930,
 									},
 									Value: "a",
 								},
@@ -8667,26 +8653,26 @@ func TestPhp5(t *testing.T) {
 						},
 						&node.Parameter{
 							Position: &position.Position{
-								StartLine: 180,
-								EndLine:   180,
-								StartPos:  3976,
-								EndPos:    3977,
+								StartLine: 178,
+								EndLine:   178,
+								StartPos:  3933,
+								EndPos:    3934,
 							},
-							ByRef:    false,
 							Variadic: false,
+							ByRef:    false,
 							Variable: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 180,
-									EndLine:   180,
-									StartPos:  3976,
-									EndPos:    3977,
+									StartLine: 178,
+									EndLine:   178,
+									StartPos:  3933,
+									EndPos:    3934,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 180,
-										EndLine:   180,
-										StartPos:  3976,
-										EndPos:    3977,
+										StartLine: 178,
+										EndLine:   178,
+										StartPos:  3933,
+										EndPos:    3934,
 									},
 									Value: "b",
 								},
@@ -8695,49 +8681,49 @@ func TestPhp5(t *testing.T) {
 					},
 					ClosureUse: &expr.ClosureUse{
 						Position: &position.Position{
-							StartLine: 180,
-							EndLine:   180,
-							StartPos:  3980,
-							EndPos:    3992,
+							StartLine: 178,
+							EndLine:   178,
+							StartPos:  3937,
+							EndPos:    3949,
 						},
 						Uses: []node.Node{
 							&expr.Variable{
 								Position: &position.Position{
-									StartLine: 180,
-									EndLine:   180,
-									StartPos:  3985,
-									EndPos:    3986,
+									StartLine: 178,
+									EndLine:   178,
+									StartPos:  3942,
+									EndPos:    3943,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 180,
-										EndLine:   180,
-										StartPos:  3985,
-										EndPos:    3986,
+										StartLine: 178,
+										EndLine:   178,
+										StartPos:  3942,
+										EndPos:    3943,
 									},
 									Value: "c",
 								},
 							},
 							&expr.Reference{
 								Position: &position.Position{
-									StartLine: 180,
-									EndLine:   180,
-									StartPos:  3989,
-									EndPos:    3991,
+									StartLine: 178,
+									EndLine:   178,
+									StartPos:  3946,
+									EndPos:    3948,
 								},
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 180,
-										EndLine:   180,
-										StartPos:  3990,
-										EndPos:    3991,
+										StartLine: 178,
+										EndLine:   178,
+										StartPos:  3947,
+										EndPos:    3948,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 180,
-											EndLine:   180,
-											StartPos:  3990,
-											EndPos:    3991,
+											StartLine: 178,
+											EndLine:   178,
+											StartPos:  3947,
+											EndPos:    3948,
 										},
 										Value: "d",
 									},
@@ -8750,17 +8736,17 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 181,
-					EndLine:   181,
-					StartPos:  4000,
-					EndPos:    4033,
+					StartLine: 179,
+					EndLine:   179,
+					StartPos:  3957,
+					EndPos:    3990,
 				},
 				Expr: &expr.Closure{
 					Position: &position.Position{
-						StartLine: 181,
-						EndLine:   181,
-						StartPos:  4000,
-						EndPos:    4032,
+						StartLine: 179,
+						EndLine:   179,
+						StartPos:  3957,
+						EndPos:    3989,
 					},
 					ReturnsRef:    false,
 					Static:        false,
@@ -8768,26 +8754,26 @@ func TestPhp5(t *testing.T) {
 					Params: []node.Node{
 						&node.Parameter{
 							Position: &position.Position{
-								StartLine: 181,
-								EndLine:   181,
-								StartPos:  4009,
-								EndPos:    4010,
+								StartLine: 179,
+								EndLine:   179,
+								StartPos:  3966,
+								EndPos:    3967,
 							},
 							ByRef:    false,
 							Variadic: false,
 							Variable: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 181,
-									EndLine:   181,
-									StartPos:  4009,
-									EndPos:    4010,
+									StartLine: 179,
+									EndLine:   179,
+									StartPos:  3966,
+									EndPos:    3967,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 181,
-										EndLine:   181,
-										StartPos:  4009,
-										EndPos:    4010,
+										StartLine: 179,
+										EndLine:   179,
+										StartPos:  3966,
+										EndPos:    3967,
 									},
 									Value: "a",
 								},
@@ -8795,26 +8781,26 @@ func TestPhp5(t *testing.T) {
 						},
 						&node.Parameter{
 							Position: &position.Position{
-								StartLine: 181,
-								EndLine:   181,
-								StartPos:  4013,
-								EndPos:    4014,
+								StartLine: 179,
+								EndLine:   179,
+								StartPos:  3970,
+								EndPos:    3971,
 							},
 							ByRef:    false,
 							Variadic: false,
 							Variable: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 181,
-									EndLine:   181,
-									StartPos:  4013,
-									EndPos:    4014,
+									StartLine: 179,
+									EndLine:   179,
+									StartPos:  3970,
+									EndPos:    3971,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 181,
-										EndLine:   181,
-										StartPos:  4013,
-										EndPos:    4014,
+										StartLine: 179,
+										EndLine:   179,
+										StartPos:  3970,
+										EndPos:    3971,
 									},
 									Value: "b",
 								},
@@ -8823,32 +8809,32 @@ func TestPhp5(t *testing.T) {
 					},
 					ClosureUse: &expr.ClosureUse{
 						Position: &position.Position{
-							StartLine: 181,
-							EndLine:   181,
-							StartPos:  4017,
-							EndPos:    4029,
+							StartLine: 179,
+							EndLine:   179,
+							StartPos:  3974,
+							EndPos:    3986,
 						},
 						Uses: []node.Node{
 							&expr.Reference{
 								Position: &position.Position{
-									StartLine: 181,
-									EndLine:   181,
-									StartPos:  4022,
-									EndPos:    4024,
+									StartLine: 179,
+									EndLine:   179,
+									StartPos:  3979,
+									EndPos:    3981,
 								},
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 181,
-										EndLine:   181,
-										StartPos:  4023,
-										EndPos:    4024,
+										StartLine: 179,
+										EndLine:   179,
+										StartPos:  3980,
+										EndPos:    3981,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 181,
-											EndLine:   181,
-											StartPos:  4023,
-											EndPos:    4024,
+											StartLine: 179,
+											EndLine:   179,
+											StartPos:  3980,
+											EndPos:    3981,
 										},
 										Value: "c",
 									},
@@ -8856,17 +8842,17 @@ func TestPhp5(t *testing.T) {
 							},
 							&expr.Variable{
 								Position: &position.Position{
-									StartLine: 181,
-									EndLine:   181,
-									StartPos:  4027,
-									EndPos:    4028,
+									StartLine: 179,
+									EndLine:   179,
+									StartPos:  3984,
+									EndPos:    3985,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 181,
-										EndLine:   181,
-										StartPos:  4027,
-										EndPos:    4028,
+										StartLine: 179,
+										EndLine:   179,
+										StartPos:  3984,
+										EndPos:    3985,
 									},
 									Value: "d",
 								},
@@ -8878,17 +8864,17 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 182,
-					EndLine:   182,
-					StartPos:  4037,
-					EndPos:    4050,
+					StartLine: 180,
+					EndLine:   180,
+					StartPos:  3994,
+					EndPos:    4007,
 				},
 				Expr: &expr.Closure{
 					Position: &position.Position{
-						StartLine: 182,
-						EndLine:   182,
-						StartPos:  4037,
-						EndPos:    4049,
+						StartLine: 180,
+						EndLine:   180,
+						StartPos:  3994,
+						EndPos:    4006,
 					},
 					ReturnsRef:    false,
 					Static:        false,
@@ -8898,32 +8884,32 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 183,
-					EndLine:   183,
-					StartPos:  4054,
-					EndPos:    4057,
+					StartLine: 181,
+					EndLine:   181,
+					StartPos:  4011,
+					EndPos:    4014,
 				},
 				Expr: &expr.ConstFetch{
 					Position: &position.Position{
-						StartLine: 183,
-						EndLine:   183,
-						StartPos:  4054,
-						EndPos:    4056,
+						StartLine: 181,
+						EndLine:   181,
+						StartPos:  4011,
+						EndPos:    4013,
 					},
 					Constant: &name.Name{
 						Position: &position.Position{
-							StartLine: 183,
-							EndLine:   183,
-							StartPos:  4054,
-							EndPos:    4056,
+							StartLine: 181,
+							EndLine:   181,
+							StartPos:  4011,
+							EndPos:    4013,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 183,
-									EndLine:   183,
-									StartPos:  4054,
-									EndPos:    4056,
+									StartLine: 181,
+									EndLine:   181,
+									StartPos:  4011,
+									EndPos:    4013,
 								},
 								Value: "foo",
 							},
@@ -8933,32 +8919,67 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 184,
-					EndLine:   184,
-					StartPos:  4061,
-					EndPos:    4074,
+					StartLine: 182,
+					EndLine:   182,
+					StartPos:  4018,
+					EndPos:    4031,
 				},
 				Expr: &expr.ConstFetch{
 					Position: &position.Position{
-						StartLine: 184,
-						EndLine:   184,
-						StartPos:  4061,
-						EndPos:    4073,
+						StartLine: 182,
+						EndLine:   182,
+						StartPos:  4018,
+						EndPos:    4030,
 					},
 					Constant: &name.Relative{
 						Position: &position.Position{
-							StartLine: 184,
-							EndLine:   184,
-							StartPos:  4061,
-							EndPos:    4073,
+							StartLine: 182,
+							EndLine:   182,
+							StartPos:  4018,
+							EndPos:    4030,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 184,
-									EndLine:   184,
-									StartPos:  4071,
-									EndPos:    4073,
+									StartLine: 182,
+									EndLine:   182,
+									StartPos:  4028,
+									EndPos:    4030,
+								},
+								Value: "foo",
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 183,
+					EndLine:   183,
+					StartPos:  4035,
+					EndPos:    4039,
+				},
+				Expr: &expr.ConstFetch{
+					Position: &position.Position{
+						StartLine: 183,
+						EndLine:   183,
+						StartPos:  4035,
+						EndPos:    4038,
+					},
+					Constant: &name.FullyQualified{
+						Position: &position.Position{
+							StartLine: 183,
+							EndLine:   183,
+							StartPos:  4035,
+							EndPos:    4038,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 183,
+									EndLine:   183,
+									StartPos:  4036,
+									EndPos:    4038,
 								},
 								Value: "foo",
 							},
@@ -8970,64 +8991,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 185,
 					EndLine:   185,
-					StartPos:  4078,
-					EndPos:    4082,
-				},
-				Expr: &expr.ConstFetch{
-					Position: &position.Position{
-						StartLine: 185,
-						EndLine:   185,
-						StartPos:  4078,
-						EndPos:    4081,
-					},
-					Constant: &name.FullyQualified{
-						Position: &position.Position{
-							StartLine: 185,
-							EndLine:   185,
-							StartPos:  4078,
-							EndPos:    4081,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 185,
-									EndLine:   185,
-									StartPos:  4079,
-									EndPos:    4081,
-								},
-								Value: "foo",
-							},
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 187,
-					EndLine:   187,
-					StartPos:  4087,
-					EndPos:    4096,
+					StartPos:  4044,
+					EndPos:    4053,
 				},
 				Expr: &expr.Empty{
 					Position: &position.Position{
-						StartLine: 187,
-						EndLine:   187,
-						StartPos:  4087,
-						EndPos:    4095,
+						StartLine: 185,
+						EndLine:   185,
+						StartPos:  4044,
+						EndPos:    4052,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 187,
-							EndLine:   187,
-							StartPos:  4093,
-							EndPos:    4094,
+							StartLine: 185,
+							EndLine:   185,
+							StartPos:  4050,
+							EndPos:    4051,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 187,
-								EndLine:   187,
-								StartPos:  4093,
-								EndPos:    4094,
+								StartLine: 185,
+								EndLine:   185,
+								StartPos:  4050,
+								EndPos:    4051,
 							},
 							Value: "a",
 						},
@@ -9036,39 +9022,39 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 188,
-					EndLine:   188,
-					StartPos:  4100,
-					EndPos:    4110,
+					StartLine: 186,
+					EndLine:   186,
+					StartPos:  4057,
+					EndPos:    4067,
 				},
 				Expr: &expr.Empty{
 					Position: &position.Position{
-						StartLine: 188,
-						EndLine:   188,
-						StartPos:  4100,
-						EndPos:    4109,
+						StartLine: 186,
+						EndLine:   186,
+						StartPos:  4057,
+						EndPos:    4066,
 					},
 					Expr: &expr.ConstFetch{
 						Position: &position.Position{
-							StartLine: 188,
-							EndLine:   188,
-							StartPos:  4106,
-							EndPos:    4108,
+							StartLine: 186,
+							EndLine:   186,
+							StartPos:  4063,
+							EndPos:    4065,
 						},
 						Constant: &name.Name{
 							Position: &position.Position{
-								StartLine: 188,
-								EndLine:   188,
-								StartPos:  4106,
-								EndPos:    4108,
+								StartLine: 186,
+								EndLine:   186,
+								StartPos:  4063,
+								EndPos:    4065,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
-										StartLine: 188,
-										EndLine:   188,
-										StartPos:  4106,
-										EndPos:    4108,
+										StartLine: 186,
+										EndLine:   186,
+										StartPos:  4063,
+										EndPos:    4065,
 									},
 									Value: "Foo",
 								},
@@ -9079,31 +9065,31 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 189,
-					EndLine:   189,
-					StartPos:  4114,
-					EndPos:    4117,
+					StartLine: 187,
+					EndLine:   187,
+					StartPos:  4071,
+					EndPos:    4074,
 				},
 				Expr: &expr.ErrorSuppress{
 					Position: &position.Position{
-						StartLine: 189,
-						EndLine:   189,
-						StartPos:  4114,
-						EndPos:    4116,
+						StartLine: 187,
+						EndLine:   187,
+						StartPos:  4071,
+						EndPos:    4073,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 189,
-							EndLine:   189,
-							StartPos:  4115,
-							EndPos:    4116,
+							StartLine: 187,
+							EndLine:   187,
+							StartPos:  4072,
+							EndPos:    4073,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 189,
-								EndLine:   189,
-								StartPos:  4115,
-								EndPos:    4116,
+								StartLine: 187,
+								EndLine:   187,
+								StartPos:  4072,
+								EndPos:    4073,
 							},
 							Value: "a",
 						},
@@ -9112,31 +9098,82 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 190,
-					EndLine:   190,
-					StartPos:  4121,
-					EndPos:    4129,
+					StartLine: 188,
+					EndLine:   188,
+					StartPos:  4078,
+					EndPos:    4086,
 				},
 				Expr: &expr.Eval{
 					Position: &position.Position{
+						StartLine: 188,
+						EndLine:   188,
+						StartPos:  4078,
+						EndPos:    4085,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 188,
+							EndLine:   188,
+							StartPos:  4083,
+							EndPos:    4084,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 188,
+								EndLine:   188,
+								StartPos:  4083,
+								EndPos:    4084,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 189,
+					EndLine:   189,
+					StartPos:  4090,
+					EndPos:    4094,
+				},
+				Expr: &expr.Exit{
+					Position: &position.Position{
+						StartLine: 189,
+						EndLine:   189,
+						StartPos:  4090,
+						EndPos:    4093,
+					},
+					Die: false,
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 190,
+					EndLine:   190,
+					StartPos:  4098,
+					EndPos:    4106,
+				},
+				Expr: &expr.Exit{
+					Position: &position.Position{
 						StartLine: 190,
 						EndLine:   190,
-						StartPos:  4121,
-						EndPos:    4128,
+						StartPos:  4098,
+						EndPos:    4105,
 					},
+					Die: false,
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 190,
 							EndLine:   190,
-							StartPos:  4126,
-							EndPos:    4127,
+							StartPos:  4103,
+							EndPos:    4104,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 190,
 								EndLine:   190,
-								StartPos:  4126,
-								EndPos:    4127,
+								StartPos:  4103,
+								EndPos:    4104,
 							},
 							Value: "a",
 						},
@@ -9147,47 +9184,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 191,
 					EndLine:   191,
-					StartPos:  4133,
-					EndPos:    4137,
+					StartPos:  4110,
+					EndPos:    4115,
 				},
 				Expr: &expr.Exit{
-					Die: false,
 					Position: &position.Position{
 						StartLine: 191,
 						EndLine:   191,
-						StartPos:  4133,
-						EndPos:    4136,
+						StartPos:  4110,
+						EndPos:    4114,
 					},
+					Die: true,
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
 					StartLine: 192,
 					EndLine:   192,
-					StartPos:  4141,
-					EndPos:    4149,
+					StartPos:  4119,
+					EndPos:    4126,
 				},
 				Expr: &expr.Exit{
-					Die: false,
 					Position: &position.Position{
 						StartLine: 192,
 						EndLine:   192,
-						StartPos:  4141,
-						EndPos:    4148,
+						StartPos:  4119,
+						EndPos:    4125,
 					},
+					Die: true,
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 192,
 							EndLine:   192,
-							StartPos:  4146,
-							EndPos:    4147,
+							StartPos:  4123,
+							EndPos:    4124,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 192,
 								EndLine:   192,
-								StartPos:  4146,
-								EndPos:    4147,
+								StartPos:  4123,
+								EndPos:    4124,
 							},
 							Value: "a",
 						},
@@ -9198,16 +9235,42 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 193,
 					EndLine:   193,
-					StartPos:  4153,
-					EndPos:    4158,
+					StartPos:  4130,
+					EndPos:    4135,
 				},
-				Expr: &expr.Exit{
-					Die: true,
+				Expr: &expr.FunctionCall{
 					Position: &position.Position{
 						StartLine: 193,
 						EndLine:   193,
-						StartPos:  4153,
-						EndPos:    4157,
+						StartPos:  4130,
+						EndPos:    4134,
+					},
+					Function: &name.Name{
+						Position: &position.Position{
+							StartLine: 193,
+							EndLine:   193,
+							StartPos:  4130,
+							EndPos:    4132,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 193,
+									EndLine:   193,
+									StartPos:  4130,
+									EndPos:    4132,
+								},
+								Value: "foo",
+							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 193,
+							EndLine:   193,
+							StartPos:  4133,
+							EndPos:    4134,
+						},
 					},
 				},
 			},
@@ -9215,107 +9278,30 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 194,
 					EndLine:   194,
-					StartPos:  4162,
-					EndPos:    4169,
+					StartPos:  4139,
+					EndPos:    4157,
 				},
-				Expr: &expr.Exit{
-					Die: true,
+				Expr: &expr.FunctionCall{
 					Position: &position.Position{
 						StartLine: 194,
 						EndLine:   194,
-						StartPos:  4162,
-						EndPos:    4168,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 194,
-							EndLine:   194,
-							StartPos:  4166,
-							EndPos:    4167,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 194,
-								EndLine:   194,
-								StartPos:  4166,
-								EndPos:    4167,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 195,
-					EndLine:   195,
-					StartPos:  4173,
-					EndPos:    4178,
-				},
-				Expr: &expr.FunctionCall{
-					Position: &position.Position{
-						StartLine: 195,
-						EndLine:   195,
-						StartPos:  4173,
-						EndPos:    4177,
-					},
-					Function: &name.Name{
-						Position: &position.Position{
-							StartLine: 195,
-							EndLine:   195,
-							StartPos:  4173,
-							EndPos:    4175,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 195,
-									EndLine:   195,
-									StartPos:  4173,
-									EndPos:    4175,
-								},
-								Value: "foo",
-							},
-						},
-					},
-					ArgumentList: &node.ArgumentList{
-						Position: &position.Position{
-							StartLine: 195,
-							EndLine:   195,
-							StartPos:  4176,
-							EndPos:    4177,
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 196,
-					EndLine:   196,
-					StartPos:  4182,
-					EndPos:    4200,
-				},
-				Expr: &expr.FunctionCall{
-					Position: &position.Position{
-						StartLine: 196,
-						EndLine:   196,
-						StartPos:  4182,
-						EndPos:    4199,
+						StartPos:  4139,
+						EndPos:    4156,
 					},
 					Function: &name.Relative{
 						Position: &position.Position{
-							StartLine: 196,
-							EndLine:   196,
-							StartPos:  4182,
-							EndPos:    4194,
+							StartLine: 194,
+							EndLine:   194,
+							StartPos:  4139,
+							EndPos:    4151,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 196,
-									EndLine:   196,
-									StartPos:  4192,
-									EndPos:    4194,
+									StartLine: 194,
+									EndLine:   194,
+									StartPos:  4149,
+									EndPos:    4151,
 								},
 								Value: "foo",
 							},
@@ -9323,34 +9309,34 @@ func TestPhp5(t *testing.T) {
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 196,
-							EndLine:   196,
-							StartPos:  4195,
-							EndPos:    4199,
+							StartLine: 194,
+							EndLine:   194,
+							StartPos:  4152,
+							EndPos:    4156,
 						},
 						Arguments: []node.Node{
 							&node.Argument{
 								Position: &position.Position{
-									StartLine: 196,
-									EndLine:   196,
-									StartPos:  4197,
-									EndPos:    4198,
+									StartLine: 194,
+									EndLine:   194,
+									StartPos:  4154,
+									EndPos:    4155,
 								},
 								Variadic:    false,
 								IsReference: true,
 								Expr: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 196,
-										EndLine:   196,
-										StartPos:  4197,
-										EndPos:    4198,
+										StartLine: 194,
+										EndLine:   194,
+										StartPos:  4154,
+										EndPos:    4155,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 196,
-											EndLine:   196,
-											StartPos:  4197,
-											EndPos:    4198,
+											StartLine: 194,
+											EndLine:   194,
+											StartPos:  4154,
+											EndPos:    4155,
 										},
 										Value: "a",
 									},
@@ -9362,32 +9348,32 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 197,
-					EndLine:   197,
-					StartPos:  4204,
-					EndPos:    4212,
+					StartLine: 195,
+					EndLine:   195,
+					StartPos:  4161,
+					EndPos:    4169,
 				},
 				Expr: &expr.FunctionCall{
 					Position: &position.Position{
-						StartLine: 197,
-						EndLine:   197,
-						StartPos:  4204,
-						EndPos:    4211,
+						StartLine: 195,
+						EndLine:   195,
+						StartPos:  4161,
+						EndPos:    4168,
 					},
 					Function: &name.FullyQualified{
 						Position: &position.Position{
-							StartLine: 197,
-							EndLine:   197,
-							StartPos:  4204,
-							EndPos:    4207,
+							StartLine: 195,
+							EndLine:   195,
+							StartPos:  4161,
+							EndPos:    4164,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 197,
-									EndLine:   197,
-									StartPos:  4205,
-									EndPos:    4207,
+									StartLine: 195,
+									EndLine:   195,
+									StartPos:  4162,
+									EndPos:    4164,
 								},
 								Value: "foo",
 							},
@@ -9395,27 +9381,27 @@ func TestPhp5(t *testing.T) {
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 197,
-							EndLine:   197,
-							StartPos:  4208,
-							EndPos:    4211,
+							StartLine: 195,
+							EndLine:   195,
+							StartPos:  4165,
+							EndPos:    4168,
 						},
 						Arguments: []node.Node{
 							&node.Argument{
 								Position: &position.Position{
-									StartLine: 197,
-									EndLine:   197,
-									StartPos:  4209,
-									EndPos:    4210,
+									StartLine: 195,
+									EndLine:   195,
+									StartPos:  4166,
+									EndPos:    4167,
 								},
 								Variadic:    false,
 								IsReference: false,
 								Expr: &expr.ShortArray{
 									Position: &position.Position{
-										StartLine: 197,
-										EndLine:   197,
-										StartPos:  4209,
-										EndPos:    4210,
+										StartLine: 195,
+										EndLine:   195,
+										StartPos:  4166,
+										EndPos:    4167,
 									},
 									Items: []node.Node{},
 								},
@@ -9426,72 +9412,72 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 198,
-					EndLine:   198,
-					StartPos:  4216,
-					EndPos:    4230,
+					StartLine: 196,
+					EndLine:   196,
+					StartPos:  4173,
+					EndPos:    4187,
 				},
 				Expr: &expr.FunctionCall{
 					Position: &position.Position{
-						StartLine: 198,
-						EndLine:   198,
-						StartPos:  4216,
-						EndPos:    4229,
+						StartLine: 196,
+						EndLine:   196,
+						StartPos:  4173,
+						EndPos:    4186,
 					},
 					Function: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 198,
-							EndLine:   198,
-							StartPos:  4216,
-							EndPos:    4219,
+							StartLine: 196,
+							EndLine:   196,
+							StartPos:  4173,
+							EndPos:    4176,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 198,
-								EndLine:   198,
-								StartPos:  4216,
-								EndPos:    4219,
+								StartLine: 196,
+								EndLine:   196,
+								StartPos:  4173,
+								EndPos:    4176,
 							},
 							Value: "foo",
 						},
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 198,
-							EndLine:   198,
-							StartPos:  4220,
-							EndPos:    4229,
+							StartLine: 196,
+							EndLine:   196,
+							StartPos:  4177,
+							EndPos:    4186,
 						},
 						Arguments: []node.Node{
 							&node.Argument{
 								Position: &position.Position{
-									StartLine: 198,
-									EndLine:   198,
-									StartPos:  4221,
-									EndPos:    4228,
+									StartLine: 196,
+									EndLine:   196,
+									StartPos:  4178,
+									EndPos:    4185,
 								},
 								Variadic:    false,
 								IsReference: false,
 								Expr: &expr.Yield{
 									Position: &position.Position{
-										StartLine: 198,
-										EndLine:   198,
-										StartPos:  4221,
-										EndPos:    4228,
+										StartLine: 196,
+										EndLine:   196,
+										StartPos:  4178,
+										EndPos:    4185,
 									},
 									Value: &expr.Variable{
 										Position: &position.Position{
-											StartLine: 198,
-											EndLine:   198,
-											StartPos:  4227,
-											EndPos:    4228,
+											StartLine: 196,
+											EndLine:   196,
+											StartPos:  4184,
+											EndPos:    4185,
 										},
 										VarName: &node.Identifier{
 											Position: &position.Position{
-												StartLine: 198,
-												EndLine:   198,
-												StartPos:  4227,
-												EndPos:    4228,
+												StartLine: 196,
+												EndLine:   196,
+												StartPos:  4184,
+												EndPos:    4185,
 											},
 											Value: "a",
 										},
@@ -9504,31 +9490,97 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 200,
-					EndLine:   200,
-					StartPos:  4235,
-					EndPos:    4239,
+					StartLine: 198,
+					EndLine:   198,
+					StartPos:  4192,
+					EndPos:    4196,
 				},
 				Expr: &expr.PostDec{
 					Position: &position.Position{
+						StartLine: 198,
+						EndLine:   198,
+						StartPos:  4192,
+						EndPos:    4195,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 198,
+							EndLine:   198,
+							StartPos:  4192,
+							EndPos:    4193,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 198,
+								EndLine:   198,
+								StartPos:  4192,
+								EndPos:    4193,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 199,
+					EndLine:   199,
+					StartPos:  4200,
+					EndPos:    4204,
+				},
+				Expr: &expr.PostInc{
+					Position: &position.Position{
+						StartLine: 199,
+						EndLine:   199,
+						StartPos:  4200,
+						EndPos:    4203,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 199,
+							EndLine:   199,
+							StartPos:  4200,
+							EndPos:    4201,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 199,
+								EndLine:   199,
+								StartPos:  4200,
+								EndPos:    4201,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 200,
+					EndLine:   200,
+					StartPos:  4208,
+					EndPos:    4212,
+				},
+				Expr: &expr.PreDec{
+					Position: &position.Position{
 						StartLine: 200,
 						EndLine:   200,
-						StartPos:  4235,
-						EndPos:    4238,
+						StartPos:  4208,
+						EndPos:    4211,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 200,
 							EndLine:   200,
-							StartPos:  4235,
-							EndPos:    4236,
+							StartPos:  4210,
+							EndPos:    4211,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 200,
 								EndLine:   200,
-								StartPos:  4235,
-								EndPos:    4236,
+								StartPos:  4210,
+								EndPos:    4211,
 							},
 							Value: "a",
 						},
@@ -9539,62 +9591,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 201,
 					EndLine:   201,
-					StartPos:  4243,
-					EndPos:    4247,
+					StartPos:  4216,
+					EndPos:    4220,
 				},
-				Expr: &expr.PostInc{
+				Expr: &expr.PreInc{
 					Position: &position.Position{
 						StartLine: 201,
 						EndLine:   201,
-						StartPos:  4243,
-						EndPos:    4246,
+						StartPos:  4216,
+						EndPos:    4219,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 201,
 							EndLine:   201,
-							StartPos:  4243,
-							EndPos:    4244,
+							StartPos:  4218,
+							EndPos:    4219,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 201,
 								EndLine:   201,
-								StartPos:  4243,
-								EndPos:    4244,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 202,
-					EndLine:   202,
-					StartPos:  4251,
-					EndPos:    4255,
-				},
-				Expr: &expr.PreDec{
-					Position: &position.Position{
-						StartLine: 202,
-						EndLine:   202,
-						StartPos:  4251,
-						EndPos:    4254,
-					},
-					Variable: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 202,
-							EndLine:   202,
-							StartPos:  4253,
-							EndPos:    4254,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 202,
-								EndLine:   202,
-								StartPos:  4253,
-								EndPos:    4254,
+								StartPos:  4218,
+								EndPos:    4219,
 							},
 							Value: "a",
 						},
@@ -9605,29 +9624,62 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 203,
 					EndLine:   203,
-					StartPos:  4259,
-					EndPos:    4263,
+					StartPos:  4225,
+					EndPos:    4235,
 				},
-				Expr: &expr.PreInc{
+				Expr: &expr.Include{
 					Position: &position.Position{
 						StartLine: 203,
 						EndLine:   203,
-						StartPos:  4259,
-						EndPos:    4262,
+						StartPos:  4225,
+						EndPos:    4234,
 					},
-					Variable: &expr.Variable{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 203,
 							EndLine:   203,
-							StartPos:  4261,
-							EndPos:    4262,
+							StartPos:  4233,
+							EndPos:    4234,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 203,
 								EndLine:   203,
-								StartPos:  4261,
-								EndPos:    4262,
+								StartPos:  4233,
+								EndPos:    4234,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 204,
+					EndLine:   204,
+					StartPos:  4239,
+					EndPos:    4254,
+				},
+				Expr: &expr.IncludeOnce{
+					Position: &position.Position{
+						StartLine: 204,
+						EndLine:   204,
+						StartPos:  4239,
+						EndPos:    4253,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 204,
+							EndLine:   204,
+							StartPos:  4252,
+							EndPos:    4253,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 204,
+								EndLine:   204,
+								StartPos:  4252,
+								EndPos:    4253,
 							},
 							Value: "a",
 						},
@@ -9638,29 +9690,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 205,
 					EndLine:   205,
-					StartPos:  4268,
-					EndPos:    4278,
+					StartPos:  4258,
+					EndPos:    4268,
 				},
-				Expr: &expr.Include{
+				Expr: &expr.Require{
 					Position: &position.Position{
 						StartLine: 205,
 						EndLine:   205,
-						StartPos:  4268,
-						EndPos:    4277,
+						StartPos:  4258,
+						EndPos:    4267,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 205,
 							EndLine:   205,
-							StartPos:  4276,
-							EndPos:    4277,
+							StartPos:  4266,
+							EndPos:    4267,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 205,
 								EndLine:   205,
-								StartPos:  4276,
-								EndPos:    4277,
+								StartPos:  4266,
+								EndPos:    4267,
 							},
 							Value: "a",
 						},
@@ -9671,62 +9723,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 206,
 					EndLine:   206,
-					StartPos:  4282,
-					EndPos:    4297,
+					StartPos:  4272,
+					EndPos:    4287,
 				},
-				Expr: &expr.IncludeOnce{
+				Expr: &expr.RequireOnce{
 					Position: &position.Position{
 						StartLine: 206,
 						EndLine:   206,
-						StartPos:  4282,
-						EndPos:    4296,
+						StartPos:  4272,
+						EndPos:    4286,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 206,
 							EndLine:   206,
-							StartPos:  4295,
-							EndPos:    4296,
+							StartPos:  4285,
+							EndPos:    4286,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 206,
 								EndLine:   206,
-								StartPos:  4295,
-								EndPos:    4296,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 207,
-					EndLine:   207,
-					StartPos:  4301,
-					EndPos:    4311,
-				},
-				Expr: &expr.Require{
-					Position: &position.Position{
-						StartLine: 207,
-						EndLine:   207,
-						StartPos:  4301,
-						EndPos:    4310,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 207,
-							EndLine:   207,
-							StartPos:  4309,
-							EndPos:    4310,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 207,
-								EndLine:   207,
-								StartPos:  4309,
-								EndPos:    4310,
+								StartPos:  4285,
+								EndPos:    4286,
 							},
 							Value: "a",
 						},
@@ -9737,80 +9756,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 208,
 					EndLine:   208,
-					StartPos:  4315,
-					EndPos:    4330,
+					StartPos:  4292,
+					EndPos:    4309,
 				},
-				Expr: &expr.RequireOnce{
+				Expr: &expr.InstanceOf{
 					Position: &position.Position{
 						StartLine: 208,
 						EndLine:   208,
-						StartPos:  4315,
-						EndPos:    4329,
+						StartPos:  4292,
+						EndPos:    4308,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 208,
 							EndLine:   208,
-							StartPos:  4328,
-							EndPos:    4329,
+							StartPos:  4292,
+							EndPos:    4293,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 208,
 								EndLine:   208,
-								StartPos:  4328,
-								EndPos:    4329,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 210,
-					EndLine:   210,
-					StartPos:  4335,
-					EndPos:    4352,
-				},
-				Expr: &expr.InstanceOf{
-					Position: &position.Position{
-						StartLine: 210,
-						EndLine:   210,
-						StartPos:  4335,
-						EndPos:    4351,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 210,
-							EndLine:   210,
-							StartPos:  4335,
-							EndPos:    4336,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 210,
-								EndLine:   210,
-								StartPos:  4335,
-								EndPos:    4336,
+								StartPos:  4292,
+								EndPos:    4293,
 							},
 							Value: "a",
 						},
 					},
 					Class: &name.Name{
 						Position: &position.Position{
-							StartLine: 210,
-							EndLine:   210,
-							StartPos:  4349,
-							EndPos:    4351,
+							StartLine: 208,
+							EndLine:   208,
+							StartPos:  4306,
+							EndPos:    4308,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 210,
-									EndLine:   210,
-									StartPos:  4349,
-									EndPos:    4351,
+									StartLine: 208,
+									EndLine:   208,
+									StartPos:  4306,
+									EndPos:    4308,
 								},
 								Value: "Foo",
 							},
@@ -9820,49 +9806,101 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 211,
-					EndLine:   211,
-					StartPos:  4356,
-					EndPos:    4383,
+					StartLine: 209,
+					EndLine:   209,
+					StartPos:  4313,
+					EndPos:    4340,
 				},
 				Expr: &expr.InstanceOf{
 					Position: &position.Position{
-						StartLine: 211,
-						EndLine:   211,
-						StartPos:  4356,
-						EndPos:    4382,
+						StartLine: 209,
+						EndLine:   209,
+						StartPos:  4313,
+						EndPos:    4339,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 211,
-							EndLine:   211,
-							StartPos:  4356,
-							EndPos:    4357,
+							StartLine: 209,
+							EndLine:   209,
+							StartPos:  4313,
+							EndPos:    4314,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 211,
-								EndLine:   211,
-								StartPos:  4356,
-								EndPos:    4357,
+								StartLine: 209,
+								EndLine:   209,
+								StartPos:  4313,
+								EndPos:    4314,
 							},
 							Value: "a",
 						},
 					},
 					Class: &name.Relative{
 						Position: &position.Position{
-							StartLine: 211,
-							EndLine:   211,
-							StartPos:  4370,
-							EndPos:    4382,
+							StartLine: 209,
+							EndLine:   209,
+							StartPos:  4327,
+							EndPos:    4339,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 211,
-									EndLine:   211,
-									StartPos:  4380,
-									EndPos:    4382,
+									StartLine: 209,
+									EndLine:   209,
+									StartPos:  4337,
+									EndPos:    4339,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 210,
+					EndLine:   210,
+					StartPos:  4344,
+					EndPos:    4362,
+				},
+				Expr: &expr.InstanceOf{
+					Position: &position.Position{
+						StartLine: 210,
+						EndLine:   210,
+						StartPos:  4344,
+						EndPos:    4361,
+					},
+					Expr: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 210,
+							EndLine:   210,
+							StartPos:  4344,
+							EndPos:    4345,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 210,
+								EndLine:   210,
+								StartPos:  4344,
+								EndPos:    4345,
+							},
+							Value: "a",
+						},
+					},
+					Class: &name.FullyQualified{
+						Position: &position.Position{
+							StartLine: 210,
+							EndLine:   210,
+							StartPos:  4358,
+							EndPos:    4361,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 210,
+									EndLine:   210,
+									StartPos:  4359,
+									EndPos:    4361,
 								},
 								Value: "Foo",
 							},
@@ -9874,99 +9912,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 212,
 					EndLine:   212,
-					StartPos:  4387,
-					EndPos:    4405,
-				},
-				Expr: &expr.InstanceOf{
-					Position: &position.Position{
-						StartLine: 212,
-						EndLine:   212,
-						StartPos:  4387,
-						EndPos:    4404,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 212,
-							EndLine:   212,
-							StartPos:  4387,
-							EndPos:    4388,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 212,
-								EndLine:   212,
-								StartPos:  4387,
-								EndPos:    4388,
-							},
-							Value: "a",
-						},
-					},
-					Class: &name.FullyQualified{
-						Position: &position.Position{
-							StartLine: 212,
-							EndLine:   212,
-							StartPos:  4401,
-							EndPos:    4404,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 212,
-									EndLine:   212,
-									StartPos:  4402,
-									EndPos:    4404,
-								},
-								Value: "Foo",
-							},
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 214,
-					EndLine:   214,
-					StartPos:  4410,
-					EndPos:    4423,
+					StartPos:  4367,
+					EndPos:    4380,
 				},
 				Expr: &expr.Isset{
 					Position: &position.Position{
-						StartLine: 214,
-						EndLine:   214,
-						StartPos:  4410,
-						EndPos:    4422,
+						StartLine: 212,
+						EndLine:   212,
+						StartPos:  4367,
+						EndPos:    4379,
 					},
 					Variables: []node.Node{
 						&expr.Variable{
 							Position: &position.Position{
-								StartLine: 214,
-								EndLine:   214,
-								StartPos:  4416,
-								EndPos:    4417,
+								StartLine: 212,
+								EndLine:   212,
+								StartPos:  4373,
+								EndPos:    4374,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 214,
-									EndLine:   214,
-									StartPos:  4416,
-									EndPos:    4417,
+									StartLine: 212,
+									EndLine:   212,
+									StartPos:  4373,
+									EndPos:    4374,
 								},
 								Value: "a",
 							},
 						},
 						&expr.Variable{
 							Position: &position.Position{
-								StartLine: 214,
-								EndLine:   214,
-								StartPos:  4420,
-								EndPos:    4421,
+								StartLine: 212,
+								EndLine:   212,
+								StartPos:  4377,
+								EndPos:    4378,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 214,
-									EndLine:   214,
-									StartPos:  4420,
-									EndPos:    4421,
+									StartLine: 212,
+									EndLine:   212,
+									StartPos:  4377,
+									EndPos:    4378,
 								},
 								Value: "b",
 							},
@@ -9976,40 +9962,40 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 215,
-					EndLine:   215,
-					StartPos:  4427,
-					EndPos:    4437,
+					StartLine: 213,
+					EndLine:   213,
+					StartPos:  4384,
+					EndPos:    4394,
 				},
 				Expr: &expr.Isset{
 					Position: &position.Position{
-						StartLine: 215,
-						EndLine:   215,
-						StartPos:  4427,
-						EndPos:    4436,
+						StartLine: 213,
+						EndLine:   213,
+						StartPos:  4384,
+						EndPos:    4393,
 					},
 					Variables: []node.Node{
 						&expr.ConstFetch{
 							Position: &position.Position{
-								StartLine: 215,
-								EndLine:   215,
-								StartPos:  4433,
-								EndPos:    4435,
+								StartLine: 213,
+								EndLine:   213,
+								StartPos:  4390,
+								EndPos:    4392,
 							},
 							Constant: &name.Name{
 								Position: &position.Position{
-									StartLine: 215,
-									EndLine:   215,
-									StartPos:  4433,
-									EndPos:    4435,
+									StartLine: 213,
+									EndLine:   213,
+									StartPos:  4390,
+									EndPos:    4392,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 215,
-											EndLine:   215,
-											StartPos:  4433,
-											EndPos:    4435,
+											StartLine: 213,
+											EndLine:   213,
+											StartPos:  4390,
+											EndPos:    4392,
 										},
 										Value: "Foo",
 									},
@@ -10021,40 +10007,40 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 216,
-					EndLine:   216,
-					StartPos:  4441,
-					EndPos:    4452,
+					StartLine: 214,
+					EndLine:   214,
+					StartPos:  4398,
+					EndPos:    4409,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
-						StartLine: 216,
-						EndLine:   216,
-						StartPos:  4441,
-						EndPos:    4451,
+						StartLine: 214,
+						EndLine:   214,
+						StartPos:  4398,
+						EndPos:    4408,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
-							StartLine: 216,
-							EndLine:   216,
-							StartPos:  4441,
-							EndPos:    4446,
+							StartLine: 214,
+							EndLine:   214,
+							StartPos:  4398,
+							EndPos:    4403,
 						},
 						Items: []node.Node{},
 					},
 					Expression: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 216,
-							EndLine:   216,
-							StartPos:  4450,
-							EndPos:    4451,
+							StartLine: 214,
+							EndLine:   214,
+							StartPos:  4407,
+							EndPos:    4408,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 216,
-								EndLine:   216,
-								StartPos:  4450,
-								EndPos:    4451,
+								StartLine: 214,
+								EndLine:   214,
+								StartPos:  4407,
+								EndPos:    4408,
 							},
 							Value: "b",
 						},
@@ -10063,46 +10049,46 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 217,
-					EndLine:   217,
-					StartPos:  4456,
-					EndPos:    4473,
+					StartLine: 215,
+					EndLine:   215,
+					StartPos:  4413,
+					EndPos:    4430,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
-						StartLine: 217,
-						EndLine:   217,
-						StartPos:  4456,
-						EndPos:    4472,
+						StartLine: 215,
+						EndLine:   215,
+						StartPos:  4413,
+						EndPos:    4429,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
-							StartLine: 217,
-							EndLine:   217,
-							StartPos:  4456,
-							EndPos:    4467,
+							StartLine: 215,
+							EndLine:   215,
+							StartPos:  4413,
+							EndPos:    4424,
 						},
 						Items: []node.Node{
 							&expr.ArrayItem{
 								Position: &position.Position{
-									StartLine: 217,
-									EndLine:   217,
-									StartPos:  4461,
-									EndPos:    4462,
+									StartLine: 215,
+									EndLine:   215,
+									StartPos:  4418,
+									EndPos:    4419,
 								},
 								Val: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 217,
-										EndLine:   217,
-										StartPos:  4461,
-										EndPos:    4462,
+										StartLine: 215,
+										EndLine:   215,
+										StartPos:  4418,
+										EndPos:    4419,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 217,
-											EndLine:   217,
-											StartPos:  4461,
-											EndPos:    4462,
+											StartLine: 215,
+											EndLine:   215,
+											StartPos:  4418,
+											EndPos:    4419,
 										},
 										Value: "a",
 									},
@@ -10110,24 +10096,24 @@ func TestPhp5(t *testing.T) {
 							},
 							&expr.ArrayItem{
 								Position: &position.Position{
-									StartLine: 217,
-									EndLine:   217,
-									StartPos:  4465,
-									EndPos:    4466,
+									StartLine: 215,
+									EndLine:   215,
+									StartPos:  4422,
+									EndPos:    4423,
 								},
 								Val: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 217,
-										EndLine:   217,
-										StartPos:  4465,
-										EndPos:    4466,
+										StartLine: 215,
+										EndLine:   215,
+										StartPos:  4422,
+										EndPos:    4423,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 217,
-											EndLine:   217,
-											StartPos:  4465,
-											EndPos:    4466,
+											StartLine: 215,
+											EndLine:   215,
+											StartPos:  4422,
+											EndPos:    4423,
 										},
 										Value: "b",
 									},
@@ -10137,17 +10123,17 @@ func TestPhp5(t *testing.T) {
 					},
 					Expression: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 217,
-							EndLine:   217,
-							StartPos:  4471,
-							EndPos:    4472,
+							StartLine: 215,
+							EndLine:   215,
+							StartPos:  4428,
+							EndPos:    4429,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 217,
-								EndLine:   217,
-								StartPos:  4471,
-								EndPos:    4472,
+								StartLine: 215,
+								EndLine:   215,
+								StartPos:  4428,
+								EndPos:    4429,
 							},
 							Value: "b",
 						},
@@ -10156,53 +10142,53 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 218,
-					EndLine:   218,
-					StartPos:  4477,
-					EndPos:    4492,
+					StartLine: 216,
+					EndLine:   216,
+					StartPos:  4434,
+					EndPos:    4449,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
-						StartLine: 218,
-						EndLine:   218,
-						StartPos:  4477,
-						EndPos:    4491,
+						StartLine: 216,
+						EndLine:   216,
+						StartPos:  4434,
+						EndPos:    4448,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
-							StartLine: 218,
-							EndLine:   218,
-							StartPos:  4477,
-							EndPos:    4486,
+							StartLine: 216,
+							EndLine:   216,
+							StartPos:  4434,
+							EndPos:    4443,
 						},
 						Items: []node.Node{
 							&expr.ArrayItem{
 								Position: &position.Position{
-									StartLine: 218,
-									EndLine:   218,
-									StartPos:  4482,
-									EndPos:    4485,
+									StartLine: 216,
+									EndLine:   216,
+									StartPos:  4439,
+									EndPos:    4442,
 								},
 								Val: &expr.ArrayDimFetch{
 									Position: &position.Position{
-										StartLine: 218,
-										EndLine:   218,
-										StartPos:  4482,
-										EndPos:    4485,
+										StartLine: 216,
+										EndLine:   216,
+										StartPos:  4439,
+										EndPos:    4442,
 									},
 									Variable: &expr.Variable{
 										Position: &position.Position{
-											StartLine: 218,
-											EndLine:   218,
-											StartPos:  4482,
-											EndPos:    4483,
+											StartLine: 216,
+											EndLine:   216,
+											StartPos:  4439,
+											EndPos:    4440,
 										},
 										VarName: &node.Identifier{
 											Position: &position.Position{
-												StartLine: 218,
-												EndLine:   218,
-												StartPos:  4482,
-												EndPos:    4483,
+												StartLine: 216,
+												EndLine:   216,
+												StartPos:  4439,
+												EndPos:    4440,
 											},
 											Value: "a",
 										},
@@ -10213,17 +10199,17 @@ func TestPhp5(t *testing.T) {
 					},
 					Expression: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 218,
-							EndLine:   218,
-							StartPos:  4490,
-							EndPos:    4491,
+							StartLine: 216,
+							EndLine:   216,
+							StartPos:  4447,
+							EndPos:    4448,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 218,
-								EndLine:   218,
-								StartPos:  4490,
-								EndPos:    4491,
+								StartLine: 216,
+								EndLine:   216,
+								StartPos:  4447,
+								EndPos:    4448,
 							},
 							Value: "b",
 						},
@@ -10232,61 +10218,61 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 219,
-					EndLine:   219,
-					StartPos:  4496,
-					EndPos:    4515,
+					StartLine: 217,
+					EndLine:   217,
+					StartPos:  4453,
+					EndPos:    4472,
 				},
 				Expr: &assign.Assign{
 					Position: &position.Position{
-						StartLine: 219,
-						EndLine:   219,
-						StartPos:  4496,
-						EndPos:    4514,
+						StartLine: 217,
+						EndLine:   217,
+						StartPos:  4453,
+						EndPos:    4471,
 					},
 					Variable: &expr.List{
 						Position: &position.Position{
-							StartLine: 219,
-							EndLine:   219,
-							StartPos:  4496,
-							EndPos:    4509,
+							StartLine: 217,
+							EndLine:   217,
+							StartPos:  4453,
+							EndPos:    4466,
 						},
 						Items: []node.Node{
 							&expr.ArrayItem{
 								Position: &position.Position{
-									StartLine: 219,
-									EndLine:   219,
-									StartPos:  4501,
-									EndPos:    4508,
+									StartLine: 217,
+									EndLine:   217,
+									StartPos:  4458,
+									EndPos:    4465,
 								},
 								Val: &expr.List{
 									Position: &position.Position{
-										StartLine: 219,
-										EndLine:   219,
-										StartPos:  4501,
-										EndPos:    4508,
+										StartLine: 217,
+										EndLine:   217,
+										StartPos:  4458,
+										EndPos:    4465,
 									},
 									Items: []node.Node{
 										&expr.ArrayItem{
 											Position: &position.Position{
-												StartLine: 219,
-												EndLine:   219,
-												StartPos:  4506,
-												EndPos:    4507,
+												StartLine: 217,
+												EndLine:   217,
+												StartPos:  4463,
+												EndPos:    4464,
 											},
 											Val: &expr.Variable{
 												Position: &position.Position{
-													StartLine: 219,
-													EndLine:   219,
-													StartPos:  4506,
-													EndPos:    4507,
+													StartLine: 217,
+													EndLine:   217,
+													StartPos:  4463,
+													EndPos:    4464,
 												},
 												VarName: &node.Identifier{
 													Position: &position.Position{
-														StartLine: 219,
-														EndLine:   219,
-														StartPos:  4506,
-														EndPos:    4507,
+														StartLine: 217,
+														EndLine:   217,
+														StartPos:  4463,
+														EndPos:    4464,
 													},
 													Value: "a",
 												},
@@ -10299,17 +10285,17 @@ func TestPhp5(t *testing.T) {
 					},
 					Expression: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 219,
-							EndLine:   219,
-							StartPos:  4513,
-							EndPos:    4514,
+							StartLine: 217,
+							EndLine:   217,
+							StartPos:  4470,
+							EndPos:    4471,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 219,
-								EndLine:   219,
-								StartPos:  4513,
-								EndPos:    4514,
+								StartLine: 217,
+								EndLine:   217,
+								StartPos:  4470,
+								EndPos:    4471,
 							},
 							Value: "b",
 						},
@@ -10318,50 +10304,128 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 221,
-					EndLine:   221,
-					StartPos:  4520,
-					EndPos:    4529,
+					StartLine: 219,
+					EndLine:   219,
+					StartPos:  4477,
+					EndPos:    4486,
 				},
 				Expr: &expr.MethodCall{
 					Position: &position.Position{
-						StartLine: 221,
-						EndLine:   221,
-						StartPos:  4520,
-						EndPos:    4528,
+						StartLine: 219,
+						EndLine:   219,
+						StartPos:  4477,
+						EndPos:    4485,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 221,
-							EndLine:   221,
-							StartPos:  4520,
-							EndPos:    4521,
+							StartLine: 219,
+							EndLine:   219,
+							StartPos:  4477,
+							EndPos:    4478,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 221,
-								EndLine:   221,
-								StartPos:  4520,
-								EndPos:    4521,
+								StartLine: 219,
+								EndLine:   219,
+								StartPos:  4477,
+								EndPos:    4478,
 							},
 							Value: "a",
 						},
 					},
 					Method: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 221,
-							EndLine:   221,
-							StartPos:  4524,
-							EndPos:    4526,
+							StartLine: 219,
+							EndLine:   219,
+							StartPos:  4481,
+							EndPos:    4483,
 						},
 						Value: "foo",
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
+							StartLine: 219,
+							EndLine:   219,
+							StartPos:  4484,
+							EndPos:    4485,
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 220,
+					EndLine:   220,
+					StartPos:  4490,
+					EndPos:    4497,
+				},
+				Expr: &expr.New{
+					Position: &position.Position{
+						StartLine: 220,
+						EndLine:   220,
+						StartPos:  4490,
+						EndPos:    4496,
+					},
+					Class: &name.Name{
+						Position: &position.Position{
+							StartLine: 220,
+							EndLine:   220,
+							StartPos:  4494,
+							EndPos:    4496,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 220,
+									EndLine:   220,
+									StartPos:  4494,
+									EndPos:    4496,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 221,
+					EndLine:   221,
+					StartPos:  4501,
+					EndPos:    4520,
+				},
+				Expr: &expr.New{
+					Position: &position.Position{
+						StartLine: 221,
+						EndLine:   221,
+						StartPos:  4501,
+						EndPos:    4519,
+					},
+					Class: &name.Relative{
+						Position: &position.Position{
 							StartLine: 221,
 							EndLine:   221,
-							StartPos:  4527,
-							EndPos:    4528,
+							StartPos:  4505,
+							EndPos:    4517,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 221,
+									EndLine:   221,
+									StartPos:  4515,
+									EndPos:    4517,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 221,
+							EndLine:   221,
+							StartPos:  4518,
+							EndPos:    4519,
 						},
 					},
 				},
@@ -10370,33 +10434,41 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 222,
 					EndLine:   222,
-					StartPos:  4533,
-					EndPos:    4540,
+					StartPos:  4524,
+					EndPos:    4534,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
 						StartLine: 222,
 						EndLine:   222,
-						StartPos:  4533,
-						EndPos:    4539,
+						StartPos:  4524,
+						EndPos:    4533,
 					},
-					Class: &name.Name{
+					Class: &name.FullyQualified{
 						Position: &position.Position{
 							StartLine: 222,
 							EndLine:   222,
-							StartPos:  4537,
-							EndPos:    4539,
+							StartPos:  4528,
+							EndPos:    4531,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
 									StartLine: 222,
 									EndLine:   222,
-									StartPos:  4537,
-									EndPos:    4539,
+									StartPos:  4529,
+									EndPos:    4531,
 								},
 								Value: "Foo",
 							},
+						},
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 222,
+							EndLine:   222,
+							StartPos:  4532,
+							EndPos:    4533,
 						},
 					},
 				},
@@ -10405,41 +10477,31 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 223,
 					EndLine:   223,
-					StartPos:  4544,
-					EndPos:    4563,
+					StartPos:  4538,
+					EndPos:    4547,
 				},
-				Expr: &expr.New{
+				Expr: &expr.Print{
 					Position: &position.Position{
 						StartLine: 223,
 						EndLine:   223,
-						StartPos:  4544,
-						EndPos:    4562,
+						StartPos:  4538,
+						EndPos:    4545,
 					},
-					Class: &name.Relative{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 223,
 							EndLine:   223,
-							StartPos:  4548,
-							EndPos:    4560,
+							StartPos:  4544,
+							EndPos:    4545,
 						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 223,
-									EndLine:   223,
-									StartPos:  4558,
-									EndPos:    4560,
-								},
-								Value: "Foo",
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 223,
+								EndLine:   223,
+								StartPos:  4544,
+								EndPos:    4545,
 							},
-						},
-					},
-					ArgumentList: &node.ArgumentList{
-						Position: &position.Position{
-							StartLine: 223,
-							EndLine:   223,
-							StartPos:  4561,
-							EndPos:    4562,
+							Value: "a",
 						},
 					},
 				},
@@ -10448,115 +10510,39 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 224,
 					EndLine:   224,
-					StartPos:  4567,
-					EndPos:    4577,
-				},
-				Expr: &expr.New{
-					Position: &position.Position{
-						StartLine: 224,
-						EndLine:   224,
-						StartPos:  4567,
-						EndPos:    4576,
-					},
-					Class: &name.FullyQualified{
-						Position: &position.Position{
-							StartLine: 224,
-							EndLine:   224,
-							StartPos:  4571,
-							EndPos:    4574,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 224,
-									EndLine:   224,
-									StartPos:  4572,
-									EndPos:    4574,
-								},
-								Value: "Foo",
-							},
-						},
-					},
-					ArgumentList: &node.ArgumentList{
-						Position: &position.Position{
-							StartLine: 224,
-							EndLine:   224,
-							StartPos:  4575,
-							EndPos:    4576,
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 225,
-					EndLine:   225,
-					StartPos:  4581,
-					EndPos:    4590,
-				},
-				Expr: &expr.Print{
-					Position: &position.Position{
-						StartLine: 225,
-						EndLine:   225,
-						StartPos:  4581,
-						EndPos:    4588,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 225,
-							EndLine:   225,
-							StartPos:  4587,
-							EndPos:    4588,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 225,
-								EndLine:   225,
-								StartPos:  4587,
-								EndPos:    4588,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 226,
-					EndLine:   226,
-					StartPos:  4594,
-					EndPos:    4601,
+					StartPos:  4551,
+					EndPos:    4558,
 				},
 				Expr: &expr.PropertyFetch{
 					Position: &position.Position{
-						StartLine: 226,
-						EndLine:   226,
-						StartPos:  4594,
-						EndPos:    4600,
+						StartLine: 224,
+						EndLine:   224,
+						StartPos:  4551,
+						EndPos:    4557,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 226,
-							EndLine:   226,
-							StartPos:  4594,
-							EndPos:    4595,
+							StartLine: 224,
+							EndLine:   224,
+							StartPos:  4551,
+							EndPos:    4552,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 226,
-								EndLine:   226,
-								StartPos:  4594,
-								EndPos:    4595,
+								StartLine: 224,
+								EndLine:   224,
+								StartPos:  4551,
+								EndPos:    4552,
 							},
 							Value: "a",
 						},
 					},
 					Property: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 226,
-							EndLine:   226,
-							StartPos:  4598,
-							EndPos:    4600,
+							StartLine: 224,
+							EndLine:   224,
+							StartPos:  4555,
+							EndPos:    4557,
 						},
 						Value: "foo",
 					},
@@ -10564,58 +10550,260 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 227,
-					EndLine:   227,
-					StartPos:  4605,
-					EndPos:    4615,
+					StartLine: 225,
+					EndLine:   225,
+					StartPos:  4562,
+					EndPos:    4572,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 227,
-						EndLine:   227,
-						StartPos:  4605,
-						EndPos:    4613,
+						StartLine: 225,
+						EndLine:   225,
+						StartPos:  4562,
+						EndPos:    4570,
 					},
 					Variable: &expr.PropertyFetch{
 						Position: &position.Position{
-							StartLine: 227,
-							EndLine:   227,
-							StartPos:  4605,
-							EndPos:    4611,
+							StartLine: 225,
+							EndLine:   225,
+							StartPos:  4562,
+							EndPos:    4568,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 227,
-								EndLine:   227,
-								StartPos:  4605,
-								EndPos:    4606,
+								StartLine: 225,
+								EndLine:   225,
+								StartPos:  4562,
+								EndPos:    4563,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 227,
-									EndLine:   227,
-									StartPos:  4605,
-									EndPos:    4606,
+									StartLine: 225,
+									EndLine:   225,
+									StartPos:  4562,
+									EndPos:    4563,
 								},
 								Value: "a",
 							},
 						},
 						Property: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 227,
-								EndLine:   227,
-								StartPos:  4609,
-								EndPos:    4611,
+								StartLine: 225,
+								EndLine:   225,
+								StartPos:  4566,
+								EndPos:    4568,
 							},
 							Value: "foo",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
+							StartLine: 225,
+							EndLine:   225,
+							StartPos:  4570,
+							EndPos:    4570,
+						},
+						Value: "1",
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 226,
+					EndLine:   226,
+					StartPos:  4576,
+					EndPos:    4604,
+				},
+				Expr: &expr.ArrayDimFetch{
+					Position: &position.Position{
+						StartLine: 226,
+						EndLine:   226,
+						StartPos:  4576,
+						EndPos:    4602,
+					},
+					Variable: &expr.PropertyFetch{
+						Position: &position.Position{
+							StartLine: 226,
+							EndLine:   226,
+							StartPos:  4576,
+							EndPos:    4600,
+						},
+						Variable: &expr.MethodCall{
+							Position: &position.Position{
+								StartLine: 226,
+								EndLine:   226,
+								StartPos:  4576,
+								EndPos:    4594,
+							},
+							Variable: &expr.PropertyFetch{
+								Position: &position.Position{
+									StartLine: 226,
+									EndLine:   226,
+									StartPos:  4576,
+									EndPos:    4587,
+								},
+								Variable: &expr.PropertyFetch{
+									Position: &position.Position{
+										StartLine: 226,
+										EndLine:   226,
+										StartPos:  4576,
+										EndPos:    4582,
+									},
+									Variable: &expr.Variable{
+										Position: &position.Position{
+											StartLine: 226,
+											EndLine:   226,
+											StartPos:  4576,
+											EndPos:    4577,
+										},
+										VarName: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 226,
+												EndLine:   226,
+												StartPos:  4576,
+												EndPos:    4577,
+											},
+											Value: "a",
+										},
+									},
+									Property: &node.Identifier{
+										Position: &position.Position{
+											StartLine: 226,
+											EndLine:   226,
+											StartPos:  4580,
+											EndPos:    4582,
+										},
+										Value: "foo",
+									},
+								},
+								Property: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 226,
+										EndLine:   226,
+										StartPos:  4585,
+										EndPos:    4587,
+									},
+									Value: "bar",
+								},
+							},
+							Method: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 226,
+									EndLine:   226,
+									StartPos:  4590,
+									EndPos:    4592,
+								},
+								Value: "baz",
+							},
+							ArgumentList: &node.ArgumentList{
+								Position: &position.Position{
+									StartLine: 226,
+									EndLine:   226,
+									StartPos:  4593,
+									EndPos:    4594,
+								},
+							},
+						},
+						Property: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 226,
+								EndLine:   226,
+								StartPos:  4597,
+								EndPos:    4600,
+							},
+							Value: "quux",
+						},
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 226,
+							EndLine:   226,
+							StartPos:  4602,
+							EndPos:    4602,
+						},
+						Value: "0",
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 227,
+					EndLine:   227,
+					StartPos:  4608,
+					EndPos:    4623,
+				},
+				Expr: &expr.ArrayDimFetch{
+					Position: &position.Position{
+						StartLine: 227,
+						EndLine:   227,
+						StartPos:  4608,
+						EndPos:    4621,
+					},
+					Variable: &expr.ArrayDimFetch{
+						Position: &position.Position{
 							StartLine: 227,
 							EndLine:   227,
-							StartPos:  4613,
-							EndPos:    4613,
+							StartPos:  4608,
+							EndPos:    4618,
+						},
+						Variable: &expr.MethodCall{
+							Position: &position.Position{
+								StartLine: 227,
+								EndLine:   227,
+								StartPos:  4608,
+								EndPos:    4616,
+							},
+							Variable: &expr.Variable{
+								Position: &position.Position{
+									StartLine: 227,
+									EndLine:   227,
+									StartPos:  4608,
+									EndPos:    4609,
+								},
+								VarName: &node.Identifier{
+									Position: &position.Position{
+										StartLine: 227,
+										EndLine:   227,
+										StartPos:  4608,
+										EndPos:    4609,
+									},
+									Value: "a",
+								},
+							},
+							Method: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 227,
+									EndLine:   227,
+									StartPos:  4612,
+									EndPos:    4614,
+								},
+								Value: "foo",
+							},
+							ArgumentList: &node.ArgumentList{
+								Position: &position.Position{
+									StartLine: 227,
+									EndLine:   227,
+									StartPos:  4615,
+									EndPos:    4616,
+								},
+							},
+						},
+						Dim: &scalar.Lnumber{
+							Position: &position.Position{
+								StartLine: 227,
+								EndLine:   227,
+								StartPos:  4618,
+								EndPos:    4618,
+							},
+							Value: "1",
+						},
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 227,
+							EndLine:   227,
+							StartPos:  4621,
+							EndPos:    4621,
 						},
 						Value: "1",
 					},
@@ -10625,241 +10813,39 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 228,
 					EndLine:   228,
-					StartPos:  4619,
-					EndPos:    4647,
-				},
-				Expr: &expr.ArrayDimFetch{
-					Position: &position.Position{
-						StartLine: 228,
-						EndLine:   228,
-						StartPos:  4619,
-						EndPos:    4645,
-					},
-					Variable: &expr.PropertyFetch{
-						Position: &position.Position{
-							StartLine: 228,
-							EndLine:   228,
-							StartPos:  4619,
-							EndPos:    4643,
-						},
-						Variable: &expr.MethodCall{
-							Position: &position.Position{
-								StartLine: 228,
-								EndLine:   228,
-								StartPos:  4619,
-								EndPos:    4637,
-							},
-							Variable: &expr.PropertyFetch{
-								Position: &position.Position{
-									StartLine: 228,
-									EndLine:   228,
-									StartPos:  4619,
-									EndPos:    4630,
-								},
-								Variable: &expr.PropertyFetch{
-									Position: &position.Position{
-										StartLine: 228,
-										EndLine:   228,
-										StartPos:  4619,
-										EndPos:    4625,
-									},
-									Variable: &expr.Variable{
-										Position: &position.Position{
-											StartLine: 228,
-											EndLine:   228,
-											StartPos:  4619,
-											EndPos:    4620,
-										},
-										VarName: &node.Identifier{
-											Position: &position.Position{
-												StartLine: 228,
-												EndLine:   228,
-												StartPos:  4619,
-												EndPos:    4620,
-											},
-											Value: "a",
-										},
-									},
-									Property: &node.Identifier{
-										Position: &position.Position{
-											StartLine: 228,
-											EndLine:   228,
-											StartPos:  4623,
-											EndPos:    4625,
-										},
-										Value: "foo",
-									},
-								},
-								Property: &node.Identifier{
-									Position: &position.Position{
-										StartLine: 228,
-										EndLine:   228,
-										StartPos:  4628,
-										EndPos:    4630,
-									},
-									Value: "bar",
-								},
-							},
-							Method: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 228,
-									EndLine:   228,
-									StartPos:  4633,
-									EndPos:    4635,
-								},
-								Value: "baz",
-							},
-							ArgumentList: &node.ArgumentList{
-								Position: &position.Position{
-									StartLine: 228,
-									EndLine:   228,
-									StartPos:  4636,
-									EndPos:    4637,
-								},
-							},
-						},
-						Property: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 228,
-								EndLine:   228,
-								StartPos:  4640,
-								EndPos:    4643,
-							},
-							Value: "quux",
-						},
-					},
-					Dim: &scalar.Lnumber{
-						Position: &position.Position{
-							StartLine: 228,
-							EndLine:   228,
-							StartPos:  4645,
-							EndPos:    4645,
-						},
-						Value: "0",
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 229,
-					EndLine:   229,
-					StartPos:  4651,
-					EndPos:    4666,
-				},
-				Expr: &expr.ArrayDimFetch{
-					Position: &position.Position{
-						StartLine: 229,
-						EndLine:   229,
-						StartPos:  4651,
-						EndPos:    4664,
-					},
-					Variable: &expr.ArrayDimFetch{
-						Position: &position.Position{
-							StartLine: 229,
-							EndLine:   229,
-							StartPos:  4651,
-							EndPos:    4661,
-						},
-						Variable: &expr.MethodCall{
-							Position: &position.Position{
-								StartLine: 229,
-								EndLine:   229,
-								StartPos:  4651,
-								EndPos:    4659,
-							},
-							Variable: &expr.Variable{
-								Position: &position.Position{
-									StartLine: 229,
-									EndLine:   229,
-									StartPos:  4651,
-									EndPos:    4652,
-								},
-								VarName: &node.Identifier{
-									Position: &position.Position{
-										StartLine: 229,
-										EndLine:   229,
-										StartPos:  4651,
-										EndPos:    4652,
-									},
-									Value: "a",
-								},
-							},
-							Method: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 229,
-									EndLine:   229,
-									StartPos:  4655,
-									EndPos:    4657,
-								},
-								Value: "foo",
-							},
-							ArgumentList: &node.ArgumentList{
-								Position: &position.Position{
-									StartLine: 229,
-									EndLine:   229,
-									StartPos:  4658,
-									EndPos:    4659,
-								},
-							},
-						},
-						Dim: &scalar.Lnumber{
-							Position: &position.Position{
-								StartLine: 229,
-								EndLine:   229,
-								StartPos:  4661,
-								EndPos:    4661,
-							},
-							Value: "1",
-						},
-					},
-					Dim: &scalar.Lnumber{
-						Position: &position.Position{
-							StartLine: 229,
-							EndLine:   229,
-							StartPos:  4664,
-							EndPos:    4664,
-						},
-						Value: "1",
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 230,
-					EndLine:   230,
-					StartPos:  4670,
-					EndPos:    4678,
+					StartPos:  4627,
+					EndPos:    4635,
 				},
 				Expr: &expr.ShellExec{
 					Position: &position.Position{
-						StartLine: 230,
-						EndLine:   230,
-						StartPos:  4670,
-						EndPos:    4677,
+						StartLine: 228,
+						EndLine:   228,
+						StartPos:  4627,
+						EndPos:    4634,
 					},
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{
 							Position: &position.Position{
-								StartLine: 230,
-								EndLine:   230,
-								StartPos:  4671,
-								EndPos:    4674,
+								StartLine: 228,
+								EndLine:   228,
+								StartPos:  4628,
+								EndPos:    4631,
 							},
 							Value: "cmd ",
 						},
 						&expr.Variable{
 							Position: &position.Position{
-								StartLine: 230,
-								EndLine:   230,
-								StartPos:  4675,
-								EndPos:    4676,
+								StartLine: 228,
+								EndLine:   228,
+								StartPos:  4632,
+								EndPos:    4633,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 230,
-									EndLine:   230,
-									StartPos:  4675,
-									EndPos:    4676,
+									StartLine: 228,
+									EndLine:   228,
+									StartPos:  4632,
+									EndPos:    4633,
 								},
 								Value: "a",
 							},
@@ -10869,17 +10855,17 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 231,
-					EndLine:   231,
-					StartPos:  4682,
-					EndPos:    4687,
+					StartLine: 229,
+					EndLine:   229,
+					StartPos:  4639,
+					EndPos:    4644,
 				},
 				Expr: &expr.ShellExec{
 					Position: &position.Position{
-						StartLine: 231,
-						EndLine:   231,
-						StartPos:  4682,
-						EndPos:    4686,
+						StartLine: 229,
+						EndLine:   229,
+						StartPos:  4639,
+						EndPos:    4643,
 					},
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{
@@ -10890,66 +10876,66 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 232,
-					EndLine:   232,
-					StartPos:  4691,
-					EndPos:    4693,
+					StartLine: 230,
+					EndLine:   230,
+					StartPos:  4648,
+					EndPos:    4650,
 				},
 				Expr: &expr.ShellExec{
 					Position: &position.Position{
-						StartLine: 232,
-						EndLine:   232,
-						StartPos:  4691,
-						EndPos:    4692,
+						StartLine: 230,
+						EndLine:   230,
+						StartPos:  4648,
+						EndPos:    4649,
 					},
 					Parts: []node.Node{},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 233,
-					EndLine:   233,
-					StartPos:  4697,
-					EndPos:    4699,
+					StartLine: 231,
+					EndLine:   231,
+					StartPos:  4654,
+					EndPos:    4656,
 				},
 				Expr: &expr.ShortArray{
 					Position: &position.Position{
-						StartLine: 233,
-						EndLine:   233,
-						StartPos:  4697,
-						EndPos:    4698,
+						StartLine: 231,
+						EndLine:   231,
+						StartPos:  4654,
+						EndPos:    4655,
 					},
 					Items: []node.Node{},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 234,
-					EndLine:   234,
-					StartPos:  4703,
-					EndPos:    4706,
+					StartLine: 232,
+					EndLine:   232,
+					StartPos:  4660,
+					EndPos:    4663,
 				},
 				Expr: &expr.ShortArray{
 					Position: &position.Position{
-						StartLine: 234,
-						EndLine:   234,
-						StartPos:  4703,
-						EndPos:    4705,
+						StartLine: 232,
+						EndLine:   232,
+						StartPos:  4660,
+						EndPos:    4662,
 					},
 					Items: []node.Node{
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 234,
-								EndLine:   234,
-								StartPos:  4704,
-								EndPos:    4704,
+								StartLine: 232,
+								EndLine:   232,
+								StartPos:  4661,
+								EndPos:    4661,
 							},
 							Val: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 234,
-									EndLine:   234,
-									StartPos:  4704,
-									EndPos:    4704,
+									StartLine: 232,
+									EndLine:   232,
+									StartPos:  4661,
+									EndPos:    4661,
 								},
 								Value: "1",
 							},
@@ -10959,72 +10945,72 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 235,
-					EndLine:   235,
-					StartPos:  4710,
-					EndPos:    4722,
+					StartLine: 233,
+					EndLine:   233,
+					StartPos:  4667,
+					EndPos:    4679,
 				},
 				Expr: &expr.ShortArray{
 					Position: &position.Position{
-						StartLine: 235,
-						EndLine:   235,
-						StartPos:  4710,
-						EndPos:    4721,
+						StartLine: 233,
+						EndLine:   233,
+						StartPos:  4667,
+						EndPos:    4678,
 					},
 					Items: []node.Node{
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 235,
-								EndLine:   235,
-								StartPos:  4711,
-								EndPos:    4714,
+								StartLine: 233,
+								EndLine:   233,
+								StartPos:  4668,
+								EndPos:    4671,
 							},
 							Key: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 235,
-									EndLine:   235,
-									StartPos:  4711,
-									EndPos:    4711,
+									StartLine: 233,
+									EndLine:   233,
+									StartPos:  4668,
+									EndPos:    4668,
 								},
 								Value: "1",
 							},
 							Val: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 235,
-									EndLine:   235,
-									StartPos:  4714,
-									EndPos:    4714,
+									StartLine: 233,
+									EndLine:   233,
+									StartPos:  4671,
+									EndPos:    4671,
 								},
 								Value: "1",
 							},
 						},
 						&expr.ArrayItem{
 							Position: &position.Position{
-								StartLine: 235,
-								EndLine:   235,
-								StartPos:  4717,
-								EndPos:    4719,
+								StartLine: 233,
+								EndLine:   233,
+								StartPos:  4674,
+								EndPos:    4676,
 							},
 							Val: &expr.Reference{
 								Position: &position.Position{
-									StartLine: 235,
-									EndLine:   235,
-									StartPos:  4717,
-									EndPos:    4719,
+									StartLine: 233,
+									EndLine:   233,
+									StartPos:  4674,
+									EndPos:    4676,
 								},
 								Variable: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 235,
-										EndLine:   235,
-										StartPos:  4718,
-										EndPos:    4719,
+										StartLine: 233,
+										EndLine:   233,
+										StartPos:  4675,
+										EndPos:    4676,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 235,
-											EndLine:   235,
-											StartPos:  4718,
-											EndPos:    4719,
+											StartLine: 233,
+											EndLine:   233,
+											StartPos:  4675,
+											EndPos:    4676,
 										},
 										Value: "b",
 									},
@@ -11037,32 +11023,136 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
+					StartLine: 235,
+					EndLine:   235,
+					StartPos:  4684,
+					EndPos:    4694,
+				},
+				Expr: &expr.StaticCall{
+					Position: &position.Position{
+						StartLine: 235,
+						EndLine:   235,
+						StartPos:  4684,
+						EndPos:    4693,
+					},
+					Class: &name.Name{
+						Position: &position.Position{
+							StartLine: 235,
+							EndLine:   235,
+							StartPos:  4684,
+							EndPos:    4686,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 235,
+									EndLine:   235,
+									StartPos:  4684,
+									EndPos:    4686,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+					Call: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 235,
+							EndLine:   235,
+							StartPos:  4689,
+							EndPos:    4691,
+						},
+						Value: "bar",
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 235,
+							EndLine:   235,
+							StartPos:  4692,
+							EndPos:    4693,
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 236,
+					EndLine:   236,
+					StartPos:  4698,
+					EndPos:    4718,
+				},
+				Expr: &expr.StaticCall{
+					Position: &position.Position{
+						StartLine: 236,
+						EndLine:   236,
+						StartPos:  4698,
+						EndPos:    4717,
+					},
+					Class: &name.Relative{
+						Position: &position.Position{
+							StartLine: 236,
+							EndLine:   236,
+							StartPos:  4698,
+							EndPos:    4710,
+						},
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 236,
+									EndLine:   236,
+									StartPos:  4708,
+									EndPos:    4710,
+								},
+								Value: "Foo",
+							},
+						},
+					},
+					Call: &node.Identifier{
+						Position: &position.Position{
+							StartLine: 236,
+							EndLine:   236,
+							StartPos:  4713,
+							EndPos:    4715,
+						},
+						Value: "bar",
+					},
+					ArgumentList: &node.ArgumentList{
+						Position: &position.Position{
+							StartLine: 236,
+							EndLine:   236,
+							StartPos:  4716,
+							EndPos:    4717,
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
 					StartLine: 237,
 					EndLine:   237,
-					StartPos:  4727,
-					EndPos:    4737,
+					StartPos:  4722,
+					EndPos:    4733,
 				},
 				Expr: &expr.StaticCall{
 					Position: &position.Position{
 						StartLine: 237,
 						EndLine:   237,
-						StartPos:  4727,
-						EndPos:    4736,
+						StartPos:  4722,
+						EndPos:    4732,
 					},
-					Class: &name.Name{
+					Class: &name.FullyQualified{
 						Position: &position.Position{
 							StartLine: 237,
 							EndLine:   237,
-							StartPos:  4727,
-							EndPos:    4729,
+							StartPos:  4722,
+							EndPos:    4725,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
 									StartLine: 237,
 									EndLine:   237,
-									StartPos:  4727,
-									EndPos:    4729,
+									StartPos:  4723,
+									EndPos:    4725,
 								},
 								Value: "Foo",
 							},
@@ -11072,8 +11162,8 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 237,
 							EndLine:   237,
-							StartPos:  4732,
-							EndPos:    4734,
+							StartPos:  4728,
+							EndPos:    4730,
 						},
 						Value: "bar",
 					},
@@ -11081,8 +11171,8 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 237,
 							EndLine:   237,
-							StartPos:  4735,
-							EndPos:    4736,
+							StartPos:  4731,
+							EndPos:    4732,
 						},
 					},
 				},
@@ -11091,50 +11181,58 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 238,
 					EndLine:   238,
-					StartPos:  4741,
-					EndPos:    4761,
+					StartPos:  4737,
+					EndPos:    4748,
 				},
 				Expr: &expr.StaticCall{
 					Position: &position.Position{
 						StartLine: 238,
 						EndLine:   238,
-						StartPos:  4741,
-						EndPos:    4760,
+						StartPos:  4737,
+						EndPos:    4747,
 					},
-					Class: &name.Relative{
+					Class: &name.Name{
 						Position: &position.Position{
 							StartLine: 238,
 							EndLine:   238,
-							StartPos:  4741,
-							EndPos:    4753,
+							StartPos:  4737,
+							EndPos:    4739,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
 									StartLine: 238,
 									EndLine:   238,
-									StartPos:  4751,
-									EndPos:    4753,
+									StartPos:  4737,
+									EndPos:    4739,
 								},
 								Value: "Foo",
 							},
 						},
 					},
-					Call: &node.Identifier{
+					Call: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 238,
 							EndLine:   238,
-							StartPos:  4756,
-							EndPos:    4758,
+							StartPos:  4742,
+							EndPos:    4745,
 						},
-						Value: "bar",
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 238,
+								EndLine:   238,
+								StartPos:  4742,
+								EndPos:    4745,
+							},
+							Value: "bar",
+						},
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
 							StartLine: 238,
 							EndLine:   238,
-							StartPos:  4759,
-							EndPos:    4760,
+							StartPos:  4746,
+							EndPos:    4747,
 						},
 					},
 				},
@@ -11143,50 +11241,56 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 239,
 					EndLine:   239,
-					StartPos:  4765,
-					EndPos:    4776,
+					StartPos:  4752,
+					EndPos:    4764,
 				},
 				Expr: &expr.StaticCall{
 					Position: &position.Position{
 						StartLine: 239,
 						EndLine:   239,
-						StartPos:  4765,
-						EndPos:    4775,
+						StartPos:  4752,
+						EndPos:    4763,
 					},
-					Class: &name.FullyQualified{
+					Class: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 239,
 							EndLine:   239,
-							StartPos:  4765,
-							EndPos:    4768,
+							StartPos:  4752,
+							EndPos:    4755,
 						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 239,
-									EndLine:   239,
-									StartPos:  4766,
-									EndPos:    4768,
-								},
-								Value: "Foo",
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 239,
+								EndLine:   239,
+								StartPos:  4752,
+								EndPos:    4755,
 							},
+							Value: "foo",
 						},
 					},
-					Call: &node.Identifier{
+					Call: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 239,
 							EndLine:   239,
-							StartPos:  4771,
-							EndPos:    4773,
+							StartPos:  4758,
+							EndPos:    4761,
 						},
-						Value: "bar",
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 239,
+								EndLine:   239,
+								StartPos:  4758,
+								EndPos:    4761,
+							},
+							Value: "bar",
+						},
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
 							StartLine: 239,
 							EndLine:   239,
-							StartPos:  4774,
-							EndPos:    4775,
+							StartPos:  4762,
+							EndPos:    4763,
 						},
 					},
 				},
@@ -11195,58 +11299,50 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 240,
 					EndLine:   240,
-					StartPos:  4780,
-					EndPos:    4791,
+					StartPos:  4768,
+					EndPos:    4777,
 				},
-				Expr: &expr.StaticCall{
+				Expr: &expr.StaticPropertyFetch{
 					Position: &position.Position{
 						StartLine: 240,
 						EndLine:   240,
-						StartPos:  4780,
-						EndPos:    4790,
+						StartPos:  4768,
+						EndPos:    4776,
 					},
 					Class: &name.Name{
 						Position: &position.Position{
 							StartLine: 240,
 							EndLine:   240,
-							StartPos:  4780,
-							EndPos:    4782,
+							StartPos:  4768,
+							EndPos:    4770,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
 									StartLine: 240,
 									EndLine:   240,
-									StartPos:  4780,
-									EndPos:    4782,
+									StartPos:  4768,
+									EndPos:    4770,
 								},
 								Value: "Foo",
 							},
 						},
 					},
-					Call: &expr.Variable{
+					Property: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 240,
 							EndLine:   240,
-							StartPos:  4785,
-							EndPos:    4788,
+							StartPos:  4773,
+							EndPos:    4776,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 240,
 								EndLine:   240,
-								StartPos:  4785,
-								EndPos:    4788,
+								StartPos:  4773,
+								EndPos:    4776,
 							},
 							Value: "bar",
-						},
-					},
-					ArgumentList: &node.ArgumentList{
-						Position: &position.Position{
-							StartLine: 240,
-							EndLine:   240,
-							StartPos:  4789,
-							EndPos:    4790,
 						},
 					},
 				},
@@ -11255,56 +11351,50 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 241,
 					EndLine:   241,
-					StartPos:  4795,
-					EndPos:    4807,
+					StartPos:  4781,
+					EndPos:    4800,
 				},
-				Expr: &expr.StaticCall{
+				Expr: &expr.StaticPropertyFetch{
 					Position: &position.Position{
 						StartLine: 241,
 						EndLine:   241,
-						StartPos:  4795,
-						EndPos:    4806,
+						StartPos:  4781,
+						EndPos:    4799,
 					},
-					Class: &expr.Variable{
+					Class: &name.Relative{
 						Position: &position.Position{
 							StartLine: 241,
 							EndLine:   241,
-							StartPos:  4795,
-							EndPos:    4798,
+							StartPos:  4781,
+							EndPos:    4793,
 						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 241,
-								EndLine:   241,
-								StartPos:  4795,
-								EndPos:    4798,
+						Parts: []node.Node{
+							&name.NamePart{
+								Position: &position.Position{
+									StartLine: 241,
+									EndLine:   241,
+									StartPos:  4791,
+									EndPos:    4793,
+								},
+								Value: "Foo",
 							},
-							Value: "foo",
 						},
 					},
-					Call: &expr.Variable{
+					Property: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 241,
 							EndLine:   241,
-							StartPos:  4801,
-							EndPos:    4804,
+							StartPos:  4796,
+							EndPos:    4799,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 241,
 								EndLine:   241,
-								StartPos:  4801,
-								EndPos:    4804,
+								StartPos:  4796,
+								EndPos:    4799,
 							},
 							Value: "bar",
-						},
-					},
-					ArgumentList: &node.ArgumentList{
-						Position: &position.Position{
-							StartLine: 241,
-							EndLine:   241,
-							StartPos:  4805,
-							EndPos:    4806,
 						},
 					},
 				},
@@ -11313,30 +11403,30 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 242,
 					EndLine:   242,
-					StartPos:  4811,
-					EndPos:    4820,
+					StartPos:  4804,
+					EndPos:    4814,
 				},
 				Expr: &expr.StaticPropertyFetch{
 					Position: &position.Position{
 						StartLine: 242,
 						EndLine:   242,
-						StartPos:  4811,
-						EndPos:    4819,
+						StartPos:  4804,
+						EndPos:    4813,
 					},
-					Class: &name.Name{
+					Class: &name.FullyQualified{
 						Position: &position.Position{
 							StartLine: 242,
 							EndLine:   242,
-							StartPos:  4811,
-							EndPos:    4813,
+							StartPos:  4804,
+							EndPos:    4807,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
 									StartLine: 242,
 									EndLine:   242,
-									StartPos:  4811,
-									EndPos:    4813,
+									StartPos:  4805,
+									EndPos:    4807,
 								},
 								Value: "Foo",
 							},
@@ -11346,15 +11436,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 242,
 							EndLine:   242,
-							StartPos:  4816,
-							EndPos:    4819,
+							StartPos:  4810,
+							EndPos:    4813,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 242,
 								EndLine:   242,
-								StartPos:  4816,
-								EndPos:    4819,
+								StartPos:  4810,
+								EndPos:    4813,
 							},
 							Value: "bar",
 						},
@@ -11365,50 +11455,65 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 243,
 					EndLine:   243,
-					StartPos:  4824,
-					EndPos:    4843,
+					StartPos:  4818,
+					EndPos:    4830,
 				},
-				Expr: &expr.StaticPropertyFetch{
+				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 243,
 						EndLine:   243,
-						StartPos:  4824,
-						EndPos:    4842,
+						StartPos:  4818,
+						EndPos:    4829,
 					},
-					Class: &name.Relative{
+					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 243,
 							EndLine:   243,
-							StartPos:  4824,
-							EndPos:    4836,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 243,
-									EndLine:   243,
-									StartPos:  4834,
-									EndPos:    4836,
-								},
-								Value: "Foo",
-							},
-						},
-					},
-					Property: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 243,
-							EndLine:   243,
-							StartPos:  4839,
-							EndPos:    4842,
+							StartPos:  4818,
+							EndPos:    4819,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 243,
 								EndLine:   243,
-								StartPos:  4839,
-								EndPos:    4842,
+								StartPos:  4818,
+								EndPos:    4819,
 							},
-							Value: "bar",
+							Value: "a",
+						},
+					},
+					IfTrue: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 243,
+							EndLine:   243,
+							StartPos:  4823,
+							EndPos:    4824,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 243,
+								EndLine:   243,
+								StartPos:  4823,
+								EndPos:    4824,
+							},
+							Value: "b",
+						},
+					},
+					IfFalse: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 243,
+							EndLine:   243,
+							StartPos:  4828,
+							EndPos:    4829,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 243,
+								EndLine:   243,
+								StartPos:  4828,
+								EndPos:    4829,
+							},
+							Value: "c",
 						},
 					},
 				},
@@ -11417,50 +11522,48 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 244,
 					EndLine:   244,
-					StartPos:  4847,
-					EndPos:    4857,
+					StartPos:  4834,
+					EndPos:    4843,
 				},
-				Expr: &expr.StaticPropertyFetch{
+				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 244,
 						EndLine:   244,
-						StartPos:  4847,
-						EndPos:    4856,
+						StartPos:  4834,
+						EndPos:    4842,
 					},
-					Class: &name.FullyQualified{
+					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 244,
 							EndLine:   244,
-							StartPos:  4847,
-							EndPos:    4850,
-						},
-						Parts: []node.Node{
-							&name.NamePart{
-								Position: &position.Position{
-									StartLine: 244,
-									EndLine:   244,
-									StartPos:  4848,
-									EndPos:    4850,
-								},
-								Value: "Foo",
-							},
-						},
-					},
-					Property: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 244,
-							EndLine:   244,
-							StartPos:  4853,
-							EndPos:    4856,
+							StartPos:  4834,
+							EndPos:    4835,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 244,
 								EndLine:   244,
-								StartPos:  4853,
-								EndPos:    4856,
+								StartPos:  4834,
+								EndPos:    4835,
 							},
-							Value: "bar",
+							Value: "a",
+						},
+					},
+					IfFalse: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 244,
+							EndLine:   244,
+							StartPos:  4841,
+							EndPos:    4842,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 244,
+								EndLine:   244,
+								StartPos:  4841,
+								EndPos:    4842,
+							},
+							Value: "c",
 						},
 					},
 				},
@@ -11469,65 +11572,107 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 245,
 					EndLine:   245,
-					StartPos:  4861,
-					EndPos:    4873,
+					StartPos:  4847,
+					EndPos:    4869,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 245,
 						EndLine:   245,
-						StartPos:  4861,
-						EndPos:    4872,
+						StartPos:  4847,
+						EndPos:    4868,
 					},
 					Condition: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 245,
 							EndLine:   245,
-							StartPos:  4861,
-							EndPos:    4862,
+							StartPos:  4847,
+							EndPos:    4848,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 245,
 								EndLine:   245,
-								StartPos:  4861,
-								EndPos:    4862,
+								StartPos:  4847,
+								EndPos:    4848,
 							},
 							Value: "a",
 						},
 					},
-					IfTrue: &expr.Variable{
+					IfTrue: &expr.Ternary{
 						Position: &position.Position{
 							StartLine: 245,
 							EndLine:   245,
-							StartPos:  4866,
-							EndPos:    4867,
+							StartPos:  4852,
+							EndPos:    4863,
 						},
-						VarName: &node.Identifier{
+						Condition: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 245,
 								EndLine:   245,
-								StartPos:  4866,
-								EndPos:    4867,
+								StartPos:  4852,
+								EndPos:    4853,
 							},
-							Value: "b",
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 245,
+									EndLine:   245,
+									StartPos:  4852,
+									EndPos:    4853,
+								},
+								Value: "b",
+							},
+						},
+						IfTrue: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 245,
+								EndLine:   245,
+								StartPos:  4857,
+								EndPos:    4858,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 245,
+									EndLine:   245,
+									StartPos:  4857,
+									EndPos:    4858,
+								},
+								Value: "c",
+							},
+						},
+						IfFalse: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 245,
+								EndLine:   245,
+								StartPos:  4862,
+								EndPos:    4863,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 245,
+									EndLine:   245,
+									StartPos:  4862,
+									EndPos:    4863,
+								},
+								Value: "d",
+							},
 						},
 					},
 					IfFalse: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 245,
 							EndLine:   245,
-							StartPos:  4871,
-							EndPos:    4872,
+							StartPos:  4867,
+							EndPos:    4868,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 245,
 								EndLine:   245,
-								StartPos:  4871,
-								EndPos:    4872,
+								StartPos:  4867,
+								EndPos:    4868,
 							},
-							Value: "c",
+							Value: "e",
 						},
 					},
 				},
@@ -11536,48 +11681,107 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 246,
 					EndLine:   246,
-					StartPos:  4877,
-					EndPos:    4886,
+					StartPos:  4873,
+					EndPos:    4895,
 				},
 				Expr: &expr.Ternary{
 					Position: &position.Position{
 						StartLine: 246,
 						EndLine:   246,
-						StartPos:  4877,
-						EndPos:    4885,
+						StartPos:  4873,
+						EndPos:    4894,
 					},
-					Condition: &expr.Variable{
+					Condition: &expr.Ternary{
 						Position: &position.Position{
 							StartLine: 246,
 							EndLine:   246,
-							StartPos:  4877,
-							EndPos:    4878,
+							StartPos:  4873,
+							EndPos:    4884,
+						},
+						Condition: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 246,
+								EndLine:   246,
+								StartPos:  4873,
+								EndPos:    4874,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 246,
+									EndLine:   246,
+									StartPos:  4873,
+									EndPos:    4874,
+								},
+								Value: "a",
+							},
+						},
+						IfTrue: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 246,
+								EndLine:   246,
+								StartPos:  4878,
+								EndPos:    4879,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 246,
+									EndLine:   246,
+									StartPos:  4878,
+									EndPos:    4879,
+								},
+								Value: "b",
+							},
+						},
+						IfFalse: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 246,
+								EndLine:   246,
+								StartPos:  4883,
+								EndPos:    4884,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 246,
+									EndLine:   246,
+									StartPos:  4883,
+									EndPos:    4884,
+								},
+								Value: "c",
+							},
+						},
+					},
+					IfTrue: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 246,
+							EndLine:   246,
+							StartPos:  4888,
+							EndPos:    4889,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 246,
 								EndLine:   246,
-								StartPos:  4877,
-								EndPos:    4878,
+								StartPos:  4888,
+								EndPos:    4889,
 							},
-							Value: "a",
+							Value: "d",
 						},
 					},
 					IfFalse: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 246,
 							EndLine:   246,
-							StartPos:  4884,
-							EndPos:    4885,
+							StartPos:  4893,
+							EndPos:    4894,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 246,
 								EndLine:   246,
-								StartPos:  4884,
-								EndPos:    4885,
+								StartPos:  4893,
+								EndPos:    4894,
 							},
-							Value: "c",
+							Value: "e",
 						},
 					},
 				},
@@ -11586,107 +11790,31 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 247,
 					EndLine:   247,
-					StartPos:  4890,
-					EndPos:    4912,
+					StartPos:  4899,
+					EndPos:    4902,
 				},
-				Expr: &expr.Ternary{
+				Expr: &expr.UnaryMinus{
 					Position: &position.Position{
 						StartLine: 247,
 						EndLine:   247,
-						StartPos:  4890,
-						EndPos:    4911,
+						StartPos:  4899,
+						EndPos:    4901,
 					},
-					Condition: &expr.Variable{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 247,
 							EndLine:   247,
-							StartPos:  4890,
-							EndPos:    4891,
+							StartPos:  4900,
+							EndPos:    4901,
 						},
 						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 247,
-								EndLine:   247,
-								StartPos:  4890,
-								EndPos:    4891,
-							},
-							Value: "a",
-						},
-					},
-					IfTrue: &expr.Ternary{
-						Position: &position.Position{
-							StartLine: 247,
-							EndLine:   247,
-							StartPos:  4895,
-							EndPos:    4906,
-						},
-						Condition: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 247,
-								EndLine:   247,
-								StartPos:  4895,
-								EndPos:    4896,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 247,
-									EndLine:   247,
-									StartPos:  4895,
-									EndPos:    4896,
-								},
-								Value: "b",
-							},
-						},
-						IfTrue: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 247,
 								EndLine:   247,
 								StartPos:  4900,
 								EndPos:    4901,
 							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 247,
-									EndLine:   247,
-									StartPos:  4900,
-									EndPos:    4901,
-								},
-								Value: "c",
-							},
-						},
-						IfFalse: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 247,
-								EndLine:   247,
-								StartPos:  4905,
-								EndPos:    4906,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 247,
-									EndLine:   247,
-									StartPos:  4905,
-									EndPos:    4906,
-								},
-								Value: "d",
-							},
-						},
-					},
-					IfFalse: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 247,
-							EndLine:   247,
-							StartPos:  4910,
-							EndPos:    4911,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 247,
-								EndLine:   247,
-								StartPos:  4910,
-								EndPos:    4911,
-							},
-							Value: "e",
+							Value: "a",
 						},
 					},
 				},
@@ -11695,107 +11823,31 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 248,
 					EndLine:   248,
-					StartPos:  4916,
-					EndPos:    4938,
+					StartPos:  4906,
+					EndPos:    4909,
 				},
-				Expr: &expr.Ternary{
+				Expr: &expr.UnaryPlus{
 					Position: &position.Position{
 						StartLine: 248,
 						EndLine:   248,
-						StartPos:  4916,
-						EndPos:    4937,
+						StartPos:  4906,
+						EndPos:    4908,
 					},
-					Condition: &expr.Ternary{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 248,
 							EndLine:   248,
-							StartPos:  4916,
-							EndPos:    4927,
-						},
-						Condition: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 248,
-								EndLine:   248,
-								StartPos:  4916,
-								EndPos:    4917,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 248,
-									EndLine:   248,
-									StartPos:  4916,
-									EndPos:    4917,
-								},
-								Value: "a",
-							},
-						},
-						IfTrue: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 248,
-								EndLine:   248,
-								StartPos:  4921,
-								EndPos:    4922,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 248,
-									EndLine:   248,
-									StartPos:  4921,
-									EndPos:    4922,
-								},
-								Value: "b",
-							},
-						},
-						IfFalse: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 248,
-								EndLine:   248,
-								StartPos:  4926,
-								EndPos:    4927,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 248,
-									EndLine:   248,
-									StartPos:  4926,
-									EndPos:    4927,
-								},
-								Value: "c",
-							},
-						},
-					},
-					IfTrue: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 248,
-							EndLine:   248,
-							StartPos:  4931,
-							EndPos:    4932,
+							StartPos:  4907,
+							EndPos:    4908,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 248,
 								EndLine:   248,
-								StartPos:  4931,
-								EndPos:    4932,
+								StartPos:  4907,
+								EndPos:    4908,
 							},
-							Value: "d",
-						},
-					},
-					IfFalse: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 248,
-							EndLine:   248,
-							StartPos:  4936,
-							EndPos:    4937,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 248,
-								EndLine:   248,
-								StartPos:  4936,
-								EndPos:    4937,
-							},
-							Value: "e",
+							Value: "a",
 						},
 					},
 				},
@@ -11804,29 +11856,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 249,
 					EndLine:   249,
-					StartPos:  4942,
-					EndPos:    4945,
+					StartPos:  4913,
+					EndPos:    4916,
 				},
-				Expr: &expr.UnaryMinus{
+				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 249,
 						EndLine:   249,
-						StartPos:  4942,
-						EndPos:    4944,
+						StartPos:  4913,
+						EndPos:    4915,
 					},
-					Expr: &expr.Variable{
+					VarName: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 249,
 							EndLine:   249,
-							StartPos:  4943,
-							EndPos:    4944,
+							StartPos:  4914,
+							EndPos:    4915,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 249,
 								EndLine:   249,
-								StartPos:  4943,
-								EndPos:    4944,
+								StartPos:  4914,
+								EndPos:    4915,
 							},
 							Value: "a",
 						},
@@ -11837,102 +11889,36 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 250,
 					EndLine:   250,
-					StartPos:  4949,
-					EndPos:    4952,
+					StartPos:  4920,
+					EndPos:    4924,
 				},
-				Expr: &expr.UnaryPlus{
+				Expr: &expr.Variable{
 					Position: &position.Position{
 						StartLine: 250,
 						EndLine:   250,
-						StartPos:  4949,
-						EndPos:    4951,
+						StartPos:  4920,
+						EndPos:    4923,
 					},
-					Expr: &expr.Variable{
+					VarName: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 250,
 							EndLine:   250,
-							StartPos:  4950,
-							EndPos:    4951,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 250,
-								EndLine:   250,
-								StartPos:  4950,
-								EndPos:    4951,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 251,
-					EndLine:   251,
-					StartPos:  4956,
-					EndPos:    4959,
-				},
-				Expr: &expr.Variable{
-					Position: &position.Position{
-						StartLine: 251,
-						EndLine:   251,
-						StartPos:  4956,
-						EndPos:    4958,
-					},
-					VarName: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 251,
-							EndLine:   251,
-							StartPos:  4957,
-							EndPos:    4958,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 251,
-								EndLine:   251,
-								StartPos:  4957,
-								EndPos:    4958,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 252,
-					EndLine:   252,
-					StartPos:  4963,
-					EndPos:    4967,
-				},
-				Expr: &expr.Variable{
-					Position: &position.Position{
-						StartLine: 252,
-						EndLine:   252,
-						StartPos:  4963,
-						EndPos:    4966,
-					},
-					VarName: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 252,
-							EndLine:   252,
-							StartPos:  4964,
-							EndPos:    4966,
+							StartPos:  4921,
+							EndPos:    4923,
 						},
 						VarName: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 252,
-								EndLine:   252,
-								StartPos:  4965,
-								EndPos:    4966,
+								StartLine: 250,
+								EndLine:   250,
+								StartPos:  4922,
+								EndPos:    4923,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 252,
-									EndLine:   252,
-									StartPos:  4965,
-									EndPos:    4966,
+									StartLine: 250,
+									EndLine:   250,
+									StartPos:  4922,
+									EndPos:    4923,
 								},
 								Value: "a",
 							},
@@ -11942,97 +11928,97 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
+					StartLine: 251,
+					EndLine:   251,
+					StartPos:  4928,
+					EndPos:    4933,
+				},
+				Expr: &expr.Yield{
+					Position: &position.Position{
+						StartLine: 251,
+						EndLine:   251,
+						StartPos:  4928,
+						EndPos:    4932,
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 252,
+					EndLine:   252,
+					StartPos:  4937,
+					EndPos:    4945,
+				},
+				Expr: &expr.Yield{
+					Position: &position.Position{
+						StartLine: 252,
+						EndLine:   252,
+						StartPos:  4937,
+						EndPos:    4944,
+					},
+					Value: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 252,
+							EndLine:   252,
+							StartPos:  4943,
+							EndPos:    4944,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 252,
+								EndLine:   252,
+								StartPos:  4943,
+								EndPos:    4944,
+							},
+							Value: "a",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
 					StartLine: 253,
 					EndLine:   253,
-					StartPos:  4971,
-					EndPos:    4976,
+					StartPos:  4949,
+					EndPos:    4963,
 				},
 				Expr: &expr.Yield{
 					Position: &position.Position{
 						StartLine: 253,
 						EndLine:   253,
-						StartPos:  4971,
-						EndPos:    4975,
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 254,
-					EndLine:   254,
-					StartPos:  4980,
-					EndPos:    4988,
-				},
-				Expr: &expr.Yield{
-					Position: &position.Position{
-						StartLine: 254,
-						EndLine:   254,
-						StartPos:  4980,
-						EndPos:    4987,
-					},
-					Value: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 254,
-							EndLine:   254,
-							StartPos:  4986,
-							EndPos:    4987,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 254,
-								EndLine:   254,
-								StartPos:  4986,
-								EndPos:    4987,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 255,
-					EndLine:   255,
-					StartPos:  4992,
-					EndPos:    5006,
-				},
-				Expr: &expr.Yield{
-					Position: &position.Position{
-						StartLine: 255,
-						EndLine:   255,
-						StartPos:  4992,
-						EndPos:    5005,
+						StartPos:  4949,
+						EndPos:    4962,
 					},
 					Key: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 255,
-							EndLine:   255,
-							StartPos:  4998,
-							EndPos:    4999,
+							StartLine: 253,
+							EndLine:   253,
+							StartPos:  4955,
+							EndPos:    4956,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 255,
-								EndLine:   255,
-								StartPos:  4998,
-								EndPos:    4999,
+								StartLine: 253,
+								EndLine:   253,
+								StartPos:  4955,
+								EndPos:    4956,
 							},
 							Value: "a",
 						},
 					},
 					Value: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 255,
-							EndLine:   255,
-							StartPos:  5004,
-							EndPos:    5005,
+							StartLine: 253,
+							EndLine:   253,
+							StartPos:  4961,
+							EndPos:    4962,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 255,
-								EndLine:   255,
-								StartPos:  5004,
-								EndPos:    5005,
+								StartLine: 253,
+								EndLine:   253,
+								StartPos:  4961,
+								EndPos:    4962,
 							},
 							Value: "b",
 						},
@@ -12041,39 +12027,39 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 256,
-					EndLine:   256,
-					StartPos:  5010,
-					EndPos:    5026,
+					StartLine: 254,
+					EndLine:   254,
+					StartPos:  4967,
+					EndPos:    4983,
 				},
 				Expr: &expr.Yield{
 					Position: &position.Position{
-						StartLine: 256,
-						EndLine:   256,
-						StartPos:  5010,
-						EndPos:    5025,
+						StartLine: 254,
+						EndLine:   254,
+						StartPos:  4967,
+						EndPos:    4982,
 					},
 					Value: &expr.ClassConstFetch{
 						Position: &position.Position{
-							StartLine: 256,
-							EndLine:   256,
-							StartPos:  5016,
-							EndPos:    5025,
+							StartLine: 254,
+							EndLine:   254,
+							StartPos:  4973,
+							EndPos:    4982,
 						},
 						Class: &name.Name{
 							Position: &position.Position{
-								StartLine: 256,
-								EndLine:   256,
-								StartPos:  5016,
-								EndPos:    5018,
+								StartLine: 254,
+								EndLine:   254,
+								StartPos:  4973,
+								EndPos:    4975,
 							},
 							Parts: []node.Node{
 								&name.NamePart{
 									Position: &position.Position{
-										StartLine: 256,
-										EndLine:   256,
-										StartPos:  5016,
-										EndPos:    5018,
+										StartLine: 254,
+										EndLine:   254,
+										StartPos:  4973,
+										EndPos:    4975,
 									},
 									Value: "Foo",
 								},
@@ -12081,10 +12067,79 @@ func TestPhp5(t *testing.T) {
 						},
 						ConstantName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 256,
-								EndLine:   256,
-								StartPos:  5021,
-								EndPos:    5025,
+								StartLine: 254,
+								EndLine:   254,
+								StartPos:  4978,
+								EndPos:    4982,
+							},
+							Value: "class",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 255,
+					EndLine:   255,
+					StartPos:  4987,
+					EndPos:    5009,
+				},
+				Expr: &expr.Yield{
+					Position: &position.Position{
+						StartLine: 255,
+						EndLine:   255,
+						StartPos:  4987,
+						EndPos:    5008,
+					},
+					Key: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 255,
+							EndLine:   255,
+							StartPos:  4993,
+							EndPos:    4994,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 255,
+								EndLine:   255,
+								StartPos:  4993,
+								EndPos:    4994,
+							},
+							Value: "a",
+						},
+					},
+					Value: &expr.ClassConstFetch{
+						Position: &position.Position{
+							StartLine: 255,
+							EndLine:   255,
+							StartPos:  4999,
+							EndPos:    5008,
+						},
+						Class: &name.Name{
+							Position: &position.Position{
+								StartLine: 255,
+								EndLine:   255,
+								StartPos:  4999,
+								EndPos:    5001,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 255,
+										EndLine:   255,
+										StartPos:  4999,
+										EndPos:    5001,
+									},
+									Value: "Foo",
+								},
+							},
+						},
+						ConstantName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 255,
+								EndLine:   255,
+								StartPos:  5004,
+								EndPos:    5008,
 							},
 							Value: "class",
 						},
@@ -12095,67 +12150,64 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 257,
 					EndLine:   257,
-					StartPos:  5030,
-					EndPos:    5052,
+					StartPos:  5016,
+					EndPos:    5025,
 				},
-				Expr: &expr.Yield{
+				Expr: &cast.Array{
 					Position: &position.Position{
 						StartLine: 257,
 						EndLine:   257,
-						StartPos:  5030,
-						EndPos:    5051,
+						StartPos:  5016,
+						EndPos:    5024,
 					},
-					Key: &expr.Variable{
+					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 257,
 							EndLine:   257,
-							StartPos:  5036,
-							EndPos:    5037,
+							StartPos:  5023,
+							EndPos:    5024,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 257,
 								EndLine:   257,
-								StartPos:  5036,
-								EndPos:    5037,
+								StartPos:  5023,
+								EndPos:    5024,
 							},
 							Value: "a",
 						},
 					},
-					Value: &expr.ClassConstFetch{
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 258,
+					EndLine:   258,
+					StartPos:  5029,
+					EndPos:    5040,
+				},
+				Expr: &cast.Bool{
+					Position: &position.Position{
+						StartLine: 258,
+						EndLine:   258,
+						StartPos:  5029,
+						EndPos:    5039,
+					},
+					Expr: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 257,
-							EndLine:   257,
-							StartPos:  5042,
-							EndPos:    5051,
+							StartLine: 258,
+							EndLine:   258,
+							StartPos:  5038,
+							EndPos:    5039,
 						},
-						Class: &name.Name{
+						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 257,
-								EndLine:   257,
-								StartPos:  5042,
-								EndPos:    5044,
+								StartLine: 258,
+								EndLine:   258,
+								StartPos:  5038,
+								EndPos:    5039,
 							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 257,
-										EndLine:   257,
-										StartPos:  5042,
-										EndPos:    5044,
-									},
-									Value: "Foo",
-								},
-							},
-						},
-						ConstantName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 257,
-								EndLine:   257,
-								StartPos:  5047,
-								EndPos:    5051,
-							},
-							Value: "class",
+							Value: "a",
 						},
 					},
 				},
@@ -12164,29 +12216,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 259,
 					EndLine:   259,
-					StartPos:  5059,
-					EndPos:    5068,
+					StartPos:  5044,
+					EndPos:    5052,
 				},
-				Expr: &cast.Array{
+				Expr: &cast.Bool{
 					Position: &position.Position{
 						StartLine: 259,
 						EndLine:   259,
-						StartPos:  5059,
-						EndPos:    5067,
+						StartPos:  5044,
+						EndPos:    5051,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 259,
 							EndLine:   259,
-							StartPos:  5066,
-							EndPos:    5067,
+							StartPos:  5050,
+							EndPos:    5051,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 259,
 								EndLine:   259,
-								StartPos:  5066,
-								EndPos:    5067,
+								StartPos:  5050,
+								EndPos:    5051,
 							},
 							Value: "a",
 						},
@@ -12197,29 +12249,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 260,
 					EndLine:   260,
-					StartPos:  5072,
-					EndPos:    5083,
+					StartPos:  5056,
+					EndPos:    5066,
 				},
-				Expr: &cast.Bool{
+				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 260,
 						EndLine:   260,
-						StartPos:  5072,
-						EndPos:    5082,
+						StartPos:  5056,
+						EndPos:    5065,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 260,
 							EndLine:   260,
-							StartPos:  5081,
-							EndPos:    5082,
+							StartPos:  5064,
+							EndPos:    5065,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 260,
 								EndLine:   260,
-								StartPos:  5081,
-								EndPos:    5082,
+								StartPos:  5064,
+								EndPos:    5065,
 							},
 							Value: "a",
 						},
@@ -12230,29 +12282,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 261,
 					EndLine:   261,
-					StartPos:  5087,
-					EndPos:    5095,
+					StartPos:  5070,
+					EndPos:    5079,
 				},
-				Expr: &cast.Bool{
+				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 261,
 						EndLine:   261,
-						StartPos:  5087,
-						EndPos:    5094,
+						StartPos:  5070,
+						EndPos:    5078,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 261,
 							EndLine:   261,
-							StartPos:  5093,
-							EndPos:    5094,
+							StartPos:  5077,
+							EndPos:    5078,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 261,
 								EndLine:   261,
-								StartPos:  5093,
-								EndPos:    5094,
+								StartPos:  5077,
+								EndPos:    5078,
 							},
 							Value: "a",
 						},
@@ -12263,29 +12315,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 262,
 					EndLine:   262,
-					StartPos:  5099,
-					EndPos:    5109,
+					StartPos:  5083,
+					EndPos:    5094,
 				},
-				Expr: &cast.Double{
+				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 262,
 						EndLine:   262,
-						StartPos:  5099,
-						EndPos:    5108,
+						StartPos:  5083,
+						EndPos:    5093,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 262,
 							EndLine:   262,
-							StartPos:  5107,
-							EndPos:    5108,
+							StartPos:  5092,
+							EndPos:    5093,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 262,
 								EndLine:   262,
-								StartPos:  5107,
-								EndPos:    5108,
+								StartPos:  5092,
+								EndPos:    5093,
 							},
 							Value: "a",
 						},
@@ -12296,29 +12348,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 263,
 					EndLine:   263,
-					StartPos:  5113,
-					EndPos:    5122,
+					StartPos:  5098,
+					EndPos:    5105,
 				},
-				Expr: &cast.Double{
+				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 263,
 						EndLine:   263,
-						StartPos:  5113,
-						EndPos:    5121,
+						StartPos:  5098,
+						EndPos:    5104,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 263,
 							EndLine:   263,
-							StartPos:  5120,
-							EndPos:    5121,
+							StartPos:  5103,
+							EndPos:    5104,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 263,
 								EndLine:   263,
-								StartPos:  5120,
-								EndPos:    5121,
+								StartPos:  5103,
+								EndPos:    5104,
 							},
 							Value: "a",
 						},
@@ -12329,29 +12381,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 264,
 					EndLine:   264,
-					StartPos:  5126,
-					EndPos:    5137,
+					StartPos:  5109,
+					EndPos:    5119,
 				},
-				Expr: &cast.Int{
+				Expr: &cast.Object{
 					Position: &position.Position{
 						StartLine: 264,
 						EndLine:   264,
-						StartPos:  5126,
-						EndPos:    5136,
+						StartPos:  5109,
+						EndPos:    5118,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 264,
 							EndLine:   264,
-							StartPos:  5135,
-							EndPos:    5136,
+							StartPos:  5117,
+							EndPos:    5118,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 264,
 								EndLine:   264,
-								StartPos:  5135,
-								EndPos:    5136,
+								StartPos:  5117,
+								EndPos:    5118,
 							},
 							Value: "a",
 						},
@@ -12362,29 +12414,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 265,
 					EndLine:   265,
-					StartPos:  5141,
-					EndPos:    5148,
+					StartPos:  5123,
+					EndPos:    5133,
 				},
-				Expr: &cast.Int{
+				Expr: &cast.String{
 					Position: &position.Position{
 						StartLine: 265,
 						EndLine:   265,
-						StartPos:  5141,
-						EndPos:    5147,
+						StartPos:  5123,
+						EndPos:    5132,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 265,
 							EndLine:   265,
-							StartPos:  5146,
-							EndPos:    5147,
+							StartPos:  5131,
+							EndPos:    5132,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 265,
 								EndLine:   265,
-								StartPos:  5146,
-								EndPos:    5147,
+								StartPos:  5131,
+								EndPos:    5132,
 							},
 							Value: "a",
 						},
@@ -12395,62 +12447,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 266,
 					EndLine:   266,
-					StartPos:  5152,
-					EndPos:    5162,
+					StartPos:  5137,
+					EndPos:    5146,
 				},
-				Expr: &cast.Object{
+				Expr: &cast.Unset{
 					Position: &position.Position{
 						StartLine: 266,
 						EndLine:   266,
-						StartPos:  5152,
-						EndPos:    5161,
+						StartPos:  5137,
+						EndPos:    5145,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 266,
 							EndLine:   266,
-							StartPos:  5160,
-							EndPos:    5161,
+							StartPos:  5144,
+							EndPos:    5145,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 266,
 								EndLine:   266,
-								StartPos:  5160,
-								EndPos:    5161,
-							},
-							Value: "a",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 267,
-					EndLine:   267,
-					StartPos:  5166,
-					EndPos:    5176,
-				},
-				Expr: &cast.String{
-					Position: &position.Position{
-						StartLine: 267,
-						EndLine:   267,
-						StartPos:  5166,
-						EndPos:    5175,
-					},
-					Expr: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 267,
-							EndLine:   267,
-							StartPos:  5174,
-							EndPos:    5175,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 267,
-								EndLine:   267,
-								StartPos:  5174,
-								EndPos:    5175,
+								StartPos:  5144,
+								EndPos:    5145,
 							},
 							Value: "a",
 						},
@@ -12461,31 +12480,98 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 268,
 					EndLine:   268,
-					StartPos:  5180,
-					EndPos:    5189,
+					StartPos:  5151,
+					EndPos:    5158,
 				},
-				Expr: &cast.Unset{
+				Expr: &binary.BitwiseAnd{
 					Position: &position.Position{
 						StartLine: 268,
 						EndLine:   268,
-						StartPos:  5180,
-						EndPos:    5188,
+						StartPos:  5151,
+						EndPos:    5157,
 					},
-					Expr: &expr.Variable{
+					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 268,
 							EndLine:   268,
-							StartPos:  5187,
-							EndPos:    5188,
+							StartPos:  5151,
+							EndPos:    5152,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 268,
 								EndLine:   268,
-								StartPos:  5187,
-								EndPos:    5188,
+								StartPos:  5151,
+								EndPos:    5152,
 							},
 							Value: "a",
+						},
+					},
+					Right: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 268,
+							EndLine:   268,
+							StartPos:  5156,
+							EndPos:    5157,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 268,
+								EndLine:   268,
+								StartPos:  5156,
+								EndPos:    5157,
+							},
+							Value: "b",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 269,
+					EndLine:   269,
+					StartPos:  5162,
+					EndPos:    5169,
+				},
+				Expr: &binary.BitwiseOr{
+					Position: &position.Position{
+						StartLine: 269,
+						EndLine:   269,
+						StartPos:  5162,
+						EndPos:    5168,
+					},
+					Left: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 269,
+							EndLine:   269,
+							StartPos:  5162,
+							EndPos:    5163,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 269,
+								EndLine:   269,
+								StartPos:  5162,
+								EndPos:    5163,
+							},
+							Value: "a",
+						},
+					},
+					Right: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 269,
+							EndLine:   269,
+							StartPos:  5167,
+							EndPos:    5168,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 269,
+								EndLine:   269,
+								StartPos:  5167,
+								EndPos:    5168,
+							},
+							Value: "b",
 						},
 					},
 				},
@@ -12494,29 +12580,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 270,
 					EndLine:   270,
-					StartPos:  5194,
-					EndPos:    5201,
+					StartPos:  5173,
+					EndPos:    5180,
 				},
-				Expr: &binary.BitwiseAnd{
+				Expr: &binary.BitwiseXor{
 					Position: &position.Position{
 						StartLine: 270,
 						EndLine:   270,
-						StartPos:  5194,
-						EndPos:    5200,
+						StartPos:  5173,
+						EndPos:    5179,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 270,
 							EndLine:   270,
-							StartPos:  5194,
-							EndPos:    5195,
+							StartPos:  5173,
+							EndPos:    5174,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 270,
 								EndLine:   270,
-								StartPos:  5194,
-								EndPos:    5195,
+								StartPos:  5173,
+								EndPos:    5174,
 							},
 							Value: "a",
 						},
@@ -12525,15 +12611,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 270,
 							EndLine:   270,
-							StartPos:  5199,
-							EndPos:    5200,
+							StartPos:  5178,
+							EndPos:    5179,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 270,
 								EndLine:   270,
-								StartPos:  5199,
-								EndPos:    5200,
+								StartPos:  5178,
+								EndPos:    5179,
 							},
 							Value: "b",
 						},
@@ -12544,29 +12630,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 271,
 					EndLine:   271,
-					StartPos:  5205,
-					EndPos:    5212,
+					StartPos:  5184,
+					EndPos:    5192,
 				},
-				Expr: &binary.BitwiseOr{
+				Expr: &binary.BooleanAnd{
 					Position: &position.Position{
 						StartLine: 271,
 						EndLine:   271,
-						StartPos:  5205,
-						EndPos:    5211,
+						StartPos:  5184,
+						EndPos:    5191,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 271,
 							EndLine:   271,
-							StartPos:  5205,
-							EndPos:    5206,
+							StartPos:  5184,
+							EndPos:    5185,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 271,
 								EndLine:   271,
-								StartPos:  5205,
-								EndPos:    5206,
+								StartPos:  5184,
+								EndPos:    5185,
 							},
 							Value: "a",
 						},
@@ -12575,15 +12661,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 271,
 							EndLine:   271,
-							StartPos:  5210,
-							EndPos:    5211,
+							StartPos:  5190,
+							EndPos:    5191,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 271,
 								EndLine:   271,
-								StartPos:  5210,
-								EndPos:    5211,
+								StartPos:  5190,
+								EndPos:    5191,
 							},
 							Value: "b",
 						},
@@ -12594,29 +12680,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 272,
 					EndLine:   272,
-					StartPos:  5216,
-					EndPos:    5223,
+					StartPos:  5196,
+					EndPos:    5204,
 				},
-				Expr: &binary.BitwiseXor{
+				Expr: &binary.BooleanOr{
 					Position: &position.Position{
 						StartLine: 272,
 						EndLine:   272,
-						StartPos:  5216,
-						EndPos:    5222,
+						StartPos:  5196,
+						EndPos:    5203,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 272,
 							EndLine:   272,
-							StartPos:  5216,
-							EndPos:    5217,
+							StartPos:  5196,
+							EndPos:    5197,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 272,
 								EndLine:   272,
-								StartPos:  5216,
-								EndPos:    5217,
+								StartPos:  5196,
+								EndPos:    5197,
 							},
 							Value: "a",
 						},
@@ -12625,15 +12711,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 272,
 							EndLine:   272,
-							StartPos:  5221,
-							EndPos:    5222,
+							StartPos:  5202,
+							EndPos:    5203,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 272,
 								EndLine:   272,
-								StartPos:  5221,
-								EndPos:    5222,
+								StartPos:  5202,
+								EndPos:    5203,
 							},
 							Value: "b",
 						},
@@ -12644,29 +12730,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 273,
 					EndLine:   273,
-					StartPos:  5227,
-					EndPos:    5235,
+					StartPos:  5208,
+					EndPos:    5215,
 				},
-				Expr: &binary.BooleanAnd{
+				Expr: &binary.Concat{
 					Position: &position.Position{
 						StartLine: 273,
 						EndLine:   273,
-						StartPos:  5227,
-						EndPos:    5234,
+						StartPos:  5208,
+						EndPos:    5214,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 273,
 							EndLine:   273,
-							StartPos:  5227,
-							EndPos:    5228,
+							StartPos:  5208,
+							EndPos:    5209,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 273,
 								EndLine:   273,
-								StartPos:  5227,
-								EndPos:    5228,
+								StartPos:  5208,
+								EndPos:    5209,
 							},
 							Value: "a",
 						},
@@ -12675,15 +12761,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 273,
 							EndLine:   273,
-							StartPos:  5233,
-							EndPos:    5234,
+							StartPos:  5213,
+							EndPos:    5214,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 273,
 								EndLine:   273,
-								StartPos:  5233,
-								EndPos:    5234,
+								StartPos:  5213,
+								EndPos:    5214,
 							},
 							Value: "b",
 						},
@@ -12694,29 +12780,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 274,
 					EndLine:   274,
-					StartPos:  5239,
-					EndPos:    5247,
+					StartPos:  5219,
+					EndPos:    5226,
 				},
-				Expr: &binary.BooleanOr{
+				Expr: &binary.Div{
 					Position: &position.Position{
 						StartLine: 274,
 						EndLine:   274,
-						StartPos:  5239,
-						EndPos:    5246,
+						StartPos:  5219,
+						EndPos:    5225,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 274,
 							EndLine:   274,
-							StartPos:  5239,
-							EndPos:    5240,
+							StartPos:  5219,
+							EndPos:    5220,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 274,
 								EndLine:   274,
-								StartPos:  5239,
-								EndPos:    5240,
+								StartPos:  5219,
+								EndPos:    5220,
 							},
 							Value: "a",
 						},
@@ -12725,15 +12811,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 274,
 							EndLine:   274,
-							StartPos:  5245,
-							EndPos:    5246,
+							StartPos:  5224,
+							EndPos:    5225,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 274,
 								EndLine:   274,
-								StartPos:  5245,
-								EndPos:    5246,
+								StartPos:  5224,
+								EndPos:    5225,
 							},
 							Value: "b",
 						},
@@ -12744,29 +12830,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 275,
 					EndLine:   275,
-					StartPos:  5251,
-					EndPos:    5258,
+					StartPos:  5230,
+					EndPos:    5238,
 				},
-				Expr: &binary.Concat{
+				Expr: &binary.Equal{
 					Position: &position.Position{
 						StartLine: 275,
 						EndLine:   275,
-						StartPos:  5251,
-						EndPos:    5257,
+						StartPos:  5230,
+						EndPos:    5237,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 275,
 							EndLine:   275,
-							StartPos:  5251,
-							EndPos:    5252,
+							StartPos:  5230,
+							EndPos:    5231,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 275,
 								EndLine:   275,
-								StartPos:  5251,
-								EndPos:    5252,
+								StartPos:  5230,
+								EndPos:    5231,
 							},
 							Value: "a",
 						},
@@ -12775,15 +12861,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 275,
 							EndLine:   275,
-							StartPos:  5256,
-							EndPos:    5257,
+							StartPos:  5236,
+							EndPos:    5237,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 275,
 								EndLine:   275,
-								StartPos:  5256,
-								EndPos:    5257,
+								StartPos:  5236,
+								EndPos:    5237,
 							},
 							Value: "b",
 						},
@@ -12794,29 +12880,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 276,
 					EndLine:   276,
-					StartPos:  5262,
-					EndPos:    5269,
+					StartPos:  5242,
+					EndPos:    5250,
 				},
-				Expr: &binary.Div{
+				Expr: &binary.GreaterOrEqual{
 					Position: &position.Position{
 						StartLine: 276,
 						EndLine:   276,
-						StartPos:  5262,
-						EndPos:    5268,
+						StartPos:  5242,
+						EndPos:    5249,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 276,
 							EndLine:   276,
-							StartPos:  5262,
-							EndPos:    5263,
+							StartPos:  5242,
+							EndPos:    5243,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 276,
 								EndLine:   276,
-								StartPos:  5262,
-								EndPos:    5263,
+								StartPos:  5242,
+								EndPos:    5243,
 							},
 							Value: "a",
 						},
@@ -12825,15 +12911,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 276,
 							EndLine:   276,
-							StartPos:  5267,
-							EndPos:    5268,
+							StartPos:  5248,
+							EndPos:    5249,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 276,
 								EndLine:   276,
-								StartPos:  5267,
-								EndPos:    5268,
+								StartPos:  5248,
+								EndPos:    5249,
 							},
 							Value: "b",
 						},
@@ -12844,29 +12930,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 277,
 					EndLine:   277,
-					StartPos:  5273,
-					EndPos:    5281,
+					StartPos:  5254,
+					EndPos:    5261,
 				},
-				Expr: &binary.Equal{
+				Expr: &binary.Greater{
 					Position: &position.Position{
 						StartLine: 277,
 						EndLine:   277,
-						StartPos:  5273,
-						EndPos:    5280,
+						StartPos:  5254,
+						EndPos:    5260,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 277,
 							EndLine:   277,
-							StartPos:  5273,
-							EndPos:    5274,
+							StartPos:  5254,
+							EndPos:    5255,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 277,
 								EndLine:   277,
-								StartPos:  5273,
-								EndPos:    5274,
+								StartPos:  5254,
+								EndPos:    5255,
 							},
 							Value: "a",
 						},
@@ -12875,15 +12961,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 277,
 							EndLine:   277,
-							StartPos:  5279,
-							EndPos:    5280,
+							StartPos:  5259,
+							EndPos:    5260,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 277,
 								EndLine:   277,
-								StartPos:  5279,
-								EndPos:    5280,
+								StartPos:  5259,
+								EndPos:    5260,
 							},
 							Value: "b",
 						},
@@ -12894,29 +12980,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 278,
 					EndLine:   278,
-					StartPos:  5285,
-					EndPos:    5293,
+					StartPos:  5265,
+					EndPos:    5274,
 				},
-				Expr: &binary.GreaterOrEqual{
+				Expr: &binary.Identical{
 					Position: &position.Position{
 						StartLine: 278,
 						EndLine:   278,
-						StartPos:  5285,
-						EndPos:    5292,
+						StartPos:  5265,
+						EndPos:    5273,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 278,
 							EndLine:   278,
-							StartPos:  5285,
-							EndPos:    5286,
+							StartPos:  5265,
+							EndPos:    5266,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 278,
 								EndLine:   278,
-								StartPos:  5285,
-								EndPos:    5286,
+								StartPos:  5265,
+								EndPos:    5266,
 							},
 							Value: "a",
 						},
@@ -12925,15 +13011,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 278,
 							EndLine:   278,
-							StartPos:  5291,
-							EndPos:    5292,
+							StartPos:  5272,
+							EndPos:    5273,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 278,
 								EndLine:   278,
-								StartPos:  5291,
-								EndPos:    5292,
+								StartPos:  5272,
+								EndPos:    5273,
 							},
 							Value: "b",
 						},
@@ -12944,29 +13030,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 279,
 					EndLine:   279,
-					StartPos:  5297,
-					EndPos:    5304,
+					StartPos:  5278,
+					EndPos:    5287,
 				},
-				Expr: &binary.Greater{
+				Expr: &binary.LogicalAnd{
 					Position: &position.Position{
 						StartLine: 279,
 						EndLine:   279,
-						StartPos:  5297,
-						EndPos:    5303,
+						StartPos:  5278,
+						EndPos:    5286,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 279,
 							EndLine:   279,
-							StartPos:  5297,
-							EndPos:    5298,
+							StartPos:  5278,
+							EndPos:    5279,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 279,
 								EndLine:   279,
-								StartPos:  5297,
-								EndPos:    5298,
+								StartPos:  5278,
+								EndPos:    5279,
 							},
 							Value: "a",
 						},
@@ -12975,15 +13061,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 279,
 							EndLine:   279,
-							StartPos:  5302,
-							EndPos:    5303,
+							StartPos:  5285,
+							EndPos:    5286,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 279,
 								EndLine:   279,
-								StartPos:  5302,
-								EndPos:    5303,
+								StartPos:  5285,
+								EndPos:    5286,
 							},
 							Value: "b",
 						},
@@ -12994,29 +13080,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 280,
 					EndLine:   280,
-					StartPos:  5308,
-					EndPos:    5317,
+					StartPos:  5291,
+					EndPos:    5299,
 				},
-				Expr: &binary.Identical{
+				Expr: &binary.LogicalOr{
 					Position: &position.Position{
 						StartLine: 280,
 						EndLine:   280,
-						StartPos:  5308,
-						EndPos:    5316,
+						StartPos:  5291,
+						EndPos:    5298,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 280,
 							EndLine:   280,
-							StartPos:  5308,
-							EndPos:    5309,
+							StartPos:  5291,
+							EndPos:    5292,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 280,
 								EndLine:   280,
-								StartPos:  5308,
-								EndPos:    5309,
+								StartPos:  5291,
+								EndPos:    5292,
 							},
 							Value: "a",
 						},
@@ -13025,15 +13111,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 280,
 							EndLine:   280,
-							StartPos:  5315,
-							EndPos:    5316,
+							StartPos:  5297,
+							EndPos:    5298,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 280,
 								EndLine:   280,
-								StartPos:  5315,
-								EndPos:    5316,
+								StartPos:  5297,
+								EndPos:    5298,
 							},
 							Value: "b",
 						},
@@ -13044,29 +13130,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 281,
 					EndLine:   281,
-					StartPos:  5321,
-					EndPos:    5330,
+					StartPos:  5303,
+					EndPos:    5312,
 				},
-				Expr: &binary.LogicalAnd{
+				Expr: &binary.LogicalXor{
 					Position: &position.Position{
 						StartLine: 281,
 						EndLine:   281,
-						StartPos:  5321,
-						EndPos:    5329,
+						StartPos:  5303,
+						EndPos:    5311,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 281,
 							EndLine:   281,
-							StartPos:  5321,
-							EndPos:    5322,
+							StartPos:  5303,
+							EndPos:    5304,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 281,
 								EndLine:   281,
-								StartPos:  5321,
-								EndPos:    5322,
+								StartPos:  5303,
+								EndPos:    5304,
 							},
 							Value: "a",
 						},
@@ -13075,15 +13161,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 281,
 							EndLine:   281,
-							StartPos:  5328,
-							EndPos:    5329,
+							StartPos:  5310,
+							EndPos:    5311,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 281,
 								EndLine:   281,
-								StartPos:  5328,
-								EndPos:    5329,
+								StartPos:  5310,
+								EndPos:    5311,
 							},
 							Value: "b",
 						},
@@ -13094,29 +13180,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 282,
 					EndLine:   282,
-					StartPos:  5334,
-					EndPos:    5342,
+					StartPos:  5316,
+					EndPos:    5323,
 				},
-				Expr: &binary.LogicalOr{
+				Expr: &binary.Minus{
 					Position: &position.Position{
 						StartLine: 282,
 						EndLine:   282,
-						StartPos:  5334,
-						EndPos:    5341,
+						StartPos:  5316,
+						EndPos:    5322,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 282,
 							EndLine:   282,
-							StartPos:  5334,
-							EndPos:    5335,
+							StartPos:  5316,
+							EndPos:    5317,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 282,
 								EndLine:   282,
-								StartPos:  5334,
-								EndPos:    5335,
+								StartPos:  5316,
+								EndPos:    5317,
 							},
 							Value: "a",
 						},
@@ -13125,15 +13211,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 282,
 							EndLine:   282,
-							StartPos:  5340,
-							EndPos:    5341,
+							StartPos:  5321,
+							EndPos:    5322,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 282,
 								EndLine:   282,
-								StartPos:  5340,
-								EndPos:    5341,
+								StartPos:  5321,
+								EndPos:    5322,
 							},
 							Value: "b",
 						},
@@ -13144,29 +13230,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 283,
 					EndLine:   283,
-					StartPos:  5346,
-					EndPos:    5355,
+					StartPos:  5327,
+					EndPos:    5334,
 				},
-				Expr: &binary.LogicalXor{
+				Expr: &binary.Mod{
 					Position: &position.Position{
 						StartLine: 283,
 						EndLine:   283,
-						StartPos:  5346,
-						EndPos:    5354,
+						StartPos:  5327,
+						EndPos:    5333,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 283,
 							EndLine:   283,
-							StartPos:  5346,
-							EndPos:    5347,
+							StartPos:  5327,
+							EndPos:    5328,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 283,
 								EndLine:   283,
-								StartPos:  5346,
-								EndPos:    5347,
+								StartPos:  5327,
+								EndPos:    5328,
 							},
 							Value: "a",
 						},
@@ -13175,15 +13261,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 283,
 							EndLine:   283,
-							StartPos:  5353,
-							EndPos:    5354,
+							StartPos:  5332,
+							EndPos:    5333,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 283,
 								EndLine:   283,
-								StartPos:  5353,
-								EndPos:    5354,
+								StartPos:  5332,
+								EndPos:    5333,
 							},
 							Value: "b",
 						},
@@ -13194,29 +13280,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 284,
 					EndLine:   284,
-					StartPos:  5359,
-					EndPos:    5366,
+					StartPos:  5338,
+					EndPos:    5345,
 				},
-				Expr: &binary.Minus{
+				Expr: &binary.Mul{
 					Position: &position.Position{
 						StartLine: 284,
 						EndLine:   284,
-						StartPos:  5359,
-						EndPos:    5365,
+						StartPos:  5338,
+						EndPos:    5344,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 284,
 							EndLine:   284,
-							StartPos:  5359,
-							EndPos:    5360,
+							StartPos:  5338,
+							EndPos:    5339,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 284,
 								EndLine:   284,
-								StartPos:  5359,
-								EndPos:    5360,
+								StartPos:  5338,
+								EndPos:    5339,
 							},
 							Value: "a",
 						},
@@ -13225,15 +13311,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 284,
 							EndLine:   284,
-							StartPos:  5364,
-							EndPos:    5365,
+							StartPos:  5343,
+							EndPos:    5344,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 284,
 								EndLine:   284,
-								StartPos:  5364,
-								EndPos:    5365,
+								StartPos:  5343,
+								EndPos:    5344,
 							},
 							Value: "b",
 						},
@@ -13244,29 +13330,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 285,
 					EndLine:   285,
-					StartPos:  5370,
-					EndPos:    5377,
+					StartPos:  5349,
+					EndPos:    5357,
 				},
-				Expr: &binary.Mod{
+				Expr: &binary.NotEqual{
 					Position: &position.Position{
 						StartLine: 285,
 						EndLine:   285,
-						StartPos:  5370,
-						EndPos:    5376,
+						StartPos:  5349,
+						EndPos:    5356,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 285,
 							EndLine:   285,
-							StartPos:  5370,
-							EndPos:    5371,
+							StartPos:  5349,
+							EndPos:    5350,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 285,
 								EndLine:   285,
-								StartPos:  5370,
-								EndPos:    5371,
+								StartPos:  5349,
+								EndPos:    5350,
 							},
 							Value: "a",
 						},
@@ -13275,15 +13361,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 285,
 							EndLine:   285,
-							StartPos:  5375,
-							EndPos:    5376,
+							StartPos:  5355,
+							EndPos:    5356,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 285,
 								EndLine:   285,
-								StartPos:  5375,
-								EndPos:    5376,
+								StartPos:  5355,
+								EndPos:    5356,
 							},
 							Value: "b",
 						},
@@ -13294,29 +13380,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 286,
 					EndLine:   286,
-					StartPos:  5381,
-					EndPos:    5388,
+					StartPos:  5361,
+					EndPos:    5370,
 				},
-				Expr: &binary.Mul{
+				Expr: &binary.NotIdentical{
 					Position: &position.Position{
 						StartLine: 286,
 						EndLine:   286,
-						StartPos:  5381,
-						EndPos:    5387,
+						StartPos:  5361,
+						EndPos:    5369,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 286,
 							EndLine:   286,
-							StartPos:  5381,
-							EndPos:    5382,
+							StartPos:  5361,
+							EndPos:    5362,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 286,
 								EndLine:   286,
-								StartPos:  5381,
-								EndPos:    5382,
+								StartPos:  5361,
+								EndPos:    5362,
 							},
 							Value: "a",
 						},
@@ -13325,15 +13411,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 286,
 							EndLine:   286,
-							StartPos:  5386,
-							EndPos:    5387,
+							StartPos:  5368,
+							EndPos:    5369,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 286,
 								EndLine:   286,
-								StartPos:  5386,
-								EndPos:    5387,
+								StartPos:  5368,
+								EndPos:    5369,
 							},
 							Value: "b",
 						},
@@ -13344,29 +13430,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 287,
 					EndLine:   287,
-					StartPos:  5392,
-					EndPos:    5400,
+					StartPos:  5374,
+					EndPos:    5381,
 				},
-				Expr: &binary.NotEqual{
+				Expr: &binary.Plus{
 					Position: &position.Position{
 						StartLine: 287,
 						EndLine:   287,
-						StartPos:  5392,
-						EndPos:    5399,
+						StartPos:  5374,
+						EndPos:    5380,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 287,
 							EndLine:   287,
-							StartPos:  5392,
-							EndPos:    5393,
+							StartPos:  5374,
+							EndPos:    5375,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 287,
 								EndLine:   287,
-								StartPos:  5392,
-								EndPos:    5393,
+								StartPos:  5374,
+								EndPos:    5375,
 							},
 							Value: "a",
 						},
@@ -13375,15 +13461,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 287,
 							EndLine:   287,
-							StartPos:  5398,
-							EndPos:    5399,
+							StartPos:  5379,
+							EndPos:    5380,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 287,
 								EndLine:   287,
-								StartPos:  5398,
-								EndPos:    5399,
+								StartPos:  5379,
+								EndPos:    5380,
 							},
 							Value: "b",
 						},
@@ -13394,29 +13480,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 288,
 					EndLine:   288,
-					StartPos:  5404,
-					EndPos:    5413,
+					StartPos:  5385,
+					EndPos:    5393,
 				},
-				Expr: &binary.NotIdentical{
+				Expr: &binary.Pow{
 					Position: &position.Position{
 						StartLine: 288,
 						EndLine:   288,
-						StartPos:  5404,
-						EndPos:    5412,
+						StartPos:  5385,
+						EndPos:    5392,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 288,
 							EndLine:   288,
-							StartPos:  5404,
-							EndPos:    5405,
+							StartPos:  5385,
+							EndPos:    5386,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 288,
 								EndLine:   288,
-								StartPos:  5404,
-								EndPos:    5405,
+								StartPos:  5385,
+								EndPos:    5386,
 							},
 							Value: "a",
 						},
@@ -13425,15 +13511,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 288,
 							EndLine:   288,
-							StartPos:  5411,
-							EndPos:    5412,
+							StartPos:  5391,
+							EndPos:    5392,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 288,
 								EndLine:   288,
-								StartPos:  5411,
-								EndPos:    5412,
+								StartPos:  5391,
+								EndPos:    5392,
 							},
 							Value: "b",
 						},
@@ -13444,29 +13530,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 289,
 					EndLine:   289,
-					StartPos:  5417,
-					EndPos:    5424,
+					StartPos:  5397,
+					EndPos:    5405,
 				},
-				Expr: &binary.Plus{
+				Expr: &binary.ShiftLeft{
 					Position: &position.Position{
 						StartLine: 289,
 						EndLine:   289,
-						StartPos:  5417,
-						EndPos:    5423,
+						StartPos:  5397,
+						EndPos:    5404,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 289,
 							EndLine:   289,
-							StartPos:  5417,
-							EndPos:    5418,
+							StartPos:  5397,
+							EndPos:    5398,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 289,
 								EndLine:   289,
-								StartPos:  5417,
-								EndPos:    5418,
+								StartPos:  5397,
+								EndPos:    5398,
 							},
 							Value: "a",
 						},
@@ -13475,15 +13561,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 289,
 							EndLine:   289,
-							StartPos:  5422,
-							EndPos:    5423,
+							StartPos:  5403,
+							EndPos:    5404,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 289,
 								EndLine:   289,
-								StartPos:  5422,
-								EndPos:    5423,
+								StartPos:  5403,
+								EndPos:    5404,
 							},
 							Value: "b",
 						},
@@ -13494,29 +13580,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 290,
 					EndLine:   290,
-					StartPos:  5428,
-					EndPos:    5436,
+					StartPos:  5409,
+					EndPos:    5417,
 				},
-				Expr: &binary.Pow{
+				Expr: &binary.ShiftRight{
 					Position: &position.Position{
 						StartLine: 290,
 						EndLine:   290,
-						StartPos:  5428,
-						EndPos:    5435,
+						StartPos:  5409,
+						EndPos:    5416,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 290,
 							EndLine:   290,
-							StartPos:  5428,
-							EndPos:    5429,
+							StartPos:  5409,
+							EndPos:    5410,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 290,
 								EndLine:   290,
-								StartPos:  5428,
-								EndPos:    5429,
+								StartPos:  5409,
+								EndPos:    5410,
 							},
 							Value: "a",
 						},
@@ -13525,15 +13611,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 290,
 							EndLine:   290,
-							StartPos:  5434,
-							EndPos:    5435,
+							StartPos:  5415,
+							EndPos:    5416,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 290,
 								EndLine:   290,
-								StartPos:  5434,
-								EndPos:    5435,
+								StartPos:  5415,
+								EndPos:    5416,
 							},
 							Value: "b",
 						},
@@ -13544,29 +13630,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 291,
 					EndLine:   291,
-					StartPos:  5440,
-					EndPos:    5448,
+					StartPos:  5421,
+					EndPos:    5429,
 				},
-				Expr: &binary.ShiftLeft{
+				Expr: &binary.SmallerOrEqual{
 					Position: &position.Position{
 						StartLine: 291,
 						EndLine:   291,
-						StartPos:  5440,
-						EndPos:    5447,
+						StartPos:  5421,
+						EndPos:    5428,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 291,
 							EndLine:   291,
-							StartPos:  5440,
-							EndPos:    5441,
+							StartPos:  5421,
+							EndPos:    5422,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 291,
 								EndLine:   291,
-								StartPos:  5440,
-								EndPos:    5441,
+								StartPos:  5421,
+								EndPos:    5422,
 							},
 							Value: "a",
 						},
@@ -13575,15 +13661,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 291,
 							EndLine:   291,
-							StartPos:  5446,
-							EndPos:    5447,
+							StartPos:  5427,
+							EndPos:    5428,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 291,
 								EndLine:   291,
-								StartPos:  5446,
-								EndPos:    5447,
+								StartPos:  5427,
+								EndPos:    5428,
 							},
 							Value: "b",
 						},
@@ -13594,29 +13680,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 292,
 					EndLine:   292,
-					StartPos:  5452,
-					EndPos:    5460,
+					StartPos:  5433,
+					EndPos:    5440,
 				},
-				Expr: &binary.ShiftRight{
+				Expr: &binary.Smaller{
 					Position: &position.Position{
 						StartLine: 292,
 						EndLine:   292,
-						StartPos:  5452,
-						EndPos:    5459,
+						StartPos:  5433,
+						EndPos:    5439,
 					},
 					Left: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 292,
 							EndLine:   292,
-							StartPos:  5452,
-							EndPos:    5453,
+							StartPos:  5433,
+							EndPos:    5434,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 292,
 								EndLine:   292,
-								StartPos:  5452,
-								EndPos:    5453,
+								StartPos:  5433,
+								EndPos:    5434,
 							},
 							Value: "a",
 						},
@@ -13625,65 +13711,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 292,
 							EndLine:   292,
-							StartPos:  5458,
-							EndPos:    5459,
+							StartPos:  5438,
+							EndPos:    5439,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 292,
 								EndLine:   292,
-								StartPos:  5458,
-								EndPos:    5459,
-							},
-							Value: "b",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 293,
-					EndLine:   293,
-					StartPos:  5464,
-					EndPos:    5472,
-				},
-				Expr: &binary.SmallerOrEqual{
-					Position: &position.Position{
-						StartLine: 293,
-						EndLine:   293,
-						StartPos:  5464,
-						EndPos:    5471,
-					},
-					Left: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 293,
-							EndLine:   293,
-							StartPos:  5464,
-							EndPos:    5465,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 293,
-								EndLine:   293,
-								StartPos:  5464,
-								EndPos:    5465,
-							},
-							Value: "a",
-						},
-					},
-					Right: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 293,
-							EndLine:   293,
-							StartPos:  5470,
-							EndPos:    5471,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 293,
-								EndLine:   293,
-								StartPos:  5470,
-								EndPos:    5471,
+								StartPos:  5438,
+								EndPos:    5439,
 							},
 							Value: "b",
 						},
@@ -13694,48 +13730,108 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 294,
 					EndLine:   294,
-					StartPos:  5476,
-					EndPos:    5483,
+					StartPos:  5445,
+					EndPos:    5453,
 				},
-				Expr: &binary.Smaller{
+				Expr: &assign.Reference{
 					Position: &position.Position{
 						StartLine: 294,
 						EndLine:   294,
-						StartPos:  5476,
-						EndPos:    5482,
+						StartPos:  5445,
+						EndPos:    5452,
 					},
-					Left: &expr.Variable{
+					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 294,
 							EndLine:   294,
-							StartPos:  5476,
-							EndPos:    5477,
+							StartPos:  5445,
+							EndPos:    5446,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 294,
 								EndLine:   294,
-								StartPos:  5476,
-								EndPos:    5477,
+								StartPos:  5445,
+								EndPos:    5446,
 							},
 							Value: "a",
 						},
 					},
-					Right: &expr.Variable{
+					Expression: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 294,
 							EndLine:   294,
-							StartPos:  5481,
-							EndPos:    5482,
+							StartPos:  5451,
+							EndPos:    5452,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 294,
 								EndLine:   294,
-								StartPos:  5481,
-								EndPos:    5482,
+								StartPos:  5451,
+								EndPos:    5452,
 							},
 							Value: "b",
+						},
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 295,
+					EndLine:   295,
+					StartPos:  5457,
+					EndPos:    5470,
+				},
+				Expr: &assign.Reference{
+					Position: &position.Position{
+						StartLine: 295,
+						EndLine:   295,
+						StartPos:  5457,
+						EndPos:    5469,
+					},
+					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 295,
+							EndLine:   295,
+							StartPos:  5457,
+							EndPos:    5458,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 295,
+								EndLine:   295,
+								StartPos:  5457,
+								EndPos:    5458,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.New{
+						Position: &position.Position{
+							StartLine: 295,
+							EndLine:   295,
+							StartPos:  5463,
+							EndPos:    5469,
+						},
+						Class: &name.Name{
+							Position: &position.Position{
+								StartLine: 295,
+								EndLine:   295,
+								StartPos:  5467,
+								EndPos:    5469,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 295,
+										EndLine:   295,
+										StartPos:  5467,
+										EndPos:    5469,
+									},
+									Value: "Foo",
+								},
+							},
 						},
 					},
 				},
@@ -13744,48 +13840,95 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 296,
 					EndLine:   296,
-					StartPos:  5488,
-					EndPos:    5496,
+					StartPos:  5474,
+					EndPos:    5491,
 				},
 				Expr: &assign.Reference{
 					Position: &position.Position{
 						StartLine: 296,
 						EndLine:   296,
-						StartPos:  5488,
-						EndPos:    5495,
+						StartPos:  5474,
+						EndPos:    5490,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 296,
 							EndLine:   296,
-							StartPos:  5488,
-							EndPos:    5489,
+							StartPos:  5474,
+							EndPos:    5475,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 296,
 								EndLine:   296,
-								StartPos:  5488,
-								EndPos:    5489,
+								StartPos:  5474,
+								EndPos:    5475,
 							},
 							Value: "a",
 						},
 					},
-					Expression: &expr.Variable{
+					Expression: &expr.New{
 						Position: &position.Position{
 							StartLine: 296,
 							EndLine:   296,
-							StartPos:  5494,
-							EndPos:    5495,
+							StartPos:  5480,
+							EndPos:    5490,
 						},
-						VarName: &node.Identifier{
+						Class: &name.Name{
 							Position: &position.Position{
 								StartLine: 296,
 								EndLine:   296,
-								StartPos:  5494,
-								EndPos:    5495,
+								StartPos:  5484,
+								EndPos:    5486,
 							},
-							Value: "b",
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 296,
+										EndLine:   296,
+										StartPos:  5484,
+										EndPos:    5486,
+									},
+									Value: "Foo",
+								},
+							},
+						},
+						ArgumentList: &node.ArgumentList{
+							Position: &position.Position{
+								StartLine: 296,
+								EndLine:   296,
+								StartPos:  5487,
+								EndPos:    5490,
+							},
+							Arguments: []node.Node{
+								&node.Argument{
+									Position: &position.Position{
+										StartLine: 296,
+										EndLine:   296,
+										StartPos:  5488,
+										EndPos:    5489,
+									},
+									Variadic:    false,
+									IsReference: false,
+									Expr: &expr.Variable{
+										Position: &position.Position{
+											StartLine: 296,
+											EndLine:   296,
+											StartPos:  5488,
+											EndPos:    5489,
+										},
+										VarName: &node.Identifier{
+											Position: &position.Position{
+												StartLine: 296,
+												EndLine:   296,
+												StartPos:  5488,
+												EndPos:    5489,
+											},
+											Value: "b",
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -13794,17 +13937,34 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 297,
 					EndLine:   297,
-					StartPos:  5500,
-					EndPos:    5513,
+					StartPos:  5495,
+					EndPos:    5502,
 				},
-				Expr: &assign.Reference{
+				Expr: &assign.Assign{
 					Position: &position.Position{
 						StartLine: 297,
 						EndLine:   297,
-						StartPos:  5500,
-						EndPos:    5512,
+						StartPos:  5495,
+						EndPos:    5501,
 					},
 					Variable: &expr.Variable{
+						Position: &position.Position{
+							StartLine: 297,
+							EndLine:   297,
+							StartPos:  5495,
+							EndPos:    5496,
+						},
+						VarName: &node.Identifier{
+							Position: &position.Position{
+								StartLine: 297,
+								EndLine:   297,
+								StartPos:  5495,
+								EndPos:    5496,
+							},
+							Value: "a",
+						},
+					},
+					Expression: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 297,
 							EndLine:   297,
@@ -13818,34 +13978,7 @@ func TestPhp5(t *testing.T) {
 								StartPos:  5500,
 								EndPos:    5501,
 							},
-							Value: "a",
-						},
-					},
-					Expression: &expr.New{
-						Position: &position.Position{
-							StartLine: 297,
-							EndLine:   297,
-							StartPos:  5506,
-							EndPos:    5512,
-						},
-						Class: &name.Name{
-							Position: &position.Position{
-								StartLine: 297,
-								EndLine:   297,
-								StartPos:  5510,
-								EndPos:    5512,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 297,
-										EndLine:   297,
-										StartPos:  5510,
-										EndPos:    5512,
-									},
-									Value: "Foo",
-								},
-							},
+							Value: "b",
 						},
 					},
 				},
@@ -13854,95 +13987,48 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 298,
 					EndLine:   298,
-					StartPos:  5517,
-					EndPos:    5534,
+					StartPos:  5506,
+					EndPos:    5514,
 				},
-				Expr: &assign.Reference{
+				Expr: &assign.BitwiseAnd{
 					Position: &position.Position{
 						StartLine: 298,
 						EndLine:   298,
-						StartPos:  5517,
-						EndPos:    5533,
+						StartPos:  5506,
+						EndPos:    5513,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 298,
 							EndLine:   298,
-							StartPos:  5517,
-							EndPos:    5518,
+							StartPos:  5506,
+							EndPos:    5507,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 298,
 								EndLine:   298,
-								StartPos:  5517,
-								EndPos:    5518,
+								StartPos:  5506,
+								EndPos:    5507,
 							},
 							Value: "a",
 						},
 					},
-					Expression: &expr.New{
+					Expression: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 298,
 							EndLine:   298,
-							StartPos:  5523,
-							EndPos:    5533,
+							StartPos:  5512,
+							EndPos:    5513,
 						},
-						Class: &name.Name{
+						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 298,
 								EndLine:   298,
-								StartPos:  5527,
-								EndPos:    5529,
+								StartPos:  5512,
+								EndPos:    5513,
 							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 298,
-										EndLine:   298,
-										StartPos:  5527,
-										EndPos:    5529,
-									},
-									Value: "Foo",
-								},
-							},
-						},
-						ArgumentList: &node.ArgumentList{
-							Position: &position.Position{
-								StartLine: 298,
-								EndLine:   298,
-								StartPos:  5530,
-								EndPos:    5533,
-							},
-							Arguments: []node.Node{
-								&node.Argument{
-									Position: &position.Position{
-										StartLine: 298,
-										EndLine:   298,
-										StartPos:  5531,
-										EndPos:    5532,
-									},
-									Variadic:    false,
-									IsReference: false,
-									Expr: &expr.Variable{
-										Position: &position.Position{
-											StartLine: 298,
-											EndLine:   298,
-											StartPos:  5531,
-											EndPos:    5532,
-										},
-										VarName: &node.Identifier{
-											Position: &position.Position{
-												StartLine: 298,
-												EndLine:   298,
-												StartPos:  5531,
-												EndPos:    5532,
-											},
-											Value: "b",
-										},
-									},
-								},
-							},
+							Value: "b",
 						},
 					},
 				},
@@ -13951,29 +14037,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 299,
 					EndLine:   299,
-					StartPos:  5538,
-					EndPos:    5545,
+					StartPos:  5518,
+					EndPos:    5526,
 				},
-				Expr: &assign.Assign{
+				Expr: &assign.BitwiseOr{
 					Position: &position.Position{
 						StartLine: 299,
 						EndLine:   299,
-						StartPos:  5538,
-						EndPos:    5544,
+						StartPos:  5518,
+						EndPos:    5525,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 299,
 							EndLine:   299,
-							StartPos:  5538,
-							EndPos:    5539,
+							StartPos:  5518,
+							EndPos:    5519,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 299,
 								EndLine:   299,
-								StartPos:  5538,
-								EndPos:    5539,
+								StartPos:  5518,
+								EndPos:    5519,
 							},
 							Value: "a",
 						},
@@ -13982,15 +14068,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 299,
 							EndLine:   299,
-							StartPos:  5543,
-							EndPos:    5544,
+							StartPos:  5524,
+							EndPos:    5525,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 299,
 								EndLine:   299,
-								StartPos:  5543,
-								EndPos:    5544,
+								StartPos:  5524,
+								EndPos:    5525,
 							},
 							Value: "b",
 						},
@@ -14001,29 +14087,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 300,
 					EndLine:   300,
-					StartPos:  5549,
-					EndPos:    5557,
+					StartPos:  5530,
+					EndPos:    5538,
 				},
-				Expr: &assign.BitwiseAnd{
+				Expr: &assign.BitwiseXor{
 					Position: &position.Position{
 						StartLine: 300,
 						EndLine:   300,
-						StartPos:  5549,
-						EndPos:    5556,
+						StartPos:  5530,
+						EndPos:    5537,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 300,
 							EndLine:   300,
-							StartPos:  5549,
-							EndPos:    5550,
+							StartPos:  5530,
+							EndPos:    5531,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 300,
 								EndLine:   300,
-								StartPos:  5549,
-								EndPos:    5550,
+								StartPos:  5530,
+								EndPos:    5531,
 							},
 							Value: "a",
 						},
@@ -14032,15 +14118,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 300,
 							EndLine:   300,
-							StartPos:  5555,
-							EndPos:    5556,
+							StartPos:  5536,
+							EndPos:    5537,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 300,
 								EndLine:   300,
-								StartPos:  5555,
-								EndPos:    5556,
+								StartPos:  5536,
+								EndPos:    5537,
 							},
 							Value: "b",
 						},
@@ -14051,29 +14137,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 301,
 					EndLine:   301,
-					StartPos:  5561,
-					EndPos:    5569,
+					StartPos:  5542,
+					EndPos:    5550,
 				},
-				Expr: &assign.BitwiseOr{
+				Expr: &assign.Concat{
 					Position: &position.Position{
 						StartLine: 301,
 						EndLine:   301,
-						StartPos:  5561,
-						EndPos:    5568,
+						StartPos:  5542,
+						EndPos:    5549,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 301,
 							EndLine:   301,
-							StartPos:  5561,
-							EndPos:    5562,
+							StartPos:  5542,
+							EndPos:    5543,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 301,
 								EndLine:   301,
-								StartPos:  5561,
-								EndPos:    5562,
+								StartPos:  5542,
+								EndPos:    5543,
 							},
 							Value: "a",
 						},
@@ -14082,15 +14168,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 301,
 							EndLine:   301,
-							StartPos:  5567,
-							EndPos:    5568,
+							StartPos:  5548,
+							EndPos:    5549,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 301,
 								EndLine:   301,
-								StartPos:  5567,
-								EndPos:    5568,
+								StartPos:  5548,
+								EndPos:    5549,
 							},
 							Value: "b",
 						},
@@ -14101,29 +14187,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 302,
 					EndLine:   302,
-					StartPos:  5573,
-					EndPos:    5581,
+					StartPos:  5554,
+					EndPos:    5562,
 				},
-				Expr: &assign.BitwiseXor{
+				Expr: &assign.Div{
 					Position: &position.Position{
 						StartLine: 302,
 						EndLine:   302,
-						StartPos:  5573,
-						EndPos:    5580,
+						StartPos:  5554,
+						EndPos:    5561,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 302,
 							EndLine:   302,
-							StartPos:  5573,
-							EndPos:    5574,
+							StartPos:  5554,
+							EndPos:    5555,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 302,
 								EndLine:   302,
-								StartPos:  5573,
-								EndPos:    5574,
+								StartPos:  5554,
+								EndPos:    5555,
 							},
 							Value: "a",
 						},
@@ -14132,15 +14218,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 302,
 							EndLine:   302,
-							StartPos:  5579,
-							EndPos:    5580,
+							StartPos:  5560,
+							EndPos:    5561,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 302,
 								EndLine:   302,
-								StartPos:  5579,
-								EndPos:    5580,
+								StartPos:  5560,
+								EndPos:    5561,
 							},
 							Value: "b",
 						},
@@ -14151,29 +14237,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 303,
 					EndLine:   303,
-					StartPos:  5585,
-					EndPos:    5593,
+					StartPos:  5566,
+					EndPos:    5574,
 				},
-				Expr: &assign.Concat{
+				Expr: &assign.Minus{
 					Position: &position.Position{
 						StartLine: 303,
 						EndLine:   303,
-						StartPos:  5585,
-						EndPos:    5592,
+						StartPos:  5566,
+						EndPos:    5573,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 303,
 							EndLine:   303,
-							StartPos:  5585,
-							EndPos:    5586,
+							StartPos:  5566,
+							EndPos:    5567,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 303,
 								EndLine:   303,
-								StartPos:  5585,
-								EndPos:    5586,
+								StartPos:  5566,
+								EndPos:    5567,
 							},
 							Value: "a",
 						},
@@ -14182,15 +14268,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 303,
 							EndLine:   303,
-							StartPos:  5591,
-							EndPos:    5592,
+							StartPos:  5572,
+							EndPos:    5573,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 303,
 								EndLine:   303,
-								StartPos:  5591,
-								EndPos:    5592,
+								StartPos:  5572,
+								EndPos:    5573,
 							},
 							Value: "b",
 						},
@@ -14201,29 +14287,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 304,
 					EndLine:   304,
-					StartPos:  5597,
-					EndPos:    5605,
+					StartPos:  5578,
+					EndPos:    5586,
 				},
-				Expr: &assign.Div{
+				Expr: &assign.Mod{
 					Position: &position.Position{
 						StartLine: 304,
 						EndLine:   304,
-						StartPos:  5597,
-						EndPos:    5604,
+						StartPos:  5578,
+						EndPos:    5585,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 304,
 							EndLine:   304,
-							StartPos:  5597,
-							EndPos:    5598,
+							StartPos:  5578,
+							EndPos:    5579,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 304,
 								EndLine:   304,
-								StartPos:  5597,
-								EndPos:    5598,
+								StartPos:  5578,
+								EndPos:    5579,
 							},
 							Value: "a",
 						},
@@ -14232,15 +14318,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 304,
 							EndLine:   304,
-							StartPos:  5603,
-							EndPos:    5604,
+							StartPos:  5584,
+							EndPos:    5585,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 304,
 								EndLine:   304,
-								StartPos:  5603,
-								EndPos:    5604,
+								StartPos:  5584,
+								EndPos:    5585,
 							},
 							Value: "b",
 						},
@@ -14251,29 +14337,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 305,
 					EndLine:   305,
-					StartPos:  5609,
-					EndPos:    5617,
+					StartPos:  5590,
+					EndPos:    5598,
 				},
-				Expr: &assign.Minus{
+				Expr: &assign.Mul{
 					Position: &position.Position{
 						StartLine: 305,
 						EndLine:   305,
-						StartPos:  5609,
-						EndPos:    5616,
+						StartPos:  5590,
+						EndPos:    5597,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 305,
 							EndLine:   305,
-							StartPos:  5609,
-							EndPos:    5610,
+							StartPos:  5590,
+							EndPos:    5591,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 305,
 								EndLine:   305,
-								StartPos:  5609,
-								EndPos:    5610,
+								StartPos:  5590,
+								EndPos:    5591,
 							},
 							Value: "a",
 						},
@@ -14282,15 +14368,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 305,
 							EndLine:   305,
-							StartPos:  5615,
-							EndPos:    5616,
+							StartPos:  5596,
+							EndPos:    5597,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 305,
 								EndLine:   305,
-								StartPos:  5615,
-								EndPos:    5616,
+								StartPos:  5596,
+								EndPos:    5597,
 							},
 							Value: "b",
 						},
@@ -14301,29 +14387,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 306,
 					EndLine:   306,
-					StartPos:  5621,
-					EndPos:    5629,
+					StartPos:  5602,
+					EndPos:    5610,
 				},
-				Expr: &assign.Mod{
+				Expr: &assign.Plus{
 					Position: &position.Position{
 						StartLine: 306,
 						EndLine:   306,
-						StartPos:  5621,
-						EndPos:    5628,
+						StartPos:  5602,
+						EndPos:    5609,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 306,
 							EndLine:   306,
-							StartPos:  5621,
-							EndPos:    5622,
+							StartPos:  5602,
+							EndPos:    5603,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 306,
 								EndLine:   306,
-								StartPos:  5621,
-								EndPos:    5622,
+								StartPos:  5602,
+								EndPos:    5603,
 							},
 							Value: "a",
 						},
@@ -14332,15 +14418,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 306,
 							EndLine:   306,
-							StartPos:  5627,
-							EndPos:    5628,
+							StartPos:  5608,
+							EndPos:    5609,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 306,
 								EndLine:   306,
-								StartPos:  5627,
-								EndPos:    5628,
+								StartPos:  5608,
+								EndPos:    5609,
 							},
 							Value: "b",
 						},
@@ -14351,29 +14437,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 307,
 					EndLine:   307,
-					StartPos:  5633,
-					EndPos:    5641,
+					StartPos:  5614,
+					EndPos:    5623,
 				},
-				Expr: &assign.Mul{
+				Expr: &assign.Pow{
 					Position: &position.Position{
 						StartLine: 307,
 						EndLine:   307,
-						StartPos:  5633,
-						EndPos:    5640,
+						StartPos:  5614,
+						EndPos:    5622,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 307,
 							EndLine:   307,
-							StartPos:  5633,
-							EndPos:    5634,
+							StartPos:  5614,
+							EndPos:    5615,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 307,
 								EndLine:   307,
-								StartPos:  5633,
-								EndPos:    5634,
+								StartPos:  5614,
+								EndPos:    5615,
 							},
 							Value: "a",
 						},
@@ -14382,15 +14468,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 307,
 							EndLine:   307,
-							StartPos:  5639,
-							EndPos:    5640,
+							StartPos:  5621,
+							EndPos:    5622,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 307,
 								EndLine:   307,
-								StartPos:  5639,
-								EndPos:    5640,
+								StartPos:  5621,
+								EndPos:    5622,
 							},
 							Value: "b",
 						},
@@ -14401,29 +14487,29 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 308,
 					EndLine:   308,
-					StartPos:  5645,
-					EndPos:    5653,
+					StartPos:  5627,
+					EndPos:    5636,
 				},
-				Expr: &assign.Plus{
+				Expr: &assign.ShiftLeft{
 					Position: &position.Position{
 						StartLine: 308,
 						EndLine:   308,
-						StartPos:  5645,
-						EndPos:    5652,
+						StartPos:  5627,
+						EndPos:    5635,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 308,
 							EndLine:   308,
-							StartPos:  5645,
-							EndPos:    5646,
+							StartPos:  5627,
+							EndPos:    5628,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 308,
 								EndLine:   308,
-								StartPos:  5645,
-								EndPos:    5646,
+								StartPos:  5627,
+								EndPos:    5628,
 							},
 							Value: "a",
 						},
@@ -14432,15 +14518,15 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 308,
 							EndLine:   308,
-							StartPos:  5651,
-							EndPos:    5652,
+							StartPos:  5634,
+							EndPos:    5635,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 308,
 								EndLine:   308,
-								StartPos:  5651,
-								EndPos:    5652,
+								StartPos:  5634,
+								EndPos:    5635,
 							},
 							Value: "b",
 						},
@@ -14451,146 +14537,46 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 309,
 					EndLine:   309,
-					StartPos:  5657,
-					EndPos:    5666,
-				},
-				Expr: &assign.Pow{
-					Position: &position.Position{
-						StartLine: 309,
-						EndLine:   309,
-						StartPos:  5657,
-						EndPos:    5665,
-					},
-					Variable: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 309,
-							EndLine:   309,
-							StartPos:  5657,
-							EndPos:    5658,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 309,
-								EndLine:   309,
-								StartPos:  5657,
-								EndPos:    5658,
-							},
-							Value: "a",
-						},
-					},
-					Expression: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 309,
-							EndLine:   309,
-							StartPos:  5664,
-							EndPos:    5665,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 309,
-								EndLine:   309,
-								StartPos:  5664,
-								EndPos:    5665,
-							},
-							Value: "b",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 310,
-					EndLine:   310,
-					StartPos:  5670,
-					EndPos:    5679,
-				},
-				Expr: &assign.ShiftLeft{
-					Position: &position.Position{
-						StartLine: 310,
-						EndLine:   310,
-						StartPos:  5670,
-						EndPos:    5678,
-					},
-					Variable: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 310,
-							EndLine:   310,
-							StartPos:  5670,
-							EndPos:    5671,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 310,
-								EndLine:   310,
-								StartPos:  5670,
-								EndPos:    5671,
-							},
-							Value: "a",
-						},
-					},
-					Expression: &expr.Variable{
-						Position: &position.Position{
-							StartLine: 310,
-							EndLine:   310,
-							StartPos:  5677,
-							EndPos:    5678,
-						},
-						VarName: &node.Identifier{
-							Position: &position.Position{
-								StartLine: 310,
-								EndLine:   310,
-								StartPos:  5677,
-								EndPos:    5678,
-							},
-							Value: "b",
-						},
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 311,
-					EndLine:   311,
-					StartPos:  5683,
-					EndPos:    5692,
+					StartPos:  5640,
+					EndPos:    5649,
 				},
 				Expr: &assign.ShiftRight{
 					Position: &position.Position{
-						StartLine: 311,
-						EndLine:   311,
-						StartPos:  5683,
-						EndPos:    5691,
+						StartLine: 309,
+						EndLine:   309,
+						StartPos:  5640,
+						EndPos:    5648,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 311,
-							EndLine:   311,
-							StartPos:  5683,
-							EndPos:    5684,
+							StartLine: 309,
+							EndLine:   309,
+							StartPos:  5640,
+							EndPos:    5641,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 311,
-								EndLine:   311,
-								StartPos:  5683,
-								EndPos:    5684,
+								StartLine: 309,
+								EndLine:   309,
+								StartPos:  5640,
+								EndPos:    5641,
 							},
 							Value: "a",
 						},
 					},
 					Expression: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 311,
-							EndLine:   311,
-							StartPos:  5690,
-							EndPos:    5691,
+							StartLine: 309,
+							EndLine:   309,
+							StartPos:  5647,
+							EndPos:    5648,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 311,
-								EndLine:   311,
-								StartPos:  5690,
-								EndPos:    5691,
+								StartLine: 309,
+								EndLine:   309,
+								StartPos:  5647,
+								EndPos:    5648,
 							},
 							Value: "b",
 						},
@@ -14599,32 +14585,32 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 314,
-					EndLine:   314,
-					StartPos:  5699,
-					EndPos:    5710,
+					StartLine: 312,
+					EndLine:   312,
+					StartPos:  5656,
+					EndPos:    5667,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
-						StartLine: 314,
-						EndLine:   314,
-						StartPos:  5699,
-						EndPos:    5708,
+						StartLine: 312,
+						EndLine:   312,
+						StartPos:  5656,
+						EndPos:    5665,
 					},
 					Class: &name.FullyQualified{
 						Position: &position.Position{
-							StartLine: 314,
-							EndLine:   314,
-							StartPos:  5703,
-							EndPos:    5706,
+							StartLine: 312,
+							EndLine:   312,
+							StartPos:  5660,
+							EndPos:    5663,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 314,
-									EndLine:   314,
-									StartPos:  5704,
-									EndPos:    5706,
+									StartLine: 312,
+									EndLine:   312,
+									StartPos:  5661,
+									EndPos:    5663,
 								},
 								Value: "Foo",
 							},
@@ -14632,56 +14618,56 @@ func TestPhp5(t *testing.T) {
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 314,
-							EndLine:   314,
-							StartPos:  5707,
-							EndPos:    5708,
+							StartLine: 312,
+							EndLine:   312,
+							StartPos:  5664,
+							EndPos:    5665,
 						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 315,
-					EndLine:   315,
-					StartPos:  5735,
-					EndPos:    5738,
+					StartLine: 313,
+					EndLine:   313,
+					StartPos:  5692,
+					EndPos:    5695,
 				},
 				Expr: &expr.PropertyFetch{
 					Position: &position.Position{
-						StartLine: 315,
-						EndLine:   315,
-						StartPos:  5735,
-						EndPos:    5737,
+						StartLine: 313,
+						EndLine:   313,
+						StartPos:  5692,
+						EndPos:    5694,
 					},
 					Variable: &expr.MethodCall{
 						Position: &position.Position{
-							StartLine: 315,
-							EndLine:   315,
-							StartPos:  5731,
-							EndPos:    5732,
+							StartLine: 313,
+							EndLine:   313,
+							StartPos:  5688,
+							EndPos:    5689,
 						},
 						Variable: &expr.New{
 							Position: &position.Position{
-								StartLine: 315,
-								EndLine:   315,
-								StartPos:  5715,
-								EndPos:    5724,
+								StartLine: 313,
+								EndLine:   313,
+								StartPos:  5672,
+								EndPos:    5681,
 							},
 							Class: &name.FullyQualified{
 								Position: &position.Position{
-									StartLine: 315,
-									EndLine:   315,
-									StartPos:  5719,
-									EndPos:    5722,
+									StartLine: 313,
+									EndLine:   313,
+									StartPos:  5676,
+									EndPos:    5679,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 315,
-											EndLine:   315,
-											StartPos:  5720,
-											EndPos:    5722,
+											StartLine: 313,
+											EndLine:   313,
+											StartPos:  5677,
+											EndPos:    5679,
 										},
 										Value: "Foo",
 									},
@@ -14689,37 +14675,37 @@ func TestPhp5(t *testing.T) {
 							},
 							ArgumentList: &node.ArgumentList{
 								Position: &position.Position{
-									StartLine: 315,
-									EndLine:   315,
-									StartPos:  5723,
-									EndPos:    5724,
+									StartLine: 313,
+									EndLine:   313,
+									StartPos:  5680,
+									EndPos:    5681,
 								},
 							},
 						},
 						Method: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 315,
-								EndLine:   315,
-								StartPos:  5728,
-								EndPos:    5730,
+								StartLine: 313,
+								EndLine:   313,
+								StartPos:  5685,
+								EndPos:    5687,
 							},
 							Value: "bar",
 						},
 						ArgumentList: &node.ArgumentList{
 							Position: &position.Position{
-								StartLine: 315,
-								EndLine:   315,
-								StartPos:  5731,
-								EndPos:    5732,
+								StartLine: 313,
+								EndLine:   313,
+								StartPos:  5688,
+								EndPos:    5689,
 							},
 						},
 					},
 					Property: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 315,
-							EndLine:   315,
-							StartPos:  5735,
-							EndPos:    5737,
+							StartLine: 313,
+							EndLine:   313,
+							StartPos:  5692,
+							EndPos:    5694,
 						},
 						Value: "baz",
 					},
@@ -14727,46 +14713,46 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 316,
-					EndLine:   316,
-					StartPos:  5758,
-					EndPos:    5760,
+					StartLine: 314,
+					EndLine:   314,
+					StartPos:  5715,
+					EndPos:    5717,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 316,
-						EndLine:   316,
-						StartPos:  5758,
-						EndPos:    5758,
+						StartLine: 314,
+						EndLine:   314,
+						StartPos:  5715,
+						EndPos:    5715,
 					},
 					Variable: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 316,
-							EndLine:   316,
-							StartPos:  5755,
-							EndPos:    5755,
+							StartLine: 314,
+							EndLine:   314,
+							StartPos:  5712,
+							EndPos:    5712,
 						},
 						Variable: &expr.New{
 							Position: &position.Position{
-								StartLine: 316,
-								EndLine:   316,
-								StartPos:  5743,
-								EndPos:    5752,
+								StartLine: 314,
+								EndLine:   314,
+								StartPos:  5700,
+								EndPos:    5709,
 							},
 							Class: &name.FullyQualified{
 								Position: &position.Position{
-									StartLine: 316,
-									EndLine:   316,
-									StartPos:  5747,
-									EndPos:    5750,
+									StartLine: 314,
+									EndLine:   314,
+									StartPos:  5704,
+									EndPos:    5707,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 316,
-											EndLine:   316,
-											StartPos:  5748,
-											EndPos:    5750,
+											StartLine: 314,
+											EndLine:   314,
+											StartPos:  5705,
+											EndPos:    5707,
 										},
 										Value: "Foo",
 									},
@@ -14774,29 +14760,29 @@ func TestPhp5(t *testing.T) {
 							},
 							ArgumentList: &node.ArgumentList{
 								Position: &position.Position{
-									StartLine: 316,
-									EndLine:   316,
-									StartPos:  5751,
-									EndPos:    5752,
+									StartLine: 314,
+									EndLine:   314,
+									StartPos:  5708,
+									EndPos:    5709,
 								},
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 316,
-								EndLine:   316,
-								StartPos:  5755,
-								EndPos:    5755,
+								StartLine: 314,
+								EndLine:   314,
+								StartPos:  5712,
+								EndPos:    5712,
 							},
 							Value: "0",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
-							StartLine: 316,
-							EndLine:   316,
-							StartPos:  5758,
-							EndPos:    5758,
+							StartLine: 314,
+							EndLine:   314,
+							StartPos:  5715,
+							EndPos:    5715,
 						},
 						Value: "0",
 					},
@@ -14804,46 +14790,46 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 317,
-					EndLine:   317,
-					StartPos:  5784,
-					EndPos:    5786,
+					StartLine: 315,
+					EndLine:   315,
+					StartPos:  5741,
+					EndPos:    5743,
 				},
 				Expr: &expr.MethodCall{
 					Position: &position.Position{
-						StartLine: 317,
-						EndLine:   317,
-						StartPos:  5784,
-						EndPos:    5785,
+						StartLine: 315,
+						EndLine:   315,
+						StartPos:  5741,
+						EndPos:    5742,
 					},
 					Variable: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 317,
-							EndLine:   317,
-							StartPos:  5777,
-							EndPos:    5777,
+							StartLine: 315,
+							EndLine:   315,
+							StartPos:  5734,
+							EndPos:    5734,
 						},
 						Variable: &expr.New{
 							Position: &position.Position{
-								StartLine: 317,
-								EndLine:   317,
-								StartPos:  5765,
-								EndPos:    5774,
+								StartLine: 315,
+								EndLine:   315,
+								StartPos:  5722,
+								EndPos:    5731,
 							},
 							Class: &name.FullyQualified{
 								Position: &position.Position{
-									StartLine: 317,
-									EndLine:   317,
-									StartPos:  5769,
-									EndPos:    5772,
+									StartLine: 315,
+									EndLine:   315,
+									StartPos:  5726,
+									EndPos:    5729,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 317,
-											EndLine:   317,
-											StartPos:  5770,
-											EndPos:    5772,
+											StartLine: 315,
+											EndLine:   315,
+											StartPos:  5727,
+											EndPos:    5729,
 										},
 										Value: "Foo",
 									},
@@ -14851,99 +14837,99 @@ func TestPhp5(t *testing.T) {
 							},
 							ArgumentList: &node.ArgumentList{
 								Position: &position.Position{
-									StartLine: 317,
-									EndLine:   317,
-									StartPos:  5773,
-									EndPos:    5774,
+									StartLine: 315,
+									EndLine:   315,
+									StartPos:  5730,
+									EndPos:    5731,
 								},
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 317,
-								EndLine:   317,
-								StartPos:  5777,
-								EndPos:    5777,
+								StartLine: 315,
+								EndLine:   315,
+								StartPos:  5734,
+								EndPos:    5734,
 							},
 							Value: "0",
 						},
 					},
 					Method: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 317,
-							EndLine:   317,
-							StartPos:  5781,
-							EndPos:    5783,
+							StartLine: 315,
+							EndLine:   315,
+							StartPos:  5738,
+							EndPos:    5740,
 						},
 						Value: "bar",
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 317,
-							EndLine:   317,
-							StartPos:  5784,
-							EndPos:    5785,
+							StartLine: 315,
+							EndLine:   315,
+							StartPos:  5741,
+							EndPos:    5742,
 						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 319,
-					EndLine:   319,
-					StartPos:  5791,
-					EndPos:    5807,
+					StartLine: 317,
+					EndLine:   317,
+					StartPos:  5748,
+					EndPos:    5764,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 319,
-						EndLine:   319,
-						StartPos:  5791,
-						EndPos:    5806,
+						StartLine: 317,
+						EndLine:   317,
+						StartPos:  5748,
+						EndPos:    5763,
 					},
 					Variable: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 319,
-							EndLine:   319,
-							StartPos:  5791,
-							EndPos:    5803,
+							StartLine: 317,
+							EndLine:   317,
+							StartPos:  5748,
+							EndPos:    5760,
 						},
 						Variable: &expr.Array{
 							Position: &position.Position{
-								StartLine: 319,
-								EndLine:   319,
-								StartPos:  5791,
-								EndPos:    5800,
+								StartLine: 317,
+								EndLine:   317,
+								StartPos:  5748,
+								EndPos:    5757,
 							},
 							Items: []node.Node{
 								&expr.ArrayItem{
 									Position: &position.Position{
-										StartLine: 319,
-										EndLine:   319,
-										StartPos:  5797,
-										EndPos:    5799,
+										StartLine: 317,
+										EndLine:   317,
+										StartPos:  5754,
+										EndPos:    5756,
 									},
 									Val: &expr.ShortArray{
 										Position: &position.Position{
-											StartLine: 319,
-											EndLine:   319,
-											StartPos:  5797,
-											EndPos:    5799,
+											StartLine: 317,
+											EndLine:   317,
+											StartPos:  5754,
+											EndPos:    5756,
 										},
 										Items: []node.Node{
 											&expr.ArrayItem{
 												Position: &position.Position{
-													StartLine: 319,
-													EndLine:   319,
-													StartPos:  5798,
-													EndPos:    5798,
+													StartLine: 317,
+													EndLine:   317,
+													StartPos:  5755,
+													EndPos:    5755,
 												},
 												Val: &scalar.Lnumber{
 													Position: &position.Position{
-														StartLine: 319,
-														EndLine:   319,
-														StartPos:  5798,
-														EndPos:    5798,
+														StartLine: 317,
+														EndLine:   317,
+														StartPos:  5755,
+														EndPos:    5755,
 													},
 													Value: "0",
 												},
@@ -14955,20 +14941,106 @@ func TestPhp5(t *testing.T) {
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 319,
-								EndLine:   319,
-								StartPos:  5802,
-								EndPos:    5802,
+								StartLine: 317,
+								EndLine:   317,
+								StartPos:  5759,
+								EndPos:    5759,
 							},
 							Value: "0",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
+							StartLine: 317,
+							EndLine:   317,
+							StartPos:  5762,
+							EndPos:    5762,
+						},
+						Value: "0",
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 318,
+					EndLine:   318,
+					StartPos:  5768,
+					EndPos:    5776,
+				},
+				Expr: &expr.ArrayDimFetch{
+					Position: &position.Position{
+						StartLine: 318,
+						EndLine:   318,
+						StartPos:  5768,
+						EndPos:    5775,
+					},
+					Variable: &scalar.String{
+						Position: &position.Position{
+							StartLine: 318,
+							EndLine:   318,
+							StartPos:  5768,
+							EndPos:    5772,
+						},
+						Value: "\"foo\"",
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 318,
+							EndLine:   318,
+							StartPos:  5774,
+							EndPos:    5774,
+						},
+						Value: "0",
+					},
+				},
+			},
+			&stmt.Expression{
+				Position: &position.Position{
+					StartLine: 319,
+					EndLine:   319,
+					StartPos:  5780,
+					EndPos:    5786,
+				},
+				Expr: &expr.ArrayDimFetch{
+					Position: &position.Position{
+						StartLine: 319,
+						EndLine:   319,
+						StartPos:  5780,
+						EndPos:    5785,
+					},
+					Variable: &expr.ConstFetch{
+						Position: &position.Position{
 							StartLine: 319,
 							EndLine:   319,
-							StartPos:  5805,
-							EndPos:    5805,
+							StartPos:  5780,
+							EndPos:    5782,
+						},
+						Constant: &name.Name{
+							Position: &position.Position{
+								StartLine: 319,
+								EndLine:   319,
+								StartPos:  5780,
+								EndPos:    5782,
+							},
+							Parts: []node.Node{
+								&name.NamePart{
+									Position: &position.Position{
+										StartLine: 319,
+										EndLine:   319,
+										StartPos:  5780,
+										EndPos:    5782,
+									},
+									Value: "foo",
+								},
+							},
+						},
+					},
+					Dim: &scalar.Lnumber{
+						Position: &position.Position{
+							StartLine: 319,
+							EndLine:   319,
+							StartPos:  5784,
+							EndPos:    5784,
 						},
 						Value: "0",
 					},
@@ -14978,117 +15050,31 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 320,
 					EndLine:   320,
-					StartPos:  5811,
-					EndPos:    5819,
-				},
-				Expr: &expr.ArrayDimFetch{
-					Position: &position.Position{
-						StartLine: 320,
-						EndLine:   320,
-						StartPos:  5811,
-						EndPos:    5818,
-					},
-					Variable: &scalar.String{
-						Position: &position.Position{
-							StartLine: 320,
-							EndLine:   320,
-							StartPos:  5811,
-							EndPos:    5815,
-						},
-						Value: "\"foo\"",
-					},
-					Dim: &scalar.Lnumber{
-						Position: &position.Position{
-							StartLine: 320,
-							EndLine:   320,
-							StartPos:  5817,
-							EndPos:    5817,
-						},
-						Value: "0",
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 321,
-					EndLine:   321,
-					StartPos:  5823,
-					EndPos:    5829,
-				},
-				Expr: &expr.ArrayDimFetch{
-					Position: &position.Position{
-						StartLine: 321,
-						EndLine:   321,
-						StartPos:  5823,
-						EndPos:    5828,
-					},
-					Variable: &expr.ConstFetch{
-						Position: &position.Position{
-							StartLine: 321,
-							EndLine:   321,
-							StartPos:  5823,
-							EndPos:    5825,
-						},
-						Constant: &name.Name{
-							Position: &position.Position{
-								StartLine: 321,
-								EndLine:   321,
-								StartPos:  5823,
-								EndPos:    5825,
-							},
-							Parts: []node.Node{
-								&name.NamePart{
-									Position: &position.Position{
-										StartLine: 321,
-										EndLine:   321,
-										StartPos:  5823,
-										EndPos:    5825,
-									},
-									Value: "foo",
-								},
-							},
-						},
-					},
-					Dim: &scalar.Lnumber{
-						Position: &position.Position{
-							StartLine: 321,
-							EndLine:   321,
-							StartPos:  5827,
-							EndPos:    5827,
-						},
-						Value: "0",
-					},
-				},
-			},
-			&stmt.Expression{
-				Position: &position.Position{
-					StartLine: 322,
-					EndLine:   322,
-					StartPos:  5833,
-					EndPos:    5844,
+					StartPos:  5790,
+					EndPos:    5801,
 				},
 				Expr: &expr.ClassConstFetch{
 					Position: &position.Position{
-						StartLine: 322,
-						EndLine:   322,
-						StartPos:  5833,
-						EndPos:    5843,
+						StartLine: 320,
+						EndLine:   320,
+						StartPos:  5790,
+						EndPos:    5800,
 					},
 					Class: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 322,
-							EndLine:   322,
-							StartPos:  5833,
-							EndPos:    5838,
+							StartLine: 320,
+							EndLine:   320,
+							StartPos:  5790,
+							EndPos:    5795,
 						},
 						Value: "static",
 					},
 					ConstantName: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 322,
-							EndLine:   322,
-							StartPos:  5841,
-							EndPos:    5843,
+							StartLine: 320,
+							EndLine:   320,
+							StartPos:  5798,
+							EndPos:    5800,
 						},
 						Value: "foo",
 					},
@@ -15096,31 +15082,31 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 324,
-					EndLine:   324,
-					StartPos:  5849,
-					EndPos:    5857,
+					StartLine: 322,
+					EndLine:   322,
+					StartPos:  5806,
+					EndPos:    5814,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
-						StartLine: 324,
-						EndLine:   324,
-						StartPos:  5849,
-						EndPos:    5856,
+						StartLine: 322,
+						EndLine:   322,
+						StartPos:  5806,
+						EndPos:    5813,
 					},
 					Class: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 324,
-							EndLine:   324,
-							StartPos:  5853,
-							EndPos:    5856,
+							StartLine: 322,
+							EndLine:   322,
+							StartPos:  5810,
+							EndPos:    5813,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 324,
-								EndLine:   324,
-								StartPos:  5853,
-								EndPos:    5856,
+								StartLine: 322,
+								EndLine:   322,
+								StartPos:  5810,
+								EndPos:    5813,
 							},
 							Value: "foo",
 						},
@@ -15129,55 +15115,55 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 325,
-					EndLine:   325,
-					StartPos:  5861,
-					EndPos:    5875,
+					StartLine: 323,
+					EndLine:   323,
+					StartPos:  5818,
+					EndPos:    5832,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
-						StartLine: 325,
-						EndLine:   325,
-						StartPos:  5861,
-						EndPos:    5874,
+						StartLine: 323,
+						EndLine:   323,
+						StartPos:  5818,
+						EndPos:    5831,
 					},
 					Class: &expr.StaticPropertyFetch{
 						Position: &position.Position{
-							StartLine: 325,
-							EndLine:   325,
-							StartPos:  5865,
-							EndPos:    5874,
+							StartLine: 323,
+							EndLine:   323,
+							StartPos:  5822,
+							EndPos:    5831,
 						},
 						Class: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 325,
-								EndLine:   325,
-								StartPos:  5865,
-								EndPos:    5868,
+								StartLine: 323,
+								EndLine:   323,
+								StartPos:  5822,
+								EndPos:    5825,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 325,
-									EndLine:   325,
-									StartPos:  5865,
-									EndPos:    5868,
+									StartLine: 323,
+									EndLine:   323,
+									StartPos:  5822,
+									EndPos:    5825,
 								},
 								Value: "foo",
 							},
 						},
 						Property: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 325,
-								EndLine:   325,
-								StartPos:  5871,
-								EndPos:    5874,
+								StartLine: 323,
+								EndLine:   323,
+								StartPos:  5828,
+								EndPos:    5831,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 325,
-									EndLine:   325,
-									StartPos:  5871,
-									EndPos:    5874,
+									StartLine: 323,
+									EndLine:   323,
+									StartPos:  5828,
+									EndPos:    5831,
 								},
 								Value: "bar",
 							},
@@ -15187,65 +15173,65 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 326,
-					EndLine:   326,
-					StartPos:  5879,
-					EndPos:    5891,
+					StartLine: 324,
+					EndLine:   324,
+					StartPos:  5836,
+					EndPos:    5848,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
-						StartLine: 326,
-						EndLine:   326,
-						StartPos:  5879,
-						EndPos:    5889,
+						StartLine: 324,
+						EndLine:   324,
+						StartPos:  5836,
+						EndPos:    5846,
 					},
 					Class: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 326,
-							EndLine:   326,
-							StartPos:  5889,
-							EndPos:    5889,
+							StartLine: 324,
+							EndLine:   324,
+							StartPos:  5846,
+							EndPos:    5846,
 						},
 						Variable: &expr.PropertyFetch{
 							Position: &position.Position{
-								StartLine: 326,
-								EndLine:   326,
-								StartPos:  5887,
-								EndPos:    5889,
+								StartLine: 324,
+								EndLine:   324,
+								StartPos:  5844,
+								EndPos:    5846,
 							},
 							Variable: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 326,
-									EndLine:   326,
-									StartPos:  5883,
-									EndPos:    5887,
+									StartLine: 324,
+									EndLine:   324,
+									StartPos:  5840,
+									EndPos:    5844,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 326,
-										EndLine:   326,
-										StartPos:  5883,
-										EndPos:    5884,
+										StartLine: 324,
+										EndLine:   324,
+										StartPos:  5840,
+										EndPos:    5841,
 									},
 									Value: "a",
 								},
 							},
 							Property: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 326,
-									EndLine:   326,
-									StartPos:  5887,
-									EndPos:    5887,
+									StartLine: 324,
+									EndLine:   324,
+									StartPos:  5844,
+									EndPos:    5844,
 								},
 								Value: "b",
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 326,
-								EndLine:   326,
-								StartPos:  5889,
-								EndPos:    5889,
+								StartLine: 324,
+								EndLine:   324,
+								StartPos:  5846,
+								EndPos:    5846,
 							},
 							Value: "0",
 						},
@@ -15254,125 +15240,125 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 327,
-					EndLine:   327,
-					StartPos:  5895,
-					EndPos:    5926,
+					StartLine: 325,
+					EndLine:   325,
+					StartPos:  5852,
+					EndPos:    5883,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
-						StartLine: 327,
-						EndLine:   327,
-						StartPos:  5895,
-						EndPos:    5924,
+						StartLine: 325,
+						EndLine:   325,
+						StartPos:  5852,
+						EndPos:    5881,
 					},
 					Class: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 327,
-							EndLine:   327,
-							StartPos:  5924,
-							EndPos:    5924,
+							StartLine: 325,
+							EndLine:   325,
+							StartPos:  5881,
+							EndPos:    5881,
 						},
 						Variable: &expr.PropertyFetch{
 							Position: &position.Position{
-								StartLine: 327,
-								EndLine:   327,
-								StartPos:  5922,
-								EndPos:    5924,
+								StartLine: 325,
+								EndLine:   325,
+								StartPos:  5879,
+								EndPos:    5881,
 							},
 							Variable: &expr.PropertyFetch{
 								Position: &position.Position{
-									StartLine: 327,
-									EndLine:   327,
-									StartPos:  5918,
-									EndPos:    5922,
+									StartLine: 325,
+									EndLine:   325,
+									StartPos:  5875,
+									EndPos:    5879,
 								},
 								Variable: &expr.ArrayDimFetch{
 									Position: &position.Position{
-										StartLine: 327,
-										EndLine:   327,
-										StartPos:  5905,
-										EndPos:    5919,
+										StartLine: 325,
+										EndLine:   325,
+										StartPos:  5862,
+										EndPos:    5876,
 									},
 									Variable: &expr.PropertyFetch{
 										Position: &position.Position{
-											StartLine: 327,
-											EndLine:   327,
-											StartPos:  5903,
-											EndPos:    5914,
+											StartLine: 325,
+											EndLine:   325,
+											StartPos:  5860,
+											EndPos:    5871,
 										},
 										Variable: &expr.Variable{
 											Position: &position.Position{
-												StartLine: 327,
-												EndLine:   327,
-												StartPos:  5899,
-												EndPos:    5903,
+												StartLine: 325,
+												EndLine:   325,
+												StartPos:  5856,
+												EndPos:    5860,
 											},
 											VarName: &node.Identifier{
 												Position: &position.Position{
-													StartLine: 327,
-													EndLine:   327,
-													StartPos:  5899,
-													EndPos:    5900,
+													StartLine: 325,
+													EndLine:   325,
+													StartPos:  5856,
+													EndPos:    5857,
 												},
 												Value: "a",
 											},
 										},
 										Property: &node.Identifier{
 											Position: &position.Position{
-												StartLine: 327,
-												EndLine:   327,
-												StartPos:  5903,
-												EndPos:    5903,
+												StartLine: 325,
+												EndLine:   325,
+												StartPos:  5860,
+												EndPos:    5860,
 											},
 											Value: "b",
 										},
 									},
 									Dim: &expr.Ternary{
 										Position: &position.Position{
-											StartLine: 327,
-											EndLine:   327,
-											StartPos:  5905,
-											EndPos:    5914,
+											StartLine: 325,
+											EndLine:   325,
+											StartPos:  5862,
+											EndPos:    5871,
 										},
 										Condition: &expr.Variable{
 											Position: &position.Position{
-												StartLine: 327,
-												EndLine:   327,
-												StartPos:  5905,
-												EndPos:    5906,
+												StartLine: 325,
+												EndLine:   325,
+												StartPos:  5862,
+												EndPos:    5863,
 											},
 											VarName: &node.Identifier{
 												Position: &position.Position{
-													StartLine: 327,
-													EndLine:   327,
-													StartPos:  5905,
-													EndPos:    5906,
+													StartLine: 325,
+													EndLine:   325,
+													StartPos:  5862,
+													EndPos:    5863,
 												},
 												Value: "b",
 											},
 										},
 										IfFalse: &expr.ConstFetch{
 											Position: &position.Position{
-												StartLine: 327,
-												EndLine:   327,
-												StartPos:  5911,
-												EndPos:    5914,
+												StartLine: 325,
+												EndLine:   325,
+												StartPos:  5868,
+												EndPos:    5871,
 											},
 											Constant: &name.Name{
 												Position: &position.Position{
-													StartLine: 327,
-													EndLine:   327,
-													StartPos:  5911,
-													EndPos:    5914,
+													StartLine: 325,
+													EndLine:   325,
+													StartPos:  5868,
+													EndPos:    5871,
 												},
 												Parts: []node.Node{
 													&name.NamePart{
 														Position: &position.Position{
-															StartLine: 327,
-															EndLine:   327,
-															StartPos:  5911,
-															EndPos:    5914,
+															StartLine: 325,
+															EndLine:   325,
+															StartPos:  5868,
+															EndPos:    5871,
 														},
 														Value: "null",
 													},
@@ -15383,17 +15369,17 @@ func TestPhp5(t *testing.T) {
 								},
 								Property: &expr.Variable{
 									Position: &position.Position{
-										StartLine: 327,
-										EndLine:   327,
-										StartPos:  5918,
-										EndPos:    5919,
+										StartLine: 325,
+										EndLine:   325,
+										StartPos:  5875,
+										EndPos:    5876,
 									},
 									VarName: &node.Identifier{
 										Position: &position.Position{
-											StartLine: 327,
-											EndLine:   327,
-											StartPos:  5918,
-											EndPos:    5919,
+											StartLine: 325,
+											EndLine:   325,
+											StartPos:  5875,
+											EndPos:    5876,
 										},
 										Value: "c",
 									},
@@ -15401,20 +15387,20 @@ func TestPhp5(t *testing.T) {
 							},
 							Property: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 327,
-									EndLine:   327,
-									StartPos:  5922,
-									EndPos:    5922,
+									StartLine: 325,
+									EndLine:   325,
+									StartPos:  5879,
+									EndPos:    5879,
 								},
 								Value: "d",
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 327,
-								EndLine:   327,
-								StartPos:  5924,
-								EndPos:    5924,
+								StartLine: 325,
+								EndLine:   325,
+								StartPos:  5881,
+								EndPos:    5881,
 							},
 							Value: "0",
 						},
@@ -15423,64 +15409,64 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 327,
-					EndLine:   327,
-					StartPos:  5927,
-					EndPos:    5945,
+					StartLine: 325,
+					EndLine:   325,
+					StartPos:  5884,
+					EndPos:    5902,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 327,
-							EndLine:   327,
-							StartPos:  5934,
-							EndPos:    5944,
+							StartLine: 325,
+							EndLine:   325,
+							StartPos:  5891,
+							EndPos:    5901,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 327,
-								EndLine:   327,
-								StartPos:  5934,
-								EndPos:    5935,
+								StartLine: 325,
+								EndLine:   325,
+								StartPos:  5891,
+								EndPos:    5892,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 327,
-									EndLine:   327,
-									StartPos:  5934,
-									EndPos:    5935,
+									StartLine: 325,
+									EndLine:   325,
+									StartPos:  5891,
+									EndPos:    5892,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &expr.ArrayDimFetch{
 							Position: &position.Position{
-								StartLine: 327,
-								EndLine:   327,
-								StartPos:  5939,
-								EndPos:    5944,
+								StartLine: 325,
+								EndLine:   325,
+								StartPos:  5896,
+								EndPos:    5901,
 							},
 							Variable: &expr.ShortArray{
 								Position: &position.Position{
-									StartLine: 327,
-									EndLine:   327,
-									StartPos:  5939,
-									EndPos:    5941,
+									StartLine: 325,
+									EndLine:   325,
+									StartPos:  5896,
+									EndPos:    5898,
 								},
 								Items: []node.Node{
 									&expr.ArrayItem{
 										Position: &position.Position{
-											StartLine: 327,
-											EndLine:   327,
-											StartPos:  5940,
-											EndPos:    5940,
+											StartLine: 325,
+											EndLine:   325,
+											StartPos:  5897,
+											EndPos:    5897,
 										},
 										Val: &scalar.Lnumber{
 											Position: &position.Position{
-												StartLine: 327,
-												EndLine:   327,
-												StartPos:  5940,
-												EndPos:    5940,
+												StartLine: 325,
+												EndLine:   325,
+												StartPos:  5897,
+												EndPos:    5897,
 											},
 											Value: "1",
 										},
@@ -15489,10 +15475,10 @@ func TestPhp5(t *testing.T) {
 							},
 							Dim: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 327,
-									EndLine:   327,
-									StartPos:  5943,
-									EndPos:    5943,
+									StartLine: 325,
+									EndLine:   325,
+									StartPos:  5900,
+									EndPos:    5900,
 								},
 								Value: "0",
 							},
@@ -15502,49 +15488,153 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 329,
-					EndLine:   329,
-					StartPos:  5950,
-					EndPos:    5964,
+					StartLine: 327,
+					EndLine:   327,
+					StartPos:  5907,
+					EndPos:    5921,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 329,
-							EndLine:   329,
-							StartPos:  5957,
-							EndPos:    5963,
+							StartLine: 327,
+							EndLine:   327,
+							StartPos:  5914,
+							EndPos:    5920,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 329,
-								EndLine:   329,
-								StartPos:  5957,
-								EndPos:    5958,
+								StartLine: 327,
+								EndLine:   327,
+								StartPos:  5914,
+								EndPos:    5915,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 329,
-									EndLine:   329,
-									StartPos:  5957,
-									EndPos:    5958,
+									StartLine: 327,
+									EndLine:   327,
+									StartPos:  5914,
+									EndPos:    5915,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &expr.BooleanNot{
 							Position: &position.Position{
+								StartLine: 327,
+								EndLine:   327,
+								StartPos:  5919,
+								EndPos:    5920,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 327,
+									EndLine:   327,
+									StartPos:  5920,
+									EndPos:    5920,
+								},
+								Value: "1",
+							},
+						},
+					},
+				},
+			},
+			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 328,
+					EndLine:   328,
+					StartPos:  5925,
+					EndPos:    5939,
+				},
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Position: &position.Position{
+							StartLine: 328,
+							EndLine:   328,
+							StartPos:  5932,
+							EndPos:    5938,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 328,
+								EndLine:   328,
+								StartPos:  5932,
+								EndPos:    5933,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 328,
+									EndLine:   328,
+									StartPos:  5932,
+									EndPos:    5933,
+								},
+								Value: "a",
+							},
+						},
+						Expr: &expr.BitwiseNot{
+							Position: &position.Position{
+								StartLine: 328,
+								EndLine:   328,
+								StartPos:  5937,
+								EndPos:    5938,
+							},
+							Expr: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 328,
+									EndLine:   328,
+									StartPos:  5938,
+									EndPos:    5938,
+								},
+								Value: "1",
+							},
+						},
+					},
+				},
+			},
+			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 329,
+					EndLine:   329,
+					StartPos:  5943,
+					EndPos:    5957,
+				},
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Position: &position.Position{
+							StartLine: 329,
+							EndLine:   329,
+							StartPos:  5950,
+							EndPos:    5956,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
 								StartLine: 329,
 								EndLine:   329,
-								StartPos:  5962,
-								EndPos:    5963,
+								StartPos:  5950,
+								EndPos:    5951,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 329,
+									EndLine:   329,
+									StartPos:  5950,
+									EndPos:    5951,
+								},
+								Value: "a",
+							},
+						},
+						Expr: &expr.UnaryPlus{
+							Position: &position.Position{
+								StartLine: 329,
+								EndLine:   329,
+								StartPos:  5955,
+								EndPos:    5956,
 							},
 							Expr: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 329,
 									EndLine:   329,
-									StartPos:  5963,
-									EndPos:    5963,
+									StartPos:  5956,
+									EndPos:    5956,
 								},
 								Value: "1",
 							},
@@ -15556,47 +15646,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 330,
 					EndLine:   330,
-					StartPos:  5968,
-					EndPos:    5982,
+					StartPos:  5961,
+					EndPos:    5975,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 330,
 							EndLine:   330,
-							StartPos:  5975,
-							EndPos:    5981,
+							StartPos:  5968,
+							EndPos:    5974,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 330,
 								EndLine:   330,
-								StartPos:  5975,
-								EndPos:    5976,
+								StartPos:  5968,
+								EndPos:    5969,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 330,
 									EndLine:   330,
-									StartPos:  5975,
-									EndPos:    5976,
+									StartPos:  5968,
+									EndPos:    5969,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.BitwiseNot{
+						Expr: &expr.UnaryMinus{
 							Position: &position.Position{
 								StartLine: 330,
 								EndLine:   330,
-								StartPos:  5980,
-								EndPos:    5981,
+								StartPos:  5973,
+								EndPos:    5974,
 							},
 							Expr: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 330,
 									EndLine:   330,
-									StartPos:  5981,
-									EndPos:    5981,
+									StartPos:  5974,
+									EndPos:    5974,
 								},
 								Value: "1",
 							},
@@ -15608,50 +15698,42 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 331,
 					EndLine:   331,
-					StartPos:  5986,
-					EndPos:    6000,
+					StartPos:  5979,
+					EndPos:    5994,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 331,
 							EndLine:   331,
-							StartPos:  5993,
-							EndPos:    5999,
+							StartPos:  5986,
+							EndPos:    5992,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 331,
 								EndLine:   331,
-								StartPos:  5993,
-								EndPos:    5994,
+								StartPos:  5986,
+								EndPos:    5987,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 331,
 									EndLine:   331,
-									StartPos:  5993,
-									EndPos:    5994,
+									StartPos:  5986,
+									EndPos:    5987,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.UnaryPlus{
+						Expr: &scalar.Lnumber{
 							Position: &position.Position{
 								StartLine: 331,
 								EndLine:   331,
-								StartPos:  5998,
-								EndPos:    5999,
+								StartPos:  5992,
+								EndPos:    5992,
 							},
-							Expr: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 331,
-									EndLine:   331,
-									StartPos:  5999,
-									EndPos:    5999,
-								},
-								Value: "1",
-							},
+							Value: "1",
 						},
 					},
 				},
@@ -15660,49 +15742,58 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 332,
 					EndLine:   332,
-					StartPos:  6004,
-					EndPos:    6018,
+					StartPos:  5998,
+					EndPos:    6016,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 332,
 							EndLine:   332,
-							StartPos:  6011,
-							EndPos:    6017,
+							StartPos:  6005,
+							EndPos:    6015,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 332,
 								EndLine:   332,
-								StartPos:  6011,
-								EndPos:    6012,
+								StartPos:  6005,
+								EndPos:    6006,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 332,
 									EndLine:   332,
-									StartPos:  6011,
-									EndPos:    6012,
+									StartPos:  6005,
+									EndPos:    6006,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.UnaryMinus{
+						Expr: &expr.Ternary{
 							Position: &position.Position{
 								StartLine: 332,
 								EndLine:   332,
-								StartPos:  6016,
-								EndPos:    6017,
+								StartPos:  6010,
+								EndPos:    6015,
 							},
-							Expr: &scalar.Lnumber{
+							Condition: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 332,
 									EndLine:   332,
-									StartPos:  6017,
-									EndPos:    6017,
+									StartPos:  6010,
+									EndPos:    6010,
 								},
 								Value: "1",
+							},
+							IfFalse: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 332,
+									EndLine:   332,
+									StartPos:  6015,
+									EndPos:    6015,
+								},
+								Value: "2",
 							},
 						},
 					},
@@ -15712,42 +15803,68 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 333,
 					EndLine:   333,
-					StartPos:  6022,
-					EndPos:    6037,
+					StartPos:  6020,
+					EndPos:    6041,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 333,
 							EndLine:   333,
-							StartPos:  6029,
-							EndPos:    6035,
+							StartPos:  6027,
+							EndPos:    6040,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 333,
 								EndLine:   333,
-								StartPos:  6029,
-								EndPos:    6030,
+								StartPos:  6027,
+								EndPos:    6028,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 333,
 									EndLine:   333,
-									StartPos:  6029,
-									EndPos:    6030,
+									StartPos:  6027,
+									EndPos:    6028,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &scalar.Lnumber{
+						Expr: &expr.Ternary{
 							Position: &position.Position{
 								StartLine: 333,
 								EndLine:   333,
-								StartPos:  6035,
-								EndPos:    6035,
+								StartPos:  6032,
+								EndPos:    6040,
 							},
-							Value: "1",
+							Condition: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 333,
+									EndLine:   333,
+									StartPos:  6032,
+									EndPos:    6032,
+								},
+								Value: "1",
+							},
+							IfTrue: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 333,
+									EndLine:   333,
+									StartPos:  6036,
+									EndPos:    6036,
+								},
+								Value: "2",
+							},
+							IfFalse: &scalar.Lnumber{
+								Position: &position.Position{
+									StartLine: 333,
+									EndLine:   333,
+									StartPos:  6040,
+									EndPos:    6040,
+								},
+								Value: "3",
+							},
 						},
 					},
 				},
@@ -15756,56 +15873,56 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 334,
 					EndLine:   334,
-					StartPos:  6041,
-					EndPos:    6059,
+					StartPos:  6045,
+					EndPos:    6062,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 334,
 							EndLine:   334,
-							StartPos:  6048,
-							EndPos:    6058,
+							StartPos:  6052,
+							EndPos:    6061,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 334,
 								EndLine:   334,
-								StartPos:  6048,
-								EndPos:    6049,
+								StartPos:  6052,
+								EndPos:    6053,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 334,
 									EndLine:   334,
-									StartPos:  6048,
-									EndPos:    6049,
+									StartPos:  6052,
+									EndPos:    6053,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.Ternary{
+						Expr: &binary.BitwiseAnd{
 							Position: &position.Position{
 								StartLine: 334,
 								EndLine:   334,
-								StartPos:  6053,
-								EndPos:    6058,
+								StartPos:  6057,
+								EndPos:    6061,
 							},
-							Condition: &scalar.Lnumber{
+							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 334,
 									EndLine:   334,
-									StartPos:  6053,
-									EndPos:    6053,
+									StartPos:  6057,
+									EndPos:    6057,
 								},
 								Value: "1",
 							},
-							IfFalse: &scalar.Lnumber{
+							Right: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 334,
 									EndLine:   334,
-									StartPos:  6058,
-									EndPos:    6058,
+									StartPos:  6061,
+									EndPos:    6061,
 								},
 								Value: "2",
 							},
@@ -15817,67 +15934,58 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 335,
 					EndLine:   335,
-					StartPos:  6063,
-					EndPos:    6084,
+					StartPos:  6066,
+					EndPos:    6083,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 335,
 							EndLine:   335,
-							StartPos:  6070,
-							EndPos:    6083,
+							StartPos:  6073,
+							EndPos:    6082,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 335,
 								EndLine:   335,
-								StartPos:  6070,
-								EndPos:    6071,
+								StartPos:  6073,
+								EndPos:    6074,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 335,
 									EndLine:   335,
-									StartPos:  6070,
-									EndPos:    6071,
+									StartPos:  6073,
+									EndPos:    6074,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.Ternary{
+						Expr: &binary.BitwiseOr{
 							Position: &position.Position{
 								StartLine: 335,
 								EndLine:   335,
-								StartPos:  6075,
-								EndPos:    6083,
+								StartPos:  6078,
+								EndPos:    6082,
 							},
-							Condition: &scalar.Lnumber{
+							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 335,
 									EndLine:   335,
-									StartPos:  6075,
-									EndPos:    6075,
+									StartPos:  6078,
+									EndPos:    6078,
 								},
 								Value: "1",
 							},
-							IfTrue: &scalar.Lnumber{
+							Right: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 335,
 									EndLine:   335,
-									StartPos:  6079,
-									EndPos:    6079,
+									StartPos:  6082,
+									EndPos:    6082,
 								},
 								Value: "2",
-							},
-							IfFalse: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 335,
-									EndLine:   335,
-									StartPos:  6083,
-									EndPos:    6083,
-								},
-								Value: "3",
 							},
 						},
 					},
@@ -15887,47 +15995,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 336,
 					EndLine:   336,
-					StartPos:  6088,
-					EndPos:    6105,
+					StartPos:  6087,
+					EndPos:    6104,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 336,
 							EndLine:   336,
-							StartPos:  6095,
-							EndPos:    6104,
+							StartPos:  6094,
+							EndPos:    6103,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 336,
 								EndLine:   336,
-								StartPos:  6095,
-								EndPos:    6096,
+								StartPos:  6094,
+								EndPos:    6095,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 336,
 									EndLine:   336,
-									StartPos:  6095,
-									EndPos:    6096,
+									StartPos:  6094,
+									EndPos:    6095,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.BitwiseAnd{
+						Expr: &binary.BitwiseXor{
 							Position: &position.Position{
 								StartLine: 336,
 								EndLine:   336,
-								StartPos:  6100,
-								EndPos:    6104,
+								StartPos:  6099,
+								EndPos:    6103,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 336,
 									EndLine:   336,
-									StartPos:  6100,
-									EndPos:    6100,
+									StartPos:  6099,
+									EndPos:    6099,
 								},
 								Value: "1",
 							},
@@ -15935,8 +16043,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 336,
 									EndLine:   336,
-									StartPos:  6104,
-									EndPos:    6104,
+									StartPos:  6103,
+									EndPos:    6103,
 								},
 								Value: "2",
 							},
@@ -15948,7 +16056,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 337,
 					EndLine:   337,
-					StartPos:  6109,
+					StartPos:  6108,
 					EndPos:    6126,
 				},
 				Vars: []node.Node{
@@ -15956,39 +16064,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 337,
 							EndLine:   337,
-							StartPos:  6116,
+							StartPos:  6115,
 							EndPos:    6125,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 337,
 								EndLine:   337,
-								StartPos:  6116,
-								EndPos:    6117,
+								StartPos:  6115,
+								EndPos:    6116,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 337,
 									EndLine:   337,
-									StartPos:  6116,
-									EndPos:    6117,
+									StartPos:  6115,
+									EndPos:    6116,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.BitwiseOr{
+						Expr: &binary.BooleanAnd{
 							Position: &position.Position{
 								StartLine: 337,
 								EndLine:   337,
-								StartPos:  6121,
+								StartPos:  6120,
 								EndPos:    6125,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 337,
 									EndLine:   337,
-									StartPos:  6121,
-									EndPos:    6121,
+									StartPos:  6120,
+									EndPos:    6120,
 								},
 								Value: "1",
 							},
@@ -16010,7 +16118,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 338,
 					EndLine:   338,
 					StartPos:  6130,
-					EndPos:    6147,
+					EndPos:    6148,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -16018,7 +16126,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 338,
 							EndLine:   338,
 							StartPos:  6137,
-							EndPos:    6146,
+							EndPos:    6147,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -16037,12 +16145,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.BitwiseXor{
+						Expr: &binary.BooleanOr{
 							Position: &position.Position{
 								StartLine: 338,
 								EndLine:   338,
 								StartPos:  6142,
-								EndPos:    6146,
+								EndPos:    6147,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -16057,8 +16165,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 338,
 									EndLine:   338,
-									StartPos:  6146,
-									EndPos:    6146,
+									StartPos:  6147,
+									EndPos:    6147,
 								},
 								Value: "2",
 							},
@@ -16070,7 +16178,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 339,
 					EndLine:   339,
-					StartPos:  6151,
+					StartPos:  6152,
 					EndPos:    6169,
 				},
 				Vars: []node.Node{
@@ -16078,39 +16186,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 339,
 							EndLine:   339,
-							StartPos:  6158,
+							StartPos:  6159,
 							EndPos:    6168,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 339,
 								EndLine:   339,
-								StartPos:  6158,
-								EndPos:    6159,
+								StartPos:  6159,
+								EndPos:    6160,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 339,
 									EndLine:   339,
-									StartPos:  6158,
-									EndPos:    6159,
+									StartPos:  6159,
+									EndPos:    6160,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.BooleanAnd{
+						Expr: &binary.Concat{
 							Position: &position.Position{
 								StartLine: 339,
 								EndLine:   339,
-								StartPos:  6163,
+								StartPos:  6164,
 								EndPos:    6168,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 339,
 									EndLine:   339,
-									StartPos:  6163,
-									EndPos:    6163,
+									StartPos:  6164,
+									EndPos:    6164,
 								},
 								Value: "1",
 							},
@@ -16132,7 +16240,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 340,
 					EndLine:   340,
 					StartPos:  6173,
-					EndPos:    6191,
+					EndPos:    6190,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -16140,7 +16248,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 340,
 							EndLine:   340,
 							StartPos:  6180,
-							EndPos:    6190,
+							EndPos:    6189,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -16159,12 +16267,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.BooleanOr{
+						Expr: &binary.Div{
 							Position: &position.Position{
 								StartLine: 340,
 								EndLine:   340,
 								StartPos:  6185,
-								EndPos:    6190,
+								EndPos:    6189,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -16179,8 +16287,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 340,
 									EndLine:   340,
-									StartPos:  6190,
-									EndPos:    6190,
+									StartPos:  6189,
+									EndPos:    6189,
 								},
 								Value: "2",
 							},
@@ -16192,7 +16300,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 341,
 					EndLine:   341,
-					StartPos:  6195,
+					StartPos:  6194,
 					EndPos:    6212,
 				},
 				Vars: []node.Node{
@@ -16200,39 +16308,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 341,
 							EndLine:   341,
-							StartPos:  6202,
+							StartPos:  6201,
 							EndPos:    6211,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 341,
 								EndLine:   341,
-								StartPos:  6202,
-								EndPos:    6203,
+								StartPos:  6201,
+								EndPos:    6202,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 341,
 									EndLine:   341,
-									StartPos:  6202,
-									EndPos:    6203,
+									StartPos:  6201,
+									EndPos:    6202,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Concat{
+						Expr: &binary.Equal{
 							Position: &position.Position{
 								StartLine: 341,
 								EndLine:   341,
-								StartPos:  6207,
+								StartPos:  6206,
 								EndPos:    6211,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 341,
 									EndLine:   341,
-									StartPos:  6207,
-									EndPos:    6207,
+									StartPos:  6206,
+									EndPos:    6206,
 								},
 								Value: "1",
 							},
@@ -16254,7 +16362,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 342,
 					EndLine:   342,
 					StartPos:  6216,
-					EndPos:    6233,
+					EndPos:    6234,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -16262,7 +16370,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 342,
 							EndLine:   342,
 							StartPos:  6223,
-							EndPos:    6232,
+							EndPos:    6233,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -16281,12 +16389,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.Div{
+						Expr: &binary.GreaterOrEqual{
 							Position: &position.Position{
 								StartLine: 342,
 								EndLine:   342,
 								StartPos:  6228,
-								EndPos:    6232,
+								EndPos:    6233,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -16301,8 +16409,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 342,
 									EndLine:   342,
-									StartPos:  6232,
-									EndPos:    6232,
+									StartPos:  6233,
+									EndPos:    6233,
 								},
 								Value: "2",
 							},
@@ -16314,7 +16422,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 343,
 					EndLine:   343,
-					StartPos:  6237,
+					StartPos:  6238,
 					EndPos:    6255,
 				},
 				Vars: []node.Node{
@@ -16322,39 +16430,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 343,
 							EndLine:   343,
-							StartPos:  6244,
+							StartPos:  6245,
 							EndPos:    6254,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 343,
 								EndLine:   343,
-								StartPos:  6244,
-								EndPos:    6245,
+								StartPos:  6245,
+								EndPos:    6246,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 343,
 									EndLine:   343,
-									StartPos:  6244,
-									EndPos:    6245,
+									StartPos:  6245,
+									EndPos:    6246,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Equal{
+						Expr: &binary.Greater{
 							Position: &position.Position{
 								StartLine: 343,
 								EndLine:   343,
-								StartPos:  6249,
+								StartPos:  6250,
 								EndPos:    6254,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 343,
 									EndLine:   343,
-									StartPos:  6249,
-									EndPos:    6249,
+									StartPos:  6250,
+									EndPos:    6250,
 								},
 								Value: "1",
 							},
@@ -16376,7 +16484,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 344,
 					EndLine:   344,
 					StartPos:  6259,
-					EndPos:    6277,
+					EndPos:    6278,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -16384,7 +16492,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 344,
 							EndLine:   344,
 							StartPos:  6266,
-							EndPos:    6276,
+							EndPos:    6277,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -16403,12 +16511,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.GreaterOrEqual{
+						Expr: &binary.Identical{
 							Position: &position.Position{
 								StartLine: 344,
 								EndLine:   344,
 								StartPos:  6271,
-								EndPos:    6276,
+								EndPos:    6277,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -16423,8 +16531,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 344,
 									EndLine:   344,
-									StartPos:  6276,
-									EndPos:    6276,
+									StartPos:  6277,
+									EndPos:    6277,
 								},
 								Value: "2",
 							},
@@ -16436,47 +16544,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 345,
 					EndLine:   345,
-					StartPos:  6281,
-					EndPos:    6298,
+					StartPos:  6282,
+					EndPos:    6301,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 345,
 							EndLine:   345,
-							StartPos:  6288,
-							EndPos:    6297,
+							StartPos:  6289,
+							EndPos:    6300,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 345,
 								EndLine:   345,
-								StartPos:  6288,
-								EndPos:    6289,
+								StartPos:  6289,
+								EndPos:    6290,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 345,
 									EndLine:   345,
-									StartPos:  6288,
-									EndPos:    6289,
+									StartPos:  6289,
+									EndPos:    6290,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Greater{
+						Expr: &binary.LogicalAnd{
 							Position: &position.Position{
 								StartLine: 345,
 								EndLine:   345,
-								StartPos:  6293,
-								EndPos:    6297,
+								StartPos:  6294,
+								EndPos:    6300,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 345,
 									EndLine:   345,
-									StartPos:  6293,
-									EndPos:    6293,
+									StartPos:  6294,
+									EndPos:    6294,
 								},
 								Value: "1",
 							},
@@ -16484,8 +16592,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 345,
 									EndLine:   345,
-									StartPos:  6297,
-									EndPos:    6297,
+									StartPos:  6300,
+									EndPos:    6300,
 								},
 								Value: "2",
 							},
@@ -16497,47 +16605,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 346,
 					EndLine:   346,
-					StartPos:  6302,
-					EndPos:    6321,
+					StartPos:  6305,
+					EndPos:    6323,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 346,
 							EndLine:   346,
-							StartPos:  6309,
-							EndPos:    6320,
+							StartPos:  6312,
+							EndPos:    6322,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 346,
 								EndLine:   346,
-								StartPos:  6309,
-								EndPos:    6310,
+								StartPos:  6312,
+								EndPos:    6313,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 346,
 									EndLine:   346,
-									StartPos:  6309,
-									EndPos:    6310,
+									StartPos:  6312,
+									EndPos:    6313,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Identical{
+						Expr: &binary.LogicalOr{
 							Position: &position.Position{
 								StartLine: 346,
 								EndLine:   346,
-								StartPos:  6314,
-								EndPos:    6320,
+								StartPos:  6317,
+								EndPos:    6322,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 346,
 									EndLine:   346,
-									StartPos:  6314,
-									EndPos:    6314,
+									StartPos:  6317,
+									EndPos:    6317,
 								},
 								Value: "1",
 							},
@@ -16545,8 +16653,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 346,
 									EndLine:   346,
-									StartPos:  6320,
-									EndPos:    6320,
+									StartPos:  6322,
+									EndPos:    6322,
 								},
 								Value: "2",
 							},
@@ -16558,47 +16666,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 347,
 					EndLine:   347,
-					StartPos:  6325,
-					EndPos:    6344,
+					StartPos:  6327,
+					EndPos:    6346,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 347,
 							EndLine:   347,
-							StartPos:  6332,
-							EndPos:    6343,
+							StartPos:  6334,
+							EndPos:    6345,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 347,
 								EndLine:   347,
-								StartPos:  6332,
-								EndPos:    6333,
+								StartPos:  6334,
+								EndPos:    6335,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 347,
 									EndLine:   347,
-									StartPos:  6332,
-									EndPos:    6333,
+									StartPos:  6334,
+									EndPos:    6335,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.LogicalAnd{
+						Expr: &binary.LogicalXor{
 							Position: &position.Position{
 								StartLine: 347,
 								EndLine:   347,
-								StartPos:  6337,
-								EndPos:    6343,
+								StartPos:  6339,
+								EndPos:    6345,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 347,
 									EndLine:   347,
-									StartPos:  6337,
-									EndPos:    6337,
+									StartPos:  6339,
+									EndPos:    6339,
 								},
 								Value: "1",
 							},
@@ -16606,8 +16714,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 347,
 									EndLine:   347,
-									StartPos:  6343,
-									EndPos:    6343,
+									StartPos:  6345,
+									EndPos:    6345,
 								},
 								Value: "2",
 							},
@@ -16619,47 +16727,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 348,
 					EndLine:   348,
-					StartPos:  6348,
-					EndPos:    6366,
+					StartPos:  6350,
+					EndPos:    6367,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 348,
 							EndLine:   348,
-							StartPos:  6355,
-							EndPos:    6365,
+							StartPos:  6357,
+							EndPos:    6366,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 348,
 								EndLine:   348,
-								StartPos:  6355,
-								EndPos:    6356,
+								StartPos:  6357,
+								EndPos:    6358,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 348,
 									EndLine:   348,
-									StartPos:  6355,
-									EndPos:    6356,
+									StartPos:  6357,
+									EndPos:    6358,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.LogicalOr{
+						Expr: &binary.Minus{
 							Position: &position.Position{
 								StartLine: 348,
 								EndLine:   348,
-								StartPos:  6360,
-								EndPos:    6365,
+								StartPos:  6362,
+								EndPos:    6366,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 348,
 									EndLine:   348,
-									StartPos:  6360,
-									EndPos:    6360,
+									StartPos:  6362,
+									EndPos:    6362,
 								},
 								Value: "1",
 							},
@@ -16667,8 +16775,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 348,
 									EndLine:   348,
-									StartPos:  6365,
-									EndPos:    6365,
+									StartPos:  6366,
+									EndPos:    6366,
 								},
 								Value: "2",
 							},
@@ -16680,47 +16788,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 349,
 					EndLine:   349,
-					StartPos:  6370,
-					EndPos:    6389,
+					StartPos:  6371,
+					EndPos:    6388,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 349,
 							EndLine:   349,
-							StartPos:  6377,
-							EndPos:    6388,
+							StartPos:  6378,
+							EndPos:    6387,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 349,
 								EndLine:   349,
-								StartPos:  6377,
-								EndPos:    6378,
+								StartPos:  6378,
+								EndPos:    6379,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 349,
 									EndLine:   349,
-									StartPos:  6377,
-									EndPos:    6378,
+									StartPos:  6378,
+									EndPos:    6379,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.LogicalXor{
+						Expr: &binary.Mod{
 							Position: &position.Position{
 								StartLine: 349,
 								EndLine:   349,
-								StartPos:  6382,
-								EndPos:    6388,
+								StartPos:  6383,
+								EndPos:    6387,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 349,
 									EndLine:   349,
-									StartPos:  6382,
-									EndPos:    6382,
+									StartPos:  6383,
+									EndPos:    6383,
 								},
 								Value: "1",
 							},
@@ -16728,8 +16836,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 349,
 									EndLine:   349,
-									StartPos:  6388,
-									EndPos:    6388,
+									StartPos:  6387,
+									EndPos:    6387,
 								},
 								Value: "2",
 							},
@@ -16741,47 +16849,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 350,
 					EndLine:   350,
-					StartPos:  6393,
-					EndPos:    6410,
+					StartPos:  6392,
+					EndPos:    6409,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 350,
 							EndLine:   350,
-							StartPos:  6400,
-							EndPos:    6409,
+							StartPos:  6399,
+							EndPos:    6408,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 350,
 								EndLine:   350,
-								StartPos:  6400,
-								EndPos:    6401,
+								StartPos:  6399,
+								EndPos:    6400,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 350,
 									EndLine:   350,
-									StartPos:  6400,
-									EndPos:    6401,
+									StartPos:  6399,
+									EndPos:    6400,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Minus{
+						Expr: &binary.Mul{
 							Position: &position.Position{
 								StartLine: 350,
 								EndLine:   350,
-								StartPos:  6405,
-								EndPos:    6409,
+								StartPos:  6404,
+								EndPos:    6408,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 350,
 									EndLine:   350,
-									StartPos:  6405,
-									EndPos:    6405,
+									StartPos:  6404,
+									EndPos:    6404,
 								},
 								Value: "1",
 							},
@@ -16789,8 +16897,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 350,
 									EndLine:   350,
-									StartPos:  6409,
-									EndPos:    6409,
+									StartPos:  6408,
+									EndPos:    6408,
 								},
 								Value: "2",
 							},
@@ -16802,7 +16910,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 351,
 					EndLine:   351,
-					StartPos:  6414,
+					StartPos:  6413,
 					EndPos:    6431,
 				},
 				Vars: []node.Node{
@@ -16810,39 +16918,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 351,
 							EndLine:   351,
-							StartPos:  6421,
+							StartPos:  6420,
 							EndPos:    6430,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 351,
 								EndLine:   351,
-								StartPos:  6421,
-								EndPos:    6422,
+								StartPos:  6420,
+								EndPos:    6421,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 351,
 									EndLine:   351,
-									StartPos:  6421,
-									EndPos:    6422,
+									StartPos:  6420,
+									EndPos:    6421,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Mod{
+						Expr: &binary.NotEqual{
 							Position: &position.Position{
 								StartLine: 351,
 								EndLine:   351,
-								StartPos:  6426,
+								StartPos:  6425,
 								EndPos:    6430,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 351,
 									EndLine:   351,
-									StartPos:  6426,
-									EndPos:    6426,
+									StartPos:  6425,
+									EndPos:    6425,
 								},
 								Value: "1",
 							},
@@ -16864,7 +16972,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 352,
 					EndLine:   352,
 					StartPos:  6435,
-					EndPos:    6452,
+					EndPos:    6454,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -16872,7 +16980,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 352,
 							EndLine:   352,
 							StartPos:  6442,
-							EndPos:    6451,
+							EndPos:    6453,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -16891,12 +16999,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.Mul{
+						Expr: &binary.NotIdentical{
 							Position: &position.Position{
 								StartLine: 352,
 								EndLine:   352,
 								StartPos:  6447,
-								EndPos:    6451,
+								EndPos:    6453,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -16911,8 +17019,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 352,
 									EndLine:   352,
-									StartPos:  6451,
-									EndPos:    6451,
+									StartPos:  6453,
+									EndPos:    6453,
 								},
 								Value: "2",
 							},
@@ -16924,47 +17032,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 353,
 					EndLine:   353,
-					StartPos:  6456,
-					EndPos:    6474,
+					StartPos:  6458,
+					EndPos:    6475,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 353,
 							EndLine:   353,
-							StartPos:  6463,
-							EndPos:    6473,
+							StartPos:  6465,
+							EndPos:    6474,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 353,
 								EndLine:   353,
-								StartPos:  6463,
-								EndPos:    6464,
+								StartPos:  6465,
+								EndPos:    6466,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 353,
 									EndLine:   353,
-									StartPos:  6463,
-									EndPos:    6464,
+									StartPos:  6465,
+									EndPos:    6466,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.NotEqual{
+						Expr: &binary.Plus{
 							Position: &position.Position{
 								StartLine: 353,
 								EndLine:   353,
-								StartPos:  6468,
-								EndPos:    6473,
+								StartPos:  6470,
+								EndPos:    6474,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 353,
 									EndLine:   353,
-									StartPos:  6468,
-									EndPos:    6468,
+									StartPos:  6470,
+									EndPos:    6470,
 								},
 								Value: "1",
 							},
@@ -16972,8 +17080,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 353,
 									EndLine:   353,
-									StartPos:  6473,
-									EndPos:    6473,
+									StartPos:  6474,
+									EndPos:    6474,
 								},
 								Value: "2",
 							},
@@ -16985,7 +17093,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 354,
 					EndLine:   354,
-					StartPos:  6478,
+					StartPos:  6479,
 					EndPos:    6497,
 				},
 				Vars: []node.Node{
@@ -16993,39 +17101,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 354,
 							EndLine:   354,
-							StartPos:  6485,
+							StartPos:  6486,
 							EndPos:    6496,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 354,
 								EndLine:   354,
-								StartPos:  6485,
-								EndPos:    6486,
+								StartPos:  6486,
+								EndPos:    6487,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 354,
 									EndLine:   354,
-									StartPos:  6485,
-									EndPos:    6486,
+									StartPos:  6486,
+									EndPos:    6487,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.NotIdentical{
+						Expr: &binary.Pow{
 							Position: &position.Position{
 								StartLine: 354,
 								EndLine:   354,
-								StartPos:  6490,
+								StartPos:  6491,
 								EndPos:    6496,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 354,
 									EndLine:   354,
-									StartPos:  6490,
-									EndPos:    6490,
+									StartPos:  6491,
+									EndPos:    6491,
 								},
 								Value: "1",
 							},
@@ -17047,7 +17155,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 355,
 					EndLine:   355,
 					StartPos:  6501,
-					EndPos:    6518,
+					EndPos:    6519,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -17055,7 +17163,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 355,
 							EndLine:   355,
 							StartPos:  6508,
-							EndPos:    6517,
+							EndPos:    6518,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -17074,12 +17182,12 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.Plus{
+						Expr: &binary.ShiftLeft{
 							Position: &position.Position{
 								StartLine: 355,
 								EndLine:   355,
 								StartPos:  6513,
-								EndPos:    6517,
+								EndPos:    6518,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
@@ -17094,8 +17202,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 355,
 									EndLine:   355,
-									StartPos:  6517,
-									EndPos:    6517,
+									StartPos:  6518,
+									EndPos:    6518,
 								},
 								Value: "2",
 							},
@@ -17107,47 +17215,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 356,
 					EndLine:   356,
-					StartPos:  6522,
-					EndPos:    6540,
+					StartPos:  6523,
+					EndPos:    6541,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 356,
 							EndLine:   356,
-							StartPos:  6529,
-							EndPos:    6539,
+							StartPos:  6530,
+							EndPos:    6540,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 356,
 								EndLine:   356,
-								StartPos:  6529,
-								EndPos:    6530,
+								StartPos:  6530,
+								EndPos:    6531,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 356,
 									EndLine:   356,
-									StartPos:  6529,
-									EndPos:    6530,
+									StartPos:  6530,
+									EndPos:    6531,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.Pow{
+						Expr: &binary.ShiftRight{
 							Position: &position.Position{
 								StartLine: 356,
 								EndLine:   356,
-								StartPos:  6534,
-								EndPos:    6539,
+								StartPos:  6535,
+								EndPos:    6540,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 356,
 									EndLine:   356,
-									StartPos:  6534,
-									EndPos:    6534,
+									StartPos:  6535,
+									EndPos:    6535,
 								},
 								Value: "1",
 							},
@@ -17155,8 +17263,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 356,
 									EndLine:   356,
-									StartPos:  6539,
-									EndPos:    6539,
+									StartPos:  6540,
+									EndPos:    6540,
 								},
 								Value: "2",
 							},
@@ -17168,47 +17276,47 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 357,
 					EndLine:   357,
-					StartPos:  6544,
-					EndPos:    6562,
+					StartPos:  6545,
+					EndPos:    6563,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 357,
 							EndLine:   357,
-							StartPos:  6551,
-							EndPos:    6561,
+							StartPos:  6552,
+							EndPos:    6562,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 357,
 								EndLine:   357,
-								StartPos:  6551,
-								EndPos:    6552,
+								StartPos:  6552,
+								EndPos:    6553,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 357,
 									EndLine:   357,
-									StartPos:  6551,
-									EndPos:    6552,
+									StartPos:  6552,
+									EndPos:    6553,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.ShiftLeft{
+						Expr: &binary.SmallerOrEqual{
 							Position: &position.Position{
 								StartLine: 357,
 								EndLine:   357,
-								StartPos:  6556,
-								EndPos:    6561,
+								StartPos:  6557,
+								EndPos:    6562,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 357,
 									EndLine:   357,
-									StartPos:  6556,
-									EndPos:    6556,
+									StartPos:  6557,
+									EndPos:    6557,
 								},
 								Value: "1",
 							},
@@ -17216,8 +17324,8 @@ func TestPhp5(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 357,
 									EndLine:   357,
-									StartPos:  6561,
-									EndPos:    6561,
+									StartPos:  6562,
+									EndPos:    6562,
 								},
 								Value: "2",
 							},
@@ -17229,7 +17337,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 358,
 					EndLine:   358,
-					StartPos:  6566,
+					StartPos:  6567,
 					EndPos:    6584,
 				},
 				Vars: []node.Node{
@@ -17237,39 +17345,39 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 358,
 							EndLine:   358,
-							StartPos:  6573,
+							StartPos:  6574,
 							EndPos:    6583,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 358,
 								EndLine:   358,
-								StartPos:  6573,
-								EndPos:    6574,
+								StartPos:  6574,
+								EndPos:    6575,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 358,
 									EndLine:   358,
-									StartPos:  6573,
-									EndPos:    6574,
+									StartPos:  6574,
+									EndPos:    6575,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &binary.ShiftRight{
+						Expr: &binary.Smaller{
 							Position: &position.Position{
 								StartLine: 358,
 								EndLine:   358,
-								StartPos:  6578,
+								StartPos:  6579,
 								EndPos:    6583,
 							},
 							Left: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 358,
 									EndLine:   358,
-									StartPos:  6578,
-									EndPos:    6578,
+									StartPos:  6579,
+									EndPos:    6579,
 								},
 								Value: "1",
 							},
@@ -17291,7 +17399,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 359,
 					EndLine:   359,
 					StartPos:  6588,
-					EndPos:    6606,
+					EndPos:    6608,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -17299,7 +17407,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 359,
 							EndLine:   359,
 							StartPos:  6595,
-							EndPos:    6605,
+							EndPos:    6607,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -17318,149 +17426,27 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &binary.SmallerOrEqual{
+						Expr: &expr.ClassConstFetch{
 							Position: &position.Position{
 								StartLine: 359,
 								EndLine:   359,
 								StartPos:  6600,
-								EndPos:    6605,
+								EndPos:    6607,
 							},
-							Left: &scalar.Lnumber{
+							Class: &name.Name{
 								Position: &position.Position{
 									StartLine: 359,
 									EndLine:   359,
 									StartPos:  6600,
-									EndPos:    6600,
-								},
-								Value: "1",
-							},
-							Right: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 359,
-									EndLine:   359,
-									StartPos:  6605,
-									EndPos:    6605,
-								},
-								Value: "2",
-							},
-						},
-					},
-				},
-			},
-			&stmt.Static{
-				Position: &position.Position{
-					StartLine: 360,
-					EndLine:   360,
-					StartPos:  6610,
-					EndPos:    6627,
-				},
-				Vars: []node.Node{
-					&stmt.StaticVar{
-						Position: &position.Position{
-							StartLine: 360,
-							EndLine:   360,
-							StartPos:  6617,
-							EndPos:    6626,
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 360,
-								EndLine:   360,
-								StartPos:  6617,
-								EndPos:    6618,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 360,
-									EndLine:   360,
-									StartPos:  6617,
-									EndPos:    6618,
-								},
-								Value: "a",
-							},
-						},
-						Expr: &binary.Smaller{
-							Position: &position.Position{
-								StartLine: 360,
-								EndLine:   360,
-								StartPos:  6622,
-								EndPos:    6626,
-							},
-							Left: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 360,
-									EndLine:   360,
-									StartPos:  6622,
-									EndPos:    6622,
-								},
-								Value: "1",
-							},
-							Right: &scalar.Lnumber{
-								Position: &position.Position{
-									StartLine: 360,
-									EndLine:   360,
-									StartPos:  6626,
-									EndPos:    6626,
-								},
-								Value: "2",
-							},
-						},
-					},
-				},
-			},
-			&stmt.Static{
-				Position: &position.Position{
-					StartLine: 361,
-					EndLine:   361,
-					StartPos:  6631,
-					EndPos:    6651,
-				},
-				Vars: []node.Node{
-					&stmt.StaticVar{
-						Position: &position.Position{
-							StartLine: 361,
-							EndLine:   361,
-							StartPos:  6638,
-							EndPos:    6650,
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 361,
-								EndLine:   361,
-								StartPos:  6638,
-								EndPos:    6639,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 361,
-									EndLine:   361,
-									StartPos:  6638,
-									EndPos:    6639,
-								},
-								Value: "a",
-							},
-						},
-						Expr: &expr.ClassConstFetch{
-							Position: &position.Position{
-								StartLine: 361,
-								EndLine:   361,
-								StartPos:  6643,
-								EndPos:    6650,
-							},
-							Class: &name.Name{
-								Position: &position.Position{
-									StartLine: 361,
-									EndLine:   361,
-									StartPos:  6643,
-									EndPos:    6645,
+									EndPos:    6602,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 361,
-											EndLine:   361,
-											StartPos:  6643,
-											EndPos:    6645,
+											StartLine: 359,
+											EndLine:   359,
+											StartPos:  6600,
+											EndPos:    6602,
 										},
 										Value: "Foo",
 									},
@@ -17468,10 +17454,10 @@ func TestPhp5(t *testing.T) {
 							},
 							ConstantName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 361,
-									EndLine:   361,
-									StartPos:  6648,
-									EndPos:    6650,
+									StartLine: 359,
+									EndLine:   359,
+									StartPos:  6605,
+									EndPos:    6607,
 								},
 								Value: "bar",
 							},
@@ -17481,57 +17467,57 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 362,
-					EndLine:   362,
-					StartPos:  6655,
-					EndPos:    6677,
+					StartLine: 360,
+					EndLine:   360,
+					StartPos:  6612,
+					EndPos:    6634,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 362,
-							EndLine:   362,
-							StartPos:  6662,
-							EndPos:    6676,
+							StartLine: 360,
+							EndLine:   360,
+							StartPos:  6619,
+							EndPos:    6633,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 362,
-								EndLine:   362,
-								StartPos:  6662,
-								EndPos:    6663,
+								StartLine: 360,
+								EndLine:   360,
+								StartPos:  6619,
+								EndPos:    6620,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 362,
-									EndLine:   362,
-									StartPos:  6662,
-									EndPos:    6663,
+									StartLine: 360,
+									EndLine:   360,
+									StartPos:  6619,
+									EndPos:    6620,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &expr.ClassConstFetch{
 							Position: &position.Position{
-								StartLine: 362,
-								EndLine:   362,
-								StartPos:  6667,
-								EndPos:    6676,
+								StartLine: 360,
+								EndLine:   360,
+								StartPos:  6624,
+								EndPos:    6633,
 							},
 							Class: &name.Name{
 								Position: &position.Position{
-									StartLine: 362,
-									EndLine:   362,
-									StartPos:  6667,
-									EndPos:    6669,
+									StartLine: 360,
+									EndLine:   360,
+									StartPos:  6624,
+									EndPos:    6626,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
-											StartLine: 362,
-											EndLine:   362,
-											StartPos:  6667,
-											EndPos:    6669,
+											StartLine: 360,
+											EndLine:   360,
+											StartPos:  6624,
+											EndPos:    6626,
 										},
 										Value: "Foo",
 									},
@@ -17539,10 +17525,10 @@ func TestPhp5(t *testing.T) {
 							},
 							ConstantName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 362,
-									EndLine:   362,
-									StartPos:  6672,
-									EndPos:    6676,
+									StartLine: 360,
+									EndLine:   360,
+									StartPos:  6629,
+									EndPos:    6633,
 								},
 								Value: "class",
 							},
@@ -17552,42 +17538,42 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 363,
-					EndLine:   363,
-					StartPos:  6681,
-					EndPos:    6702,
+					StartLine: 361,
+					EndLine:   361,
+					StartPos:  6638,
+					EndPos:    6659,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 363,
-							EndLine:   363,
-							StartPos:  6688,
-							EndPos:    6701,
+							StartLine: 361,
+							EndLine:   361,
+							StartPos:  6645,
+							EndPos:    6658,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 363,
-								EndLine:   363,
-								StartPos:  6688,
-								EndPos:    6689,
+								StartLine: 361,
+								EndLine:   361,
+								StartPos:  6645,
+								EndPos:    6646,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 363,
-									EndLine:   363,
-									StartPos:  6688,
-									EndPos:    6689,
+									StartLine: 361,
+									EndLine:   361,
+									StartPos:  6645,
+									EndPos:    6646,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &scalar.MagicConstant{
 							Position: &position.Position{
-								StartLine: 363,
-								EndLine:   363,
-								StartPos:  6693,
-								EndPos:    6701,
+								StartLine: 361,
+								EndLine:   361,
+								StartPos:  6650,
+								EndPos:    6658,
 							},
 							Value: "__CLASS__",
 						},
@@ -17596,32 +17582,156 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
+					StartLine: 362,
+					EndLine:   362,
+					StartPos:  6663,
+					EndPos:    6678,
+				},
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Position: &position.Position{
+							StartLine: 362,
+							EndLine:   362,
+							StartPos:  6670,
+							EndPos:    6677,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 362,
+								EndLine:   362,
+								StartPos:  6670,
+								EndPos:    6671,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 362,
+									EndLine:   362,
+									StartPos:  6670,
+									EndPos:    6671,
+								},
+								Value: "a",
+							},
+						},
+						Expr: &expr.ConstFetch{
+							Position: &position.Position{
+								StartLine: 362,
+								EndLine:   362,
+								StartPos:  6675,
+								EndPos:    6677,
+							},
+							Constant: &name.Name{
+								Position: &position.Position{
+									StartLine: 362,
+									EndLine:   362,
+									StartPos:  6675,
+									EndPos:    6677,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 362,
+											EndLine:   362,
+											StartPos:  6675,
+											EndPos:    6677,
+										},
+										Value: "Foo",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Static{
+				Position: &position.Position{
+					StartLine: 363,
+					EndLine:   363,
+					StartPos:  6682,
+					EndPos:    6707,
+				},
+				Vars: []node.Node{
+					&stmt.StaticVar{
+						Position: &position.Position{
+							StartLine: 363,
+							EndLine:   363,
+							StartPos:  6689,
+							EndPos:    6706,
+						},
+						Variable: &expr.Variable{
+							Position: &position.Position{
+								StartLine: 363,
+								EndLine:   363,
+								StartPos:  6689,
+								EndPos:    6690,
+							},
+							VarName: &node.Identifier{
+								Position: &position.Position{
+									StartLine: 363,
+									EndLine:   363,
+									StartPos:  6689,
+									EndPos:    6690,
+								},
+								Value: "a",
+							},
+						},
+						Expr: &expr.ConstFetch{
+							Position: &position.Position{
+								StartLine: 363,
+								EndLine:   363,
+								StartPos:  6694,
+								EndPos:    6706,
+							},
+							Constant: &name.Relative{
+								Position: &position.Position{
+									StartLine: 363,
+									EndLine:   363,
+									StartPos:  6694,
+									EndPos:    6706,
+								},
+								Parts: []node.Node{
+									&name.NamePart{
+										Position: &position.Position{
+											StartLine: 363,
+											EndLine:   363,
+											StartPos:  6704,
+											EndPos:    6706,
+										},
+										Value: "Foo",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			&stmt.Static{
+				Position: &position.Position{
 					StartLine: 364,
 					EndLine:   364,
-					StartPos:  6706,
-					EndPos:    6721,
+					StartPos:  6711,
+					EndPos:    6727,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
 							StartLine: 364,
 							EndLine:   364,
-							StartPos:  6713,
-							EndPos:    6720,
+							StartPos:  6718,
+							EndPos:    6726,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 364,
 								EndLine:   364,
-								StartPos:  6713,
-								EndPos:    6714,
+								StartPos:  6718,
+								EndPos:    6719,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 364,
 									EndLine:   364,
-									StartPos:  6713,
-									EndPos:    6714,
+									StartPos:  6718,
+									EndPos:    6719,
 								},
 								Value: "a",
 							},
@@ -17630,23 +17740,23 @@ func TestPhp5(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 364,
 								EndLine:   364,
-								StartPos:  6718,
-								EndPos:    6720,
+								StartPos:  6723,
+								EndPos:    6726,
 							},
-							Constant: &name.Name{
+							Constant: &name.FullyQualified{
 								Position: &position.Position{
 									StartLine: 364,
 									EndLine:   364,
-									StartPos:  6718,
-									EndPos:    6720,
+									StartPos:  6723,
+									EndPos:    6726,
 								},
 								Parts: []node.Node{
 									&name.NamePart{
 										Position: &position.Position{
 											StartLine: 364,
 											EndLine:   364,
-											StartPos:  6718,
-											EndPos:    6720,
+											StartPos:  6724,
+											EndPos:    6726,
 										},
 										Value: "Foo",
 									},
@@ -17660,7 +17770,7 @@ func TestPhp5(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 365,
 					EndLine:   365,
-					StartPos:  6725,
+					StartPos:  6731,
 					EndPos:    6750,
 				},
 				Vars: []node.Node{
@@ -17668,51 +17778,32 @@ func TestPhp5(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 365,
 							EndLine:   365,
-							StartPos:  6732,
+							StartPos:  6738,
 							EndPos:    6749,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 365,
 								EndLine:   365,
-								StartPos:  6732,
-								EndPos:    6733,
+								StartPos:  6738,
+								EndPos:    6739,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 365,
 									EndLine:   365,
-									StartPos:  6732,
-									EndPos:    6733,
+									StartPos:  6738,
+									EndPos:    6739,
 								},
 								Value: "a",
 							},
 						},
-						Expr: &expr.ConstFetch{
+						Expr: &expr.Array{
 							Position: &position.Position{
 								StartLine: 365,
 								EndLine:   365,
-								StartPos:  6737,
+								StartPos:  6743,
 								EndPos:    6749,
-							},
-							Constant: &name.Relative{
-								Position: &position.Position{
-									StartLine: 365,
-									EndLine:   365,
-									StartPos:  6737,
-									EndPos:    6749,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 365,
-											EndLine:   365,
-											StartPos:  6747,
-											EndPos:    6749,
-										},
-										Value: "Foo",
-									},
-								},
 							},
 						},
 					},
@@ -17723,7 +17814,7 @@ func TestPhp5(t *testing.T) {
 					StartLine: 366,
 					EndLine:   366,
 					StartPos:  6754,
-					EndPos:    6770,
+					EndPos:    6782,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
@@ -17731,7 +17822,7 @@ func TestPhp5(t *testing.T) {
 							StartLine: 366,
 							EndLine:   366,
 							StartPos:  6761,
-							EndPos:    6769,
+							EndPos:    6781,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
@@ -17750,158 +17841,53 @@ func TestPhp5(t *testing.T) {
 								Value: "a",
 							},
 						},
-						Expr: &expr.ConstFetch{
+						Expr: &expr.Array{
 							Position: &position.Position{
 								StartLine: 366,
 								EndLine:   366,
 								StartPos:  6766,
-								EndPos:    6769,
-							},
-							Constant: &name.FullyQualified{
-								Position: &position.Position{
-									StartLine: 366,
-									EndLine:   366,
-									StartPos:  6766,
-									EndPos:    6769,
-								},
-								Parts: []node.Node{
-									&name.NamePart{
-										Position: &position.Position{
-											StartLine: 366,
-											EndLine:   366,
-											StartPos:  6767,
-											EndPos:    6769,
-										},
-										Value: "Foo",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			&stmt.Static{
-				Position: &position.Position{
-					StartLine: 367,
-					EndLine:   367,
-					StartPos:  6774,
-					EndPos:    6793,
-				},
-				Vars: []node.Node{
-					&stmt.StaticVar{
-						Position: &position.Position{
-							StartLine: 367,
-							EndLine:   367,
-							StartPos:  6781,
-							EndPos:    6792,
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 367,
-								EndLine:   367,
-								StartPos:  6781,
-								EndPos:    6782,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 367,
-									EndLine:   367,
-									StartPos:  6781,
-									EndPos:    6782,
-								},
-								Value: "a",
-							},
-						},
-						Expr: &expr.Array{
-							Position: &position.Position{
-								StartLine: 367,
-								EndLine:   367,
-								StartPos:  6786,
-								EndPos:    6792,
-							},
-						},
-					},
-				},
-			},
-			&stmt.Static{
-				Position: &position.Position{
-					StartLine: 368,
-					EndLine:   368,
-					StartPos:  6797,
-					EndPos:    6825,
-				},
-				Vars: []node.Node{
-					&stmt.StaticVar{
-						Position: &position.Position{
-							StartLine: 368,
-							EndLine:   368,
-							StartPos:  6804,
-							EndPos:    6824,
-						},
-						Variable: &expr.Variable{
-							Position: &position.Position{
-								StartLine: 368,
-								EndLine:   368,
-								StartPos:  6804,
-								EndPos:    6805,
-							},
-							VarName: &node.Identifier{
-								Position: &position.Position{
-									StartLine: 368,
-									EndLine:   368,
-									StartPos:  6804,
-									EndPos:    6805,
-								},
-								Value: "a",
-							},
-						},
-						Expr: &expr.Array{
-							Position: &position.Position{
-								StartLine: 368,
-								EndLine:   368,
-								StartPos:  6809,
-								EndPos:    6824,
+								EndPos:    6781,
 							},
 							Items: []node.Node{
 								&expr.ArrayItem{
 									Position: &position.Position{
-										StartLine: 368,
-										EndLine:   368,
-										StartPos:  6815,
-										EndPos:    6820,
+										StartLine: 366,
+										EndLine:   366,
+										StartPos:  6772,
+										EndPos:    6777,
 									},
 									Key: &scalar.Lnumber{
 										Position: &position.Position{
-											StartLine: 368,
-											EndLine:   368,
-											StartPos:  6815,
-											EndPos:    6815,
+											StartLine: 366,
+											EndLine:   366,
+											StartPos:  6772,
+											EndPos:    6772,
 										},
 										Value: "1",
 									},
 									Val: &scalar.Lnumber{
 										Position: &position.Position{
-											StartLine: 368,
-											EndLine:   368,
-											StartPos:  6820,
-											EndPos:    6820,
+											StartLine: 366,
+											EndLine:   366,
+											StartPos:  6777,
+											EndPos:    6777,
 										},
 										Value: "1",
 									},
 								},
 								&expr.ArrayItem{
 									Position: &position.Position{
-										StartLine: 368,
-										EndLine:   368,
-										StartPos:  6823,
-										EndPos:    6823,
+										StartLine: 366,
+										EndLine:   366,
+										StartPos:  6780,
+										EndPos:    6780,
 									},
 									Val: &scalar.Lnumber{
 										Position: &position.Position{
-											StartLine: 368,
-											EndLine:   368,
-											StartPos:  6823,
-											EndPos:    6823,
+											StartLine: 366,
+											EndLine:   366,
+											StartPos:  6780,
+											EndPos:    6780,
 										},
 										Value: "2",
 									},
@@ -17913,90 +17899,90 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Static{
 				Position: &position.Position{
-					StartLine: 369,
-					EndLine:   369,
-					StartPos:  6829,
-					EndPos:    6855,
+					StartLine: 367,
+					EndLine:   367,
+					StartPos:  6786,
+					EndPos:    6812,
 				},
 				Vars: []node.Node{
 					&stmt.StaticVar{
 						Position: &position.Position{
-							StartLine: 369,
-							EndLine:   369,
-							StartPos:  6836,
-							EndPos:    6854,
+							StartLine: 367,
+							EndLine:   367,
+							StartPos:  6793,
+							EndPos:    6811,
 						},
 						Variable: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 369,
-								EndLine:   369,
-								StartPos:  6836,
-								EndPos:    6837,
+								StartLine: 367,
+								EndLine:   367,
+								StartPos:  6793,
+								EndPos:    6794,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 369,
-									EndLine:   369,
-									StartPos:  6836,
-									EndPos:    6837,
+									StartLine: 367,
+									EndLine:   367,
+									StartPos:  6793,
+									EndPos:    6794,
 								},
 								Value: "a",
 							},
 						},
 						Expr: &expr.ArrayDimFetch{
 							Position: &position.Position{
-								StartLine: 369,
-								EndLine:   369,
-								StartPos:  6841,
-								EndPos:    6854,
+								StartLine: 367,
+								EndLine:   367,
+								StartPos:  6798,
+								EndPos:    6811,
 							},
 							Variable: &expr.ShortArray{
 								Position: &position.Position{
-									StartLine: 369,
-									EndLine:   369,
-									StartPos:  6841,
-									EndPos:    6851,
+									StartLine: 367,
+									EndLine:   367,
+									StartPos:  6798,
+									EndPos:    6808,
 								},
 								Items: []node.Node{
 									&expr.ArrayItem{
 										Position: &position.Position{
-											StartLine: 369,
-											EndLine:   369,
-											StartPos:  6842,
-											EndPos:    6842,
+											StartLine: 367,
+											EndLine:   367,
+											StartPos:  6799,
+											EndPos:    6799,
 										},
 										Val: &scalar.Lnumber{
 											Position: &position.Position{
-												StartLine: 369,
-												EndLine:   369,
-												StartPos:  6842,
-												EndPos:    6842,
+												StartLine: 367,
+												EndLine:   367,
+												StartPos:  6799,
+												EndPos:    6799,
 											},
 											Value: "1",
 										},
 									},
 									&expr.ArrayItem{
 										Position: &position.Position{
-											StartLine: 369,
-											EndLine:   369,
-											StartPos:  6845,
-											EndPos:    6850,
+											StartLine: 367,
+											EndLine:   367,
+											StartPos:  6802,
+											EndPos:    6807,
 										},
 										Key: &scalar.Lnumber{
 											Position: &position.Position{
-												StartLine: 369,
-												EndLine:   369,
-												StartPos:  6845,
-												EndPos:    6845,
+												StartLine: 367,
+												EndLine:   367,
+												StartPos:  6802,
+												EndPos:    6802,
 											},
 											Value: "2",
 										},
 										Val: &scalar.Lnumber{
 											Position: &position.Position{
-												StartLine: 369,
-												EndLine:   369,
-												StartPos:  6850,
-												EndPos:    6850,
+												StartLine: 367,
+												EndLine:   367,
+												StartPos:  6807,
+												EndPos:    6807,
 											},
 											Value: "2",
 										},
@@ -18005,10 +17991,10 @@ func TestPhp5(t *testing.T) {
 							},
 							Dim: &scalar.Lnumber{
 								Position: &position.Position{
-									StartLine: 369,
-									EndLine:   369,
-									StartPos:  6853,
-									EndPos:    6853,
+									StartLine: 367,
+									EndLine:   367,
+									StartPos:  6810,
+									EndPos:    6810,
 								},
 								Value: "0",
 							},
@@ -18018,66 +18004,66 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.If{
 				Position: &position.Position{
-					StartLine: 371,
-					EndLine:   371,
-					StartPos:  6860,
-					EndPos:    6874,
+					StartLine: 369,
+					EndLine:   369,
+					StartPos:  6817,
+					EndPos:    6831,
 				},
 				Cond: &expr.Yield{
 					Position: &position.Position{
-						StartLine: 371,
-						EndLine:   371,
-						StartPos:  6864,
-						EndPos:    6870,
+						StartLine: 369,
+						EndLine:   369,
+						StartPos:  6821,
+						EndPos:    6827,
 					},
 					Value: &scalar.Lnumber{
 						Position: &position.Position{
-							StartLine: 371,
-							EndLine:   371,
-							StartPos:  6870,
-							EndPos:    6870,
+							StartLine: 369,
+							EndLine:   369,
+							StartPos:  6827,
+							EndPos:    6827,
 						},
 						Value: "1",
 					},
 				},
 				Stmt: &stmt.StmtList{
 					Position: &position.Position{
-						StartLine: 371,
-						EndLine:   371,
-						StartPos:  6873,
-						EndPos:    6874,
+						StartLine: 369,
+						EndLine:   369,
+						StartPos:  6830,
+						EndPos:    6831,
 					},
 					Stmts: []node.Node{},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 372,
-					EndLine:   372,
-					StartPos:  6878,
-					EndPos:    6888,
+					StartLine: 370,
+					EndLine:   370,
+					StartPos:  6835,
+					EndPos:    6845,
 				},
 				Expr: &expr.StaticPropertyFetch{
 					Position: &position.Position{
-						StartLine: 372,
-						EndLine:   372,
-						StartPos:  6878,
-						EndPos:    6887,
+						StartLine: 370,
+						EndLine:   370,
+						StartPos:  6835,
+						EndPos:    6844,
 					},
 					Class: &name.Name{
 						Position: &position.Position{
-							StartLine: 372,
-							EndLine:   372,
-							StartPos:  6878,
-							EndPos:    6880,
+							StartLine: 370,
+							EndLine:   370,
+							StartPos:  6835,
+							EndPos:    6837,
 						},
 						Parts: []node.Node{
 							&name.NamePart{
 								Position: &position.Position{
-									StartLine: 372,
-									EndLine:   372,
-									StartPos:  6878,
-									EndPos:    6880,
+									StartLine: 370,
+									EndLine:   370,
+									StartPos:  6835,
+									EndPos:    6837,
 								},
 								Value: "Foo",
 							},
@@ -18085,24 +18071,24 @@ func TestPhp5(t *testing.T) {
 					},
 					Property: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 372,
-							EndLine:   372,
-							StartPos:  6883,
-							EndPos:    6887,
+							StartLine: 370,
+							EndLine:   370,
+							StartPos:  6840,
+							EndPos:    6844,
 						},
 						VarName: &expr.Variable{
 							Position: &position.Position{
-								StartLine: 372,
-								EndLine:   372,
-								StartPos:  6884,
-								EndPos:    6887,
+								StartLine: 370,
+								EndLine:   370,
+								StartPos:  6841,
+								EndPos:    6844,
 							},
 							VarName: &node.Identifier{
 								Position: &position.Position{
-									StartLine: 372,
-									EndLine:   372,
-									StartPos:  6884,
-									EndPos:    6887,
+									StartLine: 370,
+									EndLine:   370,
+									StartPos:  6841,
+									EndPos:    6844,
 								},
 								Value: "bar",
 							},
@@ -18112,115 +18098,115 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 374,
-					EndLine:   374,
-					StartPos:  6893,
-					EndPos:    6899,
+					StartLine: 372,
+					EndLine:   372,
+					StartPos:  6850,
+					EndPos:    6856,
 				},
 				Expr: &expr.FunctionCall{
 					Position: &position.Position{
-						StartLine: 374,
-						EndLine:   374,
-						StartPos:  6893,
-						EndPos:    6898,
+						StartLine: 372,
+						EndLine:   372,
+						StartPos:  6850,
+						EndPos:    6855,
 					},
 					Function: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 374,
-							EndLine:   374,
-							StartPos:  6893,
-							EndPos:    6896,
+							StartLine: 372,
+							EndLine:   372,
+							StartPos:  6850,
+							EndPos:    6853,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 374,
-								EndLine:   374,
-								StartPos:  6893,
-								EndPos:    6896,
+								StartLine: 372,
+								EndLine:   372,
+								StartPos:  6850,
+								EndPos:    6853,
 							},
 							Value: "foo",
 						},
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 374,
-							EndLine:   374,
-							StartPos:  6897,
-							EndPos:    6898,
+							StartLine: 372,
+							EndLine:   372,
+							StartPos:  6854,
+							EndPos:    6855,
 						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 375,
-					EndLine:   375,
-					StartPos:  6903,
-					EndPos:    6915,
+					StartLine: 373,
+					EndLine:   373,
+					StartPos:  6860,
+					EndPos:    6872,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 375,
-						EndLine:   375,
-						StartPos:  6903,
-						EndPos:    6914,
+						StartLine: 373,
+						EndLine:   373,
+						StartPos:  6860,
+						EndPos:    6871,
 					},
 					Variable: &expr.ArrayDimFetch{
 						Position: &position.Position{
-							StartLine: 375,
-							EndLine:   375,
-							StartPos:  6903,
-							EndPos:    6911,
+							StartLine: 373,
+							EndLine:   373,
+							StartPos:  6860,
+							EndPos:    6868,
 						},
 						Variable: &expr.FunctionCall{
 							Position: &position.Position{
-								StartLine: 375,
-								EndLine:   375,
-								StartPos:  6903,
-								EndPos:    6908,
+								StartLine: 373,
+								EndLine:   373,
+								StartPos:  6860,
+								EndPos:    6865,
 							},
 							Function: &expr.Variable{
 								Position: &position.Position{
-									StartLine: 375,
-									EndLine:   375,
-									StartPos:  6903,
-									EndPos:    6906,
+									StartLine: 373,
+									EndLine:   373,
+									StartPos:  6860,
+									EndPos:    6863,
 								},
 								VarName: &node.Identifier{
 									Position: &position.Position{
-										StartLine: 375,
-										EndLine:   375,
-										StartPos:  6903,
-										EndPos:    6906,
+										StartLine: 373,
+										EndLine:   373,
+										StartPos:  6860,
+										EndPos:    6863,
 									},
 									Value: "foo",
 								},
 							},
 							ArgumentList: &node.ArgumentList{
 								Position: &position.Position{
-									StartLine: 375,
-									EndLine:   375,
-									StartPos:  6907,
-									EndPos:    6908,
+									StartLine: 373,
+									EndLine:   373,
+									StartPos:  6864,
+									EndPos:    6865,
 								},
 							},
 						},
 						Dim: &scalar.Lnumber{
 							Position: &position.Position{
-								StartLine: 375,
-								EndLine:   375,
-								StartPos:  6910,
-								EndPos:    6910,
+								StartLine: 373,
+								EndLine:   373,
+								StartPos:  6867,
+								EndPos:    6867,
 							},
 							Value: "0",
 						},
 					},
 					Dim: &scalar.Lnumber{
 						Position: &position.Position{
-							StartLine: 375,
-							EndLine:   375,
-							StartPos:  6913,
-							EndPos:    6913,
+							StartLine: 373,
+							EndLine:   373,
+							StartPos:  6870,
+							EndPos:    6870,
 						},
 						Value: "0",
 					},
@@ -18228,48 +18214,48 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 376,
-					EndLine:   376,
-					StartPos:  6919,
-					EndPos:    6925,
+					StartLine: 374,
+					EndLine:   374,
+					StartPos:  6876,
+					EndPos:    6882,
 				},
 				Expr: &expr.ArrayDimFetch{
 					Position: &position.Position{
-						StartLine: 376,
-						EndLine:   376,
-						StartPos:  6919,
-						EndPos:    6924,
+						StartLine: 374,
+						EndLine:   374,
+						StartPos:  6876,
+						EndPos:    6881,
 					},
 					Variable: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 376,
-							EndLine:   376,
-							StartPos:  6919,
-							EndPos:    6920,
+							StartLine: 374,
+							EndLine:   374,
+							StartPos:  6876,
+							EndPos:    6877,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 376,
-								EndLine:   376,
-								StartPos:  6919,
-								EndPos:    6920,
+								StartLine: 374,
+								EndLine:   374,
+								StartPos:  6876,
+								EndPos:    6877,
 							},
 							Value: "a",
 						},
 					},
 					Dim: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 376,
-							EndLine:   376,
-							StartPos:  6922,
-							EndPos:    6923,
+							StartLine: 374,
+							EndLine:   374,
+							StartPos:  6879,
+							EndPos:    6880,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 376,
-								EndLine:   376,
-								StartPos:  6922,
-								EndPos:    6923,
+								StartLine: 374,
+								EndLine:   374,
+								StartPos:  6879,
+								EndPos:    6880,
 							},
 							Value: "b",
 						},
@@ -18278,31 +18264,31 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 377,
-					EndLine:   377,
-					StartPos:  6929,
-					EndPos:    6934,
+					StartLine: 375,
+					EndLine:   375,
+					StartPos:  6886,
+					EndPos:    6891,
 				},
 				Expr: &expr.Variable{
 					Position: &position.Position{
-						StartLine: 377,
-						EndLine:   377,
-						StartPos:  6929,
-						EndPos:    6933,
+						StartLine: 375,
+						EndLine:   375,
+						StartPos:  6886,
+						EndPos:    6890,
 					},
 					VarName: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 377,
-							EndLine:   377,
-							StartPos:  6931,
-							EndPos:    6932,
+							StartLine: 375,
+							EndLine:   375,
+							StartPos:  6888,
+							EndPos:    6889,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 377,
-								EndLine:   377,
-								StartPos:  6931,
-								EndPos:    6932,
+								StartLine: 375,
+								EndLine:   375,
+								StartPos:  6888,
+								EndPos:    6889,
 							},
 							Value: "a",
 						},
@@ -18311,102 +18297,110 @@ func TestPhp5(t *testing.T) {
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 378,
-					EndLine:   378,
-					StartPos:  6938,
-					EndPos:    6952,
+					StartLine: 376,
+					EndLine:   376,
+					StartPos:  6895,
+					EndPos:    6909,
 				},
 				Expr: &expr.StaticCall{
 					Position: &position.Position{
-						StartLine: 378,
-						EndLine:   378,
-						StartPos:  6938,
-						EndPos:    6951,
+						StartLine: 376,
+						EndLine:   376,
+						StartPos:  6895,
+						EndPos:    6908,
 					},
 					Class: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 378,
-							EndLine:   378,
-							StartPos:  6938,
-							EndPos:    6941,
+							StartLine: 376,
+							EndLine:   376,
+							StartPos:  6895,
+							EndPos:    6898,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 378,
-								EndLine:   378,
-								StartPos:  6938,
-								EndPos:    6941,
+								StartLine: 376,
+								EndLine:   376,
+								StartPos:  6895,
+								EndPos:    6898,
 							},
 							Value: "foo",
 						},
 					},
 					Call: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 378,
-							EndLine:   378,
-							StartPos:  6944,
-							EndPos:    6949,
+							StartLine: 376,
+							EndLine:   376,
+							StartPos:  6901,
+							EndPos:    6906,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 378,
-								EndLine:   378,
-								StartPos:  6945,
-								EndPos:    6948,
+								StartLine: 376,
+								EndLine:   376,
+								StartPos:  6902,
+								EndPos:    6905,
 							},
 							Value: "bar",
 						},
 					},
 					ArgumentList: &node.ArgumentList{
 						Position: &position.Position{
-							StartLine: 378,
-							EndLine:   378,
-							StartPos:  6950,
-							EndPos:    6951,
+							StartLine: 376,
+							EndLine:   376,
+							StartPos:  6907,
+							EndPos:    6908,
 						},
 					},
 				},
 			},
 			&stmt.Expression{
 				Position: &position.Position{
-					StartLine: 379,
-					EndLine:   379,
-					StartPos:  6956,
-					EndPos:    6965,
+					StartLine: 377,
+					EndLine:   377,
+					StartPos:  6913,
+					EndPos:    6922,
 				},
 				Expr: &expr.ClassConstFetch{
 					Position: &position.Position{
-						StartLine: 379,
-						EndLine:   379,
-						StartPos:  6956,
-						EndPos:    6964,
+						StartLine: 377,
+						EndLine:   377,
+						StartPos:  6913,
+						EndPos:    6921,
 					},
 					Class: &expr.Variable{
 						Position: &position.Position{
-							StartLine: 379,
-							EndLine:   379,
-							StartPos:  6956,
-							EndPos:    6959,
+							StartLine: 377,
+							EndLine:   377,
+							StartPos:  6913,
+							EndPos:    6916,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
-								StartLine: 379,
-								EndLine:   379,
-								StartPos:  6956,
-								EndPos:    6959,
+								StartLine: 377,
+								EndLine:   377,
+								StartPos:  6913,
+								EndPos:    6916,
 							},
 							Value: "foo",
 						},
 					},
 					ConstantName: &node.Identifier{
 						Position: &position.Position{
-							StartLine: 379,
-							EndLine:   379,
-							StartPos:  6962,
-							EndPos:    6964,
+							StartLine: 377,
+							EndLine:   377,
+							StartPos:  6919,
+							EndPos:    6921,
 						},
 						Value: "bar",
 					},
+				},
+			},
+			&stmt.HaltCompiler{
+				Position: &position.Position{
+					StartLine: 379,
+					EndLine:   379,
+					StartPos:  6927,
+					EndPos:    6944,
 				},
 			},
 		},

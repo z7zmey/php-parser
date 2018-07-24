@@ -476,6 +476,8 @@ top_statement:
                 addMeta($$, $4.Meta, meta.SemiColonToken)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+
+                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
     |   T_NAMESPACE namespace_name ';'
             {
