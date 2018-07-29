@@ -9,7 +9,7 @@ import (
 
 // CaseList node
 type CaseList struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cases    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *CaseList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *CaseList) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *CaseList) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *CaseList) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

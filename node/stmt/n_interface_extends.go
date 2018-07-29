@@ -9,7 +9,7 @@ import (
 
 // InterfaceExtends node
 type InterfaceExtends struct {
-	Meta           []meta.Meta
+	Meta           meta.Collection
 	Position       *position.Position
 	InterfaceNames []node.Node
 }
@@ -31,12 +31,8 @@ func (n *InterfaceExtends) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *InterfaceExtends) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *InterfaceExtends) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *InterfaceExtends) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

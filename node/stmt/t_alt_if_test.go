@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/position"
 
@@ -23,6 +25,7 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 			t.Errorf("diff: (-expected +actual)\n%s", diff)
 		} else {
 			t.Errorf("expected and actual are not equal\nexpectd: %+v\nactual: %+v\n", expected, actual)
+			t.Log(spew.Sdump(expected, actual))
 		}
 
 	}

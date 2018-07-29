@@ -9,7 +9,7 @@ import (
 
 // ShellExec node
 type ShellExec struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Parts    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *ShellExec) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ShellExec) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ShellExec) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ShellExec) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // StaticPropertyFetch node
 type StaticPropertyFetch struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Class    node.Node
 	Property node.Node
@@ -33,12 +33,8 @@ func (n *StaticPropertyFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *StaticPropertyFetch) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *StaticPropertyFetch) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *StaticPropertyFetch) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // Yield node
 type Yield struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Key      node.Node
 	Value    node.Node
@@ -33,12 +33,8 @@ func (n *Yield) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Yield) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Yield) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Yield) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

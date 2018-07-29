@@ -9,7 +9,7 @@ import (
 
 // Break node
 type Break struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *Break) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Break) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Break) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Break) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -18,8 +18,12 @@ func TestToken(t *testing.T) {
 		EndPos:    3,
 	}
 
-	c := []meta.Meta{
-		meta.NewComment("test comment", nil),
+	c := meta.Collection{
+		&meta.Data{
+			Value:    "test comment",
+			Type:     meta.CommentType,
+			Position: nil,
+		},
 	}
 
 	tkn.Meta = c

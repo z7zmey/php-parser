@@ -333,7 +333,9 @@ var nodesToTest = []struct {
 	{
 		&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		[]string{"VarName"},
-		map[string]interface{}{},
+		map[string]interface{}{
+			"StringVar": false,
+		},
 	},
 	{
 		&expr.YieldFrom{

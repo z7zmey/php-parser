@@ -9,7 +9,7 @@ import (
 
 // ClosureUse node
 type ClosureUse struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Uses     []node.Node
 }
@@ -31,12 +31,8 @@ func (n *ClosureUse) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ClosureUse) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ClosureUse) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ClosureUse) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -36,10 +36,10 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(mm) > 0 {
+	if mm := n.GetMeta(); len(*mm) > 0 {
 		fmt.Fprintf(d.Writer, "%v\"Meta\":\n", d.Indent+"  ")
-		for _, m := range mm {
-			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, m.GetTokenName().String())
+		for _, m := range *mm {
+			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, m.TokenName.String())
 		}
 	}
 

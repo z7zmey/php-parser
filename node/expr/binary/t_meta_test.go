@@ -41,12 +41,20 @@ var nodes = []node.Node{
 }
 
 func TestMeta(t *testing.T) {
-	expected := []meta.Meta{
-		meta.NewComment("//comment\n", nil),
-		meta.NewWhiteSpace("    ", nil),
+	expected := &meta.Collection{
+		&meta.Data{
+			Value:    "//comment\n",
+			Type:     meta.CommentType,
+			Position: nil,
+		},
+		&meta.Data{
+			Value:    "    ",
+			Type:     meta.WhiteSpaceType,
+			Position: nil,
+		},
 	}
 	for _, n := range nodes {
-		n.AddMeta(expected)
+		n.GetMeta().Push(*expected...)
 		actual := n.GetMeta()
 		assertEqual(t, expected, actual)
 	}

@@ -9,7 +9,7 @@ import (
 
 // ClassMethod node
 type ClassMethod struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	ReturnsRef    bool
 	PhpDocComment string
@@ -43,12 +43,8 @@ func (n *ClassMethod) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ClassMethod) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ClassMethod) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ClassMethod) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

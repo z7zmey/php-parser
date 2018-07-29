@@ -9,7 +9,7 @@ import (
 
 // Coalesce node
 type Coalesce struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *Coalesce) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Coalesce) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Coalesce) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Coalesce) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

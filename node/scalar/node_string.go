@@ -8,7 +8,7 @@ import (
 
 // String node
 type String struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Value    string
 }
@@ -30,12 +30,8 @@ func (n *String) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *String) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *String) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *String) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

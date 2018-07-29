@@ -9,7 +9,7 @@ import (
 
 // Relative node
 type Relative struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Parts    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Relative) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Relative) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Relative) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Relative) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

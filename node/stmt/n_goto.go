@@ -9,7 +9,7 @@ import (
 
 // Goto node
 type Goto struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Label    node.Node
 }
@@ -31,12 +31,8 @@ func (n *Goto) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Goto) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Goto) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Goto) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

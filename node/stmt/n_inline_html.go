@@ -8,7 +8,7 @@ import (
 
 // InlineHtml node
 type InlineHtml struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Value    string
 }
@@ -30,12 +30,8 @@ func (n *InlineHtml) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *InlineHtml) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *InlineHtml) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *InlineHtml) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

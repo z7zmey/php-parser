@@ -8,7 +8,7 @@ import (
 
 // Nullable node
 type Nullable struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     Node
 }
@@ -30,12 +30,8 @@ func (n *Nullable) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Nullable) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Nullable) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Nullable) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

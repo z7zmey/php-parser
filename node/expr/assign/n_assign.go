@@ -9,7 +9,7 @@ import (
 
 // Assign node
 type Assign struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *Assign) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Assign) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Assign) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Assign) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

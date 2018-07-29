@@ -9,7 +9,7 @@ import (
 
 // Switch node
 type Switch struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	CaseList *CaseList
@@ -33,12 +33,8 @@ func (n *Switch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Switch) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Switch) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Switch) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

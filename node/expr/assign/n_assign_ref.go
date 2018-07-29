@@ -9,7 +9,7 @@ import (
 
 // Reference node
 type Reference struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *Reference) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Reference) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Reference) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Reference) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

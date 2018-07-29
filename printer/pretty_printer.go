@@ -1319,8 +1319,9 @@ func (p *PrettyPrinter) printExprUnaryPlus(n node.Node) {
 }
 
 func (p *PrettyPrinter) printExprVariable(n node.Node) {
+	nn := n.(*expr.Variable)
 	io.WriteString(p.w, "$")
-	p.Print(n.(*expr.Variable).VarName)
+	p.Print(nn.VarName)
 }
 
 func (p *PrettyPrinter) printExprYieldFrom(n node.Node) {

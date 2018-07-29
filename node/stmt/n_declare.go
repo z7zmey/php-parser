@@ -9,17 +9,19 @@ import (
 
 // Declare node
 type Declare struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Consts   []node.Node
 	Stmt     node.Node
+	Alt      bool
 }
 
 // NewDeclare node constructor
-func NewDeclare(Consts []node.Node, Stmt node.Node) *Declare {
+func NewDeclare(Consts []node.Node, Stmt node.Node, alt bool) *Declare {
 	return &Declare{
 		Consts: Consts,
 		Stmt:   Stmt,
+		Alt:    alt,
 	}
 }
 
@@ -33,12 +35,8 @@ func (n *Declare) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Declare) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Declare) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Declare) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

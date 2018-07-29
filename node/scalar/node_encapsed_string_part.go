@@ -8,7 +8,7 @@ import (
 
 // EncapsedStringPart node
 type EncapsedStringPart struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Value    string
 }
@@ -30,12 +30,8 @@ func (n *EncapsedStringPart) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *EncapsedStringPart) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *EncapsedStringPart) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *EncapsedStringPart) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

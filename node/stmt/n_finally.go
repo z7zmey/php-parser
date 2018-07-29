@@ -9,7 +9,7 @@ import (
 
 // Finally node
 type Finally struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Stmts    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Finally) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Finally) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Finally) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Finally) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

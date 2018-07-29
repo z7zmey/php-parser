@@ -9,7 +9,7 @@ import (
 
 // Function node
 type Function struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	ReturnsRef    bool
 	PhpDocComment string
@@ -41,12 +41,8 @@ func (n *Function) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Function) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Function) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Function) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // BitwiseOr node
 type BitwiseOr struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *BitwiseOr) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *BitwiseOr) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *BitwiseOr) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *BitwiseOr) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

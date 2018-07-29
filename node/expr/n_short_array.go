@@ -9,7 +9,7 @@ import (
 
 // ShortArray node
 type ShortArray struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Items    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *ShortArray) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ShortArray) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ShortArray) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ShortArray) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,6 +9,7 @@ package scanner
 
 import (
     "fmt"
+    "github.com/z7zmey/php-parser/meta"
     "github.com/cznic/golex/lex"
 )
 
@@ -58,7 +59,7 @@ NEW_LINE        (\r|\n|\r\n)
 %%
     c = l.Rule0()
 
-<INITIAL>[ \t\n\r]+
+<INITIAL>[ \t\n\r]+                             l.addMeta(meta.WhiteSpaceType, l.Token())
 <INITIAL>.
     tb := []lex.Char{}
 
@@ -85,11 +86,12 @@ NEW_LINE        (\r|\n|\r\n)
     lval.Token(l.createToken(tb))
     return int(T_INLINE_HTML)
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.Begin(PHP);l.ungetChars(len(l.Token())-5)
-<INITIAL>\<\?                                   l.Begin(PHP);
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.addMeta(meta.TokenType, l.Token()[:5]);l.Begin(PHP);l.ungetChars(len(l.Token())-5)
+<INITIAL>\<\?                                   l.addMeta(meta.TokenType, l.Token());l.Begin(PHP);
 <INITIAL>\<\?=                                  l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_ECHO);
 
-<PHP>[ \t\n\r]+                                 l.addWhiteSpace(l.Token())
+
+<PHP>[ \t\n\r]+                                 l.addMeta(meta.WhiteSpaceType, l.Token())
 <PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 
@@ -286,10 +288,10 @@ NEW_LINE        (\r|\n|\r\n)
         break;
     }
 
-    l.addComments(tb)
+    l.addMeta(meta.CommentType, tb)
 
 <PHP>[/][*][*][/]
-    l.addComments(l.Token())
+    l.addMeta(meta.CommentType, l.Token())
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false
@@ -314,9 +316,9 @@ NEW_LINE        (\r|\n|\r\n)
 
     if is_doc_comment {
         l.PhpDocComment = string(l.TokenBytes(nil))
-        l.addComments(l.Token())
+        l.addMeta(meta.CommentType, l.Token())
     } else {
-        l.addComments(l.Token())
+        l.addMeta(meta.CommentType, l.Token())
     }
 
 <PHP>{OPERATORS}                                lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
@@ -327,7 +329,7 @@ NEW_LINE        (\r|\n|\r\n)
 <PHP>{VAR_NAME}                                 lval.Token(l.createToken(l.Token())); return int(T_STRING)
 
 <PHP>->                                         l.Begin(PROPERTY);lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
-<PROPERTY>[ \t\n\r]+                            l.addWhiteSpace(l.Token())
+<PROPERTY>[ \t\n\r]+                            l.addMeta(meta.WhiteSpaceType, l.Token())
 <PROPERTY>->                                    lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
 <PROPERTY>{VAR_NAME}                            l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_STRING);
 <PROPERTY>.                                     l.ungetChars(1);l.Begin(PHP)

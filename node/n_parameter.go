@@ -8,7 +8,7 @@ import (
 
 // Parameter node
 type Parameter struct {
-	Meta         []meta.Meta
+	Meta         meta.Collection
 	Position     *position.Position
 	ByRef        bool
 	Variadic     bool
@@ -38,12 +38,8 @@ func (n *Parameter) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Parameter) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Parameter) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Parameter) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

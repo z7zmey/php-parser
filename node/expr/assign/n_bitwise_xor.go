@@ -9,7 +9,7 @@ import (
 
 // BitwiseXor node
 type BitwiseXor struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *BitwiseXor) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *BitwiseXor) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *BitwiseXor) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *BitwiseXor) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

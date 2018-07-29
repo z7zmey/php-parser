@@ -9,7 +9,7 @@ import (
 
 // List node
 type List struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Items    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *List) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *List) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *List) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *List) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // InstanceOf node
 type InstanceOf struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 	Class    node.Node
@@ -33,12 +33,8 @@ func (n *InstanceOf) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *InstanceOf) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *InstanceOf) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *InstanceOf) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

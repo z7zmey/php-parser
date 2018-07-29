@@ -43,19 +43,21 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(mm) > 0 {
+	if mm := n.GetMeta(); len(*mm) > 0 {
 		fmt.Fprintf(d.Writer, ",%q:[", "meta")
 
-		for k, m := range mm {
+		for k, m := range *mm {
 			if k != 0 {
 				fmt.Fprint(d.Writer, ",")
 			}
 
-			switch m.(type) {
-			case *meta.Comment:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.Comment", "value", m.String(), "tokenName", m.GetTokenName().String())
-			case *meta.WhiteSpace:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpace", "value", m.String(), "tokenName", m.GetTokenName().String())
+			switch m.Type {
+			case meta.CommentType:
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.CommentType", "value", m.String(), "tokenName", m.TokenName.String())
+			case meta.WhiteSpaceType:
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpaceType", "value", m.String(), "tokenName", m.TokenName.String())
+			case meta.TokenType:
+				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.TokenType", "value", m.String(), "tokenName", m.TokenName.String())
 			}
 		}
 

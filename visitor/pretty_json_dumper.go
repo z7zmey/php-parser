@@ -82,12 +82,12 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(mm) > 0 {
+	if mm := n.GetMeta(); len(*mm) > 0 {
 		fmt.Fprint(d.Writer, ",\n")
 		d.printIndent(d.Writer)
 		fmt.Fprint(d.Writer, "\"meta\": [\n")
 		d.depth++
-		for k, m := range mm {
+		for k, m := range *mm {
 			if k != 0 {
 				fmt.Fprint(d.Writer, ",\n")
 			}
@@ -96,16 +96,18 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 			fmt.Fprint(d.Writer, "{\n")
 			d.depth++
 			d.printIndent(d.Writer)
-			switch m.(type) {
-			case *meta.Comment:
-				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.Comment")
-			case *meta.WhiteSpace:
-				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.WhiteSpace")
+			switch m.Type {
+			case meta.CommentType:
+				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.CommentType")
+			case meta.WhiteSpaceType:
+				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.WhiteSpaceType")
+			case meta.TokenType:
+				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.TokenType")
 			}
 			d.printIndent(d.Writer)
 			fmt.Fprintf(d.Writer, "%q: %q,\n", "value", m.String())
 			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", m.GetTokenName().String())
+			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", m.TokenName.String())
 			d.depth--
 			d.printIndent(d.Writer)
 			fmt.Fprint(d.Writer, "}")

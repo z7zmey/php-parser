@@ -9,7 +9,7 @@ import (
 
 // GroupUse node
 type GroupUse struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	UseType  node.Node
 	Prefix   node.Node
@@ -35,12 +35,8 @@ func (n *GroupUse) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *GroupUse) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *GroupUse) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *GroupUse) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

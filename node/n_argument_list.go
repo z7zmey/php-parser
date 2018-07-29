@@ -8,7 +8,7 @@ import (
 
 // ArgumentList node
 type ArgumentList struct {
-	Meta      []meta.Meta
+	Meta      meta.Collection
 	Position  *position.Position
 	Arguments []Node
 }
@@ -30,12 +30,8 @@ func (n *ArgumentList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ArgumentList) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ArgumentList) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ArgumentList) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

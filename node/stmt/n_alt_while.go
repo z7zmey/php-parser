@@ -9,7 +9,7 @@ import (
 
 // AltWhile node
 type AltWhile struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	Stmt     node.Node
@@ -33,12 +33,8 @@ func (n *AltWhile) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltWhile) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *AltWhile) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *AltWhile) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

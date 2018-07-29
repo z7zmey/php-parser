@@ -9,7 +9,7 @@ import (
 
 // AltElse node
 type AltElse struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Stmt     node.Node
 }
@@ -31,12 +31,8 @@ func (n *AltElse) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltElse) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *AltElse) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *AltElse) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

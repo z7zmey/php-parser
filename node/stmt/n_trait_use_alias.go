@@ -9,7 +9,7 @@ import (
 
 // TraitUseAlias node
 type TraitUseAlias struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Ref      node.Node
 	Modifier node.Node
@@ -35,12 +35,8 @@ func (n *TraitUseAlias) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitUseAlias) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *TraitUseAlias) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *TraitUseAlias) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

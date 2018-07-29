@@ -7,7 +7,7 @@ import (
 // Token value returned by lexer
 type Token struct {
 	Value     string
-	Meta      []meta.Meta
+	Meta      meta.Collection
 	StartLine int
 	EndLine   int
 	StartPos  int

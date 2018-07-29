@@ -8,7 +8,7 @@ import (
 
 // HaltCompiler node
 type HaltCompiler struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 }
 
@@ -27,12 +27,8 @@ func (n *HaltCompiler) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *HaltCompiler) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *HaltCompiler) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *HaltCompiler) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

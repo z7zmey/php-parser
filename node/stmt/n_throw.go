@@ -9,7 +9,7 @@ import (
 
 // Throw node
 type Throw struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *Throw) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Throw) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Throw) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Throw) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // ShiftLeft node
 type ShiftLeft struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *ShiftLeft) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ShiftLeft) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ShiftLeft) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ShiftLeft) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

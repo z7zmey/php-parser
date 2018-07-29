@@ -43,6 +43,7 @@ func ExampleDumper() {
 	// |     [*stmt.Namespace]
 	// |       "Position": Pos{Line: 3-11 Pos: 10-143}
 	// |       "Meta":
+	// |         "<?php" before "NamespaceToken"
 	// |         "\n\n\t\t" before "NamespaceToken"
 	// |         " " before "OpenCurlyBracesToken"
 	// |         "\n\t\t" before "CloseCurlyBracesToken"
@@ -109,6 +110,7 @@ func ExampleDumper() {
 	// |                       "Position": Pos{Line: 5-5 Pos: 79-82}
 	// |                       "Meta":
 	// |                         " " before "VariableToken"
+	// |                       "StringVar": false
 	// |                       "VarName":
 	// |                         [*node.Identifier]
 	// |                           "Position": Pos{Line: 5-5 Pos: 79-82}
@@ -135,6 +137,8 @@ func ExampleDumper() {
 	// |                   "Stmts":
 	// |                     [*stmt.Expression]
 	// |                       "Position": Pos{Line: 8-8 Pos: 124-128}
+	// |                       "Meta":
+	// |                         ";" before "SemiColonToken"
 	// |                       "Expr":
 	// |                         [*expr.Variable]
 	// |                           "Position": Pos{Line: 8-8 Pos: 124-127}
@@ -142,6 +146,7 @@ func ExampleDumper() {
 	// |                             "\n\t\t\t\t\t" before "VariableToken"
 	// |                             "// some comment\n" before "VariableToken"
 	// |                             "\t\t\t\t\t" before "VariableToken"
+	// |                           "StringVar": false
 	// |                           "VarName":
 	// |                             [*node.Identifier]
 	// |                               "Position": Pos{Line: 8-8 Pos: 124-127}

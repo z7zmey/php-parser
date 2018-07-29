@@ -9,7 +9,7 @@ import (
 
 // Isset node
 type Isset struct {
-	Meta      []meta.Meta
+	Meta      meta.Collection
 	Position  *position.Position
 	Variables []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Isset) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Isset) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Isset) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Isset) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

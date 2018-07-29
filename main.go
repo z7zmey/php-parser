@@ -18,6 +18,7 @@ import (
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/printer"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
@@ -27,6 +28,7 @@ var dumpType string
 var profiler string
 var withMeta *bool
 var showResolvedNs *bool
+var printBack *bool
 
 type file struct {
 	path    string
@@ -37,6 +39,7 @@ func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
 	withMeta = flag.Bool("meta", false, "show meta")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
+	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 
@@ -62,7 +65,7 @@ func main() {
 	}
 
 	// run printer goroutine
-	go printer(resultCh)
+	go printerWorker(resultCh)
 
 	// process files
 	processPath(flag.Args(), fileCh)
@@ -133,7 +136,7 @@ func parserWorker(fileCh <-chan *file, result chan<- parser.Parser) {
 	}
 }
 
-func printer(result <-chan parser.Parser) {
+func printerWorker(result <-chan parser.Parser) {
 	var counter int
 
 	w := bufio.NewWriter(os.Stdout)
@@ -151,6 +154,15 @@ func printer(result <-chan parser.Parser) {
 
 		for _, e := range parserWorker.GetErrors() {
 			fmt.Fprintln(w, e)
+		}
+
+		if *printBack {
+			o := bytes.NewBuffer([]byte{})
+			p := printer.NewPrinter(o)
+			p.Print(parserWorker.GetRootNode())
+
+			err := ioutil.WriteFile(parserWorker.GetPath(), o.Bytes(), 0644)
+			checkErr(err)
 		}
 
 		var nsResolver *visitor.NamespaceResolver

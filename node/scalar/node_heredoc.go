@@ -9,7 +9,7 @@ import (
 
 // Heredoc node
 type Heredoc struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Label    string
 	Parts    []node.Node
@@ -33,12 +33,8 @@ func (n *Heredoc) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Heredoc) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Heredoc) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Heredoc) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

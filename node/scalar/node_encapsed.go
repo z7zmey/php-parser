@@ -9,7 +9,7 @@ import (
 
 // Encapsed node
 type Encapsed struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Parts    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Encapsed) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Encapsed) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Encapsed) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Encapsed) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

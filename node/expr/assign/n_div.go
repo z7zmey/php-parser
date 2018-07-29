@@ -9,7 +9,7 @@ import (
 
 // Div node
 type Div struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *Div) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Div) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Div) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Div) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

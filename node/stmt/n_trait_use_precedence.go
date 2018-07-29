@@ -9,7 +9,7 @@ import (
 
 // TraitUsePrecedence node
 type TraitUsePrecedence struct {
-	Meta      []meta.Meta
+	Meta      meta.Collection
 	Position  *position.Position
 	Ref       node.Node
 	Insteadof []node.Node
@@ -33,12 +33,8 @@ func (n *TraitUsePrecedence) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitUsePrecedence) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *TraitUsePrecedence) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *TraitUsePrecedence) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // LogicalXor node
 type LogicalXor struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *LogicalXor) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *LogicalXor) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *LogicalXor) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *LogicalXor) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

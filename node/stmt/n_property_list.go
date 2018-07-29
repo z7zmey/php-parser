@@ -9,7 +9,7 @@ import (
 
 // PropertyList node
 type PropertyList struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Modifiers  []node.Node
 	Properties []node.Node
@@ -33,12 +33,8 @@ func (n *PropertyList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *PropertyList) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *PropertyList) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *PropertyList) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

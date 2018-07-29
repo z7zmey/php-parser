@@ -967,9 +967,22 @@ func TestSlashAfterVariable(t *testing.T) {
 func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
-		meta.NewComment("//test", position.NewPosition(1, 1, 7, 12)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 1, 6, 6),
+		},
+		&meta.Data{
+			Value:    "//test",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(1, 1, 7, 12),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -986,9 +999,22 @@ func TestCommentEnd(t *testing.T) {
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
-		meta.NewComment("//test\n", position.NewPosition(1, 1, 7, 13)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 1, 6, 6),
+		},
+		&meta.Data{
+			Value:    "//test\n",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(1, 1, 7, 13),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1005,9 +1031,22 @@ func TestCommentNewLine(t *testing.T) {
 func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
-		meta.NewComment("//test\r", position.NewPosition(1, 1, 7, 13)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 1, 6, 6),
+		},
+		&meta.Data{
+			Value:    "//test\r",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(1, 1, 7, 13),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1024,9 +1063,22 @@ func TestCommentNewLine1(t *testing.T) {
 func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(1, 1, 6, 6)),
-		meta.NewComment("#test\r\n", position.NewPosition(1, 1, 7, 13)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 1, 6, 6),
+		},
+		&meta.Data{
+			Value:    "#test\r\n",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(1, 1, 7, 13),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1044,9 +1096,22 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	src := `<?php
 	//test?> test`
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
-		meta.NewComment("//test", position.NewPosition(2, 2, 8, 13)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
+		&meta.Data{
+			Value:    "//test",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(2, 2, 8, 13),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1064,9 +1129,22 @@ func TestInlineComment(t *testing.T) {
 	src := `<?php
 	/*test*/`
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
-		meta.NewComment("/*test*/", position.NewPosition(2, 2, 8, 15)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
+		&meta.Data{
+			Value:    "/*test*/",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(2, 2, 8, 15),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1084,9 +1162,22 @@ func TestInlineComment2(t *testing.T) {
 	src := `<?php
 	/*/*/`
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
-		meta.NewComment("/*/*/", position.NewPosition(2, 2, 8, 12)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
+		&meta.Data{
+			Value:    "/*/*/",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(2, 2, 8, 12),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1104,10 +1195,27 @@ func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
 	/**/ `
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
-		meta.NewComment("/**/", position.NewPosition(2, 2, 8, 11)),
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 12, 12)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
+		&meta.Data{
+			Value:    "/**/",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(2, 2, 8, 11),
+		},
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 12, 12),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1125,9 +1233,22 @@ func TestEmptyInlineComment2(t *testing.T) {
 	src := `<?php
 	/***/`
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
-		meta.NewComment("/***/", position.NewPosition(2, 2, 8, 12)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
+		&meta.Data{
+			Value:    "/***/",
+			Type:     meta.CommentType,
+			Position: position.NewPosition(2, 2, 8, 12),
+		},
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
@@ -1149,50 +1270,83 @@ func TestMethodCallTokens(t *testing.T) {
 	lexer.WithMeta = true
 	lv := &lval{}
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
 	}
 	lexer.Lex(lv)
 	actual := lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 10, 10)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 10, 10),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 13, 13)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 13, 13),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 17, 17)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 17, 17),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 19, 19)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 19, 19),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 22, 22)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 22, 22),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 24, 24)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 24, 24),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta
@@ -1207,15 +1361,28 @@ func TestYieldFromTokens(t *testing.T) {
 	lexer.WithMeta = true
 	lv := &lval{}
 
-	expected := []meta.Meta{
-		meta.NewWhiteSpace("\n\t", position.NewPosition(1, 2, 6, 7)),
+	expected := meta.Collection{
+		&meta.Data{
+			Value:    "<?php",
+			Type:     meta.TokenType,
+			Position: position.NewPosition(1, 1, 1, 5),
+		},
+		&meta.Data{
+			Value:    "\n\t",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(1, 2, 6, 7),
+		},
 	}
 	lexer.Lex(lv)
 	actual := lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 
-	expected = []meta.Meta{
-		meta.NewWhiteSpace(" ", position.NewPosition(2, 2, 18, 18)),
+	expected = meta.Collection{
+		&meta.Data{
+			Value:    " ",
+			Type:     meta.WhiteSpaceType,
+			Position: position.NewPosition(2, 2, 18, 18),
+		},
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.Meta

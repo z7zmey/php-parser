@@ -9,7 +9,7 @@ import (
 
 // While node
 type While struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	Stmt     node.Node
@@ -33,12 +33,8 @@ func (n *While) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *While) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *While) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *While) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

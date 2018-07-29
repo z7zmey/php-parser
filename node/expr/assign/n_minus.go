@@ -9,7 +9,7 @@ import (
 
 // Minus node
 type Minus struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *Minus) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Minus) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Minus) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Minus) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

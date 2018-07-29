@@ -9,7 +9,7 @@ import (
 
 // Closure node
 type Closure struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	ReturnsRef    bool
 	Static        bool
@@ -43,12 +43,8 @@ func (n *Closure) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Closure) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Closure) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Closure) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

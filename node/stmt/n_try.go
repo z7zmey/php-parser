@@ -9,7 +9,7 @@ import (
 
 // Try node
 type Try struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Stmts    []node.Node
 	Catches  []node.Node
@@ -35,12 +35,8 @@ func (n *Try) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Try) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Try) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Try) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

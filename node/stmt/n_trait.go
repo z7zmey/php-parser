@@ -9,7 +9,7 @@ import (
 
 // Trait node
 type Trait struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	PhpDocComment string
 	TraitName     node.Node
@@ -35,12 +35,8 @@ func (n *Trait) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Trait) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Trait) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Trait) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

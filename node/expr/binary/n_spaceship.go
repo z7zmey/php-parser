@@ -9,7 +9,7 @@ import (
 
 // Spaceship node
 type Spaceship struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *Spaceship) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Spaceship) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Spaceship) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Spaceship) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

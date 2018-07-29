@@ -9,7 +9,7 @@ import (
 
 // NotIdentical node
 type NotIdentical struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *NotIdentical) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *NotIdentical) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *NotIdentical) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *NotIdentical) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

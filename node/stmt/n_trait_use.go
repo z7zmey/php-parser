@@ -9,7 +9,7 @@ import (
 
 // TraitUse node
 type TraitUse struct {
-	Meta                []meta.Meta
+	Meta                meta.Collection
 	Position            *position.Position
 	Traits              []node.Node
 	TraitAdaptationList node.Node
@@ -33,12 +33,8 @@ func (n *TraitUse) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitUse) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *TraitUse) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *TraitUse) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

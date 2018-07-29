@@ -9,7 +9,7 @@ import (
 
 // StaticVar node
 type StaticVar struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Variable node.Node
 	Expr     node.Node
@@ -33,12 +33,8 @@ func (n *StaticVar) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *StaticVar) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *StaticVar) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *StaticVar) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

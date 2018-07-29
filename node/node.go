@@ -12,6 +12,5 @@ type Node interface {
 	Attributes() map[string]interface{} // Attributes returns node attributes as map
 	SetPosition(p *position.Position)
 	GetPosition() *position.Position
-	AddMeta(m []meta.Meta)
-	GetMeta() []meta.Meta
+	GetMeta() *meta.Collection
 }

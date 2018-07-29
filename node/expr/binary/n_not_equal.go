@@ -9,7 +9,7 @@ import (
 
 // NotEqual node
 type NotEqual struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *NotEqual) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *NotEqual) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *NotEqual) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *NotEqual) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

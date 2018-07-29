@@ -8,7 +8,7 @@ import (
 
 // Dnumber node
 type Dnumber struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Value    string
 }
@@ -30,12 +30,8 @@ func (n *Dnumber) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Dnumber) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Dnumber) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Dnumber) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

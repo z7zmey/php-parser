@@ -9,7 +9,7 @@ import (
 
 // ConstFetch node
 type ConstFetch struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Constant node.Node
 }
@@ -31,12 +31,8 @@ func (n *ConstFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ConstFetch) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ConstFetch) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ConstFetch) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

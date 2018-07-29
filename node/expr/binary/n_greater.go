@@ -9,7 +9,7 @@ import (
 
 // Greater node
 type Greater struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *Greater) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Greater) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Greater) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Greater) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

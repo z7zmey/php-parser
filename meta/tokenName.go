@@ -36,7 +36,6 @@ const (
 	EnddeclareToken
 	AsToken
 	SwitchToken
-	SwitchSemicolonToken
 	EndswitchToken
 	CaseToken
 	DefaultToken
@@ -68,9 +67,11 @@ const (
 	CallableToken
 	StartHeredocToken
 	DollarOpenCurlyBracesToken
+	DollarCloseCurlyBracesToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
 	NamespaceToken
+	UseLeadingNsSeparatorToken
 	NsSeparatorToken
 	EllipsisToken
 	EvalToken
@@ -80,7 +81,7 @@ const (
 	LogicalXorToken
 	LogicalAndToken
 	InstanceofToken
-	NewToken
+	NewAnchor
 	CloneToken
 	ElseifToken
 	ElseToken

@@ -9,7 +9,7 @@ import (
 
 // ArrayItem node
 type ArrayItem struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Key      node.Node
 	Val      node.Node
@@ -33,12 +33,8 @@ func (n *ArrayItem) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ArrayItem) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ArrayItem) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ArrayItem) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

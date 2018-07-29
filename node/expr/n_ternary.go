@@ -9,7 +9,7 @@ import (
 
 // Ternary node
 type Ternary struct {
-	Meta      []meta.Meta
+	Meta      meta.Collection
 	Position  *position.Position
 	Condition node.Node
 	IfTrue    node.Node
@@ -35,12 +35,8 @@ func (n *Ternary) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Ternary) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Ternary) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Ternary) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

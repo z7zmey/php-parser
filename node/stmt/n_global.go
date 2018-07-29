@@ -9,7 +9,7 @@ import (
 
 // Global node
 type Global struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Vars     []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Global) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Global) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Global) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Global) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

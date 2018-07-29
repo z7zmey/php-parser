@@ -32,7 +32,7 @@ type Lexer struct {
 	*lex.Lexer
 	StateStack    []int
 	PhpDocComment string
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     *TokenPool
@@ -136,44 +136,6 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	return token
 }
 
-func (l *Lexer) addComments(chars []lex.Char) {
-	if !l.WithMeta {
-		return
-	}
-
-	firstChar := chars[0]
-	lastChar := chars[len(chars)-1]
-
-	pos := position.NewPosition(
-		l.File.Line(firstChar.Pos()),
-		l.File.Line(lastChar.Pos()),
-		int(firstChar.Pos()),
-		int(lastChar.Pos()),
-	)
-
-	c := meta.NewComment(l.tokenString(chars), pos)
-	l.Meta = append(l.Meta, c)
-}
-
-func (l *Lexer) addWhiteSpace(chars []lex.Char) {
-	if !l.WithMeta {
-		return
-	}
-
-	firstChar := chars[0]
-	lastChar := chars[len(chars)-1]
-
-	pos := position.NewPosition(
-		l.File.Line(firstChar.Pos()),
-		l.File.Line(lastChar.Pos()),
-		int(firstChar.Pos()),
-		int(lastChar.Pos()),
-	)
-
-	c := meta.NewWhiteSpace(l.tokenString(chars), pos)
-	l.Meta = append(l.Meta, c)
-}
-
 func (l *Lexer) tokenString(chars []lex.Char) string {
 	l.tokenBytesBuf.Reset()
 
@@ -182,4 +144,28 @@ func (l *Lexer) tokenString(chars []lex.Char) string {
 	}
 
 	return string(l.tokenBytesBuf.Bytes())
+}
+
+// meta
+
+func (l *Lexer) addMeta(mt meta.Type, chars []lex.Char) {
+	if !l.WithMeta {
+		return
+	}
+
+	firstChar := chars[0]
+	lastChar := chars[len(chars)-1]
+
+	pos := position.NewPosition(
+		l.File.Line(firstChar.Pos()),
+		l.File.Line(lastChar.Pos()),
+		int(firstChar.Pos()),
+		int(lastChar.Pos()),
+	)
+
+	l.Meta.Push(&meta.Data{
+		Value:    l.tokenString(chars),
+		Type:     mt,
+		Position: pos,
+	})
 }

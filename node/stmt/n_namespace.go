@@ -9,7 +9,7 @@ import (
 
 // Namespace node
 type Namespace struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	NamespaceName node.Node
 	Stmts         []node.Node
@@ -33,12 +33,8 @@ func (n *Namespace) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Namespace) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Namespace) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Namespace) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

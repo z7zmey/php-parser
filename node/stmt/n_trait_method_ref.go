@@ -9,7 +9,7 @@ import (
 
 // TraitMethodRef node
 type TraitMethodRef struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Trait    node.Node
 	Method   node.Node
@@ -33,12 +33,8 @@ func (n *TraitMethodRef) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitMethodRef) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *TraitMethodRef) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *TraitMethodRef) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

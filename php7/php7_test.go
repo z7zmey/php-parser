@@ -449,6 +449,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  10,
 										EndPos:    11,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 2,
@@ -476,6 +477,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  17,
 										EndPos:    18,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 2,
@@ -512,6 +514,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  24,
 							EndPos:    27,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 3,
@@ -546,6 +549,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  29,
 										EndPos:    30,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 3,
@@ -573,6 +577,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  36,
 										EndPos:    37,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 3,
@@ -609,6 +614,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  43,
 							EndPos:    46,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 4,
@@ -652,6 +658,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  53,
 										EndPos:    54,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 4,
@@ -670,8 +677,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  57,
 									EndPos:    61,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 4,
@@ -679,6 +686,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  60,
 										EndPos:    61,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 4,
@@ -760,6 +768,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  76,
 										EndPos:    77,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 5,
@@ -787,6 +796,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  83,
 										EndPos:    84,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 5,
@@ -823,6 +833,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  90,
 							EndPos:    93,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 6,
@@ -857,8 +868,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  100,
 									EndPos:    101,
 								},
-								Variadic:    false,
 								IsReference: false,
+								Variadic:    false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 6,
@@ -866,6 +877,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  100,
 										EndPos:    101,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 6,
@@ -884,8 +896,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  104,
 									EndPos:    108,
 								},
-								IsReference: false,
 								Variadic:    true,
+								IsReference: false,
 								Expr: &expr.Variable{
 									Position: &position.Position{
 										StartLine: 6,
@@ -893,6 +905,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  107,
 										EndPos:    108,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 6,
@@ -965,6 +978,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  122,
 										EndPos:    123,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 7,
@@ -992,6 +1006,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  129,
 										EndPos:    130,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 7,
@@ -1044,8 +1059,8 @@ func TestPhp7(t *testing.T) {
 										StartPos:  172,
 										EndPos:    173,
 									},
-									Variadic:    false,
 									IsReference: false,
+									Variadic:    false,
 									Expr: &expr.Variable{
 										Position: &position.Position{
 											StartLine: 9,
@@ -1053,6 +1068,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  172,
 											EndPos:    173,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 9,
@@ -1071,8 +1087,8 @@ func TestPhp7(t *testing.T) {
 										StartPos:  176,
 										EndPos:    180,
 									},
-									IsReference: false,
 									Variadic:    true,
+									IsReference: false,
 									Expr: &expr.Variable{
 										Position: &position.Position{
 											StartLine: 9,
@@ -1080,6 +1096,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  179,
 											EndPos:    180,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 9,
@@ -1144,6 +1161,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  209,
 							EndPos:    212,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 11,
@@ -1184,6 +1202,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  221,
 								EndPos:    224,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 12,
@@ -1234,6 +1253,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  236,
 								EndPos:    239,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 13,
@@ -1251,6 +1271,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  241,
 								EndPos:    244,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 13,
@@ -1292,6 +1313,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  254,
 								EndPos:    257,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 14,
@@ -1342,6 +1364,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  271,
 								EndPos:    274,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 15,
@@ -1359,6 +1382,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  277,
 								EndPos:    280,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 15,
@@ -1409,6 +1433,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  297,
 								EndPos:    300,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 16,
@@ -1429,8 +1454,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  306,
 					EndPos:    350,
 				},
-				ReturnsRef:    false,
 				PhpDocComment: "",
+				ReturnsRef:    false,
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 18,
@@ -1448,8 +1473,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  319,
 							EndPos:    332,
 						},
-						ByRef:    false,
 						Variadic: false,
+						ByRef:    false,
 						VariableType: &node.Nullable{
 							Position: &position.Position{
 								StartLine: 18,
@@ -1484,6 +1509,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  324,
 								EndPos:    327,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 18,
@@ -1557,6 +1583,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  343,
 								EndPos:    346,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 18,
@@ -1626,8 +1653,8 @@ func TestPhp7(t *testing.T) {
 									StartPos:  385,
 									EndPos:    398,
 								},
-								Variadic: false,
 								ByRef:    false,
+								Variadic: false,
 								VariableType: &node.Nullable{
 									Position: &position.Position{
 										StartLine: 19,
@@ -1662,6 +1689,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  390,
 										EndPos:    393,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 19,
@@ -1735,6 +1763,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  409,
 										EndPos:    412,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 19,
@@ -1773,9 +1802,9 @@ func TestPhp7(t *testing.T) {
 						StartPos:  421,
 						EndPos:    461,
 					},
-					PhpDocComment: "",
 					ReturnsRef:    false,
 					Static:        false,
+					PhpDocComment: "",
 					Params: []node.Node{
 						&node.Parameter{
 							Position: &position.Position{
@@ -1820,6 +1849,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  435,
 									EndPos:    438,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 20,
@@ -1893,6 +1923,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  454,
 									EndPos:    457,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 20,
@@ -1933,8 +1964,8 @@ func TestPhp7(t *testing.T) {
 								StartPos:  482,
 								EndPos:    495,
 							},
-							ByRef:    false,
 							Variadic: false,
+							ByRef:    false,
 							VariableType: &node.Nullable{
 								Position: &position.Position{
 									StartLine: 21,
@@ -1969,6 +2000,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  487,
 									EndPos:    490,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 21,
@@ -2042,6 +2074,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  506,
 									EndPos:    509,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 21,
@@ -2343,6 +2376,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  873,
 								EndPos:    876,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 39,
@@ -2394,6 +2428,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  888,
 									EndPos:    891,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 40,
@@ -2455,6 +2490,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  906,
 									EndPos:    909,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 41,
@@ -2524,6 +2560,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  925,
 									EndPos:    928,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 42,
@@ -2585,6 +2622,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  982,
 									EndPos:    985,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 43,
@@ -2646,6 +2684,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1040,
 									EndPos:    1043,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 44,
@@ -2707,6 +2746,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1060,
 									EndPos:    1063,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 45,
@@ -2724,6 +2764,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1065,
 									EndPos:    1068,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 45,
@@ -2760,6 +2801,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1076,
 								EndPos:    1079,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 46,
@@ -2786,6 +2828,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1081,
 								EndPos:    1084,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 46,
@@ -2837,6 +2880,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1096,
 									EndPos:    1099,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 47,
@@ -2900,6 +2944,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1118,
 								EndPos:    1123,
 							},
+							StringVar: true,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 48,
@@ -2951,6 +2996,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1137,
 									EndPos:    1139,
 								},
+								StringVar: true,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 49,
@@ -3005,6 +3051,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1155,
 								EndPos:    1161,
 							},
+							StringVar: true,
 							VarName: &expr.Variable{
 								Position: &position.Position{
 									StartLine: 50,
@@ -3012,6 +3059,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1157,
 									EndPos:    1160,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 50,
@@ -3064,6 +3112,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  1174,
 									EndPos:    1177,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 51,
@@ -3109,6 +3158,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  1196,
 						EndPos:    1197,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 53,
@@ -3143,6 +3193,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  1217,
 						EndPos:    1218,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 55,
@@ -3177,6 +3228,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1233,
 								EndPos:    1234,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 56,
@@ -3213,6 +3265,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  1253,
 						EndPos:    1254,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 58,
@@ -3264,6 +3317,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  1282,
 						EndPos:    1283,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 61,
@@ -3298,6 +3352,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1298,
 								EndPos:    1299,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 62,
@@ -3332,6 +3387,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  1313,
 								EndPos:    1314,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 63,
@@ -3698,8 +3754,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  1516,
 							EndPos:    1532,
 						},
-						ReturnsRef:    false,
 						PhpDocComment: "",
+						ReturnsRef:    false,
 						MethodName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 72,
@@ -4494,6 +4550,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  1980,
 					EndPos:    2008,
 				},
+				Alt: true,
 				Consts: []node.Node{
 					&stmt.Constant{
 						Position: &position.Position{
@@ -4525,10 +4582,10 @@ func TestPhp7(t *testing.T) {
 				},
 				Stmt: &stmt.StmtList{
 					Position: &position.Position{
-						StartLine: 87,
-						EndLine:   87,
-						StartPos:  1996,
-						EndPos:    2008,
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
 					},
 					Stmts: []node.Node{},
 				},
@@ -4574,6 +4631,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  2035,
 							EndPos:    2036,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 89,
@@ -4610,6 +4668,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  2049,
 							EndPos:    2050,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 90,
@@ -4644,6 +4703,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2060,
 								EndPos:    2061,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 91,
@@ -4680,6 +4740,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2068,
 								EndPos:    2069,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 91,
@@ -4716,6 +4777,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2077,
 								EndPos:    2078,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 91,
@@ -4741,6 +4803,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2083,
 								EndPos:    2084,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 91,
@@ -4785,6 +4848,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2100,
 								EndPos:    2101,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 92,
@@ -4821,6 +4885,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2109,
 								EndPos:    2110,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 92,
@@ -4846,6 +4911,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2115,
 								EndPos:    2116,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 92,
@@ -4882,6 +4948,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2142,
 						EndPos:    2143,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 93,
@@ -4899,6 +4966,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2148,
 						EndPos:    2149,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 93,
@@ -4933,6 +5001,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2166,
 						EndPos:    2167,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 94,
@@ -4950,6 +5019,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2172,
 						EndPos:    2173,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 94,
@@ -4984,6 +5054,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2201,
 						EndPos:    2202,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 95,
@@ -5001,6 +5072,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2207,
 						EndPos:    2208,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 95,
@@ -5018,6 +5090,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2213,
 						EndPos:    2214,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 95,
@@ -5052,6 +5125,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2231,
 						EndPos:    2232,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 96,
@@ -5069,6 +5143,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2237,
 						EndPos:    2238,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 96,
@@ -5093,6 +5168,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  2244,
 							EndPos:    2245,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 96,
@@ -5128,6 +5204,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2262,
 						EndPos:    2263,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 97,
@@ -5145,6 +5222,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2268,
 						EndPos:    2269,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 97,
@@ -5177,6 +5255,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  2279,
 									EndPos:    2280,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 97,
@@ -5214,6 +5293,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2298,
 						EndPos:    2299,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 98,
@@ -5231,6 +5311,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2304,
 						EndPos:    2305,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 98,
@@ -5263,6 +5344,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  2311,
 									EndPos:    2312,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 98,
@@ -5380,8 +5462,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  2398,
 					EndPos:    2421,
 				},
-				PhpDocComment: "",
 				ReturnsRef:    true,
+				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 102,
@@ -5427,6 +5509,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  2432,
 							EndPos:    2433,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 103,
@@ -5444,6 +5527,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  2436,
 							EndPos:    2437,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 103,
@@ -5504,6 +5588,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2462,
 						EndPos:    2463,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 106,
@@ -5538,6 +5623,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2475,
 						EndPos:    2476,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 107,
@@ -5572,6 +5658,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2490,
 								EndPos:    2491,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 107,
@@ -5608,6 +5695,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2503,
 						EndPos:    2504,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 108,
@@ -5659,6 +5747,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2524,
 						EndPos:    2525,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 109,
@@ -5693,6 +5782,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2539,
 								EndPos:    2540,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 109,
@@ -5727,6 +5817,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2554,
 								EndPos:    2555,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 109,
@@ -5780,6 +5871,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  2575,
 						EndPos:    2576,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 110,
@@ -5814,6 +5906,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2590,
 								EndPos:    2591,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 110,
@@ -5856,6 +5949,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2606,
 								EndPos:    2607,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 110,
@@ -6162,6 +6256,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  2795,
 										EndPos:    2796,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 118,
@@ -6238,6 +6333,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  2827,
 										EndPos:    2828,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 119,
@@ -6264,6 +6360,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  2831,
 										EndPos:    2832,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 119,
@@ -6310,6 +6407,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2849,
 								EndPos:    2850,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 120,
@@ -6335,6 +6433,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  2853,
 								EndPos:    2854,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 120,
@@ -6668,6 +6767,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  3102,
 						EndPos:    3103,
 					},
+					StringVar: false,
 					VarName: &node.Identifier{
 						Position: &position.Position{
 							StartLine: 143,
@@ -7445,6 +7545,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3444,
 								EndPos:    3445,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 154,
@@ -7522,6 +7623,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3494,
 								EndPos:    3495,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 155,
@@ -7580,6 +7682,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3527,
 								EndPos:    3528,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 156,
@@ -7627,6 +7730,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3558,
 								EndPos:    3559,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 156,
@@ -7685,6 +7789,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3591,
 								EndPos:    3592,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 157,
@@ -7723,6 +7828,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  3618,
 							EndPos:    3619,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 159,
@@ -7740,6 +7846,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  3622,
 							EndPos:    3623,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 159,
@@ -8818,6 +8925,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  3990,
 							EndPos:    3991,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 177,
@@ -8867,6 +8975,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  3999,
 								EndPos:    4000,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 178,
@@ -9012,6 +9121,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  4047,
 										EndPos:    4048,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 181,
@@ -9049,6 +9159,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4056,
 							EndPos:    4057,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 182,
@@ -9082,6 +9193,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4063,
 							EndPos:    4064,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 183,
@@ -9159,6 +9271,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4082,
 							EndPos:    4085,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 186,
@@ -9201,6 +9314,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4101,
 							EndPos:    4102,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 187,
@@ -9234,6 +9348,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4114,
 							EndPos:    4115,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 188,
@@ -9260,9 +9375,9 @@ func TestPhp7(t *testing.T) {
 						StartPos:  4120,
 						EndPos:    4131,
 					},
+					PhpDocComment: "",
 					ReturnsRef:    false,
 					Static:        false,
-					PhpDocComment: "",
 					Stmts:         []node.Node{},
 				},
 			},
@@ -9300,6 +9415,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  4145,
 									EndPos:    4146,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 190,
@@ -9327,6 +9443,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  4149,
 									EndPos:    4150,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 190,
@@ -9354,6 +9471,7 @@ func TestPhp7(t *testing.T) {
 									StartPos:  4158,
 									EndPos:    4159,
 								},
+								StringVar: false,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 190,
@@ -9378,6 +9496,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  4163,
 										EndPos:    4164,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 190,
@@ -9559,6 +9678,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4235,
 							EndPos:    4236,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 196,
@@ -9592,6 +9712,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4243,
 							EndPos:    4244,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 197,
@@ -9625,6 +9746,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4254,
 							EndPos:    4255,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 198,
@@ -9676,6 +9798,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4274,
 							EndPos:    4275,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 200,
@@ -9727,6 +9850,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4292,
 							EndPos:    4293,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 202,
@@ -9889,6 +10013,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4337,
 							EndPos:    4340,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 206,
@@ -9930,6 +10055,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4348,
 							EndPos:    4349,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 208,
@@ -9963,6 +10089,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4356,
 							EndPos:    4357,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 209,
@@ -9996,6 +10123,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4366,
 							EndPos:    4367,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 210,
@@ -10029,6 +10157,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4374,
 							EndPos:    4375,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 211,
@@ -10062,6 +10191,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4389,
 							EndPos:    4390,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 213,
@@ -10095,6 +10225,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4408,
 							EndPos:    4409,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 214,
@@ -10128,6 +10259,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4422,
 							EndPos:    4423,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 215,
@@ -10161,6 +10293,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4441,
 							EndPos:    4442,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 216,
@@ -10194,6 +10327,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4448,
 							EndPos:    4449,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 218,
@@ -10246,6 +10380,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4469,
 							EndPos:    4470,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 219,
@@ -10298,6 +10433,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4500,
 							EndPos:    4501,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 220,
@@ -10351,6 +10487,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4529,
 								EndPos:    4530,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 222,
@@ -10368,6 +10505,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4533,
 								EndPos:    4534,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 222,
@@ -10417,6 +10555,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  4545,
 										EndPos:    4546,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 223,
@@ -10437,6 +10576,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4551,
 							EndPos:    4552,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 223,
@@ -10492,6 +10632,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  4562,
 											EndPos:    4563,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 224,
@@ -10513,6 +10654,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4570,
 							EndPos:    4571,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 224,
@@ -10576,6 +10718,7 @@ func TestPhp7(t *testing.T) {
 													StartPos:  4586,
 													EndPos:    4587,
 												},
+												StringVar: false,
 												VarName: &node.Identifier{
 													Position: &position.Position{
 														StartLine: 225,
@@ -10599,6 +10742,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4593,
 							EndPos:    4594,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 225,
@@ -10632,6 +10776,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4600,
 							EndPos:    4601,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 227,
@@ -10836,6 +10981,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  4674,
 											EndPos:    4675,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 231,
@@ -10863,6 +11009,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  4681,
 											EndPos:    4682,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 231,
@@ -10901,6 +11048,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4697,
 							EndPos:    4698,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 232,
@@ -10934,6 +11082,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4704,
 							EndPos:    4705,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 233,
@@ -10986,6 +11135,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4720,
 								EndPos:    4721,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 234,
@@ -11151,6 +11301,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  4763,
 										EndPos:    4764,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 239,
@@ -11203,6 +11354,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  4773,
 										EndPos:    4774,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 241,
@@ -11223,6 +11375,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4779,
 							EndPos:    4780,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 241,
@@ -11278,6 +11431,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  4786,
 											EndPos:    4787,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 242,
@@ -11299,6 +11453,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4794,
 							EndPos:    4795,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 242,
@@ -11362,6 +11517,7 @@ func TestPhp7(t *testing.T) {
 													StartPos:  4806,
 													EndPos:    4807,
 												},
+												StringVar: false,
 												VarName: &node.Identifier{
 													Position: &position.Position{
 														StartLine: 243,
@@ -11385,6 +11541,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4813,
 							EndPos:    4814,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 243,
@@ -11593,6 +11750,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4877,
 							EndPos:    4880,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 247,
@@ -11626,6 +11784,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4885,
 							EndPos:    4888,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 248,
@@ -11643,6 +11802,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4891,
 							EndPos:    4894,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 248,
@@ -11695,6 +11855,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4914,
 							EndPos:    4917,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 249,
@@ -11747,6 +11908,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4928,
 							EndPos:    4931,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 250,
@@ -11780,6 +11942,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4936,
 							EndPos:    4937,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 251,
@@ -11797,6 +11960,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4941,
 							EndPos:    4942,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 251,
@@ -11814,6 +11978,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4946,
 							EndPos:    4947,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 251,
@@ -11847,6 +12012,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4952,
 							EndPos:    4953,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 252,
@@ -11864,6 +12030,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4959,
 							EndPos:    4960,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 252,
@@ -11897,6 +12064,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4965,
 							EndPos:    4966,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 253,
@@ -11921,6 +12089,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4970,
 								EndPos:    4971,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 253,
@@ -11938,6 +12107,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4975,
 								EndPos:    4976,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 253,
@@ -11955,6 +12125,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4980,
 								EndPos:    4981,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 253,
@@ -11973,6 +12144,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  4985,
 							EndPos:    4986,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 253,
@@ -12013,6 +12185,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4991,
 								EndPos:    4992,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 254,
@@ -12030,6 +12203,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  4996,
 								EndPos:    4997,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 254,
@@ -12047,6 +12221,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5001,
 								EndPos:    5002,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 254,
@@ -12065,6 +12240,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5006,
 							EndPos:    5007,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 254,
@@ -12082,6 +12258,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5011,
 							EndPos:    5012,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 254,
@@ -12115,6 +12292,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5018,
 							EndPos:    5019,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 255,
@@ -12148,6 +12326,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5025,
 							EndPos:    5026,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 256,
@@ -12174,6 +12353,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  5031,
 						EndPos:    5033,
 					},
+					StringVar: false,
 					VarName: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 257,
@@ -12181,6 +12361,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5032,
 							EndPos:    5033,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 257,
@@ -12230,6 +12411,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5053,
 							EndPos:    5054,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 259,
@@ -12263,6 +12445,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5065,
 							EndPos:    5066,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 260,
@@ -12280,6 +12463,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5071,
 							EndPos:    5072,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 260,
@@ -12313,6 +12497,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5088,
 							EndPos:    5089,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 261,
@@ -12346,6 +12531,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5104,
 							EndPos:    5105,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 263,
@@ -12379,6 +12565,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5119,
 							EndPos:    5120,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 264,
@@ -12412,6 +12599,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5131,
 							EndPos:    5132,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 265,
@@ -12445,6 +12633,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5145,
 							EndPos:    5146,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 266,
@@ -12478,6 +12667,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5158,
 							EndPos:    5159,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 267,
@@ -12511,6 +12701,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5173,
 							EndPos:    5174,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 268,
@@ -12544,6 +12735,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5184,
 							EndPos:    5185,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 269,
@@ -12577,6 +12769,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5198,
 							EndPos:    5199,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 270,
@@ -12610,6 +12803,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5212,
 							EndPos:    5213,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 271,
@@ -12643,6 +12837,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5225,
 							EndPos:    5226,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 272,
@@ -12676,6 +12871,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5232,
 							EndPos:    5233,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 274,
@@ -12693,6 +12889,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5237,
 							EndPos:    5238,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 274,
@@ -12726,6 +12923,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5243,
 							EndPos:    5244,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 275,
@@ -12743,6 +12941,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5248,
 							EndPos:    5249,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 275,
@@ -12776,6 +12975,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5254,
 							EndPos:    5255,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 276,
@@ -12793,6 +12993,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5259,
 							EndPos:    5260,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 276,
@@ -12826,6 +13027,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5265,
 							EndPos:    5266,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 277,
@@ -12843,6 +13045,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5271,
 							EndPos:    5272,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 277,
@@ -12876,6 +13079,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5277,
 							EndPos:    5278,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 278,
@@ -12893,6 +13097,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5283,
 							EndPos:    5284,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 278,
@@ -12926,6 +13131,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5289,
 							EndPos:    5290,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 279,
@@ -12943,6 +13149,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5295,
 							EndPos:    5296,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 279,
@@ -12976,6 +13183,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5301,
 							EndPos:    5302,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 280,
@@ -12993,6 +13201,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5306,
 							EndPos:    5307,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 280,
@@ -13026,6 +13235,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5312,
 							EndPos:    5313,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 281,
@@ -13043,6 +13253,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5317,
 							EndPos:    5318,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 281,
@@ -13076,6 +13287,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5323,
 							EndPos:    5324,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 282,
@@ -13093,6 +13305,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5329,
 							EndPos:    5330,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 282,
@@ -13126,6 +13339,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5335,
 							EndPos:    5336,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 283,
@@ -13143,6 +13357,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5341,
 							EndPos:    5342,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 283,
@@ -13176,6 +13391,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5347,
 							EndPos:    5348,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 284,
@@ -13193,6 +13409,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5352,
 							EndPos:    5353,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 284,
@@ -13226,6 +13443,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5358,
 							EndPos:    5359,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 285,
@@ -13243,6 +13461,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5365,
 							EndPos:    5366,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 285,
@@ -13276,6 +13495,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5371,
 							EndPos:    5372,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 286,
@@ -13293,6 +13513,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5378,
 							EndPos:    5379,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 286,
@@ -13326,6 +13547,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5384,
 							EndPos:    5385,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 287,
@@ -13343,6 +13565,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5390,
 							EndPos:    5391,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 287,
@@ -13376,6 +13599,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5396,
 							EndPos:    5397,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 288,
@@ -13393,6 +13617,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5403,
 							EndPos:    5404,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 288,
@@ -13426,6 +13651,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5409,
 							EndPos:    5410,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 289,
@@ -13443,6 +13669,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5414,
 							EndPos:    5415,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 289,
@@ -13476,6 +13703,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5420,
 							EndPos:    5421,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 290,
@@ -13493,6 +13721,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5425,
 							EndPos:    5426,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 290,
@@ -13526,6 +13755,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5431,
 							EndPos:    5432,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 291,
@@ -13543,6 +13773,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5436,
 							EndPos:    5437,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 291,
@@ -13576,6 +13807,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5442,
 							EndPos:    5443,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 292,
@@ -13593,6 +13825,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5448,
 							EndPos:    5449,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 292,
@@ -13626,6 +13859,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5454,
 							EndPos:    5455,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 293,
@@ -13643,6 +13877,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5461,
 							EndPos:    5462,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 293,
@@ -13676,6 +13911,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5467,
 							EndPos:    5468,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 294,
@@ -13693,6 +13929,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5472,
 							EndPos:    5473,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 294,
@@ -13726,6 +13963,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5478,
 							EndPos:    5479,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 295,
@@ -13743,6 +13981,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5484,
 							EndPos:    5485,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 295,
@@ -13776,6 +14015,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5490,
 							EndPos:    5491,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 296,
@@ -13793,6 +14033,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5496,
 							EndPos:    5497,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 296,
@@ -13826,6 +14067,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5502,
 							EndPos:    5503,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 297,
@@ -13843,6 +14085,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5508,
 							EndPos:    5509,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 297,
@@ -13876,6 +14119,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5514,
 							EndPos:    5515,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 298,
@@ -13893,6 +14137,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5520,
 							EndPos:    5521,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 298,
@@ -13926,6 +14171,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5526,
 							EndPos:    5527,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 299,
@@ -13943,6 +14189,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5531,
 							EndPos:    5532,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 299,
@@ -13976,6 +14223,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5537,
 							EndPos:    5538,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 300,
@@ -13993,6 +14241,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5544,
 							EndPos:    5545,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 300,
@@ -14026,6 +14275,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5551,
 							EndPos:    5552,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 302,
@@ -14043,6 +14293,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5557,
 							EndPos:    5558,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 302,
@@ -14076,6 +14327,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5563,
 							EndPos:    5564,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 303,
@@ -14093,6 +14345,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5568,
 							EndPos:    5569,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 303,
@@ -14126,6 +14379,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5574,
 							EndPos:    5575,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 304,
@@ -14143,6 +14397,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5580,
 							EndPos:    5581,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 304,
@@ -14176,6 +14431,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5586,
 							EndPos:    5587,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 305,
@@ -14193,6 +14449,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5592,
 							EndPos:    5593,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 305,
@@ -14226,6 +14483,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5598,
 							EndPos:    5599,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 306,
@@ -14243,6 +14501,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5604,
 							EndPos:    5605,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 306,
@@ -14276,6 +14535,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5610,
 							EndPos:    5611,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 307,
@@ -14293,6 +14553,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5616,
 							EndPos:    5617,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 307,
@@ -14326,6 +14587,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5622,
 							EndPos:    5623,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 308,
@@ -14343,6 +14605,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5628,
 							EndPos:    5629,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 308,
@@ -14376,6 +14639,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5634,
 							EndPos:    5635,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 309,
@@ -14393,6 +14657,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5640,
 							EndPos:    5641,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 309,
@@ -14426,6 +14691,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5646,
 							EndPos:    5647,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 310,
@@ -14443,6 +14709,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5652,
 							EndPos:    5653,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 310,
@@ -14476,6 +14743,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5658,
 							EndPos:    5659,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 311,
@@ -14493,6 +14761,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5664,
 							EndPos:    5665,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 311,
@@ -14526,6 +14795,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5670,
 							EndPos:    5671,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 312,
@@ -14543,6 +14813,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5676,
 							EndPos:    5677,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 312,
@@ -14576,6 +14847,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5682,
 							EndPos:    5683,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 313,
@@ -14593,6 +14865,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5689,
 							EndPos:    5690,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 313,
@@ -14626,6 +14899,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5695,
 							EndPos:    5696,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 314,
@@ -14643,6 +14917,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5702,
 							EndPos:    5703,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 314,
@@ -14676,6 +14951,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5708,
 							EndPos:    5709,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 315,
@@ -14693,6 +14969,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5715,
 							EndPos:    5716,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 315,
@@ -14730,8 +15007,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5733,
 							EndPos:    5758,
 						},
-						PhpDocComment: "",
 						ReturnsRef:    false,
+						PhpDocComment: "",
 						MethodName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 317,
@@ -14823,8 +15100,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5779,
 					EndPos:    5905,
 				},
-				PhpDocComment: "",
 				ReturnsRef:    false,
+				PhpDocComment: "",
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 320,
@@ -14842,8 +15119,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5792,
 							EndPos:    5794,
 						},
-						Variadic: false,
 						ByRef:    true,
+						Variadic: false,
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 320,
@@ -14851,6 +15128,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5793,
 								EndPos:    5794,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 320,
@@ -14869,8 +15147,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5797,
 							EndPos:    5801,
 						},
-						ByRef:    false,
 						Variadic: true,
+						ByRef:    false,
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 320,
@@ -14878,6 +15156,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5800,
 								EndPos:    5801,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 320,
@@ -14906,8 +15185,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5831,
 							EndPos:    5847,
 						},
-						PhpDocComment: "",
 						ReturnsRef:    false,
+						PhpDocComment: "",
 						FunctionName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 322,
@@ -15013,6 +15292,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5926,
 								EndPos:    5927,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 328,
@@ -15049,6 +15329,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5937,
 								EndPos:    5938,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 328,
@@ -15076,8 +15357,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  5945,
 							EndPos:    5950,
 						},
-						ByRef:    false,
 						Variadic: false,
+						ByRef:    false,
 						Variable: &expr.Variable{
 							Position: &position.Position{
 								StartLine: 328,
@@ -15085,6 +15366,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5945,
 								EndPos:    5946,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 328,
@@ -15115,8 +15397,8 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5958,
 					EndPos:    5995,
 				},
-				ReturnsRef:    false,
 				PhpDocComment: "",
+				ReturnsRef:    false,
 				FunctionName: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 329,
@@ -15152,6 +15434,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5977,
 								EndPos:    5978,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 329,
@@ -15188,6 +15471,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  5990,
 								EndPos:    5991,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 329,
@@ -15247,8 +15531,8 @@ func TestPhp7(t *testing.T) {
 							StartPos:  6026,
 							EndPos:    6066,
 						},
-						PhpDocComment: "",
 						ReturnsRef:    false,
+						PhpDocComment: "",
 						MethodName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 330,
@@ -15492,6 +15776,7 @@ func TestPhp7(t *testing.T) {
 											StartPos:  6139,
 											EndPos:    6142,
 										},
+										StringVar: false,
 										VarName: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 334,
@@ -15681,6 +15966,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  6180,
 								EndPos:    6183,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 337,
@@ -15716,6 +16002,7 @@ func TestPhp7(t *testing.T) {
 						StartPos:  6191,
 						EndPos:    6198,
 					},
+					StringVar: false,
 					VarName: &expr.FunctionCall{
 						Position: &position.Position{
 							StartLine: 338,
@@ -15793,6 +16080,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  6209,
 							EndPos:    6212,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 340,
@@ -15860,6 +16148,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  6225,
 								EndPos:    6228,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 341,
@@ -15911,6 +16200,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  6242,
 							EndPos:    6245,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 343,
@@ -15928,6 +16218,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  6248,
 							EndPos:    6251,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 343,
@@ -15961,6 +16252,7 @@ func TestPhp7(t *testing.T) {
 							StartPos:  6256,
 							EndPos:    6259,
 						},
+						StringVar: false,
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 344,
@@ -15985,6 +16277,7 @@ func TestPhp7(t *testing.T) {
 								StartPos:  6263,
 								EndPos:    6266,
 							},
+							StringVar: false,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 344,
@@ -16052,6 +16345,7 @@ func TestPhp7(t *testing.T) {
 										StartPos:  6281,
 										EndPos:    6282,
 									},
+									StringVar: false,
 									VarName: &node.Identifier{
 										Position: &position.Position{
 											StartLine: 346,
@@ -16102,6 +16396,7 @@ func TestPhp7(t *testing.T) {
 												StartPos:  6293,
 												EndPos:    6294,
 											},
+											StringVar: false,
 											VarName: &node.Identifier{
 												Position: &position.Position{
 													StartLine: 346,

@@ -9,7 +9,7 @@ import (
 
 // UseList node
 type UseList struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	UseType  node.Node
 	Uses     []node.Node
@@ -33,12 +33,8 @@ func (n *UseList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *UseList) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *UseList) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *UseList) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

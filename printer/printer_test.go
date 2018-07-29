@@ -63,7 +63,7 @@ func TestPrinterPrintFile(t *testing.T) {
 		},
 	})
 
-	expected := `<?phpnamespaceFoo;abstractclassBarextendsBaz{publicfunctiongreet(){echo'Hello world';}}`
+	expected := `namespaceFooabstractclassBarextendsBaz{publicfunctiongreet(){'Hello world'}}`
 	actual := o.String()
 
 	if expected != actual {
@@ -79,6 +79,18 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 		Stmts: []node.Node{
 			&stmt.InlineHtml{Value: "<div>HTML</div>"},
 			&stmt.Expression{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "<?php ",
+						TokenName: meta.NodeStart,
+					},
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "",
+						TokenName: meta.SemiColonToken,
+					},
+				},
 				Expr: &expr.Variable{
 					VarName: &node.Identifier{
 						Value: "a",
@@ -88,7 +100,7 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 		},
 	})
 
-	expected := `<div>HTML</div><?php$a;`
+	expected := `<div>HTML</div><?php $a`
 	actual := o.String()
 
 	if expected != actual {
@@ -103,8 +115,9 @@ func TestPrinterPrintIdentifier(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	n := &node.Identifier{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     "  ",
 				TokenName: meta.IdentifierToken,
 			},
@@ -123,12 +136,14 @@ func TestPrinterPrintParameter(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&node.Parameter{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EllipsisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
@@ -136,16 +151,18 @@ func TestPrinterPrintParameter(t *testing.T) {
 		ByRef:    false,
 		Variadic: true,
 		VariableType: &name.FullyQualified{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.NsSeparatorToken,
 				},
 			},
 			Parts: []node.Node{
 				&name.NamePart{
-					Meta: []meta.Meta{
-						&meta.WhiteSpace{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.WhiteSpaceType,
 							Value:     " ",
 							TokenName: meta.StringToken,
 						},
@@ -156,8 +173,9 @@ func TestPrinterPrintParameter(t *testing.T) {
 		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		DefaultValue: &scalar.String{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ConstantEncapsedStringToken,
 				},
@@ -179,19 +197,22 @@ func TestPrinterPrintNullable(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&node.Nullable{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.QuestionMarkToken,
 			},
 		},
 		Expr: &node.Parameter{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.AmpersandToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.EqualToken,
 				},
@@ -199,8 +220,9 @@ func TestPrinterPrintNullable(t *testing.T) {
 			ByRef:    true,
 			Variadic: false,
 			VariableType: &name.FullyQualified{
-				Meta: []meta.Meta{
-					&meta.WhiteSpace{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.WhiteSpaceType,
 						Value:     " ",
 						TokenName: meta.NsSeparatorToken,
 					},
@@ -212,8 +234,9 @@ func TestPrinterPrintNullable(t *testing.T) {
 				},
 			},
 			Variable: &expr.Variable{
-				Meta: []meta.Meta{
-					&meta.WhiteSpace{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.WhiteSpaceType,
 						Value:     " ",
 						TokenName: meta.VariableToken,
 					},
@@ -223,8 +246,9 @@ func TestPrinterPrintNullable(t *testing.T) {
 				},
 			},
 			DefaultValue: &scalar.String{
-				Meta: []meta.Meta{
-					&meta.WhiteSpace{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.WhiteSpaceType,
 						Value:     " ",
 						TokenName: meta.ConstantEncapsedStringToken,
 					},
@@ -247,8 +271,9 @@ func TestPrinterPrintArgument(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&node.Argument{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EllipsisToken,
 			},
@@ -256,8 +281,9 @@ func TestPrinterPrintArgument(t *testing.T) {
 		IsReference: false,
 		Variadic:    true,
 		Expr: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -280,8 +306,9 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&node.Argument{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
@@ -289,8 +316,9 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 		IsReference: true,
 		Variadic:    false,
 		Expr: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -316,20 +344,24 @@ func TestPrinterPrintNameNamePart(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&name.NamePart{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StringToken,
 			},
-			&meta.Comment{
+			&meta.Data{
+				Type:      meta.CommentType,
 				Value:     "/*comment*/",
 				TokenName: meta.StringToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StringToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NsSeparatorToken,
 			},
@@ -350,24 +382,28 @@ func TestPrinterPrintNameName(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&name.Name{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StringToken,
 			},
 		},
 		Parts: []node.Node{
 			&name.NamePart{
-				Meta: []meta.Meta{
-					&meta.Comment{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.CommentType,
 						Value:     "/*comment*/",
 						TokenName: meta.StringToken,
 					},
-					&meta.WhiteSpace{
+					&meta.Data{
+						Type:      meta.WhiteSpaceType,
 						Value:     " ",
 						TokenName: meta.StringToken,
 					},
-					&meta.WhiteSpace{
+					&meta.Data{
+						Type:      meta.WhiteSpaceType,
 						Value:     " ",
 						TokenName: meta.NsSeparatorToken,
 					},
@@ -393,8 +429,9 @@ func TestPrinterPrintNameFullyQualified(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&name.FullyQualified{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NsSeparatorToken,
 			},
@@ -422,12 +459,14 @@ func TestPrinterPrintNameRelative(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&name.Relative{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NamespaceToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NsSeparatorToken,
 			},
@@ -457,8 +496,9 @@ func TestPrinterPrintScalarLNumber(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Lnumber{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.LnumberToken,
 			},
@@ -479,8 +519,9 @@ func TestPrinterPrintScalarDNumber(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Dnumber{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DnumberToken,
 			},
@@ -501,8 +542,9 @@ func TestPrinterPrintScalarString(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.String{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ConstantEncapsedStringToken,
 			},
@@ -523,8 +565,9 @@ func TestPrinterPrintScalarEncapsedStringPart(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.EncapsedStringPart{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EncapsedAndWhitespaceToken,
 			},
@@ -542,8 +585,9 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Encapsed{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoubleQuoteToken,
 			},
@@ -555,7 +599,7 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 		},
 	})
 
-	if o.String() != ` "hello {$var} world"` {
+	if o.String() != ` "hello $var world"` {
 		t.Errorf("TestPrintScalarEncapsed is failed\n")
 	}
 }
@@ -565,8 +609,9 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StartHeredocToken,
 			},
@@ -580,7 +625,7 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 	})
 
 	expected := ` <<<LBL
-hello {$var} world
+hello $var world
 LBL`
 	actual := o.String()
 
@@ -594,8 +639,9 @@ func TestPrinterPrintScalarNowdoc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StartHeredocToken,
 			},
@@ -621,8 +667,9 @@ func TestPrinterPrintScalarMagicConstant(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.MagicConstant{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.MagicConstantToken,
 			},
@@ -642,16 +689,18 @@ func TestPrinterPrintAssign(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Assign{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
 		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -673,20 +722,23 @@ func TestPrinterPrintReference(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Reference{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
 		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -708,16 +760,18 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseAnd{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AndEqualToken,
 			},
 		},
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Expression: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -739,8 +793,9 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseOr{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OrEqualToken,
 			},
@@ -762,8 +817,9 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.BitwiseXor{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.XorEqualToken,
 			},
@@ -785,8 +841,9 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Concat{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ConcatEqualToken,
 			},
@@ -808,8 +865,9 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Div{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DivEqualToken,
 			},
@@ -831,8 +889,9 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Minus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.MinusEqualToken,
 			},
@@ -854,8 +913,9 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Mod{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ModEqualToken,
 			},
@@ -877,8 +937,9 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Mul{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.MulEqualToken,
 			},
@@ -900,8 +961,9 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Plus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PlusEqualToken,
 			},
@@ -923,8 +985,9 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.Pow{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PowEqualToken,
 			},
@@ -946,8 +1009,9 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.ShiftLeft{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SlEqualToken,
 			},
@@ -969,8 +1033,9 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&assign.ShiftRight{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SrEqualToken,
 			},
@@ -994,8 +1059,9 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseAnd{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
@@ -1017,8 +1083,9 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseOr{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.VerticalBarToken,
 			},
@@ -1040,8 +1107,9 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.BitwiseXor{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CaretToken,
 			},
@@ -1063,8 +1131,9 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.BooleanAnd{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.BooleanAndToken,
 			},
@@ -1086,8 +1155,9 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.BooleanOr{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.BooleanOrToken,
 			},
@@ -1109,8 +1179,9 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Coalesce{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CoalesceToken,
 			},
@@ -1132,8 +1203,9 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Concat{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DotToken,
 			},
@@ -1155,8 +1227,9 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Div{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SlashToken,
 			},
@@ -1178,8 +1251,9 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Equal{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IsEqualToken,
 			},
@@ -1201,8 +1275,9 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.GreaterOrEqual{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IsGreaterOrEqualToken,
 			},
@@ -1224,8 +1299,9 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Greater{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.GreaterToken,
 			},
@@ -1247,8 +1323,9 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Identical{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IsIdenticalToken,
 			},
@@ -1270,8 +1347,9 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalAnd{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.LogicalAndToken,
 			},
@@ -1293,8 +1371,9 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalOr{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.LogicalOrToken,
 			},
@@ -1316,8 +1395,9 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.LogicalXor{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.LogicalXorToken,
 			},
@@ -1339,8 +1419,9 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Minus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.MinusToken,
 			},
@@ -1362,8 +1443,9 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Mod{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PercentToken,
 			},
@@ -1385,8 +1467,9 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Mul{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AsteriskToken,
 			},
@@ -1408,9 +1491,15 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.NotEqual{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.IsNotEqualToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "!=",
 				TokenName: meta.IsNotEqualToken,
 			},
 		},
@@ -1431,8 +1520,9 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.NotIdentical{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IsNotIdenticalToken,
 			},
@@ -1454,8 +1544,9 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Plus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PlusToken,
 			},
@@ -1477,8 +1568,9 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Pow{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PowToken,
 			},
@@ -1500,8 +1592,9 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.ShiftLeft{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SlToken,
 			},
@@ -1523,8 +1616,9 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.ShiftRight{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SrToken,
 			},
@@ -1546,8 +1640,9 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.SmallerOrEqual{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IsSmallerOrEqualToken,
 			},
@@ -1569,8 +1664,9 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Smaller{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.LessToken,
 			},
@@ -1592,8 +1688,9 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&binary.Spaceship{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SpaceshipToken,
 			},
@@ -1617,9 +1714,15 @@ func TestPrinterPrintArray(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Array{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.ArrayCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(array)",
 				TokenName: meta.ArrayCastToken,
 			},
 		},
@@ -1639,9 +1742,15 @@ func TestPrinterPrintBool(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Bool{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.BoolCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(bool)",
 				TokenName: meta.BoolCastToken,
 			},
 		},
@@ -1661,9 +1770,15 @@ func TestPrinterPrintDouble(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Double{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.DoubleCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(float)",
 				TokenName: meta.DoubleCastToken,
 			},
 		},
@@ -1683,9 +1798,15 @@ func TestPrinterPrintInt(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Int{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.IntCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(int)",
 				TokenName: meta.IntCastToken,
 			},
 		},
@@ -1705,9 +1826,15 @@ func TestPrinterPrintObject(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Object{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.ObjectCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(object)",
 				TokenName: meta.ObjectCastToken,
 			},
 		},
@@ -1727,9 +1854,15 @@ func TestPrinterPrintString(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.String{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.StringCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(string)",
 				TokenName: meta.StringCastToken,
 			},
 		},
@@ -1749,9 +1882,15 @@ func TestPrinterPrintUnset(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&cast.Unset{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.UnsetCastToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "(unset)",
 				TokenName: meta.UnsetCastToken,
 			},
 		},
@@ -1773,13 +1912,25 @@ func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayDimFetch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenSquareBracket,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "[",
+				TokenName: meta.OpenSquareBracket,
+			},
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.CloseSquareBracket,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "]",
 				TokenName: meta.CloseSquareBracket,
 			},
 		},
@@ -1800,16 +1951,18 @@ func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayItem{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoubleArrowToken,
 			},
 		},
 		Key: &scalar.String{Value: "'Hello'"},
 		Val: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
@@ -1847,16 +2000,19 @@ func TestPrinterPrintExprArray(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Array{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ArrayToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -1889,8 +2045,9 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.BitwiseNot{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.TildeToken,
 			},
@@ -1911,8 +2068,9 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.BooleanNot{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ExclamationMarkToken,
 			},
@@ -1933,16 +2091,18 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ClassConstFetch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
 		},
 		Class: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		ConstantName: &node.Identifier{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.IdentifierToken,
 				},
@@ -1964,8 +2124,9 @@ func TestPrinterPrintExprClone(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Clone{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloneToken,
 			},
@@ -1986,16 +2147,19 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ClosureUse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UseToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2019,32 +2183,39 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Closure{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StaticToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.FunctionToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -2065,8 +2236,9 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 			},
 		},
 		ReturnType: &name.FullyQualified{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ColonToken,
 				},
@@ -2078,7 +2250,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 		},
 	})
 
-	expected := ` static function & (&$var )use(&$a,$b) :\Foo {$a; }`
+	expected := ` static function & (&$var )use(&$a,$b) :\Foo {$a }`
 	actual := o.String()
 
 	if expected != actual {
@@ -2107,16 +2279,19 @@ func TestPrinterPrintEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Empty{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EmptyToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2137,8 +2312,9 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ErrorSuppress{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AtToken,
 			},
@@ -2159,16 +2335,19 @@ func TestPrinterPrintEval(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Eval{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EvalToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2189,16 +2368,19 @@ func TestPrinterPrintExit(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Exit{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ExitToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2209,7 +2391,7 @@ func TestPrinterPrintExit(t *testing.T) {
 		},
 	})
 
-	expected := ` exit ($var )`
+	expected := ` exit $var `
 	actual := o.String()
 
 	if expected != actual {
@@ -2223,16 +2405,19 @@ func TestPrinterPrintDie(t *testing.T) {
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Exit{
 		Die: true,
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ExitToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2242,7 +2427,7 @@ func TestPrinterPrintDie(t *testing.T) {
 		},
 	})
 
-	expected := ` die ($var )`
+	expected := ` die $var `
 	actual := o.String()
 
 	if expected != actual {
@@ -2257,12 +2442,14 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 	p.Print(&expr.FunctionCall{
 		Function: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		ArgumentList: &node.ArgumentList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenParenthesisToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseParenthesisToken,
 				},
@@ -2296,8 +2483,9 @@ func TestPrinterPrintInclude(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Include{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IncludeToken,
 			},
@@ -2318,8 +2506,9 @@ func TestPrinterPrintIncludeOnce(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.IncludeOnce{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IncludeOnceToken,
 			},
@@ -2339,8 +2528,9 @@ func TestPrinterPrintInstanceOf(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.InstanceOf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.InstanceofToken,
 			},
@@ -2362,16 +2552,19 @@ func TestPrinterPrintIsset(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Isset{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IssetToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2395,16 +2588,19 @@ func TestPrinterPrintList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.List{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ListToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -2441,8 +2637,9 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.MethodCall{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ObjectOperatorToken,
 			},
@@ -2450,12 +2647,14 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
 		Method:   &node.Identifier{Value: "bar"},
 		ArgumentList: &node.ArgumentList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenParenthesisToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseParenthesisToken,
 				},
@@ -2484,17 +2683,19 @@ func TestPrinterPrintNew(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.New{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NewToken,
+				TokenName: meta.NewAnchor,
 			},
 		},
 		Class: &name.Name{
 			Parts: []node.Node{
 				&name.NamePart{
-					Meta: []meta.Meta{
-						&meta.WhiteSpace{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.WhiteSpaceType,
 							Value:     " ",
 							TokenName: meta.StringToken,
 						},
@@ -2504,12 +2705,14 @@ func TestPrinterPrintNew(t *testing.T) {
 			},
 		},
 		ArgumentList: &node.ArgumentList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenParenthesisToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseParenthesisToken,
 				},
@@ -2538,8 +2741,9 @@ func TestPrinterPrintPostDec(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.PostDec{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DecToken,
 			},
@@ -2560,8 +2764,9 @@ func TestPrinterPrintPostInc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.PostInc{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IncToken,
 			},
@@ -2582,8 +2787,9 @@ func TestPrinterPrintPreDec(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.PreDec{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DecToken,
 			},
@@ -2604,8 +2810,9 @@ func TestPrinterPrintPreInc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.PreInc{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IncToken,
 			},
@@ -2626,28 +2833,26 @@ func TestPrinterPrintPrint(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Print{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PrintToken,
 			},
 		},
 		Expr: &expr.Variable{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.OpenParenthesisToken,
-				},
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.CloseParenthesisToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
 		},
 	})
 
-	expected := ` print ($var )`
+	expected := ` print $var`
 	actual := o.String()
 
 	if expected != actual {
@@ -2660,8 +2865,9 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.PropertyFetch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ObjectOperatorToken,
 			},
@@ -2683,8 +2889,9 @@ func TestPrinterPrintExprReference(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Reference{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
@@ -2705,8 +2912,9 @@ func TestPrinterPrintRequire(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Require{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.RequireToken,
 			},
@@ -2727,8 +2935,9 @@ func TestPrinterPrintRequireOnce(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.RequireOnce{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.RequireOnceToken,
 			},
@@ -2749,8 +2958,9 @@ func TestPrinterPrintShellExec(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ShellExec{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.BackquoteToken,
 			},
@@ -2762,7 +2972,7 @@ func TestPrinterPrintShellExec(t *testing.T) {
 		},
 	})
 
-	expected := " `hello {$world}!`"
+	expected := " `hello $world!`"
 	actual := o.String()
 
 	if expected != actual {
@@ -2775,12 +2985,14 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ShortArray{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenSquareBracket,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseSquareBracket,
 			},
@@ -2813,12 +3025,14 @@ func TestPrinterPrintShortList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ShortList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenSquareBracket,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseSquareBracket,
 			},
@@ -2855,8 +3069,9 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.StaticCall{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
@@ -2864,12 +3079,14 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 		Class: &node.Identifier{Value: "Foo"},
 		Call:  &node.Identifier{Value: "bar"},
 		ArgumentList: &node.ArgumentList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenParenthesisToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseParenthesisToken,
 				},
@@ -2898,8 +3115,9 @@ func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.StaticPropertyFetch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
@@ -2921,12 +3139,14 @@ func TestPrinterPrintTernary(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Ternary{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.QuestionMarkToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -2948,12 +3168,14 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Ternary{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.QuestionMarkToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -2976,8 +3198,9 @@ func TestPrinterPrintUnaryMinus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.UnaryMinus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.MinusToken,
 			},
@@ -2998,8 +3221,9 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.UnaryPlus{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PlusToken,
 			},
@@ -3020,10 +3244,11 @@ func TestPrinterPrintVariable(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Variable{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.VariableToken,
+				TokenName: meta.DollarToken,
 			},
 		},
 		VarName: &expr.Variable{
@@ -3044,8 +3269,9 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.YieldFrom{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.YieldFromToken,
 			},
@@ -3066,8 +3292,9 @@ func TestPrinterPrintYield(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Yield{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.YieldToken,
 			},
@@ -3088,12 +3315,14 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.Yield{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.YieldToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoubleArrowToken,
 			},
@@ -3117,20 +3346,24 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElseIf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseifToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -3143,7 +3376,7 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 		},
 	})
 
-	expected := ` elseif ($a ) :$b;`
+	expected := ` elseif ($a ) :$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -3156,20 +3389,24 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElseIf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseifToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -3191,12 +3428,14 @@ func TestPrinterPrintAltElse(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -3208,7 +3447,7 @@ func TestPrinterPrintAltElse(t *testing.T) {
 		},
 	})
 
-	expected := ` else :$b;`
+	expected := ` else :$b`
 	actual := o.String()
 
 	if expected != actual {
@@ -3221,12 +3460,14 @@ func TestPrinterPrintAltElseEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltElse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -3247,37 +3488,50 @@ func TestPrinterPrintAltFor(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltFor{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForInitSemicolonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForCondSemicolonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EndforToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3297,7 +3551,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 		},
 	})
 
-	expected := ` for ($a ;$b ;$c ) :$d; endfor ;`
+	expected := ` for ($a ;$b ;$c ) :$d endfor `
 	actual := o.String()
 
 	if expected != actual {
@@ -3310,37 +3564,50 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltForeach{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForeachToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AsToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoubleArrowToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EndforeachToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3354,7 +3621,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 		},
 	})
 
-	expected := ` foreach ($var as$key =>&$val ) :$d; endforeach ;`
+	expected := ` foreach ($var as$key =>&$val ) :$d endforeach `
 	actual := o.String()
 
 	if expected != actual {
@@ -3367,29 +3634,40 @@ func TestPrinterPrintAltIf(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltIf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IfToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EndifToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3422,7 +3700,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 		},
 	})
 
-	expected := ` if ($a ) :$d;elseif($b):$b;elseif($c):else:$b; endif ;`
+	expected := ` if ($a ) :$delseif($b):$belseif($c):else:$b endif `
 	actual := o.String()
 
 	if expected != actual {
@@ -3435,33 +3713,40 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltSwitch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SwitchToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.SwitchSemicolonToken,
-			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EndswitchToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3484,7 +3769,7 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 		},
 	})
 
-	expected := ` switch ($var ) : ;case'a':$a;case'b':$b; endswitch ;`
+	expected := ` switch ($var ) :case'a':$acase'b':$b endswitch `
 	actual := o.String()
 
 	if expected != actual {
@@ -3497,29 +3782,40 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.AltWhile{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.WhileToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EndwhileToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3531,7 +3827,7 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 		},
 	})
 
-	expected := ` while ($a ) :$b; endwhile ;`
+	expected := ` while ($a ) :$b endwhile `
 	actual := o.String()
 
 	if expected != actual {
@@ -3544,32 +3840,36 @@ func TestPrinterPrintStmtBreak(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Break{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.BreakToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Expr: &scalar.Lnumber{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.OpenParenthesisToken,
-				},
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.CloseParenthesisToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			Value: "1",
 		},
 	})
 
-	expected := " break (1 ) ;"
+	expected := " break 1 "
 	actual := o.String()
 
 	if expected != actual {
@@ -3582,14 +3882,11 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Case{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CaseToken,
-			},
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.CaseSeparatorToken,
 			},
 		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
@@ -3598,7 +3895,7 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 		},
 	})
 
-	expected := ` case$a :$a;`
+	expected := ` case$a:$a`
 	actual := o.String()
 
 	if expected != actual {
@@ -3611,21 +3908,18 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Case{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CaseToken,
-			},
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.CaseSeparatorToken,
 			},
 		},
 		Cond:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		Stmts: []node.Node{},
 	})
 
-	expected := " case$a :"
+	expected := " case$a:"
 	actual := o.String()
 
 	if expected != actual {
@@ -3638,24 +3932,29 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Catch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CatchToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -3670,7 +3969,7 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 		},
 	})
 
-	expected := ` catch (Exception|\RuntimeException$e ) {$a; }`
+	expected := ` catch (Exception|\RuntimeException$e ) {$a }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3683,20 +3982,24 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassMethod{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.FunctionToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -3717,8 +4020,9 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 			},
 		},
 		ReturnType: &name.Name{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ColonToken,
 				},
@@ -3726,12 +4030,14 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 			Parts: []node.Node{&name.NamePart{Value: "void"}},
 		},
 		Stmt: &stmt.StmtList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenCurlyBracesToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseCurlyBracesToken,
 				},
@@ -3742,32 +4048,37 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 		},
 	})
 
-	expected := `public function &foo (?int&$a=null,...$b ) :void {$a; }`
+	expected := `public function &foo (?int&$a=null,...$b ) :void {$a }`
 	actual := o.String()
 
 	if expected != actual {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
+
 func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassMethod{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.FunctionToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -3788,8 +4099,9 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 			},
 		},
 		ReturnType: &name.Name{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ColonToken,
 				},
@@ -3799,7 +4111,7 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `public function &foo (?int&$a=null,...$b ) :void;`
+	expected := `public function &foo (?int&$a=null,...$b ) :void`
 	actual := o.String()
 
 	if expected != actual {
@@ -3812,16 +4124,19 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Class{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ClassToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -3829,8 +4144,9 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
 		ClassName: &node.Identifier{Value: "Foo"},
 		Extends: &stmt.ClassExtends{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ExtendsToken,
 				},
@@ -3838,8 +4154,9 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 		},
 		Implements: &stmt.ClassImplements{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ImplementsToken,
 				},
@@ -3862,7 +4179,7 @@ func TestPrinterPrintStmtClass(t *testing.T) {
 		},
 	})
 
-	expected := `abstract classFoo extendsBar implementsBaz,Quuz {publicconstFOO='bar'; }`
+	expected := `abstract classFoo extendsBar implementsBaz,Quuz {publicconstFOO='bar' }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3875,28 +4192,33 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Class{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ClassToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
 		},
 		Modifiers: []node.Node{&node.Identifier{Value: "abstract"}},
 		ArgumentList: &node.ArgumentList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenParenthesisToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseParenthesisToken,
 				},
@@ -3911,8 +4233,9 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 			},
 		},
 		Extends: &stmt.ClassExtends{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ExtendsToken,
 				},
@@ -3920,8 +4243,9 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 			ClassName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 		},
 		Implements: &stmt.ClassImplements{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ImplementsToken,
 				},
@@ -3944,7 +4268,7 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 		},
 	})
 
-	expected := `abstract class ($a,$b ) extendsBar implementsBaz,Quuz {publicconstFOO='bar'; }`
+	expected := `abstract class ($a,$b ) extendsBar implementsBaz,Quuz {publicconstFOO='bar' }`
 	actual := o.String()
 
 	if expected != actual {
@@ -3957,13 +4281,20 @@ func TestPrinterPrintStmtClassConstList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ClassConstList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ConstToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -3980,7 +4311,49 @@ func TestPrinterPrintStmtClassConstList(t *testing.T) {
 		},
 	})
 
-	expected := `public constFOO='a',BAR='b' ;`
+	expected := `public constFOO='a',BAR='b' `
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
+func TestPrinterPrintStmtConstList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.ConstList{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
+				Value:     " ",
+				TokenName: meta.ConstToken,
+			},
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
+				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
+				TokenName: meta.SemiColonToken,
+			},
+		},
+		Consts: []node.Node{
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "FOO"},
+				Expr:         &scalar.String{Value: "'a'"},
+			},
+			&stmt.Constant{
+				ConstantName: &node.Identifier{Value: "BAR"},
+				Expr:         &scalar.String{Value: "'b'"},
+			},
+		},
+	})
+
+	expected := ` constFOO='a',BAR='b' `
 	actual := o.String()
 
 	if expected != actual {
@@ -3993,8 +4366,9 @@ func TestPrinterPrintStmtConstant(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Constant{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
@@ -4016,32 +4390,36 @@ func TestPrinterPrintStmtContinue(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Continue{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ContinueToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Expr: &scalar.Lnumber{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.OpenParenthesisToken,
-				},
-				&meta.WhiteSpace{
-					Value:     " ",
-					TokenName: meta.CloseParenthesisToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			Value: "1",
 		},
 	})
 
-	expected := ` continue (1 ) ;`
+	expected := ` continue 1 `
 	actual := o.String()
 
 	if expected != actual {
@@ -4054,16 +4432,19 @@ func TestPrinterPrintStmtDeclareStmts(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Declare{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DeclareToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4081,7 +4462,7 @@ func TestPrinterPrintStmtDeclareStmts(t *testing.T) {
 		},
 	})
 
-	expected := ` declare (FOO='bar' ){;}`
+	expected := ` declare (FOO='bar' ){}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4094,16 +4475,19 @@ func TestPrinterPrintStmtDeclareExpr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Declare{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DeclareToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4117,7 +4501,7 @@ func TestPrinterPrintStmtDeclareExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := ` declare (FOO='bar' )'bar';`
+	expected := ` declare (FOO='bar' )'bar'`
 	actual := o.String()
 
 	if expected != actual {
@@ -4139,7 +4523,7 @@ func TestPrinterPrintStmtDeclareNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `declare(FOO='bar');`
+	expected := `declare(FOO='bar')`
 	actual := o.String()
 
 	if expected != actual {
@@ -4152,14 +4536,11 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Default{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DefaultToken,
-			},
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.CaseSeparatorToken,
 			},
 		},
 		Stmts: []node.Node{
@@ -4167,7 +4548,7 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 		},
 	})
 
-	expected := ` default :$a;`
+	expected := ` default:$a`
 	actual := o.String()
 
 	if expected != actual {
@@ -4180,20 +4561,17 @@ func TestPrinterPrintStmtDefalutEmpty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Default{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DefaultToken,
-			},
-			&meta.WhiteSpace{
-				Value:     " ",
-				TokenName: meta.CaseSeparatorToken,
 			},
 		},
 		Stmts: []node.Node{},
 	})
 
-	expected := ` default :`
+	expected := ` default:`
 	actual := o.String()
 
 	if expected != actual {
@@ -4206,25 +4584,35 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Do{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.WhileToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -4234,7 +4622,7 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 		},
 	})
 
-	expected := ` do$a; while (1 ) ;`
+	expected := ` do$a while (1 ) `
 	actual := o.String()
 
 	if expected != actual {
@@ -4247,25 +4635,35 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Do{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.WhileToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -4277,7 +4675,7 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 		},
 	})
 
-	expected := ` do{$a;} while (1 ) ;`
+	expected := ` do{$a} while (1 ) `
 	actual := o.String()
 
 	if expected != actual {
@@ -4290,13 +4688,25 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Echo{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "echo",
+				TokenName: meta.EchoToken,
+			},
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EchoToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -4306,7 +4716,7 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 		},
 	})
 
-	expected := ` echo$a,$b ;`
+	expected := `echo $a,$b `
 	actual := o.String()
 
 	if expected != actual {
@@ -4319,16 +4729,19 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseifToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4341,7 +4754,7 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 		},
 	})
 
-	expected := ` elseif ($a ){;}`
+	expected := ` elseif ($a ){}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4354,16 +4767,19 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseifToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4372,7 +4788,7 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := ` elseif ($a )'bar';`
+	expected := ` elseif ($a )'bar'`
 	actual := o.String()
 
 	if expected != actual {
@@ -4389,7 +4805,7 @@ func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `elseif($a);`
+	expected := `elseif($a)`
 	actual := o.String()
 
 	if expected != actual {
@@ -4402,8 +4818,9 @@ func TestPrinterPrintStmtElseStmts(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Else{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseToken,
 			},
@@ -4415,7 +4832,7 @@ func TestPrinterPrintStmtElseStmts(t *testing.T) {
 		},
 	})
 
-	expected := ` else{;}`
+	expected := ` else{}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4428,8 +4845,9 @@ func TestPrinterPrintStmtElseExpr(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Else{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ElseToken,
 			},
@@ -4437,7 +4855,7 @@ func TestPrinterPrintStmtElseExpr(t *testing.T) {
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
-	expected := ` else'bar';`
+	expected := ` else'bar'`
 	actual := o.String()
 
 	if expected != actual {
@@ -4453,7 +4871,7 @@ func TestPrinterPrintStmtElseNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `else;`
+	expected := `else`
 	actual := o.String()
 
 	if expected != actual {
@@ -4466,16 +4884,22 @@ func TestPrinterPrintExpression(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Expression{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
 	})
 
-	expected := `$a ;`
+	expected := `$a `
 	actual := o.String()
 
 	if expected != actual {
@@ -4488,16 +4912,19 @@ func TestPrinterPrintStmtFinally(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Finally{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.FinallyToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -4507,7 +4934,7 @@ func TestPrinterPrintStmtFinally(t *testing.T) {
 		},
 	})
 
-	expected := ` finally {; }`
+	expected := ` finally { }`
 	actual := o.String()
 
 	if expected != actual {
@@ -4520,24 +4947,29 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.For{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForInitSemicolonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForCondSemicolonToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4561,7 +4993,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 		},
 	})
 
-	expected := ` for ($a,$b ;$c,$d ;$e,$f ){;}`
+	expected := ` for ($a,$b ;$c,$d ;$e,$f ){}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4574,24 +5006,29 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Foreach{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ForeachToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AsToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.DoubleArrowToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4606,7 +5043,7 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 		},
 	})
 
-	expected := ` foreach ($a as$k =>$v ){;}`
+	expected := ` foreach ($a as$k =>$v ){}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4619,28 +5056,34 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Function{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.FunctionToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AmpersandToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -4655,8 +5098,9 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 			},
 		},
 		ReturnType: &name.FullyQualified{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ColonToken,
 				},
@@ -4668,7 +5112,7 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 		},
 	})
 
-	expected := ` function &foo (&$var ) :\Foo {; }`
+	expected := ` function &foo (&$var ) :\Foo { }`
 	actual := o.String()
 
 	if expected != actual {
@@ -4681,13 +5125,20 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Global{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.GlobalToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -4697,7 +5148,7 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 		},
 	})
 
-	expected := ` global$a,$b ;`
+	expected := ` global$a,$b `
 	actual := o.String()
 
 	if expected != actual {
@@ -4710,20 +5161,27 @@ func TestPrinterPrintStmtGoto(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Goto{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.GotoToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Label: &node.Identifier{Value: "FOO"},
 	})
 
-	expected := ` gotoFOO ;`
+	expected := ` gotoFOO `
 	actual := o.String()
 
 	if expected != actual {
@@ -4736,25 +5194,35 @@ func TestPrinterPrintStmtGroupUse(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.GroupUse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UseToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NsSeparatorToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -4771,7 +5239,7 @@ func TestPrinterPrintStmtGroupUse(t *testing.T) {
 		},
 	})
 
-	expected := ` usefunctionFoo \ {BarasBaz,Quuz } ;`
+	expected := ` usefunctionFoo \ {BarasBaz,Quuz } `
 	actual := o.String()
 
 	if expected != actual {
@@ -4784,27 +5252,36 @@ func TestPrinterPrintHaltCompiler(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.HaltCompiler{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.HaltCompilerToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 	})
 
-	expected := ` __halt_compiler ( ) ;`
+	expected := ` __halt_compiler ( ) `
 	actual := o.String()
 
 	if expected != actual {
@@ -4817,16 +5294,19 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.If{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IfToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4858,7 +5338,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 		},
 	})
 
-	expected := ` if ($a )$b;elseif($c){$d;}elseif($e);else$f;`
+	expected := ` if ($a )$belseif($c){$d}elseif($e)else$f`
 	actual := o.String()
 
 	if expected != actual {
@@ -4871,16 +5351,19 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.If{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.IfToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -4895,7 +5378,7 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 		},
 	})
 
-	expected := ` if ($a ){$b;}`
+	expected := ` if ($a ){$b}`
 	actual := o.String()
 
 	if expected != actual {
@@ -4912,7 +5395,7 @@ func TestPrinterPrintIfNop(t *testing.T) {
 		Stmt: &stmt.Nop{},
 	})
 
-	expected := `if($a);`
+	expected := `if($a)`
 	actual := o.String()
 
 	if expected != actual {
@@ -4925,8 +5408,9 @@ func TestPrinterPrintInlineHtml(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.InlineHtml{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.InlineHTMLToken,
 			},
@@ -4934,7 +5418,7 @@ func TestPrinterPrintInlineHtml(t *testing.T) {
 		Value: "test",
 	})
 
-	expected := ` ?>test<?php`
+	expected := ` test`
 	actual := o.String()
 
 	if expected != actual {
@@ -4947,24 +5431,28 @@ func TestPrinterPrintInterface(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Interface{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.InterfaceToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
 		},
 		InterfaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Extends: &stmt.InterfaceExtends{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.ExtendsToken,
 				},
@@ -4988,7 +5476,7 @@ func TestPrinterPrintInterface(t *testing.T) {
 		},
 	})
 
-	expected := ` interfaceFoo extendsBar,Baz {publicfunctionfoo(){$a;} }`
+	expected := ` interfaceFoo extendsBar,Baz {publicfunctionfoo(){$a} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5001,8 +5489,9 @@ func TestPrinterPrintLabel(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Label{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ColonToken,
 			},
@@ -5023,20 +5512,27 @@ func TestPrinterPrintNamespace(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Namespace{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NamespaceToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 	})
 
-	expected := ` namespaceFoo ;`
+	expected := ` namespaceFoo `
 	actual := o.String()
 
 	if expected != actual {
@@ -5049,16 +5545,19 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Namespace{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.NamespaceToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -5069,7 +5568,7 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 		},
 	})
 
-	expected := ` namespaceFoo {$a; }`
+	expected := ` namespaceFoo {$a }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5082,15 +5581,16 @@ func TestPrinterPrintNop(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Nop{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.SemiColonToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 	})
 
-	expected := ` ;`
+	expected := ` `
 	actual := o.String()
 
 	if expected != actual {
@@ -5103,9 +5603,15 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.PropertyList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5123,7 +5629,7 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 		},
 	})
 
-	expected := `publicstatic$a,$b ;`
+	expected := `publicstatic$a,$b `
 	actual := o.String()
 
 	if expected != actual {
@@ -5136,8 +5642,9 @@ func TestPrinterPrintProperty(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Property{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
@@ -5159,20 +5666,27 @@ func TestPrinterPrintReturn(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Return{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ReturnToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
-	expected := ` return1 ;`
+	expected := ` return1 `
 	actual := o.String()
 
 	if expected != actual {
@@ -5185,8 +5699,9 @@ func TestPrinterPrintStaticVar(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.StaticVar{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.EqualToken,
 			},
@@ -5208,13 +5723,20 @@ func TestPrinterPrintStatic(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Static{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.StaticToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5228,7 +5750,7 @@ func TestPrinterPrintStatic(t *testing.T) {
 		},
 	})
 
-	expected := ` static$a,$b ;`
+	expected := ` static$a,$b `
 	actual := o.String()
 
 	if expected != actual {
@@ -5241,12 +5763,14 @@ func TestPrinterPrintStmtList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.StmtList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -5257,7 +5781,7 @@ func TestPrinterPrintStmtList(t *testing.T) {
 		},
 	})
 
-	expected := ` {$a;$b; }`
+	expected := ` {$a$b }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5270,12 +5794,14 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.StmtList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -5295,7 +5821,7 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 		},
 	})
 
-	expected := ` {$a;{$b;{$c;}} }`
+	expected := ` {$a{$b{$c}} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5308,28 +5834,33 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Switch{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.SwitchToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
 		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 		CaseList: &stmt.CaseList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenCurlyBracesToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseCurlyBracesToken,
 				},
@@ -5351,7 +5882,7 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 		},
 	})
 
-	expected := ` switch ($var ) {case'a':$a;case'b':$b; }`
+	expected := ` switch ($var ) {case'a':$acase'b':$b }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5364,20 +5895,27 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Throw{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.ThrowToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
 		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
 	})
 
-	expected := ` throw$var ;`
+	expected := ` throw$var `
 	actual := o.String()
 
 	if expected != actual {
@@ -5400,13 +5938,15 @@ func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
 		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
 	}
 }
+
 func TestPrinterPrintStmtTraitMethodRefFull(t *testing.T) {
 	o := bytes.NewBufferString("")
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitMethodRef{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
@@ -5428,13 +5968,20 @@ func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUseAlias{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AsToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5446,7 +5993,7 @@ func TestPrinterPrintStmtTraitUseAlias(t *testing.T) {
 		Alias:    &node.Identifier{Value: "b"},
 	})
 
-	expected := `Foo::a aspublicb ;`
+	expected := `Foo::a aspublicb `
 	actual := o.String()
 
 	if expected != actual {
@@ -5459,13 +6006,20 @@ func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUsePrecedence{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.InsteadofToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5479,7 +6033,7 @@ func TestPrinterPrintStmtTraitUsePrecedence(t *testing.T) {
 		},
 	})
 
-	expected := `Foo::a insteadofBar,Baz ;`
+	expected := `Foo::a insteadofBar,Baz `
 	actual := o.String()
 
 	if expected != actual {
@@ -5492,8 +6046,9 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UseToken,
 			},
@@ -5503,16 +6058,22 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 		},
 		TraitAdaptationList: &stmt.Nop{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
+					TokenName: meta.SemiColonToken,
+				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "",
 					TokenName: meta.SemiColonToken,
 				},
 			},
 		},
 	})
 
-	expected := ` useFoo,Bar ;`
+	expected := ` useFoo,Bar `
 	actual := o.String()
 
 	if expected != actual {
@@ -5525,8 +6086,9 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.TraitUse{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UseToken,
 			},
@@ -5536,12 +6098,14 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Bar"}}},
 		},
 		TraitAdaptationList: &stmt.TraitAdaptationList{
-			Meta: []meta.Meta{
-				&meta.WhiteSpace{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.OpenCurlyBracesToken,
 				},
-				&meta.WhiteSpace{
+				&meta.Data{
+					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.CloseCurlyBracesToken,
 				},
@@ -5558,7 +6122,7 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 		},
 	})
 
-	expected := ` useFoo,Bar {Foo::aasb; }`
+	expected := ` useFoo,Bar {Foo::aasb }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5571,16 +6135,19 @@ func TestPrinterPrintTrait(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Trait{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.TraitToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -5600,7 +6167,7 @@ func TestPrinterPrintTrait(t *testing.T) {
 		},
 	})
 
-	expected := ` traitFoo {publicfunctionfoo(){$a;} }`
+	expected := ` traitFoo {publicfunctionfoo(){$a} }`
 	actual := o.String()
 
 	if expected != actual {
@@ -5613,16 +6180,19 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Try{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.TryToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenCurlyBracesToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseCurlyBracesToken,
 			},
@@ -5649,7 +6219,7 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 		},
 	})
 
-	expected := ` try {$a; }catch(Exception|\RuntimeException$e){$b;}finally{;}`
+	expected := ` try {$a }catch(Exception|\RuntimeException$e){$b}finally{}`
 	actual := o.String()
 
 	if expected != actual {
@@ -5662,21 +6232,30 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Unset{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UnsetToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5686,7 +6265,7 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 		},
 	})
 
-	expected := ` unset ($a,$b ) ;`
+	expected := ` unset ($a,$b ) `
 	actual := o.String()
 
 	if expected != actual {
@@ -5699,13 +6278,20 @@ func TestPrinterPrintStmtUseList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.UseList{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.UseToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
+				TokenName: meta.SemiColonToken,
+			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "",
 				TokenName: meta.SemiColonToken,
 			},
 		},
@@ -5721,7 +6307,7 @@ func TestPrinterPrintStmtUseList(t *testing.T) {
 		},
 	})
 
-	expected := ` usefunctionFooasBar,Baz ;`
+	expected := ` usefunctionFooasBar,Baz `
 	actual := o.String()
 
 	if expected != actual {
@@ -5734,8 +6320,9 @@ func TestPrinterPrintUse(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Use{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.AsToken,
 			},
@@ -5758,16 +6345,19 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.While{
-		Meta: []meta.Meta{
-			&meta.WhiteSpace{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.WhileToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.OpenParenthesisToken,
 			},
-			&meta.WhiteSpace{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
 				Value:     " ",
 				TokenName: meta.CloseParenthesisToken,
 			},
@@ -5780,7 +6370,7 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 		},
 	})
 
-	expected := ` while ($a ){$a;}`
+	expected := ` while ($a ){$a}`
 	actual := o.String()
 
 	if expected != actual {

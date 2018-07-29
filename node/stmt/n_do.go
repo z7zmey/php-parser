@@ -9,7 +9,7 @@ import (
 
 // Do node
 type Do struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Stmt     node.Node
 	Cond     node.Node
@@ -33,12 +33,8 @@ func (n *Do) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Do) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Do) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Do) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

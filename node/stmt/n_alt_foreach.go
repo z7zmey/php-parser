@@ -9,7 +9,7 @@ import (
 
 // AltForeach node
 type AltForeach struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 	Key      node.Node
@@ -37,12 +37,8 @@ func (n *AltForeach) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltForeach) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *AltForeach) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *AltForeach) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

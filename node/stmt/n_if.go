@@ -9,7 +9,7 @@ import (
 
 // If node
 type If struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	Stmt     node.Node
@@ -37,12 +37,8 @@ func (n *If) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *If) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *If) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *If) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

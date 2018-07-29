@@ -8,7 +8,7 @@ import (
 
 // Root node
 type Root struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Stmts    []Node
 }
@@ -30,12 +30,8 @@ func (n *Root) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Root) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Root) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Root) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

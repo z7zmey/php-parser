@@ -98,12 +98,34 @@ func isDollar(r rune) bool {
 	return r == '$'
 }
 
-func addMeta(n node.Node, mm []meta.Meta, tn meta.TokenName) {
-	for _, m := range mm {
-		m.SetTokenName(tn)
+func (l *Parser) appendMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
+	if !l.Lexer.WithMeta {
+		return
 	}
 
-	n.AddMeta(mm)
+	m := &meta.Data{
+		Value:     t.Value,
+		Type:      meta.TokenType,
+		Position:  l.positionBuilder.NewTokenPosition(t),
+		TokenName: tn,
+	}
+
+	n.GetMeta().Push(m)
+}
+
+func (l *Parser) prependMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
+	if !l.Lexer.WithMeta {
+		return
+	}
+
+	m := &meta.Data{
+		Value:     t.Value,
+		Type:      meta.TokenType,
+		Position:  l.positionBuilder.NewTokenPosition(t),
+		TokenName: tn,
+	}
+
+	n.GetMeta().Unshift(m)
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

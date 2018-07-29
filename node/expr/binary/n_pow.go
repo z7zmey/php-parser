@@ -9,7 +9,7 @@ import (
 
 // Pow node
 type Pow struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *Pow) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Pow) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Pow) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Pow) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

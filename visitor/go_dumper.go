@@ -61,17 +61,19 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 		fmt.Fprint(d.Writer, "},\n")
 	}
 
-	if mm := n.GetMeta(); len(mm) > 0 {
+	if mm := n.GetMeta(); len(*mm) > 0 {
 		printIndent(d.Writer, d.depth)
 		fmt.Fprint(d.Writer, "Meta: []meta.Meta{\n")
 		d.depth++
-		for _, m := range mm {
+		for _, m := range *mm {
 			printIndent(d.Writer, d.depth)
-			switch m.(type) {
-			case *meta.Comment:
-				fmt.Fprint(d.Writer, "&meta.Comment{\n")
-			case *meta.WhiteSpace:
-				fmt.Fprint(d.Writer, "&meta.WhiteSpace{\n")
+			switch m.Type {
+			case meta.CommentType:
+				fmt.Fprint(d.Writer, "&meta.CommentType{\n")
+			case meta.WhiteSpaceType:
+				fmt.Fprint(d.Writer, "&meta.WhiteSpaceType{\n")
+			case meta.TokenType:
+				fmt.Fprint(d.Writer, "&meta.TokenType{\n")
 			}
 			d.depth++
 
@@ -79,13 +81,13 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 			fmt.Fprint(d.Writer, "Position: &position.Position{\n")
 			d.depth++
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.GetPosition().StartLine)
+			fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.Position.StartLine)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.GetPosition().EndLine)
+			fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.Position.EndLine)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.GetPosition().StartPos)
+			fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.Position.StartPos)
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.GetPosition().EndPos)
+			fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.Position.EndPos)
 			d.depth--
 			printIndent(d.Writer, d.depth)
 			fmt.Fprint(d.Writer, "},\n")
@@ -93,7 +95,7 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 			printIndent(d.Writer, d.depth)
 			fmt.Fprintf(d.Writer, "Value: %q,\n", m.String())
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "TokenName: %d,\n", m.GetTokenName())
+			fmt.Fprintf(d.Writer, "TokenName: %d,\n", m.TokenName)
 
 			d.depth--
 			printIndent(d.Writer, d.depth)

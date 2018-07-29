@@ -9,7 +9,7 @@ import (
 
 // BitwiseAnd node
 type BitwiseAnd struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *BitwiseAnd) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *BitwiseAnd) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *BitwiseAnd) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *BitwiseAnd) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

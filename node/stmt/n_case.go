@@ -9,7 +9,7 @@ import (
 
 // Case node
 type Case struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	Stmts    []node.Node
@@ -33,12 +33,8 @@ func (n *Case) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Case) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Case) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Case) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

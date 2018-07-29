@@ -230,13 +230,14 @@ func TestAltDeclare(t *testing.T) {
 				},
 				Stmt: &stmt.StmtList{
 					Position: &position.Position{
-						StartLine: 1,
-						EndLine:   1,
-						StartPos:  20,
-						EndPos:    32,
+						StartLine: -1,
+						EndLine:   -1,
+						StartPos:  -1,
+						EndPos:    -1,
 					},
 					Stmts: []node.Node{},
 				},
+				Alt: true,
 			},
 		},
 	}

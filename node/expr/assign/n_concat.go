@@ -9,7 +9,7 @@ import (
 
 // Concat node
 type Concat struct {
-	Meta       []meta.Meta
+	Meta       meta.Collection
 	Position   *position.Position
 	Variable   node.Node
 	Expression node.Node
@@ -33,12 +33,8 @@ func (n *Concat) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Concat) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Concat) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Concat) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

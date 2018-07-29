@@ -9,7 +9,7 @@ import (
 
 // Expression node
 type Expression struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *Expression) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Expression) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Expression) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Expression) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

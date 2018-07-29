@@ -9,7 +9,7 @@ import (
 
 // Clone node
 type Clone struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *Clone) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Clone) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Clone) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Clone) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

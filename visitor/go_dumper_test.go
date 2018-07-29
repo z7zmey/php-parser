@@ -15,7 +15,7 @@ func ExampleGoDumper() {
 			class Bar {
 				public function FunctionName(Type $var = null)
 				{
-					//some comment
+					// some comment
 					$var;
 				}
 			}
@@ -40,7 +40,7 @@ func ExampleGoDumper() {
 	// 		StartLine: 3,
 	// 		EndLine: 11,
 	// 		StartPos: 10,
-	// 		EndPos: 142,
+	// 		EndPos: 143,
 	// 	},
 	// 	Stmts: []node.Node{
 	// 		&stmt.Namespace{
@@ -48,10 +48,20 @@ func ExampleGoDumper() {
 	// 				StartLine: 3,
 	// 				EndLine: 11,
 	// 				StartPos: 10,
-	// 				EndPos: 142,
+	// 				EndPos: 143,
 	// 			},
 	// 			Meta: []meta.Meta{
-	// 				&meta.WhiteSpace{
+	// 				&meta.TokenType{
+	// 					Position: &position.Position{
+	// 						StartLine: 1,
+	// 						EndLine: 1,
+	// 						StartPos: 1,
+	// 						EndPos: 5,
+	// 					},
+	// 					Value: "<?php",
+	// 					TokenName: 65,
+	// 				},
+	// 				&meta.WhiteSpaceType{
 	// 					Position: &position.Position{
 	// 						StartLine: 1,
 	// 						EndLine: 3,
@@ -61,7 +71,7 @@ func ExampleGoDumper() {
 	// 					Value: "\n\n\t\t",
 	// 					TokenName: 65,
 	// 				},
-	// 				&meta.WhiteSpace{
+	// 				&meta.WhiteSpaceType{
 	// 					Position: &position.Position{
 	// 						StartLine: 3,
 	// 						EndLine: 3,
@@ -69,17 +79,17 @@ func ExampleGoDumper() {
 	// 						EndPos: 23,
 	// 					},
 	// 					Value: " ",
-	// 					TokenName: 129,
+	// 					TokenName: 130,
 	// 				},
-	// 				&meta.WhiteSpace{
+	// 				&meta.WhiteSpaceType{
 	// 					Position: &position.Position{
 	// 						StartLine: 10,
 	// 						EndLine: 11,
-	// 						StartPos: 139,
-	// 						EndPos: 141,
+	// 						StartPos: 140,
+	// 						EndPos: 142,
 	// 					},
 	// 					Value: "\n\t\t",
-	// 					TokenName: 130,
+	// 					TokenName: 131,
 	// 				},
 	// 			},
 	// 			NamespaceName: &name.Name{
@@ -98,7 +108,7 @@ func ExampleGoDumper() {
 	// 							EndPos: 22,
 	// 						},
 	// 						Meta: []meta.Meta{
-	// 							&meta.WhiteSpace{
+	// 							&meta.WhiteSpaceType{
 	// 								Position: &position.Position{
 	// 									StartLine: 3,
 	// 									EndLine: 3,
@@ -119,10 +129,10 @@ func ExampleGoDumper() {
 	// 						StartLine: 4,
 	// 						EndLine: 10,
 	// 						StartPos: 29,
-	// 						EndPos: 138,
+	// 						EndPos: 139,
 	// 					},
 	// 					Meta: []meta.Meta{
-	// 						&meta.WhiteSpace{
+	// 						&meta.WhiteSpaceType{
 	// 							Position: &position.Position{
 	// 								StartLine: 3,
 	// 								EndLine: 4,
@@ -130,9 +140,9 @@ func ExampleGoDumper() {
 	// 								EndPos: 28,
 	// 							},
 	// 							Value: "\n\t\t\t",
-	// 							TokenName: 52,
+	// 							TokenName: 51,
 	// 						},
-	// 						&meta.WhiteSpace{
+	// 						&meta.WhiteSpaceType{
 	// 							Position: &position.Position{
 	// 								StartLine: 4,
 	// 								EndLine: 4,
@@ -140,17 +150,17 @@ func ExampleGoDumper() {
 	// 								EndPos: 38,
 	// 							},
 	// 							Value: " ",
-	// 							TokenName: 129,
+	// 							TokenName: 130,
 	// 						},
-	// 						&meta.WhiteSpace{
+	// 						&meta.WhiteSpaceType{
 	// 							Position: &position.Position{
 	// 								StartLine: 9,
 	// 								EndLine: 10,
-	// 								StartPos: 134,
-	// 								EndPos: 137,
+	// 								StartPos: 135,
+	// 								EndPos: 138,
 	// 							},
 	// 							Value: "\n\t\t\t",
-	// 							TokenName: 130,
+	// 							TokenName: 131,
 	// 						},
 	// 					},
 	// 					PhpDocComment: "",
@@ -162,7 +172,7 @@ func ExampleGoDumper() {
 	// 							EndPos: 37,
 	// 						},
 	// 						Meta: []meta.Meta{
-	// 							&meta.WhiteSpace{
+	// 							&meta.WhiteSpaceType{
 	// 								Position: &position.Position{
 	// 									StartLine: 4,
 	// 									EndLine: 4,
@@ -170,7 +180,7 @@ func ExampleGoDumper() {
 	// 									EndPos: 34,
 	// 								},
 	// 								Value: " ",
-	// 								TokenName: 125,
+	// 								TokenName: 126,
 	// 							},
 	// 						},
 	// 						Value: "Bar",
@@ -181,10 +191,10 @@ func ExampleGoDumper() {
 	// 								StartLine: 5,
 	// 								EndLine: 9,
 	// 								StartPos: 45,
-	// 								EndPos: 133,
+	// 								EndPos: 134,
 	// 							},
 	// 							Meta: []meta.Meta{
-	// 								&meta.WhiteSpace{
+	// 								&meta.WhiteSpaceType{
 	// 									Position: &position.Position{
 	// 										StartLine: 5,
 	// 										EndLine: 5,
@@ -192,7 +202,7 @@ func ExampleGoDumper() {
 	// 										EndPos: 51,
 	// 									},
 	// 									Value: " ",
-	// 									TokenName: 38,
+	// 									TokenName: 37,
 	// 								},
 	// 							},
 	// 							ReturnsRef: false,
@@ -205,7 +215,7 @@ func ExampleGoDumper() {
 	// 									EndPos: 72,
 	// 								},
 	// 								Meta: []meta.Meta{
-	// 									&meta.WhiteSpace{
+	// 									&meta.WhiteSpaceType{
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
@@ -213,7 +223,7 @@ func ExampleGoDumper() {
 	// 											EndPos: 60,
 	// 										},
 	// 										Value: " ",
-	// 										TokenName: 125,
+	// 										TokenName: 126,
 	// 									},
 	// 								},
 	// 								Value: "FunctionName",
@@ -227,7 +237,7 @@ func ExampleGoDumper() {
 	// 										EndPos: 50,
 	// 									},
 	// 									Meta: []meta.Meta{
-	// 										&meta.WhiteSpace{
+	// 										&meta.WhiteSpaceType{
 	// 											Position: &position.Position{
 	// 												StartLine: 4,
 	// 												EndLine: 5,
@@ -235,7 +245,7 @@ func ExampleGoDumper() {
 	// 												EndPos: 44,
 	// 											},
 	// 											Value: "\n\t\t\t\t",
-	// 											TokenName: 125,
+	// 											TokenName: 126,
 	// 										},
 	// 									},
 	// 									Value: "public",
@@ -250,7 +260,7 @@ func ExampleGoDumper() {
 	// 										EndPos: 89,
 	// 									},
 	// 									Meta: []meta.Meta{
-	// 										&meta.WhiteSpace{
+	// 										&meta.WhiteSpaceType{
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
 	// 												EndLine: 5,
@@ -258,7 +268,7 @@ func ExampleGoDumper() {
 	// 												EndPos: 83,
 	// 											},
 	// 											Value: " ",
-	// 											TokenName: 147,
+	// 											TokenName: 148,
 	// 										},
 	// 									},
 	// 									ByRef: false,
@@ -290,7 +300,7 @@ func ExampleGoDumper() {
 	// 											EndPos: 82,
 	// 										},
 	// 										Meta: []meta.Meta{
-	// 											&meta.WhiteSpace{
+	// 											&meta.WhiteSpaceType{
 	// 												Position: &position.Position{
 	// 													StartLine: 5,
 	// 													EndLine: 5,
@@ -301,6 +311,7 @@ func ExampleGoDumper() {
 	// 												TokenName: 12,
 	// 											},
 	// 										},
+	// 										StringVar: false,
 	// 										VarName: &node.Identifier{
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
@@ -334,7 +345,7 @@ func ExampleGoDumper() {
 	// 														EndPos: 89,
 	// 													},
 	// 													Meta: []meta.Meta{
-	// 														&meta.WhiteSpace{
+	// 														&meta.WhiteSpaceType{
 	// 															Position: &position.Position{
 	// 																StartLine: 5,
 	// 																EndLine: 5,
@@ -357,10 +368,10 @@ func ExampleGoDumper() {
 	// 									StartLine: 6,
 	// 									EndLine: 9,
 	// 									StartPos: 96,
-	// 									EndPos: 133,
+	// 									EndPos: 134,
 	// 								},
 	// 								Meta: []meta.Meta{
-	// 									&meta.WhiteSpace{
+	// 									&meta.WhiteSpaceType{
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 6,
@@ -368,17 +379,17 @@ func ExampleGoDumper() {
 	// 											EndPos: 95,
 	// 										},
 	// 										Value: "\n\t\t\t\t",
-	// 										TokenName: 129,
+	// 										TokenName: 130,
 	// 									},
-	// 									&meta.WhiteSpace{
+	// 									&meta.WhiteSpaceType{
 	// 										Position: &position.Position{
 	// 											StartLine: 8,
 	// 											EndLine: 9,
-	// 											StartPos: 128,
-	// 											EndPos: 132,
+	// 											StartPos: 129,
+	// 											EndPos: 133,
 	// 										},
 	// 										Value: "\n\t\t\t\t",
-	// 										TokenName: 130,
+	// 										TokenName: 131,
 	// 									},
 	// 								},
 	// 								Stmts: []node.Node{
@@ -386,18 +397,30 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 8,
 	// 											EndLine: 8,
-	// 											StartPos: 123,
-	// 											EndPos: 127,
+	// 											StartPos: 124,
+	// 											EndPos: 128,
+	// 										},
+	// 										Meta: []meta.Meta{
+	// 											&meta.TokenType{
+	// 												Position: &position.Position{
+	// 													StartLine: 8,
+	// 													EndLine: 8,
+	// 													StartPos: 128,
+	// 													EndPos: 128,
+	// 												},
+	// 												Value: ";",
+	// 												TokenName: 132,
+	// 											},
 	// 										},
 	// 										Expr: &expr.Variable{
 	// 											Position: &position.Position{
 	// 												StartLine: 8,
 	// 												EndLine: 8,
-	// 												StartPos: 123,
-	// 												EndPos: 126,
+	// 												StartPos: 124,
+	// 												EndPos: 127,
 	// 											},
 	// 											Meta: []meta.Meta{
-	// 												&meta.WhiteSpace{
+	// 												&meta.WhiteSpaceType{
 	// 													Position: &position.Position{
 	// 														StartLine: 6,
 	// 														EndLine: 7,
@@ -407,33 +430,34 @@ func ExampleGoDumper() {
 	// 													Value: "\n\t\t\t\t\t",
 	// 													TokenName: 12,
 	// 												},
-	// 												&meta.Comment{
+	// 												&meta.CommentType{
 	// 													Position: &position.Position{
 	// 														StartLine: 7,
 	// 														EndLine: 7,
 	// 														StartPos: 103,
-	// 														EndPos: 117,
+	// 														EndPos: 118,
 	// 													},
-	// 													Value: "//some comment\n",
+	// 													Value: "// some comment\n",
 	// 													TokenName: 12,
 	// 												},
-	// 												&meta.WhiteSpace{
+	// 												&meta.WhiteSpaceType{
 	// 													Position: &position.Position{
 	// 														StartLine: 8,
 	// 														EndLine: 8,
-	// 														StartPos: 118,
-	// 														EndPos: 122,
+	// 														StartPos: 119,
+	// 														EndPos: 123,
 	// 													},
 	// 													Value: "\t\t\t\t\t",
 	// 													TokenName: 12,
 	// 												},
 	// 											},
+	// 											StringVar: false,
 	// 											VarName: &node.Identifier{
 	// 												Position: &position.Position{
 	// 													StartLine: 8,
 	// 													EndLine: 8,
-	// 													StartPos: 123,
-	// 													EndPos: 126,
+	// 													StartPos: 124,
+	// 													EndPos: 127,
 	// 												},
 	// 												Value: "var",
 	// 											},

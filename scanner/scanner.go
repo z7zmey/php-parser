@@ -11,6 +11,7 @@ package scanner
 import (
 	"fmt"
 	"github.com/cznic/golex/lex"
+	"github.com/z7zmey/php-parser/meta"
 )
 
 const (
@@ -7554,8 +7555,10 @@ yystate604:
 	goto yyrule168
 
 yyrule1: // [ \t\n\r]+
-
-	goto yystate0
+	{
+		l.addMeta(meta.WhiteSpaceType, l.Token())
+		goto yystate0
+	}
 yyrule2: // .
 	{
 
@@ -7581,12 +7584,14 @@ yyrule2: // .
 	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
+		l.addMeta(meta.TokenType, l.Token()[:5])
 		l.Begin(PHP)
 		l.ungetChars(len(l.Token()) - 5)
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
+		l.addMeta(meta.TokenType, l.Token())
 		l.Begin(PHP)
 		goto yystate0
 	}
@@ -7599,7 +7604,7 @@ yyrule5: // \<\?=
 	}
 yyrule6: // [ \t\n\r]+
 	{
-		l.addWhiteSpace(l.Token())
+		l.addMeta(meta.WhiteSpaceType, l.Token())
 		goto yystate0
 	}
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?
@@ -8397,13 +8402,13 @@ yyrule126: // (#|[/][/])
 			}
 			break
 		}
-		l.addComments(tb)
+		l.addMeta(meta.CommentType, tb)
 		goto yystate0
 	}
 yyrule127: // [/][*][*][/]
 	{
 
-		l.addComments(l.Token())
+		l.addMeta(meta.CommentType, l.Token())
 		goto yystate0
 	}
 yyrule128: // ([/][*])|([/][*][*])
@@ -8428,9 +8433,9 @@ yyrule128: // ([/][*])|([/][*][*])
 		}
 		if is_doc_comment {
 			l.PhpDocComment = string(l.TokenBytes(nil))
-			l.addComments(l.Token())
+			l.addMeta(meta.CommentType, l.Token())
 		} else {
-			l.addComments(l.Token())
+			l.addMeta(meta.CommentType, l.Token())
 		}
 		goto yystate0
 	}
@@ -8476,7 +8481,7 @@ yyrule134: // ->
 	}
 yyrule135: // [ \t\n\r]+
 	{
-		l.addWhiteSpace(l.Token())
+		l.addMeta(meta.WhiteSpaceType, l.Token())
 		goto yystate0
 	}
 yyrule136: // ->

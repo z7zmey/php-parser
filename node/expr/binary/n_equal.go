@@ -9,7 +9,7 @@ import (
 
 // Equal node
 type Equal struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *Equal) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Equal) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Equal) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Equal) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

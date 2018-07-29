@@ -9,7 +9,7 @@ import (
 
 // Property node
 type Property struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	PhpDocComment string
 	Variable      node.Node
@@ -35,12 +35,8 @@ func (n *Property) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Property) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Property) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Property) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

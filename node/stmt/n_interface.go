@@ -9,7 +9,7 @@ import (
 
 // Interface node
 type Interface struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	PhpDocComment string
 	InterfaceName node.Node
@@ -37,12 +37,8 @@ func (n *Interface) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Interface) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Interface) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Interface) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

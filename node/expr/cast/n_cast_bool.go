@@ -9,7 +9,7 @@ import (
 
 // Bool node
 type Bool struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *Bool) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Bool) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Bool) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Bool) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

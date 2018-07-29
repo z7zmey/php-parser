@@ -74,7 +74,7 @@ func TestResolveStaticPropertyFetch(t *testing.T) {
 			},
 			&expr.StaticPropertyFetch{
 				Class:    nameBC,
-				Property: &node.Identifier{Value: "$foo"},
+				Property: &node.Identifier{Value: "foo"},
 			},
 		},
 	}

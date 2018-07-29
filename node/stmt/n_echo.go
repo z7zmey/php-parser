@@ -9,7 +9,7 @@ import (
 
 // Echo node
 type Echo struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Exprs    []node.Node
 }
@@ -31,12 +31,8 @@ func (n *Echo) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Echo) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Echo) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Echo) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

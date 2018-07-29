@@ -9,7 +9,7 @@ import (
 
 // Constant node
 type Constant struct {
-	Meta          []meta.Meta
+	Meta          meta.Collection
 	Position      *position.Position
 	PhpDocComment string
 	ConstantName  node.Node
@@ -35,12 +35,8 @@ func (n *Constant) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Constant) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Constant) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Constant) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

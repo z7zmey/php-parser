@@ -9,7 +9,7 @@ import (
 
 // UnaryPlus node
 type UnaryPlus struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 }
@@ -31,12 +31,8 @@ func (n *UnaryPlus) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *UnaryPlus) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *UnaryPlus) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *UnaryPlus) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // AltElseIf node
 type AltElseIf struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Cond     node.Node
 	Stmt     node.Node
@@ -33,12 +33,8 @@ func (n *AltElseIf) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltElseIf) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *AltElseIf) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *AltElseIf) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

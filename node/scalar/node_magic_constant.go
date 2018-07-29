@@ -8,7 +8,7 @@ import (
 
 // MagicConstant node
 type MagicConstant struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Value    string
 }
@@ -30,12 +30,8 @@ func (n *MagicConstant) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *MagicConstant) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *MagicConstant) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *MagicConstant) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

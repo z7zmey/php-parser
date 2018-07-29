@@ -9,7 +9,7 @@ import (
 
 // ConstList node
 type ConstList struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Consts   []node.Node
 }
@@ -31,12 +31,8 @@ func (n *ConstList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ConstList) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ConstList) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ConstList) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

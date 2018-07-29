@@ -9,7 +9,7 @@ import (
 
 // SmallerOrEqual node
 type SmallerOrEqual struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Left     node.Node
 	Right    node.Node
@@ -33,12 +33,8 @@ func (n *SmallerOrEqual) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *SmallerOrEqual) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *SmallerOrEqual) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *SmallerOrEqual) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

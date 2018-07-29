@@ -8,7 +8,7 @@ import (
 
 // Argument node
 type Argument struct {
-	Meta        []meta.Meta
+	Meta        meta.Collection
 	Position    *position.Position
 	Variadic    bool // if ... before variable
 	IsReference bool // if & before variable
@@ -34,12 +34,8 @@ func (n *Argument) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Argument) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Argument) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Argument) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -9,7 +9,7 @@ import (
 
 // FunctionCall node
 type FunctionCall struct {
-	Meta         []meta.Meta
+	Meta         meta.Collection
 	Position     *position.Position
 	Function     node.Node
 	ArgumentList *node.ArgumentList
@@ -33,12 +33,8 @@ func (n *FunctionCall) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *FunctionCall) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *FunctionCall) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *FunctionCall) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

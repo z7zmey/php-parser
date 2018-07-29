@@ -9,7 +9,7 @@ import (
 
 // PostDec node
 type PostDec struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Variable node.Node
 }
@@ -31,12 +31,8 @@ func (n *PostDec) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *PostDec) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *PostDec) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *PostDec) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

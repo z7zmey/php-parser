@@ -9,7 +9,7 @@ import (
 
 // ClassImplements node
 type ClassImplements struct {
-	Meta           []meta.Meta
+	Meta           meta.Collection
 	Position       *position.Position
 	InterfaceNames []node.Node
 }
@@ -31,12 +31,8 @@ func (n *ClassImplements) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ClassImplements) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *ClassImplements) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *ClassImplements) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map

@@ -48,16 +48,21 @@ func (p *Printer) printNodes(nn []node.Node) {
 	}
 }
 
-func (p *Printer) printMeta(n node.Node, tn meta.TokenName) {
+func (p *Printer) printMeta(n node.Node, tn meta.TokenName) bool {
 	if n == nil {
-		return
+		return false
 	}
 
-	for _, m := range n.GetMeta() {
-		if m.GetTokenName() == tn {
+	r := false
+
+	for _, m := range *n.GetMeta() {
+		if m.TokenName == tn {
 			io.WriteString(p.w, m.String())
+			r = true
 		}
 	}
+
+	return r
 }
 
 func (p *Printer) printNode(n node.Node) {
@@ -76,7 +81,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *node.Argument:
 		p.printNodeArgument(n)
 
-		// name
+	// name
 
 	case *name.NamePart:
 		p.printNameNamePart(n)
@@ -87,7 +92,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *name.Relative:
 		p.printNameRelative(n)
 
-		// scalar
+	// scalar
 
 	case *scalar.Lnumber:
 		p.printScalarLNumber(n)
@@ -104,7 +109,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *scalar.MagicConstant:
 		p.printScalarMagicConstant(n)
 
-		// assign
+	// assign
 
 	case *assign.Assign:
 		p.printAssign(n)
@@ -135,7 +140,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *assign.ShiftRight:
 		p.printAssignShiftRight(n)
 
-		// binary
+	// binary
 
 	case *binary.BitwiseAnd:
 		p.printBinaryBitwiseAnd(n)
@@ -192,7 +197,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *binary.Spaceship:
 		p.printBinarySpaceship(n)
 
-		// cast
+	// cast
 
 	case *cast.Array:
 		p.printArray(n)
@@ -209,7 +214,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *cast.Unset:
 		p.printUnset(n)
 
-		// expr
+	// expr
 
 	case *expr.ArrayDimFetch:
 		p.printExprArrayDimFetch(n)
@@ -296,7 +301,7 @@ func (p *Printer) printNode(n node.Node) {
 	case *expr.Yield:
 		p.printExprYield(n)
 
-		// stmt
+	// stmt
 
 	case *stmt.AltElseIf:
 		p.printStmtAltElseIf(n)
@@ -324,6 +329,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printStmtClass(n)
 	case *stmt.ClassConstList:
 		p.printStmtClassConstList(n)
+	case *stmt.ConstList:
+		p.printStmtConstList(n)
 	case *stmt.Constant:
 		p.printStmtConstant(n)
 	case *stmt.Continue:
@@ -415,22 +422,23 @@ func (p *Printer) printNodeRoot(n node.Node) {
 	nn := n.(*node.Root)
 	p.printMeta(nn, meta.NodeStart)
 
-	var stmts []node.Node
+	// var stmts []node.Node
 
-	if len(nn.Stmts) > 0 {
-		firstStmt := nn.Stmts[0]
-		stmts = nn.Stmts[1:]
+	// if len(nn.Stmts) > 0 {
+	// 	firstStmt := nn.Stmts[0]
+	// 	stmts = nn.Stmts[1:]
 
-		switch fs := firstStmt.(type) {
-		case *stmt.InlineHtml:
-			io.WriteString(p.w, fs.Value)
-			io.WriteString(p.w, "<?php")
-		default:
-			io.WriteString(p.w, "<?php")
-			p.Print(fs)
-		}
-	}
-	p.printNodes(stmts)
+	// 	switch fs := firstStmt.(type) {
+	// 	case *stmt.InlineHtml:
+	// 		io.WriteString(p.w, fs.Value)
+	// 		io.WriteString(p.w, "<?php")
+	// 	default:
+	// 		io.WriteString(p.w, "<?php")
+	// 		p.Print(fs)
+	// 	}
+	// }
+	// p.printNodes(stmts)
+	p.printNodes(nn.Stmts)
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -627,15 +635,7 @@ func (p *Printer) printScalarEncapsed(n node.Node) {
 	io.WriteString(p.w, "\"")
 
 	for _, part := range nn.Parts {
-		switch part.(type) {
-		case *scalar.EncapsedStringPart:
-			p.Print(part)
-		default:
-			io.WriteString(p.w, "{")
-			p.Print(part)
-			p.printMeta(nn, meta.CloseCurlyBracesToken)
-			io.WriteString(p.w, "}")
-		}
+		p.Print(part)
 	}
 
 	io.WriteString(p.w, "\"")
@@ -658,10 +658,9 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 		case *scalar.EncapsedStringPart:
 			p.Print(part)
 		default:
-			io.WriteString(p.w, "{")
+			p.printMeta(part, meta.DollarOpenCurlyBracesToken)
 			p.Print(part)
-			p.printMeta(nn, meta.CloseCurlyBracesToken)
-			io.WriteString(p.w, "}")
+			p.printMeta(part, meta.DollarCloseCurlyBracesToken)
 		}
 	}
 
@@ -1065,7 +1064,6 @@ func (p *Printer) printBinaryNotEqual(n node.Node) {
 
 	p.Print(nn.Left)
 	p.printMeta(nn, meta.IsNotEqualToken)
-	io.WriteString(p.w, "!=")
 	p.Print(nn.Right)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1174,7 +1172,6 @@ func (p *Printer) printArray(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.ArrayCastToken)
-	io.WriteString(p.w, "(array)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1185,7 +1182,6 @@ func (p *Printer) printBool(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.BoolCastToken)
-	io.WriteString(p.w, "(bool)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1196,7 +1192,6 @@ func (p *Printer) printDouble(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.DoubleCastToken)
-	io.WriteString(p.w, "(float)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1207,7 +1202,6 @@ func (p *Printer) printInt(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.IntCastToken)
-	io.WriteString(p.w, "(int)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1218,7 +1212,6 @@ func (p *Printer) printObject(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.ObjectCastToken)
-	io.WriteString(p.w, "(object)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1229,7 +1222,6 @@ func (p *Printer) printString(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.StringCastToken)
-	io.WriteString(p.w, "(string)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1240,7 +1232,6 @@ func (p *Printer) printUnset(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.UnsetCastToken)
-	io.WriteString(p.w, "(unset)")
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -1253,11 +1244,10 @@ func (p *Printer) printExprArrayDimFetch(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 	p.Print(nn.Variable)
 	p.printMeta(nn, meta.OpenSquareBracket)
-	io.WriteString(p.w, "[")
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	p.Print(nn.Dim)
 	p.printMeta(nn, meta.CloseSquareBracket)
-	io.WriteString(p.w, "]")
-
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	p.printMeta(nn, meta.NodeEnd)
 }
 
@@ -1452,10 +1442,8 @@ func (p *Printer) printExprExit(n node.Node) {
 		io.WriteString(p.w, "exit")
 	}
 	p.printMeta(nn, meta.OpenParenthesisToken)
-	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.CloseParenthesisToken)
-	io.WriteString(p.w, ")")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1468,6 +1456,7 @@ func (p *Printer) printExprFunctionCall(n node.Node) {
 	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CommaToken)
 	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
@@ -1517,6 +1506,7 @@ func (p *Printer) printExprIsset(n node.Node) {
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.joinPrint(",", nn.Variables)
+	p.printMeta(nn, meta.CommaToken)
 	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
@@ -1549,6 +1539,7 @@ func (p *Printer) printExprMethodCall(n node.Node) {
 	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CommaToken)
 	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
@@ -1559,7 +1550,7 @@ func (p *Printer) printExprNew(n node.Node) {
 	nn := n.(*expr.New)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.NewToken)
+	p.printMeta(nn, meta.NewAnchor)
 	io.WriteString(p.w, "new")
 	p.Print(nn.Class)
 
@@ -1567,6 +1558,7 @@ func (p *Printer) printExprNew(n node.Node) {
 		p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 		io.WriteString(p.w, "(")
 		p.joinPrint(",", nn.ArgumentList.Arguments)
+		p.printMeta(nn.ArgumentList, meta.CommaToken)
 		p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 		io.WriteString(p.w, ")")
 	}
@@ -1624,11 +1616,7 @@ func (p *Printer) printExprPrint(n node.Node) {
 
 	p.printMeta(nn, meta.PrintToken)
 	io.WriteString(p.w, "print")
-	p.printMeta(nn.Expr, meta.OpenParenthesisToken)
-	io.WriteString(p.w, "(")
 	p.Print(nn.Expr)
-	p.printMeta(nn.Expr, meta.CloseParenthesisToken)
-	io.WriteString(p.w, ")")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1689,10 +1677,9 @@ func (p *Printer) printExprShellExec(n node.Node) {
 		case *scalar.EncapsedStringPart:
 			p.Print(part)
 		default:
-			io.WriteString(p.w, "{")
+			p.printMeta(part, meta.DollarOpenCurlyBracesToken)
 			p.Print(part)
-			p.printMeta(nn, meta.CloseCurlyBracesToken)
-			io.WriteString(p.w, "}")
+			p.printMeta(part, meta.DollarCloseCurlyBracesToken)
 		}
 	}
 	io.WriteString(p.w, "`")
@@ -1737,6 +1724,7 @@ func (p *Printer) printExprStaticCall(n node.Node) {
 	p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.joinPrint(",", nn.ArgumentList.Arguments)
+	p.printMeta(nn.ArgumentList, meta.CommaToken)
 	p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
@@ -1800,8 +1788,17 @@ func (p *Printer) printExprVariable(n node.Node) {
 	nn := n.(*expr.Variable)
 	p.printMeta(nn, meta.NodeStart)
 	p.printMeta(nn, meta.VariableToken)
-	io.WriteString(p.w, "$")
+	p.printMeta(nn, meta.DollarOpenCurlyBracesToken)
+	p.printMeta(nn, meta.DollarToken)
+
+	if !nn.StringVar {
+		io.WriteString(p.w, "$")
+	}
+
+	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	p.Print(nn.VarName)
+	p.printMeta(nn, meta.DollarCloseCurlyBracesToken)
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1900,7 +1897,6 @@ func (p *Printer) printStmtAltFor(n node.Node) {
 	p.printMeta(nn, meta.EndforToken)
 	io.WriteString(p.w, "endfor")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1936,7 +1932,6 @@ func (p *Printer) printStmtAltForeach(n node.Node) {
 	p.printMeta(nn, meta.EndforeachToken)
 	io.WriteString(p.w, "endforeach")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1969,7 +1964,6 @@ func (p *Printer) printStmtAltIf(n node.Node) {
 	p.printMeta(nn, meta.EndifToken)
 	io.WriteString(p.w, "endif")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -1987,16 +1981,14 @@ func (p *Printer) printStmtAltSwitch(n node.Node) {
 	io.WriteString(p.w, ")")
 	p.printMeta(nn, meta.ColonToken)
 	io.WriteString(p.w, ":")
-	p.printMeta(nn, meta.SwitchSemicolonToken)
-	io.WriteString(p.w, ";")
 
+	p.printMeta(nn.CaseList, meta.CaseSeparatorToken)
 	s := nn.CaseList.Cases
 	p.printNodes(s)
 
 	p.printMeta(nn, meta.EndswitchToken)
 	io.WriteString(p.w, "endswitch")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2021,7 +2013,6 @@ func (p *Printer) printStmtAltWhile(n node.Node) {
 	p.printMeta(nn, meta.EndwhileToken)
 	io.WriteString(p.w, "endwhile")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2033,15 +2024,10 @@ func (p *Printer) printStmtBreak(n node.Node) {
 	p.printMeta(nn, meta.BreakToken)
 	io.WriteString(p.w, "break")
 	if nn.Expr != nil {
-		p.printMeta(nn.Expr, meta.OpenParenthesisToken)
-		io.WriteString(p.w, "(")
 		p.Print(nn.Expr)
-		p.printMeta(nn.Expr, meta.CloseParenthesisToken)
-		io.WriteString(p.w, ")")
 	}
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2053,8 +2039,10 @@ func (p *Printer) printStmtCase(n node.Node) {
 	p.printMeta(nn, meta.CaseToken)
 	io.WriteString(p.w, "case")
 	p.Print(nn.Cond)
-	p.printMeta(nn, meta.CaseSeparatorToken)
-	io.WriteString(p.w, ":")
+	r := p.printMeta(nn, meta.CaseSeparatorToken)
+	if !r {
+		io.WriteString(p.w, ":")
+	}
 
 	if len(nn.Stmts) > 0 {
 		p.printNodes(nn.Stmts)
@@ -2135,17 +2123,20 @@ func (p *Printer) printStmtClass(n node.Node) {
 		p.printMeta(nn.ArgumentList, meta.OpenParenthesisToken)
 		io.WriteString(p.w, "(")
 		p.joinPrint(",", nn.ArgumentList.Arguments)
+		p.printMeta(nn.ArgumentList, meta.CommaToken)
 		p.printMeta(nn.ArgumentList, meta.CloseParenthesisToken)
 		io.WriteString(p.w, ")")
 	}
 
 	if nn.Extends != nil {
+		p.printMeta(nn.Extends, meta.NodeStart)
 		p.printMeta(nn.Extends, meta.ExtendsToken)
 		io.WriteString(p.w, "extends")
 		p.Print(nn.Extends.ClassName)
 	}
 
 	if nn.Implements != nil {
+		p.printMeta(nn.Implements, meta.NodeStart)
 		p.printMeta(nn.Implements, meta.ImplementsToken)
 		io.WriteString(p.w, "implements")
 		p.joinPrint(",", nn.Implements.InterfaceNames)
@@ -2173,7 +2164,20 @@ func (p *Printer) printStmtClassConstList(n node.Node) {
 	p.joinPrint(",", nn.Consts)
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
+
+	p.printMeta(nn, meta.NodeEnd)
+}
+
+func (p *Printer) printStmtConstList(n node.Node) {
+	nn := n.(*stmt.ConstList)
+	p.printMeta(nn, meta.NodeStart)
+
+	p.printMeta(nn, meta.ConstToken)
+	io.WriteString(p.w, "const")
+
+	p.joinPrint(",", nn.Consts)
+
+	p.printMeta(nn, meta.SemiColonToken)
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2198,15 +2202,10 @@ func (p *Printer) printStmtContinue(n node.Node) {
 	io.WriteString(p.w, "continue")
 
 	if nn.Expr != nil {
-		p.printMeta(nn.Expr, meta.OpenParenthesisToken)
-		io.WriteString(p.w, "(")
 		p.Print(nn.Expr)
-		p.printMeta(nn.Expr, meta.CloseParenthesisToken)
-		io.WriteString(p.w, ")")
 	}
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2223,7 +2222,20 @@ func (p *Printer) printStmtDeclare(n node.Node) {
 	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 
-	p.Print(nn.Stmt)
+	if nn.Alt {
+		p.printMeta(nn, meta.ColonToken)
+		io.WriteString(p.w, ":")
+
+		s := nn.Stmt.(*stmt.StmtList)
+		p.printNodes(s.Stmts)
+
+		p.printMeta(nn, meta.EnddeclareToken)
+		io.WriteString(p.w, "enddeclare")
+		p.printMeta(nn, meta.SemiColonToken)
+
+	} else {
+		p.Print(nn.Stmt)
+	}
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2234,8 +2246,10 @@ func (p *Printer) printStmtDefault(n node.Node) {
 
 	p.printMeta(nn, meta.DefaultToken)
 	io.WriteString(p.w, "default")
-	p.printMeta(nn, meta.CaseSeparatorToken)
-	io.WriteString(p.w, ":")
+	r := p.printMeta(nn, meta.CaseSeparatorToken)
+	if !r {
+		io.WriteString(p.w, ":")
+	}
 
 	if len(nn.Stmts) > 0 {
 		p.printNodes(nn.Stmts)
@@ -2261,7 +2275,6 @@ func (p *Printer) printStmtDo(n node.Node) {
 	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2271,10 +2284,8 @@ func (p *Printer) printStmtEcho(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(nn, meta.EchoToken)
-	io.WriteString(p.w, "echo")
 	p.joinPrint(",", nn.Exprs)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2315,7 +2326,6 @@ func (p *Printer) printStmtExpression(n node.Node) {
 	p.Print(nn.Expr)
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2428,7 +2438,6 @@ func (p *Printer) printStmtGlobal(n node.Node) {
 	io.WriteString(p.w, "global")
 	p.joinPrint(",", nn.Vars)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2441,7 +2450,6 @@ func (p *Printer) printStmtGoto(n node.Node) {
 	io.WriteString(p.w, "goto")
 	p.Print(nn.Label)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2457,16 +2465,17 @@ func (p *Printer) printStmtGroupUse(n node.Node) {
 		p.Print(nn.UseType)
 	}
 
+	p.printMeta(nn, meta.UseLeadingNsSeparatorToken)
 	p.Print(nn.Prefix)
 	p.printMeta(nn, meta.NsSeparatorToken)
 	io.WriteString(p.w, "\\")
 	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	io.WriteString(p.w, "{")
 	p.joinPrint(",", nn.UseList)
+	p.printMeta(nn, meta.CommaToken)
 	p.printMeta(nn, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2482,7 +2491,6 @@ func (p *Printer) printStmtHaltCompiler(n node.Node) {
 	p.printMeta(n, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 	p.printMeta(n, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2517,9 +2525,9 @@ func (p *Printer) printStmtInlineHTML(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	p.printMeta(n, meta.InlineHTMLToken)
-	io.WriteString(p.w, "?>")
+	// io.WriteString(p.w, "?>")
 	io.WriteString(p.w, nn.Value)
-	io.WriteString(p.w, "<?php")
+	// io.WriteString(p.w, "<?php")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2536,6 +2544,7 @@ func (p *Printer) printStmtInterface(n node.Node) {
 	}
 
 	if nn.Extends != nil {
+		p.printMeta(nn.Extends, meta.NodeStart)
 		p.printMeta(nn.Extends, meta.ExtendsToken)
 		io.WriteString(p.w, "extends")
 		p.joinPrint(",", nn.Extends.InterfaceNames)
@@ -2580,15 +2589,15 @@ func (p *Printer) printStmtNamespace(n node.Node) {
 		io.WriteString(p.w, "}")
 	} else {
 		p.printMeta(n, meta.SemiColonToken)
-		io.WriteString(p.w, ";")
 	}
 
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtNop(n node.Node) {
+	p.printMeta(n, meta.NodeStart)
 	p.printMeta(n, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
+	p.printMeta(n, meta.NodeEnd)
 }
 
 func (p *Printer) printStmtPropertyList(n node.Node) {
@@ -2598,7 +2607,6 @@ func (p *Printer) printStmtPropertyList(n node.Node) {
 	p.joinPrint("", nn.Modifiers)
 	p.joinPrint(",", nn.Properties)
 	p.printMeta(n, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2626,7 +2634,6 @@ func (p *Printer) printStmtReturn(n node.Node) {
 	io.WriteString(p.w, "return")
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2654,7 +2661,6 @@ func (p *Printer) printStmtStatic(n node.Node) {
 	io.WriteString(p.w, "static")
 	p.joinPrint(",", nn.Vars)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2686,6 +2692,7 @@ func (p *Printer) printStmtSwitch(n node.Node) {
 
 	p.printMeta(nn.CaseList, meta.OpenCurlyBracesToken)
 	io.WriteString(p.w, "{")
+	p.printMeta(nn.CaseList, meta.CaseSeparatorToken)
 	p.printNodes(nn.CaseList.Cases)
 	p.printMeta(nn.CaseList, meta.CloseCurlyBracesToken)
 	io.WriteString(p.w, "}")
@@ -2701,7 +2708,6 @@ func (p *Printer) printStmtThrow(n node.Node) {
 	io.WriteString(p.w, "throw")
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2737,7 +2743,6 @@ func (p *Printer) printStmtTraitUseAlias(n node.Node) {
 	}
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2752,7 +2757,6 @@ func (p *Printer) printStmtTraitUsePrecedence(n node.Node) {
 	p.joinPrint(",", nn.Insteadof)
 
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2773,7 +2777,6 @@ func (p *Printer) printStmtTraitUse(n node.Node) {
 		io.WriteString(p.w, "}")
 	} else {
 		p.printMeta(nn.TraitAdaptationList, meta.SemiColonToken)
-		io.WriteString(p.w, ";")
 	}
 
 	p.printMeta(nn, meta.NodeEnd)
@@ -2828,10 +2831,10 @@ func (p *Printer) printStmtUnset(n node.Node) {
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
 	p.joinPrint(",", nn.Vars)
+	p.printMeta(nn, meta.CommaToken)
 	p.printMeta(nn, meta.CloseParenthesisToken)
 	io.WriteString(p.w, ")")
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2849,7 +2852,6 @@ func (p *Printer) printStmtUseList(n node.Node) {
 
 	p.joinPrint(",", nn.Uses)
 	p.printMeta(nn, meta.SemiColonToken)
-	io.WriteString(p.w, ";")
 
 	p.printMeta(nn, meta.NodeEnd)
 }
@@ -2861,6 +2863,8 @@ func (p *Printer) printStmtUse(n node.Node) {
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
 	}
+
+	p.printMeta(nn, meta.UseLeadingNsSeparatorToken)
 
 	p.Print(nn.Use)
 

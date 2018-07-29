@@ -9,7 +9,7 @@ import (
 
 // Foreach node
 type Foreach struct {
-	Meta     []meta.Meta
+	Meta     meta.Collection
 	Position *position.Position
 	Expr     node.Node
 	Key      node.Node
@@ -37,12 +37,8 @@ func (n *Foreach) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Foreach) AddMeta(m []meta.Meta) {
-	n.Meta = append(n.Meta, m...)
-}
-
-func (n *Foreach) GetMeta() []meta.Meta {
-	return n.Meta
+func (n *Foreach) GetMeta() *meta.Collection {
+	return &n.Meta
 }
 
 // Attributes returns node attributes as map
