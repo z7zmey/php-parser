@@ -8948,7 +8948,7 @@ yyrule167: // .
 	}
 yyrule168: // .|[ \t\n\r]
 	{
-		// do nothing
+		l.addMeta(meta.TokenType, l.Token())
 		goto yystate0
 	}
 	panic("unreachable")

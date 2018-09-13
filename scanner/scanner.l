@@ -673,7 +673,7 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_STRING_VARNAME)
 <STRING_VAR_NAME>.                          l.ungetChars(1);l.popState();l.pushState(PHP)
 
-<HALT_COMPILER>.|[ \t\n\r]                  // do nothing
+<HALT_COMPILER>.|[ \t\n\r]                  l.addMeta(meta.TokenType, l.Token())
 
 %%
     if _, ok := l.Abort(); ok {

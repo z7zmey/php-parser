@@ -1146,7 +1146,9 @@ func TestParseAndPrintGroupUse(t *testing.T) {
 
 func TestParseAndPrintHaltCompiler(t *testing.T) {
 	src := `<?php
-	__halt_compiler ( ) ;`
+	__halt_compiler ( ) ;
+	this text is ignored by parser
+	`
 
 	actual := print(parse(src))
 
