@@ -315,6 +315,8 @@ func (ns *Namespace) ResolveName(nameNode node.Node, aliasType string) (string, 
 				fallthrough
 			case "iterable":
 				fallthrough
+			case "array":
+				fallthrough
 			case "object":
 				return part, nil
 			}
