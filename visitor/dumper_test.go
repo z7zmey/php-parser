@@ -110,7 +110,7 @@ func ExampleDumper() {
 	// |                       "Position": Pos{Line: 5-5 Pos: 79-82}
 	// |                       "Meta":
 	// |                         " " before "VariableToken"
-	// |                       "StringVar": false
+	// |                         "$" before "DollarToken"
 	// |                       "VarName":
 	// |                         [*node.Identifier]
 	// |                           "Position": Pos{Line: 5-5 Pos: 79-82}
@@ -146,7 +146,7 @@ func ExampleDumper() {
 	// |                             "\n\t\t\t\t\t" before "VariableToken"
 	// |                             "// some comment\n" before "VariableToken"
 	// |                             "\t\t\t\t\t" before "VariableToken"
-	// |                           "StringVar": false
+	// |                             "$" before "DollarToken"
 	// |                           "VarName":
 	// |                             [*node.Identifier]
 	// |                               "Position": Pos{Line: 8-8 Pos: 124-127}

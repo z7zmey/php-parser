@@ -265,9 +265,13 @@ func ExamplePrettyJsonDumper() {
 	//                         "type": "*meta.WhiteSpaceType",
 	//                         "value": " ",
 	//                         "tokenName": "VariableToken"
+	//                       },
+	//                       {
+	//                         "type": "*meta.TokenType",
+	//                         "value": "$",
+	//                         "tokenName": "DollarToken"
 	//                       }
 	//                     ],
-	//                     "StringVar": false,
 	//                     "VarName": {
 	//                       "type": "*node.Identifier",
 	//                       "position": {
@@ -388,9 +392,13 @@ func ExamplePrettyJsonDumper() {
 	//                           "type": "*meta.WhiteSpaceType",
 	//                           "value": "\t\t\t\t\t",
 	//                           "tokenName": "VariableToken"
+	//                         },
+	//                         {
+	//                           "type": "*meta.TokenType",
+	//                           "value": "$",
+	//                           "tokenName": "DollarToken"
 	//                         }
 	//                       ],
-	//                       "StringVar": false,
 	//                       "VarName": {
 	//                         "type": "*node.Identifier",
 	//                         "position": {

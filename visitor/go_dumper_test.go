@@ -310,8 +310,12 @@ func ExampleGoDumper() {
 	// 												Value: " ",
 	// 												TokenName: 12,
 	// 											},
+	// 											&meta.TokenType{
+	// 												Position: nil,
+	// 												Value: "$",
+	// 												TokenName: 145,
+	// 											},
 	// 										},
-	// 										StringVar: false,
 	// 										VarName: &node.Identifier{
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
@@ -450,8 +454,12 @@ func ExampleGoDumper() {
 	// 													Value: "\t\t\t\t\t",
 	// 													TokenName: 12,
 	// 												},
+	// 												&meta.TokenType{
+	// 													Position: nil,
+	// 													Value: "$",
+	// 													TokenName: 145,
+	// 												},
 	// 											},
-	// 											StringVar: false,
 	// 											VarName: &node.Identifier{
 	// 												Position: &position.Position{
 	// 													StartLine: 8,

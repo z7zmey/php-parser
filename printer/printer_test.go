@@ -92,6 +92,13 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 					},
 				},
 				Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
 					VarName: &node.Identifier{
 						Value: "a",
 					},
@@ -171,7 +178,16 @@ func TestPrinterPrintParameter(t *testing.T) {
 				},
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		DefaultValue: &scalar.String{
 			Meta: meta.Collection{
 				&meta.Data{
@@ -240,6 +256,11 @@ func TestPrinterPrintNullable(t *testing.T) {
 						Value:     " ",
 						TokenName: meta.VariableToken,
 					},
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
 				},
 				VarName: &node.Identifier{
 					Value: "var",
@@ -287,6 +308,11 @@ func TestPrinterPrintArgument(t *testing.T) {
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
 			},
 			VarName: &node.Identifier{
 				Value: "var",
@@ -321,6 +347,11 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
+				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
 				},
 			},
 			VarName: &node.Identifier{
@@ -594,7 +625,16 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 		},
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "var"},
+			},
 			&scalar.EncapsedStringPart{Value: " world"},
 		},
 	})
@@ -619,7 +659,16 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 		Label: "LBL",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "var"},
+			},
 			&scalar.EncapsedStringPart{Value: " world"},
 		},
 	})
@@ -696,13 +745,27 @@ func TestPrinterPrintAssign(t *testing.T) {
 				TokenName: meta.EqualToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Expression: &expr.Variable{
 			Meta: meta.Collection{
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
+				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -734,13 +797,27 @@ func TestPrinterPrintReference(t *testing.T) {
 				TokenName: meta.AmpersandToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Expression: &expr.Variable{
 			Meta: meta.Collection{
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
+				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -767,13 +844,27 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 				TokenName: meta.AndEqualToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Expression: &expr.Variable{
 			Meta: meta.Collection{
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
 					TokenName: meta.VariableToken,
+				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -800,8 +891,26 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 				TokenName: meta.OrEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a |=$b`
@@ -824,8 +933,26 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 				TokenName: meta.XorEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ^=$b`
@@ -848,8 +975,26 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 				TokenName: meta.ConcatEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a .=$b`
@@ -872,8 +1017,26 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 				TokenName: meta.DivEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a /=$b`
@@ -896,8 +1059,26 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 				TokenName: meta.MinusEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a -=$b`
@@ -920,8 +1101,26 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 				TokenName: meta.ModEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a %=$b`
@@ -944,8 +1143,26 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 				TokenName: meta.MulEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a *=$b`
@@ -968,8 +1185,26 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 				TokenName: meta.PlusEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a +=$b`
@@ -992,8 +1227,26 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 				TokenName: meta.PowEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a **=$b`
@@ -1016,8 +1269,26 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 				TokenName: meta.SlEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a <<=$b`
@@ -1040,8 +1311,26 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 				TokenName: meta.SrEqualToken,
 			},
 		},
-		Variable:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expression: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expression: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a >>=$b`
@@ -1066,8 +1355,26 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 				TokenName: meta.AmpersandToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a &$b`
@@ -1090,8 +1397,26 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 				TokenName: meta.VerticalBarToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a |$b`
@@ -1114,8 +1439,26 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 				TokenName: meta.CaretToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ^$b`
@@ -1138,8 +1481,26 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 				TokenName: meta.BooleanAndToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a &&$b`
@@ -1162,8 +1523,26 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 				TokenName: meta.BooleanOrToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ||$b`
@@ -1186,8 +1565,26 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 				TokenName: meta.CoalesceToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ??$b`
@@ -1210,8 +1607,26 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 				TokenName: meta.DotToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a .$b`
@@ -1234,8 +1649,26 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 				TokenName: meta.SlashToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a /$b`
@@ -1258,8 +1691,26 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 				TokenName: meta.IsEqualToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ==$b`
@@ -1282,8 +1733,26 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 				TokenName: meta.IsGreaterOrEqualToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a >=$b`
@@ -1306,8 +1775,26 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 				TokenName: meta.GreaterToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a >$b`
@@ -1330,8 +1817,26 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 				TokenName: meta.IsIdenticalToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ===$b`
@@ -1354,8 +1859,26 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 				TokenName: meta.LogicalAndToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a and$b`
@@ -1378,8 +1901,26 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 				TokenName: meta.LogicalOrToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a or$b`
@@ -1402,8 +1943,26 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 				TokenName: meta.LogicalXorToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a xor$b`
@@ -1426,8 +1985,26 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 				TokenName: meta.MinusToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a -$b`
@@ -1450,8 +2027,26 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 				TokenName: meta.PercentToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a %$b`
@@ -1474,8 +2069,26 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 				TokenName: meta.AsteriskToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a *$b`
@@ -1503,8 +2116,26 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 				TokenName: meta.IsNotEqualToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a !=$b`
@@ -1527,8 +2158,26 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 				TokenName: meta.IsNotIdenticalToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a !==$b`
@@ -1551,8 +2200,26 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 				TokenName: meta.PlusToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a +$b`
@@ -1575,8 +2242,26 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 				TokenName: meta.PowToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a **$b`
@@ -1599,8 +2284,26 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 				TokenName: meta.SlToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a <<$b`
@@ -1623,8 +2326,26 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 				TokenName: meta.SrToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a >>$b`
@@ -1647,8 +2368,26 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 				TokenName: meta.IsSmallerOrEqualToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a <=$b`
@@ -1671,8 +2410,26 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 				TokenName: meta.LessToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a <$b`
@@ -1695,8 +2452,26 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 				TokenName: meta.SpaceshipToken,
 			},
 		},
-		Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Left: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Right: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a <=>$b`
@@ -1726,7 +2501,16 @@ func TestPrinterPrintArray(t *testing.T) {
 				TokenName: meta.ArrayCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (array)$var`
@@ -1754,7 +2538,16 @@ func TestPrinterPrintBool(t *testing.T) {
 				TokenName: meta.BoolCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (bool)$var`
@@ -1782,7 +2575,16 @@ func TestPrinterPrintDouble(t *testing.T) {
 				TokenName: meta.DoubleCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (float)$var`
@@ -1810,7 +2612,16 @@ func TestPrinterPrintInt(t *testing.T) {
 				TokenName: meta.IntCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (int)$var`
@@ -1838,7 +2649,16 @@ func TestPrinterPrintObject(t *testing.T) {
 				TokenName: meta.ObjectCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (object)$var`
@@ -1866,7 +2686,16 @@ func TestPrinterPrintString(t *testing.T) {
 				TokenName: meta.StringCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (string)$var`
@@ -1894,7 +2723,16 @@ func TestPrinterPrintUnset(t *testing.T) {
 				TokenName: meta.UnsetCastToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` (unset)$var`
@@ -1934,8 +2772,17 @@ func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 				TokenName: meta.CloseSquareBracket,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		Dim:      &scalar.Lnumber{Value: "1"},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
+		Dim: &scalar.Lnumber{Value: "1"},
 	})
 
 	expected := `$var [1 ]`
@@ -1966,6 +2813,11 @@ func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 					Value:     " ",
 					TokenName: meta.VariableToken,
 				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
 			},
 			VarName: &node.Identifier{Value: "world"},
 		},
@@ -1984,7 +2836,16 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.ArrayItem{
-		Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "world"}}},
+		Val: &expr.Reference{Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "world"},
+		}},
 	})
 
 	expected := `&$world`
@@ -2020,14 +2881,41 @@ func TestPrinterPrintExprArray(t *testing.T) {
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Key: &scalar.String{Value: "'Hello'"},
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "world"},
+				},
 			},
 			&expr.ArrayItem{
 				Key: &scalar.Lnumber{Value: "2"},
-				Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
+				Val: &expr.Reference{Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				}},
 			},
 			&expr.ArrayItem{
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				},
 			},
 		},
 	})
@@ -2052,7 +2940,16 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 				TokenName: meta.TildeToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` ~$var`
@@ -2075,7 +2972,16 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 				TokenName: meta.ExclamationMarkToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` !$var`
@@ -2098,7 +3004,16 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
 		},
-		Class: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Class: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		ConstantName: &node.Identifier{
 			Meta: meta.Collection{
 				&meta.Data{
@@ -2131,7 +3046,16 @@ func TestPrinterPrintExprClone(t *testing.T) {
 				TokenName: meta.CloneToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` clone$var`
@@ -2165,8 +3089,26 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 			},
 		},
 		Uses: []node.Node{
-			&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}}},
-			&expr.Variable{VarName: &node.Identifier{Value: "bar"}},
+			&expr.Reference{Variable: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "foo"},
+			}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "bar"},
+			},
 		},
 	})
 
@@ -2226,13 +3168,40 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 			&node.Parameter{
 				ByRef:    true,
 				Variadic: false,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				},
 			},
 		},
 		ClosureUse: &expr.ClosureUse{
 			Uses: []node.Node{
-				&expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-				&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				&expr.Reference{Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				}},
+				&expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 			},
 		},
 		ReturnType: &name.FullyQualified{
@@ -2246,7 +3215,16 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 			Parts: []node.Node{&name.NamePart{Value: "Foo"}},
 		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 	})
 
@@ -2296,7 +3274,16 @@ func TestPrinterPrintEmpty(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` empty ($var )`
@@ -2319,7 +3306,16 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 				TokenName: meta.AtToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` @$var`
@@ -2352,7 +3348,16 @@ func TestPrinterPrintEval(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` eval ($var )`
@@ -2387,6 +3392,13 @@ func TestPrinterPrintExit(t *testing.T) {
 		},
 		Die: false,
 		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
 			VarName: &node.Identifier{Value: "var"},
 		},
 	})
@@ -2423,6 +3435,13 @@ func TestPrinterPrintDie(t *testing.T) {
 			},
 		},
 		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
 			VarName: &node.Identifier{Value: "var"},
 		},
 	})
@@ -2440,7 +3459,16 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&expr.FunctionCall{
-		Function: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Function: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		ArgumentList: &node.ArgumentList{
 			Meta: meta.Collection{
 				&meta.Data{
@@ -2457,14 +3485,41 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 			Arguments: []node.Node{
 				&node.Argument{
 					IsReference: true,
-					Expr:        &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "a"},
+					},
 				},
 				&node.Argument{
 					Variadic: true,
-					Expr:     &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "c"},
+					},
 				},
 			},
 		},
@@ -2535,7 +3590,16 @@ func TestPrinterPrintInstanceOf(t *testing.T) {
 				TokenName: meta.InstanceofToken,
 			},
 		},
-		Expr:  &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		Class: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 	})
 
@@ -2570,8 +3634,26 @@ func TestPrinterPrintIsset(t *testing.T) {
 			},
 		},
 		Variables: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 	})
 
@@ -2607,16 +3689,43 @@ func TestPrinterPrintList(t *testing.T) {
 		},
 		Items: []node.Node{
 			&expr.ArrayItem{
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 			},
 			&expr.ArrayItem{
 				Val: &expr.List{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							Val: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Val: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "b"},
+							},
 						},
 						&expr.ArrayItem{
-							Val: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+							Val: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "c"},
+							},
 						},
 					},
 				},
@@ -2644,8 +3753,17 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 				TokenName: meta.ObjectOperatorToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
-		Method:   &node.Identifier{Value: "bar"},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "foo"},
+		},
+		Method: &node.Identifier{Value: "bar"},
 		ArgumentList: &node.ArgumentList{
 			Meta: meta.Collection{
 				&meta.Data{
@@ -2661,10 +3779,28 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 			},
 			Arguments: []node.Node{
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "a"},
+					},
 				},
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 			},
 		},
@@ -2719,10 +3855,28 @@ func TestPrinterPrintNew(t *testing.T) {
 			},
 			Arguments: []node.Node{
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "a"},
+					},
 				},
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 			},
 		},
@@ -2748,7 +3902,16 @@ func TestPrinterPrintPostDec(t *testing.T) {
 				TokenName: meta.DecToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := `$var --`
@@ -2771,7 +3934,16 @@ func TestPrinterPrintPostInc(t *testing.T) {
 				TokenName: meta.IncToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := `$var ++`
@@ -2794,7 +3966,16 @@ func TestPrinterPrintPreDec(t *testing.T) {
 				TokenName: meta.DecToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` --$var`
@@ -2817,7 +3998,16 @@ func TestPrinterPrintPreInc(t *testing.T) {
 				TokenName: meta.IncToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` ++$var`
@@ -2847,6 +4037,11 @@ func TestPrinterPrintPrint(t *testing.T) {
 					Value:     " ",
 					TokenName: meta.NodeStart,
 				},
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
 			},
 			VarName: &node.Identifier{Value: "var"},
 		},
@@ -2872,7 +4067,16 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 				TokenName: meta.ObjectOperatorToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "foo"},
+		},
 		Property: &node.Identifier{Value: "bar"},
 	})
 
@@ -2896,7 +4100,16 @@ func TestPrinterPrintExprReference(t *testing.T) {
 				TokenName: meta.AmpersandToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "foo"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "foo"},
+		},
 	})
 
 	expected := ` &$foo`
@@ -2967,7 +4180,16 @@ func TestPrinterPrintShellExec(t *testing.T) {
 		},
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
-			&expr.Variable{VarName: &node.Identifier{Value: "world"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "world"},
+			},
 			&scalar.EncapsedStringPart{Value: "!"},
 		},
 	})
@@ -3000,14 +4222,41 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 		Items: []node.Node{
 			&expr.ArrayItem{
 				Key: &scalar.String{Value: "'Hello'"},
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "world"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "world"},
+				},
 			},
 			&expr.ArrayItem{
 				Key: &scalar.Lnumber{Value: "2"},
-				Val: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}}},
+				Val: &expr.Reference{Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				}},
 			},
 			&expr.ArrayItem{
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				},
 			},
 		},
 	})
@@ -3039,16 +4288,43 @@ func TestPrinterPrintShortList(t *testing.T) {
 		},
 		Items: []node.Node{
 			&expr.ArrayItem{
-				Val: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Val: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 			},
 			&expr.ArrayItem{
 				Val: &expr.List{
 					Items: []node.Node{
 						&expr.ArrayItem{
-							Val: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+							Val: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "b"},
+							},
 						},
 						&expr.ArrayItem{
-							Val: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+							Val: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "c"},
+							},
 						},
 					},
 				},
@@ -3093,10 +4369,28 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 			},
 			Arguments: []node.Node{
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "a"},
+					},
 				},
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 			},
 		},
@@ -3122,8 +4416,17 @@ func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 				TokenName: meta.PaamayimNekudotayimToken,
 			},
 		},
-		Class:    &node.Identifier{Value: "Foo"},
-		Property: &expr.Variable{VarName: &node.Identifier{Value: "bar"}},
+		Class: &node.Identifier{Value: "Foo"},
+		Property: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "bar"},
+		},
 	})
 
 	expected := `Foo ::$bar`
@@ -3151,8 +4454,26 @@ func TestPrinterPrintTernary(t *testing.T) {
 				TokenName: meta.ColonToken,
 			},
 		},
-		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+		Condition: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		IfFalse: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
 	})
 
 	expected := `$a ? :$b`
@@ -3180,9 +4501,36 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 				TokenName: meta.ColonToken,
 			},
 		},
-		Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-		IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+		Condition: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		IfTrue: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "b"},
+		},
+		IfFalse: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "c"},
+		},
 	})
 
 	expected := `$a ?$b :$c`
@@ -3205,7 +4553,16 @@ func TestPrinterPrintUnaryMinus(t *testing.T) {
 				TokenName: meta.MinusToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` -$var`
@@ -3228,7 +4585,16 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 				TokenName: meta.PlusToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` +$var`
@@ -3250,8 +4616,20 @@ func TestPrinterPrintVariable(t *testing.T) {
 				Value:     " ",
 				TokenName: meta.DollarToken,
 			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     "$",
+				TokenName: meta.DollarToken,
+			},
 		},
 		VarName: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
 			VarName: &node.Identifier{Value: "var"},
 		},
 	})
@@ -3276,7 +4654,16 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 				TokenName: meta.YieldFromToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` yield from$var`
@@ -3299,7 +4686,16 @@ func TestPrinterPrintYield(t *testing.T) {
 				TokenName: meta.YieldToken,
 			},
 		},
-		Value: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Value: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` yield$var`
@@ -3327,8 +4723,26 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 				TokenName: meta.DoubleArrowToken,
 			},
 		},
-		Key:   &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-		Value: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Key: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "k"},
+		},
+		Value: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` yield$k =>$var`
@@ -3368,10 +4782,28 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 				TokenName: meta.ColonToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				}},
 			},
 		},
 	})
@@ -3411,7 +4843,16 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 				TokenName: meta.ColonToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{},
 	})
 
@@ -3442,7 +4883,16 @@ func TestPrinterPrintAltElse(t *testing.T) {
 		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				}},
 			},
 		},
 	})
@@ -3536,17 +4986,53 @@ func TestPrinterPrintAltFor(t *testing.T) {
 			},
 		},
 		Init: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
 		},
 		Cond: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 		Loop: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "c"},
+			},
 		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "d"},
+				}},
 			},
 		},
 	})
@@ -3611,12 +5097,48 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "var"}},
-		Key:      &expr.Variable{VarName: &node.Identifier{Value: "key"}},
-		Variable: &expr.Reference{Variable: &expr.Variable{VarName: &node.Identifier{Value: "val"}}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
+		Key: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "key"},
+		},
+		Variable: &expr.Reference{Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "val"},
+		}},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "d"},
+				}},
 			},
 		},
 	})
@@ -3671,30 +5193,84 @@ func TestPrinterPrintAltIf(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "d"},
+				}},
 			},
 		},
 		ElseIf: []node.Node{
 			&stmt.AltElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Cond: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "b"},
+						}},
 					},
 				},
 			},
 			&stmt.AltElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				Cond: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "c"},
+				},
 				Stmt: &stmt.StmtList{},
 			},
 		},
 		Else: &stmt.AltElse{
 			Stmt: &stmt.StmtList{
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					&stmt.Expression{Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					}},
 				},
 			},
 		},
@@ -3750,19 +5326,46 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		CaseList: &stmt.CaseList{
 			Cases: []node.Node{
 				&stmt.Case{
 					Cond: &scalar.String{Value: "'a'"},
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "a"},
+						}},
 					},
 				},
 				&stmt.Case{
 					Cond: &scalar.String{Value: "'b'"},
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "b"},
+						}},
 					},
 				},
 			},
@@ -3819,10 +5422,28 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				}},
 			},
 		},
 	})
@@ -3889,9 +5510,27 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 				TokenName: meta.CaseToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 	})
 
@@ -3915,7 +5554,16 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 				TokenName: meta.CaseToken,
 			},
 		},
-		Cond:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmts: []node.Node{},
 	})
 
@@ -3963,9 +5611,27 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 			&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
 			&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "e"},
+		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 	})
 
@@ -4011,12 +5677,30 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 			&node.Parameter{
 				ByRef:        true,
 				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
-				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
 			},
 			&node.Parameter{
 				Variadic: true,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 			},
 		},
 		ReturnType: &name.Name{
@@ -4043,7 +5727,16 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 				},
 			},
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				}},
 			},
 		},
 	})
@@ -4090,12 +5783,30 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 			&node.Parameter{
 				ByRef:        true,
 				VariableType: &node.Nullable{Expr: &name.Name{Parts: []node.Node{&name.NamePart{Value: "int"}}}},
-				Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 				DefaultValue: &expr.ConstFetch{Constant: &name.Name{Parts: []node.Node{&name.NamePart{Value: "null"}}}},
 			},
 			&node.Parameter{
 				Variadic: true,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 			},
 		},
 		ReturnType: &name.Name{
@@ -4225,10 +5936,28 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 			},
 			Arguments: []node.Node{
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "a"},
+					},
 				},
 				&node.Argument{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 			},
 		},
@@ -4544,7 +6273,16 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 			},
 		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 	})
 
@@ -4618,7 +6356,16 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 		},
 		Cond: &scalar.Lnumber{Value: "1"},
 		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
 		},
 	})
 
@@ -4670,7 +6417,16 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 		Cond: &scalar.Lnumber{Value: "1"},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				}},
 			},
 		},
 	})
@@ -4711,8 +6467,26 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 			},
 		},
 		Exprs: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 	})
 
@@ -4746,7 +6520,16 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Nop{},
@@ -4784,7 +6567,16 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},
 	})
 
@@ -4801,7 +6593,16 @@ func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.ElseIf{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.Nop{},
 	})
 
@@ -4896,7 +6697,16 @@ func TestPrinterPrintExpression(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 	})
 
 	expected := `$a `
@@ -4975,16 +6785,70 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 			},
 		},
 		Init: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 		Cond: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "c"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "d"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "c"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "d"},
+			},
 		},
 		Loop: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "e"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "f"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "e"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "f"},
+			},
 		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
@@ -5033,9 +6897,36 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Expr:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Key:      &expr.Variable{VarName: &node.Identifier{Value: "k"}},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "v"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Key: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "k"},
+		},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "v"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Nop{},
@@ -5094,7 +6985,16 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 			&node.Parameter{
 				ByRef:    true,
 				Variadic: false,
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "var"},
+				},
 			},
 		},
 		ReturnType: &name.FullyQualified{
@@ -5143,8 +7043,26 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 			},
 		},
 		Vars: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 	})
 
@@ -5311,29 +7229,83 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.Expression{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 		ElseIf: []node.Node{
 			&stmt.ElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+				Cond: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "c"},
+				},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
 						&stmt.Expression{
-							Expr: &expr.Variable{VarName: &node.Identifier{Value: "d"}},
+							Expr: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "d"},
+							},
 						},
 					},
 				},
 			},
 			&stmt.ElseIf{
-				Cond: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Cond: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "e"},
+				},
 				Stmt: &stmt.Nop{},
 			},
 		},
 		Else: &stmt.Else{
 			Stmt: &stmt.Expression{
-				Expr: &expr.Variable{VarName: &node.Identifier{Value: "f"}},
+				Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "f"},
+				},
 			},
 		},
 	})
@@ -5368,11 +7340,29 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
 				&stmt.Expression{
-					Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+					Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					},
 				},
 			},
 		},
@@ -5391,7 +7381,16 @@ func TestPrinterPrintIfNop(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.If{
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.Nop{},
 	})
 
@@ -5469,7 +7468,16 @@ func TestPrinterPrintInterface(t *testing.T) {
 				Params:     []node.Node{},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "a"},
+						}},
 					},
 				},
 			},
@@ -5564,7 +7572,16 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 		},
 		NamespaceName: &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 	})
 
@@ -5621,10 +7638,28 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 		},
 		Properties: []node.Node{
 			&stmt.Property{
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 			},
 			&stmt.Property{
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 			},
 		},
 	})
@@ -5649,8 +7684,17 @@ func TestPrinterPrintProperty(t *testing.T) {
 				TokenName: meta.EqualToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expr:     &scalar.Lnumber{Value: "1"},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
 	expected := `$a =1`
@@ -5706,8 +7750,17 @@ func TestPrinterPrintStaticVar(t *testing.T) {
 				TokenName: meta.EqualToken,
 			},
 		},
-		Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		Expr:     &scalar.Lnumber{Value: "1"},
+		Variable: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
+		Expr: &scalar.Lnumber{Value: "1"},
 	})
 
 	expected := `$a =1`
@@ -5742,10 +7795,28 @@ func TestPrinterPrintStatic(t *testing.T) {
 		},
 		Vars: []node.Node{
 			&stmt.StaticVar{
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				},
 			},
 			&stmt.StaticVar{
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "b"},
+				},
 			},
 		},
 	})
@@ -5776,8 +7847,26 @@ func TestPrinterPrintStmtList(t *testing.T) {
 			},
 		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			}},
 		},
 	})
 
@@ -5807,13 +7896,40 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 			},
 		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 			&stmt.StmtList{
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					&stmt.Expression{Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					}},
 					&stmt.StmtList{
 						Stmts: []node.Node{
-							&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "c"}}},
+							&stmt.Expression{Expr: &expr.Variable{
+								Meta: meta.Collection{
+									&meta.Data{
+										Type:      meta.TokenType,
+										Value:     "$",
+										TokenName: meta.DollarToken,
+									},
+								},
+								VarName: &node.Identifier{Value: "c"},
+							}},
 						},
 					},
 				},
@@ -5851,7 +7967,16 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 		CaseList: &stmt.CaseList{
 			Meta: meta.Collection{
 				&meta.Data{
@@ -5869,13 +7994,31 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 				&stmt.Case{
 					Cond: &scalar.String{Value: "'a'"},
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "a"},
+						}},
 					},
 				},
 				&stmt.Case{
 					Cond: &scalar.String{Value: "'b'"},
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "b"},
+						}},
 					},
 				},
 			},
@@ -5912,7 +8055,16 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 				TokenName: meta.SemiColonToken,
 			},
 		},
-		Expr: &expr.Variable{VarName: &node.Identifier{Value: "var"}},
+		Expr: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "var"},
+		},
 	})
 
 	expected := ` throw$var `
@@ -6160,7 +8312,16 @@ func TestPrinterPrintTrait(t *testing.T) {
 				Params:     []node.Node{},
 				Stmt: &stmt.StmtList{
 					Stmts: []node.Node{
-						&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+						&stmt.Expression{Expr: &expr.Variable{
+							Meta: meta.Collection{
+								&meta.Data{
+									Type:      meta.TokenType,
+									Value:     "$",
+									TokenName: meta.DollarToken,
+								},
+							},
+							VarName: &node.Identifier{Value: "a"},
+						}},
 					},
 				},
 			},
@@ -6198,7 +8359,16 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 			},
 		},
 		Stmts: []node.Node{
-			&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+			&stmt.Expression{Expr: &expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			}},
 		},
 		Catches: []node.Node{
 			&stmt.Catch{
@@ -6206,9 +8376,27 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 					&name.Name{Parts: []node.Node{&name.NamePart{Value: "Exception"}}},
 					&name.FullyQualified{Parts: []node.Node{&name.NamePart{Value: "RuntimeException"}}},
 				},
-				Variable: &expr.Variable{VarName: &node.Identifier{Value: "e"}},
+				Variable: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "e"},
+				},
 				Stmts: []node.Node{
-					&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "b"}}},
+					&stmt.Expression{Expr: &expr.Variable{
+						Meta: meta.Collection{
+							&meta.Data{
+								Type:      meta.TokenType,
+								Value:     "$",
+								TokenName: meta.DollarToken,
+							},
+						},
+						VarName: &node.Identifier{Value: "b"},
+					}},
 				},
 			},
 		},
@@ -6260,8 +8448,26 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 			},
 		},
 		Vars: []node.Node{
-			&expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			&expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "a"},
+			},
+			&expr.Variable{
+				Meta: meta.Collection{
+					&meta.Data{
+						Type:      meta.TokenType,
+						Value:     "$",
+						TokenName: meta.DollarToken,
+					},
+				},
+				VarName: &node.Identifier{Value: "b"},
+			},
 		},
 	})
 
@@ -6362,10 +8568,28 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 				TokenName: meta.CloseParenthesisToken,
 			},
 		},
-		Cond: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+		Cond: &expr.Variable{
+			Meta: meta.Collection{
+				&meta.Data{
+					Type:      meta.TokenType,
+					Value:     "$",
+					TokenName: meta.DollarToken,
+				},
+			},
+			VarName: &node.Identifier{Value: "a"},
+		},
 		Stmt: &stmt.StmtList{
 			Stmts: []node.Node{
-				&stmt.Expression{Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}}},
+				&stmt.Expression{Expr: &expr.Variable{
+					Meta: meta.Collection{
+						&meta.Data{
+							Type:      meta.TokenType,
+							Value:     "$",
+							TokenName: meta.DollarToken,
+						},
+					},
+					VarName: &node.Identifier{Value: "a"},
+				}},
 			},
 		},
 	})

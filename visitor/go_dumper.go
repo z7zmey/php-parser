@@ -78,19 +78,23 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 			d.depth++
 
 			printIndent(d.Writer, d.depth)
-			fmt.Fprint(d.Writer, "Position: &position.Position{\n")
-			d.depth++
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.Position.StartLine)
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.Position.EndLine)
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.Position.StartPos)
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.Position.EndPos)
-			d.depth--
-			printIndent(d.Writer, d.depth)
-			fmt.Fprint(d.Writer, "},\n")
+			if m.Position != nil {
+				fmt.Fprint(d.Writer, "Position: &position.Position{\n")
+				d.depth++
+				printIndent(d.Writer, d.depth)
+				fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.Position.StartLine)
+				printIndent(d.Writer, d.depth)
+				fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.Position.EndLine)
+				printIndent(d.Writer, d.depth)
+				fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.Position.StartPos)
+				printIndent(d.Writer, d.depth)
+				fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.Position.EndPos)
+				d.depth--
+				printIndent(d.Writer, d.depth)
+				fmt.Fprint(d.Writer, "},\n")
+			} else {
+				fmt.Fprint(d.Writer, "Position: nil,\n")
+			}
 
 			printIndent(d.Writer, d.depth)
 			fmt.Fprintf(d.Writer, "Value: %q,\n", m.String())

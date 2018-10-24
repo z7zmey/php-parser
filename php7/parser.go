@@ -113,6 +113,14 @@ func (l *Parser) appendMetaToken(n node.Node, t *scanner.Token, tn meta.TokenNam
 	n.GetMeta().Push(m)
 }
 
+func (l *Parser) appendMeta(n node.Node, m *meta.Data, tn meta.TokenName) {
+	if !l.Lexer.WithMeta {
+		return
+	}
+
+	n.GetMeta().Push(m)
+}
+
 func (l *Parser) prependMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
 	if !l.Lexer.WithMeta {
 		return

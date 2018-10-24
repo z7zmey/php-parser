@@ -1791,10 +1791,6 @@ func (p *Printer) printExprVariable(n node.Node) {
 	p.printMeta(nn, meta.DollarOpenCurlyBracesToken)
 	p.printMeta(nn, meta.DollarToken)
 
-	if !nn.StringVar {
-		io.WriteString(p.w, "$")
-	}
-
 	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	p.Print(nn.VarName)
 	p.printMeta(nn, meta.DollarCloseCurlyBracesToken)

@@ -453,7 +453,6 @@ func TestDollarOpenCurlyBraces(t *testing.T) {
 								StartPos:  10,
 								EndPos:    15,
 							},
-							StringVar: true,
 							VarName: &node.Identifier{
 								Position: &position.Position{
 									StartLine: 1,
@@ -530,7 +529,6 @@ func TestDollarOpenCurlyBracesDimNumber(t *testing.T) {
 									StartPos:  12,
 									EndPos:    14,
 								},
-								StringVar: true,
 								VarName: &node.Identifier{
 									Position: &position.Position{
 										StartLine: 1,

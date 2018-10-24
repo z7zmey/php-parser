@@ -9,10 +9,9 @@ import (
 
 // Variable node
 type Variable struct {
-	Meta      meta.Collection
-	StringVar bool
-	Position  *position.Position
-	VarName   node.Node
+	Meta     meta.Collection
+	Position *position.Position
+	VarName  node.Node
 }
 
 // NewVariable node constructor
@@ -38,9 +37,7 @@ func (n *Variable) GetMeta() *meta.Collection {
 
 // Attributes returns node attributes as map
 func (n *Variable) Attributes() map[string]interface{} {
-	return map[string]interface{}{
-		"StringVar": n.StringVar,
-	}
+	return nil
 }
 
 // SetVarName reset var name
