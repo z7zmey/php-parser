@@ -63,21 +63,26 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 
 	if mm := n.GetMeta(); len(*mm) > 0 {
 		printIndent(d.Writer, d.depth)
-		fmt.Fprint(d.Writer, "Meta: []meta.Meta{\n")
+		fmt.Fprint(d.Writer, "Meta: meta.Collection{\n")
 		d.depth++
 		for _, m := range *mm {
 			printIndent(d.Writer, d.depth)
-			switch m.Type {
-			case meta.CommentType:
-				fmt.Fprint(d.Writer, "&meta.CommentType{\n")
-			case meta.WhiteSpaceType:
-				fmt.Fprint(d.Writer, "&meta.WhiteSpaceType{\n")
-			case meta.TokenType:
-				fmt.Fprint(d.Writer, "&meta.TokenType{\n")
-			}
+			fmt.Fprint(d.Writer, "&meta.Data{\n")
 			d.depth++
 
 			printIndent(d.Writer, d.depth)
+
+			switch m.Type {
+			case meta.CommentType:
+				fmt.Fprint(d.Writer, "Type: meta.CommentType,\n")
+			case meta.WhiteSpaceType:
+				fmt.Fprint(d.Writer, "Type: meta.WhiteSpaceType,\n")
+			case meta.TokenType:
+				fmt.Fprint(d.Writer, "Type: meta.TokenType,\n")
+			}
+
+			printIndent(d.Writer, d.depth)
+
 			if m.Position != nil {
 				fmt.Fprint(d.Writer, "Position: &position.Position{\n")
 				d.depth++
@@ -99,7 +104,7 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 			printIndent(d.Writer, d.depth)
 			fmt.Fprintf(d.Writer, "Value: %q,\n", m.String())
 			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "TokenName: %d,\n", m.TokenName)
+			fmt.Fprintf(d.Writer, "TokenName: meta.%s,\n", m.TokenName.String())
 
 			d.depth--
 			printIndent(d.Writer, d.depth)

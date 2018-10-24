@@ -17,7 +17,6 @@ const (
 	DnumberToken
 	StringToken
 	StringVarnameToken
-	VariableToken
 	NumStringToken
 	InlineHTMLToken
 	EncapsedAndWhitespaceToken
@@ -66,8 +65,6 @@ const (
 	ArrayToken
 	CallableToken
 	StartHeredocToken
-	DollarOpenCurlyBracesToken
-	DollarCloseCurlyBracesToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
 	NamespaceToken
@@ -150,7 +147,6 @@ const (
 	ExclamationMarkToken  // '!'
 	TildeToken            // '~'
 	AtToken               // '@'
-	DollarToken           // '$'
 	CommaToken            // ','
 	VerticalBarToken      // '|'
 	EqualToken            // '='

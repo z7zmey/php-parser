@@ -1318,6 +1318,7 @@ func TestParseAndPrintPhp5While(t *testing.T) {
 
 func TestParseAndPrintPhp5Parentheses(t *testing.T) {
 	src := `<?php
+	global $ { $b } ;
 	$b = (($a));
 	$b = ( ($a) );
 	$b = ( ( $a ) );

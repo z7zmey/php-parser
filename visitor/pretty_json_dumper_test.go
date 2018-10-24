@@ -264,12 +264,12 @@ func ExamplePrettyJsonDumper() {
 	//                       {
 	//                         "type": "*meta.WhiteSpaceType",
 	//                         "value": " ",
-	//                         "tokenName": "VariableToken"
+	//                         "tokenName": "NodeStart"
 	//                       },
 	//                       {
 	//                         "type": "*meta.TokenType",
 	//                         "value": "$",
-	//                         "tokenName": "DollarToken"
+	//                         "tokenName": "NodeStart"
 	//                       }
 	//                     ],
 	//                     "VarName": {
@@ -371,32 +371,32 @@ func ExamplePrettyJsonDumper() {
 	//                         {
 	//                           "type": "*meta.WhiteSpaceType",
 	//                           "value": "\n\t\t\t\t\t",
-	//                           "tokenName": "VariableToken"
+	//                           "tokenName": "NodeStart"
 	//                         },
 	//                         {
 	//                           "type": "*meta.CommentType",
 	//                           "value": "// some comment\n",
-	//                           "tokenName": "VariableToken"
+	//                           "tokenName": "NodeStart"
 	//                         },
 	//                         {
 	//                           "type": "*meta.WhiteSpaceType",
 	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "VariableToken"
+	//                           "tokenName": "NodeStart"
 	//                         },
 	//                         {
 	//                           "type": "*meta.CommentType",
 	//                           "value": "// second comment\n",
-	//                           "tokenName": "VariableToken"
+	//                           "tokenName": "NodeStart"
 	//                         },
 	//                         {
 	//                           "type": "*meta.WhiteSpaceType",
 	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "VariableToken"
+	//                           "tokenName": "NodeStart"
 	//                         },
 	//                         {
 	//                           "type": "*meta.TokenType",
 	//                           "value": "$",
-	//                           "tokenName": "DollarToken"
+	//                           "tokenName": "NodeStart"
 	//                         }
 	//                       ],
 	//                       "VarName": {

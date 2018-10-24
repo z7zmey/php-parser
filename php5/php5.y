@@ -1387,8 +1387,8 @@ catch_statement:
                 // save comments
                 $1.Meta.SetTokenName(meta.CatchToken).AppendTo(catch.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(catch.GetMeta())
-                $4.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(catch.GetMeta())
                 $6.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo(catch.GetMeta())
                 $8.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo(catch.GetMeta())
@@ -1465,8 +1465,8 @@ additional_catch:
                 // save comments
                 $1.Meta.SetTokenName(meta.CatchToken).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 $8.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
@@ -2256,8 +2256,8 @@ parameter:
                 if $3 != nil {
                     $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
                 }
-                $4.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2287,8 +2287,8 @@ parameter:
                 if $3 != nil {
                     $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
                 }
-                $4.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2474,8 +2474,8 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2487,9 +2487,9 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.DollarToken)
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2501,10 +2501,12 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.DollarToken)
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $2, meta.NodeStart)
+                $4.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $4, meta.NodeEnd)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2526,8 +2528,8 @@ static_var_list:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2545,8 +2547,8 @@ static_var_list:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $4.Meta.SetTokenName(meta.EqualToken).AppendTo(staticVar.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2564,8 +2566,8 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2582,8 +2584,8 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.EqualToken).AppendTo(staticVar.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3070,8 +3072,8 @@ class_variable_declaration:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3089,8 +3091,8 @@ class_variable_declaration:
                 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $4.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3108,8 +3110,8 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3126,8 +3128,8 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -4460,8 +4462,8 @@ lexical_var_list:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4480,8 +4482,8 @@ lexical_var_list:
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
                 $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
-                $4.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4496,8 +4498,8 @@ lexical_var_list:
                 variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4515,8 +4517,8 @@ lexical_var_list:
                 
                 // save comments
                 $1.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
-                $2.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5619,7 +5621,7 @@ scalar:
 
                 // save comments
                 $1.Meta.SetTokenName(meta.IdentifierToken).AppendTo(name.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6186,8 +6188,8 @@ compound_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6199,12 +6201,12 @@ compound_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.DollarToken)
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenCurlyBracesToken)
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseCurlyBracesToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $2, meta.NodeStart)
+                $4.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $4, meta.NodeEnd)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6330,8 +6332,8 @@ simple_indirect_reference:
                 n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarToken).AppendTo(n.GetMeta())
-                yylex.(*Parser).appendMetaToken(n, $1, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(n.GetMeta())
+                yylex.(*Parser).appendMetaToken(n, $1, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6348,8 +6350,8 @@ simple_indirect_reference:
                 n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.DollarToken).AppendTo(n.GetMeta())
-                yylex.(*Parser).appendMetaToken(n, $2, meta.DollarToken)
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(n.GetMeta())
+                yylex.(*Parser).appendMetaToken(n, $2, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6610,8 +6612,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6627,8 +6629,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
                 $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
@@ -6650,8 +6652,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.IdentifierToken).AppendTo(fetch.GetMeta())
 
@@ -6667,10 +6669,10 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarOpenCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.DollarOpenCurlyBracesToken)
-                $3.Meta.SetTokenName(meta.DollarCloseCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.DollarCloseCurlyBracesToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6686,11 +6688,11 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.DollarOpenCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.DollarOpenCurlyBracesToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.IdentifierToken).AppendTo(name.GetMeta())
-                $3.Meta.SetTokenName(meta.DollarCloseCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.DollarCloseCurlyBracesToken)
+                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6723,8 +6725,8 @@ encaps_var:
                 $$ = $2;
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $1.Meta.SetTokenName(meta.NodeStart).PrependTo($$.GetMeta())
+                yylex.(*Parser).prependMetaToken($$, $1, meta.NodeStart)
                 $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
 
@@ -6772,8 +6774,8 @@ encaps_var_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.VariableToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.DollarToken}, meta.DollarToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

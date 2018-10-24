@@ -109,8 +109,8 @@ func ExampleDumper() {
 	// |                     [*expr.Variable]
 	// |                       "Position": Pos{Line: 5-5 Pos: 79-82}
 	// |                       "Meta":
-	// |                         " " before "VariableToken"
-	// |                         "$" before "DollarToken"
+	// |                         " " before "NodeStart"
+	// |                         "$" before "NodeStart"
 	// |                       "VarName":
 	// |                         [*node.Identifier]
 	// |                           "Position": Pos{Line: 5-5 Pos: 79-82}
@@ -143,10 +143,10 @@ func ExampleDumper() {
 	// |                         [*expr.Variable]
 	// |                           "Position": Pos{Line: 8-8 Pos: 124-127}
 	// |                           "Meta":
-	// |                             "\n\t\t\t\t\t" before "VariableToken"
-	// |                             "// some comment\n" before "VariableToken"
-	// |                             "\t\t\t\t\t" before "VariableToken"
-	// |                             "$" before "DollarToken"
+	// |                             "\n\t\t\t\t\t" before "NodeStart"
+	// |                             "// some comment\n" before "NodeStart"
+	// |                             "\t\t\t\t\t" before "NodeStart"
+	// |                             "$" before "NodeStart"
 	// |                           "VarName":
 	// |                             [*node.Identifier]
 	// |                               "Position": Pos{Line: 8-8 Pos: 124-127}

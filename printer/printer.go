@@ -654,14 +654,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 	io.WriteString(p.w, "\n")
 
 	for _, part := range nn.Parts {
-		switch part.(type) {
-		case *scalar.EncapsedStringPart:
-			p.Print(part)
-		default:
-			p.printMeta(part, meta.DollarOpenCurlyBracesToken)
-			p.Print(part)
-			p.printMeta(part, meta.DollarCloseCurlyBracesToken)
-		}
+		p.Print(part)
 	}
 
 	io.WriteString(p.w, "\n")
@@ -1673,14 +1666,7 @@ func (p *Printer) printExprShellExec(n node.Node) {
 	p.printMeta(nn, meta.BackquoteToken)
 	io.WriteString(p.w, "`")
 	for _, part := range nn.Parts {
-		switch part.(type) {
-		case *scalar.EncapsedStringPart:
-			p.Print(part)
-		default:
-			p.printMeta(part, meta.DollarOpenCurlyBracesToken)
-			p.Print(part)
-			p.printMeta(part, meta.DollarCloseCurlyBracesToken)
-		}
+		p.Print(part)
 	}
 	io.WriteString(p.w, "`")
 
@@ -1787,14 +1773,8 @@ func (p *Printer) printExprUnaryPlus(n node.Node) {
 func (p *Printer) printExprVariable(n node.Node) {
 	nn := n.(*expr.Variable)
 	p.printMeta(nn, meta.NodeStart)
-	p.printMeta(nn, meta.VariableToken)
-	p.printMeta(nn, meta.DollarOpenCurlyBracesToken)
-	p.printMeta(nn, meta.DollarToken)
 
-	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	p.Print(nn.VarName)
-	p.printMeta(nn, meta.DollarCloseCurlyBracesToken)
-	p.printMeta(nn, meta.CloseCurlyBracesToken)
 
 	p.printMeta(nn, meta.NodeEnd)
 }

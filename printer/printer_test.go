@@ -96,7 +96,7 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{
@@ -183,7 +183,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -254,12 +254,12 @@ func TestPrinterPrintNullable(t *testing.T) {
 					&meta.Data{
 						Type:      meta.WhiteSpaceType,
 						Value:     " ",
-						TokenName: meta.VariableToken,
+						TokenName: meta.NodeStart,
 					},
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{
@@ -306,12 +306,12 @@ func TestPrinterPrintArgument(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{
@@ -346,12 +346,12 @@ func TestPrinterPrintArgumentByRef(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{
@@ -630,7 +630,7 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "var"},
@@ -664,7 +664,7 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "var"},
@@ -750,7 +750,7 @@ func TestPrinterPrintAssign(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -760,12 +760,12 @@ func TestPrinterPrintAssign(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -802,7 +802,7 @@ func TestPrinterPrintReference(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -812,12 +812,12 @@ func TestPrinterPrintReference(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -849,7 +849,7 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -859,12 +859,12 @@ func TestPrinterPrintAssignBitwiseAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -896,7 +896,7 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -906,7 +906,7 @@ func TestPrinterPrintAssignBitwiseOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -938,7 +938,7 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -948,7 +948,7 @@ func TestPrinterPrintAssignBitwiseXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -980,7 +980,7 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -990,7 +990,7 @@ func TestPrinterPrintAssignConcat(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1022,7 +1022,7 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1032,7 +1032,7 @@ func TestPrinterPrintAssignDiv(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1064,7 +1064,7 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1074,7 +1074,7 @@ func TestPrinterPrintAssignMinus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1106,7 +1106,7 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1116,7 +1116,7 @@ func TestPrinterPrintAssignMod(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1148,7 +1148,7 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1158,7 +1158,7 @@ func TestPrinterPrintAssignMul(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1190,7 +1190,7 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1200,7 +1200,7 @@ func TestPrinterPrintAssignPlus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1232,7 +1232,7 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1242,7 +1242,7 @@ func TestPrinterPrintAssignPow(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1274,7 +1274,7 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1284,7 +1284,7 @@ func TestPrinterPrintAssignShiftLeft(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1316,7 +1316,7 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1326,7 +1326,7 @@ func TestPrinterPrintAssignShiftRight(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1360,7 +1360,7 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1370,7 +1370,7 @@ func TestPrinterPrintBinaryBitwiseAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1402,7 +1402,7 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1412,7 +1412,7 @@ func TestPrinterPrintBinaryBitwiseOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1444,7 +1444,7 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1454,7 +1454,7 @@ func TestPrinterPrintBinaryBitwiseXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1486,7 +1486,7 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1496,7 +1496,7 @@ func TestPrinterPrintBinaryBooleanAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1528,7 +1528,7 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1538,7 +1538,7 @@ func TestPrinterPrintBinaryBooleanOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1570,7 +1570,7 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1580,7 +1580,7 @@ func TestPrinterPrintBinaryCoalesce(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1612,7 +1612,7 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1622,7 +1622,7 @@ func TestPrinterPrintBinaryConcat(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1654,7 +1654,7 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1664,7 +1664,7 @@ func TestPrinterPrintBinaryDiv(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1696,7 +1696,7 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1706,7 +1706,7 @@ func TestPrinterPrintBinaryEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1738,7 +1738,7 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1748,7 +1748,7 @@ func TestPrinterPrintBinaryGreaterOrEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1780,7 +1780,7 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1790,7 +1790,7 @@ func TestPrinterPrintBinaryGreater(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1822,7 +1822,7 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1832,7 +1832,7 @@ func TestPrinterPrintBinaryIdentical(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1864,7 +1864,7 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1874,7 +1874,7 @@ func TestPrinterPrintBinaryLogicalAnd(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1906,7 +1906,7 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1916,7 +1916,7 @@ func TestPrinterPrintBinaryLogicalOr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1948,7 +1948,7 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -1958,7 +1958,7 @@ func TestPrinterPrintBinaryLogicalXor(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -1990,7 +1990,7 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2000,7 +2000,7 @@ func TestPrinterPrintBinaryMinus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2032,7 +2032,7 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2042,7 +2042,7 @@ func TestPrinterPrintBinaryMod(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2074,7 +2074,7 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2084,7 +2084,7 @@ func TestPrinterPrintBinaryMul(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2121,7 +2121,7 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2131,7 +2131,7 @@ func TestPrinterPrintBinaryNotEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2163,7 +2163,7 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2173,7 +2173,7 @@ func TestPrinterPrintBinaryNotIdentical(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2205,7 +2205,7 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2215,7 +2215,7 @@ func TestPrinterPrintBinaryPlus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2247,7 +2247,7 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2257,7 +2257,7 @@ func TestPrinterPrintBinaryPow(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2289,7 +2289,7 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2299,7 +2299,7 @@ func TestPrinterPrintBinaryShiftLeft(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2331,7 +2331,7 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2341,7 +2341,7 @@ func TestPrinterPrintBinaryShiftRight(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2373,7 +2373,7 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2383,7 +2383,7 @@ func TestPrinterPrintBinarySmallerOrEqual(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2415,7 +2415,7 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2425,7 +2425,7 @@ func TestPrinterPrintBinarySmaller(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2457,7 +2457,7 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -2467,7 +2467,7 @@ func TestPrinterPrintBinarySpaceship(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -2506,7 +2506,7 @@ func TestPrinterPrintArray(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2543,7 +2543,7 @@ func TestPrinterPrintBool(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2580,7 +2580,7 @@ func TestPrinterPrintDouble(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2617,7 +2617,7 @@ func TestPrinterPrintInt(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2654,7 +2654,7 @@ func TestPrinterPrintObject(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2691,7 +2691,7 @@ func TestPrinterPrintString(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2728,7 +2728,7 @@ func TestPrinterPrintUnset(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2777,7 +2777,7 @@ func TestPrinterPrintExprArrayDimFetch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2811,12 +2811,12 @@ func TestPrinterPrintExprArrayItemWithKey(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.VariableToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "world"},
@@ -2841,7 +2841,7 @@ func TestPrinterPrintExprArrayItem(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "world"},
@@ -2886,7 +2886,7 @@ func TestPrinterPrintExprArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "world"},
@@ -2899,7 +2899,7 @@ func TestPrinterPrintExprArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -2911,7 +2911,7 @@ func TestPrinterPrintExprArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -2945,7 +2945,7 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -2977,7 +2977,7 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3009,7 +3009,7 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3051,7 +3051,7 @@ func TestPrinterPrintExprClone(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3094,7 +3094,7 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "foo"},
@@ -3104,7 +3104,7 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "bar"},
@@ -3173,7 +3173,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -3187,7 +3187,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -3197,7 +3197,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -3220,7 +3220,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -3279,7 +3279,7 @@ func TestPrinterPrintEmpty(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3311,7 +3311,7 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3353,7 +3353,7 @@ func TestPrinterPrintEval(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3396,7 +3396,7 @@ func TestPrinterPrintExit(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3439,7 +3439,7 @@ func TestPrinterPrintDie(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3464,7 +3464,7 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3490,7 +3490,7 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "a"},
@@ -3503,7 +3503,7 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -3515,7 +3515,7 @@ func TestPrinterPrintFunctionCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "c"},
@@ -3595,7 +3595,7 @@ func TestPrinterPrintInstanceOf(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3639,7 +3639,7 @@ func TestPrinterPrintIsset(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -3649,7 +3649,7 @@ func TestPrinterPrintIsset(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -3694,7 +3694,7 @@ func TestPrinterPrintList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -3709,7 +3709,7 @@ func TestPrinterPrintList(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "b"},
@@ -3721,7 +3721,7 @@ func TestPrinterPrintList(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "c"},
@@ -3758,7 +3758,7 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "foo"},
@@ -3784,7 +3784,7 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "a"},
@@ -3796,7 +3796,7 @@ func TestPrinterPrintMethodCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -3860,7 +3860,7 @@ func TestPrinterPrintNew(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "a"},
@@ -3872,7 +3872,7 @@ func TestPrinterPrintNew(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -3907,7 +3907,7 @@ func TestPrinterPrintPostDec(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3939,7 +3939,7 @@ func TestPrinterPrintPostInc(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -3971,7 +3971,7 @@ func TestPrinterPrintPreDec(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4003,7 +4003,7 @@ func TestPrinterPrintPreInc(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4040,7 +4040,7 @@ func TestPrinterPrintPrint(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4072,7 +4072,7 @@ func TestPrinterPrintPropertyFetch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "foo"},
@@ -4105,7 +4105,7 @@ func TestPrinterPrintExprReference(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "foo"},
@@ -4185,7 +4185,7 @@ func TestPrinterPrintShellExec(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "world"},
@@ -4227,7 +4227,7 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "world"},
@@ -4240,7 +4240,7 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -4252,7 +4252,7 @@ func TestPrinterPrintExprShortArray(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -4293,7 +4293,7 @@ func TestPrinterPrintShortList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -4308,7 +4308,7 @@ func TestPrinterPrintShortList(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "b"},
@@ -4320,7 +4320,7 @@ func TestPrinterPrintShortList(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "c"},
@@ -4374,7 +4374,7 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "a"},
@@ -4386,7 +4386,7 @@ func TestPrinterPrintStaticCall(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -4422,7 +4422,7 @@ func TestPrinterPrintStaticPropertyFetch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "bar"},
@@ -4459,7 +4459,7 @@ func TestPrinterPrintTernary(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -4469,7 +4469,7 @@ func TestPrinterPrintTernary(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -4506,7 +4506,7 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -4516,7 +4516,7 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "b"},
@@ -4526,7 +4526,7 @@ func TestPrinterPrintTernaryFull(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "c"},
@@ -4558,7 +4558,7 @@ func TestPrinterPrintUnaryMinus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4590,7 +4590,7 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4614,12 +4614,12 @@ func TestPrinterPrintVariable(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DollarToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "$",
-				TokenName: meta.DollarToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		VarName: &expr.Variable{
@@ -4627,7 +4627,7 @@ func TestPrinterPrintVariable(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4659,7 +4659,7 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4691,7 +4691,7 @@ func TestPrinterPrintYield(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4728,7 +4728,7 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "k"},
@@ -4738,7 +4738,7 @@ func TestPrinterPrintYieldFull(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -4787,7 +4787,7 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -4799,7 +4799,7 @@ func TestPrinterPrintAltElseIf(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -4848,7 +4848,7 @@ func TestPrinterPrintAltElseIfEmpty(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -4888,7 +4888,7 @@ func TestPrinterPrintAltElse(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -4991,7 +4991,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -5003,7 +5003,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -5015,7 +5015,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "c"},
@@ -5028,7 +5028,7 @@ func TestPrinterPrintAltFor(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "d"},
@@ -5102,7 +5102,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -5112,7 +5112,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "key"},
@@ -5122,7 +5122,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "val"},
@@ -5134,7 +5134,7 @@ func TestPrinterPrintAltForeach(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "d"},
@@ -5198,7 +5198,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -5210,7 +5210,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "d"},
@@ -5224,7 +5224,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -5236,7 +5236,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "b"},
@@ -5250,7 +5250,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "c"},
@@ -5266,7 +5266,7 @@ func TestPrinterPrintAltIf(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -5331,7 +5331,7 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -5346,7 +5346,7 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "a"},
@@ -5361,7 +5361,7 @@ func TestPrinterPrintStmtAltSwitch(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "b"},
@@ -5427,7 +5427,7 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -5439,7 +5439,7 @@ func TestPrinterPrintAltWhile(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -5515,7 +5515,7 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -5526,7 +5526,7 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -5559,7 +5559,7 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -5616,7 +5616,7 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "e"},
@@ -5627,7 +5627,7 @@ func TestPrinterPrintStmtCatch(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -5682,7 +5682,7 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -5696,7 +5696,7 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -5732,7 +5732,7 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -5788,7 +5788,7 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -5802,7 +5802,7 @@ func TestPrinterPrintStmtAbstractClassMethod(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -5941,7 +5941,7 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "a"},
@@ -5953,7 +5953,7 @@ func TestPrinterPrintStmtAnonymousClass(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -6278,7 +6278,7 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -6361,7 +6361,7 @@ func TestPrinterPrintStmtDo_Expression(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -6422,7 +6422,7 @@ func TestPrinterPrintStmtDo_StmtList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -6472,7 +6472,7 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -6482,7 +6482,7 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -6525,7 +6525,7 @@ func TestPrinterPrintStmtElseIfStmts(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -6572,7 +6572,7 @@ func TestPrinterPrintStmtElseIfExpr(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -6598,7 +6598,7 @@ func TestPrinterPrintStmtElseIfNop(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -6702,7 +6702,7 @@ func TestPrinterPrintExpression(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -6790,7 +6790,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -6800,7 +6800,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -6812,7 +6812,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "c"},
@@ -6822,7 +6822,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "d"},
@@ -6834,7 +6834,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "e"},
@@ -6844,7 +6844,7 @@ func TestPrinterPrintStmtFor(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "f"},
@@ -6902,7 +6902,7 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -6912,7 +6912,7 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "k"},
@@ -6922,7 +6922,7 @@ func TestPrinterPrintStmtForeach(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "v"},
@@ -6990,7 +6990,7 @@ func TestPrinterPrintStmtFunction(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "var"},
@@ -7048,7 +7048,7 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -7058,7 +7058,7 @@ func TestPrinterPrintStmtGlobal(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -7234,7 +7234,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -7245,7 +7245,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -7258,7 +7258,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "c"},
@@ -7271,7 +7271,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "d"},
@@ -7286,7 +7286,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "e"},
@@ -7301,7 +7301,7 @@ func TestPrinterPrintIfExpression(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "f"},
@@ -7345,7 +7345,7 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -7358,7 +7358,7 @@ func TestPrinterPrintIfStmtList(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -7386,7 +7386,7 @@ func TestPrinterPrintIfNop(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -7473,7 +7473,7 @@ func TestPrinterPrintInterface(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "a"},
@@ -7577,7 +7577,7 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -7643,7 +7643,7 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -7655,7 +7655,7 @@ func TestPrinterPrintPropertyList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -7689,7 +7689,7 @@ func TestPrinterPrintProperty(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -7755,7 +7755,7 @@ func TestPrinterPrintStaticVar(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -7800,7 +7800,7 @@ func TestPrinterPrintStatic(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
@@ -7812,7 +7812,7 @@ func TestPrinterPrintStatic(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "b"},
@@ -7852,7 +7852,7 @@ func TestPrinterPrintStmtList(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -7862,7 +7862,7 @@ func TestPrinterPrintStmtList(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -7901,7 +7901,7 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -7913,7 +7913,7 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -7925,7 +7925,7 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 									&meta.Data{
 										Type:      meta.TokenType,
 										Value:     "$",
-										TokenName: meta.DollarToken,
+										TokenName: meta.NodeStart,
 									},
 								},
 								VarName: &node.Identifier{Value: "c"},
@@ -7972,7 +7972,7 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -7999,7 +7999,7 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "a"},
@@ -8014,7 +8014,7 @@ func TestPrinterPrintStmtSwitch(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "b"},
@@ -8060,7 +8060,7 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "var"},
@@ -8317,7 +8317,7 @@ func TestPrinterPrintTrait(t *testing.T) {
 								&meta.Data{
 									Type:      meta.TokenType,
 									Value:     "$",
-									TokenName: meta.DollarToken,
+									TokenName: meta.NodeStart,
 								},
 							},
 							VarName: &node.Identifier{Value: "a"},
@@ -8364,7 +8364,7 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -8381,7 +8381,7 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "e"},
@@ -8392,7 +8392,7 @@ func TestPrinterPrintStmtTry(t *testing.T) {
 							&meta.Data{
 								Type:      meta.TokenType,
 								Value:     "$",
-								TokenName: meta.DollarToken,
+								TokenName: meta.NodeStart,
 							},
 						},
 						VarName: &node.Identifier{Value: "b"},
@@ -8453,7 +8453,7 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "a"},
@@ -8463,7 +8463,7 @@ func TestPrinterPrintStmtUnset(t *testing.T) {
 					&meta.Data{
 						Type:      meta.TokenType,
 						Value:     "$",
-						TokenName: meta.DollarToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				VarName: &node.Identifier{Value: "b"},
@@ -8573,7 +8573,7 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "$",
-					TokenName: meta.DollarToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},
@@ -8585,7 +8585,7 @@ func TestPrinterPrintWhileStmtList(t *testing.T) {
 						&meta.Data{
 							Type:      meta.TokenType,
 							Value:     "$",
-							TokenName: meta.DollarToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					VarName: &node.Identifier{Value: "a"},
