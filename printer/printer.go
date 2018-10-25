@@ -578,13 +578,10 @@ func (p *Printer) printScalarEncapsed(n node.Node) {
 	nn := n.(*scalar.Encapsed)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.DoubleQuoteToken)
 	io.WriteString(p.w, "\"")
-
 	for _, part := range nn.Parts {
 		p.Print(part)
 	}
-
 	io.WriteString(p.w, "\"")
 
 	p.printMeta(nn, meta.NodeEnd)

@@ -122,7 +122,6 @@ const (
 	IsGreaterOrEqualToken
 	HaltCompilerToken
 	CaseSeparatorToken    // ';' or ':'
-	DoubleQuoteToken      // '"'
 	BackquoteToken        // '`'
 	OpenCurlyBracesToken  // '{'
 	CloseCurlyBracesToken // '}'

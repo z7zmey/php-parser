@@ -620,7 +620,7 @@ func TestPrinterPrintScalarEncapsed(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DoubleQuoteToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Parts: []node.Node{
