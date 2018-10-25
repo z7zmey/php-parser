@@ -465,8 +465,6 @@ func (p *Printer) printNodeNullable(n node.Node) {
 	nn := n.(*node.Nullable)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.QuestionMarkToken)
-
 	io.WriteString(p.w, "?")
 	p.Print(nn.Expr)
 

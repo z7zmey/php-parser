@@ -217,7 +217,7 @@ func TestPrinterPrintNullable(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.QuestionMarkToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &node.Parameter{
