@@ -69,7 +69,6 @@ const (
 	LogicalAndToken
 	InstanceofToken
 	NewAnchor
-	CloneToken
 	ElseifToken
 	ElseToken
 	EndifToken

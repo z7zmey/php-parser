@@ -1220,11 +1220,8 @@ func (p *Printer) printExprClassConstFetch(n node.Node) {
 func (p *Printer) printExprClone(n node.Node) {
 	nn := n.(*expr.Clone)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.CloneToken)
 	io.WriteString(p.w, "clone")
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

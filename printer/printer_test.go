@@ -3043,7 +3043,7 @@ func TestPrinterPrintExprClone(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.CloneToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
