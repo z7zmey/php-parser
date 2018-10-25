@@ -162,7 +162,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.NsSeparatorToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			Parts: []node.Node{
@@ -240,7 +240,7 @@ func TestPrinterPrintNullable(t *testing.T) {
 					&meta.Data{
 						Type:      meta.WhiteSpaceType,
 						Value:     " ",
-						TokenName: meta.NsSeparatorToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				Parts: []node.Node{
@@ -464,7 +464,7 @@ func TestPrinterPrintNameFullyQualified(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NsSeparatorToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Parts: []node.Node{
@@ -494,7 +494,7 @@ func TestPrinterPrintNameRelative(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NamespaceToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -7524,7 +7524,7 @@ func TestPrinterPrintNamespace(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NamespaceToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -7557,7 +7557,7 @@ func TestPrinterPrintNamespaceWithStmts(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NamespaceToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

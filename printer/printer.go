@@ -522,8 +522,6 @@ func (p *Printer) printNameFullyQualified(n node.Node) {
 	nn := n.(*name.FullyQualified)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.NsSeparatorToken)
-
 	for _, part := range nn.Parts {
 		io.WriteString(p.w, "\\")
 		p.Print(part)
@@ -535,13 +533,10 @@ func (p *Printer) printNameFullyQualified(n node.Node) {
 func (p *Printer) printNameRelative(n node.Node) {
 	nn := n.(*name.Relative)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.NamespaceToken)
 	io.WriteString(p.w, "namespace")
-	for k, part := range nn.Parts {
-		if k == 0 {
-			p.printMeta(nn, meta.NsSeparatorToken)
-		}
+	p.printMeta(nn, meta.NsSeparatorToken)
+
+	for _, part := range nn.Parts {
 		io.WriteString(p.w, "\\")
 		p.Print(part)
 	}
@@ -2515,8 +2510,6 @@ func (p *Printer) printStmtLabel(n node.Node) {
 func (p *Printer) printStmtNamespace(n node.Node) {
 	nn := n.(*stmt.Namespace)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(n, meta.NamespaceToken)
 	io.WriteString(p.w, "namespace")
 
 	if nn.NamespaceName != nil {

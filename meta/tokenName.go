@@ -64,7 +64,6 @@ const (
 	StartHeredocToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
-	NamespaceToken
 	UseLeadingNsSeparatorToken
 	NsSeparatorToken
 	EllipsisToken

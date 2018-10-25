@@ -43,8 +43,8 @@ func ExampleDumper() {
 	// |     [*stmt.Namespace]
 	// |       "Position": Pos{Line: 3-11 Pos: 10-143}
 	// |       "Meta":
-	// |         "<?php" before "NamespaceToken"
-	// |         "\n\n\t\t" before "NamespaceToken"
+	// |         "<?php" before "NodeStart"
+	// |         "\n\n\t\t" before "NodeStart"
 	// |         " " before "OpenCurlyBracesToken"
 	// |         "\n\t\t" before "CloseCurlyBracesToken"
 	// |       "NamespaceName":

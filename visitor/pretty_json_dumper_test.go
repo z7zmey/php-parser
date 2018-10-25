@@ -67,12 +67,12 @@ func ExamplePrettyJsonDumper() {
 	//         {
 	//           "type": "*meta.TokenType",
 	//           "value": "<?php",
-	//           "tokenName": "NamespaceToken"
+	//           "tokenName": "NodeStart"
 	//         },
 	//         {
 	//           "type": "*meta.WhiteSpaceType",
 	//           "value": "\n\n\t\t",
-	//           "tokenName": "NamespaceToken"
+	//           "tokenName": "NodeStart"
 	//         },
 	//         {
 	//           "type": "*meta.WhiteSpaceType",

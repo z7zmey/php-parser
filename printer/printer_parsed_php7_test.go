@@ -113,7 +113,7 @@ func TestParseAndPrintParameter(t *testing.T) {
 	function & foo (
 		? int $a , & $b = null
 		, \ Foo ...$c
-	) : namespace \ Bar {
+	) : namespace  \ Bar \  baz \ quuz{
 		;
 	}`
 

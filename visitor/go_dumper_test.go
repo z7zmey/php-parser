@@ -60,7 +60,7 @@ func ExampleGoDumper() {
 	// 						EndPos: 5,
 	// 					},
 	// 					Value: "<?php",
-	// 					TokenName: meta.NamespaceToken,
+	// 					TokenName: meta.NodeStart,
 	// 				},
 	// 				&meta.Data{
 	// 					Type: meta.WhiteSpaceType,
@@ -71,7 +71,7 @@ func ExampleGoDumper() {
 	// 						EndPos: 9,
 	// 					},
 	// 					Value: "\n\n\t\t",
-	// 					TokenName: meta.NamespaceToken,
+	// 					TokenName: meta.NodeStart,
 	// 				},
 	// 				&meta.Data{
 	// 					Type: meta.WhiteSpaceType,
