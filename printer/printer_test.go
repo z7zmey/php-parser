@@ -2969,7 +2969,7 @@ func TestPrinterPrintExprBooleanNot(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ExclamationMarkToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{

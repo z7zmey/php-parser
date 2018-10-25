@@ -1200,10 +1200,8 @@ func (p *Printer) printExprBitwiseNot(n node.Node) {
 func (p *Printer) printExprBooleanNot(n node.Node) {
 	nn := n.(*expr.BooleanNot)
 	p.printMeta(nn, meta.NodeStart)
-	p.printMeta(nn, meta.ExclamationMarkToken)
 	io.WriteString(p.w, "!")
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

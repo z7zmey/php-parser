@@ -125,7 +125,6 @@ const (
 	AmpersandToken        // '&'
 	MinusToken            // '-'
 	PlusToken             // '+'
-	ExclamationMarkToken  // '!'
 	AtToken               // '@'
 	CommaToken            // ','
 	VerticalBarToken      // '|'
