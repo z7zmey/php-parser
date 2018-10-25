@@ -1243,7 +1243,6 @@ func (p *Printer) printExprClosure(n node.Node) {
 	p.printMeta(nn, meta.NodeStart)
 
 	if nn.Static {
-		p.printMeta(nn, meta.StaticToken)
 		io.WriteString(p.w, "static")
 	}
 
@@ -2535,12 +2534,9 @@ func (p *Printer) printStmtStaticVar(n node.Node) {
 func (p *Printer) printStmtStatic(n node.Node) {
 	nn := n.(*stmt.Static)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.StaticToken)
 	io.WriteString(p.w, "static")
 	p.joinPrint(",", nn.Vars)
 	p.printMeta(nn, meta.SemiColonToken)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

@@ -1113,7 +1113,7 @@ statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.StaticToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
 
@@ -3998,7 +3998,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $11))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 if $2 != nil {
                     $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
                 }
@@ -4017,7 +4017,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $12))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.StaticToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
                 if $3 != nil {
                     $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())

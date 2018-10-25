@@ -73,7 +73,6 @@ const (
 	EndifToken
 	PrintToken
 	YieldToken
-	StaticToken
 	AbstractToken
 	FinalToken
 	PrivateToken

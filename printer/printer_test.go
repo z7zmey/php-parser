@@ -3129,7 +3129,7 @@ func TestPrinterPrintExprClosure(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StaticToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -7780,7 +7780,7 @@ func TestPrinterPrintStatic(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StaticToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
