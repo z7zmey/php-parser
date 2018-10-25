@@ -608,11 +608,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 func (p *Printer) printScalarMagicConstant(n node.Node) {
 	nn := n.(*scalar.MagicConstant)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.MagicConstantToken)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

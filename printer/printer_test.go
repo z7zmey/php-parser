@@ -720,7 +720,7 @@ func TestPrinterPrintScalarMagicConstant(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.MagicConstantToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "__DIR__",
