@@ -3075,7 +3075,7 @@ func TestPrinterPrintExprClosureUse(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UseToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -7116,7 +7116,7 @@ func TestPrinterPrintStmtGroupUse(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UseToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -8202,7 +8202,7 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Traits: []node.Node{
@@ -8242,7 +8242,7 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Traits: []node.Node{
@@ -8488,7 +8488,7 @@ func TestPrinterPrintStmtUseList(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UseToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

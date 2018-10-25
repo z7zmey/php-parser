@@ -41,7 +41,6 @@ const (
 	CatchToken
 	FinallyToken
 	ThrowToken
-	UseToken
 	InsteadofToken
 	GlobalToken
 	VarToken

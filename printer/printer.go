@@ -1228,8 +1228,6 @@ func (p *Printer) printExprClone(n node.Node) {
 func (p *Printer) printExprClosureUse(n node.Node) {
 	nn := n.(*expr.ClosureUse)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.UseToken)
 	io.WriteString(p.w, "use")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2342,7 +2340,6 @@ func (p *Printer) printStmtGroupUse(n node.Node) {
 	nn := n.(*stmt.GroupUse)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.UseToken)
 	io.WriteString(p.w, "use")
 
 	if nn.UseType != nil {
@@ -2647,7 +2644,6 @@ func (p *Printer) printStmtTraitUse(n node.Node) {
 	nn := n.(*stmt.TraitUse)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.UseToken)
 	io.WriteString(p.w, "use")
 	p.joinPrint(",", nn.Traits)
 
@@ -2725,7 +2721,6 @@ func (p *Printer) printStmtUseList(n node.Node) {
 	nn := n.(*stmt.UseList)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.UseToken)
 	io.WriteString(p.w, "use")
 
 	if nn.UseType != nil {
