@@ -436,8 +436,6 @@ func (p *Printer) printNodeParameter(n node.Node) {
 	nn := n.(*node.Parameter)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.UnknownToken)
-
 	if nn.VariableType != nil {
 		p.Print(nn.VariableType)
 	}
@@ -478,8 +476,6 @@ func (p *Printer) printNodeNullable(n node.Node) {
 func (p *Printer) printNodeArgument(n node.Node) {
 	nn := n.(*node.Argument)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.UnknownToken)
 
 	if nn.IsReference {
 		p.printMeta(nn, meta.AmpersandToken)

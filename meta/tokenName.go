@@ -5,8 +5,7 @@ type TokenName int
 
 //go:generate stringer -type=TokenName -output ./tokenName_string.go
 const (
-	UnknownToken TokenName = iota
-	NodeStart
+	NodeStart TokenName = iota
 	NodeEnd
 	MagicConstantToken
 	IncludeToken
