@@ -600,7 +600,7 @@ func TestPrinterPrintScalarEncapsedStringPart(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.EncapsedAndWhitespaceToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "hello world",

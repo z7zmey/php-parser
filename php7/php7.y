@@ -5101,7 +5101,7 @@ encaps_list:
                 encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.EncapsedAndWhitespaceToken).AppendTo(encapsed.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(encapsed.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5120,7 +5120,7 @@ encaps_list:
                 encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.EncapsedAndWhitespaceToken).AppendTo(encapsed.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(encapsed.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

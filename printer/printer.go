@@ -563,20 +563,14 @@ func (p *Printer) printScalarDNumber(n node.Node) {
 func (p *Printer) printScalarString(n node.Node) {
 	nn := n.(*scalar.String)
 	p.printMeta(nn, meta.NodeStart)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarEncapsedStringPart(n node.Node) {
 	nn := n.(*scalar.EncapsedStringPart)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.EncapsedAndWhitespaceToken)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

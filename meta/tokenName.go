@@ -15,7 +15,6 @@ const (
 	StringVarnameToken
 	NumStringToken
 	InlineHTMLToken
-	EncapsedAndWhitespaceToken
 	EchoToken
 	DoToken
 	WhileToken
