@@ -128,7 +128,6 @@ const (
 	IsSmallerOrEqualToken
 	IsGreaterOrEqualToken
 	HaltCompilerToken
-	IdentifierToken
 	CaseSeparatorToken    // ';' or ':'
 	DoubleQuoteToken      // '"'
 	BackquoteToken        // '`'

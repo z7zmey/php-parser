@@ -153,7 +153,7 @@ func ExamplePrettyJsonDumper() {
 	//               {
 	//                 "type": "*meta.WhiteSpaceType",
 	//                 "value": " ",
-	//                 "tokenName": "IdentifierToken"
+	//                 "tokenName": "NodeStart"
 	//               }
 	//             ],
 	//             "Value": "Bar"
@@ -188,7 +188,7 @@ func ExamplePrettyJsonDumper() {
 	//                   {
 	//                     "type": "*meta.WhiteSpaceType",
 	//                     "value": " ",
-	//                     "tokenName": "IdentifierToken"
+	//                     "tokenName": "NodeStart"
 	//                   }
 	//                 ],
 	//                 "Value": "FunctionName"
@@ -206,7 +206,7 @@ func ExamplePrettyJsonDumper() {
 	//                     {
 	//                       "type": "*meta.WhiteSpaceType",
 	//                       "value": "\n\t\t\t\t",
-	//                       "tokenName": "IdentifierToken"
+	//                       "tokenName": "NodeStart"
 	//                     }
 	//                   ],
 	//                   "Value": "public"
@@ -456,7 +456,7 @@ func ExamplePrettyJsonDumper() {
 	//               {
 	//                 "type": "*meta.WhiteSpaceType",
 	//                 "value": " ",
-	//                 "tokenName": "IdentifierToken"
+	//                 "tokenName": "NodeStart"
 	//               }
 	//             ],
 	//             "Value": "foo"

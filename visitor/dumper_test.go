@@ -69,7 +69,7 @@ func ExampleDumper() {
 	// |             [*node.Identifier]
 	// |               "Position": Pos{Line: 4-4 Pos: 35-37}
 	// |               "Meta":
-	// |                 " " before "IdentifierToken"
+	// |                 " " before "NodeStart"
 	// |               "Value": "Bar"
 	// |           "Stmts":
 	// |             [*stmt.ClassMethod]
@@ -82,13 +82,13 @@ func ExampleDumper() {
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 61-72}
 	// |                   "Meta":
-	// |                     " " before "IdentifierToken"
+	// |                     " " before "NodeStart"
 	// |                   "Value": "FunctionName"
 	// |               "Modifiers":
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 45-50}
 	// |                   "Meta":
-	// |                     "\n\t\t\t\t" before "IdentifierToken"
+	// |                     "\n\t\t\t\t" before "NodeStart"
 	// |                   "Value": "public"
 	// |               "Params":
 	// |                 [*node.Parameter]

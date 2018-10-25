@@ -421,36 +421,14 @@ func (p *Printer) printNode(n node.Node) {
 func (p *Printer) printNodeRoot(n node.Node) {
 	nn := n.(*node.Root)
 	p.printMeta(nn, meta.NodeStart)
-
-	// var stmts []node.Node
-
-	// if len(nn.Stmts) > 0 {
-	// 	firstStmt := nn.Stmts[0]
-	// 	stmts = nn.Stmts[1:]
-
-	// 	switch fs := firstStmt.(type) {
-	// 	case *stmt.InlineHtml:
-	// 		io.WriteString(p.w, fs.Value)
-	// 		io.WriteString(p.w, "<?php")
-	// 	default:
-	// 		io.WriteString(p.w, "<?php")
-	// 		p.Print(fs)
-	// 	}
-	// }
-	// p.printNodes(stmts)
 	p.printNodes(nn.Stmts)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printNodeIdentifier(n node.Node) {
 	nn := n.(*node.Identifier)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.IdentifierToken)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

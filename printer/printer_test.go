@@ -126,7 +126,7 @@ func TestPrinterPrintIdentifier(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     "  ",
-				TokenName: meta.IdentifierToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "test",
@@ -3019,7 +3019,7 @@ func TestPrinterPrintExprClassConstFetch(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.IdentifierToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			Value: "CONST",
