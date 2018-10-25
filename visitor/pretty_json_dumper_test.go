@@ -106,7 +106,7 @@ func ExamplePrettyJsonDumper() {
 	//               {
 	//                 "type": "*meta.WhiteSpaceType",
 	//                 "value": " ",
-	//                 "tokenName": "StringToken"
+	//                 "tokenName": "NodeStart"
 	//               }
 	//             ],
 	//             "Value": "Foo"
@@ -313,7 +313,7 @@ func ExamplePrettyJsonDumper() {
 	//                             {
 	//                               "type": "*meta.WhiteSpaceType",
 	//                               "value": " ",
-	//                               "tokenName": "StringToken"
+	//                               "tokenName": "NodeStart"
 	//                             }
 	//                           ],
 	//                           "Value": "null"

@@ -496,8 +496,6 @@ func (p *Printer) printNameNamePart(n node.Node) {
 	nn := n.(*name.NamePart)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.StringToken)
-
 	io.WriteString(p.w, nn.Value)
 
 	p.printMeta(nn, meta.NsSeparatorToken)
@@ -508,8 +506,6 @@ func (p *Printer) printNameNamePart(n node.Node) {
 func (p *Printer) printNameName(n node.Node) {
 	nn := n.(*name.Name)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.StringToken)
 
 	for k, part := range nn.Parts {
 		if k > 0 {
@@ -580,8 +576,6 @@ func (p *Printer) printScalarDNumber(n node.Node) {
 func (p *Printer) printScalarString(n node.Node) {
 	nn := n.(*scalar.String)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.ConstantEncapsedStringToken)
 
 	io.WriteString(p.w, nn.Value)
 

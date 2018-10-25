@@ -54,7 +54,7 @@ func ExampleDumper() {
 	// |             [*name.NamePart]
 	// |               "Position": Pos{Line: 3-3 Pos: 20-22}
 	// |               "Meta":
-	// |                 " " before "StringToken"
+	// |                 " " before "NodeStart"
 	// |               "Value": "Foo"
 	// |       "Stmts":
 	// |         [*stmt.Class]
@@ -126,7 +126,7 @@ func ExampleDumper() {
 	// |                             [*name.NamePart]
 	// |                               "Position": Pos{Line: 5-5 Pos: 86-89}
 	// |                               "Meta":
-	// |                                 " " before "StringToken"
+	// |                                 " " before "NodeStart"
 	// |                               "Value": "null"
 	// |               "Stmt":
 	// |                 [*stmt.StmtList]

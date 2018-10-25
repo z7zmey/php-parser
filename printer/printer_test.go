@@ -171,7 +171,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 						&meta.Data{
 							Type:      meta.WhiteSpaceType,
 							Value:     " ",
-							TokenName: meta.StringToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					Value: "Foo",
@@ -193,7 +193,7 @@ func TestPrinterPrintParameter(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.ConstantEncapsedStringToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 			Value: "'default'",
@@ -271,7 +271,7 @@ func TestPrinterPrintNullable(t *testing.T) {
 					&meta.Data{
 						Type:      meta.WhiteSpaceType,
 						Value:     " ",
-						TokenName: meta.ConstantEncapsedStringToken,
+						TokenName: meta.NodeStart,
 					},
 				},
 				Value: "'default'",
@@ -379,17 +379,17 @@ func TestPrinterPrintNameNamePart(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StringToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.CommentType,
 				Value:     "/*comment*/",
-				TokenName: meta.StringToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StringToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -417,7 +417,7 @@ func TestPrinterPrintNameName(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StringToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Parts: []node.Node{
@@ -426,12 +426,12 @@ func TestPrinterPrintNameName(t *testing.T) {
 					&meta.Data{
 						Type:      meta.CommentType,
 						Value:     "/*comment*/",
-						TokenName: meta.StringToken,
+						TokenName: meta.NodeStart,
 					},
 					&meta.Data{
 						Type:      meta.WhiteSpaceType,
 						Value:     " ",
-						TokenName: meta.StringToken,
+						TokenName: meta.NodeStart,
 					},
 					&meta.Data{
 						Type:      meta.WhiteSpaceType,
@@ -577,7 +577,7 @@ func TestPrinterPrintScalarString(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ConstantEncapsedStringToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "'hello world'",
@@ -3833,7 +3833,7 @@ func TestPrinterPrintNew(t *testing.T) {
 						&meta.Data{
 							Type:      meta.WhiteSpaceType,
 							Value:     " ",
-							TokenName: meta.StringToken,
+							TokenName: meta.NodeStart,
 						},
 					},
 					Value: "Foo",

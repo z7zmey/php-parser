@@ -14,12 +14,10 @@ const (
 	IfToken
 	LnumberToken
 	DnumberToken
-	StringToken
 	StringVarnameToken
 	NumStringToken
 	InlineHTMLToken
 	EncapsedAndWhitespaceToken
-	ConstantEncapsedStringToken
 	EchoToken
 	DoToken
 	WhileToken
