@@ -2493,12 +2493,12 @@ func TestPrinterPrintArray(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ArrayCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(array)",
-				TokenName: meta.ArrayCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2530,12 +2530,12 @@ func TestPrinterPrintBool(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.BoolCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(bool)",
-				TokenName: meta.BoolCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2567,12 +2567,12 @@ func TestPrinterPrintDouble(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DoubleCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(float)",
-				TokenName: meta.DoubleCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2604,12 +2604,12 @@ func TestPrinterPrintInt(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.IntCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(int)",
-				TokenName: meta.IntCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2641,12 +2641,12 @@ func TestPrinterPrintObject(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ObjectCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(object)",
-				TokenName: meta.ObjectCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2678,12 +2678,12 @@ func TestPrinterPrintString(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StringCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(string)",
-				TokenName: meta.StringCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
@@ -2715,12 +2715,12 @@ func TestPrinterPrintUnset(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.UnsetCastToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "(unset)",
-				TokenName: meta.UnsetCastToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{

@@ -86,13 +86,6 @@ const (
 	DecToken
 	YieldFromToken
 	ObjectOperatorToken
-	IntCastToken
-	DoubleCastToken
-	StringCastToken
-	ArrayCastToken
-	ObjectCastToken
-	BoolCastToken
-	UnsetCastToken
 	CoalesceToken
 	SpaceshipToken
 	PlusEqualToken

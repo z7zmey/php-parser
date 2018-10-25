@@ -1101,70 +1101,49 @@ func (p *Printer) printBinarySpaceship(n node.Node) {
 func (p *Printer) printArray(n node.Node) {
 	nn := n.(*cast.Array)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.ArrayCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printBool(n node.Node) {
 	nn := n.(*cast.Bool)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.BoolCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printDouble(n node.Node) {
 	nn := n.(*cast.Double)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.DoubleCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printInt(n node.Node) {
 	nn := n.(*cast.Int)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.IntCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printObject(n node.Node) {
 	nn := n.(*cast.Object)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.ObjectCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printString(n node.Node) {
 	nn := n.(*cast.String)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.StringCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printUnset(n node.Node) {
 	nn := n.(*cast.Unset)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.UnsetCastToken)
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
