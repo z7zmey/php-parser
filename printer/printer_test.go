@@ -2937,7 +2937,7 @@ func TestPrinterPrintExprBitwiseNot(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.TildeToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{

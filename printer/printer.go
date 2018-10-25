@@ -1192,10 +1192,8 @@ func (p *Printer) printExprArray(n node.Node) {
 func (p *Printer) printExprBitwiseNot(n node.Node) {
 	nn := n.(*expr.BitwiseNot)
 	p.printMeta(nn, meta.NodeStart)
-	p.printMeta(nn, meta.TildeToken)
 	io.WriteString(p.w, "~")
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

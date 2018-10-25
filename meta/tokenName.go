@@ -126,7 +126,6 @@ const (
 	MinusToken            // '-'
 	PlusToken             // '+'
 	ExclamationMarkToken  // '!'
-	TildeToken            // '~'
 	AtToken               // '@'
 	CommaToken            // ','
 	VerticalBarToken      // '|'
