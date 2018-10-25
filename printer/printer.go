@@ -549,22 +549,14 @@ func (p *Printer) printNameRelative(n node.Node) {
 func (p *Printer) printScalarLNumber(n node.Node) {
 	nn := n.(*scalar.Lnumber)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.LnumberToken)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printScalarDNumber(n node.Node) {
 	nn := n.(*scalar.Dnumber)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.DnumberToken)
-
 	io.WriteString(p.w, nn.Value)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

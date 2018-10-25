@@ -531,7 +531,7 @@ func TestPrinterPrintScalarLNumber(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.LnumberToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "1",
@@ -554,7 +554,7 @@ func TestPrinterPrintScalarDNumber(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DnumberToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: ".1",

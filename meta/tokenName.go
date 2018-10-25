@@ -12,8 +12,6 @@ const (
 	IncludeOnceToken
 	ExitToken
 	IfToken
-	LnumberToken
-	DnumberToken
 	StringVarnameToken
 	NumStringToken
 	InlineHTMLToken
