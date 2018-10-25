@@ -1179,8 +1179,6 @@ func (p *Printer) printExprArrayItem(n node.Node) {
 func (p *Printer) printExprArray(n node.Node) {
 	nn := n.(*expr.Array)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.ArrayToken)
 	io.WriteString(p.w, "array")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

@@ -55,7 +55,6 @@ const (
 	ImplementsToken
 	DoubleArrowToken
 	ListToken
-	ArrayToken
 	CallableToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
