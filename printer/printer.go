@@ -591,8 +591,6 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 	nn := n.(*scalar.Heredoc)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.StartHeredocToken)
-
 	io.WriteString(p.w, "<<<")
 	io.WriteString(p.w, nn.Label)
 	io.WriteString(p.w, "\n")

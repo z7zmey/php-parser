@@ -653,7 +653,7 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StartHeredocToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Label: "LBL",
@@ -692,7 +692,7 @@ func TestPrinterPrintScalarNowdoc(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.StartHeredocToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Label: "'LBL'",

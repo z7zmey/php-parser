@@ -58,7 +58,6 @@ const (
 	ListToken
 	ArrayToken
 	CallableToken
-	StartHeredocToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
 	UseLeadingNsSeparatorToken
