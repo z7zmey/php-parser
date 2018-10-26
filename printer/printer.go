@@ -1473,7 +1473,6 @@ func (p *Printer) printExprPreDec(n node.Node) {
 	nn := n.(*expr.PreDec)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.DecToken)
 	io.WriteString(p.w, "--")
 	p.Print(nn.Variable)
 
@@ -1484,7 +1483,6 @@ func (p *Printer) printExprPreInc(n node.Node) {
 	nn := n.(*expr.PreInc)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.IncToken)
 	io.WriteString(p.w, "++")
 	p.Print(nn.Variable)
 

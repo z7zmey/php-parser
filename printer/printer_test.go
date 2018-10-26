@@ -3963,7 +3963,7 @@ func TestPrinterPrintPreDec(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DecToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Variable: &expr.Variable{
@@ -3995,7 +3995,7 @@ func TestPrinterPrintPreInc(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.IncToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Variable: &expr.Variable{
