@@ -1493,7 +1493,6 @@ func (p *Printer) printExprPrint(n node.Node) {
 	nn := n.(*expr.Print)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.PrintToken)
 	io.WriteString(p.w, "print")
 	p.Print(nn.Expr)
 

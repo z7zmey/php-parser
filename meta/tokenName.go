@@ -63,7 +63,6 @@ const (
 	ElseifToken
 	ElseToken
 	EndifToken
-	PrintToken
 	YieldToken
 	AbstractToken
 	FinalToken
