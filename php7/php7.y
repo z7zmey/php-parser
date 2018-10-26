@@ -5346,7 +5346,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.IssetToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 if $4 != nil {
                     $4.Meta.SetTokenName(meta.CommaToken).AppendTo($$.GetMeta())

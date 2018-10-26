@@ -8037,7 +8037,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.IssetToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(yyVAL.node.GetMeta())
 			if yyDollar[4].token != nil {
 				yyDollar[4].token.Meta.SetTokenName(meta.CommaToken).AppendTo(yyVAL.node.GetMeta())

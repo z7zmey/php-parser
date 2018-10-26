@@ -42,7 +42,6 @@ const (
 	GlobalToken
 	VarToken
 	UnsetToken
-	IssetToken
 	ClassToken
 	TraitToken
 	InterfaceToken

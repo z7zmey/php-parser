@@ -1385,7 +1385,6 @@ func (p *Printer) printExprIsset(n node.Node) {
 	nn := n.(*expr.Isset)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.IssetToken)
 	io.WriteString(p.w, "isset")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
