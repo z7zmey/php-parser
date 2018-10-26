@@ -1364,11 +1364,8 @@ func (p *Printer) printExprInclude(n node.Node) {
 func (p *Printer) printExprIncludeOnce(n node.Node) {
 	nn := n.(*expr.IncludeOnce)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.IncludeOnceToken)
 	io.WriteString(p.w, "include_once")
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
