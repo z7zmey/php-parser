@@ -46,7 +46,6 @@ const (
 	VarToken
 	UnsetToken
 	IssetToken
-	EmptyToken
 	ClassToken
 	TraitToken
 	InterfaceToken

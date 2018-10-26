@@ -1282,17 +1282,13 @@ func (p *Printer) printExprClosure(n node.Node) {
 func (p *Printer) printExprConstFetch(n node.Node) {
 	nn := n.(*expr.ConstFetch)
 	p.printMeta(nn, meta.NodeStart)
-
 	p.Print(nn.Constant)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 
 func (p *Printer) printExprEmpty(n node.Node) {
 	nn := n.(*expr.Empty)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.EmptyToken)
 	io.WriteString(p.w, "empty")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
