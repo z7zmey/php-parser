@@ -3329,7 +3329,7 @@ new_expr:
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NewAnchor).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3400,7 +3400,7 @@ expr_without_variable:
                 // save comments
                 $2.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NewAnchor).AppendTo(_new.GetMeta())
+                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(_new.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

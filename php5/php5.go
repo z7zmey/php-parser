@@ -5557,7 +5557,7 @@ yydefault:
 			}
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.NewAnchor).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -5633,7 +5633,7 @@ yydefault:
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.EqualToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[3].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(yyVAL.node.GetMeta())
-			yyDollar[4].token.Meta.SetTokenName(meta.NewAnchor).AppendTo(_new.GetMeta())
+			yyDollar[4].token.Meta.SetTokenName(meta.NodeStart).AppendTo(_new.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}

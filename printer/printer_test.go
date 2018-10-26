@@ -3823,7 +3823,7 @@ func TestPrinterPrintNew(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.NewAnchor,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Class: &name.Name{

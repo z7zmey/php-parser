@@ -60,7 +60,6 @@ const (
 	LogicalXorToken
 	LogicalAndToken
 	InstanceofToken
-	NewAnchor
 	ElseifToken
 	ElseToken
 	EndifToken

@@ -1432,7 +1432,6 @@ func (p *Printer) printExprNew(n node.Node) {
 	nn := n.(*expr.New)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.NewAnchor)
 	io.WriteString(p.w, "new")
 	p.Print(nn.Class)
 
