@@ -1356,11 +1356,8 @@ func (p *Printer) printExprFunctionCall(n node.Node) {
 func (p *Printer) printExprInclude(n node.Node) {
 	nn := n.(*expr.Include)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.IncludeToken)
 	io.WriteString(p.w, "include")
 	p.Print(nn.Expr)
-
 	p.printMeta(nn, meta.NodeEnd)
 }
 

@@ -3542,7 +3542,7 @@ func TestPrinterPrintInclude(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.IncludeToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &scalar.String{Value: "'path'"},

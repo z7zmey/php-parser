@@ -7,7 +7,6 @@ type TokenName int
 const (
 	NodeStart TokenName = iota
 	NodeEnd
-	IncludeToken
 	IncludeOnceToken
 	IfToken
 	StringVarnameToken
