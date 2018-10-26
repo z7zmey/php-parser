@@ -59,7 +59,6 @@ const (
 	UseLeadingNsSeparatorToken
 	NsSeparatorToken
 	EllipsisToken
-	EvalToken
 	RequireToken
 	RequireOnceToken
 	LogicalOrToken

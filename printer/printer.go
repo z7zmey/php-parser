@@ -1311,8 +1311,6 @@ func (p *Printer) printExprErrorSuppress(n node.Node) {
 func (p *Printer) printExprEval(n node.Node) {
 	nn := n.(*expr.Eval)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.EvalToken)
 	io.WriteString(p.w, "eval")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
