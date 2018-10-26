@@ -3303,7 +3303,7 @@ func TestPrinterPrettyPrinterrorSuppress(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.AtToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{

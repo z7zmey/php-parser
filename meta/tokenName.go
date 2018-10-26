@@ -121,7 +121,6 @@ const (
 	AmpersandToken        // '&'
 	MinusToken            // '-'
 	PlusToken             // '+'
-	AtToken               // '@'
 	CommaToken            // ','
 	VerticalBarToken      // '|'
 	EqualToken            // '='

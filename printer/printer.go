@@ -1302,8 +1302,6 @@ func (p *Printer) printExprEmpty(n node.Node) {
 func (p *Printer) printExprErrorSuppress(n node.Node) {
 	nn := n.(*expr.ErrorSuppress)
 	p.printMeta(nn, meta.NodeStart)
-
-	p.printMeta(nn, meta.AtToken)
 	io.WriteString(p.w, "@")
 	p.Print(nn.Expr)
 
