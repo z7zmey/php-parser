@@ -3894,7 +3894,7 @@ expr_without_variable:
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ExitToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

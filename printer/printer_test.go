@@ -3377,7 +3377,7 @@ func TestPrinterPrintExit(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ExitToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -3421,7 +3421,7 @@ func TestPrinterPrintDie(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ExitToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

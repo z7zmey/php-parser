@@ -1325,12 +1325,12 @@ func (p *Printer) printExprExit(n node.Node) {
 	nn := n.(*expr.Exit)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ExitToken)
 	if nn.Die {
 		io.WriteString(p.w, "die")
 	} else {
 		io.WriteString(p.w, "exit")
 	}
+
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.CloseParenthesisToken)

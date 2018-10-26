@@ -6447,7 +6447,7 @@ yydefault:
 			}
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ExitToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}

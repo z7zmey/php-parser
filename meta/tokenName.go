@@ -9,7 +9,6 @@ const (
 	NodeEnd
 	IncludeToken
 	IncludeOnceToken
-	ExitToken
 	IfToken
 	StringVarnameToken
 	NumStringToken
