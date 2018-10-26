@@ -1678,7 +1678,7 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
 
@@ -3093,7 +3093,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
                 $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
@@ -5060,7 +5060,7 @@ array_pair:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
                 $4.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
                 $6.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
 
@@ -5077,7 +5077,7 @@ array_pair:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
 

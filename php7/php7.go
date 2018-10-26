@@ -4038,7 +4038,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ListToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(yyVAL.node.GetMeta())
 
@@ -5516,7 +5516,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
 			yyDollar[5].token.Meta.SetTokenName(meta.EqualToken).AppendTo(yyVAL.node.GetMeta())
@@ -7729,7 +7729,7 @@ yydefault:
 
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(yyVAL.node.GetMeta())
-			yyDollar[3].token.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+			yyDollar[3].token.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
 			yyDollar[6].token.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
 
@@ -7748,7 +7748,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
 

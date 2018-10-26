@@ -3674,7 +3674,7 @@ func TestPrinterPrintList(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ListToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

@@ -48,7 +48,6 @@ const (
 	ExtendsToken
 	ImplementsToken
 	DoubleArrowToken
-	ListToken
 	CallableToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken

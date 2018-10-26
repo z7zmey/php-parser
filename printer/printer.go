@@ -1400,7 +1400,6 @@ func (p *Printer) printExprList(n node.Node) {
 	nn := n.(*expr.List)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ListToken)
 	io.WriteString(p.w, "list")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

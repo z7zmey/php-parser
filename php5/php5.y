@@ -1806,7 +1806,7 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
 
@@ -3346,7 +3346,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo(list.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(list.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
                 $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
@@ -6404,7 +6404,7 @@ assignment_list_element:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(item))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ListToken).AppendTo(item.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(item.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(item.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(item.GetMeta())
 
