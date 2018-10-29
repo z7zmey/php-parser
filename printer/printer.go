@@ -1787,7 +1787,6 @@ func (p *Printer) printStmtAltIf(n node.Node) {
 	nn := n.(*stmt.AltIf)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.IfToken)
 	io.WriteString(p.w, "if")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -1819,7 +1818,6 @@ func (p *Printer) printStmtAltSwitch(n node.Node) {
 	nn := n.(*stmt.AltSwitch)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.SwitchToken)
 	io.WriteString(p.w, "switch")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2341,7 +2339,6 @@ func (p *Printer) printStmtIf(n node.Node) {
 	nn := n.(*stmt.If)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(n, meta.IfToken)
 	io.WriteString(p.w, "if")
 	p.printMeta(n, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2519,7 +2516,6 @@ func (p *Printer) printStmtSwitch(n node.Node) {
 	nn := n.(*stmt.Switch)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.SwitchToken)
 	io.WriteString(p.w, "switch")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

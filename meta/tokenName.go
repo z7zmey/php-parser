@@ -7,7 +7,6 @@ type TokenName int
 const (
 	NodeStart TokenName = iota
 	NodeEnd
-	IfToken
 	StringVarnameToken
 	NumStringToken
 	InlineHTMLToken
@@ -22,7 +21,6 @@ const (
 	DeclareToken
 	EnddeclareToken
 	AsToken
-	SwitchToken
 	EndswitchToken
 	CaseToken
 	DefaultToken
