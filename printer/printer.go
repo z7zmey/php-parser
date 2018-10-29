@@ -393,6 +393,8 @@ func (p *Printer) printNode(n node.Node) {
 		p.printStmtSwitch(n)
 	case *stmt.Throw:
 		p.printStmtThrow(n)
+	case *stmt.TraitAdaptationList:
+		p.printStmtTraitAdaptationList(n)
 	case *stmt.TraitMethodRef:
 		p.printStmtTraitMethodRef(n)
 	case *stmt.TraitUseAlias:
@@ -2414,7 +2416,6 @@ func (p *Printer) printStmtNamespace(n node.Node) {
 
 func (p *Printer) printStmtNop(n node.Node) {
 	p.printMeta(n, meta.NodeStart)
-	p.printMeta(n, meta.SemiColonToken)
 	p.printMeta(n, meta.NodeEnd)
 }
 
@@ -2526,6 +2527,18 @@ func (p *Printer) printStmtThrow(n node.Node) {
 	p.printMeta(nn, meta.NodeEnd)
 }
 
+func (p *Printer) printStmtTraitAdaptationList(n node.Node) {
+	nn := n.(*stmt.TraitAdaptationList)
+	p.printMeta(nn, meta.NodeStart)
+
+	io.WriteString(p.w, "{")
+	p.printNodes(nn.Adaptations)
+	p.printMeta(nn, meta.CloseCurlyBracesToken)
+	io.WriteString(p.w, "}")
+
+	p.printMeta(nn, meta.NodeEnd)
+}
+
 func (p *Printer) printStmtTraitMethodRef(n node.Node) {
 	nn := n.(*stmt.TraitMethodRef)
 	p.printMeta(nn, meta.NodeStart)
@@ -2582,15 +2595,7 @@ func (p *Printer) printStmtTraitUse(n node.Node) {
 	io.WriteString(p.w, "use")
 	p.joinPrint(",", nn.Traits)
 
-	if adaptationList, ok := nn.TraitAdaptationList.(*stmt.TraitAdaptationList); ok {
-		p.printMeta(adaptationList, meta.OpenCurlyBracesToken)
-		io.WriteString(p.w, "{")
-		p.printNodes(adaptationList.Adaptations)
-		p.printMeta(adaptationList, meta.CloseCurlyBracesToken)
-		io.WriteString(p.w, "}")
-	} else {
-		p.printMeta(nn.TraitAdaptationList, meta.SemiColonToken)
-	}
+	p.Print(nn.TraitAdaptationList)
 
 	p.printMeta(nn, meta.NodeEnd)
 }

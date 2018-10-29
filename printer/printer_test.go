@@ -7604,10 +7604,15 @@ func TestPrinterPrintNop(t *testing.T) {
 				Value:     " ",
 				TokenName: meta.NodeStart,
 			},
+			&meta.Data{
+				Type:      meta.TokenType,
+				Value:     ";",
+				TokenName: meta.NodeStart,
+			},
 		},
 	})
 
-	expected := ` `
+	expected := ` ;`
 	actual := o.String()
 
 	if expected != actual {
@@ -8075,6 +8080,42 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 	}
 }
 
+func TestPrinterPrintStmtTraitAdaptationList(t *testing.T) {
+	o := bytes.NewBufferString("")
+
+	p := printer.NewPrinter(o)
+	p.Print(&stmt.TraitAdaptationList{
+		Meta: meta.Collection{
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
+				Value:     " ",
+				TokenName: meta.NodeStart,
+			},
+			&meta.Data{
+				Type:      meta.WhiteSpaceType,
+				Value:     " ",
+				TokenName: meta.CloseCurlyBracesToken,
+			},
+		},
+		Adaptations: []node.Node{
+			&stmt.TraitUseAlias{
+				Ref: &stmt.TraitMethodRef{
+					Trait:  &name.Name{Parts: []node.Node{&name.NamePart{Value: "Foo"}}},
+					Method: &node.Identifier{Value: "a"},
+				},
+				Alias: &node.Identifier{Value: "b"},
+			},
+		},
+	})
+
+	expected := ` {Foo::aasb }`
+	actual := o.String()
+
+	if expected != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", expected, actual)
+	}
+}
+
 func TestPrinterPrintStmtTraitMethodRef(t *testing.T) {
 	o := bytes.NewBufferString("")
 
@@ -8214,12 +8255,12 @@ func TestPrinterPrintStmtTraitUse(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.SemiColonToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.TokenType,
 					Value:     "",
-					TokenName: meta.SemiColonToken,
+					TokenName: meta.NodeStart,
 				},
 			},
 		},
@@ -8254,7 +8295,7 @@ func TestPrinterPrintStmtTraitAdaptations(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.OpenCurlyBracesToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,

@@ -474,12 +474,12 @@ func ExamplePrettyJsonDumper() {
 	//                 {
 	//                   "type": "*meta.WhiteSpaceType",
 	//                   "value": "\n\t\t\t\t",
-	//                   "tokenName": "SemiColonToken"
+	//                   "tokenName": "NodeStart"
 	//                 },
 	//                 {
 	//                   "type": "*meta.TokenType",
 	//                   "value": ";",
-	//                   "tokenName": "SemiColonToken"
+	//                   "tokenName": "NodeStart"
 	//                 }
 	//               ]
 	//             }
