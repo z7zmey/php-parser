@@ -21,7 +21,6 @@ const (
 	FunctionToken
 	ConstToken
 	TryToken
-	ThrowToken
 	InsteadofToken
 	VarToken
 	UnsetToken

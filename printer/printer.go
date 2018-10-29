@@ -2517,7 +2517,6 @@ func (p *Printer) printStmtThrow(n node.Node) {
 	nn := n.(*stmt.Throw)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ThrowToken)
 	io.WriteString(p.w, "throw")
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.SemiColonToken)

@@ -8047,7 +8047,7 @@ func TestPrinterPrintStmtThrow(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ThrowToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
