@@ -4873,7 +4873,7 @@ func TestPrinterPrintAltElse(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ElseToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -4914,7 +4914,7 @@ func TestPrinterPrintAltElseEmpty(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ElseToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -6623,7 +6623,7 @@ func TestPrinterPrintStmtElseStmts(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ElseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Stmt: &stmt.StmtList{
@@ -6650,7 +6650,7 @@ func TestPrinterPrintStmtElseExpr(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.ElseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Stmt: &stmt.Expression{Expr: &scalar.String{Value: "'bar'"}},

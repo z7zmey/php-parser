@@ -1987,7 +1987,7 @@ if_stmt:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseToken).AppendTo(_else.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_else.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2058,7 +2058,7 @@ alt_if_stmt:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $6))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseToken).AppendTo(_else.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_else.GetMeta())
                 $3.Meta.SetTokenName(meta.ColonToken).AppendTo(_else.GetMeta())
                 $5.Meta.SetTokenName(meta.EndifToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())

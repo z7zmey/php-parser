@@ -1709,7 +1709,6 @@ func (p *Printer) printStmtAltElse(n node.Node) {
 	nn := n.(*stmt.AltElse)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ElseToken)
 	io.WriteString(p.w, "else")
 	p.printMeta(nn, meta.ColonToken)
 	io.WriteString(p.w, ":")
@@ -2160,7 +2159,6 @@ func (p *Printer) printStmtElse(n node.Node) {
 	nn := n.(*stmt.Else)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ElseToken)
 	io.WriteString(p.w, "else")
 
 	p.Print(nn.Stmt)
