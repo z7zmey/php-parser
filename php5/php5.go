@@ -3958,7 +3958,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -6866,7 +6866,7 @@ yydefault:
 
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode(yyDollar[1].list).GetMeta())
-			yyDollar[3].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[3].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
 			yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
@@ -6905,7 +6905,7 @@ yydefault:
 			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
 			yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
@@ -9072,7 +9072,7 @@ yydefault:
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode(yyDollar[1].list).GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-			yyDollar[5].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[5].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -9090,7 +9090,7 @@ yydefault:
 
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode(yyDollar[1].list).GetMeta())
-			yyDollar[3].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[3].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -9108,7 +9108,7 @@ yydefault:
 
 			// save comments
 			yyDollar[2].token.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-			yyDollar[3].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[3].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -9125,7 +9125,7 @@ yydefault:
 			arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}

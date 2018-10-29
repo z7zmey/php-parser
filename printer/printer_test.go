@@ -4097,7 +4097,7 @@ func TestPrinterPrintExprReference(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.AmpersandToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Variable: &expr.Variable{

@@ -1515,7 +1515,6 @@ func (p *Printer) printExprReference(n node.Node) {
 	nn := n.(*expr.Reference)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.AmpersandToken)
 	io.WriteString(p.w, "&")
 	p.Print(nn.Variable)
 

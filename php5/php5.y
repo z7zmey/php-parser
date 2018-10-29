@@ -1794,7 +1794,7 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4481,7 +4481,7 @@ lexical_var_list:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
@@ -4516,7 +4516,7 @@ lexical_var_list:
                 reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
                 $2.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
@@ -6507,7 +6507,7 @@ non_empty_array_pair_list:
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
                 $4.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-                $5.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $5.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6523,7 +6523,7 @@ non_empty_array_pair_list:
                 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6539,7 +6539,7 @@ non_empty_array_pair_list:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-                $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6554,7 +6554,7 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.AmpersandToken).AppendTo(reference.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
