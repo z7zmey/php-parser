@@ -1295,7 +1295,7 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.DeclareToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
 

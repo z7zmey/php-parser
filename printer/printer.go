@@ -2053,7 +2053,6 @@ func (p *Printer) printStmtDeclare(n node.Node) {
 	nn := n.(*stmt.Declare)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.DeclareToken)
 	io.WriteString(p.w, "declare")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

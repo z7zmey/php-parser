@@ -18,7 +18,6 @@ const (
 	ForCondSemicolonToken
 	EndforToken
 	EndforeachToken
-	DeclareToken
 	EnddeclareToken
 	AsToken
 	EndswitchToken
