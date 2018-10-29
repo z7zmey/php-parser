@@ -1641,7 +1641,6 @@ func (p *Printer) printExprUnaryPlus(n node.Node) {
 	nn := n.(*expr.UnaryPlus)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.PlusToken)
 	io.WriteString(p.w, "+")
 	p.Print(nn.Expr)
 

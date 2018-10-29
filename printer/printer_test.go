@@ -4582,7 +4582,7 @@ func TestPrinterPrintUnaryPlus(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.PlusToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
