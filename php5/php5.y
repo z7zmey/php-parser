@@ -774,7 +774,7 @@ constant_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, constList))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ConstToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
                 $3.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
 

@@ -2866,7 +2866,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, constList))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ConstToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
 			yyDollar[3].token.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
 

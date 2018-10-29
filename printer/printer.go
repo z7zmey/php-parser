@@ -2013,7 +2013,6 @@ func (p *Printer) printStmtConstList(n node.Node) {
 	nn := n.(*stmt.ConstList)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ConstToken)
 	io.WriteString(p.w, "const")
 
 	p.joinPrint(",", nn.Consts)
