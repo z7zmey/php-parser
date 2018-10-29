@@ -5282,9 +5282,6 @@ encaps_var_offset:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
-                // save comments
-                $1.Meta.SetTokenName(meta.NumStringToken).AppendTo($$.GetMeta())
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   '-' T_NUM_STRING
@@ -5310,11 +5307,6 @@ encaps_var_offset:
 
                 // save comments
                 $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                if isInt {
-                    $2.Meta.SetTokenName(meta.NumStringToken).AppendTo(lnumber.GetMeta())
-                } else {
-                    $2.Meta.SetTokenName(meta.NumStringToken).AppendTo($$.GetMeta())
-                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

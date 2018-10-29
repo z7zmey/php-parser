@@ -6757,9 +6757,6 @@ encaps_var_offset:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
-                // save comments
-                $1.Meta.SetTokenName(meta.NumStringToken).AppendTo($$.GetMeta())
-
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE

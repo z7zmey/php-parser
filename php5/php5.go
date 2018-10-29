@@ -348,7 +348,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php5/php5.y:6991
+//line php5/php5.y:6988
 type simpleIndirectReference struct {
 	all  []*expr.Variable
 	last *expr.Variable
@@ -9345,14 +9345,11 @@ yydefault:
 			// save position
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
 
-			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.NumStringToken).AppendTo(yyVAL.node.GetMeta())
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 504:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:6766
+		//line php5/php5.y:6763
 		{
 			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
 			yyVAL.node = expr.NewVariable(identifier)
@@ -9369,7 +9366,7 @@ yydefault:
 		}
 	case 505:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:6784
+		//line php5/php5.y:6781
 		{
 			yyVAL.node = expr.NewIsset(yyDollar[3].list)
 
@@ -9385,7 +9382,7 @@ yydefault:
 		}
 	case 506:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:6798
+		//line php5/php5.y:6795
 		{
 			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 
@@ -9401,7 +9398,7 @@ yydefault:
 		}
 	case 507:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:6812
+		//line php5/php5.y:6809
 		{
 			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
 
@@ -9417,7 +9414,7 @@ yydefault:
 		}
 	case 508:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:6826
+		//line php5/php5.y:6823
 		{
 			yyVAL.node = expr.NewInclude(yyDollar[2].node)
 
@@ -9431,7 +9428,7 @@ yydefault:
 		}
 	case 509:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:6838
+		//line php5/php5.y:6835
 		{
 			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
 
@@ -9445,7 +9442,7 @@ yydefault:
 		}
 	case 510:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php5/php5.y:6850
+		//line php5/php5.y:6847
 		{
 			yyVAL.node = expr.NewEval(yyDollar[3].node)
 
@@ -9461,7 +9458,7 @@ yydefault:
 		}
 	case 511:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:6864
+		//line php5/php5.y:6861
 		{
 			yyVAL.node = expr.NewRequire(yyDollar[2].node)
 
@@ -9475,7 +9472,7 @@ yydefault:
 		}
 	case 512:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php5/php5.y:6876
+		//line php5/php5.y:6873
 		{
 			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
 
@@ -9489,7 +9486,7 @@ yydefault:
 		}
 	case 513:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:6891
+		//line php5/php5.y:6888
 		{
 			yyVAL.list = []node.Node{yyDollar[1].node}
 
@@ -9497,7 +9494,7 @@ yydefault:
 		}
 	case 514:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:6897
+		//line php5/php5.y:6894
 		{
 			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 
@@ -9508,7 +9505,7 @@ yydefault:
 		}
 	case 515:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:6909
+		//line php5/php5.y:6906
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -9516,7 +9513,7 @@ yydefault:
 		}
 	case 516:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php5/php5.y:6915
+		//line php5/php5.y:6912
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -9524,7 +9521,7 @@ yydefault:
 		}
 	case 517:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:6924
+		//line php5/php5.y:6921
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -9541,7 +9538,7 @@ yydefault:
 		}
 	case 518:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:6939
+		//line php5/php5.y:6936
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -9558,7 +9555,7 @@ yydefault:
 		}
 	case 519:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:6957
+		//line php5/php5.y:6954
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
@@ -9575,7 +9572,7 @@ yydefault:
 		}
 	case 520:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php5/php5.y:6975
+		//line php5/php5.y:6972
 		{
 			target := node.NewIdentifier(yyDollar[3].token.Value)
 			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)

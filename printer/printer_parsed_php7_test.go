@@ -1451,6 +1451,9 @@ func TestParseAndPrintComplexString1(t *testing.T) {
 	src := `<?php
 	// "test $foo" ;
 	"test $foo[1]" ;
+	"test $foo[-1]" ;
+	"test $foo[112345678901234567890] " ;
+	"test $foo[-112345678901234567890] " ;
 	"test $foo[a]" ;
 	"test $foo[$bar]" ;
 	"test $foo->bar" ;
