@@ -20,7 +20,6 @@ const (
 	EndswitchToken
 	FunctionToken
 	ConstToken
-	ReturnToken
 	TryToken
 	ThrowToken
 	InsteadofToken

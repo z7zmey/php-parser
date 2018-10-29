@@ -2449,7 +2449,6 @@ func (p *Printer) printStmtReturn(n node.Node) {
 	nn := n.(*stmt.Return)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ReturnToken)
 	io.WriteString(p.w, "return")
 	p.Print(nn.Expr)
 	p.printMeta(nn, meta.SemiColonToken)
