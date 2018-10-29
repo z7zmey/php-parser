@@ -24,7 +24,6 @@ const (
 	EndswitchToken
 	CaseToken
 	DefaultToken
-	BreakToken
 	ContinueToken
 	GotoToken
 	FunctionToken

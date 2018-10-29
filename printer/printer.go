@@ -1865,7 +1865,6 @@ func (p *Printer) printStmtBreak(n node.Node) {
 	nn := n.(*stmt.Break)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.BreakToken)
 	io.WriteString(p.w, "break")
 	if nn.Expr != nil {
 		p.Print(nn.Expr)
