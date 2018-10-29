@@ -2263,7 +2263,6 @@ func (p *Printer) printStmtGlobal(n node.Node) {
 	nn := n.(*stmt.Global)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.GlobalToken)
 	io.WriteString(p.w, "global")
 	p.joinPrint(",", nn.Vars)
 	p.printMeta(nn, meta.SemiColonToken)

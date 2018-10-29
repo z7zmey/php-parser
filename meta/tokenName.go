@@ -26,7 +26,6 @@ const (
 	TryToken
 	ThrowToken
 	InsteadofToken
-	GlobalToken
 	VarToken
 	UnsetToken
 	ClassToken
