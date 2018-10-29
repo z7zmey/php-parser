@@ -1753,7 +1753,6 @@ func (p *Printer) printStmtAltForeach(n node.Node) {
 	nn := n.(*stmt.AltForeach)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ForeachToken)
 	io.WriteString(p.w, "foreach")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2217,7 +2216,6 @@ func (p *Printer) printStmtForeach(n node.Node) {
 	nn := n.(*stmt.Foreach)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ForeachToken)
 	io.WriteString(p.w, "foreach")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

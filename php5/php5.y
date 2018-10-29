@@ -1236,7 +1236,7 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.ForeachToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 if $6 != nil {
@@ -1276,7 +1276,7 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ForeachToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 if $6 != nil {

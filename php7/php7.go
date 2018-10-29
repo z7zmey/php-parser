@@ -3530,7 +3530,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ForeachToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.AsToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[6].token.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(yyVAL.node.GetMeta())
@@ -3558,7 +3558,7 @@ yydefault:
 			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
 
 			// save comments
-			yyDollar[1].token.Meta.SetTokenName(meta.ForeachToken).AppendTo(yyVAL.node.GetMeta())
+			yyDollar[1].token.Meta.SetTokenName(meta.NodeStart).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[2].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.AsToken).AppendTo(yyVAL.node.GetMeta())
 			yyDollar[6].token.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(yyVAL.node.GetMeta())

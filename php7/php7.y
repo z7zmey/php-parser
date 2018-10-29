@@ -1196,7 +1196,7 @@ statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $7))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ForeachToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
@@ -1222,7 +1222,7 @@ statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ForeachToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo($$.GetMeta())
