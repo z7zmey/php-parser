@@ -25,7 +25,6 @@ const (
 	VarToken
 	UnsetToken
 	ClassToken
-	TraitToken
 	ExtendsToken
 	ImplementsToken
 	DoubleArrowToken

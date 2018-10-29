@@ -1652,7 +1652,7 @@ class_entry_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.TraitToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

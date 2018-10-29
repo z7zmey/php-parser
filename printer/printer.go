@@ -2601,7 +2601,6 @@ func (p *Printer) printStmtTrait(n node.Node) {
 	nn := n.(*stmt.Trait)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.TraitToken)
 	io.WriteString(p.w, "trait")
 	p.Print(nn.TraitName)
 

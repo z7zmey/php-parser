@@ -8332,7 +8332,7 @@ func TestPrinterPrintTrait(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.TraitToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

@@ -1559,7 +1559,7 @@ trait_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.TraitToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
                 $4.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
