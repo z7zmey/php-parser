@@ -4285,7 +4285,7 @@ yydefault:
 			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[4].node))
 
 			// save comments
-			yyDollar[2].token.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
 			yyDollar[3].node.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
 			yyDollar[3].node.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
 
@@ -4312,7 +4312,7 @@ yydefault:
 			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list))
 
 			// save comments
-			yyDollar[2].token.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
 			yyDollar[3].node.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
 			yyDollar[3].node.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
 			yyDollar[4].token.Meta.SetTokenName(meta.ColonToken).AppendTo(_elseIf.GetMeta())

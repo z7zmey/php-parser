@@ -1689,7 +1689,6 @@ func (p *Printer) printStmtAltElseIf(n node.Node) {
 	nn := n.(*stmt.AltElseIf)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ElseifToken)
 	io.WriteString(p.w, "elseif")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2145,7 +2144,6 @@ func (p *Printer) printStmtElseif(n node.Node) {
 	nn := n.(*stmt.ElseIf)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ElseifToken)
 	io.WriteString(p.w, "elseif")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

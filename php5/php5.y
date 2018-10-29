@@ -2112,7 +2112,7 @@ elseif_list:
                 _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
                 $3.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
                 $3.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
 
@@ -2139,7 +2139,7 @@ new_elseif_list:
                 _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
                 $3.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
                 $3.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
                 $4.Meta.SetTokenName(meta.ColonToken).AppendTo(_elseIf.GetMeta())

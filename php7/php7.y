@@ -1962,7 +1962,7 @@ if_stmt_without_else:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $6))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
                 $3.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(_elseIf.GetMeta())
                 $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(_elseIf.GetMeta())
 
@@ -2022,7 +2022,7 @@ alt_if_stmt_without_else:
                 _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $7))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ElseifToken).AppendTo(_elseIf.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
                 $3.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(_elseIf.GetMeta())
                 $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(_elseIf.GetMeta())
                 $6.Meta.SetTokenName(meta.ColonToken).AppendTo(_elseIf.GetMeta())

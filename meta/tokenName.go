@@ -58,7 +58,6 @@ const (
 	LogicalXorToken
 	LogicalAndToken
 	InstanceofToken
-	ElseifToken
 	ElseToken
 	EndifToken
 	AbstractToken
