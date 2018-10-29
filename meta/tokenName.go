@@ -25,7 +25,6 @@ const (
 	ExtendsToken
 	ImplementsToken
 	DoubleArrowToken
-	CallableToken
 	CurlyOpenToken
 	PaamayimNekudotayimToken
 	UseLeadingNsSeparatorToken
