@@ -3692,7 +3692,7 @@ yydefault:
 			catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[9].token))
 
 			// save comments
-			yyDollar[2].token.Meta.SetTokenName(meta.CatchToken).AppendTo(catch.GetMeta())
+			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(catch.GetMeta())
 			yyDollar[3].token.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(catch.GetMeta())
 			yyDollar[5].token.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
 			yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)

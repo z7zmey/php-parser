@@ -29,7 +29,6 @@ const (
 	ConstToken
 	ReturnToken
 	TryToken
-	CatchToken
 	FinallyToken
 	ThrowToken
 	InsteadofToken

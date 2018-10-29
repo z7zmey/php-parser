@@ -1897,7 +1897,6 @@ func (p *Printer) printStmtCatch(n node.Node) {
 	nn := n.(*stmt.Catch)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.CatchToken)
 	io.WriteString(p.w, "catch")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

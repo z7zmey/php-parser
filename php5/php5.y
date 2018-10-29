@@ -1385,7 +1385,7 @@ catch_statement:
                 catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.CatchToken).AppendTo(catch.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(catch.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(catch.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
@@ -1463,7 +1463,7 @@ additional_catch:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.CatchToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)

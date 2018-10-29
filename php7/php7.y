@@ -1342,7 +1342,7 @@ catch_list:
                 catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($2, $9))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.CatchToken).AppendTo(catch.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(catch.GetMeta())
                 $3.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(catch.GetMeta())
                 $5.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
