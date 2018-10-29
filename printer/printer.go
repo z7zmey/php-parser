@@ -2310,7 +2310,6 @@ func (p *Printer) printStmtHaltCompiler(n node.Node) {
 	nn := n.(*stmt.HaltCompiler)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(n, meta.HaltCompilerToken)
 	io.WriteString(p.w, "__halt_compiler")
 	p.printMeta(n, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")

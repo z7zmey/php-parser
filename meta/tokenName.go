@@ -77,7 +77,6 @@ const (
 	IsNotEqualToken
 	IsSmallerOrEqualToken
 	IsGreaterOrEqualToken
-	HaltCompilerToken
 	CaseSeparatorToken    // ';' or ':'
 	OpenCurlyBracesToken  // '{'
 	CloseCurlyBracesToken // '}'

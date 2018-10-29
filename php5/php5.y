@@ -371,7 +371,7 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.HaltCompilerToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
@@ -834,7 +834,7 @@ inner_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.HaltCompilerToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
