@@ -61,7 +61,6 @@ const (
 	ElseifToken
 	ElseToken
 	EndifToken
-	YieldToken
 	AbstractToken
 	FinalToken
 	PrivateToken
