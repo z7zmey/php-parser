@@ -2229,7 +2229,6 @@ func (p *Printer) printStmtFunction(n node.Node) {
 	nn := n.(*stmt.Function)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.FunctionToken)
 	io.WriteString(p.w, "function")
 
 	if nn.ReturnsRef {

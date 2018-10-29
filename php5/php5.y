@@ -1553,7 +1553,7 @@ unticked_function_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 if $2 != nil {
                     $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
                 }

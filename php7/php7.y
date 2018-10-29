@@ -1433,7 +1433,7 @@ function_declaration_statement:
 
 
                 // save comments
-                $1.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 if $2 != nil {
                     $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
                 }
