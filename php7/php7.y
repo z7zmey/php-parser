@@ -1874,7 +1874,7 @@ case_list:
                 _case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.CaseToken).AppendTo(_case.GetMeta())
+                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_case.GetMeta())
                 $4.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(_case.GetMeta())
                 yylex.(*Parser).appendMetaToken(_case, $4, meta.CaseSeparatorToken)
 

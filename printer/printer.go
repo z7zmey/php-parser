@@ -1879,7 +1879,6 @@ func (p *Printer) printStmtCase(n node.Node) {
 	nn := n.(*stmt.Case)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.CaseToken)
 	io.WriteString(p.w, "case")
 	p.Print(nn.Cond)
 	r := p.printMeta(nn, meta.CaseSeparatorToken)

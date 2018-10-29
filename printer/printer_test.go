@@ -5507,7 +5507,7 @@ func TestPrinterPrintStmtCase(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.CaseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Cond: &expr.Variable{
@@ -5551,7 +5551,7 @@ func TestPrinterPrintStmtCaseEmpty(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.CaseToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Cond: &expr.Variable{

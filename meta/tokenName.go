@@ -22,7 +22,6 @@ const (
 	EnddeclareToken
 	AsToken
 	EndswitchToken
-	CaseToken
 	DefaultToken
 	ContinueToken
 	GotoToken
