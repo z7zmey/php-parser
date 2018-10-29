@@ -2274,7 +2274,6 @@ func (p *Printer) printStmtGoto(n node.Node) {
 	nn := n.(*stmt.Goto)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.GotoToken)
 	io.WriteString(p.w, "goto")
 	p.Print(nn.Label)
 	p.printMeta(nn, meta.SemiColonToken)

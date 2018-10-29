@@ -19,7 +19,6 @@ const (
 	EnddeclareToken
 	AsToken
 	EndswitchToken
-	GotoToken
 	FunctionToken
 	ConstToken
 	ReturnToken
