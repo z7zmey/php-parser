@@ -21,7 +21,6 @@ const (
 	FunctionToken
 	ConstToken
 	InsteadofToken
-	VarToken
 	ClassToken
 	ExtendsToken
 	ImplementsToken
