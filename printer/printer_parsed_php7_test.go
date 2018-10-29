@@ -1465,11 +1465,10 @@ func TestParseAndPrintComplexString1(t *testing.T) {
 
 func TestParseAndPrintComplexString2(t *testing.T) {
 	src := `<?php
-	"test ${foo}" ;
-	"test ${foo[0]}";
 	"test ${ foo }" ;
 	"test ${ foo . 'bar' }" ;
 	"test ${ foo [ ] }" ;
+	"test ${ foo [ $b ] }" ;
 	"test ${ foo [ 1 ] }" ;
 	"test ${ foo [ 'expr' . $bar ] }" ;
 	"test ${ $foo }" ;
@@ -1486,6 +1485,29 @@ func TestParseAndPrintComplexString2(t *testing.T) {
 }
 
 func TestParseAndPrintComplexString3(t *testing.T) {
+	src := `<?php
+	"test ${foo}" ;
+	"test ${foo[0]}";
+	"test ${foo }" ;
+	"test ${foo . 'bar' }" ;
+	"test ${foo [ ] }" ;
+	"test ${foo [ $b ] }" ;
+	"test ${foo [ 1 ] }" ;
+	"test ${foo [ 'expr' . $bar ] }" ;
+	"test ${$foo }" ;
+	"test ${$foo -> bar }" ;
+	"test ${$foo -> bar ( ) }" ;
+	"test ${$a . '' }" ;
+	`
+
+	actual := print(parse(src))
+
+	if src != actual {
+		t.Errorf("\nexpected: %s\ngot: %s\n", src, actual)
+	}
+}
+
+func TestParseAndPrintComplexString4(t *testing.T) {
 	src := `<?php
 	"test {$foo }" ;
 	"test {$foo [ ] }" ;

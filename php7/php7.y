@@ -5234,7 +5234,6 @@ encaps_var:
                 // save comments
                 $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.StringVarnameToken).AppendTo(variable.GetMeta())
                 $3.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $3, meta.OpenSquareBracket)
                 $5.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
