@@ -1692,7 +1692,7 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3110,7 +3110,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(shortList.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(shortList.GetMeta())
                 $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(shortList.GetMeta())
                 $4.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
 
@@ -4292,7 +4292,7 @@ dereferencable_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)

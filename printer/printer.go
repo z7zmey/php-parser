@@ -1558,7 +1558,6 @@ func (p *Printer) printExprShortArray(n node.Node) {
 	nn := n.(*expr.ShortArray)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.OpenSquareBracket)
 	io.WriteString(p.w, "[")
 	p.joinPrint(",", nn.Items)
 	p.printMeta(nn, meta.CloseSquareBracket)
@@ -1571,7 +1570,6 @@ func (p *Printer) printExprShortList(n node.Node) {
 	nn := n.(*expr.ShortList)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.OpenSquareBracket)
 	io.WriteString(p.w, "[")
 	p.joinPrint(",", nn.Items)
 	p.printMeta(nn, meta.CloseSquareBracket)
