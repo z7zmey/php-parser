@@ -2348,10 +2348,7 @@ func (p *Printer) printStmtInlineHTML(n node.Node) {
 	nn := n.(*stmt.InlineHtml)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(n, meta.InlineHTMLToken)
-	// io.WriteString(p.w, "?>")
 	io.WriteString(p.w, nn.Value)
-	// io.WriteString(p.w, "<?php")
 
 	p.printMeta(nn, meta.NodeEnd)
 }

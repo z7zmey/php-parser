@@ -9,7 +9,6 @@ const (
 	NodeEnd
 	StringVarnameToken
 	NumStringToken
-	InlineHTMLToken
 	WhileToken
 	EndwhileToken
 	ForInitSemicolonToken

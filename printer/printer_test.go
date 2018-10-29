@@ -7411,7 +7411,7 @@ func TestPrinterPrintInlineHtml(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.InlineHTMLToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Value: "test",
