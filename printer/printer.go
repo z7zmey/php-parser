@@ -1545,7 +1545,6 @@ func (p *Printer) printExprShellExec(n node.Node) {
 	nn := n.(*expr.ShellExec)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.BackquoteToken)
 	io.WriteString(p.w, "`")
 	for _, part := range nn.Parts {
 		p.Print(part)

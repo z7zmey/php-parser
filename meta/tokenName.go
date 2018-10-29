@@ -98,7 +98,6 @@ const (
 	IsGreaterOrEqualToken
 	HaltCompilerToken
 	CaseSeparatorToken    // ';' or ':'
-	BackquoteToken        // '`'
 	OpenCurlyBracesToken  // '{'
 	CloseCurlyBracesToken // '}'
 	SemiColonToken        // ';'

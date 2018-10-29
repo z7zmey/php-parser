@@ -4175,7 +4175,7 @@ func TestPrinterPrintShellExec(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.BackquoteToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Parts: []node.Node{
