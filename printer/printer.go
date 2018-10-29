@@ -1724,7 +1724,6 @@ func (p *Printer) printStmtAltFor(n node.Node) {
 	nn := n.(*stmt.AltFor)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ForToken)
 	io.WriteString(p.w, "for")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2196,7 +2195,6 @@ func (p *Printer) printStmtFor(n node.Node) {
 	nn := n.(*stmt.For)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ForToken)
 	io.WriteString(p.w, "for")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
