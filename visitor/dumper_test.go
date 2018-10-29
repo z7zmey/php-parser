@@ -132,7 +132,7 @@ func ExampleDumper() {
 	// |                 [*stmt.StmtList]
 	// |                   "Position": Pos{Line: 6-9 Pos: 96-134}
 	// |                   "Meta":
-	// |                     "\n\t\t\t\t" before "OpenCurlyBracesToken"
+	// |                     "\n\t\t\t\t" before "NodeStart"
 	// |                     "\n\t\t\t\t" before "CloseCurlyBracesToken"
 	// |                   "Stmts":
 	// |                     [*stmt.Expression]

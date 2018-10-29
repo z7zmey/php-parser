@@ -2484,7 +2484,6 @@ func (p *Printer) printStmtStmtList(n node.Node) {
 	nn := n.(*stmt.StmtList)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	io.WriteString(p.w, "{")
 	p.printNodes(nn.Stmts)
 	p.printMeta(nn, meta.CloseCurlyBracesToken)

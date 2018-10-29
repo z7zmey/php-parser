@@ -5718,7 +5718,7 @@ func TestPrinterPrintStmtClassMethod(t *testing.T) {
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
 					Value:     " ",
-					TokenName: meta.OpenCurlyBracesToken,
+					TokenName: meta.NodeStart,
 				},
 				&meta.Data{
 					Type:      meta.WhiteSpaceType,
@@ -7843,7 +7843,7 @@ func TestPrinterPrintStmtList(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.OpenCurlyBracesToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
@@ -7892,7 +7892,7 @@ func TestPrinterPrintStmtListNested(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.OpenCurlyBracesToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

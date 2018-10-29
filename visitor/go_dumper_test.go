@@ -215,8 +215,8 @@ func ExampleGoDumper() {
 	// 									TokenName: meta.FunctionToken,
 	// 								},
 	// 							},
-	// 							ReturnsRef: false,
 	// 							PhpDocComment: "",
+	// 							ReturnsRef: false,
 	// 							MethodName: &node.Identifier{
 	// 								Position: &position.Position{
 	// 									StartLine: 5,
@@ -400,7 +400,7 @@ func ExampleGoDumper() {
 	// 											EndPos: 95,
 	// 										},
 	// 										Value: "\n\t\t\t\t",
-	// 										TokenName: meta.OpenCurlyBracesToken,
+	// 										TokenName: meta.NodeStart,
 	// 									},
 	// 									&meta.Data{
 	// 										Type: meta.WhiteSpaceType,
