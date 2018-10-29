@@ -22,7 +22,6 @@ const (
 	ConstToken
 	InsteadofToken
 	VarToken
-	UnsetToken
 	ClassToken
 	ExtendsToken
 	ImplementsToken

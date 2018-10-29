@@ -2639,7 +2639,6 @@ func (p *Printer) printStmtUnset(n node.Node) {
 	nn := n.(*stmt.Unset)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.UnsetToken)
 	io.WriteString(p.w, "unset")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
