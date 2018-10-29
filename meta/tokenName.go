@@ -23,7 +23,6 @@ const (
 	AsToken
 	EndswitchToken
 	DefaultToken
-	ContinueToken
 	GotoToken
 	FunctionToken
 	ConstToken

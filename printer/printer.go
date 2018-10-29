@@ -2038,7 +2038,6 @@ func (p *Printer) printStmtContinue(n node.Node) {
 	nn := n.(*stmt.Continue)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.ContinueToken)
 	io.WriteString(p.w, "continue")
 
 	if nn.Expr != nil {
