@@ -1631,7 +1631,6 @@ func (p *Printer) printExprUnaryMinus(n node.Node) {
 	nn := n.(*expr.UnaryMinus)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.MinusToken)
 	io.WriteString(p.w, "-")
 	p.Print(nn.Expr)
 
