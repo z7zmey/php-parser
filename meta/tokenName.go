@@ -24,7 +24,6 @@ const (
 	ConstToken
 	ReturnToken
 	TryToken
-	FinallyToken
 	ThrowToken
 	InsteadofToken
 	GlobalToken

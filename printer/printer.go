@@ -2167,7 +2167,6 @@ func (p *Printer) printStmtFinally(n node.Node) {
 	nn := n.(*stmt.Finally)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.FinallyToken)
 	io.WriteString(p.w, "finally")
 	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	io.WriteString(p.w, "{")
