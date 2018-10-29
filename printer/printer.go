@@ -2082,7 +2082,6 @@ func (p *Printer) printStmtDefault(n node.Node) {
 	nn := n.(*stmt.Default)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.DefaultToken)
 	io.WriteString(p.w, "default")
 	r := p.printMeta(nn, meta.CaseSeparatorToken)
 	if !r {

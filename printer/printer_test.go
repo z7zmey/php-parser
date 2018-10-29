@@ -6269,7 +6269,7 @@ func TestPrinterPrintStmtDefalut(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DefaultToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Stmts: []node.Node{
@@ -6303,7 +6303,7 @@ func TestPrinterPrintStmtDefalutEmpty(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.DefaultToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Stmts: []node.Node{},

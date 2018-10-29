@@ -4218,7 +4218,7 @@ yydefault:
 			_default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
 
 			// save comments
-			yyDollar[2].token.Meta.SetTokenName(meta.DefaultToken).AppendTo(_default.GetMeta())
+			yyDollar[2].token.Meta.SetTokenName(meta.NodeStart).AppendTo(_default.GetMeta())
 			yyDollar[3].token.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(_default.GetMeta())
 			yylex.(*Parser).appendMetaToken(_default, yyDollar[3].token, meta.CaseSeparatorToken)
 

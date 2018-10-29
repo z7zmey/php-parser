@@ -21,7 +21,6 @@ const (
 	EnddeclareToken
 	AsToken
 	EndswitchToken
-	DefaultToken
 	GotoToken
 	FunctionToken
 	ConstToken
