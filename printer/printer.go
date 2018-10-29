@@ -2617,7 +2617,6 @@ func (p *Printer) printStmtTry(n node.Node) {
 	nn := n.(*stmt.Try)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.TryToken)
 	io.WriteString(p.w, "try")
 	p.printMeta(nn, meta.OpenCurlyBracesToken)
 	io.WriteString(p.w, "{")

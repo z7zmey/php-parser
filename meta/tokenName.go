@@ -20,7 +20,6 @@ const (
 	EndswitchToken
 	FunctionToken
 	ConstToken
-	TryToken
 	InsteadofToken
 	VarToken
 	UnsetToken
