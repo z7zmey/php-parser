@@ -2119,7 +2119,6 @@ func (p *Printer) printStmtEcho(n node.Node) {
 	nn := n.(*stmt.Echo)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.EchoToken)
 	p.joinPrint(",", nn.Exprs)
 	p.printMeta(nn, meta.SemiColonToken)
 

@@ -6448,12 +6448,12 @@ func TestPrinterPrintStmtEcho(t *testing.T) {
 			&meta.Data{
 				Type:      meta.TokenType,
 				Value:     "echo",
-				TokenName: meta.EchoToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.EchoToken,
+				TokenName: meta.NodeStart,
 			},
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,

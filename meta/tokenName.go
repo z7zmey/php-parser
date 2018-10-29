@@ -10,7 +10,6 @@ const (
 	StringVarnameToken
 	NumStringToken
 	InlineHTMLToken
-	EchoToken
 	WhileToken
 	EndwhileToken
 	ForInitSemicolonToken
