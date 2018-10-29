@@ -990,7 +990,7 @@ statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.DoToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.WhileToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
                 $6.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())

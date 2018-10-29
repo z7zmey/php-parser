@@ -2099,7 +2099,6 @@ func (p *Printer) printStmtDo(n node.Node) {
 	nn := n.(*stmt.Do)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.DoToken)
 	io.WriteString(p.w, "do")
 
 	p.Print(nn.Stmt)

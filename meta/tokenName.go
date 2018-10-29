@@ -11,7 +11,6 @@ const (
 	NumStringToken
 	InlineHTMLToken
 	EchoToken
-	DoToken
 	WhileToken
 	EndwhileToken
 	ForInitSemicolonToken
