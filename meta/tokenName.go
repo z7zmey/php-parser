@@ -25,7 +25,6 @@ const (
 	ExtendsToken
 	ImplementsToken
 	DoubleArrowToken
-	CurlyOpenToken
 	PaamayimNekudotayimToken
 	UseLeadingNsSeparatorToken
 	NsSeparatorToken
@@ -35,11 +34,6 @@ const (
 	LogicalAndToken
 	InstanceofToken
 	EndifToken
-	AbstractToken
-	FinalToken
-	PrivateToken
-	ProtectedToken
-	PublicToken
 	IncToken
 	DecToken
 	ObjectOperatorToken
