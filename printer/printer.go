@@ -1842,7 +1842,6 @@ func (p *Printer) printStmtAltWhile(n node.Node) {
 	nn := n.(*stmt.AltWhile)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.WhileToken)
 	io.WriteString(p.w, "while")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
@@ -2712,7 +2711,6 @@ func (p *Printer) printStmtWhile(n node.Node) {
 	nn := n.(*stmt.While)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.WhileToken)
 	io.WriteString(p.w, "while")
 	p.printMeta(nn, meta.OpenParenthesisToken)
 	io.WriteString(p.w, "(")
