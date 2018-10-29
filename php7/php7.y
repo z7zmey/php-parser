@@ -5416,7 +5416,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.RequireToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5428,7 +5428,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.RequireOnceToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

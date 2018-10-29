@@ -1525,7 +1525,6 @@ func (p *Printer) printExprRequire(n node.Node) {
 	nn := n.(*expr.Require)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.RequireToken)
 	io.WriteString(p.w, "require")
 	p.Print(nn.Expr)
 
@@ -1536,7 +1535,6 @@ func (p *Printer) printExprRequireOnce(n node.Node) {
 	nn := n.(*expr.RequireOnce)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.RequireOnceToken)
 	io.WriteString(p.w, "require_once")
 	p.Print(nn.Expr)
 

@@ -54,8 +54,6 @@ const (
 	UseLeadingNsSeparatorToken
 	NsSeparatorToken
 	EllipsisToken
-	RequireToken
-	RequireOnceToken
 	LogicalOrToken
 	LogicalXorToken
 	LogicalAndToken

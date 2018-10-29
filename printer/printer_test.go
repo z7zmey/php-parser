@@ -4129,7 +4129,7 @@ func TestPrinterPrintRequire(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.RequireToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &scalar.String{Value: "'path'"},
@@ -4152,7 +4152,7 @@ func TestPrinterPrintRequireOnce(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.RequireOnceToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &scalar.String{Value: "'path'"},
