@@ -69,7 +69,6 @@ const (
 	PublicToken
 	IncToken
 	DecToken
-	YieldFromToken
 	ObjectOperatorToken
 	CoalesceToken
 	SpaceshipToken

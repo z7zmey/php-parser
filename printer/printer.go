@@ -1660,7 +1660,6 @@ func (p *Printer) printExprYieldFrom(n node.Node) {
 	nn := n.(*expr.YieldFrom)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(nn, meta.YieldFromToken)
 	io.WriteString(p.w, "yield from")
 	p.Print(nn.Expr)
 

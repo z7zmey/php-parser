@@ -4651,7 +4651,7 @@ func TestPrinterPrintYieldFrom(t *testing.T) {
 			&meta.Data{
 				Type:      meta.WhiteSpaceType,
 				Value:     " ",
-				TokenName: meta.YieldFromToken,
+				TokenName: meta.NodeStart,
 			},
 		},
 		Expr: &expr.Variable{
