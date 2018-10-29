@@ -28,7 +28,6 @@ const (
 	UnsetToken
 	ClassToken
 	TraitToken
-	InterfaceToken
 	ExtendsToken
 	ImplementsToken
 	DoubleArrowToken

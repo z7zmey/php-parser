@@ -2357,7 +2357,6 @@ func (p *Printer) printStmtInterface(n node.Node) {
 	nn := n.(*stmt.Interface)
 	p.printMeta(nn, meta.NodeStart)
 
-	p.printMeta(n, meta.InterfaceToken)
 	io.WriteString(p.w, "interface")
 
 	if nn.InterfaceName != nil {
