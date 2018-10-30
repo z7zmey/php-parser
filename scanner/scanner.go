@@ -625,8 +625,6 @@ yystart13:
 		goto yystate27
 	case c == '\\':
 		goto yystate456
-	case c == '\t' || c == '\n' || c == '\r' || c == ' ':
-		goto yystate14
 	case c == '^':
 		goto yystate457
 	case c == '_':
@@ -643,6 +641,8 @@ yystart13:
 		goto yystate541
 	case c >= '1' && c <= '9':
 		goto yystate118
+	case c >= '\x01' && c <= ' ':
+		goto yystate14
 	}
 
 yystate14:
@@ -652,7 +652,7 @@ yystate14:
 	switch {
 	default:
 		goto yyrule6
-	case c == '\t' || c == '\n' || c == '\r' || c == ' ':
+	case c >= '\x01' && c <= ' ':
 		goto yystate14
 	}
 
@@ -7605,7 +7605,7 @@ yyrule5: // \<\?=
 		return T_ECHO
 		goto yystate0
 	}
-yyrule6: // [ \t\n\r]+
+yyrule6: // [\001- ]+
 
 	goto yystate0
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?

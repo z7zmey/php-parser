@@ -89,7 +89,7 @@ NEW_LINE        (\r|\n|\r\n)
 <INITIAL>\<\?                                   l.Begin(PHP);
 <INITIAL>\<\?=                                  l.Begin(PHP);lval.Token(l.createToken(l.Token())); return T_ECHO;
 
-<PHP>[ \t\n\r]+
+<PHP>[\001- ]+
 <PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 
