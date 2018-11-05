@@ -20,7 +20,6 @@ type Parser struct {
 	path            string
 	currentToken    *scanner.Token
 	positionBuilder *parser.PositionBuilder
-	errors          []*errors.Error
 	rootNode        node.Node
 	comments        parser.Comments
 	positions       parser.Positions
@@ -38,7 +37,6 @@ func NewParser(src io.Reader, path string) *Parser {
 		nil,
 		nil,
 		nil,
-		nil,
 	}
 }
 
@@ -50,13 +48,13 @@ func (l *Parser) Lex(lval *yySymType) int {
 }
 
 func (l *Parser) Error(msg string) {
-	l.errors = append(l.errors, errors.NewError(msg, l.currentToken))
+	l.Lexer.Errors = append(l.Lexer.Errors, errors.NewError(msg, l.currentToken.Position))
 }
 
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
 	// init
-	l.errors = nil
+	l.Lexer.Errors = nil
 	l.rootNode = nil
 	l.comments = parser.Comments{}
 	l.positions = parser.Positions{}
@@ -92,7 +90,7 @@ func (l *Parser) GetRootNode() node.Node {
 
 // GetErrors returns errors list
 func (l *Parser) GetErrors() []*errors.Error {
-	return l.errors
+	return l.Lexer.Errors
 }
 
 // GetComments returns comments list
