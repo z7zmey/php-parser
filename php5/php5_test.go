@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/kylelemons/godebug/pretty"
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
 	"github.com/z7zmey/php-parser/node/expr/binary"
@@ -18706,5 +18707,25 @@ CAD;
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
+	assertEqual(t, expected, actual)
+}
+
+func TestPhp5ControlCharsErrors(t *testing.T) {
+	src := "<?php \004 echo $b; \"$a[\005test]\";"
+
+	expected := []*errors.Error{
+		{
+			Msg: "WARNING: Unexpected character in input: '\004' (ASCII=4)",
+			Pos: &position.Position{1, 1, 7, 7},
+		},
+		{
+			Msg: "WARNING: Unexpected character in input: '\005' (ASCII=5)",
+			Pos: &position.Position{1, 1, 22, 22},
+		},
+	}
+
+	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser.Parse()
+	actual := php5parser.GetErrors()
 	assertEqual(t, expected, actual)
 }

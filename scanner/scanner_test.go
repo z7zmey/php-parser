@@ -1388,3 +1388,52 @@ func TestYieldFromTokens(t *testing.T) {
 	actual = lv.Tkn.Meta
 	assertEqual(t, expected, actual)
 }
+
+func TestIgnoreControllCharacters(t *testing.T) {
+	src := "<?php \004 echo $b;"
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	expected := "echo"
+	lexer.Lex(lv)
+	actual := lv.Tkn.Value
+	assertEqual(t, expected, actual)
+
+	expected = "$b"
+	lexer.Lex(lv)
+	actual = lv.Tkn.Value
+	assertEqual(t, expected, actual)
+}
+
+func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
+	src := "<?php \"$a[test\004]\";"
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	expected := "\""
+	lexer.Lex(lv)
+	actual := lv.Tkn.Value
+	assertEqual(t, expected, actual)
+
+	expected = "$a"
+	lexer.Lex(lv)
+	actual = lv.Tkn.Value
+	assertEqual(t, expected, actual)
+
+	expected = "["
+	lexer.Lex(lv)
+	actual = lv.Tkn.Value
+	assertEqual(t, expected, actual)
+
+	expected = "test"
+	lexer.Lex(lv)
+	actual = lv.Tkn.Value
+	assertEqual(t, expected, actual)
+
+	expected = "]"
+	lexer.Lex(lv)
+	actual = lv.Tkn.Value
+	assertEqual(t, expected, actual)
+}

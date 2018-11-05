@@ -55,6 +55,7 @@ EXPONENT_DNUM   (({LNUM}|{DNUM})[eE][+-]?{LNUM})
 VAR_NAME        [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
 OPERATORS       [;:,.\[\]()|\/\^&\+-*=%!~$<>?@]
 NEW_LINE        (\r|\n|\r\n)
+ANY_CHAR        .
 
 %%
     c = l.Rule0()
@@ -668,12 +669,14 @@ NEW_LINE        (\r|\n|\r\n)
 <STRING_VAR_INDEX>\]                        l.popState(); l.popState();lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
 <STRING_VAR_INDEX>[ \n\r\t\\'#]             l.popState(); l.popState();lval.Token(l.createToken(l.Token())); return int(T_ENCAPSED_AND_WHITESPACE)
 <STRING_VAR_INDEX>{OPERATORS}               lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
-<STRING_VAR_INDEX>.                         lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
+<STRING_VAR_INDEX>{ANY_CHAR}                l.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", l.TokenBytes(nil)[0], l.TokenBytes(nil)[0]));l.Abort();
 
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_STRING_VARNAME)
 <STRING_VAR_NAME>.                          l.ungetChars(1);l.popState();l.pushState(PHP)
 
 <HALT_COMPILER>.|[ \t\n\r]                  l.addMeta(meta.TokenType, l.Token())
+
+<PHP>{ANY_CHAR}                             l.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", l.TokenBytes(nil)[0], l.TokenBytes(nil)[0]));l.Abort();
 
 %%
     if _, ok := l.Abort(); ok {

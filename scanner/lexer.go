@@ -8,6 +8,7 @@ import (
 	"io"
 	"unicode"
 
+	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/position"
 
 	"github.com/cznic/golex/lex"
@@ -38,6 +39,7 @@ type Lexer struct {
 	TokenPool     *TokenPool
 	WithMeta      bool
 	lastToken     *Token
+	Errors        []*errors.Error
 }
 
 // Rune2Class returns the rune integer id
@@ -77,6 +79,21 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		tokenBytesBuf: &bytes.Buffer{},
 		TokenPool:     &TokenPool{},
 	}
+}
+
+func (l *Lexer) Error(msg string) {
+	chars := l.Token()
+	firstChar := chars[0]
+	lastChar := chars[len(chars)-1]
+
+	pos := position.NewPosition(
+		l.File.Line(firstChar.Pos()),
+		l.File.Line(lastChar.Pos()),
+		int(firstChar.Pos()),
+		int(lastChar.Pos()),
+	)
+
+	l.Errors = append(l.Errors, errors.NewError(msg, pos))
 }
 
 func (l *Lexer) ungetChars(n int) []lex.Char {

@@ -3,6 +3,8 @@ package php7
 import (
 	"io"
 
+	"github.com/z7zmey/php-parser/position"
+
 	"github.com/z7zmey/php-parser/meta"
 
 	"github.com/z7zmey/php-parser/errors"
@@ -21,7 +23,6 @@ type Parser struct {
 	path            string
 	currentToken    *scanner.Token
 	positionBuilder *parser.PositionBuilder
-	errors          []*errors.Error
 	rootNode        node.Node
 }
 
@@ -32,7 +33,6 @@ func NewParser(src io.Reader, path string) *Parser {
 	return &Parser{
 		lexer,
 		path,
-		nil,
 		nil,
 		nil,
 		nil,
@@ -47,7 +47,14 @@ func (l *Parser) Lex(lval *yySymType) int {
 }
 
 func (l *Parser) Error(msg string) {
-	l.errors = append(l.errors, errors.NewError(msg, l.currentToken))
+	pos := &position.Position{
+		StartLine: l.currentToken.StartLine,
+		EndLine:   l.currentToken.EndLine,
+		StartPos:  l.currentToken.StartPos,
+		EndPos:    l.currentToken.EndPos,
+	}
+
+	l.Lexer.Errors = append(l.Lexer.Errors, errors.NewError(msg, pos))
 }
 
 func (l *Parser) WithMeta() {
@@ -57,7 +64,7 @@ func (l *Parser) WithMeta() {
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse() int {
 	// init
-	l.errors = nil
+	l.Lexer.Errors = nil
 	l.rootNode = nil
 	l.positionBuilder = &parser.PositionBuilder{}
 
@@ -78,7 +85,7 @@ func (l *Parser) GetRootNode() node.Node {
 
 // GetErrors returns errors list
 func (l *Parser) GetErrors() []*errors.Error {
-	return l.errors
+	return l.Lexer.Errors
 }
 
 // helpers

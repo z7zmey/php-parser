@@ -7,7 +7,6 @@ import (
 	"github.com/z7zmey/php-parser/position"
 
 	"github.com/z7zmey/php-parser/errors"
-	"github.com/z7zmey/php-parser/scanner"
 
 	"github.com/kylelemons/godebug/pretty"
 )
@@ -27,15 +26,8 @@ func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
 
 func TestConstructor(t *testing.T) {
 	pos := position.NewPosition(1, 2, 3, 4)
-	token := &scanner.Token{
-		Value:     `test`,
-		StartLine: 1,
-		EndLine:   2,
-		StartPos:  3,
-		EndPos:    4,
-	}
 
-	actual := errors.NewError("message", token)
+	actual := errors.NewError("message", pos)
 
 	expected := &errors.Error{
 		Msg: "message",
@@ -46,19 +38,23 @@ func TestConstructor(t *testing.T) {
 }
 
 func TestPrint(t *testing.T) {
-	token := &scanner.Token{
-		Value:     `test`,
-		StartLine: 1,
-		EndLine:   2,
-		StartPos:  3,
-		EndPos:    4,
-	}
+	pos := position.NewPosition(1, 2, 3, 4)
 
-	Error := errors.NewError("message", token)
+	Error := errors.NewError("message", pos)
 
 	actual := Error.String()
 
 	expected := "message at line 1"
+
+	assertEqual(t, expected, actual)
+}
+
+func TestPrintWithotPos(t *testing.T) {
+	Error := errors.NewError("message", nil)
+
+	actual := Error.String()
+
+	expected := "message"
 
 	assertEqual(t, expected, actual)
 }
