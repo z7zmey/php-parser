@@ -64,18 +64,41 @@ func (mc *Collection) Cut(f Filter) *Collection {
 type Filter func(d *Data) bool
 
 // TokenNameFilter generates filter function that returns true
-// if data.TokenName exactly same as given
-func TokenNameFilter(tn TokenName) Filter {
+// if data.TokenName has in the arguments list
+func TokenNameFilter(tokenNames ...TokenName) Filter {
 	return func(d *Data) bool {
-		return d.TokenName == tn
+		for _, tn := range tokenNames {
+			if d.TokenName == tn {
+				return true
+			}
+		}
+		return false
 	}
 }
 
 // TypeFilter generates filter function that returns true
-// if data.Type exactly same as given
-func TypeFilter(t Type) Filter {
+// if data.Type has in the arguments list
+func TypeFilter(types ...Type) Filter {
 	return func(d *Data) bool {
-		return d.Type == t
+		for _, t := range types {
+			if d.Type == t {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+// ValueFilter generates filter function that returns true
+// if data.Value has in the arguments list
+func ValueFilter(values ...string) Filter {
+	return func(d *Data) bool {
+		for _, v := range values {
+			if d.Value == v {
+				return true
+			}
+		}
+		return false
 	}
 }
 
@@ -111,5 +134,22 @@ func OrFilter(filters ...Filter) Filter {
 func NotFilter(f Filter) Filter {
 	return func(d *Data) bool {
 		return !f(d)
+	}
+}
+
+// StopOnFailureFilter always returns false after first failure
+func StopOnFailureFilter(f Filter) Filter {
+	stopFlag := false
+	return func(d *Data) bool {
+		if stopFlag == true {
+			return false
+		}
+
+		if !f(d) {
+			stopFlag = true
+			return false
+		}
+
+		return true
 	}
 }

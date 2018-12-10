@@ -261,11 +261,11 @@ func TestCollectionCutByTokenName(t *testing.T) {
 	actualCollection := meta.Collection{whiteSpace, OpenParenthesisComment, OpenParenthesisToken, CloseParenthesisToken}
 
 	expectedCollection := meta.Collection{whiteSpace, CloseParenthesisToken}
-	expectedCuttedCollection := &meta.Collection{OpenParenthesisComment, OpenParenthesisToken}
+	expectedCutCollection := &meta.Collection{OpenParenthesisComment, OpenParenthesisToken}
 
 	// action
 
-	actualCuttedCollection := actualCollection.Cut(
+	actualCutCollection := actualCollection.Cut(
 		meta.TokenNameFilter(meta.OpenParenthesisToken),
 	)
 
@@ -281,13 +281,13 @@ func TestCollectionCutByTokenName(t *testing.T) {
 		}
 	}
 
-	if !reflect.DeepEqual(expectedCuttedCollection, actualCuttedCollection) {
-		diff := pretty.Compare(expectedCuttedCollection, actualCuttedCollection)
+	if !reflect.DeepEqual(expectedCutCollection, actualCutCollection) {
+		diff := pretty.Compare(expectedCutCollection, actualCutCollection)
 
 		if diff != "" {
-			t.Errorf("\nexpected and actual cutted collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
 		} else {
-			t.Errorf("\nexpected and actual cutted collections are not equal\n")
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
 		}
 	}
 }
@@ -319,11 +319,11 @@ func TestCollectionCutByTokenTypes(t *testing.T) {
 	actualCollection := meta.Collection{whiteSpace, OpenParenthesisComment, OpenParenthesisToken, CloseParenthesisToken}
 
 	expectedCollection := meta.Collection{OpenParenthesisToken, CloseParenthesisToken}
-	expectedCuttedCollection := &meta.Collection{whiteSpace, OpenParenthesisComment}
+	expectedCutCollection := &meta.Collection{whiteSpace, OpenParenthesisComment}
 
 	// action
 
-	actualCuttedCollection := actualCollection.Cut(meta.OrFilter(
+	actualCutCollection := actualCollection.Cut(meta.OrFilter(
 		meta.TypeFilter(meta.CommentType),
 		meta.TypeFilter(meta.WhiteSpaceType)),
 	)
@@ -340,13 +340,13 @@ func TestCollectionCutByTokenTypes(t *testing.T) {
 		}
 	}
 
-	if !reflect.DeepEqual(expectedCuttedCollection, actualCuttedCollection) {
-		diff := pretty.Compare(expectedCuttedCollection, actualCuttedCollection)
+	if !reflect.DeepEqual(expectedCutCollection, actualCutCollection) {
+		diff := pretty.Compare(expectedCutCollection, actualCutCollection)
 
 		if diff != "" {
-			t.Errorf("\nexpected and actual cutted collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
 		} else {
-			t.Errorf("\nexpected and actual cutted collections are not equal\n")
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
 		}
 	}
 }
@@ -387,13 +387,13 @@ func TestCollectionCutByTokenNameButNotType(t *testing.T) {
 		OpenParenthesisToken,
 		CloseParenthesisToken,
 	}
-	expectedCuttedCollection := &meta.Collection{
+	expectedCutCollection := &meta.Collection{
 		OpenParenthesisComment,
 	}
 
 	// action
 
-	actualCuttedCollection := actualCollection.Cut(meta.AndFilter(
+	actualCutCollection := actualCollection.Cut(meta.AndFilter(
 		meta.TokenNameFilter(meta.OpenParenthesisToken),
 		meta.NotFilter(meta.TypeFilter(meta.TokenType))),
 	)
@@ -410,13 +410,161 @@ func TestCollectionCutByTokenNameButNotType(t *testing.T) {
 		}
 	}
 
-	if !reflect.DeepEqual(expectedCuttedCollection, actualCuttedCollection) {
-		diff := pretty.Compare(expectedCuttedCollection, actualCuttedCollection)
+	if !reflect.DeepEqual(expectedCutCollection, actualCutCollection) {
+		diff := pretty.Compare(expectedCutCollection, actualCutCollection)
 
 		if diff != "" {
-			t.Errorf("\nexpected and actual cutted collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
 		} else {
-			t.Errorf("\nexpected and actual cutted collections are not equal\n")
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
+		}
+	}
+}
+
+func TestCollectionCutByValue(t *testing.T) {
+
+	// prepare
+
+	whiteSpace := &meta.Data{
+		Type:  meta.WhiteSpaceType,
+		Value: "\n",
+	}
+	OpenParenthesisComment := &meta.Data{
+		Type:      meta.CommentType,
+		Value:     "// some comment",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	OpenParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     "(",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	CloseParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     ")",
+		TokenName: meta.CloseParenthesisToken,
+	}
+
+	actualCollection := meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+		OpenParenthesisToken,
+		CloseParenthesisToken,
+	}
+
+	expectedCollection := meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+	}
+	expectedCutCollection := &meta.Collection{
+		OpenParenthesisToken,
+		CloseParenthesisToken,
+	}
+
+	// action
+
+	actualCutCollection := actualCollection.Cut(meta.ValueFilter("(", ")"))
+
+	// check
+
+	if !reflect.DeepEqual(expectedCollection, actualCollection) {
+		diff := pretty.Compare(expectedCollection, actualCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual collections are not equal\n")
+		}
+	}
+
+	if !reflect.DeepEqual(expectedCutCollection, actualCutCollection) {
+		diff := pretty.Compare(expectedCutCollection, actualCutCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
+		}
+	}
+}
+
+func TestCollectionCutUntilFirstToken(t *testing.T) {
+
+	// prepare
+
+	whiteSpace := &meta.Data{
+		Type:      meta.WhiteSpaceType,
+		Value:     "\n",
+		TokenName: meta.NodeStart,
+	}
+	OpenParenthesisComment := &meta.Data{
+		Type:      meta.CommentType,
+		Value:     "// some comment",
+		TokenName: meta.NodeStart,
+	}
+	OpenParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     "(",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	CloseParenthesisComment := &meta.Data{
+		Type:      meta.WhiteSpaceType,
+		Value:     "// some comment",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	CloseParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     ")",
+		TokenName: meta.CloseParenthesisToken,
+	}
+
+	actualCollection := meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+		OpenParenthesisToken,
+		CloseParenthesisComment,
+		CloseParenthesisToken,
+	}
+
+	expectedCutCollection := &meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+	}
+	expectedCollection := meta.Collection{
+		OpenParenthesisToken,
+		CloseParenthesisComment, // must not be cut
+		CloseParenthesisToken,
+	}
+
+	// action
+
+	actualCutCollection := actualCollection.Cut(
+		meta.StopOnFailureFilter(
+			meta.NotFilter(
+				meta.TypeFilter(meta.TokenType),
+			),
+		),
+	)
+
+	// check
+
+	if !reflect.DeepEqual(expectedCollection, actualCollection) {
+		diff := pretty.Compare(expectedCollection, actualCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual collections are not equal\n")
+		}
+	}
+
+	if !reflect.DeepEqual(expectedCutCollection, actualCutCollection) {
+		diff := pretty.Compare(expectedCutCollection, actualCutCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
 		}
 	}
 }
