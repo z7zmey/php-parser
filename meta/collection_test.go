@@ -568,3 +568,81 @@ func TestCollectionCutUntilFirstToken(t *testing.T) {
 		}
 	}
 }
+
+func TestCollectionFindByType(t *testing.T) {
+
+	// prepare
+
+	whiteSpace := &meta.Data{
+		Type:      meta.WhiteSpaceType,
+		Value:     "\n",
+		TokenName: meta.NodeStart,
+	}
+	OpenParenthesisComment := &meta.Data{
+		Type:      meta.CommentType,
+		Value:     "// some comment",
+		TokenName: meta.NodeStart,
+	}
+	OpenParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     "(",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	CloseParenthesisComment := &meta.Data{
+		Type:      meta.WhiteSpaceType,
+		Value:     "// some comment",
+		TokenName: meta.OpenParenthesisToken,
+	}
+	CloseParenthesisToken := &meta.Data{
+		Type:      meta.TokenType,
+		Value:     ")",
+		TokenName: meta.CloseParenthesisToken,
+	}
+
+	actualCollection := meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+		OpenParenthesisToken,
+		CloseParenthesisComment,
+		CloseParenthesisToken,
+	}
+
+	expectedCollection := meta.Collection{
+		whiteSpace,
+		OpenParenthesisComment,
+		OpenParenthesisToken,
+		CloseParenthesisComment,
+		CloseParenthesisToken,
+	}
+
+	expectedFoundCollection := meta.Collection{
+		OpenParenthesisToken,
+		CloseParenthesisToken,
+	}
+
+	// action
+
+	actualFoundCollection := actualCollection.FindBy(meta.TypeFilter(meta.TokenType))
+
+	// check
+
+	if !reflect.DeepEqual(expectedCollection, actualCollection) {
+		diff := pretty.Compare(expectedCollection, actualCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual collections are not equal\n")
+		}
+	}
+
+	if !reflect.DeepEqual(expectedFoundCollection, actualFoundCollection) {
+		diff := pretty.Compare(expectedFoundCollection, actualFoundCollection)
+
+		if diff != "" {
+			t.Errorf("\nexpected and actual Cut collections are not equal\ndiff: (-expected +actual)\n%s", diff)
+		} else {
+			t.Errorf("\nexpected and actual Cut collections are not equal\n")
+		}
+	}
+}

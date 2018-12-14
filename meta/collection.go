@@ -60,6 +60,19 @@ func (mc *Collection) Cut(f Filter) *Collection {
 	return &cutted
 }
 
+// FindBy filter
+func (mc *Collection) FindBy(f Filter) Collection {
+	found := Collection{}
+
+	for _, m := range *mc {
+		if fr := f(m); fr {
+			found = append(found, m)
+		}
+	}
+
+	return found
+}
+
 // Filter function signature
 type Filter func(d *Data) bool
 
