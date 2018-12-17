@@ -2,6 +2,7 @@ package php5
 
 import (
 	"io"
+	"strings"
 
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/meta"
@@ -161,6 +162,73 @@ func (l *Parser) prependMetaToken(n node.Node, t *scanner.Token, tn meta.TokenNa
 	}
 
 	n.GetMeta().Unshift(m)
+}
+
+func (l *Parser) splitSemicolonTokenAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
+	SemiColonTokenMeta := prevNode.GetMeta().Cut(meta.AndFilter(
+		meta.TokenNameFilter(meta.SemiColonToken),
+		meta.TypeFilter(meta.TokenType),
+	))
+
+	if len(*SemiColonTokenMeta) < 1 {
+		return
+	}
+
+	metaTokenValue := (*SemiColonTokenMeta)[0].Value
+
+	i := strings.Index(metaTokenValue, "?>")
+
+	if i < 0 {
+		SemiColonTokenMeta.AppendTo(prevNode.GetMeta())
+	} else {
+		if metaTokenValue[0] == ';' {
+			prevNode.GetMeta().Push(&meta.Data{
+				Value:     metaTokenValue[0:1],
+				Type:      meta.TokenType,
+				Position:  nil,
+				TokenName: meta.SemiColonToken,
+			})
+
+			htmlNode.GetMeta().Push(&meta.Data{
+				Value:     metaTokenValue[1:i],
+				Type:      meta.WhiteSpaceType,
+				Position:  nil,
+				TokenName: meta.NodeStart,
+			})
+
+			htmlNode.GetMeta().Push(&meta.Data{
+				Value:     metaTokenValue[i : i+2],
+				Type:      meta.TokenType,
+				Position:  nil,
+				TokenName: meta.NodeStart,
+			})
+
+			if len(metaTokenValue) > i+2 {
+				htmlNode.GetMeta().Push(&meta.Data{
+					Value:     metaTokenValue[i+2:],
+					Type:      meta.WhiteSpaceType,
+					Position:  nil,
+					TokenName: meta.NodeStart,
+				})
+			}
+		} else {
+			htmlNode.GetMeta().Push(&meta.Data{
+				Value:     metaTokenValue[:2],
+				Type:      meta.TokenType,
+				Position:  nil,
+				TokenName: meta.NodeStart,
+			})
+
+			if len(metaTokenValue) > 2 {
+				htmlNode.GetMeta().Push(&meta.Data{
+					Value:     metaTokenValue[2:],
+					Type:      meta.WhiteSpaceType,
+					Position:  nil,
+					TokenName: meta.NodeStart,
+				})
+			}
+		}
+	}
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {
