@@ -146,7 +146,7 @@ func ExampleGoDumper() {
 	// 								EndPos: 28,
 	// 							},
 	// 							Value: "\n\t\t\t",
-	// 							TokenName: meta.ClassToken,
+	// 							TokenName: meta.NodeStart,
 	// 						},
 	// 						&meta.Data{
 	// 							Type: meta.WhiteSpaceType,

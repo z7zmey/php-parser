@@ -61,7 +61,7 @@ func ExampleDumper() {
 	// |           "Position": Pos{Line: 4-10 Pos: 29-139}
 	// |           "NamespacedName": "Foo\\Bar"
 	// |           "Meta":
-	// |             "\n\t\t\t" before "ClassToken"
+	// |             "\n\t\t\t" before "NodeStart"
 	// |             " " before "OpenCurlyBracesToken"
 	// |             "\n\t\t\t" before "CloseCurlyBracesToken"
 	// |           "PhpDocComment": ""

@@ -1508,6 +1508,8 @@ class_declaration_statement:
                 $7.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 $9.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
 
+                $1[0].GetMeta().Cut(inheritMetaFilter).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
@@ -1520,7 +1522,7 @@ class_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ClassToken).AppendTo($$.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
                 $6.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 $8.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
@@ -2145,13 +2147,20 @@ parameter:
                 }
 
                 // save comments
+                if $1 != nil {
+                    $1.GetMeta().Cut(inheritMetaFilter).PrependTo($$.GetMeta())
+                }
                 if $2 != nil {
                     $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
                 }
                 if $3 != nil {
                     $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
                 }
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                if $1 == nil && $2 == nil && $3 == nil {
+                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                } else {
+                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                }
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -2176,13 +2185,20 @@ parameter:
                 }
 
                 // save comments
+                if $1 != nil {
+                    $1.GetMeta().Cut(inheritMetaFilter).PrependTo($$.GetMeta())
+                }
                 if $2 != nil {
                     $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
                 }
                 if $3 != nil {
                     $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
                 }
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                if $1 == nil && $2 == nil && $3 == nil {
+                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                } else {
+                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                }
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
 

@@ -127,7 +127,7 @@ func ExamplePrettyJsonDumper() {
 	//             {
 	//               "type": "*meta.WhiteSpaceType",
 	//               "value": "\n\t\t\t",
-	//               "tokenName": "ClassToken"
+	//               "tokenName": "NodeStart"
 	//             },
 	//             {
 	//               "type": "*meta.WhiteSpaceType",
