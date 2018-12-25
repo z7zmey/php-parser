@@ -13,6 +13,14 @@ import (
 	"github.com/z7zmey/php-parser/scanner"
 )
 
+var inheritMetaFilter = meta.AndFilter(
+	meta.TokenNameFilter(meta.NodeStart),
+	meta.OrFilter(
+		meta.TypeFilter(meta.CommentType, meta.WhiteSpaceType),
+		meta.ValueFilter("<?php", "<?"),
+	),
+)
+
 func (lval *yySymType) Token(t *scanner.Token) {
 	lval.token = t
 }

@@ -424,6 +424,39 @@ func ExampleGoDumper() {
 	// 										},
 	// 										Meta: meta.Collection{
 	// 											&meta.Data{
+	// 												Type: meta.WhiteSpaceType,
+	// 												Position: &position.Position{
+	// 													StartLine: 6,
+	// 													EndLine: 7,
+	// 													StartPos: 97,
+	// 													EndPos: 102,
+	// 												},
+	// 												Value: "\n\t\t\t\t\t",
+	// 												TokenName: meta.NodeStart,
+	// 											},
+	// 											&meta.Data{
+	// 												Type: meta.CommentType,
+	// 												Position: &position.Position{
+	// 													StartLine: 7,
+	// 													EndLine: 7,
+	// 													StartPos: 103,
+	// 													EndPos: 118,
+	// 												},
+	// 												Value: "// some comment\n",
+	// 												TokenName: meta.NodeStart,
+	// 											},
+	// 											&meta.Data{
+	// 												Type: meta.WhiteSpaceType,
+	// 												Position: &position.Position{
+	// 													StartLine: 8,
+	// 													EndLine: 8,
+	// 													StartPos: 119,
+	// 													EndPos: 123,
+	// 												},
+	// 												Value: "\t\t\t\t\t",
+	// 												TokenName: meta.NodeStart,
+	// 											},
+	// 											&meta.Data{
 	// 												Type: meta.TokenType,
 	// 												Position: &position.Position{
 	// 													StartLine: 8,
@@ -443,39 +476,6 @@ func ExampleGoDumper() {
 	// 												EndPos: 127,
 	// 											},
 	// 											Meta: meta.Collection{
-	// 												&meta.Data{
-	// 													Type: meta.WhiteSpaceType,
-	// 													Position: &position.Position{
-	// 														StartLine: 6,
-	// 														EndLine: 7,
-	// 														StartPos: 97,
-	// 														EndPos: 102,
-	// 													},
-	// 													Value: "\n\t\t\t\t\t",
-	// 													TokenName: meta.NodeStart,
-	// 												},
-	// 												&meta.Data{
-	// 													Type: meta.CommentType,
-	// 													Position: &position.Position{
-	// 														StartLine: 7,
-	// 														EndLine: 7,
-	// 														StartPos: 103,
-	// 														EndPos: 118,
-	// 													},
-	// 													Value: "// some comment\n",
-	// 													TokenName: meta.NodeStart,
-	// 												},
-	// 												&meta.Data{
-	// 													Type: meta.WhiteSpaceType,
-	// 													Position: &position.Position{
-	// 														StartLine: 8,
-	// 														EndLine: 8,
-	// 														StartPos: 119,
-	// 														EndPos: 123,
-	// 													},
-	// 													Value: "\t\t\t\t\t",
-	// 													TokenName: meta.NodeStart,
-	// 												},
 	// 												&meta.Data{
 	// 													Type: meta.TokenType,
 	// 													Position: nil,

@@ -354,6 +354,31 @@ func ExamplePrettyJsonDumper() {
 	//                     },
 	//                     "meta": [
 	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\n\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.CommentType",
+	//                         "value": "// some comment\n",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.CommentType",
+	//                         "value": "// second comment\n",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
 	//                         "type": "*meta.TokenType",
 	//                         "value": ";",
 	//                         "tokenName": "SemiColonToken"
@@ -368,31 +393,6 @@ func ExamplePrettyJsonDumper() {
 	//                         "endLine": 9
 	//                       },
 	//                       "meta": [
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\n\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.CommentType",
-	//                           "value": "// some comment\n",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.CommentType",
-	//                           "value": "// second comment\n",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
 	//                         {
 	//                           "type": "*meta.TokenType",
 	//                           "value": "$",

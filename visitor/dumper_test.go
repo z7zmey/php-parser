@@ -138,14 +138,14 @@ func ExampleDumper() {
 	// |                     [*stmt.Expression]
 	// |                       "Position": Pos{Line: 8-8 Pos: 124-128}
 	// |                       "Meta":
+	// |                         "\n\t\t\t\t\t" before "NodeStart"
+	// |                         "// some comment\n" before "NodeStart"
+	// |                         "\t\t\t\t\t" before "NodeStart"
 	// |                         ";" before "SemiColonToken"
 	// |                       "Expr":
 	// |                         [*expr.Variable]
 	// |                           "Position": Pos{Line: 8-8 Pos: 124-127}
 	// |                           "Meta":
-	// |                             "\n\t\t\t\t\t" before "NodeStart"
-	// |                             "// some comment\n" before "NodeStart"
-	// |                             "\t\t\t\t\t" before "NodeStart"
 	// |                             "$" before "NodeStart"
 	// |                           "VarName":
 	// |                             [*node.Identifier]
