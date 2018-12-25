@@ -395,6 +395,9 @@ name:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                // save comments
+                $1[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     | T_NAMESPACE T_NS_SEPARATOR namespace_name
@@ -644,6 +647,8 @@ group_use_declaration:
                 }
                 $6.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
 
+                $1[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' unprefixed_use_declarations possible_comma '}'
@@ -665,6 +670,8 @@ group_use_declaration:
                     yylex.(*Parser).appendMetaToken($$, $6, meta.CommaToken)
                 }
                 $7.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+
+                $2[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -689,6 +696,8 @@ mixed_group_use_declaration:
                 }
                 $6.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
 
+                $1[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
+                
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name T_NS_SEPARATOR '{' inline_use_declarations possible_comma '}'
@@ -710,6 +719,8 @@ mixed_group_use_declaration:
                     yylex.(*Parser).appendMetaToken($$, $6, meta.CommaToken)
                 }
                 $7.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+
+                $2[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -785,11 +796,15 @@ inline_use_declaration:
             {
                 $$ = $1
 
+                $1.(*stmt.Use).Use.GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   use_type unprefixed_use_declaration
             {
                 $$ = $2.(*stmt.Use).SetUseType($1)
+
+                $1.GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -804,6 +819,8 @@ unprefixed_use_declaration:
                 // save position
                 name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
+
+                $1[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -822,6 +839,8 @@ unprefixed_use_declaration:
                 $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
+                $1[0].GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo(name.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
@@ -831,6 +850,8 @@ use_declaration:
             {
                 $$ = $1
 
+                $1.(*stmt.Use).Use.GetMeta().Cut(meta.TokenNameFilter(meta.NodeStart)).AppendTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR unprefixed_use_declaration
@@ -838,8 +859,8 @@ use_declaration:
                 $$ = $2;
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

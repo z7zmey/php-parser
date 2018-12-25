@@ -355,6 +355,19 @@ func ExampleGoDumper() {
 	// 												StartPos: 86,
 	// 												EndPos: 89,
 	// 											},
+	// 											Meta: meta.Collection{
+	// 												&meta.Data{
+	// 													Type: meta.WhiteSpaceType,
+	// 													Position: &position.Position{
+	// 														StartLine: 5,
+	// 														EndLine: 5,
+	// 														StartPos: 85,
+	// 														EndPos: 85,
+	// 													},
+	// 													Value: " ",
+	// 													TokenName: meta.NodeStart,
+	// 												},
+	// 											},
 	// 											Parts: []node.Node{
 	// 												&name.NamePart{
 	// 													Position: &position.Position{
@@ -362,19 +375,6 @@ func ExampleGoDumper() {
 	// 														EndLine: 5,
 	// 														StartPos: 86,
 	// 														EndPos: 89,
-	// 													},
-	// 													Meta: meta.Collection{
-	// 														&meta.Data{
-	// 															Type: meta.WhiteSpaceType,
-	// 															Position: &position.Position{
-	// 																StartLine: 5,
-	// 																EndLine: 5,
-	// 																StartPos: 85,
-	// 																EndPos: 85,
-	// 															},
-	// 															Value: " ",
-	// 															TokenName: meta.NodeStart,
-	// 														},
 	// 													},
 	// 													Value: "null",
 	// 												},

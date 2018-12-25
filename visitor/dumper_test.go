@@ -122,11 +122,11 @@ func ExampleDumper() {
 	// |                         [*name.Name]
 	// |                           "Position": Pos{Line: 5-5 Pos: 86-89}
 	// |                           "NamespacedName": "null"
+	// |                           "Meta":
+	// |                             " " before "NodeStart"
 	// |                           "Parts":
 	// |                             [*name.NamePart]
 	// |                               "Position": Pos{Line: 5-5 Pos: 86-89}
-	// |                               "Meta":
-	// |                                 " " before "NodeStart"
 	// |                               "Value": "null"
 	// |               "Stmt":
 	// |                 [*stmt.StmtList]
