@@ -170,6 +170,11 @@ func ExamplePrettyJsonDumper() {
 	//               "meta": [
 	//                 {
 	//                   "type": "*meta.WhiteSpaceType",
+	//                   "value": "\n\t\t\t\t",
+	//                   "tokenName": "NodeStart"
+	//                 },
+	//                 {
+	//                   "type": "*meta.WhiteSpaceType",
 	//                   "value": " ",
 	//                   "tokenName": "FunctionToken"
 	//                 }
@@ -202,13 +207,6 @@ func ExamplePrettyJsonDumper() {
 	//                     "startLine": 5,
 	//                     "endLine": 5
 	//                   },
-	//                   "meta": [
-	//                     {
-	//                       "type": "*meta.WhiteSpaceType",
-	//                       "value": "\n\t\t\t\t",
-	//                       "tokenName": "NodeStart"
-	//                     }
-	//                   ],
 	//                   "Value": "public"
 	//                 }
 	//               ],

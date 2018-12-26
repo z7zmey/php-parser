@@ -206,6 +206,17 @@ func ExampleGoDumper() {
 	// 								&meta.Data{
 	// 									Type: meta.WhiteSpaceType,
 	// 									Position: &position.Position{
+	// 										StartLine: 4,
+	// 										EndLine: 5,
+	// 										StartPos: 40,
+	// 										EndPos: 44,
+	// 									},
+	// 									Value: "\n\t\t\t\t",
+	// 									TokenName: meta.NodeStart,
+	// 								},
+	// 								&meta.Data{
+	// 									Type: meta.WhiteSpaceType,
+	// 									Position: &position.Position{
 	// 										StartLine: 5,
 	// 										EndLine: 5,
 	// 										StartPos: 51,
@@ -246,19 +257,6 @@ func ExampleGoDumper() {
 	// 										EndLine: 5,
 	// 										StartPos: 45,
 	// 										EndPos: 50,
-	// 									},
-	// 									Meta: meta.Collection{
-	// 										&meta.Data{
-	// 											Type: meta.WhiteSpaceType,
-	// 											Position: &position.Position{
-	// 												StartLine: 4,
-	// 												EndLine: 5,
-	// 												StartPos: 40,
-	// 												EndPos: 44,
-	// 											},
-	// 											Value: "\n\t\t\t\t",
-	// 											TokenName: meta.NodeStart,
-	// 										},
 	// 									},
 	// 									Value: "public",
 	// 								},

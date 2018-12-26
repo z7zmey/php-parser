@@ -75,6 +75,7 @@ func ExampleDumper() {
 	// |             [*stmt.ClassMethod]
 	// |               "Position": Pos{Line: 5-9 Pos: 45-134}
 	// |               "Meta":
+	// |                 "\n\t\t\t\t" before "NodeStart"
 	// |                 " " before "FunctionToken"
 	// |               "ReturnsRef": false
 	// |               "PhpDocComment": ""
@@ -87,8 +88,6 @@ func ExampleDumper() {
 	// |               "Modifiers":
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 45-50}
-	// |                   "Meta":
-	// |                     "\n\t\t\t\t" before "NodeStart"
 	// |                   "Value": "public"
 	// |               "Params":
 	// |                 [*node.Parameter]
