@@ -13,14 +13,6 @@ import (
 	"github.com/z7zmey/php-parser/scanner"
 )
 
-var inheritMetaFilter = meta.AndFilter(
-	meta.TokenNameFilter(meta.NodeStart),
-	meta.OrFilter(
-		meta.TypeFilter(meta.CommentType, meta.WhiteSpaceType),
-		meta.ValueFilter("<?php", "<?"),
-	),
-)
-
 func (lval *yySymType) Token(t *scanner.Token) {
 	lval.token = t
 }
@@ -111,6 +103,18 @@ func firstNode(nn []node.Node) node.Node {
 
 func isDollar(r rune) bool {
 	return r == '$'
+}
+
+func newInheritMetaFilter() meta.Filter {
+	return meta.StopOnFailureFilter(
+		meta.AndFilter(
+			meta.TokenNameFilter(meta.NodeStart),
+			meta.OrFilter(
+				meta.TypeFilter(meta.CommentType, meta.WhiteSpaceType),
+				meta.ValueFilter("<?php", "<?"),
+			),
+		),
+	)
 }
 
 func (l *Parser) appendMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
