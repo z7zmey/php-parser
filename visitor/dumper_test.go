@@ -117,12 +117,12 @@ func ExampleDumper() {
 	// |                   "DefaultValue":
 	// |                     [*expr.ConstFetch]
 	// |                       "Position": Pos{Line: 5-5 Pos: 86-89}
+	// |                       "Meta":
+	// |                         " " before "NodeStart"
 	// |                       "Constant":
 	// |                         [*name.Name]
 	// |                           "Position": Pos{Line: 5-5 Pos: 86-89}
 	// |                           "NamespacedName": "null"
-	// |                           "Meta":
-	// |                             " " before "NodeStart"
 	// |                           "Parts":
 	// |                             [*name.NamePart]
 	// |                               "Position": Pos{Line: 5-5 Pos: 86-89}
