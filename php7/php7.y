@@ -661,8 +661,9 @@ group_use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
+                yylex.(*Parser).appendMetaToken(name, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo(name.GetMeta())
                 $3.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 if $6 != nil {
@@ -670,8 +671,6 @@ group_use_declaration:
                     yylex.(*Parser).appendMetaToken($$, $6, meta.CommaToken)
                 }
                 $7.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
-
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo(name.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -710,8 +709,9 @@ mixed_group_use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $7))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
+                yylex.(*Parser).appendMetaToken(name, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo(name.GetMeta())
                 $3.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
                 if $6 != nil {
@@ -861,6 +861,7 @@ use_declaration:
                 // save comments
                 $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
                 yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2.(*stmt.Use).Use.GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
