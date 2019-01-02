@@ -518,6 +518,9 @@ use_declaration:
                 name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                // save comments
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
@@ -535,6 +538,8 @@ use_declaration:
                 $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_NS_SEPARATOR namespace_name
@@ -547,8 +552,9 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -564,8 +570,9 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
@@ -601,6 +608,9 @@ use_function_declaration:
                 name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                // save comments
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
@@ -615,6 +625,7 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
@@ -630,8 +641,9 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -647,8 +659,9 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
@@ -684,6 +697,9 @@ use_const_declaration:
                 name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                // save comments
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   namespace_name T_AS T_STRING
@@ -698,6 +714,7 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
+                $1[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
                 $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
@@ -713,8 +730,9 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -730,8 +748,9 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.UseLeadingNsSeparatorToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.UseLeadingNsSeparatorToken)
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
                 $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
                 $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
 
