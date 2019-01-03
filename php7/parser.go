@@ -105,6 +105,18 @@ func isDollar(r rune) bool {
 	return r == '$'
 }
 
+func newInheritMetaFilter() meta.Filter {
+	return meta.StopOnFailureFilter(
+		meta.AndFilter(
+			meta.TokenNameFilter(meta.NodeStart),
+			meta.OrFilter(
+				meta.TypeFilter(meta.CommentType, meta.WhiteSpaceType),
+				meta.ValueFilter("<?php", "<?"),
+			),
+		),
+	)
+}
+
 func (l *Parser) appendMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
 	if !l.Lexer.WithMeta {
 		return

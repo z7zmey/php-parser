@@ -2293,7 +2293,6 @@ func (p *Printer) printStmtGroupUse(n node.Node) {
 		p.Print(nn.UseType)
 	}
 
-	p.printMeta(nn, meta.UseLeadingNsSeparatorToken)
 	p.Print(nn.Prefix)
 	p.printMeta(nn, meta.NsSeparatorToken)
 	io.WriteString(p.w, "\\")
@@ -2674,8 +2673,6 @@ func (p *Printer) printStmtUse(n node.Node) {
 	if nn.UseType != nil {
 		p.Print(nn.UseType)
 	}
-
-	p.printMeta(nn, meta.UseLeadingNsSeparatorToken)
 
 	p.Print(nn.Use)
 

@@ -61,7 +61,7 @@ func ExampleDumper() {
 	// |           "Position": Pos{Line: 4-10 Pos: 29-139}
 	// |           "NamespacedName": "Foo\\Bar"
 	// |           "Meta":
-	// |             "\n\t\t\t" before "ClassToken"
+	// |             "\n\t\t\t" before "NodeStart"
 	// |             " " before "OpenCurlyBracesToken"
 	// |             "\n\t\t\t" before "CloseCurlyBracesToken"
 	// |           "PhpDocComment": ""
@@ -75,6 +75,7 @@ func ExampleDumper() {
 	// |             [*stmt.ClassMethod]
 	// |               "Position": Pos{Line: 5-9 Pos: 45-134}
 	// |               "Meta":
+	// |                 "\n\t\t\t\t" before "NodeStart"
 	// |                 " " before "FunctionToken"
 	// |               "ReturnsRef": false
 	// |               "PhpDocComment": ""
@@ -87,8 +88,6 @@ func ExampleDumper() {
 	// |               "Modifiers":
 	// |                 [*node.Identifier]
 	// |                   "Position": Pos{Line: 5-5 Pos: 45-50}
-	// |                   "Meta":
-	// |                     "\n\t\t\t\t" before "NodeStart"
 	// |                   "Value": "public"
 	// |               "Params":
 	// |                 [*node.Parameter]
@@ -118,6 +117,8 @@ func ExampleDumper() {
 	// |                   "DefaultValue":
 	// |                     [*expr.ConstFetch]
 	// |                       "Position": Pos{Line: 5-5 Pos: 86-89}
+	// |                       "Meta":
+	// |                         " " before "NodeStart"
 	// |                       "Constant":
 	// |                         [*name.Name]
 	// |                           "Position": Pos{Line: 5-5 Pos: 86-89}
@@ -125,8 +126,6 @@ func ExampleDumper() {
 	// |                           "Parts":
 	// |                             [*name.NamePart]
 	// |                               "Position": Pos{Line: 5-5 Pos: 86-89}
-	// |                               "Meta":
-	// |                                 " " before "NodeStart"
 	// |                               "Value": "null"
 	// |               "Stmt":
 	// |                 [*stmt.StmtList]
@@ -138,14 +137,14 @@ func ExampleDumper() {
 	// |                     [*stmt.Expression]
 	// |                       "Position": Pos{Line: 8-8 Pos: 124-128}
 	// |                       "Meta":
+	// |                         "\n\t\t\t\t\t" before "NodeStart"
+	// |                         "// some comment\n" before "NodeStart"
+	// |                         "\t\t\t\t\t" before "NodeStart"
 	// |                         ";" before "SemiColonToken"
 	// |                       "Expr":
 	// |                         [*expr.Variable]
 	// |                           "Position": Pos{Line: 8-8 Pos: 124-127}
 	// |                           "Meta":
-	// |                             "\n\t\t\t\t\t" before "NodeStart"
-	// |                             "// some comment\n" before "NodeStart"
-	// |                             "\t\t\t\t\t" before "NodeStart"
 	// |                             "$" before "NodeStart"
 	// |                           "VarName":
 	// |                             [*node.Identifier]

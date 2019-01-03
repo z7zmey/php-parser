@@ -127,7 +127,7 @@ func ExamplePrettyJsonDumper() {
 	//             {
 	//               "type": "*meta.WhiteSpaceType",
 	//               "value": "\n\t\t\t",
-	//               "tokenName": "ClassToken"
+	//               "tokenName": "NodeStart"
 	//             },
 	//             {
 	//               "type": "*meta.WhiteSpaceType",
@@ -170,6 +170,11 @@ func ExamplePrettyJsonDumper() {
 	//               "meta": [
 	//                 {
 	//                   "type": "*meta.WhiteSpaceType",
+	//                   "value": "\n\t\t\t\t",
+	//                   "tokenName": "NodeStart"
+	//                 },
+	//                 {
+	//                   "type": "*meta.WhiteSpaceType",
 	//                   "value": " ",
 	//                   "tokenName": "FunctionToken"
 	//                 }
@@ -202,13 +207,6 @@ func ExamplePrettyJsonDumper() {
 	//                     "startLine": 5,
 	//                     "endLine": 5
 	//                   },
-	//                   "meta": [
-	//                     {
-	//                       "type": "*meta.WhiteSpaceType",
-	//                       "value": "\n\t\t\t\t",
-	//                       "tokenName": "NodeStart"
-	//                     }
-	//                   ],
 	//                   "Value": "public"
 	//                 }
 	//               ],
@@ -291,6 +289,13 @@ func ExamplePrettyJsonDumper() {
 	//                       "startLine": 5,
 	//                       "endLine": 5
 	//                     },
+	//                     "meta": [
+	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": " ",
+	//                         "tokenName": "NodeStart"
+	//                       }
+	//                     ],
 	//                     "Constant": {
 	//                       "type": "*name.Name",
 	//                       "position": {
@@ -309,13 +314,6 @@ func ExamplePrettyJsonDumper() {
 	//                             "startLine": 5,
 	//                             "endLine": 5
 	//                           },
-	//                           "meta": [
-	//                             {
-	//                               "type": "*meta.WhiteSpaceType",
-	//                               "value": " ",
-	//                               "tokenName": "NodeStart"
-	//                             }
-	//                           ],
 	//                           "Value": "null"
 	//                         }
 	//                       ]
@@ -354,6 +352,31 @@ func ExamplePrettyJsonDumper() {
 	//                     },
 	//                     "meta": [
 	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\n\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.CommentType",
+	//                         "value": "// some comment\n",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.CommentType",
+	//                         "value": "// second comment\n",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
+	//                         "type": "*meta.WhiteSpaceType",
+	//                         "value": "\t\t\t\t\t",
+	//                         "tokenName": "NodeStart"
+	//                       },
+	//                       {
 	//                         "type": "*meta.TokenType",
 	//                         "value": ";",
 	//                         "tokenName": "SemiColonToken"
@@ -368,31 +391,6 @@ func ExamplePrettyJsonDumper() {
 	//                         "endLine": 9
 	//                       },
 	//                       "meta": [
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\n\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.CommentType",
-	//                           "value": "// some comment\n",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.CommentType",
-	//                           "value": "// second comment\n",
-	//                           "tokenName": "NodeStart"
-	//                         },
-	//                         {
-	//                           "type": "*meta.WhiteSpaceType",
-	//                           "value": "\t\t\t\t\t",
-	//                           "tokenName": "NodeStart"
-	//                         },
 	//                         {
 	//                           "type": "*meta.TokenType",
 	//                           "value": "$",

@@ -24,7 +24,6 @@ const (
 	ImplementsToken
 	DoubleArrowToken
 	PaamayimNekudotayimToken
-	UseLeadingNsSeparatorToken
 	NsSeparatorToken
 	EllipsisToken
 	LogicalOrToken
