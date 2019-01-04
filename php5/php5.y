@@ -3408,6 +3408,8 @@ expr_without_variable:
                 // save comments
                 $2.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
 
+                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   variable '=' '&' variable
