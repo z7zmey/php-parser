@@ -343,6 +343,11 @@ identifier:
 top_statement_list:
         top_statement_list top_statement
             {
+                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                    prevNode := lastNode($1)
+                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                }
+
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
@@ -888,6 +893,11 @@ const_list:
 inner_statement_list:
         inner_statement_list inner_statement
             {
+                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                    prevNode := lastNode($1)
+                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                }
+
                 if $2 != nil {
                     $$ = append($1, $2)
                 }

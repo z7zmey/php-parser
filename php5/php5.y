@@ -293,6 +293,11 @@ start:
 top_statement_list:
         top_statement_list top_statement
             {
+                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                    prevNode := lastNode($1)
+                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                }
+
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
@@ -804,6 +809,11 @@ constant_declaration:
 inner_statement_list:
         inner_statement_list inner_statement
             {
+                if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+                    prevNode := lastNode($1)
+                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                }
+
                 if $2 != nil {
                     $$ = append($1, $2)
                 }
@@ -3117,7 +3127,7 @@ class_variable_declaration:
 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3136,7 +3146,7 @@ class_variable_declaration:
                 
                 // save comments
                 $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $4.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
 
@@ -3155,7 +3165,7 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3173,7 +3183,7 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
                 yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
                 $2.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
 

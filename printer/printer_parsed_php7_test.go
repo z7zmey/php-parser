@@ -1491,6 +1491,7 @@ func TestParseAndPrintComplexString3(t *testing.T) {
 	src := `<?php
 	"test ${foo}" ;
 	"test ${foo[0]}";
+	"test ${foo::$bar}";
 	"test ${foo }" ;
 	"test ${foo . 'bar' }" ;
 	"test ${foo [ ] }" ;
