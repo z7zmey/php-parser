@@ -4,13 +4,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/z7zmey/php-parser/position"
-
-	"github.com/z7zmey/php-parser/meta"
-
 	"github.com/z7zmey/php-parser/errors"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/parser"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -106,121 +104,122 @@ func isDollar(r rune) bool {
 	return r == '$'
 }
 
-func newInheritMetaFilter() meta.Filter {
-	return meta.StopOnFailureFilter(
-		meta.AndFilter(
-			meta.TokenNameFilter(meta.NodeStart),
-			meta.OrFilter(
-				meta.TypeFilter(meta.CommentType, meta.WhiteSpaceType),
-				meta.ValueFilter("<?php", "<?"),
-			),
-		),
-	)
-}
-
-func (l *Parser) appendMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
-	if !l.Lexer.WithMeta {
+func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
+	if l.Lexer.WithMeta == false {
 		return
 	}
 
-	m := &meta.Data{
-		Value:     t.Value,
-		Type:      meta.TokenType,
-		Position:  l.positionBuilder.NewTokenPosition(t),
-		TokenName: tn,
-	}
-
-	n.GetMeta().Push(m)
-}
-
-func (l *Parser) appendMeta(n node.Node, m *meta.Data, tn meta.TokenName) {
-	if !l.Lexer.WithMeta {
+	if src.GetFreeFloating() == nil {
 		return
 	}
 
-	n.GetMeta().Push(m)
+	l.setFreeFloating(dst, freefloating.Start, (*src.GetFreeFloating())[freefloating.Start])
+	delete((*src.GetFreeFloating()), freefloating.Start)
 }
 
-func (l *Parser) prependMetaToken(n node.Node, t *scanner.Token, tn meta.TokenName) {
-	if !l.Lexer.WithMeta {
+func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings []freefloating.String) {
+	if l.Lexer.WithMeta == false {
 		return
 	}
 
-	m := &meta.Data{
-		Value:     t.Value,
-		Type:      meta.TokenType,
-		Position:  l.positionBuilder.NewTokenPosition(t),
-		TokenName: tn,
-	}
-
-	n.GetMeta().Unshift(m)
-}
-
-func (l *Parser) splitSemicolonTokenAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
-	SemiColonTokenMeta := prevNode.GetMeta().Cut(meta.AndFilter(
-		meta.TokenNameFilter(meta.SemiColonToken),
-		meta.TypeFilter(meta.TokenType),
-	))
-
-	if len(*SemiColonTokenMeta) < 1 {
+	if len(strings) == 0 {
 		return
 	}
 
-	metaTokenValue := (*SemiColonTokenMeta)[0].Value
-
-	i := strings.Index(metaTokenValue, "?>")
-
-	if i < 0 {
-		SemiColonTokenMeta.AppendTo(prevNode.GetMeta())
-	} else {
-		if metaTokenValue[0] == ';' {
-			prevNode.GetMeta().Push(&meta.Data{
-				Value:     metaTokenValue[0:1],
-				Type:      meta.TokenType,
-				Position:  nil,
-				TokenName: meta.SemiColonToken,
-			})
-
-			htmlNode.GetMeta().Push(&meta.Data{
-				Value:     metaTokenValue[1:i],
-				Type:      meta.WhiteSpaceType,
-				Position:  nil,
-				TokenName: meta.NodeStart,
-			})
-
-			htmlNode.GetMeta().Push(&meta.Data{
-				Value:     metaTokenValue[i : i+2],
-				Type:      meta.TokenType,
-				Position:  nil,
-				TokenName: meta.NodeStart,
-			})
-
-			if len(metaTokenValue) > i+2 {
-				htmlNode.GetMeta().Push(&meta.Data{
-					Value:     metaTokenValue[i+2:],
-					Type:      meta.WhiteSpaceType,
-					Position:  nil,
-					TokenName: meta.NodeStart,
-				})
-			}
-		} else {
-			htmlNode.GetMeta().Push(&meta.Data{
-				Value:     metaTokenValue[:2],
-				Type:      meta.TokenType,
-				Position:  nil,
-				TokenName: meta.NodeStart,
-			})
-
-			if len(metaTokenValue) > 2 {
-				htmlNode.GetMeta().Push(&meta.Data{
-					Value:     metaTokenValue[2:],
-					Type:      meta.WhiteSpaceType,
-					Position:  nil,
-					TokenName: meta.NodeStart,
-				})
-			}
-		}
+	dstCollection := dst.GetFreeFloating()
+	if *dstCollection == nil {
+		*dstCollection = make(freefloating.Collection)
 	}
+
+	(*dstCollection)[p] = strings
+}
+
+func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
+	if l.Lexer.WithMeta == false {
+		return []freefloating.String{}
+	}
+
+	return t.GetFreeFloatingToken()
+}
+
+func (l *Parser) addDollarToken(v node.Node) {
+	if l.Lexer.WithMeta == false {
+		return
+	}
+
+	l.setFreeFloating(v, freefloating.Dollar, []freefloating.String{
+		{
+			StringType: freefloating.TokenType,
+			Value:      "$",
+			Position: &position.Position{
+				StartLine: v.GetPosition().StartLine,
+				EndLine:   v.GetPosition().StartLine,
+				StartPos:  v.GetPosition().StartPos,
+				EndPos:    v.GetPosition().StartPos + 1,
+			},
+		},
+	})
+}
+
+func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
+	if l.Lexer.WithMeta == false {
+		return
+	}
+
+	semiColon := (*prevNode.GetFreeFloating())[freefloating.SemiColon]
+	delete((*prevNode.GetFreeFloating()), freefloating.SemiColon)
+	if len(semiColon) == 0 {
+		return
+	}
+
+	p := semiColon[0].Position
+	if semiColon[0].Value[0] == ';' {
+		l.setFreeFloating(prevNode, freefloating.SemiColon, []freefloating.String{
+			{
+				StringType: freefloating.TokenType,
+				Value:      ";",
+				Position: &position.Position{
+					StartLine: p.StartLine,
+					EndLine:   p.StartLine,
+					StartPos:  p.StartPos,
+					EndPos:    p.StartPos + 1,
+				},
+			},
+		})
+	}
+
+	vlen := len(semiColon[0].Value)
+	tlen := 2
+	if strings.HasSuffix(semiColon[0].Value, "?>\n") {
+		tlen = 3
+	}
+
+	phpCloseTag := []freefloating.String{}
+	if vlen-tlen > 1 {
+		phpCloseTag = append(phpCloseTag, freefloating.String{
+			StringType: freefloating.WhiteSpaceType,
+			Value:      semiColon[0].Value[1 : vlen-tlen],
+			Position: &position.Position{
+				StartLine: p.StartLine,
+				EndLine:   p.EndLine,
+				StartPos:  p.StartPos + 1,
+				EndPos:    p.EndPos - tlen,
+			},
+		})
+	}
+
+	phpCloseTag = append(phpCloseTag, freefloating.String{
+		StringType: freefloating.WhiteSpaceType,
+		Value:      semiColon[0].Value[vlen-tlen:],
+		Position: &position.Position{
+			StartLine: p.EndLine,
+			EndLine:   p.EndLine,
+			StartPos:  p.EndPos - tlen,
+			EndPos:    p.EndPos,
+		},
+	})
+
+	l.setFreeFloating(htmlNode, freefloating.Start, append(phpCloseTag, (*htmlNode.GetFreeFloating())[freefloating.Start]...))
 }
 
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {

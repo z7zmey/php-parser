@@ -1,15 +1,13 @@
 package binary_test
 
 import (
-	"reflect"
 	"testing"
-
-	"github.com/kylelemons/godebug/pretty"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/binary"
 	"github.com/z7zmey/php-parser/walker"
+	"gotest.tools/assert"
 )
 
 var nodesToTest = []struct {
@@ -23,7 +21,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BitwiseOr{
@@ -31,7 +29,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BitwiseXor{
@@ -39,7 +37,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BooleanAnd{
@@ -47,7 +45,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BooleanOr{
@@ -55,7 +53,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Coalesce{
@@ -63,7 +61,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Concat{
@@ -71,7 +69,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Div{
@@ -79,7 +77,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Equal{
@@ -87,7 +85,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.GreaterOrEqual{
@@ -95,7 +93,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Greater{
@@ -103,7 +101,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Identical{
@@ -111,7 +109,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalAnd{
@@ -119,7 +117,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalOr{
@@ -127,7 +125,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalXor{
@@ -135,7 +133,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Minus{
@@ -143,7 +141,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Mod{
@@ -151,7 +149,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Mul{
@@ -159,7 +157,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.NotEqual{
@@ -167,7 +165,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.NotIdentical{
@@ -175,7 +173,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Plus{
@@ -183,7 +181,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Pow{
@@ -191,7 +189,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.ShiftLeft{
@@ -199,7 +197,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.ShiftRight{
@@ -207,7 +205,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.SmallerOrEqual{
@@ -215,7 +213,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Smaller{
@@ -223,7 +221,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Spaceship{
@@ -231,7 +229,7 @@ var nodesToTest = []struct {
 			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -253,31 +251,25 @@ func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -288,9 +280,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

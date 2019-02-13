@@ -1,7 +1,7 @@
 package binary
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // LogicalXor node
 type LogicalXor struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Left     node.Node
-	Right    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Left         node.Node
+	Right        node.Node
 }
 
 // NewLogicalXor node constructor
 func NewLogicalXor(Variable node.Node, Expression node.Node) *LogicalXor {
 	return &LogicalXor{
-		Left:  Variable,
-		Right: Expression,
+		FreeFloating: nil,
+		Left:         Variable,
+		Right:        Expression,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *LogicalXor) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *LogicalXor) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *LogicalXor) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

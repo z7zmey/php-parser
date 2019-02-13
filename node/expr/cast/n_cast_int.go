@@ -1,7 +1,7 @@
 package cast
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Int node
 type Int struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Expr     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
 }
 
 // NewInt node constructor
 func NewInt(Expr node.Node) *Int {
 	return &Int{
-		Expr: Expr,
+		FreeFloating: nil,
+		Expr:         Expr,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Int) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Int) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Int) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

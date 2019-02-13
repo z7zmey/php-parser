@@ -2,34 +2,17 @@ package stmt_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
-	"github.com/davecgh/go-spew/spew"
+	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/position"
-
-	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\nexpectd: %+v\nactual: %+v\n", expected, actual)
-			t.Log(spew.Sdump(expected, actual))
-		}
-
-	}
-}
 
 func TestAltIf(t *testing.T) {
 	src := `<?
@@ -85,12 +68,12 @@ func TestAltIf(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestAltElseIf(t *testing.T) {
@@ -184,12 +167,12 @@ func TestAltElseIf(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestAltElse(t *testing.T) {
@@ -264,12 +247,12 @@ func TestAltElse(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestAltElseElseIf(t *testing.T) {
@@ -416,10 +399,10 @@ func TestAltElseElseIf(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

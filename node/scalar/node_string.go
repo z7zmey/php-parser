@@ -1,22 +1,23 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // String node
 type String struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Value    string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewString node constructor
 func NewString(Value string) *String {
 	return &String{
-		Value: Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *String) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *String) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *String) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

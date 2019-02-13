@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Goto node
 type Goto struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Label    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Label        node.Node
 }
 
 // NewGoto node constructor
 func NewGoto(Label node.Node) *Goto {
 	return &Goto{
-		Label: Label,
+		FreeFloating: nil,
+		Label:        Label,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Goto) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Goto) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Goto) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

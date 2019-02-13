@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // Concat node
 type Concat struct {
-	Meta       meta.Collection
-	Position   *position.Position
-	Variable   node.Node
-	Expression node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Expression   node.Node
 }
 
 // NewConcat node constructor
 func NewConcat(Variable node.Node, Expression node.Node) *Concat {
 	return &Concat{
-		Variable:   Variable,
-		Expression: Expression,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Expression:   Expression,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *Concat) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Concat) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Concat) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

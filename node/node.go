@@ -1,7 +1,7 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
@@ -12,5 +12,5 @@ type Node interface {
 	Attributes() map[string]interface{} // Attributes returns node attributes as map
 	SetPosition(p *position.Position)
 	GetPosition() *position.Position
-	GetMeta() *meta.Collection
+	GetFreeFloating() *freefloating.Collection
 }

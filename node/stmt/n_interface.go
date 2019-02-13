@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Interface node
 type Interface struct {
-	Meta          meta.Collection
+	FreeFloating  freefloating.Collection
 	Position      *position.Position
 	PhpDocComment string
 	InterfaceName node.Node
@@ -20,6 +20,7 @@ type Interface struct {
 // NewInterface node constructor
 func NewInterface(InterfaceName node.Node, Extends *InterfaceExtends, Stmts []node.Node, PhpDocComment string) *Interface {
 	return &Interface{
+		FreeFloating:  nil,
 		PhpDocComment: PhpDocComment,
 		InterfaceName: InterfaceName,
 		Extends:       Extends,
@@ -37,8 +38,8 @@ func (n *Interface) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Interface) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Interface) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

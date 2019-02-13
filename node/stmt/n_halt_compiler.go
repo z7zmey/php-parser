@@ -1,15 +1,15 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // HaltCompiler node
 type HaltCompiler struct {
-	Meta     meta.Collection
-	Position *position.Position
+	FreeFloating freefloating.Collection
+	Position     *position.Position
 }
 
 // NewHaltCompiler node constructor
@@ -27,8 +27,8 @@ func (n *HaltCompiler) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *HaltCompiler) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *HaltCompiler) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

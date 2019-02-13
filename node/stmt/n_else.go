@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Else node
 type Else struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Stmt     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Stmt         node.Node
 }
 
 // NewElse node constructor
 func NewElse(Stmt node.Node) *Else {
 	return &Else{
-		Stmt: Stmt,
+		FreeFloating: nil,
+		Stmt:         Stmt,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Else) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Else) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Else) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

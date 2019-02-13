@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // MethodCall node
 type MethodCall struct {
-	Meta         meta.Collection
+	FreeFloating freefloating.Collection
 	Position     *position.Position
 	Variable     node.Node
 	Method       node.Node
@@ -19,6 +19,7 @@ type MethodCall struct {
 // NewMethodCall node constructor
 func NewMethodCall(Variable node.Node, Method node.Node, ArgumentList *node.ArgumentList) *MethodCall {
 	return &MethodCall{
+		FreeFloating: nil,
 		Variable:     Variable,
 		Method:       Method,
 		ArgumentList: ArgumentList,
@@ -35,8 +36,8 @@ func (n *MethodCall) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *MethodCall) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *MethodCall) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // TraitUsePrecedence node
 type TraitUsePrecedence struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	Ref       node.Node
-	Insteadof []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Ref          node.Node
+	Insteadof    []node.Node
 }
 
 // NewTraitUsePrecedence node constructor
 func NewTraitUsePrecedence(Ref node.Node, Insteadof []node.Node) *TraitUsePrecedence {
 	return &TraitUsePrecedence{
-		Ref:       Ref,
-		Insteadof: Insteadof,
+		FreeFloating: nil,
+		Ref:          Ref,
+		Insteadof:    Insteadof,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *TraitUsePrecedence) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitUsePrecedence) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *TraitUsePrecedence) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

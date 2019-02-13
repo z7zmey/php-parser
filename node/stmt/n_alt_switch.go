@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // AltSwitch node
 type AltSwitch struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Cond     node.Node
-	CaseList *CaseList
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cond         node.Node
+	CaseList     *CaseList
 }
 
 // NewAltSwitch node constructor
 func NewAltSwitch(Cond node.Node, CaseList *CaseList) *AltSwitch {
 	return &AltSwitch{
-		Cond:     Cond,
-		CaseList: CaseList,
+		FreeFloating: nil,
+		Cond:         Cond,
+		CaseList:     CaseList,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *AltSwitch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltSwitch) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *AltSwitch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

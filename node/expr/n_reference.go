@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Reference node
 type Reference struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Variable node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
 }
 
 // NewReference node constructor
 func NewReference(Variable node.Node) *Reference {
 	return &Reference{
-		Variable: Variable,
+		FreeFloating: nil,
+		Variable:     Variable,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Reference) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Reference) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Reference) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

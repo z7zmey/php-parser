@@ -9,7 +9,7 @@ package scanner
 
 import (
     "fmt"
-    "github.com/z7zmey/php-parser/meta"
+    "github.com/z7zmey/php-parser/freefloating"
     "github.com/cznic/golex/lex"
 )
 
@@ -33,9 +33,8 @@ func isValidFirstVarNameRune(r rune) bool {
 }
 
 func (l *Lexer) Lex(lval Lval) int {
-    l.Meta = nil
+    l.FreeFloating = nil
     c := l.Enter()
-
 %}
 
 %s PHP STRING STRING_VAR STRING_VAR_INDEX STRING_VAR_NAME PROPERTY HEREDOC_END NOWDOC HEREDOC BACKQUOTE HALT_COMPILER
@@ -60,7 +59,7 @@ ANY_CHAR        .
 %%
     c = l.Rule0()
 
-<INITIAL>[ \t\n\r]+                             l.addMeta(meta.WhiteSpaceType, l.Token())
+<INITIAL>[ \t\n\r]+                             l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 <INITIAL>.
     tb := []lex.Char{}
 
@@ -87,12 +86,12 @@ ANY_CHAR        .
     lval.Token(l.createToken(tb))
     return int(T_INLINE_HTML)
 
-<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.addMeta(meta.TokenType, l.Token()[:5]);l.Begin(PHP);l.ungetChars(len(l.Token())-5)
-<INITIAL>\<\?                                   l.addMeta(meta.TokenType, l.Token());l.Begin(PHP);
+<INITIAL>\<\?php([ \t]|{NEW_LINE})              l.addFreeFloating(freefloating.TokenType, l.Token()[:5]);l.Begin(PHP);l.ungetChars(len(l.Token())-5)
+<INITIAL>\<\?                                   l.addFreeFloating(freefloating.TokenType, l.Token());l.Begin(PHP);
 <INITIAL>\<\?=                                  l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_ECHO);
 
 
-<PHP>[ \t\n\r]+                                 l.addMeta(meta.WhiteSpaceType, l.Token())
+<PHP>[ \t\n\r]+                                 l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 <PHP>[;][ \t\n\r]*\?\>{NEW_LINE}?               l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 <PHP>\?\>{NEW_LINE}?                            l.Begin(INITIAL);lval.Token(l.createToken(l.Token())); return Rune2Class(';');
 
@@ -289,10 +288,10 @@ ANY_CHAR        .
         break;
     }
 
-    l.addMeta(meta.CommentType, tb)
+    l.addFreeFloating(freefloating.CommentType, tb)
 
 <PHP>[/][*][*][/]
-    l.addMeta(meta.CommentType, l.Token())
+    l.addFreeFloating(freefloating.CommentType, l.Token())
 <PHP>([/][*])|([/][*][*])
     tb := l.Token()
     is_doc_comment := false
@@ -317,9 +316,9 @@ ANY_CHAR        .
 
     if is_doc_comment {
         l.PhpDocComment = string(l.TokenBytes(nil))
-        l.addMeta(meta.CommentType, l.Token())
+        l.addFreeFloating(freefloating.CommentType, l.Token())
     } else {
-        l.addMeta(meta.CommentType, l.Token())
+        l.addFreeFloating(freefloating.CommentType, l.Token())
     }
 
 <PHP>{OPERATORS}                                lval.Token(l.createToken(l.Token())); return Rune2Class(rune(l.TokenBytes(nil)[0]))
@@ -330,7 +329,7 @@ ANY_CHAR        .
 <PHP>{VAR_NAME}                                 lval.Token(l.createToken(l.Token())); return int(T_STRING)
 
 <PHP>->                                         l.Begin(PROPERTY);lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
-<PROPERTY>[ \t\n\r]+                            l.addMeta(meta.WhiteSpaceType, l.Token())
+<PROPERTY>[ \t\n\r]+                            l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 <PROPERTY>->                                    lval.Token(l.createToken(l.Token())); return int(T_OBJECT_OPERATOR);
 <PROPERTY>{VAR_NAME}                            l.Begin(PHP);lval.Token(l.createToken(l.Token())); return int(T_STRING);
 <PROPERTY>.                                     l.ungetChars(1);l.Begin(PHP)
@@ -674,7 +673,7 @@ ANY_CHAR        .
 <STRING_VAR_NAME>{VAR_NAME}[\[\}]           l.popState();l.pushState(PHP);lval.Token(l.createToken(l.ungetChars(1))); return int(T_STRING_VARNAME)
 <STRING_VAR_NAME>.                          l.ungetChars(1);l.popState();l.pushState(PHP)
 
-<HALT_COMPILER>.|[ \t\n\r]                  l.addMeta(meta.TokenType, l.Token())
+<HALT_COMPILER>.|[ \t\n\r]                  l.addFreeFloating(freefloating.TokenType, l.Token())
 
 <PHP>{ANY_CHAR}                             l.Error(fmt.Sprintf("WARNING: Unexpected character in input: '%c' (ASCII=%d)", l.TokenBytes(nil)[0], l.TokenBytes(nil)[0]));l.Abort();
 

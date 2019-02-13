@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Label node
 type Label struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	LabelName node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	LabelName    node.Node
 }
 
 // NewLabel node constructor
 func NewLabel(LabelName node.Node) *Label {
 	return &Label{
-		LabelName: LabelName,
+		FreeFloating: nil,
+		LabelName:    LabelName,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Label) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Label) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Label) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

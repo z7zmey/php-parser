@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // StaticVar node
 type StaticVar struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Variable node.Node
-	Expr     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Expr         node.Node
 }
 
 // NewStaticVar node constructor
 func NewStaticVar(Variable node.Node, Expr node.Node) *StaticVar {
 	return &StaticVar{
-		Variable: Variable,
-		Expr:     Expr,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Expr:         Expr,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *StaticVar) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *StaticVar) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *StaticVar) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

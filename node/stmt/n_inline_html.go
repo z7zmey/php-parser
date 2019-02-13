@@ -1,22 +1,23 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // InlineHtml node
 type InlineHtml struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Value    string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewInlineHtml node constructor
 func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
-		Value: Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *InlineHtml) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *InlineHtml) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *InlineHtml) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

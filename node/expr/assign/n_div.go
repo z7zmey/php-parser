@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // Div node
 type Div struct {
-	Meta       meta.Collection
-	Position   *position.Position
-	Variable   node.Node
-	Expression node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Expression   node.Node
 }
 
 // NewDiv node constructor
 func NewDiv(Variable node.Node, Expression node.Node) *Div {
 	return &Div{
-		Variable:   Variable,
-		Expression: Expression,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Expression:   Expression,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *Div) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Div) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Div) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

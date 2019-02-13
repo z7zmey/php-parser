@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,19 +9,20 @@ import (
 
 // Catch node
 type Catch struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Types    []node.Node
-	Variable node.Node
-	Stmts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Types        []node.Node
+	Variable     node.Node
+	Stmts        []node.Node
 }
 
 // NewCatch node constructor
 func NewCatch(Types []node.Node, Variable node.Node, Stmts []node.Node) *Catch {
 	return &Catch{
-		Types:    Types,
-		Variable: Variable,
-		Stmts:    Stmts,
+		FreeFloating: nil,
+		Types:        Types,
+		Variable:     Variable,
+		Stmts:        Stmts,
 	}
 }
 
@@ -35,8 +36,8 @@ func (n *Catch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Catch) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Catch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

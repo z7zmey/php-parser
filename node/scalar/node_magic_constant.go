@@ -1,22 +1,23 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // MagicConstant node
 type MagicConstant struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Value    string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewMagicConstant node constructor
 func NewMagicConstant(Value string) *MagicConstant {
 	return &MagicConstant{
-		Value: Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *MagicConstant) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *MagicConstant) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *MagicConstant) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // StaticPropertyFetch node
 type StaticPropertyFetch struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Class    node.Node
-	Property node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Class        node.Node
+	Property     node.Node
 }
 
 // NewStaticPropertyFetch node constructor
 func NewStaticPropertyFetch(Class node.Node, Property node.Node) *StaticPropertyFetch {
 	return &StaticPropertyFetch{
-		Class:    Class,
-		Property: Property,
+		FreeFloating: nil,
+		Class:        Class,
+		Property:     Property,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *StaticPropertyFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *StaticPropertyFetch) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *StaticPropertyFetch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Closure node
 type Closure struct {
-	Meta          meta.Collection
+	FreeFloating  freefloating.Collection
 	Position      *position.Position
 	ReturnsRef    bool
 	Static        bool
@@ -23,6 +23,7 @@ type Closure struct {
 // NewClosure node constructor
 func NewClosure(Params []node.Node, ClosureUse *ClosureUse, ReturnType node.Node, Stmts []node.Node, Static bool, ReturnsRef bool, PhpDocComment string) *Closure {
 	return &Closure{
+		FreeFloating:  nil,
 		ReturnsRef:    ReturnsRef,
 		Static:        Static,
 		PhpDocComment: PhpDocComment,
@@ -43,8 +44,8 @@ func (n *Closure) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Closure) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Closure) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

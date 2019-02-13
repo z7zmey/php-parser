@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,19 +9,20 @@ import (
 
 // TraitUseAlias node
 type TraitUseAlias struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Ref      node.Node
-	Modifier node.Node
-	Alias    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Ref          node.Node
+	Modifier     node.Node
+	Alias        node.Node
 }
 
 // NewTraitUseAlias node constructor
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) *TraitUseAlias {
 	return &TraitUseAlias{
-		Ref:      Ref,
-		Modifier: Modifier,
-		Alias:    Alias,
+		FreeFloating: nil,
+		Ref:          Ref,
+		Modifier:     Modifier,
+		Alias:        Alias,
 	}
 }
 
@@ -35,8 +36,8 @@ func (n *TraitUseAlias) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitUseAlias) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *TraitUseAlias) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

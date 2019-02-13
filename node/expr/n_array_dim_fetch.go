@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // ArrayDimFetch node
 type ArrayDimFetch struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Variable node.Node
-	Dim      node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Dim          node.Node
 }
 
 // NewArrayDimFetch node constructor
 func NewArrayDimFetch(Variable node.Node, Dim node.Node) *ArrayDimFetch {
 	return &ArrayDimFetch{
-		Variable: Variable,
-		Dim:      Dim,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Dim:          Dim,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *ArrayDimFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ArrayDimFetch) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ArrayDimFetch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

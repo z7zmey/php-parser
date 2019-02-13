@@ -1,15 +1,13 @@
 package assign_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node/expr/assign"
-
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/expr/assign"
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -24,7 +22,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Assign{
@@ -32,7 +30,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.BitwiseAnd{
@@ -40,7 +38,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.BitwiseOr{
@@ -48,7 +46,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.BitwiseXor{
@@ -56,7 +54,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Concat{
@@ -64,7 +62,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Div{
@@ -72,7 +70,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Minus{
@@ -80,7 +78,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Mod{
@@ -88,7 +86,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Mul{
@@ -96,7 +94,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Plus{
@@ -104,7 +102,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.Pow{
@@ -112,7 +110,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.ShiftLeft{
@@ -120,7 +118,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&assign.ShiftRight{
@@ -128,7 +126,7 @@ var nodesToTest = []struct {
 			Expression: &expr.Variable{},
 		},
 		[]string{"Variable", "Expression"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -150,31 +148,25 @@ func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -185,9 +177,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Continue node
 type Continue struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Expr     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
 }
 
 // NewContinue node constructor
 func NewContinue(Expr node.Node) *Continue {
 	return &Continue{
-		Expr: Expr,
+		FreeFloating: nil,
+		Expr:         Expr,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Continue) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Continue) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Continue) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

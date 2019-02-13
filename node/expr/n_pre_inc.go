@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // PreInc node
 type PreInc struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Variable node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
 }
 
 // NewPreInc node constructor
 func NewPreInc(Variable node.Node) *PreInc {
 	return &PreInc{
-		Variable: Variable,
+		FreeFloating: nil,
+		Variable:     Variable,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *PreInc) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *PreInc) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *PreInc) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

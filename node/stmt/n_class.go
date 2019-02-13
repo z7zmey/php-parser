@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Class node
 type Class struct {
-	Meta          meta.Collection
+	FreeFloating  freefloating.Collection
 	Position      *position.Position
 	PhpDocComment string
 	ClassName     node.Node
@@ -23,6 +23,7 @@ type Class struct {
 // NewClass node constructor
 func NewClass(ClassName node.Node, Modifiers []node.Node, ArgumentList *node.ArgumentList, Extends *ClassExtends, Implements *ClassImplements, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
+		FreeFloating:  nil,
 		PhpDocComment: PhpDocComment,
 		ClassName:     ClassName,
 		Modifiers:     Modifiers,
@@ -43,8 +44,8 @@ func (n *Class) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Class) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Class) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // Trait node
 type Trait struct {
-	Meta          meta.Collection
+	FreeFloating  freefloating.Collection
 	Position      *position.Position
 	PhpDocComment string
 	TraitName     node.Node
@@ -19,6 +19,7 @@ type Trait struct {
 // NewTrait node constructor
 func NewTrait(TraitName node.Node, Stmts []node.Node, PhpDocComment string) *Trait {
 	return &Trait{
+		FreeFloating:  nil,
 		PhpDocComment: PhpDocComment,
 		TraitName:     TraitName,
 		Stmts:         Stmts,
@@ -35,8 +36,8 @@ func (n *Trait) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Trait) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Trait) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

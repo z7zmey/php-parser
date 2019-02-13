@@ -7,10 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/z7zmey/php-parser/meta"
-
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
-
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -61,50 +59,58 @@ func (d *GoDumper) EnterNode(w walker.Walkable) bool {
 		fmt.Fprint(d.Writer, "},\n")
 	}
 
-	if mm := n.GetMeta(); len(*mm) > 0 {
+	if !n.GetFreeFloating().IsEmpty() {
 		printIndent(d.Writer, d.depth)
-		fmt.Fprint(d.Writer, "Meta: meta.Collection{\n")
+		fmt.Fprint(d.Writer, "FreeFloating: freefloating.Collection{\n")
 		d.depth++
-		for _, m := range *mm {
+		for key, freeFloatingStrings := range *n.GetFreeFloating() {
 			printIndent(d.Writer, d.depth)
-			fmt.Fprint(d.Writer, "&meta.Data{\n")
+			fmt.Fprintf(d.Writer, "%q: []freefloating.String{\n", key)
 			d.depth++
 
-			printIndent(d.Writer, d.depth)
-
-			switch m.Type {
-			case meta.CommentType:
-				fmt.Fprint(d.Writer, "Type: meta.CommentType,\n")
-			case meta.WhiteSpaceType:
-				fmt.Fprint(d.Writer, "Type: meta.WhiteSpaceType,\n")
-			case meta.TokenType:
-				fmt.Fprint(d.Writer, "Type: meta.TokenType,\n")
-			}
-
-			printIndent(d.Writer, d.depth)
-
-			if m.Position != nil {
-				fmt.Fprint(d.Writer, "Position: &position.Position{\n")
+			for _, freeFloatingString := range freeFloatingStrings {
+				printIndent(d.Writer, d.depth)
+				fmt.Fprint(d.Writer, "freefloating.String{\n")
 				d.depth++
+
 				printIndent(d.Writer, d.depth)
-				fmt.Fprintf(d.Writer, "StartLine: %d,\n", m.Position.StartLine)
+
+				switch freeFloatingString.StringType {
+				case freefloating.CommentType:
+					fmt.Fprint(d.Writer, "Type: freefloating.CommentType,\n")
+				case freefloating.WhiteSpaceType:
+					fmt.Fprint(d.Writer, "Type: freefloating.WhiteSpaceType,\n")
+				case freefloating.TokenType:
+					fmt.Fprint(d.Writer, "Type: freefloating.TokenType,\n")
+				}
+
 				printIndent(d.Writer, d.depth)
-				fmt.Fprintf(d.Writer, "EndLine: %d,\n", m.Position.EndLine)
+
+				if freeFloatingString.Position != nil {
+					fmt.Fprint(d.Writer, "Position: &position.Position{\n")
+					d.depth++
+					printIndent(d.Writer, d.depth)
+					fmt.Fprintf(d.Writer, "StartLine: %d,\n", freeFloatingString.Position.StartLine)
+					printIndent(d.Writer, d.depth)
+					fmt.Fprintf(d.Writer, "EndLine: %d,\n", freeFloatingString.Position.EndLine)
+					printIndent(d.Writer, d.depth)
+					fmt.Fprintf(d.Writer, "StartPos: %d,\n", freeFloatingString.Position.StartPos)
+					printIndent(d.Writer, d.depth)
+					fmt.Fprintf(d.Writer, "EndPos: %d,\n", freeFloatingString.Position.EndPos)
+					d.depth--
+					printIndent(d.Writer, d.depth)
+					fmt.Fprint(d.Writer, "},\n")
+				} else {
+					fmt.Fprint(d.Writer, "Position: nil,\n")
+				}
+
 				printIndent(d.Writer, d.depth)
-				fmt.Fprintf(d.Writer, "StartPos: %d,\n", m.Position.StartPos)
-				printIndent(d.Writer, d.depth)
-				fmt.Fprintf(d.Writer, "EndPos: %d,\n", m.Position.EndPos)
+				fmt.Fprintf(d.Writer, "Value: %q,\n", freeFloatingString.Value)
+
 				d.depth--
 				printIndent(d.Writer, d.depth)
 				fmt.Fprint(d.Writer, "},\n")
-			} else {
-				fmt.Fprint(d.Writer, "Position: nil,\n")
 			}
-
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "Value: %q,\n", m.String())
-			printIndent(d.Writer, d.depth)
-			fmt.Fprintf(d.Writer, "TokenName: meta.%s,\n", m.TokenName.String())
 
 			d.depth--
 			printIndent(d.Writer, d.depth)

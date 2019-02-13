@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // ShellExec node
 type ShellExec struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Parts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Parts        []node.Node
 }
 
 // NewShellExec node constructor
 func NewShellExec(Parts []node.Node) *ShellExec {
 	return &ShellExec{
-		Parts: Parts,
+		FreeFloating: nil,
+		Parts:        Parts,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *ShellExec) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ShellExec) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ShellExec) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

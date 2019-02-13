@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // CaseList node
 type CaseList struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Cases    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cases        []node.Node
 }
 
 // NewCaseList node constructor
 func NewCaseList(Cases []node.Node) *CaseList {
 	return &CaseList{
-		Cases: Cases,
+		FreeFloating: nil,
+		Cases:        Cases,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *CaseList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *CaseList) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *CaseList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

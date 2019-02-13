@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,21 +9,22 @@ import (
 
 // AltFor node
 type AltFor struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Init     []node.Node
-	Cond     []node.Node
-	Loop     []node.Node
-	Stmt     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Init         []node.Node
+	Cond         []node.Node
+	Loop         []node.Node
+	Stmt         node.Node
 }
 
 // NewAltFor node constructor
 func NewAltFor(Init []node.Node, Cond []node.Node, Loop []node.Node, Stmt node.Node) *AltFor {
 	return &AltFor{
-		Init: Init,
-		Cond: Cond,
-		Loop: Loop,
-		Stmt: Stmt,
+		FreeFloating: nil,
+		Init:         Init,
+		Cond:         Cond,
+		Loop:         Loop,
+		Stmt:         Stmt,
 	}
 }
 
@@ -37,8 +38,8 @@ func (n *AltFor) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *AltFor) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *AltFor) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

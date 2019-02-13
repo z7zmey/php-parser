@@ -1,22 +1,23 @@
 package name
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // NamePart node
 type NamePart struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Value    string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewNamePart node constructor
 func NewNamePart(Value string) *NamePart {
 	return &NamePart{
-		Value: Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *NamePart) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *NamePart) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *NamePart) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

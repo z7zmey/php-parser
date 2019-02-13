@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // Yield node
 type Yield struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Key      node.Node
-	Value    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Key          node.Node
+	Value        node.Node
 }
 
 // NewYield node constructor
 func NewYield(Key node.Node, Value node.Node) *Yield {
 	return &Yield{
-		Key:   Key,
-		Value: Value,
+		FreeFloating: nil,
+		Key:          Key,
+		Value:        Value,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *Yield) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Yield) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Yield) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,15 +1,15 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Nop node
 type Nop struct {
-	Meta     meta.Collection
-	Position *position.Position
+	FreeFloating freefloating.Collection
+	Position     *position.Position
 }
 
 // NewNop node constructor
@@ -27,8 +27,8 @@ func (n *Nop) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Nop) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Nop) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

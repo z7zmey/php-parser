@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,19 +9,20 @@ import (
 
 // Ternary node
 type Ternary struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	Condition node.Node
-	IfTrue    node.Node
-	IfFalse   node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Condition    node.Node
+	IfTrue       node.Node
+	IfFalse      node.Node
 }
 
 // NewTernary node constructor
 func NewTernary(Condition node.Node, IfTrue node.Node, IfFalse node.Node) *Ternary {
 	return &Ternary{
-		Condition: Condition,
-		IfTrue:    IfTrue,
-		IfFalse:   IfFalse,
+		FreeFloating: nil,
+		Condition:    Condition,
+		IfTrue:       IfTrue,
+		IfFalse:      IfFalse,
 	}
 }
 
@@ -35,8 +36,8 @@ func (n *Ternary) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Ternary) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Ternary) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

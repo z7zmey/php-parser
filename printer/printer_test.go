@@ -4,8 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/z7zmey/php-parser/meta"
-
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
@@ -80,11 +79,12 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 			&stmt.InlineHtml{Value: "<div>HTML</div>"},
 			&stmt.Expression{
 				Expr: &expr.Variable{
-					Meta: meta.Collection{
-						&meta.Data{
-							Type:      meta.TokenType,
-							Value:     "$",
-							TokenName: meta.NodeStart,
+					FreeFloating: freefloating.Collection{
+						freefloating.Start: []freefloating.String{
+							{
+								StringType: freefloating.TokenType,
+								Value:      "$",
+							},
 						},
 					},
 					VarName: &node.Identifier{
@@ -95,11 +95,12 @@ func TestPrinterPrintFileInlineHtml(t *testing.T) {
 			&stmt.InlineHtml{Value: "<div>HTML</div>"},
 			&stmt.Expression{
 				Expr: &expr.Variable{
-					Meta: meta.Collection{
-						&meta.Data{
-							Type:      meta.TokenType,
-							Value:     "$",
-							TokenName: meta.NodeStart,
+					FreeFloating: freefloating.Collection{
+						freefloating.Start: []freefloating.String{
+							{
+								StringType: freefloating.TokenType,
+								Value:      "$",
+							},
 						},
 					},
 					VarName: &node.Identifier{
@@ -3901,11 +3902,12 @@ func TestPrinterPrintProperty(t *testing.T) {
 	p := printer.NewPrinter(o)
 	p.Print(&stmt.Property{
 		Variable: &expr.Variable{
-			Meta: meta.Collection{
-				&meta.Data{
-					Type:      meta.TokenType,
-					Value:     "$",
-					TokenName: meta.NodeStart,
+			FreeFloating: freefloating.Collection{
+				freefloating.Start: []freefloating.String{
+					{
+						StringType: freefloating.TokenType,
+						Value:      "$",
+					},
 				},
 			},
 			VarName: &node.Identifier{Value: "a"},

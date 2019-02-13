@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,21 +9,22 @@ import (
 
 // Foreach node
 type Foreach struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Expr     node.Node
-	Key      node.Node
-	Variable node.Node
-	Stmt     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
+	Key          node.Node
+	Variable     node.Node
+	Stmt         node.Node
 }
 
 // NewForeach node constructor
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node) *Foreach {
 	return &Foreach{
-		Expr:     Expr,
-		Key:      Key,
-		Variable: Variable,
-		Stmt:     Stmt,
+		FreeFloating: nil,
+		Expr:         Expr,
+		Key:          Key,
+		Variable:     Variable,
+		Stmt:         Stmt,
 	}
 }
 
@@ -37,8 +38,8 @@ func (n *Foreach) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Foreach) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Foreach) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

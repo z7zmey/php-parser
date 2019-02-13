@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // PropertyList node
 type PropertyList struct {
-	Meta       meta.Collection
-	Position   *position.Position
-	Modifiers  []node.Node
-	Properties []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Modifiers    []node.Node
+	Properties   []node.Node
 }
 
 // NewPropertyList node constructor
 func NewPropertyList(Modifiers []node.Node, Properties []node.Node) *PropertyList {
 	return &PropertyList{
-		Modifiers:  Modifiers,
-		Properties: Properties,
+		FreeFloating: nil,
+		Modifiers:    Modifiers,
+		Properties:   Properties,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *PropertyList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *PropertyList) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *PropertyList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
