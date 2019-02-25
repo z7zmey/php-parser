@@ -3,6 +3,7 @@ branches:
   only:
     - master
 before_script:
+  - go get -u gotest.tools/assert
   - go get -u golang.org/x/tools/cmd/goyacc
   - go get -u github.com/pkg/profile
   - go get -u github.com/cznic/golex/lex

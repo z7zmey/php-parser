@@ -1,32 +1,17 @@
 package visitor_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
-	"github.com/z7zmey/php-parser/node/scalar"
-
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/visitor"
-
-	"github.com/z7zmey/php-parser/node/stmt"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
+	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/node/stmt"
+	"github.com/z7zmey/php-parser/visitor"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-	}
-}
 
 func TestResolveStaticCall(t *testing.T) {
 	nameAB := &name.Name{Parts: []node.Node{&name.NamePart{Value: "A"}, &name.NamePart{Value: "B"}}}
@@ -56,7 +41,7 @@ func TestResolveStaticCall(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveStaticPropertyFetch(t *testing.T) {
@@ -86,7 +71,7 @@ func TestResolveStaticPropertyFetch(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveClassConstFetch(t *testing.T) {
@@ -116,7 +101,7 @@ func TestResolveClassConstFetch(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveNew(t *testing.T) {
@@ -146,7 +131,7 @@ func TestResolveNew(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveInstanceOf(t *testing.T) {
@@ -176,7 +161,7 @@ func TestResolveInstanceOf(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveInstanceCatch(t *testing.T) {
@@ -223,7 +208,7 @@ func TestResolveInstanceCatch(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveFunctionCall(t *testing.T) {
@@ -254,7 +239,7 @@ func TestResolveFunctionCall(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveConstFetch(t *testing.T) {
@@ -284,7 +269,7 @@ func TestResolveConstFetch(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveGroupUse(t *testing.T) {
@@ -341,7 +326,7 @@ func TestResolveGroupUse(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveTraitUse(t *testing.T) {
@@ -407,7 +392,7 @@ func TestResolveTraitUse(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveClassName(t *testing.T) {
@@ -442,7 +427,7 @@ func TestResolveClassName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveInterfaceName(t *testing.T) {
@@ -475,7 +460,7 @@ func TestResolveInterfaceName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveTraitName(t *testing.T) {
@@ -498,7 +483,7 @@ func TestResolveTraitName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveFunctionName(t *testing.T) {
@@ -536,7 +521,7 @@ func TestResolveFunctionName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveMethodName(t *testing.T) {
@@ -569,7 +554,7 @@ func TestResolveMethodName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	methodNode.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveClosureName(t *testing.T) {
@@ -600,7 +585,7 @@ func TestResolveClosureName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	closureNode.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveConstantsName(t *testing.T) {
@@ -639,7 +624,7 @@ func TestResolveConstantsName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveNamespaces(t *testing.T) {
@@ -717,7 +702,7 @@ func TestResolveNamespaces(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestResolveStaticCallDinamicClassName(t *testing.T) {
@@ -736,7 +721,7 @@ func TestResolveStaticCallDinamicClassName(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestDoNotResolveReservedConstants(t *testing.T) {
@@ -792,7 +777,7 @@ func TestDoNotResolveReservedConstants(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestDoNotResolveReservedNames(t *testing.T) {
@@ -914,7 +899,7 @@ func TestDoNotResolveReservedNames(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }
 
 func TestDoNotResolveReservedSpecialNames(t *testing.T) {
@@ -987,5 +972,5 @@ func TestDoNotResolveReservedSpecialNames(t *testing.T) {
 	nsResolver := visitor.NewNamespaceResolver()
 	ast.Walk(nsResolver)
 
-	assertEqual(t, expected, nsResolver.ResolvedNames)
+	assert.DeepEqual(t, expected, nsResolver.ResolvedNames)
 }

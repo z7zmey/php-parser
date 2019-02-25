@@ -1,28 +1,13 @@
 package errors_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/z7zmey/php-parser/position"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/errors"
-
-	"github.com/kylelemons/godebug/pretty"
+	"github.com/z7zmey/php-parser/position"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-
-	}
-}
 
 func TestConstructor(t *testing.T) {
 	pos := position.NewPosition(1, 2, 3, 4)
@@ -34,7 +19,7 @@ func TestConstructor(t *testing.T) {
 		Pos: pos,
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPrint(t *testing.T) {
@@ -46,7 +31,7 @@ func TestPrint(t *testing.T) {
 
 	expected := "message at line 1"
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPrintWithotPos(t *testing.T) {
@@ -56,5 +41,5 @@ func TestPrintWithotPos(t *testing.T) {
 
 	expected := "message"
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

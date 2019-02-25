@@ -2,29 +2,13 @@ package scanner_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
-
 	"github.com/z7zmey/php-parser/scanner"
-
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-
-	}
-}
 
 type lval struct {
 	Tkn *scanner.Token
@@ -427,7 +411,7 @@ func TestTokens(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestSingleQuoteStringTokens(t *testing.T) {
@@ -474,7 +458,7 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTeplateStringTokens(t *testing.T) {
@@ -563,7 +547,7 @@ func TestTeplateStringTokens(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestBackquoteStringTokens(t *testing.T) {
@@ -649,7 +633,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestHereDocTokens(t *testing.T) {
@@ -744,7 +728,7 @@ CAT;
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestHereDocTokens2(t *testing.T) {
@@ -816,7 +800,7 @@ CAT
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestHereDocTokens3(t *testing.T) {
@@ -855,7 +839,7 @@ CAT;
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestInlineHtmlNopTokens(t *testing.T) {
@@ -888,7 +872,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestStringTokensAfterVariable(t *testing.T) {
@@ -925,8 +909,8 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
-	assertEqual(t, expectedTokens, actualTokens)
+	assert.DeepEqual(t, expected, actual)
+	assert.DeepEqual(t, expectedTokens, actualTokens)
 }
 
 func TestSlashAfterVariable(t *testing.T) {
@@ -959,8 +943,8 @@ func TestSlashAfterVariable(t *testing.T) {
 		actual = append(actual, scanner.LexerToken(token).String())
 	}
 
-	assertEqual(t, expected, actual)
-	assertEqual(t, expectedTokens, actualTokens)
+	assert.DeepEqual(t, expected, actual)
+	assert.DeepEqual(t, expectedTokens, actualTokens)
 }
 
 func TestCommentEnd(t *testing.T) {
@@ -992,7 +976,7 @@ func TestCommentEnd(t *testing.T) {
 
 	actual := lexer.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestCommentNewLine(t *testing.T) {
@@ -1024,7 +1008,7 @@ func TestCommentNewLine(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestCommentNewLine1(t *testing.T) {
@@ -1056,7 +1040,7 @@ func TestCommentNewLine1(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestCommentNewLine2(t *testing.T) {
@@ -1088,7 +1072,7 @@ func TestCommentNewLine2(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestCommentWithPhpEndTag(t *testing.T) {
@@ -1121,7 +1105,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestInlineComment(t *testing.T) {
@@ -1154,7 +1138,7 @@ func TestInlineComment(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestInlineComment2(t *testing.T) {
@@ -1187,7 +1171,7 @@ func TestInlineComment2(t *testing.T) {
 
 	actual := lexer.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestEmptyInlineComment(t *testing.T) {
@@ -1225,7 +1209,7 @@ func TestEmptyInlineComment(t *testing.T) {
 
 	actual := lexer.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestEmptyInlineComment2(t *testing.T) {
@@ -1258,7 +1242,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 
 	actual := lv.Tkn.FreeFloating
 
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestMethodCallTokens(t *testing.T) {
@@ -1283,7 +1267,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual := lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1294,7 +1278,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1305,7 +1289,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1316,7 +1300,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1327,7 +1311,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1338,7 +1322,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1349,7 +1333,7 @@ func TestMethodCallTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestYieldFromTokens(t *testing.T) {
@@ -1374,7 +1358,7 @@ func TestYieldFromTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual := lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = []freefloating.String{
 		{
@@ -1385,7 +1369,7 @@ func TestYieldFromTokens(t *testing.T) {
 	}
 	lexer.Lex(lv)
 	actual = lv.Tkn.FreeFloating
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestIgnoreControllCharacters(t *testing.T) {
@@ -1397,12 +1381,12 @@ func TestIgnoreControllCharacters(t *testing.T) {
 	expected := "echo"
 	lexer.Lex(lv)
 	actual := lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = "$b"
 	lexer.Lex(lv)
 	actual = lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
@@ -1414,25 +1398,25 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	expected := "\""
 	lexer.Lex(lv)
 	actual := lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = "$a"
 	lexer.Lex(lv)
 	actual = lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = "["
 	lexer.Lex(lv)
 	actual = lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = "test"
 	lexer.Lex(lv)
 	actual = lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	expected = "]"
 	lexer.Lex(lv)
 	actual = lv.Tkn.Value
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

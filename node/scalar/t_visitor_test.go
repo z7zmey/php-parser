@@ -1,10 +1,10 @@
 package scalar_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/walker"
@@ -70,31 +70,25 @@ func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestNameVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nameNodesTests {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestNameVisitor(t *testing.T) {
 	for _, tt := range nameNodesTests {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -105,9 +99,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
