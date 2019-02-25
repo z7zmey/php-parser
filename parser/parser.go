@@ -11,5 +11,5 @@ type Parser interface {
 	GetPath() string
 	GetRootNode() node.Node
 	GetErrors() []*errors.Error
-	WithMeta()
+	WithFreeFloating()
 }

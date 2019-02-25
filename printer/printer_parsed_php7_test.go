@@ -30,7 +30,7 @@ abstract class Bar extends Baz
 	// parse
 
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
-	php7parser.WithMeta()
+	php7parser.WithFreeFloating()
 	php7parser.Parse()
 
 	rootNode := php7parser.GetRootNode()
@@ -62,7 +62,7 @@ abstract class Bar extends Baz
 
 func parse(src string) node.Node {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
-	php7parser.WithMeta()
+	php7parser.WithFreeFloating()
 	php7parser.Parse()
 
 	return php7parser.GetRootNode()

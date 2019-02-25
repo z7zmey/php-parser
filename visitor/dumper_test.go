@@ -22,7 +22,7 @@ func ExampleDumper() {
 		}`
 
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
-	php7parser.WithMeta()
+	php7parser.WithFreeFloating()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()
 

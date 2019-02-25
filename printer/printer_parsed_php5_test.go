@@ -11,7 +11,7 @@ import (
 
 func parsePhp5(src string) node.Node {
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
-	php5parser.WithMeta()
+	php5parser.WithFreeFloating()
 	php5parser.Parse()
 
 	return php5parser.GetRootNode()

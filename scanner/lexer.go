@@ -31,15 +31,15 @@ type Lval interface {
 // Lexer php lexer
 type Lexer struct {
 	*lex.Lexer
-	StateStack    []int
-	PhpDocComment string
-	FreeFloating  []freefloating.String
-	heredocLabel  string
-	tokenBytesBuf *bytes.Buffer
-	TokenPool     *TokenPool
-	WithMeta      bool
-	lastToken     *Token
-	Errors        []*errors.Error
+	StateStack       []int
+	PhpDocComment    string
+	FreeFloating     []freefloating.String
+	heredocLabel     string
+	tokenBytesBuf    *bytes.Buffer
+	TokenPool        *TokenPool
+	WithFreeFloating bool
+	lastToken        *Token
+	Errors           []*errors.Error
 }
 
 // Rune2Class returns the rune integer id
@@ -163,10 +163,10 @@ func (l *Lexer) tokenString(chars []lex.Char) string {
 	return string(l.tokenBytesBuf.Bytes())
 }
 
-// meta
+// free-floating
 
 func (l *Lexer) addFreeFloating(t freefloating.StringType, chars []lex.Char) {
-	if !l.WithMeta {
+	if !l.WithFreeFloating {
 		return
 	}
 

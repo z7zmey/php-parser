@@ -56,8 +56,8 @@ func (l *Parser) Error(msg string) {
 	l.Lexer.Errors = append(l.Lexer.Errors, errors.NewError(msg, pos))
 }
 
-func (l *Parser) WithMeta() {
-	l.Lexer.WithMeta = true
+func (l *Parser) WithFreeFloating() {
+	l.Lexer.WithFreeFloating = true
 }
 
 // Parse the php7 Parser entrypoint
@@ -105,7 +105,7 @@ func isDollar(r rune) bool {
 }
 
 func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
-	if l.Lexer.WithMeta == false {
+	if l.Lexer.WithFreeFloating == false {
 		return
 	}
 
@@ -118,7 +118,7 @@ func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {
 }
 
 func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings []freefloating.String) {
-	if l.Lexer.WithMeta == false {
+	if l.Lexer.WithFreeFloating == false {
 		return
 	}
 
@@ -135,7 +135,7 @@ func (l *Parser) setFreeFloating(dst node.Node, p freefloating.Position, strings
 }
 
 func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
-	if l.Lexer.WithMeta == false {
+	if l.Lexer.WithFreeFloating == false {
 		return []freefloating.String{}
 	}
 
@@ -143,7 +143,7 @@ func (l *Parser) GetFreeFloatingToken(t *scanner.Token) []freefloating.String {
 }
 
 func (l *Parser) addDollarToken(v node.Node) {
-	if l.Lexer.WithMeta == false {
+	if l.Lexer.WithFreeFloating == false {
 		return
 	}
 
@@ -162,7 +162,7 @@ func (l *Parser) addDollarToken(v node.Node) {
 }
 
 func (l *Parser) splitSemiColonAndPhpCloseTag(htmlNode node.Node, prevNode node.Node) {
-	if l.Lexer.WithMeta == false {
+	if l.Lexer.WithFreeFloating == false {
 		return
 	}
 

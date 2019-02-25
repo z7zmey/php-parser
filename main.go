@@ -25,7 +25,7 @@ var wg sync.WaitGroup
 var usePhp5 *bool
 var dumpType string
 var profiler string
-var withMeta *bool
+var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
 
@@ -36,7 +36,7 @@ type file struct {
 
 func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
-	withMeta = flag.Bool("meta", false, "show meta")
+	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
@@ -110,8 +110,8 @@ func parserWorker(fileCh <-chan *file, result chan<- parser.Parser) {
 			parserWorker = php7.NewParser(src, f.path)
 		}
 
-		if *withMeta {
-			parserWorker.WithMeta()
+		if *withFreeFloating {
+			parserWorker.WithFreeFloating()
 		}
 
 		parserWorker.Parse()

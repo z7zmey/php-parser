@@ -414,7 +414,7 @@ func TestTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -550,7 +550,7 @@ func TestTeplateStringTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -636,7 +636,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -731,7 +731,7 @@ CAT;
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -803,7 +803,7 @@ CAT
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -842,7 +842,7 @@ CAT;
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -875,7 +875,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
@@ -985,7 +985,7 @@ func TestCommentEnd(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1017,7 +1017,7 @@ func TestCommentNewLine(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1049,7 +1049,7 @@ func TestCommentNewLine1(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1081,7 +1081,7 @@ func TestCommentNewLine2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1114,7 +1114,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1147,7 +1147,7 @@ func TestInlineComment(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1180,7 +1180,7 @@ func TestInlineComment2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1218,7 +1218,7 @@ func TestEmptyInlineComment(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1251,7 +1251,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 	}
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	lexer.Lex(lv)
@@ -1266,7 +1266,7 @@ func TestMethodCallTokens(t *testing.T) {
 	$a -> bar ( '' ) ;`
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	expected := []freefloating.String{
@@ -1357,7 +1357,7 @@ func TestYieldFromTokens(t *testing.T) {
 	yield from $a`
 
 	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
-	lexer.WithMeta = true
+	lexer.WithFreeFloating = true
 	lv := &lval{}
 
 	expected := []freefloating.String{
