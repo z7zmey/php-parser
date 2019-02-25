@@ -12,7 +12,6 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/karrick/godirwalk"
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
 	"github.com/z7zmey/php-parser/parser"
@@ -81,31 +80,16 @@ func processPath(pathList []string, fileCh chan<- *file) {
 		real, err := realpath.Realpath(path)
 		checkErr(err)
 
-		s, err := os.Stat(real)
+		err = filepath.Walk(real, func(path string, f os.FileInfo, err error) error {
+			if !f.IsDir() && filepath.Ext(path) == ".php" {
+				wg.Add(1)
+				content, err := ioutil.ReadFile(path)
+				checkErr(err)
+				fileCh <- &file{path, content}
+			}
+			return nil
+		})
 		checkErr(err)
-
-		if !s.IsDir() {
-			wg.Add(1)
-			content, err := ioutil.ReadFile(real)
-			checkErr(err)
-			fileCh <- &file{real, content}
-		} else {
-			godirwalk.Walk(real, &godirwalk.Options{
-				Unsorted: true,
-				Callback: func(osPathname string, de *godirwalk.Dirent) error {
-					if !de.IsDir() && filepath.Ext(osPathname) == ".php" {
-						wg.Add(1)
-						content, err := ioutil.ReadFile(osPathname)
-						checkErr(err)
-						fileCh <- &file{osPathname, content}
-					}
-					return nil
-				},
-				ErrorCallback: func(osPathname string, err error) godirwalk.ErrorAction {
-					return godirwalk.SkipNode
-				},
-			})
-		}
 	}
 }
 
