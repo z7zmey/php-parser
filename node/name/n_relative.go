@@ -1,20 +1,39 @@
 package name
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Relative node
 type Relative struct {
-	Parts []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Parts        []node.Node
 }
 
 // NewRelative node constructor
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
-		Parts,
+		FreeFloating: nil,
+		Parts:        Parts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Relative) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Relative) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Relative) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,12 +49,13 @@ func (n *Relative) Walk(v walker.Visitor) {
 	}
 
 	if n.Parts != nil {
-		vv := v.GetChildrenVisitor("Parts")
+		v.EnterChildList("Parts", n)
 		for _, nn := range n.Parts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Parts", n)
 	}
 
 	v.LeaveNode(n)

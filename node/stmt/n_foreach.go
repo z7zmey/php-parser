@@ -1,26 +1,45 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Foreach node
 type Foreach struct {
-	Expr     node.Node
-	Key      node.Node
-	Variable node.Node
-	Stmt     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
+	Key          node.Node
+	Variable     node.Node
+	Stmt         node.Node
 }
 
 // NewForeach node constructor
 func NewForeach(Expr node.Node, Key node.Node, Variable node.Node, Stmt node.Node) *Foreach {
 	return &Foreach{
-		Expr,
-		Key,
-		Variable,
-		Stmt,
+		FreeFloating: nil,
+		Expr:         Expr,
+		Key:          Key,
+		Variable:     Variable,
+		Stmt:         Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *Foreach) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Foreach) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Foreach) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -36,23 +55,27 @@ func (n *Foreach) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	if n.Key != nil {
-		vv := v.GetChildrenVisitor("Key")
-		n.Key.Walk(vv)
+		v.EnterChildNode("Key", n)
+		n.Key.Walk(v)
+		v.LeaveChildNode("Key", n)
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,22 +1,41 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // InstanceOf node
 type InstanceOf struct {
-	Expr  node.Node
-	Class node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
+	Class        node.Node
 }
 
 // NewInstanceOf node constructor
 func NewInstanceOf(Expr node.Node, Class node.Node) *InstanceOf {
 	return &InstanceOf{
-		Expr,
-		Class,
+		FreeFloating: nil,
+		Expr:         Expr,
+		Class:        Class,
 	}
+}
+
+// SetPosition sets node position
+func (n *InstanceOf) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *InstanceOf) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *InstanceOf) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,13 +51,15 @@ func (n *InstanceOf) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	if n.Class != nil {
-		vv := v.GetChildrenVisitor("Class")
-		n.Class.Walk(vv)
+		v.EnterChildNode("Class", n)
+		n.Class.Walk(v)
+		v.LeaveChildNode("Class", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,12 +1,16 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassConstFetch node
 type ClassConstFetch struct {
+	FreeFloating freefloating.Collection
+	Position     *position.Position
 	Class        node.Node
 	ConstantName node.Node
 }
@@ -14,9 +18,24 @@ type ClassConstFetch struct {
 // NewClassConstFetch node constructor
 func NewClassConstFetch(Class node.Node, ConstantName node.Node) *ClassConstFetch {
 	return &ClassConstFetch{
-		Class,
-		ConstantName,
+		FreeFloating: nil,
+		Class:        Class,
+		ConstantName: ConstantName,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassConstFetch) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassConstFetch) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *ClassConstFetch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,13 +51,15 @@ func (n *ClassConstFetch) Walk(v walker.Visitor) {
 	}
 
 	if n.Class != nil {
-		vv := v.GetChildrenVisitor("Class")
-		n.Class.Walk(vv)
+		v.EnterChildNode("Class", n)
+		n.Class.Walk(v)
+		v.LeaveChildNode("Class", n)
 	}
 
 	if n.ConstantName != nil {
-		vv := v.GetChildrenVisitor("ConstantName")
-		n.ConstantName.Walk(vv)
+		v.EnterChildNode("ConstantName", n)
+		n.ConstantName.Walk(v)
+		v.LeaveChildNode("ConstantName", n)
 	}
 
 	v.LeaveNode(n)

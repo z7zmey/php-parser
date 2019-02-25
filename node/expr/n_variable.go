@@ -1,20 +1,39 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Variable node
 type Variable struct {
-	VarName node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	VarName      node.Node
 }
 
 // NewVariable node constructor
 func NewVariable(VarName node.Node) *Variable {
 	return &Variable{
-		VarName,
+		FreeFloating: nil,
+		VarName:      VarName,
 	}
+}
+
+// SetPosition sets node position
+func (n *Variable) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Variable) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Variable) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -35,8 +54,9 @@ func (n *Variable) Walk(v walker.Visitor) {
 	}
 
 	if n.VarName != nil {
-		vv := v.GetChildrenVisitor("VarName")
-		n.VarName.Walk(vv)
+		v.EnterChildNode("VarName", n)
+		n.VarName.Walk(v)
+		v.LeaveChildNode("VarName", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,15 +1,15 @@
 package stmt_test
 
 import (
-	"reflect"
 	"testing"
+
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/name"
 
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/stmt"
 
-	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/walker"
 )
@@ -27,14 +27,14 @@ var nodesToTest = []struct {
 			Else:   &stmt.Else{},
 		},
 		[]string{"Cond", "Stmt", "ElseIf", "Else"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltElse{
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltElseIf{
@@ -42,14 +42,14 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Break{
 			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Case{
@@ -57,7 +57,7 @@ var nodesToTest = []struct {
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Cond", "Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Catch{
@@ -66,7 +66,7 @@ var nodesToTest = []struct {
 			Stmts:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Types", "Variable", "Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.ClassConstList{
@@ -74,7 +74,7 @@ var nodesToTest = []struct {
 			Consts:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Modifiers", "Consts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.ClassMethod{
@@ -107,7 +107,7 @@ var nodesToTest = []struct {
 			Consts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Consts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Constant{
@@ -123,7 +123,7 @@ var nodesToTest = []struct {
 			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Declare{
@@ -131,14 +131,14 @@ var nodesToTest = []struct {
 			Stmt:   &stmt.StmtList{},
 		},
 		[]string{"Consts", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Default{
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Do{
@@ -146,7 +146,7 @@ var nodesToTest = []struct {
 			Cond: &expr.Variable{},
 		},
 		[]string{"Stmt", "Cond"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Do{
@@ -154,14 +154,14 @@ var nodesToTest = []struct {
 			Cond: &expr.Variable{},
 		},
 		[]string{"Stmt", "Cond"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Echo{
 			Exprs: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Exprs"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.If{
@@ -171,14 +171,14 @@ var nodesToTest = []struct {
 			Else:   &stmt.Else{},
 		},
 		[]string{"Cond", "Stmt", "ElseIf", "Else"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Else{
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.ElseIf{
@@ -186,21 +186,21 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Expression{
 			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Finally{
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.For{
@@ -210,7 +210,7 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Init", "Cond", "Loop", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltFor{
@@ -220,7 +220,7 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Init", "Cond", "Loop", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Foreach{
@@ -230,7 +230,7 @@ var nodesToTest = []struct {
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltForeach{
@@ -240,7 +240,7 @@ var nodesToTest = []struct {
 			Stmt:     &stmt.StmtList{},
 		},
 		[]string{"Expr", "Key", "Variable", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Function{
@@ -259,14 +259,14 @@ var nodesToTest = []struct {
 			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Goto{
 			Label: &node.Identifier{},
 		},
 		[]string{"Label"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.GroupUse{
@@ -275,12 +275,12 @@ var nodesToTest = []struct {
 			UseList: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"UseType", "Prefix", "UseList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.HaltCompiler{},
 		[]string{},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.InlineHtml{
@@ -304,7 +304,7 @@ var nodesToTest = []struct {
 			LabelName: &node.Identifier{},
 		},
 		[]string{"LabelName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Namespace{
@@ -312,12 +312,12 @@ var nodesToTest = []struct {
 			Stmts:         []node.Node{&stmt.Expression{}},
 		},
 		[]string{"NamespaceName", "Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Nop{},
 		[]string{},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.PropertyList{
@@ -325,7 +325,7 @@ var nodesToTest = []struct {
 			Properties: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Modifiers", "Properties"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Property{
@@ -341,7 +341,7 @@ var nodesToTest = []struct {
 			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.StaticVar{
@@ -349,14 +349,14 @@ var nodesToTest = []struct {
 			Expr:     &stmt.Expression{},
 		},
 		[]string{"Variable", "Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Static{
 			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Switch{
@@ -364,22 +364,22 @@ var nodesToTest = []struct {
 			CaseList: &stmt.CaseList{},
 		},
 		[]string{"Cond", "CaseList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltSwitch{
 			Cond:     &expr.Variable{},
-			CaseList: &stmt.CaseList{Cases: []node.Node{}},
+			CaseList: &stmt.CaseList{},
 		},
 		[]string{"Cond", "CaseList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Throw{
 			Expr: &stmt.Expression{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.TraitMethodRef{
@@ -387,7 +387,7 @@ var nodesToTest = []struct {
 			Method: &node.Identifier{},
 		},
 		[]string{"Trait", "Method"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.TraitUseAlias{
@@ -396,7 +396,7 @@ var nodesToTest = []struct {
 			Alias:    &node.Identifier{},
 		},
 		[]string{"Ref", "Modifier", "Alias"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.TraitUsePrecedence{
@@ -404,7 +404,7 @@ var nodesToTest = []struct {
 			Insteadof: []node.Node{&node.Identifier{}},
 		},
 		[]string{"Ref", "Insteadof"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.TraitUse{
@@ -412,7 +412,7 @@ var nodesToTest = []struct {
 			TraitAdaptationList: &stmt.TraitAdaptationList{},
 		},
 		[]string{"Traits", "TraitAdaptationList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Trait{
@@ -430,14 +430,14 @@ var nodesToTest = []struct {
 			Finally: &stmt.Finally{},
 		},
 		[]string{"Stmts", "Catches", "Finally"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Unset{
 			Vars: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Vars"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.UseList{
@@ -445,7 +445,7 @@ var nodesToTest = []struct {
 			Uses:    []node.Node{&stmt.Expression{}},
 		},
 		[]string{"UseType", "Uses"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.Use{
@@ -454,7 +454,7 @@ var nodesToTest = []struct {
 			Alias:   &node.Identifier{},
 		},
 		[]string{"UseType", "Use", "Alias"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.While{
@@ -462,7 +462,7 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.AltWhile{
@@ -470,35 +470,35 @@ var nodesToTest = []struct {
 			Stmt: &stmt.StmtList{},
 		},
 		[]string{"Cond", "Stmt"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.StmtList{
 			Stmts: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Stmts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.CaseList{
 			Cases: []node.Node{&stmt.Expression{}},
 		},
 		[]string{"Cases"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.TraitAdaptationList{
 			Adaptations: []node.Node{&stmt.TraitUsePrecedence{}},
 		},
 		[]string{"Adaptations"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.ClassExtends{
 			ClassName: &name.Name{},
 		},
 		[]string{"ClassName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.ClassImplements{
@@ -507,7 +507,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"InterfaceNames"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&stmt.InterfaceExtends{
@@ -516,7 +516,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"InterfaceNames"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -526,39 +526,37 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -569,9 +567,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

@@ -1,10 +1,9 @@
 package cast_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -19,52 +18,52 @@ var nodesToTest = []struct {
 }{
 	{
 		&cast.Array{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Bool{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Double{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Int{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Object{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.String{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Unset{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -74,39 +73,37 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -117,9 +114,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

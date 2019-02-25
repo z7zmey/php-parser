@@ -1,22 +1,41 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // While node
 type While struct {
-	Cond node.Node
-	Stmt node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cond         node.Node
+	Stmt         node.Node
 }
 
 // NewWhile node constructor
 func NewWhile(Cond node.Node, Stmt node.Node) *While {
 	return &While{
-		Cond,
-		Stmt,
+		FreeFloating: nil,
+		Cond:         Cond,
+		Stmt:         Stmt,
 	}
+}
+
+// SetPosition sets node position
+func (n *While) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *While) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *While) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,13 +51,15 @@ func (n *While) Walk(v walker.Visitor) {
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
+		v.EnterChildNode("Cond", n)
+		n.Cond.Walk(v)
+		v.LeaveChildNode("Cond", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,17 +1,38 @@
 package scalar
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // EncapsedStringPart node
 type EncapsedStringPart struct {
-	Value string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewEncapsedStringPart node constructor
 func NewEncapsedStringPart(Value string) *EncapsedStringPart {
 	return &EncapsedStringPart{
-		Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *EncapsedStringPart) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *EncapsedStringPart) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *EncapsedStringPart) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -4,35 +4,34 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/z7zmey/php-parser/position"
-
-	"github.com/z7zmey/php-parser/comment"
-
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
 func TestToken(t *testing.T) {
-	pos := position.NewPosition(1, 1, 0, 3)
 	tkn := &scanner.Token{
-		Value:    `foo`,
-		Position: pos,
+		Value:     `foo`,
+		StartLine: 1,
+		EndLine:   1,
+		StartPos:  0,
+		EndPos:    3,
 	}
 
-	c := []*comment.Comment{
-		comment.NewComment("test comment", nil),
+	c := []freefloating.String{
+		{
+			Value:      "test comment",
+			StringType: freefloating.CommentType,
+			Position:   nil,
+		},
 	}
 
-	tkn.Comments = c
+	tkn.FreeFloating = c
 
-	if !reflect.DeepEqual(tkn.Comments, c) {
+	if !reflect.DeepEqual(tkn.FreeFloating, c) {
 		t.Errorf("comments are not equal\n")
 	}
 
 	if tkn.String() != `foo` {
 		t.Errorf("token value is not equal\n")
-	}
-
-	if tkn.Position != pos {
-		t.Errorf("token position is not equal\n")
 	}
 }

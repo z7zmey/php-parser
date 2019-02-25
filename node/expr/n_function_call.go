@@ -1,12 +1,16 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // FunctionCall node
 type FunctionCall struct {
+	FreeFloating freefloating.Collection
+	Position     *position.Position
 	Function     node.Node
 	ArgumentList *node.ArgumentList
 }
@@ -14,9 +18,24 @@ type FunctionCall struct {
 // NewFunctionCall node constructor
 func NewFunctionCall(Function node.Node, ArgumentList *node.ArgumentList) *FunctionCall {
 	return &FunctionCall{
-		Function,
-		ArgumentList,
+		FreeFloating: nil,
+		Function:     Function,
+		ArgumentList: ArgumentList,
 	}
+}
+
+// SetPosition sets node position
+func (n *FunctionCall) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *FunctionCall) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *FunctionCall) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,13 +51,15 @@ func (n *FunctionCall) Walk(v walker.Visitor) {
 	}
 
 	if n.Function != nil {
-		vv := v.GetChildrenVisitor("Function")
-		n.Function.Walk(vv)
+		v.EnterChildNode("Function", n)
+		n.Function.Walk(v)
+		v.LeaveChildNode("Function", n)
 	}
 
 	if n.ArgumentList != nil {
-		vv := v.GetChildrenVisitor("ArgumentList")
-		n.ArgumentList.Walk(vv)
+		v.EnterChildNode("ArgumentList", n)
+		n.ArgumentList.Walk(v)
+		v.LeaveChildNode("ArgumentList", n)
 	}
 
 	v.LeaveNode(n)

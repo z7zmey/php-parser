@@ -1,20 +1,39 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Unset node
 type Unset struct {
-	Vars []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Vars         []node.Node
 }
 
 // NewUnset node constructor
 func NewUnset(Vars []node.Node) *Unset {
 	return &Unset{
-		Vars,
+		FreeFloating: nil,
+		Vars:         Vars,
 	}
+}
+
+// SetPosition sets node position
+func (n *Unset) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Unset) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Unset) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,12 +49,13 @@ func (n *Unset) Walk(v walker.Visitor) {
 	}
 
 	if n.Vars != nil {
-		vv := v.GetChildrenVisitor("Vars")
+		v.EnterChildList("Vars", n)
 		for _, nn := range n.Vars {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Vars", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,16 +1,15 @@
 package expr_test
 
 import (
-	"reflect"
 	"testing"
+
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/stmt"
 
 	"github.com/z7zmey/php-parser/node/name"
 
 	"github.com/z7zmey/php-parser/node/scalar"
-
-	"github.com/kylelemons/godebug/pretty"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -24,11 +23,11 @@ var nodesToTest = []struct {
 }{
 	{
 		&expr.ArrayDimFetch{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 			Dim:      &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Variable", "Dim"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ArrayItem{
@@ -36,57 +35,54 @@ var nodesToTest = []struct {
 			Val: &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Key", "Val"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Array{
 			Items: []node.Node{
-				&expr.ArrayItem{
-					Key: &scalar.String{Value: "key"},
-					Val: &scalar.Lnumber{Value: "1"},
-				},
+				&expr.ArrayItem{},
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.BitwiseNot{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.BooleanNot{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ClassConstFetch{
-			Class:        &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Class:        &expr.Variable{},
 			ConstantName: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Class", "ConstantName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Clone{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ClosureUse{
 			Uses: []node.Node{
-				&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				&expr.Variable{},
 			},
 		},
 		[]string{"Uses"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Closure{
@@ -106,81 +102,75 @@ var nodesToTest = []struct {
 			Constant: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Constant"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Empty{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ErrorSuppress{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Eval{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Exit{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Die:  true,
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
-	},
-	{
-		&expr.Die{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-		},
-		[]string{"Expr"},
-		map[string]interface{}{},
+		map[string]interface{}{"Die": true},
 	},
 	{
 		&expr.FunctionCall{
-			Function:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Function:     &expr.Variable{},
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Function", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.IncludeOnce{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Include{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.InstanceOf{
-			Expr:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr:  &expr.Variable{},
 			Class: &name.Name{},
 		},
 		[]string{"Expr", "Class"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Isset{
 			Variables: []node.Node{
-				&expr.Variable{VarName: &node.Identifier{Value: "a"}},
+				&expr.Variable{},
 			},
 		},
 		[]string{"Variables"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.List{
@@ -189,16 +179,16 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.MethodCall{
-			Variable:     &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable:     &expr.Variable{},
 			Method:       &node.Identifier{Value: "foo"},
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Variable", "Method", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.New{
@@ -206,71 +196,71 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Class", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PostDec{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PostInc{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PreDec{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PreInc{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Print{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PropertyFetch{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 			Property: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Variable", "Property"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Reference{
-			Variable: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.RequireOnce{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Require{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShellExec{
@@ -279,7 +269,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Parts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShortArray{
@@ -288,7 +278,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShortList{
@@ -297,7 +287,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.StaticCall{
@@ -306,7 +296,7 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Class", "Call", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.StaticPropertyFetch{
@@ -314,50 +304,50 @@ var nodesToTest = []struct {
 			Property: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Class", "Property"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Ternary{
-			Condition: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			IfTrue:    &expr.Variable{VarName: &node.Identifier{Value: "b"}},
-			IfFalse:   &expr.Variable{VarName: &node.Identifier{Value: "c"}},
+			Condition: &expr.Variable{},
+			IfTrue:    &expr.Variable{},
+			IfFalse:   &expr.Variable{},
 		},
 		[]string{"Condition", "IfTrue", "IfFalse"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.UnaryMinus{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.UnaryPlus{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		[]string{"VarName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.YieldFrom{
-			Expr: &expr.Variable{VarName: &node.Identifier{Value: "a"}},
+			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Yield{
-			Key:   &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Value: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Key:   &expr.Variable{},
+			Value: &expr.Variable{},
 		},
 		[]string{"Key", "Value"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -367,24 +357,25 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -396,10 +387,7 @@ func TestVisitor(t *testing.T) {
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -410,9 +398,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

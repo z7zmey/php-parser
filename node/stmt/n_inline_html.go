@@ -1,17 +1,38 @@
 package stmt
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // InlineHtml node
 type InlineHtml struct {
-	Value string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewInlineHtml node constructor
 func NewInlineHtml(Value string) *InlineHtml {
 	return &InlineHtml{
-		Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *InlineHtml) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *InlineHtml) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *InlineHtml) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

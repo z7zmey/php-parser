@@ -1,8 +1,9 @@
 .vscode
 php-parser
+**/*.test
+
 *example.php
 
-cpu.prof
-mem.prof
-php7.test
-php5.test
+cpu.pprof
+mem.pprof
+trace.out

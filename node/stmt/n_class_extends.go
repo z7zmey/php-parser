@@ -1,20 +1,39 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassExtends node
 type ClassExtends struct {
-	ClassName node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	ClassName    node.Node
 }
 
 // NewClassExtends node constructor
 func NewClassExtends(className node.Node) *ClassExtends {
 	return &ClassExtends{
-		className,
+		FreeFloating: nil,
+		ClassName:    className,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassExtends) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassExtends) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *ClassExtends) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,8 +49,9 @@ func (n *ClassExtends) Walk(v walker.Visitor) {
 	}
 
 	if n.ClassName != nil {
-		vv := v.GetChildrenVisitor("ClassName")
-		n.ClassName.Walk(vv)
+		v.EnterChildNode("ClassName", n)
+		n.ClassName.Walk(v)
+		v.LeaveChildNode("ClassName", n)
 	}
 
 	v.LeaveNode(n)

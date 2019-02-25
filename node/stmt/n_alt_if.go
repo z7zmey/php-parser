@@ -1,26 +1,45 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // AltIf node
 type AltIf struct {
-	Cond   node.Node
-	Stmt   node.Node
-	ElseIf []node.Node
-	Else   node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cond         node.Node
+	Stmt         node.Node
+	ElseIf       []node.Node
+	Else         node.Node
 }
 
 // NewAltIf node constructor
 func NewAltIf(Cond node.Node, Stmt node.Node, ElseIf []node.Node, Else node.Node) *AltIf {
 	return &AltIf{
-		Cond,
-		Stmt,
-		ElseIf,
-		Else,
+		FreeFloating: nil,
+		Cond:         Cond,
+		Stmt:         Stmt,
+		ElseIf:       ElseIf,
+		Else:         Else,
 	}
+}
+
+// SetPosition sets node position
+func (n *AltIf) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *AltIf) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *AltIf) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -54,27 +73,31 @@ func (n *AltIf) Walk(v walker.Visitor) {
 	}
 
 	if n.Cond != nil {
-		vv := v.GetChildrenVisitor("Cond")
-		n.Cond.Walk(vv)
+		v.EnterChildNode("Cond", n)
+		n.Cond.Walk(v)
+		v.LeaveChildNode("Cond", n)
 	}
 
 	if n.Stmt != nil {
-		vv := v.GetChildrenVisitor("Stmt")
-		n.Stmt.Walk(vv)
+		v.EnterChildNode("Stmt", n)
+		n.Stmt.Walk(v)
+		v.LeaveChildNode("Stmt", n)
 	}
 
 	if n.ElseIf != nil {
-		vv := v.GetChildrenVisitor("ElseIf")
+		v.EnterChildList("ElseIf", n)
 		for _, nn := range n.ElseIf {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("ElseIf", n)
 	}
 
 	if n.Else != nil {
-		vv := v.GetChildrenVisitor("Else")
-		n.Else.Walk(vv)
+		v.EnterChildNode("Else", n)
+		n.Else.Walk(v)
+		v.LeaveChildNode("Else", n)
 	}
 
 	v.LeaveNode(n)

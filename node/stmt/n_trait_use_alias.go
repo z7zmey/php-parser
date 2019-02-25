@@ -1,24 +1,43 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitUseAlias node
 type TraitUseAlias struct {
-	Ref      node.Node
-	Modifier node.Node
-	Alias    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Ref          node.Node
+	Modifier     node.Node
+	Alias        node.Node
 }
 
 // NewTraitUseAlias node constructor
 func NewTraitUseAlias(Ref node.Node, Modifier node.Node, Alias node.Node) *TraitUseAlias {
 	return &TraitUseAlias{
-		Ref,
-		Modifier,
-		Alias,
+		FreeFloating: nil,
+		Ref:          Ref,
+		Modifier:     Modifier,
+		Alias:        Alias,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitUseAlias) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitUseAlias) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *TraitUseAlias) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -34,18 +53,21 @@ func (n *TraitUseAlias) Walk(v walker.Visitor) {
 	}
 
 	if n.Ref != nil {
-		vv := v.GetChildrenVisitor("Ref")
-		n.Ref.Walk(vv)
+		v.EnterChildNode("Ref", n)
+		n.Ref.Walk(v)
+		v.LeaveChildNode("Ref", n)
 	}
 
 	if n.Modifier != nil {
-		vv := v.GetChildrenVisitor("Modifier")
-		n.Modifier.Walk(vv)
+		v.EnterChildNode("Modifier", n)
+		n.Modifier.Walk(v)
+		v.LeaveChildNode("Modifier", n)
 	}
 
 	if n.Alias != nil {
-		vv := v.GetChildrenVisitor("Alias")
-		n.Alias.Walk(vv)
+		v.EnterChildNode("Alias", n)
+		n.Alias.Walk(v)
+		v.LeaveChildNode("Alias", n)
 	}
 
 	v.LeaveNode(n)

@@ -1,9 +1,15 @@
 package node
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Parameter node
 type Parameter struct {
+	FreeFloating freefloating.Collection
+	Position     *position.Position
 	ByRef        bool
 	Variadic     bool
 	VariableType Node
@@ -14,12 +20,27 @@ type Parameter struct {
 // NewParameter node constructor
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
-		ByRef,
-		Variadic,
-		VariableType,
-		Variable,
-		DefaultValue,
+		FreeFloating: nil,
+		ByRef:        ByRef,
+		Variadic:     Variadic,
+		VariableType: VariableType,
+		Variable:     Variable,
+		DefaultValue: DefaultValue,
 	}
+}
+
+// SetPosition sets node position
+func (n *Parameter) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Parameter) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Parameter) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -38,18 +59,21 @@ func (n *Parameter) Walk(v walker.Visitor) {
 	}
 
 	if n.VariableType != nil {
-		vv := v.GetChildrenVisitor("VariableType")
-		n.VariableType.Walk(vv)
+		v.EnterChildNode("VariableType", n)
+		n.VariableType.Walk(v)
+		v.LeaveChildNode("VariableType", n)
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.DefaultValue != nil {
-		vv := v.GetChildrenVisitor("DefaultValue")
-		n.DefaultValue.Walk(vv)
+		v.EnterChildNode("DefaultValue", n)
+		n.DefaultValue.Walk(v)
+		v.LeaveChildNode("DefaultValue", n)
 	}
 
 	v.LeaveNode(n)

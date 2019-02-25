@@ -5,11 +5,9 @@ import (
 	"fmt"
 	"io"
 	"reflect"
+	"strings"
 
-	"github.com/z7zmey/php-parser/comment"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
-
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -18,54 +16,68 @@ import (
 type Dumper struct {
 	Writer     io.Writer
 	Indent     string
-	Comments   parser.Comments
-	Positions  parser.Positions
 	NsResolver *NamespaceResolver
 }
 
 // EnterNode is invoked at every node in hierarchy
-func (d Dumper) EnterNode(w walker.Walkable) bool {
+func (d *Dumper) EnterNode(w walker.Walkable) bool {
 	n := w.(node.Node)
 
 	fmt.Fprintf(d.Writer, "%v[%v]\n", d.Indent, reflect.TypeOf(n))
 
-	if d.Positions != nil {
-		if p := d.Positions[n]; p != nil {
-			fmt.Fprintf(d.Writer, "%v\"Position\": %s;\n", d.Indent+"  ", *p)
-		}
+	if n.GetPosition() != nil {
+		fmt.Fprintf(d.Writer, "%v\"Position\": %s\n", d.Indent+"  ", n.GetPosition())
 	}
 
 	if d.NsResolver != nil {
 		if namespacedName, ok := d.NsResolver.ResolvedNames[n]; ok {
-			fmt.Fprintf(d.Writer, "%v\"NamespacedName\": %s;\n", d.Indent+"  ", namespacedName)
+			fmt.Fprintf(d.Writer, "%v\"NamespacedName\": %q\n", d.Indent+"  ", namespacedName)
 		}
 	}
 
-	if d.Comments != nil {
-		if c := d.Comments[n]; len(c) > 0 {
-			fmt.Fprintf(d.Writer, "%v\"Comments\":\n", d.Indent+"  ")
-			for _, cc := range c {
-				fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", cc, comment.TokenNames[cc.TokenName()])
+	if !n.GetFreeFloating().IsEmpty() {
+		fmt.Fprintf(d.Writer, "%v\"freefloating\":\n", d.Indent+"  ")
+		for key, freeFloatingStrings := range *n.GetFreeFloating() {
+			for _, freeFloatingString := range freeFloatingStrings {
+				fmt.Fprintf(d.Writer, "%v%q: %q\n", d.Indent+"    ", key.String(), freeFloatingString.Value)
 			}
 		}
 	}
 
 	if a := n.Attributes(); len(a) > 0 {
 		for key, attr := range a {
-			fmt.Fprintf(d.Writer, "%v\"%v\": %v;\n", d.Indent+"  ", key, attr)
+			switch attr.(type) {
+			case string:
+				fmt.Fprintf(d.Writer, "%v\"%v\": %q\n", d.Indent+"  ", key, attr)
+			default:
+				fmt.Fprintf(d.Writer, "%v\"%v\": %v\n", d.Indent+"  ", key, attr)
+			}
 		}
 	}
 
 	return true
 }
 
-// GetChildrenVisitor is invoked at every node parameter that contains children nodes
-func (d Dumper) GetChildrenVisitor(key string) walker.Visitor {
-	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
-	return Dumper{d.Writer, d.Indent + "    ", d.Comments, d.Positions, d.NsResolver}
+// LeaveNode is invoked after node process
+func (d *Dumper) LeaveNode(n walker.Walkable) {
+	// do nothing
 }
 
-// LeaveNode is invoked after node process
-func (d Dumper) LeaveNode(n walker.Walkable) {
-	// do nothing
+// GetChildrenVisitor is invoked at every node parameter that contains children nodes
+func (d *Dumper) EnterChildNode(key string, w walker.Walkable) {
+	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
+	d.Indent = d.Indent + "    "
+}
+
+func (d *Dumper) LeaveChildNode(key string, w walker.Walkable) {
+	d.Indent = strings.TrimSuffix(d.Indent, "    ")
+}
+
+func (d *Dumper) EnterChildList(key string, w walker.Walkable) {
+	fmt.Fprintf(d.Writer, "%v%q:\n", d.Indent+"  ", key)
+	d.Indent = d.Indent + "    "
+}
+
+func (d *Dumper) LeaveChildList(key string, w walker.Walkable) {
+	d.Indent = strings.TrimSuffix(d.Indent, "    ")
 }

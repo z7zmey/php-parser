@@ -1,10 +1,3 @@
-<!--
-  Title: PHP Parser
-  Description: A Parser for PHP written in Go.
-  Author: Slizov Vadym
-  Keywords: php parser go golang ast
-  -->
-
 PHP Parser written in Go
 ========================
 
@@ -26,13 +19,13 @@ Features:
 - Fully support PHP 5 and PHP 7 syntax
 - Abstract syntax tree (AST) representation
 - Traversing AST
-- Namespace resolver
-- Able to parse syntax-invalid PHP files
+- Resolving namespaced names
+- Parsing syntax-invalid PHP files
+- Saving and printing free-floating comments and whitespaces
 
 Roadmap
 -------
 
-- Pretty printer
 - Control Flow Graph (CFG)
 - PhpDocComment parser
 - Stabilize api
@@ -48,8 +41,16 @@ CLI
 ---
 
 ```
-php-parser [-php5 -noDump] <path> ...
+php-parser [flags] <path> ...
 ```
+
+| flag  | type |                description                   |
+|-------|------|----------------------------------------------|
+| -d    |string| dump format: [custom, go, json, pretty-json] |
+| -r    | bool | resolve names                                |
+| -ff   | bool | parse and show free floating strings         |
+| -prof |string| start profiler: [cpu, mem, trace]            |
+| -php5 | bool | parse as PHP5                                |
 
 Dump AST to stdout.
 
@@ -97,79 +98,3 @@ Namespace resolver is a visitor that resolves nodes fully qualified name and sav
 
 - For `Class`, `Interface`, `Trait`, `Function`, `Constant` nodes it saves name with current namespace.
 - For `Name`, `Relative`, `FullyQualified` nodes it resolves `use` aliases and saves a fully qualified name.
-
-Parsing syntax-invalid PHP files
---------------------------------
-
-If we try to parse `$a$b;` then the parser triggers error 'syntax error: unexpected T_VARIABLE'. Token `$b` is unexpected, but parser recovers parsing process and returns `$b;` statement to AST, because it is syntactically correct.
-
-Pretty printer [work in progress]
----------------------------------
-
-```Golang
-nodes := &stmt.StmtList{
-	Stmts: []node.Node{
-		&stmt.Namespace{
-			NamespaceName: &name.Name{
-				Parts: []node.Node{
-					&name.NamePart{Value: "Foo"},
-				},
-			},
-		},
-		&stmt.Class{
-			Modifiers: []node.Node{
-				&node.Identifier{Value: "abstract"},
-			},
-			ClassName: &name.Name{
-				Parts: []node.Node{
-					&name.NamePart{Value: "Bar"},
-				},
-			},
-			Extends: &stmt.ClassExtends{
-				ClassName: &name.Name{
-					Parts: []node.Node{
-						&name.NamePart{
-							Value: "Baz"
-						},
-					},
-				},
-			},
-			Stmts: []node.Node{
-				&stmt.ClassMethod{
-					Modifiers: []node.Node{
-						&node.Identifier{Value: "public"},
-					},
-					MethodName: &node.Identifier{Value: "greet"},
-					Stmt: &stmt.StmtList{
-						Stmts: []node.Node{
-							&stmt.Echo{
-								Exprs: []node.Node{
-									&scalar.String{Value: "'Hello world'"},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	},
-}
-
-file := os.Stdout
-p := printer.NewPrinter(file, "    ")
-p.Print(nodes)
-```
-
-It prints to stdout:
-
-```PHP
-<?php
-namespace Foo;
-abstract class Bar extends Baz
-{
-	public function greet()
-	{
-		echo 'Hello world';
-	}
-}
-```

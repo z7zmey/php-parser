@@ -1,22 +1,41 @@
 package assign
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Mod node
 type Mod struct {
-	Variable   node.Node
-	Expression node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Expression   node.Node
 }
 
 // NewMod node constructor
 func NewMod(Variable node.Node, Expression node.Node) *Mod {
 	return &Mod{
-		Variable,
-		Expression,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Expression:   Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *Mod) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Mod) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Mod) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,13 +51,15 @@ func (n *Mod) Walk(v walker.Visitor) {
 	}
 
 	if n.Variable != nil {
-		vv := v.GetChildrenVisitor("Variable")
-		n.Variable.Walk(vv)
+		v.EnterChildNode("Variable", n)
+		n.Variable.Walk(v)
+		v.LeaveChildNode("Variable", n)
 	}
 
 	if n.Expression != nil {
-		vv := v.GetChildrenVisitor("Expression")
-		n.Expression.Walk(vv)
+		v.EnterChildNode("Expression", n)
+		n.Expression.Walk(v)
+		v.LeaveChildNode("Expression", n)
 	}
 
 	v.LeaveNode(n)

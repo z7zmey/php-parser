@@ -1,20 +1,39 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // StmtList node
 type StmtList struct {
-	Stmts []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Stmts        []node.Node
 }
 
 // NewStmtList node constructor
 func NewStmtList(Stmts []node.Node) *StmtList {
 	return &StmtList{
-		Stmts,
+		FreeFloating: nil,
+		Stmts:        Stmts,
 	}
+}
+
+// SetPosition sets node position
+func (n *StmtList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *StmtList) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *StmtList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,12 +49,13 @@ func (n *StmtList) Walk(v walker.Visitor) {
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

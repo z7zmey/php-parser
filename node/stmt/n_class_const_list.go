@@ -1,22 +1,41 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassConstList node
 type ClassConstList struct {
-	Modifiers []node.Node
-	Consts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Modifiers    []node.Node
+	Consts       []node.Node
 }
 
 // NewClassConstList node constructor
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstList {
 	return &ClassConstList{
-		Modifiers,
-		Consts,
+		FreeFloating: nil,
+		Modifiers:    Modifiers,
+		Consts:       Consts,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassConstList) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassConstList) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *ClassConstList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,21 +51,23 @@ func (n *ClassConstList) Walk(v walker.Visitor) {
 	}
 
 	if n.Modifiers != nil {
-		vv := v.GetChildrenVisitor("Modifiers")
+		v.EnterChildList("Modifiers", n)
 		for _, nn := range n.Modifiers {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Modifiers", n)
 	}
 
 	if n.Consts != nil {
-		vv := v.GetChildrenVisitor("Consts")
+		v.EnterChildList("Consts", n)
 		for _, nn := range n.Consts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Consts", n)
 	}
 
 	v.LeaveNode(n)

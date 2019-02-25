@@ -10,7 +10,12 @@ type Walkable interface {
 
 // Visitor interface
 type Visitor interface {
-	EnterNode(w Walkable) bool             // EnterNode is invoked for each node encountered by Walk.
-	GetChildrenVisitor(Key string) Visitor // GetChildrenVisitor is invoked at every node parameter that contains children nodes
-	LeaveNode(w Walkable)                  // LeaveNode is invoked after node processed
+	EnterNode(w Walkable) bool
+	LeaveNode(w Walkable)
+
+	EnterChildNode(key string, w Walkable)
+	LeaveChildNode(key string, w Walkable)
+
+	EnterChildList(key string, w Walkable)
+	LeaveChildList(key string, w Walkable)
 }

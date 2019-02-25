@@ -1,12 +1,16 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Class node
 type Class struct {
+	FreeFloating  freefloating.Collection
+	Position      *position.Position
 	PhpDocComment string
 	ClassName     node.Node
 	Modifiers     []node.Node
@@ -19,14 +23,29 @@ type Class struct {
 // NewClass node constructor
 func NewClass(ClassName node.Node, Modifiers []node.Node, ArgumentList *node.ArgumentList, Extends *ClassExtends, Implements *ClassImplements, Stmts []node.Node, PhpDocComment string) *Class {
 	return &Class{
-		PhpDocComment,
-		ClassName,
-		Modifiers,
-		ArgumentList,
-		Extends,
-		Implements,
-		Stmts,
+		FreeFloating:  nil,
+		PhpDocComment: PhpDocComment,
+		ClassName:     ClassName,
+		Modifiers:     Modifiers,
+		ArgumentList:  ArgumentList,
+		Extends:       Extends,
+		Implements:    Implements,
+		Stmts:         Stmts,
 	}
+}
+
+// SetPosition sets node position
+func (n *Class) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Class) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Class) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -44,41 +63,47 @@ func (n *Class) Walk(v walker.Visitor) {
 	}
 
 	if n.ClassName != nil {
-		vv := v.GetChildrenVisitor("ClassName")
-		n.ClassName.Walk(vv)
+		v.EnterChildNode("ClassName", n)
+		n.ClassName.Walk(v)
+		v.LeaveChildNode("ClassName", n)
 	}
 
 	if n.Modifiers != nil {
-		vv := v.GetChildrenVisitor("Modifiers")
+		v.EnterChildList("Modifiers", n)
 		for _, nn := range n.Modifiers {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Modifiers", n)
 	}
 
 	if n.ArgumentList != nil {
-		vv := v.GetChildrenVisitor("ArgumentList")
-		n.ArgumentList.Walk(vv)
+		v.EnterChildNode("ArgumentList", n)
+		n.ArgumentList.Walk(v)
+		v.LeaveChildNode("ArgumentList", n)
 	}
 
 	if n.Extends != nil {
-		vv := v.GetChildrenVisitor("Extends")
-		n.Extends.Walk(vv)
+		v.EnterChildNode("Extends", n)
+		n.Extends.Walk(v)
+		v.LeaveChildNode("Extends", n)
 	}
 
 	if n.Implements != nil {
-		vv := v.GetChildrenVisitor("Implements")
-		n.Implements.Walk(vv)
+		v.EnterChildNode("Implements", n)
+		n.Implements.Walk(v)
+		v.LeaveChildNode("Implements", n)
 	}
 
 	if n.Stmts != nil {
-		vv := v.GetChildrenVisitor("Stmts")
+		v.EnterChildList("Stmts", n)
 		for _, nn := range n.Stmts {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Stmts", n)
 	}
 
 	v.LeaveNode(n)

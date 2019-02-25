@@ -11,6 +11,5 @@ type Parser interface {
 	GetPath() string
 	GetRootNode() node.Node
 	GetErrors() []*errors.Error
-	GetComments() Comments
-	GetPositions() Positions
+	WithFreeFloating()
 }

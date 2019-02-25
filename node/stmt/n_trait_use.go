@@ -1,22 +1,41 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // TraitUse node
 type TraitUse struct {
+	FreeFloating        freefloating.Collection
+	Position            *position.Position
 	Traits              []node.Node
-	TraitAdaptationList *TraitAdaptationList
+	TraitAdaptationList node.Node
 }
 
 // NewTraitUse node constructor
-func NewTraitUse(Traits []node.Node, InnerAdaptationList *TraitAdaptationList) *TraitUse {
+func NewTraitUse(Traits []node.Node, InnerAdaptationList node.Node) *TraitUse {
 	return &TraitUse{
-		Traits,
-		InnerAdaptationList,
+		FreeFloating:        nil,
+		Traits:              Traits,
+		TraitAdaptationList: InnerAdaptationList,
 	}
+}
+
+// SetPosition sets node position
+func (n *TraitUse) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *TraitUse) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *TraitUse) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -32,17 +51,19 @@ func (n *TraitUse) Walk(v walker.Visitor) {
 	}
 
 	if n.Traits != nil {
-		vv := v.GetChildrenVisitor("Traits")
+		v.EnterChildList("Traits", n)
 		for _, nn := range n.Traits {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("Traits", n)
 	}
 
 	if n.TraitAdaptationList != nil {
-		vv := v.GetChildrenVisitor("TraitAdaptationList")
-		n.TraitAdaptationList.Walk(vv)
+		v.EnterChildNode("TraitAdaptationList", n)
+		n.TraitAdaptationList.Walk(v)
+		v.LeaveChildNode("TraitAdaptationList", n)
 	}
 
 	v.LeaveNode(n)

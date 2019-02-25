@@ -1,20 +1,39 @@
 package expr
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ErrorSuppress node
 type ErrorSuppress struct {
-	Expr node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
 }
 
 // NewErrorSuppress node constructor
 func NewErrorSuppress(Expression node.Node) *ErrorSuppress {
 	return &ErrorSuppress{
-		Expression,
+		FreeFloating: nil,
+		Expr:         Expression,
 	}
+}
+
+// SetPosition sets node position
+func (n *ErrorSuppress) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ErrorSuppress) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *ErrorSuppress) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,8 +49,9 @@ func (n *ErrorSuppress) Walk(v walker.Visitor) {
 	}
 
 	if n.Expr != nil {
-		vv := v.GetChildrenVisitor("Expr")
-		n.Expr.Walk(vv)
+		v.EnterChildNode("Expr", n)
+		n.Expr.Walk(v)
+		v.LeaveChildNode("Expr", n)
 	}
 
 	v.LeaveNode(n)

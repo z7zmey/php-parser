@@ -156,8 +156,8 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 			nsr.ResolveName(t, "")
 		}
 
-		if n.TraitAdaptationList != nil {
-			for _, a := range n.TraitAdaptationList.Adaptations {
+		if adaptationList, ok := n.TraitAdaptationList.(*stmt.TraitAdaptationList); ok {
+			for _, a := range adaptationList.Adaptations {
 				switch aa := a.(type) {
 				case *stmt.TraitUsePrecedence:
 					refTrait := aa.Ref.(*stmt.TraitMethodRef).Trait
@@ -181,11 +181,6 @@ func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 	return true
 }
 
-// GetChildrenVisitor is invoked at every node parameter that contains children nodes
-func (nsr *NamespaceResolver) GetChildrenVisitor(key string) walker.Visitor {
-	return nsr
-}
-
 // LeaveNode is invoked after node process
 func (nsr *NamespaceResolver) LeaveNode(w walker.Walkable) {
 	switch n := w.(type) {
@@ -194,6 +189,22 @@ func (nsr *NamespaceResolver) LeaveNode(w walker.Walkable) {
 			nsr.Namespace = NewNamespace("")
 		}
 	}
+}
+
+func (nsr *NamespaceResolver) EnterChildNode(key string, w walker.Walkable) {
+	// do nothing
+}
+
+func (nsr *NamespaceResolver) LeaveChildNode(key string, w walker.Walkable) {
+	// do nothing
+}
+
+func (nsr *NamespaceResolver) EnterChildList(key string, w walker.Walkable) {
+	// do nothing
+}
+
+func (nsr *NamespaceResolver) LeaveChildList(key string, w walker.Walkable) {
+	// do nothing
 }
 
 // AddAlias adds a new alias

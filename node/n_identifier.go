@@ -1,17 +1,38 @@
 package node
 
-import "github.com/z7zmey/php-parser/walker"
+import (
+	"github.com/z7zmey/php-parser/freefloating"
+	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/walker"
+)
 
 // Identifier node
 type Identifier struct {
-	Value string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewIdentifier node constructor
 func NewIdentifier(Value string) *Identifier {
 	return &Identifier{
-		Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
+}
+
+// SetPosition sets node position
+func (n *Identifier) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *Identifier) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *Identifier) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

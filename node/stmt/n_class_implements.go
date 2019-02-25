@@ -1,20 +1,39 @@
 package stmt
 
 import (
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ClassImplements node
 type ClassImplements struct {
+	FreeFloating   freefloating.Collection
+	Position       *position.Position
 	InterfaceNames []node.Node
 }
 
 // NewClassImplements node constructor
 func NewClassImplements(interfaceNames []node.Node) *ClassImplements {
 	return &ClassImplements{
-		interfaceNames,
+		FreeFloating:   nil,
+		InterfaceNames: interfaceNames,
 	}
+}
+
+// SetPosition sets node position
+func (n *ClassImplements) SetPosition(p *position.Position) {
+	n.Position = p
+}
+
+// GetPosition returns node positions
+func (n *ClassImplements) GetPosition() *position.Position {
+	return n.Position
+}
+
+func (n *ClassImplements) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map
@@ -30,12 +49,13 @@ func (n *ClassImplements) Walk(v walker.Visitor) {
 	}
 
 	if n.InterfaceNames != nil {
-		vv := v.GetChildrenVisitor("InterfaceNames")
+		v.EnterChildList("InterfaceNames", n)
 		for _, nn := range n.InterfaceNames {
 			if nn != nil {
-				nn.Walk(vv)
+				nn.Walk(v)
 			}
 		}
+		v.LeaveChildList("InterfaceNames", n)
 	}
 
 	v.LeaveNode(n)

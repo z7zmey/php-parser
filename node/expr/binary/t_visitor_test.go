@@ -1,15 +1,13 @@
 package binary_test
 
 import (
-	"reflect"
 	"testing"
-
-	"github.com/kylelemons/godebug/pretty"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/binary"
 	"github.com/z7zmey/php-parser/walker"
+	"gotest.tools/assert"
 )
 
 var nodesToTest = []struct {
@@ -19,219 +17,219 @@ var nodesToTest = []struct {
 }{
 	{
 		&binary.BitwiseAnd{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BitwiseOr{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BitwiseXor{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BooleanAnd{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.BooleanOr{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Coalesce{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Concat{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Div{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Equal{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.GreaterOrEqual{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Greater{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Identical{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalAnd{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalOr{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.LogicalXor{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Minus{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Mod{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Mul{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.NotEqual{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.NotIdentical{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Plus{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Pow{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.ShiftLeft{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.ShiftRight{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.SmallerOrEqual{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Smaller{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&binary.Spaceship{
-			Left:  &expr.Variable{VarName: &node.Identifier{Value: "a"}},
-			Right: &expr.Variable{VarName: &node.Identifier{Value: "b"}},
+			Left:  &expr.Variable{},
+			Right: &expr.Variable{},
 		},
 		[]string{"Left", "Right"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -241,39 +239,37 @@ type visitorMock struct {
 }
 
 func (v *visitorMock) EnterNode(n walker.Walkable) bool { return v.visitChildren }
-func (v *visitorMock) GetChildrenVisitor(key string) walker.Visitor {
+func (v *visitorMock) LeaveNode(n walker.Walkable)      {}
+func (v *visitorMock) EnterChildNode(key string, w walker.Walkable) {
 	v.visitedKeys = append(v.visitedKeys, key)
-	return &visitorMock{v.visitChildren, nil}
 }
-func (v *visitorMock) LeaveNode(n walker.Walkable) {}
+func (v *visitorMock) LeaveChildNode(key string, w walker.Walkable) {}
+func (v *visitorMock) EnterChildList(key string, w walker.Walkable) {
+	v.visitedKeys = append(v.visitedKeys, key)
+}
+func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -284,9 +280,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
