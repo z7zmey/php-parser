@@ -5,7 +5,7 @@ import (
     "strings"
     "strconv"
 
-    "github.com/z7zmey/php-parser/meta"
+    "github.com/z7zmey/php-parser/freefloating"
     "github.com/z7zmey/php-parser/scanner"
     "github.com/z7zmey/php-parser/node"
     "github.com/z7zmey/php-parser/node/scalar"
@@ -285,7 +285,7 @@ start:
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
                 
                 if yylex.(*Parser).currentToken.Value == "\xff" {
-                    yylex.(*Parser).currentToken.Meta.SetTokenName(meta.NodeEnd).AppendTo(yylex.(*Parser).rootNode.GetMeta())
+                    yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
                 }
             }
 ;
@@ -295,7 +295,7 @@ top_statement_list:
             {
                 if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
                     prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
                 }
 
                 if $2 != nil {
@@ -322,7 +322,7 @@ namespace_name:
                 namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(namePart.GetMeta())
+                yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -335,8 +335,8 @@ namespace_name:
                 namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(namePart.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -376,11 +376,11 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
@@ -396,9 +396,10 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -412,9 +413,10 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $5.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $5.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -426,9 +428,9 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -440,9 +442,9 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -456,10 +458,10 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(useType.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(useType, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -473,10 +475,10 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(useType.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(useType, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -488,8 +490,8 @@ top_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -501,7 +503,7 @@ use_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -524,7 +526,7 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -540,10 +542,9 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
-
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -557,9 +558,9 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -575,11 +576,11 @@ use_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -591,7 +592,7 @@ use_function_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -614,7 +615,7 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -630,9 +631,9 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -646,9 +647,9 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -664,11 +665,11 @@ use_function_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -680,7 +681,7 @@ use_const_declarations:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -703,7 +704,7 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -719,9 +720,9 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -735,9 +736,9 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -753,11 +754,11 @@ use_const_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($2, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2[0].GetMeta().Cut(newInheritMetaFilter()).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).MoveFreeFloating($2[0], name)
+                yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -779,9 +780,9 @@ constant_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, constList.Consts))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastConst.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $4.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -798,9 +799,9 @@ constant_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, constList))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $3.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -811,7 +812,7 @@ inner_statement_list:
             {
                 if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
                     prevNode := lastNode($1)
-                    yylex.(*Parser).splitSemicolonTokenAndPhpCloseTag(inlineHtmlNode, prevNode)
+                    yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
                 }
 
                 if $2 != nil {
@@ -863,13 +864,15 @@ inner_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+
+                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
 ;
 
@@ -891,8 +894,8 @@ statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Label, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -907,8 +910,8 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -926,9 +929,13 @@ unticked_statement:
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.If, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -942,13 +949,17 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $7.Meta.SetTokenName(meta.EndifToken).AppendTo($$.GetMeta())
-                $8.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $8, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.If, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $8.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($8))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -967,9 +978,13 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.While, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -981,12 +996,16 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.WhileToken).AppendTo($$.GetMeta())
-                $4.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $4.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $5.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $5, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                if len((*$4.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.While, (*$4.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$4.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$4.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$4.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$4.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$4.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$4.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1009,11 +1028,11 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $9))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.ForInitSemicolonToken).AppendTo($$.GetMeta())
-                $6.Meta.SetTokenName(meta.ForCondSemicolonToken).AppendTo($$.GetMeta())
-                $8.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.For, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.InitExpr, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.CondExpr, $6.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.IncExpr, $8.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1034,9 +1053,13 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
-                $2.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Switch, (*$2.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$2.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1048,9 +1071,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1062,9 +1085,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1076,9 +1099,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1090,9 +1113,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1104,9 +1127,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1118,9 +1141,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1132,9 +1155,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1146,10 +1169,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1161,9 +1183,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1175,9 +1197,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1189,10 +1211,10 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Echo, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1204,7 +1226,7 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1216,10 +1238,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1231,11 +1252,11 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $5.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $5, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Unset, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1269,13 +1290,13 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
                 if $6 != nil {
-                    $6.GetMeta().Cut(meta.TokenNameFilter(meta.DoubleArrowToken)).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Key, (*$6.GetFreeFloating())[freefloating.Key]); delete((*$6.GetFreeFloating()), freefloating.Key)
                 }
-                $7.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $7.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1309,13 +1330,13 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
                 if $6 != nil {
-                    $6.GetMeta().Cut(meta.TokenNameFilter(meta.DoubleArrowToken)).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Key, (*$6.GetFreeFloating())[freefloating.Key]); delete((*$6.GetFreeFloating()), freefloating.Key)
                 }
-                $7.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $7.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1328,9 +1349,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Declare, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1342,8 +1363,8 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1359,9 +1380,9 @@ unticked_statement:
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Try, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1373,9 +1394,9 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1389,10 +1410,10 @@ unticked_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(label.GetMeta())
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(label, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Label, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1409,22 +1430,22 @@ catch_statement:
             {
                 identifier := node.NewIdentifier(strings.TrimLeftFunc($4.Value, isDollar))
                 variable := expr.NewVariable(identifier)
-                catch := stmt.NewCatch([]node.Node{$3}, variable, $7)
-                $$ = append([]node.Node{catch}, $9...)
+                catchNode := stmt.NewCatch([]node.Node{$3}, variable, $7)
+                $$ = append([]node.Node{catchNode}, $9...)
 
                 // save position
                 identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
                 variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($4))
-                catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
+                catchNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(catch.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(catch.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(catch.GetMeta())
-                $6.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo(catch.GetMeta())
-                $8.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo(catch.GetMeta())
+                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Catch, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Var, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Cond, $6.FreeFloating)
+                yylex.(*Parser).setFreeFloating(catchNode, freefloating.Stmts, $8.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1445,9 +1466,9 @@ finally_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Finally, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1496,13 +1517,13 @@ additional_catch:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $8))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $6.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $8.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Catch, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $6.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $8.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1520,7 +1541,7 @@ unset_variables:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1586,15 +1607,17 @@ unticked_function_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
                 if $2 != nil {
-                    $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+                    yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
                 }
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                $4.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $6.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $7.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $9.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParamList, $6.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Params, $7.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $9.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1623,9 +1646,9 @@ unticked_class_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $7))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                $5.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $7.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1639,10 +1662,10 @@ unticked_class_declaration_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                $4.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $6.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $6.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1658,7 +1681,7 @@ class_entry_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1672,8 +1695,8 @@ class_entry_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.ClassToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1685,7 +1708,7 @@ class_entry_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1699,8 +1722,8 @@ class_entry_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.ClassToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1721,7 +1744,7 @@ extends_from:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ExtendsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1749,7 +1772,7 @@ interface_extends_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ExtendsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1770,7 +1793,7 @@ implements_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ImplementsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1788,7 +1811,7 @@ interface_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1806,7 +1829,7 @@ foreach_optional_arg:
                 $$ = $2
 
                 // save comments
-                $1.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Key, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1827,7 +1850,7 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1839,9 +1862,9 @@ foreach_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.List, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1867,10 +1890,10 @@ for_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.EndforToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1896,10 +1919,10 @@ foreach_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.EndforeachToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1926,10 +1949,10 @@ declare_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.EnddeclareToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1948,8 +1971,8 @@ declare_list:
                 constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1964,9 +1987,9 @@ declare_list:
                 constant.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $4.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1984,8 +2007,8 @@ switch_case_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo(caseList.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo(caseList.GetMeta())
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1999,10 +2022,9 @@ switch_case_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo(caseList.GetMeta())
-                $2.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(caseList.GetMeta())
-                yylex.(*Parser).appendMetaToken(caseList, $2, meta.CaseSeparatorToken)
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo(caseList.GetMeta())
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2016,10 +2038,10 @@ switch_case_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.EndswitchToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2034,12 +2056,11 @@ switch_case_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $5))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(caseList.GetMeta())
-                yylex.(*Parser).appendMetaToken(caseList, $2, meta.CaseSeparatorToken)
-                $4.Meta.SetTokenName(meta.EndswitchToken).AppendTo($$.GetMeta())
-                $5.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $5, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2062,9 +2083,9 @@ case_list:
                 _case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_case.GetMeta())
-                $4.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(_case.GetMeta())
-                yylex.(*Parser).appendMetaToken(_case, $4, meta.CaseSeparatorToken)
+                yylex.(*Parser).setFreeFloating(_case, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(_case, freefloating.Expr, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating(_case, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2077,9 +2098,9 @@ case_list:
                 _default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_default.GetMeta())
-                $3.Meta.SetTokenName(meta.CaseSeparatorToken).AppendTo(_default.GetMeta())
-                yylex.(*Parser).appendMetaToken(_default, $3, meta.CaseSeparatorToken)
+                yylex.(*Parser).setFreeFloating(_default, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(_default, freefloating.Default, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(_default, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2118,10 +2139,10 @@ while_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.EndwhileToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2145,9 +2166,13 @@ elseif_list:
                 _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($2, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
-                $3.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
-                $3.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
+                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
+                if len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*$3.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*$3.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2172,10 +2197,14 @@ new_elseif_list:
                 _elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($2, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(_elseIf.GetMeta())
-                $3.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
-                $3.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).Cut(meta.NotFilter(meta.TypeFilter(meta.TokenType))).AppendTo(_elseIf.GetMeta())
-                $4.Meta.SetTokenName(meta.ColonToken).AppendTo(_elseIf.GetMeta())
+                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
+                if len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, (*$3.GetFreeFloating())[freefloating.OpenParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.OpenParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                }
+                if len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, (*$3.GetFreeFloating())[freefloating.CloseParenthesisToken][:len((*$3.GetFreeFloating())[freefloating.CloseParenthesisToken])-1]); delete((*$3.GetFreeFloating()), freefloating.CloseParenthesisToken)
+                }
+                yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Cond, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2197,7 +2226,7 @@ else_single:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2221,8 +2250,8 @@ new_else_single:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Else, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2256,7 +2285,7 @@ non_empty_parameter_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2284,20 +2313,27 @@ parameter:
 
                 // save comments
                 if $1 != nil {
-                    $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                    yylex.(*Parser).MoveFreeFloating($1, $$)
                 }
                 if $2 != nil {
-                    $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
                 }
                 if $3 != nil {
-                    $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
                 }
-                if $1 == nil && $2 == nil && $3 == nil {
-                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                } else {
-                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+
+                // normalize
+                if $3 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
                 }
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                if $2 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+                }
+                if $1 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2322,21 +2358,28 @@ parameter:
 
                 // save comments
                 if $1 != nil {
-                    $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                    yylex.(*Parser).MoveFreeFloating($1, $$)
                 }
                 if $2 != nil {
-                    $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
                 }
                 if $3 != nil {
-                    $3.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
                 }
-                if $1 == nil && $2 == nil && $3 == nil {
-                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                } else {
-                    $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
+
+                // normalize
+                if $3 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
                 }
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
+                if $2 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+                }
+                if $1 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2358,7 +2401,7 @@ optional_class_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2370,7 +2413,7 @@ optional_class_type:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2392,8 +2435,8 @@ function_call_parameter_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2405,8 +2448,8 @@ function_call_parameter_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2420,8 +2463,8 @@ function_call_parameter_list:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2440,7 +2483,7 @@ non_empty_function_call_parameter_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2455,7 +2498,7 @@ function_call_parameter:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 // save comments
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2467,7 +2510,7 @@ function_call_parameter:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
                 // save comments
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2479,7 +2522,7 @@ function_call_parameter:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2491,7 +2534,7 @@ function_call_parameter:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.EllipsisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2503,7 +2546,7 @@ global_var_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2527,8 +2570,8 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2540,9 +2583,8 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2554,12 +2596,10 @@ global_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.NodeStart)
-                $4.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($3, freefloating.Start, append($2.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($2), (*$3.GetFreeFloating())[freefloating.Start]...)...))
+                yylex.(*Parser).setFreeFloating($3, freefloating.End, append((*$3.GetFreeFloating())[freefloating.End], append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2580,9 +2620,9 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(staticVar.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2599,10 +2639,10 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(staticVar.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $4.Meta.SetTokenName(meta.EqualToken).AppendTo(staticVar.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2619,8 +2659,8 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(staticVar.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2637,9 +2677,9 @@ static_var_list:
                 staticVar.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(staticVar.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo(staticVar.GetMeta())
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating(staticVar, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2671,10 +2711,9 @@ class_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition($1, $3))
 
                 // save comments
-                $3.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.SemiColonToken)
-
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.PropertyList, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2686,8 +2725,8 @@ class_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2711,13 +2750,20 @@ class_statement:
                 }
 
                 // save comments
-                $2.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
-                if $3 != nil {
-                    $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                if len($1) > 0 {
+                    yylex.(*Parser).MoveFreeFloating($1[0], $$)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Start, $2.FreeFloating)
                 }
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                $5.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $7.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                if $3 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
+                }
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $7.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2732,7 +2778,7 @@ trait_use_statement:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2750,7 +2796,7 @@ trait_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2764,9 +2810,8 @@ trait_adaptations:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2777,8 +2822,8 @@ trait_adaptations:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.AdaptationList, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2820,8 +2865,8 @@ trait_adaptation_statement:
                 $$ = $1;
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.NameList, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2830,8 +2875,8 @@ trait_adaptation_statement:
                 $$ = $1;
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SemiColonToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.SemiColonToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Alias, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2846,7 +2891,8 @@ trait_precedence:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.InsteadofToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2864,7 +2910,7 @@ trait_reference_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2881,7 +2927,7 @@ trait_method_reference:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2904,8 +2950,9 @@ trait_method_reference_fully_qualified:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2922,8 +2969,9 @@ trait_alias:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(alias.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2935,7 +2983,8 @@ trait_alias:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AsToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2965,8 +3014,8 @@ method_body:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2978,8 +3027,8 @@ method_body:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3001,7 +3050,7 @@ variable_modifiers:
                 modifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(modifier.GetMeta())
+                yylex.(*Parser).setFreeFloating(modifier, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3046,7 +3095,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3058,7 +3107,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3070,7 +3119,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3082,7 +3131,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3094,7 +3143,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3106,7 +3155,7 @@ member_modifier:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3126,9 +3175,9 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3145,10 +3194,10 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $5))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $4.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating(property, freefloating.Var, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3165,8 +3214,8 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3183,9 +3232,9 @@ class_variable_declaration:
                 property.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(property.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo(property.GetMeta())
+                yylex.(*Parser).setFreeFloating(property, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating(property, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3207,9 +3256,9 @@ class_constant_declaration:
                 $1.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastConst.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $4.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastConst, freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3225,9 +3274,9 @@ class_constant_declaration:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ConstToken).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(constant.GetMeta())
-                $3.Meta.SetTokenName(meta.EqualToken).AppendTo(constant.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(constant, freefloating.Name, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3239,7 +3288,7 @@ echo_expr_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3273,7 +3322,7 @@ non_empty_for_expr:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3310,10 +3359,8 @@ chaining_dereference:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3326,10 +3373,8 @@ chaining_dereference:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $1, meta.OpenSquareBracket)
-                $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $3, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3384,7 +3429,7 @@ new_expr:
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3393,18 +3438,18 @@ new_expr:
 expr_without_variable:
         T_LIST '(' assignment_list ')' '=' expr
             {
-                list := expr.NewList($3)
-                $$ = assign.NewAssign(list, $6)
+                listNode := expr.NewList($3)
+                $$ = assign.NewAssign(listNode, $6)
 
                 // save position
-                list.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $6))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(list.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(list.GetMeta())
-                $5.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3416,9 +3461,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3429,11 +3473,10 @@ expr_without_variable:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
-
                 // save comments
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3457,11 +3500,10 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, _new))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.EqualToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(_new.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(_new, freefloating.Start, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3473,7 +3515,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3484,10 +3526,8 @@ expr_without_variable:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
-                // save comments
-                $2.Meta.SetTokenName(meta.PlusEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3499,9 +3539,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.MinusEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3513,9 +3552,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.MulEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3527,9 +3565,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PowEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3541,9 +3578,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.DivEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3555,9 +3591,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ConcatEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3569,9 +3604,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ModEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3583,9 +3617,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AndEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3597,9 +3630,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OrEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3611,9 +3643,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.XorEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3625,9 +3656,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SlEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3639,9 +3669,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SrEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3653,9 +3682,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IncToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3667,7 +3695,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3679,9 +3707,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.DecToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3693,7 +3720,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3705,9 +3732,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.BooleanOrToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3719,9 +3745,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.BooleanAndToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3733,9 +3758,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalOrToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3747,9 +3771,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalAndToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3761,9 +3784,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalXorToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3775,9 +3797,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.VerticalBarToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3789,9 +3810,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3803,9 +3823,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.CaretToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3817,9 +3836,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.DotToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3831,9 +3849,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PlusToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3845,9 +3862,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.MinusToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3859,9 +3875,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.AsteriskToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3873,9 +3888,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PowToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3887,9 +3901,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SlashToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3901,9 +3914,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PercentToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3915,9 +3927,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SlToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3929,9 +3940,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.SrToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3943,7 +3953,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3955,7 +3965,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3967,7 +3977,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3979,7 +3989,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3991,9 +4001,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsIdenticalToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4005,9 +4014,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsNotIdenticalToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4019,9 +4027,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4033,10 +4040,9 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsNotEqualToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.IsNotEqualToken)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4048,9 +4054,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.LessToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4062,9 +4067,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsSmallerOrEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4076,9 +4080,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.GreaterToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4090,9 +4093,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsGreaterOrEqualToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4104,9 +4106,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.InstanceofToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4116,8 +4117,8 @@ expr_without_variable:
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
-                $$.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).SetTokenName(meta.NodeStart).PrependTo($$.GetMeta())
-                $$.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($1, freefloating.Start, append((*$1.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$1.GetFreeFloating())[freefloating.Start]...)); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                yylex.(*Parser).setFreeFloating($1, freefloating.End, append((*$1.GetFreeFloating())[freefloating.End], (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]...)); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
             }
     |   new_expr
             {
@@ -4130,27 +4131,25 @@ expr_without_variable:
                 $$ = $2
 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.NodeStart)
-                $1.Meta.SetTokenName(meta.NodeStart).PrependTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
                 for _, n := range($4) {
                     switch nn := n.(type) {
                         case *expr.ArrayDimFetch:
                             nn.Variable = $$
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                     }
 
                     // save position
@@ -4167,10 +4166,9 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.QuestionMarkToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.True, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4182,10 +4180,9 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.QuestionMarkToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.True, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4203,8 +4200,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4216,8 +4213,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4229,8 +4226,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4242,8 +4239,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4255,8 +4252,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4268,8 +4265,8 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4281,35 +4278,29 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_EXIT exit_expr
             {
-                var e *expr.Exit;
-                if $2 != nil {
-                    e = $2.(*expr.Exit)
-                } else {
-                    e = expr.NewExit(nil)
-                }
-
-                $$ = e
+                e := $2.(*expr.Exit)
+                $$ = $2
 
                 if (strings.EqualFold($1.Value, "die")) {
                     e.Die = true
                 }
 
                 // save position
-                if $2 == nil {
+                if $2.GetPosition() == nil {
                     $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 } else {
                     $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 }
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4321,7 +4312,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4351,7 +4342,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4363,7 +4354,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4375,7 +4366,7 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4387,14 +4378,21 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $9))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                if $2 != nil {
-                    $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                if $2 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
                 }
-                $3.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $5.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $7.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $9.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $5.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, $7.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $9.FreeFloating)
+
+                // normalize
+                if $6 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVars]); delete((*$$.GetFreeFloating()), freefloating.LexicalVars)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4406,15 +4404,22 @@ expr_without_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $10))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.FunctionToken).AppendTo($$.GetMeta())
-                if $3 != nil {
-                    $3.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Static, $2.FreeFloating)
+                if $3 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+                } else {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
                 }
-                $4.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $6.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                $8.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                $10.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $6.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, $8.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $10.FreeFloating)
+
+                // normalize
+                if $7 == nil {
+                    yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVars]); delete((*$$.GetFreeFloating()), freefloating.LexicalVars)
+                }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4429,7 +4434,7 @@ yield_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4441,7 +4446,7 @@ yield_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4453,8 +4458,8 @@ yield_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4466,8 +4471,8 @@ yield_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4482,12 +4487,9 @@ combined_scalar_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4499,12 +4501,9 @@ combined_scalar_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4518,11 +4517,9 @@ combined_scalar_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(str, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4534,12 +4531,9 @@ combined_scalar_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4554,9 +4548,9 @@ combined_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Array, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4568,8 +4562,8 @@ combined_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4597,9 +4591,9 @@ lexical_vars:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Use, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVarList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4617,9 +4611,9 @@ lexical_var_list:
                 variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4636,10 +4630,10 @@ lexical_var_list:
                 reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($3, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
-                $4.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $3.FreeFloating)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $4.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4654,8 +4648,8 @@ lexical_var_list:
                 variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4672,9 +4666,9 @@ lexical_var_list:
                 reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(variable.GetMeta())
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).addDollarToken(variable)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4691,7 +4685,7 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(name, $2))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4705,8 +4699,8 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo(funcName.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(funcName, freefloating.Namespace, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4720,7 +4714,7 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(funcName, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4732,8 +4726,8 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4745,8 +4739,8 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4758,8 +4752,8 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4771,8 +4765,8 @@ function_call:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4782,7 +4776,9 @@ function_call:
                 
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $2))
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4797,7 +4793,7 @@ class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4809,7 +4805,7 @@ class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4821,8 +4817,8 @@ class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4834,7 +4830,7 @@ class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4849,7 +4845,7 @@ fully_qualified_class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
                 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4861,8 +4857,8 @@ fully_qualified_class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4874,7 +4870,7 @@ fully_qualified_class_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4901,7 +4897,7 @@ dynamic_class_name_reference:
                 $$ = $1
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($3[0].GetMeta())
+                yylex.(*Parser).setFreeFloating($3[0], freefloating.Var, $2.FreeFloating)
 
                 for _, n := range($3) {
                     switch nn := n.(type) {
@@ -4909,13 +4905,13 @@ dynamic_class_name_reference:
                             nn.Variable = $$
                             $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                     }
                 }
 
@@ -4925,13 +4921,13 @@ dynamic_class_name_reference:
                             nn.Variable = $$
                             $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                     }
                 }
 
@@ -4968,7 +4964,7 @@ dynamic_class_name_variable_property:
                 $$ = $2
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($2[0].GetMeta())
+                yylex.(*Parser).setFreeFloating($2[0], freefloating.Var, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4977,7 +4973,7 @@ dynamic_class_name_variable_property:
 exit_expr:
         /* empty */
             {
-                $$ = nil 
+                $$ = expr.NewExit(nil);
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4989,10 +4985,8 @@ exit_expr:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.OpenParenthesisToken)
-                $2.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.CloseParenthesisToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Exit, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5010,8 +5004,8 @@ exit_expr:
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 
                 // save comments
-                $1.GetMeta().Cut(meta.TokenNameFilter(meta.OpenParenthesisToken)).AppendTo($$.GetMeta())
-                $1.GetMeta().Cut(meta.TokenNameFilter(meta.CloseParenthesisToken)).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Exit, (*$1.GetFreeFloating())[freefloating.OpenParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.OpenParenthesisToken)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, (*$1.GetFreeFloating())[freefloating.CloseParenthesisToken]); delete((*$1.GetFreeFloating()), freefloating.CloseParenthesisToken)
             }
 ;
 
@@ -5024,7 +5018,11 @@ backticks_expr:
             }
     |   T_ENCAPSED_AND_WHITESPACE
             {
-                $$ = []node.Node{scalar.NewEncapsedStringPart($1.Value)} 
+                part := scalar.NewEncapsedStringPart($1.Value)
+                $$ = []node.Node{part}
+
+                // save position
+                part.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5060,7 +5058,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5072,7 +5070,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5084,7 +5082,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5096,7 +5094,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5108,7 +5106,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5120,7 +5118,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5132,7 +5130,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5144,7 +5142,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5156,7 +5154,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5168,11 +5166,11 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
-    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC 
+    |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
                 encapsed := scalar.NewEncapsedStringPart($2.Value)
                 $$ = scalar.NewHeredoc($1.Value, []node.Node{encapsed})
@@ -5182,7 +5180,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5194,7 +5192,7 @@ common_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5211,10 +5209,9 @@ static_class_constant:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5252,7 +5249,7 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5266,8 +5263,8 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo(name.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5281,7 +5278,7 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5293,9 +5290,9 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Array, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5307,8 +5304,8 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5326,7 +5323,7 @@ static_scalar_value:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5347,12 +5344,9 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5364,9 +5358,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PlusToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5378,9 +5371,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.MinusToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5392,9 +5384,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.AsteriskToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5406,9 +5397,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PowToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5420,9 +5410,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.SlashToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5434,9 +5423,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PercentToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5448,7 +5436,7 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5460,7 +5448,7 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5472,9 +5460,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.VerticalBarToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5486,9 +5473,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.AmpersandToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5500,9 +5486,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.CaretToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5514,9 +5499,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.SlToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5528,9 +5512,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.SrToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5542,9 +5525,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.DotToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5556,9 +5538,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalXorToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5570,9 +5551,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalAndToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5584,9 +5564,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.LogicalOrToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5598,9 +5577,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.BooleanAndToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5612,9 +5590,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.BooleanOrToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5626,9 +5603,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsIdenticalToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5640,9 +5616,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsNotIdenticalToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5654,9 +5629,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsEqualToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5668,10 +5642,9 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsNotEqualToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.IsNotEqualToken)
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5683,9 +5656,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.LessToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5697,9 +5669,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.GreaterToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5711,9 +5682,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsSmallerOrEqualToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5725,9 +5695,8 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.IsGreaterOrEqualToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5739,10 +5708,9 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.QuestionMarkToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.True, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5754,10 +5722,9 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $5))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.QuestionMarkToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.ColonToken).AppendTo($$.GetMeta())
-                
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.True, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5769,7 +5736,7 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5781,7 +5748,7 @@ static_operation:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5790,10 +5757,8 @@ static_operation:
                 $$ = $2
 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.NodeStart)
-                $1.Meta.SetTokenName(meta.NodeStart).PrependTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5816,7 +5781,7 @@ general_constant:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
 
                 // save comments
-                $1[0].GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5824,12 +5789,14 @@ general_constant:
             {
                 name := name.NewRelative($3)
                 $$ = expr.NewConstFetch(name)
+                
+                // save position
                 name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition($1, $3))
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.NsSeparatorToken).AppendTo(name.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(name, freefloating.Namespace, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5843,7 +5810,7 @@ general_constant:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(name))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5860,8 +5827,7 @@ scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5891,7 +5857,7 @@ scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5903,7 +5869,7 @@ scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5915,7 +5881,7 @@ scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5934,7 +5900,7 @@ static_array_pair_list:
 
                 // save comments
                 if $2 != nil {
-                    $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                    yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -5962,10 +5928,9 @@ non_empty_static_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $4.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-
-                $3.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5978,9 +5943,8 @@ non_empty_static_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-
-                $3.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5993,9 +5957,8 @@ non_empty_static_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6007,7 +5970,8 @@ non_empty_static_array_pair_list:
                 // save position
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6034,10 +5998,14 @@ parenthesis_expr:
                 $$ = $2
 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.OpenParenthesisToken)
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).PrependTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.CloseParenthesisToken)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($2, freefloating.Start, append((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$2.GetFreeFloating())[freefloating.Start]...))
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($2, freefloating.End, append((*$2.GetFreeFloating())[freefloating.End], (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
+                }
+                yylex.(*Parser).setFreeFloating($2, freefloating.OpenParenthesisToken, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+                yylex.(*Parser).setFreeFloating($2, freefloating.CloseParenthesisToken, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6046,10 +6014,14 @@ parenthesis_expr:
                 $$ = $2
 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.OpenParenthesisToken)
-                $1.Meta.SetTokenName(meta.OpenParenthesisToken).PrependTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.CloseParenthesisToken)
+                if len((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($2, freefloating.Start, append((*$2.GetFreeFloating())[freefloating.OpenParenthesisToken], (*$2.GetFreeFloating())[freefloating.Start]...))
+                }
+                if len((*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]) > 0 {
+                    yylex.(*Parser).setFreeFloating($2, freefloating.End, append((*$2.GetFreeFloating())[freefloating.End], (*$2.GetFreeFloating())[freefloating.CloseParenthesisToken]...))
+                }
+                yylex.(*Parser).setFreeFloating($2, freefloating.OpenParenthesisToken, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+                yylex.(*Parser).setFreeFloating($2, freefloating.CloseParenthesisToken, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6095,7 +6067,7 @@ variable:
                 }
 
                 // save comments
-                $2.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($3[0].GetMeta())
+                yylex.(*Parser).setFreeFloating($3[0], freefloating.Var, $2.FreeFloating)
 
                 for _, n := range($3) {
                     switch nn := n.(type) {
@@ -6103,19 +6075,19 @@ variable:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                     }
                 }
 
@@ -6125,19 +6097,19 @@ variable:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.PropertyFetch:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                         
                         case *expr.MethodCall:
                             nn.Variable = $$
                             nn.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($$, nn))
                             $$ = nn
-                            nn.Variable.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                            yylex.(*Parser).MoveFreeFloating(nn.Variable, $$)
                     }
                 }
 
@@ -6178,7 +6150,7 @@ variable_property:
                 $$ = $2
 
                 // save comments
-                $1.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($2[0].GetMeta())
+                yylex.(*Parser).setFreeFloating($2[0], freefloating.Var, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6194,10 +6166,8 @@ array_method_dereference:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6210,10 +6180,8 @@ array_method_dereference:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6282,9 +6250,8 @@ static_member:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6296,9 +6263,8 @@ static_member:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6322,12 +6288,9 @@ array_function_dereference:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6339,12 +6302,9 @@ array_function_dereference:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6408,12 +6368,9 @@ reference_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6425,12 +6382,9 @@ reference_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenCurlyBracesToken)
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseCurlyBracesToken)
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6454,8 +6408,8 @@ compound_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6467,12 +6421,10 @@ compound_variable:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.NodeStart)
-                $4.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($3, freefloating.Start, append($2.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($2), (*$3.GetFreeFloating())[freefloating.Start]...)...))
+                yylex.(*Parser).setFreeFloating($3, freefloating.End, append((*$3.GetFreeFloating())[freefloating.End], append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6523,10 +6475,8 @@ object_dim_list:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6539,10 +6489,8 @@ object_dim_list:
                 fetch.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.OpenCurlyBracesToken).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $2, meta.OpenCurlyBracesToken)
-                $4.Meta.SetTokenName(meta.CloseCurlyBracesToken).AppendTo(fetch.GetMeta())
-                yylex.(*Parser).appendMetaToken(fetch, $4, meta.CloseCurlyBracesToken)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6567,7 +6515,7 @@ variable_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6579,10 +6527,8 @@ variable_name:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
                 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.NodeStart)
-                $1.Meta.SetTokenName(meta.NodeStart).PrependTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6598,8 +6544,8 @@ simple_indirect_reference:
                 n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(n.GetMeta())
-                yylex.(*Parser).appendMetaToken(n, $1, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(n, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6616,8 +6562,8 @@ simple_indirect_reference:
                 n.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(n.GetMeta())
-                yylex.(*Parser).appendMetaToken(n, $2, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating(n, freefloating.Start, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(n, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($2))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6633,7 +6579,7 @@ assignment_list:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6658,23 +6604,24 @@ assignment_list_element:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_LIST '(' assignment_list ')'
             {
-                item := expr.NewList($3)
-                $$ = expr.NewArrayItem(nil, item)
+                listNode := expr.NewList($3)
+                $$ = expr.NewArrayItem(nil, listNode)
                 
                 // save position
-                item.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
-                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(item))
+                listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
+                $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(listNode))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo(item.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo(item.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6704,7 +6651,7 @@ array_pair_list:
 
                 // save comments
                 if $2 != nil {
-                    $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                    yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -6721,10 +6668,9 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $5))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $4.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-
-                $3.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6737,9 +6683,8 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-
-                $3.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6752,9 +6697,8 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $3))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6766,7 +6710,8 @@ non_empty_array_pair_list:
                 // save position
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition($1))
 
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                // save comments
+                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6781,11 +6726,10 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($3, $6))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $4.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-                $5.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
-
-                $3.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).MoveFreeFloating($3, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $4.FreeFloating)
+                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $5.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6800,8 +6744,8 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($3, $4))
                 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6816,10 +6760,9 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition($1, $4))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.DoubleArrowToken).AppendTo(arrayItem.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(reference.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo(arrayItem.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, arrayItem)
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Expr, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6834,7 +6777,7 @@ non_empty_array_pair_list:
                 arrayItem.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(arrayItem.GetMeta())
+                yylex.(*Parser).setFreeFloating(arrayItem, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6856,7 +6799,7 @@ encaps_list:
                 encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($2))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(encapsed.GetMeta())
+                yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6875,7 +6818,7 @@ encaps_list:
                 encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo(encapsed.GetMeta())
+                yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6892,8 +6835,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6909,11 +6852,9 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $2, meta.OpenSquareBracket)
-                $4.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $4, meta.CloseSquareBracket)
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6931,9 +6872,9 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).appendMeta(variable, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.ObjectOperatorToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(fetch.GetMeta())
+                yylex.(*Parser).addDollarToken(variable)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(fetch, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6947,9 +6888,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6965,10 +6905,8 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $3))
 
                 // save comments
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $2.Meta.SetTokenName(meta.NodeStart).AppendTo(name.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6984,13 +6922,10 @@ encaps_var:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $6))
 
                 // save comments
-                yylex.(*Parser).appendMetaToken($$, $1, meta.NodeStart)
-                $3.Meta.SetTokenName(meta.OpenSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.OpenSquareBracket)
-                $5.Meta.SetTokenName(meta.CloseSquareBracket).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $5, meta.CloseSquareBracket)
-                $6.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $6, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($5.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($5)...))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($6.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($6)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6999,9 +6934,8 @@ encaps_var:
                 $$ = $2;
 
                 // save comments
-                yylex.(*Parser).prependMetaToken($$, $1, meta.NodeStart)
-                $3.Meta.SetTokenName(meta.NodeEnd).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMetaToken($$, $3, meta.NodeEnd)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+                yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7016,7 +6950,7 @@ encaps_var_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7032,6 +6966,9 @@ encaps_var_offset:
                 // save position
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
+                // save comments
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   T_VARIABLE
@@ -7044,8 +6981,8 @@ encaps_var_offset:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition($1))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                yylex.(*Parser).appendMeta($$, &meta.Data{"$", meta.TokenType, nil, meta.NodeStart}, meta.NodeStart)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).addDollarToken($$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7060,9 +6997,9 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
                 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Isset, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7074,9 +7011,9 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Empty, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7088,9 +7025,9 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Empty, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7102,7 +7039,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7114,7 +7051,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7126,9 +7063,9 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition($1, $4))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
-                $2.Meta.SetTokenName(meta.OpenParenthesisToken).AppendTo($$.GetMeta())
-                $4.Meta.SetTokenName(meta.CloseParenthesisToken).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Eval, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7140,7 +7077,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7152,7 +7089,7 @@ internal_functions_in_yacc:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition($1, $2))
 
                 // save comments
-                $1.Meta.SetTokenName(meta.NodeStart).AppendTo($$.GetMeta())
+                yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7170,7 +7107,7 @@ isset_variables:
                 $$ = append($1, $3)
 
                 // save comments
-                $2.Meta.SetTokenName(meta.NodeEnd).AppendTo(lastNode($1).GetMeta())
+                yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7202,10 +7139,9 @@ class_constant:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7219,10 +7155,9 @@ class_constant:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7239,10 +7174,9 @@ static_class_name_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -7259,10 +7193,9 @@ class_name_scalar:
                 $$.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition($1, $3))
 
                 // save comments
-                $2.Meta.SetTokenName(meta.PaamayimNekudotayimToken).AppendTo($$.GetMeta())
-                $3.Meta.SetTokenName(meta.NodeStart).AppendTo(target.GetMeta())
-
-                $1.GetMeta().Cut(newInheritMetaFilter()).PrependTo($$.GetMeta())
+                yylex.(*Parser).MoveFreeFloating($1, $$)
+                yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+                yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

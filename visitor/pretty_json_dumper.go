@@ -6,7 +6,7 @@ import (
 	"io"
 	"reflect"
 
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/walker"
 )
@@ -82,40 +82,57 @@ func (d *PrettyJsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(*mm) > 0 {
+	if !n.GetFreeFloating().IsEmpty() {
 		fmt.Fprint(d.Writer, ",\n")
 		d.printIndent(d.Writer)
-		fmt.Fprint(d.Writer, "\"meta\": [\n")
+		fmt.Fprint(d.Writer, "\"freefloating\": {\n")
 		d.depth++
-		for k, m := range *mm {
-			if k != 0 {
+		i := 0
+		for key, freeFloatingStrings := range *n.GetFreeFloating() {
+			if i != 0 {
 				fmt.Fprint(d.Writer, ",\n")
 			}
+			i++
 
 			d.printIndent(d.Writer)
-			fmt.Fprint(d.Writer, "{\n")
+			fmt.Fprintf(d.Writer, "%q: [\n", key)
 			d.depth++
-			d.printIndent(d.Writer)
-			switch m.Type {
-			case meta.CommentType:
-				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.CommentType")
-			case meta.WhiteSpaceType:
-				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.WhiteSpaceType")
-			case meta.TokenType:
-				fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "*meta.TokenType")
+
+			j := 0
+			for _, freeFloatingString := range freeFloatingStrings {
+				if j != 0 {
+					fmt.Fprint(d.Writer, ",\n")
+				}
+				j++
+
+				d.printIndent(d.Writer)
+				fmt.Fprint(d.Writer, "{\n")
+				d.depth++
+				d.printIndent(d.Writer)
+				switch freeFloatingString.StringType {
+				case freefloating.CommentType:
+					fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "freefloating.CommentType")
+				case freefloating.WhiteSpaceType:
+					fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "freefloating.WhiteSpaceType")
+				case freefloating.TokenType:
+					fmt.Fprintf(d.Writer, "%q: %q,\n", "type", "freefloating.TokenType")
+				}
+				d.printIndent(d.Writer)
+				fmt.Fprintf(d.Writer, "%q: %q\n", "value", freeFloatingString.Value)
+				d.depth--
+				d.printIndent(d.Writer)
+				fmt.Fprint(d.Writer, "}")
 			}
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %q,\n", "value", m.String())
-			d.printIndent(d.Writer)
-			fmt.Fprintf(d.Writer, "%q: %q\n", "tokenName", m.TokenName.String())
+
 			d.depth--
+			fmt.Fprint(d.Writer, "\n")
 			d.printIndent(d.Writer)
-			fmt.Fprint(d.Writer, "}")
+			fmt.Fprint(d.Writer, "]")
 		}
 		d.depth--
 		fmt.Fprint(d.Writer, "\n")
 		d.printIndent(d.Writer)
-		fmt.Fprint(d.Writer, "]")
+		fmt.Fprint(d.Writer, "}")
 	}
 
 	if a := n.Attributes(); len(a) > 0 {

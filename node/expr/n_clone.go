@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Clone node
 type Clone struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Expr     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         node.Node
 }
 
 // NewClone node constructor
 func NewClone(Expression node.Node) *Clone {
 	return &Clone{
-		Expr: Expression,
+		FreeFloating: nil,
+		Expr:         Expression,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Clone) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Clone) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Clone) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,10 +1,9 @@
 package cast_test
 
 import (
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -22,49 +21,49 @@ var nodesToTest = []struct {
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Bool{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Double{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Int{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Object{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.String{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&cast.Unset{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -86,31 +85,25 @@ func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
 func TestVisitor(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{true, nil}
+		v := &visitorMock{true, []string{}}
 		tt.node.Walk(v)
 
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -121,9 +114,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

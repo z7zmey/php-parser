@@ -1,7 +1,7 @@
 package scalar
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // Heredoc node
 type Heredoc struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Label    string
-	Parts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Label        string
+	Parts        []node.Node
 }
 
 // NewHeredoc node constructor
 func NewHeredoc(Label string, Parts []node.Node) *Heredoc {
 	return &Heredoc{
-		Label: Label,
-		Parts: Parts,
+		FreeFloating: nil,
+		Label:        Label,
+		Parts:        Parts,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *Heredoc) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Heredoc) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Heredoc) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

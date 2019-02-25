@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/z7zmey/php-parser/node"
-
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -36,10 +35,12 @@ func (d *Dumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(*mm) > 0 {
-		fmt.Fprintf(d.Writer, "%v\"Meta\":\n", d.Indent+"  ")
-		for _, m := range *mm {
-			fmt.Fprintf(d.Writer, "%v%q before %q\n", d.Indent+"    ", m, m.TokenName.String())
+	if !n.GetFreeFloating().IsEmpty() {
+		fmt.Fprintf(d.Writer, "%v\"freefloating\":\n", d.Indent+"  ")
+		for key, freeFloatingStrings := range *n.GetFreeFloating() {
+			for _, freeFloatingString := range freeFloatingStrings {
+				fmt.Fprintf(d.Writer, "%v%q: %q\n", d.Indent+"    ", key.String(), freeFloatingString.Value)
+			}
 		}
 	}
 

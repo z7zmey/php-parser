@@ -1,7 +1,7 @@
 package assign
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // BitwiseAnd node
 type BitwiseAnd struct {
-	Meta       meta.Collection
-	Position   *position.Position
-	Variable   node.Node
-	Expression node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variable     node.Node
+	Expression   node.Node
 }
 
 // NewBitwiseAnd node constructor
 func NewBitwiseAnd(Variable node.Node, Expression node.Node) *BitwiseAnd {
 	return &BitwiseAnd{
-		Variable:   Variable,
-		Expression: Expression,
+		FreeFloating: nil,
+		Variable:     Variable,
+		Expression:   Expression,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *BitwiseAnd) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *BitwiseAnd) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *BitwiseAnd) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

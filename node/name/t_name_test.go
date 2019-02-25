@@ -2,32 +2,19 @@ package name_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
+
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/position"
 
-	"github.com/kylelemons/godebug/pretty"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-
-	}
-}
 
 func TestName(t *testing.T) {
 	src := `<? foo();`
@@ -89,12 +76,12 @@ func TestName(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestFullyQualified(t *testing.T) {
@@ -157,12 +144,12 @@ func TestFullyQualified(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestRelative(t *testing.T) {
@@ -225,12 +212,12 @@ func TestRelative(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestNamePartsGetter(t *testing.T) {
@@ -243,7 +230,7 @@ func TestNamePartsGetter(t *testing.T) {
 	relativeName := &name.Relative{Parts: expected}
 	fullyQualifiedName := &name.FullyQualified{Parts: expected}
 
-	assertEqual(t, expected, plainName.GetParts())
-	assertEqual(t, expected, relativeName.GetParts())
-	assertEqual(t, expected, fullyQualifiedName.GetParts())
+	assert.DeepEqual(t, expected, plainName.GetParts())
+	assert.DeepEqual(t, expected, relativeName.GetParts())
+	assert.DeepEqual(t, expected, fullyQualifiedName.GetParts())
 }

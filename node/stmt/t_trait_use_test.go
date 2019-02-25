@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"testing"
 
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/position"
 
@@ -87,12 +89,12 @@ func TestTraitUse(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTraitsUse(t *testing.T) {
@@ -188,12 +190,12 @@ func TestTraitsUse(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTraitsUseEmptyAdaptations(t *testing.T) {
@@ -289,12 +291,12 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTraitsUseModifier(t *testing.T) {
@@ -426,12 +428,12 @@ func TestTraitsUseModifier(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTraitsUseAliasModifier(t *testing.T) {
@@ -572,12 +574,12 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestTraitsUseAdaptions(t *testing.T) {
@@ -812,10 +814,10 @@ func TestTraitsUseAdaptions(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

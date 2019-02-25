@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Global node
 type Global struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Vars     []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Vars         []node.Node
 }
 
 // NewGlobal node constructor
 func NewGlobal(Vars []node.Node) *Global {
 	return &Global{
-		Vars: Vars,
+		FreeFloating: nil,
+		Vars:         Vars,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Global) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Global) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Global) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

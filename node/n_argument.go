@@ -1,26 +1,27 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Argument node
 type Argument struct {
-	Meta        meta.Collection
-	Position    *position.Position
-	Variadic    bool // if ... before variable
-	IsReference bool // if & before variable
-	Expr        Node // Exression
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variadic     bool // if ... before variable
+	IsReference  bool // if & before variable
+	Expr         Node // Exression
 }
 
 // NewArgument node constructor
 func NewArgument(Expression Node, Variadic bool, IsReference bool) *Argument {
 	return &Argument{
-		Variadic:    Variadic,
-		IsReference: IsReference,
-		Expr:        Expression,
+		FreeFloating: nil,
+		Variadic:     Variadic,
+		IsReference:  IsReference,
+		Expr:         Expression,
 	}
 }
 
@@ -34,8 +35,8 @@ func (n *Argument) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Argument) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Argument) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

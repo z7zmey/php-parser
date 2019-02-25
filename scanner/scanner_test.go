@@ -5,9 +5,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
-
-	"github.com/z7zmey/php-parser/meta"
 
 	"github.com/z7zmey/php-parser/scanner"
 
@@ -967,21 +966,21 @@ func TestSlashAfterVariable(t *testing.T) {
 func TestCommentEnd(t *testing.T) {
 	src := `<?php //test`
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 1, 6, 6),
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 1, 6, 6),
 		},
-		&meta.Data{
-			Value:    "//test",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(1, 1, 7, 12),
+		{
+			Value:      "//test",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(1, 1, 7, 12),
 		},
 	}
 
@@ -991,7 +990,7 @@ func TestCommentEnd(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lexer.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -999,21 +998,21 @@ func TestCommentEnd(t *testing.T) {
 func TestCommentNewLine(t *testing.T) {
 	src := "<?php //test\n$a"
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 1, 6, 6),
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 1, 6, 6),
 		},
-		&meta.Data{
-			Value:    "//test\n",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(1, 1, 7, 13),
+		{
+			Value:      "//test\n",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(1, 1, 7, 13),
 		},
 	}
 
@@ -1023,7 +1022,7 @@ func TestCommentNewLine(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1031,21 +1030,21 @@ func TestCommentNewLine(t *testing.T) {
 func TestCommentNewLine1(t *testing.T) {
 	src := "<?php //test\r$a"
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 1, 6, 6),
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 1, 6, 6),
 		},
-		&meta.Data{
-			Value:    "//test\r",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(1, 1, 7, 13),
+		{
+			Value:      "//test\r",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(1, 1, 7, 13),
 		},
 	}
 
@@ -1055,7 +1054,7 @@ func TestCommentNewLine1(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1063,21 +1062,21 @@ func TestCommentNewLine1(t *testing.T) {
 func TestCommentNewLine2(t *testing.T) {
 	src := "<?php #test\r\n$a"
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 1, 6, 6),
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 1, 6, 6),
 		},
-		&meta.Data{
-			Value:    "#test\r\n",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(1, 1, 7, 13),
+		{
+			Value:      "#test\r\n",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(1, 1, 7, 13),
 		},
 	}
 
@@ -1087,7 +1086,7 @@ func TestCommentNewLine2(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1096,21 +1095,21 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 	src := `<?php
 	//test?> test`
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
-		&meta.Data{
-			Value:    "//test",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(2, 2, 8, 13),
+		{
+			Value:      "//test",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(2, 2, 8, 13),
 		},
 	}
 
@@ -1120,7 +1119,7 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1129,21 +1128,21 @@ func TestInlineComment(t *testing.T) {
 	src := `<?php
 	/*test*/`
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
-		&meta.Data{
-			Value:    "/*test*/",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(2, 2, 8, 15),
+		{
+			Value:      "/*test*/",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(2, 2, 8, 15),
 		},
 	}
 
@@ -1153,7 +1152,7 @@ func TestInlineComment(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1162,21 +1161,21 @@ func TestInlineComment2(t *testing.T) {
 	src := `<?php
 	/*/*/`
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
-		&meta.Data{
-			Value:    "/*/*/",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(2, 2, 8, 12),
+		{
+			Value:      "/*/*/",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(2, 2, 8, 12),
 		},
 	}
 
@@ -1186,7 +1185,7 @@ func TestInlineComment2(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lexer.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1195,26 +1194,26 @@ func TestEmptyInlineComment(t *testing.T) {
 	src := `<?php
 	/**/ `
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
-		&meta.Data{
-			Value:    "/**/",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(2, 2, 8, 11),
+		{
+			Value:      "/**/",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(2, 2, 8, 11),
 		},
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 12, 12),
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 12, 12),
 		},
 	}
 
@@ -1224,7 +1223,7 @@ func TestEmptyInlineComment(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lexer.Meta
+	actual := lexer.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1233,21 +1232,21 @@ func TestEmptyInlineComment2(t *testing.T) {
 	src := `<?php
 	/***/`
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
-		&meta.Data{
-			Value:    "/***/",
-			Type:     meta.CommentType,
-			Position: position.NewPosition(2, 2, 8, 12),
+		{
+			Value:      "/***/",
+			StringType: freefloating.CommentType,
+			Position:   position.NewPosition(2, 2, 8, 12),
 		},
 	}
 
@@ -1257,7 +1256,7 @@ func TestEmptyInlineComment2(t *testing.T) {
 
 	lexer.Lex(lv)
 
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 
 	assertEqual(t, expected, actual)
 }
@@ -1270,86 +1269,86 @@ func TestMethodCallTokens(t *testing.T) {
 	lexer.WithMeta = true
 	lv := &lval{}
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
 	}
 	lexer.Lex(lv)
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 10, 10),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 10, 10),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 13, 13),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 13, 13),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 17, 17),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 17, 17),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 19, 19),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 19, 19),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 22, 22),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 22, 22),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 24, 24),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 24, 24),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 }
 
@@ -1361,31 +1360,31 @@ func TestYieldFromTokens(t *testing.T) {
 	lexer.WithMeta = true
 	lv := &lval{}
 
-	expected := meta.Collection{
-		&meta.Data{
-			Value:    "<?php",
-			Type:     meta.TokenType,
-			Position: position.NewPosition(1, 1, 1, 5),
+	expected := []freefloating.String{
+		{
+			Value:      "<?php",
+			StringType: freefloating.TokenType,
+			Position:   position.NewPosition(1, 1, 1, 5),
 		},
-		&meta.Data{
-			Value:    "\n\t",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(1, 2, 6, 7),
+		{
+			Value:      "\n\t",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(1, 2, 6, 7),
 		},
 	}
 	lexer.Lex(lv)
-	actual := lv.Tkn.Meta
+	actual := lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 
-	expected = meta.Collection{
-		&meta.Data{
-			Value:    " ",
-			Type:     meta.WhiteSpaceType,
-			Position: position.NewPosition(2, 2, 18, 18),
+	expected = []freefloating.String{
+		{
+			Value:      " ",
+			StringType: freefloating.WhiteSpaceType,
+			Position:   position.NewPosition(2, 2, 18, 18),
 		},
 	}
 	lexer.Lex(lv)
-	actual = lv.Tkn.Meta
+	actual = lv.Tkn.FreeFloating
 	assertEqual(t, expected, actual)
 }
 

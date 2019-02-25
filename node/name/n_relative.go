@@ -1,7 +1,7 @@
 package name
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Relative node
 type Relative struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Parts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Parts        []node.Node
 }
 
 // NewRelative node constructor
 func NewRelative(Parts []node.Node) *Relative {
 	return &Relative{
-		Parts: Parts,
+		FreeFloating: nil,
+		Parts:        Parts,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Relative) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Relative) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Relative) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

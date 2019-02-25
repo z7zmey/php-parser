@@ -50,50 +50,40 @@ func ExampleGoDumper() {
 	// 				StartPos: 10,
 	// 				EndPos: 143,
 	// 			},
-	// 			Meta: meta.Collection{
-	// 				&meta.Data{
-	// 					Type: meta.TokenType,
-	// 					Position: &position.Position{
-	// 						StartLine: 1,
-	// 						EndLine: 1,
-	// 						StartPos: 1,
-	// 						EndPos: 5,
+	// 			FreeFloating: freefloating.Collection{
+	// 				"Stmts": []freefloating.String{
+	// 					freefloating.String{
+	// 						Type: freefloating.WhiteSpaceType,
+	// 						Position: &position.Position{
+	// 							StartLine: 10,
+	// 							EndLine: 11,
+	// 							StartPos: 140,
+	// 							EndPos: 142,
+	// 						},
+	// 						Value: "\n\t\t",
 	// 					},
-	// 					Value: "<?php",
-	// 					TokenName: meta.NodeStart,
 	// 				},
-	// 				&meta.Data{
-	// 					Type: meta.WhiteSpaceType,
-	// 					Position: &position.Position{
-	// 						StartLine: 1,
-	// 						EndLine: 3,
-	// 						StartPos: 6,
-	// 						EndPos: 9,
+	// 				"Start": []freefloating.String{
+	// 					freefloating.String{
+	// 						Type: freefloating.TokenType,
+	// 						Position: &position.Position{
+	// 							StartLine: 1,
+	// 							EndLine: 1,
+	// 							StartPos: 1,
+	// 							EndPos: 5,
+	// 						},
+	// 						Value: "<?php",
 	// 					},
-	// 					Value: "\n\n\t\t",
-	// 					TokenName: meta.NodeStart,
-	// 				},
-	// 				&meta.Data{
-	// 					Type: meta.WhiteSpaceType,
-	// 					Position: &position.Position{
-	// 						StartLine: 3,
-	// 						EndLine: 3,
-	// 						StartPos: 23,
-	// 						EndPos: 23,
+	// 					freefloating.String{
+	// 						Type: freefloating.WhiteSpaceType,
+	// 						Position: &position.Position{
+	// 							StartLine: 1,
+	// 							EndLine: 3,
+	// 							StartPos: 6,
+	// 							EndPos: 9,
+	// 						},
+	// 						Value: "\n\n\t\t",
 	// 					},
-	// 					Value: " ",
-	// 					TokenName: meta.OpenCurlyBracesToken,
-	// 				},
-	// 				&meta.Data{
-	// 					Type: meta.WhiteSpaceType,
-	// 					Position: &position.Position{
-	// 						StartLine: 10,
-	// 						EndLine: 11,
-	// 						StartPos: 140,
-	// 						EndPos: 142,
-	// 					},
-	// 					Value: "\n\t\t",
-	// 					TokenName: meta.CloseCurlyBracesToken,
 	// 				},
 	// 			},
 	// 			NamespaceName: &name.Name{
@@ -103,6 +93,32 @@ func ExampleGoDumper() {
 	// 					StartPos: 20,
 	// 					EndPos: 22,
 	// 				},
+	// 				FreeFloating: freefloating.Collection{
+	// 					"Start": []freefloating.String{
+	// 						freefloating.String{
+	// 							Type: freefloating.WhiteSpaceType,
+	// 							Position: &position.Position{
+	// 								StartLine: 3,
+	// 								EndLine: 3,
+	// 								StartPos: 19,
+	// 								EndPos: 19,
+	// 							},
+	// 							Value: " ",
+	// 						},
+	// 					},
+	// 					"End": []freefloating.String{
+	// 						freefloating.String{
+	// 							Type: freefloating.WhiteSpaceType,
+	// 							Position: &position.Position{
+	// 								StartLine: 3,
+	// 								EndLine: 3,
+	// 								StartPos: 23,
+	// 								EndPos: 23,
+	// 							},
+	// 							Value: " ",
+	// 						},
+	// 					},
+	// 				},
 	// 				Parts: []node.Node{
 	// 					&name.NamePart{
 	// 						Position: &position.Position{
@@ -110,19 +126,6 @@ func ExampleGoDumper() {
 	// 							EndLine: 3,
 	// 							StartPos: 20,
 	// 							EndPos: 22,
-	// 						},
-	// 						Meta: meta.Collection{
-	// 							&meta.Data{
-	// 								Type: meta.WhiteSpaceType,
-	// 								Position: &position.Position{
-	// 									StartLine: 3,
-	// 									EndLine: 3,
-	// 									StartPos: 19,
-	// 									EndPos: 19,
-	// 								},
-	// 								Value: " ",
-	// 								TokenName: meta.NodeStart,
-	// 							},
 	// 						},
 	// 						Value: "Foo",
 	// 					},
@@ -136,39 +139,42 @@ func ExampleGoDumper() {
 	// 						StartPos: 29,
 	// 						EndPos: 139,
 	// 					},
-	// 					Meta: meta.Collection{
-	// 						&meta.Data{
-	// 							Type: meta.WhiteSpaceType,
-	// 							Position: &position.Position{
-	// 								StartLine: 3,
-	// 								EndLine: 4,
-	// 								StartPos: 25,
-	// 								EndPos: 28,
+	// 					FreeFloating: freefloating.Collection{
+	// 						"Start": []freefloating.String{
+	// 							freefloating.String{
+	// 								Type: freefloating.WhiteSpaceType,
+	// 								Position: &position.Position{
+	// 									StartLine: 3,
+	// 									EndLine: 4,
+	// 									StartPos: 25,
+	// 									EndPos: 28,
+	// 								},
+	// 								Value: "\n\t\t\t",
 	// 							},
-	// 							Value: "\n\t\t\t",
-	// 							TokenName: meta.NodeStart,
 	// 						},
-	// 						&meta.Data{
-	// 							Type: meta.WhiteSpaceType,
-	// 							Position: &position.Position{
-	// 								StartLine: 4,
-	// 								EndLine: 4,
-	// 								StartPos: 38,
-	// 								EndPos: 38,
+	// 						"Name": []freefloating.String{
+	// 							freefloating.String{
+	// 								Type: freefloating.WhiteSpaceType,
+	// 								Position: &position.Position{
+	// 									StartLine: 4,
+	// 									EndLine: 4,
+	// 									StartPos: 38,
+	// 									EndPos: 38,
+	// 								},
+	// 								Value: " ",
 	// 							},
-	// 							Value: " ",
-	// 							TokenName: meta.OpenCurlyBracesToken,
 	// 						},
-	// 						&meta.Data{
-	// 							Type: meta.WhiteSpaceType,
-	// 							Position: &position.Position{
-	// 								StartLine: 9,
-	// 								EndLine: 10,
-	// 								StartPos: 135,
-	// 								EndPos: 138,
+	// 						"Stmts": []freefloating.String{
+	// 							freefloating.String{
+	// 								Type: freefloating.WhiteSpaceType,
+	// 								Position: &position.Position{
+	// 									StartLine: 9,
+	// 									EndLine: 10,
+	// 									StartPos: 135,
+	// 									EndPos: 138,
+	// 								},
+	// 								Value: "\n\t\t\t",
 	// 							},
-	// 							Value: "\n\t\t\t",
-	// 							TokenName: meta.CloseCurlyBracesToken,
 	// 						},
 	// 					},
 	// 					PhpDocComment: "",
@@ -179,17 +185,18 @@ func ExampleGoDumper() {
 	// 							StartPos: 35,
 	// 							EndPos: 37,
 	// 						},
-	// 						Meta: meta.Collection{
-	// 							&meta.Data{
-	// 								Type: meta.WhiteSpaceType,
-	// 								Position: &position.Position{
-	// 									StartLine: 4,
-	// 									EndLine: 4,
-	// 									StartPos: 34,
-	// 									EndPos: 34,
+	// 						FreeFloating: freefloating.Collection{
+	// 							"Start": []freefloating.String{
+	// 								freefloating.String{
+	// 									Type: freefloating.WhiteSpaceType,
+	// 									Position: &position.Position{
+	// 										StartLine: 4,
+	// 										EndLine: 4,
+	// 										StartPos: 34,
+	// 										EndPos: 34,
+	// 									},
+	// 									Value: " ",
 	// 								},
-	// 								Value: " ",
-	// 								TokenName: meta.NodeStart,
 	// 							},
 	// 						},
 	// 						Value: "Bar",
@@ -202,42 +209,34 @@ func ExampleGoDumper() {
 	// 								StartPos: 45,
 	// 								EndPos: 134,
 	// 							},
-	// 							Meta: meta.Collection{
-	// 								&meta.Data{
-	// 									Type: meta.WhiteSpaceType,
-	// 									Position: &position.Position{
-	// 										StartLine: 4,
-	// 										EndLine: 5,
-	// 										StartPos: 40,
-	// 										EndPos: 44,
+	// 							FreeFloating: freefloating.Collection{
+	// 								"Start": []freefloating.String{
+	// 									freefloating.String{
+	// 										Type: freefloating.WhiteSpaceType,
+	// 										Position: &position.Position{
+	// 											StartLine: 4,
+	// 											EndLine: 5,
+	// 											StartPos: 40,
+	// 											EndPos: 44,
+	// 										},
+	// 										Value: "\n\t\t\t\t",
 	// 									},
-	// 									Value: "\n\t\t\t\t",
-	// 									TokenName: meta.NodeStart,
 	// 								},
-	// 								&meta.Data{
-	// 									Type: meta.WhiteSpaceType,
-	// 									Position: &position.Position{
-	// 										StartLine: 5,
-	// 										EndLine: 5,
-	// 										StartPos: 51,
-	// 										EndPos: 51,
+	// 								"ModifierList": []freefloating.String{
+	// 									freefloating.String{
+	// 										Type: freefloating.WhiteSpaceType,
+	// 										Position: &position.Position{
+	// 											StartLine: 5,
+	// 											EndLine: 5,
+	// 											StartPos: 51,
+	// 											EndPos: 51,
+	// 										},
+	// 										Value: " ",
 	// 									},
-	// 									Value: " ",
-	// 									TokenName: meta.FunctionToken,
 	// 								},
-	// 							},
-	// 							PhpDocComment: "",
-	// 							ReturnsRef: false,
-	// 							MethodName: &node.Identifier{
-	// 								Position: &position.Position{
-	// 									StartLine: 5,
-	// 									EndLine: 5,
-	// 									StartPos: 61,
-	// 									EndPos: 72,
-	// 								},
-	// 								Meta: meta.Collection{
-	// 									&meta.Data{
-	// 										Type: meta.WhiteSpaceType,
+	// 								"Function": []freefloating.String{
+	// 									freefloating.String{
+	// 										Type: freefloating.WhiteSpaceType,
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
@@ -245,8 +244,17 @@ func ExampleGoDumper() {
 	// 											EndPos: 60,
 	// 										},
 	// 										Value: " ",
-	// 										TokenName: meta.NodeStart,
 	// 									},
+	// 								},
+	// 							},
+	// 							ReturnsRef: false,
+	// 							PhpDocComment: "",
+	// 							MethodName: &node.Identifier{
+	// 								Position: &position.Position{
+	// 									StartLine: 5,
+	// 									EndLine: 5,
+	// 									StartPos: 61,
+	// 									EndPos: 72,
 	// 								},
 	// 								Value: "FunctionName",
 	// 							},
@@ -269,17 +277,30 @@ func ExampleGoDumper() {
 	// 										StartPos: 74,
 	// 										EndPos: 89,
 	// 									},
-	// 									Meta: meta.Collection{
-	// 										&meta.Data{
-	// 											Type: meta.WhiteSpaceType,
-	// 											Position: &position.Position{
-	// 												StartLine: 5,
-	// 												EndLine: 5,
-	// 												StartPos: 83,
-	// 												EndPos: 83,
+	// 									FreeFloating: freefloating.Collection{
+	// 										"OptionalType": []freefloating.String{
+	// 											freefloating.String{
+	// 												Type: freefloating.WhiteSpaceType,
+	// 												Position: &position.Position{
+	// 													StartLine: 5,
+	// 													EndLine: 5,
+	// 													StartPos: 78,
+	// 													EndPos: 78,
+	// 												},
+	// 												Value: " ",
 	// 											},
-	// 											Value: " ",
-	// 											TokenName: meta.EqualToken,
+	// 										},
+	// 										"Var": []freefloating.String{
+	// 											freefloating.String{
+	// 												Type: freefloating.WhiteSpaceType,
+	// 												Position: &position.Position{
+	// 													StartLine: 5,
+	// 													EndLine: 5,
+	// 													StartPos: 83,
+	// 													EndPos: 83,
+	// 												},
+	// 												Value: " ",
+	// 											},
 	// 										},
 	// 									},
 	// 									ByRef: false,
@@ -310,23 +331,18 @@ func ExampleGoDumper() {
 	// 											StartPos: 79,
 	// 											EndPos: 82,
 	// 										},
-	// 										Meta: meta.Collection{
-	// 											&meta.Data{
-	// 												Type: meta.WhiteSpaceType,
-	// 												Position: &position.Position{
-	// 													StartLine: 5,
-	// 													EndLine: 5,
-	// 													StartPos: 78,
-	// 													EndPos: 78,
+	// 										FreeFloating: freefloating.Collection{
+	// 											"Dollar": []freefloating.String{
+	// 												freefloating.String{
+	// 													Type: freefloating.TokenType,
+	// 													Position: &position.Position{
+	// 														StartLine: 5,
+	// 														EndLine: 5,
+	// 														StartPos: 79,
+	// 														EndPos: 80,
+	// 													},
+	// 													Value: "$",
 	// 												},
-	// 												Value: " ",
-	// 												TokenName: meta.NodeStart,
-	// 											},
-	// 											&meta.Data{
-	// 												Type: meta.TokenType,
-	// 												Position: nil,
-	// 												Value: "$",
-	// 												TokenName: meta.NodeStart,
 	// 											},
 	// 										},
 	// 										VarName: &node.Identifier{
@@ -346,17 +362,18 @@ func ExampleGoDumper() {
 	// 											StartPos: 86,
 	// 											EndPos: 89,
 	// 										},
-	// 										Meta: meta.Collection{
-	// 											&meta.Data{
-	// 												Type: meta.WhiteSpaceType,
-	// 												Position: &position.Position{
-	// 													StartLine: 5,
-	// 													EndLine: 5,
-	// 													StartPos: 85,
-	// 													EndPos: 85,
+	// 										FreeFloating: freefloating.Collection{
+	// 											"Start": []freefloating.String{
+	// 												freefloating.String{
+	// 													Type: freefloating.WhiteSpaceType,
+	// 													Position: &position.Position{
+	// 														StartLine: 5,
+	// 														EndLine: 5,
+	// 														StartPos: 85,
+	// 														EndPos: 85,
+	// 													},
+	// 													Value: " ",
 	// 												},
-	// 												Value: " ",
-	// 												TokenName: meta.NodeStart,
 	// 											},
 	// 										},
 	// 										Constant: &name.Name{
@@ -388,28 +405,30 @@ func ExampleGoDumper() {
 	// 									StartPos: 96,
 	// 									EndPos: 134,
 	// 								},
-	// 								Meta: meta.Collection{
-	// 									&meta.Data{
-	// 										Type: meta.WhiteSpaceType,
-	// 										Position: &position.Position{
-	// 											StartLine: 5,
-	// 											EndLine: 6,
-	// 											StartPos: 91,
-	// 											EndPos: 95,
+	// 								FreeFloating: freefloating.Collection{
+	// 									"Stmts": []freefloating.String{
+	// 										freefloating.String{
+	// 											Type: freefloating.WhiteSpaceType,
+	// 											Position: &position.Position{
+	// 												StartLine: 8,
+	// 												EndLine: 9,
+	// 												StartPos: 129,
+	// 												EndPos: 133,
+	// 											},
+	// 											Value: "\n\t\t\t\t",
 	// 										},
-	// 										Value: "\n\t\t\t\t",
-	// 										TokenName: meta.NodeStart,
 	// 									},
-	// 									&meta.Data{
-	// 										Type: meta.WhiteSpaceType,
-	// 										Position: &position.Position{
-	// 											StartLine: 8,
-	// 											EndLine: 9,
-	// 											StartPos: 129,
-	// 											EndPos: 133,
+	// 									"Start": []freefloating.String{
+	// 										freefloating.String{
+	// 											Type: freefloating.WhiteSpaceType,
+	// 											Position: &position.Position{
+	// 												StartLine: 5,
+	// 												EndLine: 6,
+	// 												StartPos: 91,
+	// 												EndPos: 95,
+	// 											},
+	// 											Value: "\n\t\t\t\t",
 	// 										},
-	// 										Value: "\n\t\t\t\t",
-	// 										TokenName: meta.CloseCurlyBracesToken,
 	// 									},
 	// 								},
 	// 								Stmts: []node.Node{
@@ -420,50 +439,50 @@ func ExampleGoDumper() {
 	// 											StartPos: 124,
 	// 											EndPos: 128,
 	// 										},
-	// 										Meta: meta.Collection{
-	// 											&meta.Data{
-	// 												Type: meta.WhiteSpaceType,
-	// 												Position: &position.Position{
-	// 													StartLine: 6,
-	// 													EndLine: 7,
-	// 													StartPos: 97,
-	// 													EndPos: 102,
+	// 										FreeFloating: freefloating.Collection{
+	// 											"Start": []freefloating.String{
+	// 												freefloating.String{
+	// 													Type: freefloating.WhiteSpaceType,
+	// 													Position: &position.Position{
+	// 														StartLine: 6,
+	// 														EndLine: 7,
+	// 														StartPos: 97,
+	// 														EndPos: 102,
+	// 													},
+	// 													Value: "\n\t\t\t\t\t",
 	// 												},
-	// 												Value: "\n\t\t\t\t\t",
-	// 												TokenName: meta.NodeStart,
+	// 												freefloating.String{
+	// 													Type: freefloating.CommentType,
+	// 													Position: &position.Position{
+	// 														StartLine: 7,
+	// 														EndLine: 7,
+	// 														StartPos: 103,
+	// 														EndPos: 118,
+	// 													},
+	// 													Value: "// some comment\n",
+	// 												},
+	// 												freefloating.String{
+	// 													Type: freefloating.WhiteSpaceType,
+	// 													Position: &position.Position{
+	// 														StartLine: 8,
+	// 														EndLine: 8,
+	// 														StartPos: 119,
+	// 														EndPos: 123,
+	// 													},
+	// 													Value: "\t\t\t\t\t",
+	// 												},
 	// 											},
-	// 											&meta.Data{
-	// 												Type: meta.CommentType,
-	// 												Position: &position.Position{
-	// 													StartLine: 7,
-	// 													EndLine: 7,
-	// 													StartPos: 103,
-	// 													EndPos: 118,
+	// 											"SemiColon": []freefloating.String{
+	// 												freefloating.String{
+	// 													Type: freefloating.TokenType,
+	// 													Position: &position.Position{
+	// 														StartLine: 8,
+	// 														EndLine: 8,
+	// 														StartPos: 128,
+	// 														EndPos: 128,
+	// 													},
+	// 													Value: ";",
 	// 												},
-	// 												Value: "// some comment\n",
-	// 												TokenName: meta.NodeStart,
-	// 											},
-	// 											&meta.Data{
-	// 												Type: meta.WhiteSpaceType,
-	// 												Position: &position.Position{
-	// 													StartLine: 8,
-	// 													EndLine: 8,
-	// 													StartPos: 119,
-	// 													EndPos: 123,
-	// 												},
-	// 												Value: "\t\t\t\t\t",
-	// 												TokenName: meta.NodeStart,
-	// 											},
-	// 											&meta.Data{
-	// 												Type: meta.TokenType,
-	// 												Position: &position.Position{
-	// 													StartLine: 8,
-	// 													EndLine: 8,
-	// 													StartPos: 128,
-	// 													EndPos: 128,
-	// 												},
-	// 												Value: ";",
-	// 												TokenName: meta.SemiColonToken,
 	// 											},
 	// 										},
 	// 										Expr: &expr.Variable{
@@ -473,12 +492,18 @@ func ExampleGoDumper() {
 	// 												StartPos: 124,
 	// 												EndPos: 127,
 	// 											},
-	// 											Meta: meta.Collection{
-	// 												&meta.Data{
-	// 													Type: meta.TokenType,
-	// 													Position: nil,
-	// 													Value: "$",
-	// 													TokenName: meta.NodeStart,
+	// 											FreeFloating: freefloating.Collection{
+	// 												"Dollar": []freefloating.String{
+	// 													freefloating.String{
+	// 														Type: freefloating.TokenType,
+	// 														Position: &position.Position{
+	// 															StartLine: 8,
+	// 															EndLine: 8,
+	// 															StartPos: 124,
+	// 															EndPos: 125,
+	// 														},
+	// 														Value: "$",
+	// 													},
 	// 												},
 	// 											},
 	// 											VarName: &node.Identifier{

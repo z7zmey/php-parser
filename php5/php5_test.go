@@ -2,36 +2,22 @@ package php5_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/errors"
+	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
 	"github.com/z7zmey/php-parser/node/expr/assign"
 	"github.com/z7zmey/php-parser/node/expr/binary"
 	"github.com/z7zmey/php-parser/node/expr/cast"
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
+	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/position"
-
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/stmt"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-
-	}
-}
 
 func TestPhp5(t *testing.T) {
 	src := `<?
@@ -10872,6 +10858,12 @@ func TestPhp5(t *testing.T) {
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{
 							Value: "cmd",
+							Position: &position.Position{
+								StartLine: 229,
+								EndLine:   229,
+								StartPos:  4640,
+								EndPos:    4642,
+							},
 						},
 					},
 				},
@@ -18411,7 +18403,7 @@ func TestPhp5(t *testing.T) {
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp5Strings(t *testing.T) {
@@ -18526,7 +18518,7 @@ func TestPhp5Strings(t *testing.T) {
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp5Heredoc(t *testing.T) {
@@ -18707,7 +18699,7 @@ CAD;
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual := php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp5ControlCharsErrors(t *testing.T) {
@@ -18727,5 +18719,5 @@ func TestPhp5ControlCharsErrors(t *testing.T) {
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual := php5parser.GetErrors()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

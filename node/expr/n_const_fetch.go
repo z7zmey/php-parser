@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // ConstFetch node
 type ConstFetch struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Constant node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Constant     node.Node
 }
 
 // NewConstFetch node constructor
 func NewConstFetch(Constant node.Node) *ConstFetch {
 	return &ConstFetch{
-		Constant: Constant,
+		FreeFloating: nil,
+		Constant:     Constant,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *ConstFetch) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ConstFetch) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ConstFetch) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

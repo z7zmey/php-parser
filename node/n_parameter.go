@@ -1,14 +1,14 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Parameter node
 type Parameter struct {
-	Meta         meta.Collection
+	FreeFloating freefloating.Collection
 	Position     *position.Position
 	ByRef        bool
 	Variadic     bool
@@ -20,6 +20,7 @@ type Parameter struct {
 // NewParameter node constructor
 func NewParameter(VariableType Node, Variable Node, DefaultValue Node, ByRef bool, Variadic bool) *Parameter {
 	return &Parameter{
+		FreeFloating: nil,
 		ByRef:        ByRef,
 		Variadic:     Variadic,
 		VariableType: VariableType,
@@ -38,8 +39,8 @@ func (n *Parameter) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Parameter) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Parameter) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

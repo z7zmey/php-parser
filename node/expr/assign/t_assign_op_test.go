@@ -2,13 +2,12 @@ package assign_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
+
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/expr/assign"
 	"github.com/z7zmey/php-parser/position"
-
-	"github.com/kylelemons/godebug/pretty"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -17,18 +16,6 @@ import (
 	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-	}
-}
 
 func TestReference(t *testing.T) {
 	src := `<? $a =& $b;`
@@ -97,12 +84,12 @@ func TestReference(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestReferenceNew(t *testing.T) {
@@ -182,12 +169,12 @@ func TestReferenceNew(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestReferenceArgs(t *testing.T) {
@@ -304,12 +291,12 @@ func TestReferenceArgs(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestAssign(t *testing.T) {
@@ -379,12 +366,12 @@ func TestAssign(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestBitwiseAnd(t *testing.T) {
@@ -454,12 +441,12 @@ func TestBitwiseAnd(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestBitwiseOr(t *testing.T) {
@@ -529,12 +516,12 @@ func TestBitwiseOr(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestBitwiseXor(t *testing.T) {
@@ -604,12 +591,12 @@ func TestBitwiseXor(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestConcat(t *testing.T) {
@@ -679,12 +666,12 @@ func TestConcat(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestDiv(t *testing.T) {
@@ -754,12 +741,12 @@ func TestDiv(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestMinus(t *testing.T) {
@@ -829,12 +816,12 @@ func TestMinus(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestMod(t *testing.T) {
@@ -904,12 +891,12 @@ func TestMod(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestMul(t *testing.T) {
@@ -979,12 +966,12 @@ func TestMul(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPlus(t *testing.T) {
@@ -1054,12 +1041,12 @@ func TestPlus(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPow(t *testing.T) {
@@ -1129,12 +1116,12 @@ func TestPow(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestShiftLeft(t *testing.T) {
@@ -1204,12 +1191,12 @@ func TestShiftLeft(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestShiftRight(t *testing.T) {
@@ -1279,10 +1266,10 @@ func TestShiftRight(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 
 	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

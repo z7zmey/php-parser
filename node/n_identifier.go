@@ -1,22 +1,23 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Identifier node
 type Identifier struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Value    string
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Value        string
 }
 
 // NewIdentifier node constructor
 func NewIdentifier(Value string) *Identifier {
 	return &Identifier{
-		Value: Value,
+		FreeFloating: nil,
+		Value:        Value,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *Identifier) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Identifier) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Identifier) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

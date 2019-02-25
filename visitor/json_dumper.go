@@ -7,10 +7,8 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/z7zmey/php-parser/meta"
-
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
-
 	"github.com/z7zmey/php-parser/walker"
 )
 
@@ -43,25 +41,48 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 		}
 	}
 
-	if mm := n.GetMeta(); len(*mm) > 0 {
-		fmt.Fprintf(d.Writer, ",%q:[", "meta")
+	if !n.GetFreeFloating().IsEmpty() {
+		fmt.Fprintf(d.Writer, ",%q:{", "freefloating")
 
-		for k, m := range *mm {
-			if k != 0 {
-				fmt.Fprint(d.Writer, ",")
-			}
-
-			switch m.Type {
-			case meta.CommentType:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.CommentType", "value", m.String(), "tokenName", m.TokenName.String())
-			case meta.WhiteSpaceType:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.WhiteSpaceType", "value", m.String(), "tokenName", m.TokenName.String())
-			case meta.TokenType:
-				fmt.Fprintf(d.Writer, "{%q:%q,%q:%q,%q:%q}", "type", "*meta.TokenType", "value", m.String(), "tokenName", m.TokenName.String())
-			}
+		var freefloatingStringsKeys []int
+		for key := range *n.GetFreeFloating() {
+			freefloatingStringsKeys = append(freefloatingStringsKeys, int(key))
 		}
 
-		fmt.Fprint(d.Writer, "]")
+		sort.Ints(freefloatingStringsKeys)
+
+		i := 0
+		for _, k := range freefloatingStringsKeys {
+			key := freefloating.Position(k)
+			freeFloatingStrings := (*n.GetFreeFloating())[key]
+			if i != 0 {
+				fmt.Fprint(d.Writer, ",")
+			}
+			i++
+
+			fmt.Fprintf(d.Writer, "%q: [", key.String())
+
+			j := 0
+			for _, freeFloatingString := range freeFloatingStrings {
+				if j != 0 {
+					fmt.Fprint(d.Writer, ",")
+				}
+				j++
+
+				switch freeFloatingString.StringType {
+				case freefloating.CommentType:
+					fmt.Fprintf(d.Writer, "{%q:%q,%q:%q}", "type", "freefloating.CommentType", "value", freeFloatingString.Value)
+				case freefloating.WhiteSpaceType:
+					fmt.Fprintf(d.Writer, "{%q:%q,%q:%q}", "type", "freefloating.WhiteSpaceType", "value", freeFloatingString.Value)
+				case freefloating.TokenType:
+					fmt.Fprintf(d.Writer, "{%q:%q,%q:%q}", "type", "freefloating.TokenType", "value", freeFloatingString.Value)
+				}
+			}
+
+			fmt.Fprint(d.Writer, "]")
+		}
+
+		fmt.Fprint(d.Writer, "}")
 	}
 
 	if a := n.Attributes(); len(a) > 0 {

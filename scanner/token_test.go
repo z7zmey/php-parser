@@ -4,8 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/z7zmey/php-parser/meta"
-
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -18,17 +17,17 @@ func TestToken(t *testing.T) {
 		EndPos:    3,
 	}
 
-	c := meta.Collection{
-		&meta.Data{
-			Value:    "test comment",
-			Type:     meta.CommentType,
-			Position: nil,
+	c := []freefloating.String{
+		{
+			Value:      "test comment",
+			StringType: freefloating.CommentType,
+			Position:   nil,
 		},
 	}
 
-	tkn.Meta = c
+	tkn.FreeFloating = c
 
-	if !reflect.DeepEqual(tkn.Meta, c) {
+	if !reflect.DeepEqual(tkn.FreeFloating, c) {
 		t.Errorf("comments are not equal\n")
 	}
 

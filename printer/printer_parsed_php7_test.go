@@ -533,9 +533,11 @@ func TestParseAndPrintExit(t *testing.T) {
 	src := `<?php
 	exit ;
 	exit ( ) ;
+	exit (1) ;
 	exit ( 1 );
 	die ;
 	die ( ) ;
+	die (1) ;
 	die ( 1 );
 	`
 
@@ -1261,9 +1263,14 @@ func TestParseAndPrintReturn(t *testing.T) {
 		}
 	}
 
-	function baz ( )
+	function foo ( )
 	{
 		return $a ;
+	}
+
+	function bar ( )
+	{
+		return ;
 	}
 `
 

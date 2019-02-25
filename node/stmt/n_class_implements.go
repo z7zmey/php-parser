@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // ClassImplements node
 type ClassImplements struct {
-	Meta           meta.Collection
+	FreeFloating   freefloating.Collection
 	Position       *position.Position
 	InterfaceNames []node.Node
 }
@@ -17,6 +17,7 @@ type ClassImplements struct {
 // NewClassImplements node constructor
 func NewClassImplements(interfaceNames []node.Node) *ClassImplements {
 	return &ClassImplements{
+		FreeFloating:   nil,
 		InterfaceNames: interfaceNames,
 	}
 }
@@ -31,8 +32,8 @@ func (n *ClassImplements) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ClassImplements) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ClassImplements) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

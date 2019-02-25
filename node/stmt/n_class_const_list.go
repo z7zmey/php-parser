@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // ClassConstList node
 type ClassConstList struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	Modifiers []node.Node
-	Consts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Modifiers    []node.Node
+	Consts       []node.Node
 }
 
 // NewClassConstList node constructor
 func NewClassConstList(Modifiers []node.Node, Consts []node.Node) *ClassConstList {
 	return &ClassConstList{
-		Modifiers: Modifiers,
-		Consts:    Consts,
+		FreeFloating: nil,
+		Modifiers:    Modifiers,
+		Consts:       Consts,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *ClassConstList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ClassConstList) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ClassConstList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

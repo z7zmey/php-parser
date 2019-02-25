@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Variable node
 type Variable struct {
-	Meta     meta.Collection
-	Position *position.Position
-	VarName  node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	VarName      node.Node
 }
 
 // NewVariable node constructor
 func NewVariable(VarName node.Node) *Variable {
 	return &Variable{
-		VarName: VarName,
+		FreeFloating: nil,
+		VarName:      VarName,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Variable) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Variable) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Variable) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

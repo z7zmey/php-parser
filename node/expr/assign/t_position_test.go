@@ -3,6 +3,8 @@ package assign_test
 import (
 	"testing"
 
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/position"
 )
 
@@ -11,6 +13,6 @@ func TestPosition(t *testing.T) {
 	for _, n := range nodes {
 		n.SetPosition(expected)
 		actual := n.GetPosition()
-		assertEqual(t, expected, actual)
+		assert.DeepEqual(t, expected, actual)
 	}
 }

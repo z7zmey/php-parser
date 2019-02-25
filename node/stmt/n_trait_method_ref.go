@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // TraitMethodRef node
 type TraitMethodRef struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Trait    node.Node
-	Method   node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Trait        node.Node
+	Method       node.Node
 }
 
 // NewTraitMethodRef node constructor
 func NewTraitMethodRef(Trait node.Node, Method node.Node) *TraitMethodRef {
 	return &TraitMethodRef{
-		Trait:  Trait,
-		Method: Method,
+		FreeFloating: nil,
+		Trait:        Trait,
+		Method:       Method,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *TraitMethodRef) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *TraitMethodRef) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *TraitMethodRef) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

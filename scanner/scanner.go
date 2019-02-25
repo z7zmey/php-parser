@@ -11,7 +11,7 @@ package scanner
 import (
 	"fmt"
 	"github.com/cznic/golex/lex"
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 )
 
 const (
@@ -34,7 +34,7 @@ func isValidFirstVarNameRune(r rune) bool {
 }
 
 func (l *Lexer) Lex(lval Lval) int {
-	l.Meta = nil
+	l.FreeFloating = nil
 	c := l.Enter()
 
 yystate0:
@@ -7632,7 +7632,7 @@ yystate611:
 
 yyrule1: // [ \t\n\r]+
 	{
-		l.addMeta(meta.WhiteSpaceType, l.Token())
+		l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 		goto yystate0
 	}
 yyrule2: // .
@@ -7660,14 +7660,14 @@ yyrule2: // .
 	}
 yyrule3: // \<\?php([ \t]|{NEW_LINE})
 	{
-		l.addMeta(meta.TokenType, l.Token()[:5])
+		l.addFreeFloating(freefloating.TokenType, l.Token()[:5])
 		l.Begin(PHP)
 		l.ungetChars(len(l.Token()) - 5)
 		goto yystate0
 	}
 yyrule4: // \<\?
 	{
-		l.addMeta(meta.TokenType, l.Token())
+		l.addFreeFloating(freefloating.TokenType, l.Token())
 		l.Begin(PHP)
 		goto yystate0
 	}
@@ -7680,7 +7680,7 @@ yyrule5: // \<\?=
 	}
 yyrule6: // [ \t\n\r]+
 	{
-		l.addMeta(meta.WhiteSpaceType, l.Token())
+		l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 		goto yystate0
 	}
 yyrule7: // [;][ \t\n\r]*\?\>{NEW_LINE}?
@@ -8478,13 +8478,13 @@ yyrule126: // (#|[/][/])
 			}
 			break
 		}
-		l.addMeta(meta.CommentType, tb)
+		l.addFreeFloating(freefloating.CommentType, tb)
 		goto yystate0
 	}
 yyrule127: // [/][*][*][/]
 	{
 
-		l.addMeta(meta.CommentType, l.Token())
+		l.addFreeFloating(freefloating.CommentType, l.Token())
 		goto yystate0
 	}
 yyrule128: // ([/][*])|([/][*][*])
@@ -8509,9 +8509,9 @@ yyrule128: // ([/][*])|([/][*][*])
 		}
 		if is_doc_comment {
 			l.PhpDocComment = string(l.TokenBytes(nil))
-			l.addMeta(meta.CommentType, l.Token())
+			l.addFreeFloating(freefloating.CommentType, l.Token())
 		} else {
-			l.addMeta(meta.CommentType, l.Token())
+			l.addFreeFloating(freefloating.CommentType, l.Token())
 		}
 		goto yystate0
 	}
@@ -8557,7 +8557,7 @@ yyrule134: // ->
 	}
 yyrule135: // [ \t\n\r]+
 	{
-		l.addMeta(meta.WhiteSpaceType, l.Token())
+		l.addFreeFloating(freefloating.WhiteSpaceType, l.Token())
 		goto yystate0
 	}
 yyrule136: // ->
@@ -9024,7 +9024,7 @@ yyrule167: // .
 	}
 yyrule168: // .|[ \t\n\r]
 	{
-		l.addMeta(meta.TokenType, l.Token())
+		l.addFreeFloating(freefloating.TokenType, l.Token())
 		goto yystate0
 	}
 yyrule169: // {ANY_CHAR}

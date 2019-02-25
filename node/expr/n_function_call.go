@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,7 +9,7 @@ import (
 
 // FunctionCall node
 type FunctionCall struct {
-	Meta         meta.Collection
+	FreeFloating freefloating.Collection
 	Position     *position.Position
 	Function     node.Node
 	ArgumentList *node.ArgumentList
@@ -18,6 +18,7 @@ type FunctionCall struct {
 // NewFunctionCall node constructor
 func NewFunctionCall(Function node.Node, ArgumentList *node.ArgumentList) *FunctionCall {
 	return &FunctionCall{
+		FreeFloating: nil,
 		Function:     Function,
 		ArgumentList: ArgumentList,
 	}
@@ -33,8 +34,8 @@ func (n *FunctionCall) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *FunctionCall) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *FunctionCall) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

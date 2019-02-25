@@ -9,10 +9,10 @@ import (
 	"unicode"
 
 	"github.com/z7zmey/php-parser/errors"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 
 	"github.com/cznic/golex/lex"
-	"github.com/z7zmey/php-parser/meta"
 )
 
 // Allocate Character classes anywhere in [0x80, 0xFF].
@@ -33,7 +33,7 @@ type Lexer struct {
 	*lex.Lexer
 	StateStack    []int
 	PhpDocComment string
-	Meta          meta.Collection
+	FreeFloating  []freefloating.String
 	heredocLabel  string
 	tokenBytesBuf *bytes.Buffer
 	TokenPool     *TokenPool
@@ -74,7 +74,7 @@ func NewLexer(src io.Reader, fName string) *Lexer {
 		Lexer:         lx,
 		StateStack:    []int{0},
 		PhpDocComment: "",
-		Meta:          nil,
+		FreeFloating:  nil,
 		heredocLabel:  "",
 		tokenBytesBuf: &bytes.Buffer{},
 		TokenPool:     &TokenPool{},
@@ -140,7 +140,7 @@ func (l *Lexer) createToken(chars []lex.Char) *Token {
 	lastChar := chars[len(chars)-1]
 
 	token := l.TokenPool.Get()
-	token.Meta = l.Meta
+	token.FreeFloating = l.FreeFloating
 	token.Value = l.tokenString(chars)
 
 	// fmt.Println(l.tokenString(chars))
@@ -165,7 +165,7 @@ func (l *Lexer) tokenString(chars []lex.Char) string {
 
 // meta
 
-func (l *Lexer) addMeta(mt meta.Type, chars []lex.Char) {
+func (l *Lexer) addFreeFloating(t freefloating.StringType, chars []lex.Char) {
 	if !l.WithMeta {
 		return
 	}
@@ -180,9 +180,9 @@ func (l *Lexer) addMeta(mt meta.Type, chars []lex.Char) {
 		int(lastChar.Pos()),
 	)
 
-	l.Meta.Push(&meta.Data{
-		Value:    l.tokenString(chars),
-		Type:     mt,
-		Position: pos,
+	l.FreeFloating = append(l.FreeFloating, freefloating.String{
+		StringType: t,
+		Value:      l.tokenString(chars),
+		Position:   pos,
 	})
 }

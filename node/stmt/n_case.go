@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // Case node
 type Case struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Cond     node.Node
-	Stmts    []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cond         node.Node
+	Stmts        []node.Node
 }
 
 // NewCase node constructor
 func NewCase(Cond node.Node, Stmts []node.Node) *Case {
 	return &Case{
-		Cond:  Cond,
-		Stmts: Stmts,
+		FreeFloating: nil,
+		Cond:         Cond,
+		Stmts:        Stmts,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *Case) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Case) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Case) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

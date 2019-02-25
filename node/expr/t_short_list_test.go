@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/z7zmey/php-parser/node/expr/assign"
-	"github.com/z7zmey/php-parser/position"
-
-	"github.com/z7zmey/php-parser/node/expr"
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node"
+	"github.com/z7zmey/php-parser/node/expr"
+	"github.com/z7zmey/php-parser/node/expr/assign"
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/position"
 )
 
 func TestShortList(t *testing.T) {
@@ -99,7 +99,7 @@ func TestShortList(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestShortListArrayIndex(t *testing.T) {
@@ -195,7 +195,7 @@ func TestShortListArrayIndex(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestShortListList(t *testing.T) {
@@ -301,5 +301,5 @@ func TestShortListList(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }

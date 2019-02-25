@@ -1,7 +1,7 @@
 package binary
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // BitwiseXor node
 type BitwiseXor struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Left     node.Node
-	Right    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Left         node.Node
+	Right        node.Node
 }
 
 // NewBitwiseXor node constructor
 func NewBitwiseXor(Variable node.Node, Expression node.Node) *BitwiseXor {
 	return &BitwiseXor{
-		Left:  Variable,
-		Right: Expression,
+		FreeFloating: nil,
+		Left:         Variable,
+		Right:        Expression,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *BitwiseXor) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *BitwiseXor) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *BitwiseXor) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

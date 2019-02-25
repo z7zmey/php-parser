@@ -1,22 +1,23 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // Nullable node
 type Nullable struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Expr     Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Expr         Node
 }
 
 // NewNullable node constructor
 func NewNullable(Expression Node) *Nullable {
 	return &Nullable{
-		Expr: Expression,
+		FreeFloating: nil,
+		Expr:         Expression,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *Nullable) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Nullable) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Nullable) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

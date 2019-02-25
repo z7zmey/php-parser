@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,15 +9,16 @@ import (
 
 // Isset node
 type Isset struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	Variables []node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Variables    []node.Node
 }
 
 // NewIsset node constructor
 func NewIsset(Variables []node.Node) *Isset {
 	return &Isset{
-		Variables: Variables,
+		FreeFloating: nil,
+		Variables:    Variables,
 	}
 }
 
@@ -31,8 +32,8 @@ func (n *Isset) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Isset) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Isset) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

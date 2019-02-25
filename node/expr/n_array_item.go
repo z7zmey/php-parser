@@ -1,7 +1,7 @@
 package expr
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // ArrayItem node
 type ArrayItem struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Key      node.Node
-	Val      node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Key          node.Node
+	Val          node.Node
 }
 
 // NewArrayItem node constructor
 func NewArrayItem(Key node.Node, Val node.Node) *ArrayItem {
 	return &ArrayItem{
-		Key: Key,
-		Val: Val,
+		FreeFloating: nil,
+		Key:          Key,
+		Val:          Val,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *ArrayItem) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ArrayItem) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ArrayItem) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

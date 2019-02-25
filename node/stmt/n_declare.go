@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,19 +9,20 @@ import (
 
 // Declare node
 type Declare struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Consts   []node.Node
-	Stmt     node.Node
-	Alt      bool
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Consts       []node.Node
+	Stmt         node.Node
+	Alt          bool
 }
 
 // NewDeclare node constructor
 func NewDeclare(Consts []node.Node, Stmt node.Node, alt bool) *Declare {
 	return &Declare{
-		Consts: Consts,
-		Stmt:   Stmt,
-		Alt:    alt,
+		FreeFloating: nil,
+		Consts:       Consts,
+		Stmt:         Stmt,
+		Alt:          alt,
 	}
 }
 
@@ -35,8 +36,8 @@ func (n *Declare) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Declare) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Declare) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

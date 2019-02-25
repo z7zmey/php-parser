@@ -1,22 +1,23 @@
 package node
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
 )
 
 // ArgumentList node
 type ArgumentList struct {
-	Meta      meta.Collection
-	Position  *position.Position
-	Arguments []Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Arguments    []Node
 }
 
 // NewArgumentList node constructor
 func NewArgumentList(Arguments []Node) *ArgumentList {
 	return &ArgumentList{
-		Arguments: Arguments,
+		FreeFloating: nil,
+		Arguments:    Arguments,
 	}
 }
 
@@ -30,8 +31,8 @@ func (n *ArgumentList) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ArgumentList) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ArgumentList) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

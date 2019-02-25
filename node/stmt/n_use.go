@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,19 +9,20 @@ import (
 
 // Use node
 type Use struct {
-	Meta     meta.Collection
-	Position *position.Position
-	UseType  node.Node
-	Use      node.Node
-	Alias    node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	UseType      node.Node
+	Use          node.Node
+	Alias        node.Node
 }
 
 // NewUse node constructor
 func NewUse(UseType node.Node, use node.Node, Alias node.Node) *Use {
 	return &Use{
-		UseType: UseType,
-		Use:     use,
-		Alias:   Alias,
+		FreeFloating: nil,
+		UseType:      UseType,
+		Use:          use,
+		Alias:        Alias,
 	}
 }
 
@@ -35,8 +36,8 @@ func (n *Use) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *Use) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *Use) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

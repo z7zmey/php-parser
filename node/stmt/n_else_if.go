@@ -1,7 +1,7 @@
 package stmt
 
 import (
-	"github.com/z7zmey/php-parser/meta"
+	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/walker"
@@ -9,17 +9,18 @@ import (
 
 // ElseIf node
 type ElseIf struct {
-	Meta     meta.Collection
-	Position *position.Position
-	Cond     node.Node
-	Stmt     node.Node
+	FreeFloating freefloating.Collection
+	Position     *position.Position
+	Cond         node.Node
+	Stmt         node.Node
 }
 
 // NewElseIf node constructor
 func NewElseIf(Cond node.Node, Stmt node.Node) *ElseIf {
 	return &ElseIf{
-		Cond: Cond,
-		Stmt: Stmt,
+		FreeFloating: nil,
+		Cond:         Cond,
+		Stmt:         Stmt,
 	}
 }
 
@@ -33,8 +34,8 @@ func (n *ElseIf) GetPosition() *position.Position {
 	return n.Position
 }
 
-func (n *ElseIf) GetMeta() *meta.Collection {
-	return &n.Meta
+func (n *ElseIf) GetFreeFloating() *freefloating.Collection {
+	return &n.FreeFloating
 }
 
 // Attributes returns node attributes as map

@@ -1,16 +1,15 @@
 package expr_test
 
 import (
-	"reflect"
 	"testing"
+
+	"gotest.tools/assert"
 
 	"github.com/z7zmey/php-parser/node/stmt"
 
 	"github.com/z7zmey/php-parser/node/name"
 
 	"github.com/z7zmey/php-parser/node/scalar"
-
-	"github.com/kylelemons/godebug/pretty"
 
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -28,7 +27,7 @@ var nodesToTest = []struct {
 			Dim:      &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Variable", "Dim"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ArrayItem{
@@ -36,7 +35,7 @@ var nodesToTest = []struct {
 			Val: &scalar.Lnumber{Value: "1"},
 		},
 		[]string{"Key", "Val"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Array{
@@ -45,21 +44,21 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.BitwiseNot{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.BooleanNot{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ClassConstFetch{
@@ -67,14 +66,14 @@ var nodesToTest = []struct {
 			ConstantName: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Class", "ConstantName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Clone{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ClosureUse{
@@ -83,7 +82,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Uses"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Closure{
@@ -103,28 +102,28 @@ var nodesToTest = []struct {
 			Constant: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Constant"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Empty{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ErrorSuppress{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Eval{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Exit{
@@ -140,21 +139,21 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Function", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.IncludeOnce{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Include{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.InstanceOf{
@@ -162,7 +161,7 @@ var nodesToTest = []struct {
 			Class: &name.Name{},
 		},
 		[]string{"Expr", "Class"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Isset{
@@ -171,7 +170,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Variables"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.List{
@@ -180,7 +179,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.MethodCall{
@@ -189,7 +188,7 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Variable", "Method", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.New{
@@ -197,42 +196,42 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Class", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PostDec{
 			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PostInc{
 			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PreDec{
 			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PreInc{
 			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Print{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.PropertyFetch{
@@ -240,28 +239,28 @@ var nodesToTest = []struct {
 			Property: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Variable", "Property"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Reference{
 			Variable: &expr.Variable{},
 		},
 		[]string{"Variable"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.RequireOnce{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Require{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShellExec{
@@ -270,7 +269,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Parts"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShortArray{
@@ -279,7 +278,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.ShortList{
@@ -288,7 +287,7 @@ var nodesToTest = []struct {
 			},
 		},
 		[]string{"Items"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.StaticCall{
@@ -297,7 +296,7 @@ var nodesToTest = []struct {
 			ArgumentList: &node.ArgumentList{},
 		},
 		[]string{"Class", "Call", "ArgumentList"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.StaticPropertyFetch{
@@ -305,7 +304,7 @@ var nodesToTest = []struct {
 			Property: &node.Identifier{Value: "foo"},
 		},
 		[]string{"Class", "Property"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Ternary{
@@ -314,33 +313,33 @@ var nodesToTest = []struct {
 			IfFalse:   &expr.Variable{},
 		},
 		[]string{"Condition", "IfTrue", "IfFalse"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.UnaryMinus{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.UnaryPlus{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Variable{VarName: &node.Identifier{Value: "a"}},
 		[]string{"VarName"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.YieldFrom{
 			Expr: &expr.Variable{},
 		},
 		[]string{"Expr"},
-		map[string]interface{}{},
+		nil,
 	},
 	{
 		&expr.Yield{
@@ -348,7 +347,7 @@ var nodesToTest = []struct {
 			Value: &expr.Variable{},
 		},
 		[]string{"Key", "Value"},
-		map[string]interface{}{},
+		nil,
 	},
 }
 
@@ -370,16 +369,13 @@ func (v *visitorMock) LeaveChildList(key string, w walker.Walkable) {}
 
 func TestVisitorDisableChildren(t *testing.T) {
 	for _, tt := range nodesToTest {
-		v := &visitorMock{false, nil}
+		v := &visitorMock{false, []string{}}
 		tt.node.Walk(v)
 
 		expected := []string{}
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -391,10 +387,7 @@ func TestVisitor(t *testing.T) {
 		expected := tt.expectedVisitedKeys
 		actual := v.visitedKeys
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }
 
@@ -405,9 +398,6 @@ func TestNameAttributes(t *testing.T) {
 		expected := tt.expectedAttributes
 		actual := tt.node.Attributes()
 
-		diff := pretty.Compare(expected, actual)
-		if diff != "" {
-			t.Errorf("%s diff: (-expected +actual)\n%s", reflect.TypeOf(tt.node), diff)
-		}
+		assert.DeepEqual(t, expected, actual)
 	}
 }

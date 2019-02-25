@@ -2,10 +2,10 @@ package php7_test
 
 import (
 	"bytes"
-	"reflect"
 	"testing"
 
-	"github.com/kylelemons/godebug/pretty"
+	"gotest.tools/assert"
+
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -18,19 +18,6 @@ import (
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/position"
 )
-
-func assertEqual(t *testing.T, expected interface{}, actual interface{}) {
-	if !reflect.DeepEqual(expected, actual) {
-		diff := pretty.Compare(expected, actual)
-
-		if diff != "" {
-			t.Errorf("diff: (-expected +actual)\n%s", diff)
-		} else {
-			t.Errorf("expected and actual are not equal\n")
-		}
-
-	}
-}
 
 func TestPhp7(t *testing.T) {
 	src := `<?
@@ -11017,6 +11004,12 @@ func TestPhp7(t *testing.T) {
 					},
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{
+							Position: &position.Position{
+								StartLine: 235,
+								EndLine:   235,
+								StartPos:  4728,
+								EndPos:    4730,
+							},
 							Value: "cmd",
 						},
 					},
@@ -16135,7 +16128,7 @@ func TestPhp7(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp5Strings(t *testing.T) {
@@ -16250,7 +16243,7 @@ func TestPhp5Strings(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp5Heredoc(t *testing.T) {
@@ -16431,7 +16424,7 @@ CAD;
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
 
 func TestPhp7ControlCharsErrors(t *testing.T) {
@@ -16451,5 +16444,5 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
 	php7parser.Parse()
 	actual := php7parser.GetErrors()
-	assertEqual(t, expected, actual)
+	assert.DeepEqual(t, expected, actual)
 }
