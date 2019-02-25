@@ -4,7 +4,7 @@ branches:
     - master
 before_script:
   - go get -u golang.org/x/tools/cmd/goyacc
-  - go get -u github.com/kylelemons/godebug/pretty
+  - go get -u github.com/pkg/profile
   - go get -u github.com/cznic/golex/lex
   - go get -u github.com/yookoala/realpath
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
