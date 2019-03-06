@@ -23,6 +23,11 @@ Features:
 - Parsing syntax-invalid PHP files
 - Saving and printing free-floating comments and whitespaces
 
+Who Uses
+--------
+
+[VKCOM/noverify](https://github.com/VKCOM/noverify) - NoVerify is a pretty fast linter for PHP
+
 Usage example
 -------
 
@@ -59,11 +64,6 @@ func main() {
 	rootNode.Walk(visitor)
 }
 ```
-
-Who Uses
---------
-
-[VKCOM/noverify](https://github.com/VKCOM/noverify) - NoVerify is a pretty fast linter for PHP
 
 Roadmap
 -------
