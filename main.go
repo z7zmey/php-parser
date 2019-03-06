@@ -44,6 +44,11 @@ func main() {
 
 	flag.Parse()
 
+	if len(flag.Args()) == 0{
+		flag.Usage()
+		return
+	}
+
 	switch profiler {
 	case "cpu":
 		defer profile.Start(profile.ProfilePath("."), profile.NoShutdownHook).Stop()
