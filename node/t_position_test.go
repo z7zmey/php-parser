@@ -9,7 +9,7 @@ import (
 )
 
 func TestPosition(t *testing.T) {
-	expected := position.NewPosition(1, 1, 1, 1)
+	expected := position.NewPosition(1, 1, 0, 1)
 	for _, n := range nodes {
 		n.SetPosition(expected)
 		actual := n.GetPosition()

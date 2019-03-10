@@ -1,7 +1,6 @@
 package php5_test
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/z7zmey/php-parser/php5"
@@ -414,7 +413,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+		php5parser := php5.NewParser([]byte(src))
 		php5parser.Parse()
 	}
 }

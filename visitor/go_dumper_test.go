@@ -1,7 +1,6 @@
 package visitor_test
 
 import (
-	"bytes"
 	"os"
 
 	"github.com/z7zmey/php-parser/php7"
@@ -21,7 +20,7 @@ func ExampleGoDumper() {
 			}
 		}`
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.WithFreeFloating()
 	php7parser.Parse()
 	nodes := php7parser.GetRootNode()
@@ -39,7 +38,7 @@ func ExampleGoDumper() {
 	// 	Position: &position.Position{
 	// 		StartLine: 3,
 	// 		EndLine: 11,
-	// 		StartPos: 10,
+	// 		StartPos: 9,
 	// 		EndPos: 143,
 	// 	},
 	// 	Stmts: []node.Node{
@@ -47,7 +46,7 @@ func ExampleGoDumper() {
 	// 			Position: &position.Position{
 	// 				StartLine: 3,
 	// 				EndLine: 11,
-	// 				StartPos: 10,
+	// 				StartPos: 9,
 	// 				EndPos: 143,
 	// 			},
 	// 			FreeFloating: freefloating.Collection{
@@ -57,7 +56,7 @@ func ExampleGoDumper() {
 	// 						Position: &position.Position{
 	// 							StartLine: 10,
 	// 							EndLine: 11,
-	// 							StartPos: 140,
+	// 							StartPos: 139,
 	// 							EndPos: 142,
 	// 						},
 	// 						Value: "\n\t\t",
@@ -69,7 +68,7 @@ func ExampleGoDumper() {
 	// 						Position: &position.Position{
 	// 							StartLine: 1,
 	// 							EndLine: 1,
-	// 							StartPos: 1,
+	// 							StartPos: 0,
 	// 							EndPos: 5,
 	// 						},
 	// 						Value: "<?php",
@@ -79,7 +78,7 @@ func ExampleGoDumper() {
 	// 						Position: &position.Position{
 	// 							StartLine: 1,
 	// 							EndLine: 3,
-	// 							StartPos: 6,
+	// 							StartPos: 5,
 	// 							EndPos: 9,
 	// 						},
 	// 						Value: "\n\n\t\t",
@@ -90,7 +89,7 @@ func ExampleGoDumper() {
 	// 				Position: &position.Position{
 	// 					StartLine: 3,
 	// 					EndLine: 3,
-	// 					StartPos: 20,
+	// 					StartPos: 19,
 	// 					EndPos: 22,
 	// 				},
 	// 				FreeFloating: freefloating.Collection{
@@ -100,7 +99,7 @@ func ExampleGoDumper() {
 	// 							Position: &position.Position{
 	// 								StartLine: 3,
 	// 								EndLine: 3,
-	// 								StartPos: 19,
+	// 								StartPos: 18,
 	// 								EndPos: 19,
 	// 							},
 	// 							Value: " ",
@@ -112,7 +111,7 @@ func ExampleGoDumper() {
 	// 							Position: &position.Position{
 	// 								StartLine: 3,
 	// 								EndLine: 3,
-	// 								StartPos: 23,
+	// 								StartPos: 22,
 	// 								EndPos: 23,
 	// 							},
 	// 							Value: " ",
@@ -124,7 +123,7 @@ func ExampleGoDumper() {
 	// 						Position: &position.Position{
 	// 							StartLine: 3,
 	// 							EndLine: 3,
-	// 							StartPos: 20,
+	// 							StartPos: 19,
 	// 							EndPos: 22,
 	// 						},
 	// 						Value: "Foo",
@@ -136,7 +135,7 @@ func ExampleGoDumper() {
 	// 					Position: &position.Position{
 	// 						StartLine: 4,
 	// 						EndLine: 10,
-	// 						StartPos: 29,
+	// 						StartPos: 28,
 	// 						EndPos: 139,
 	// 					},
 	// 					FreeFloating: freefloating.Collection{
@@ -146,7 +145,7 @@ func ExampleGoDumper() {
 	// 								Position: &position.Position{
 	// 									StartLine: 3,
 	// 									EndLine: 4,
-	// 									StartPos: 25,
+	// 									StartPos: 24,
 	// 									EndPos: 28,
 	// 								},
 	// 								Value: "\n\t\t\t",
@@ -158,7 +157,7 @@ func ExampleGoDumper() {
 	// 								Position: &position.Position{
 	// 									StartLine: 4,
 	// 									EndLine: 4,
-	// 									StartPos: 38,
+	// 									StartPos: 37,
 	// 									EndPos: 38,
 	// 								},
 	// 								Value: " ",
@@ -170,7 +169,7 @@ func ExampleGoDumper() {
 	// 								Position: &position.Position{
 	// 									StartLine: 9,
 	// 									EndLine: 10,
-	// 									StartPos: 135,
+	// 									StartPos: 134,
 	// 									EndPos: 138,
 	// 								},
 	// 								Value: "\n\t\t\t",
@@ -182,7 +181,7 @@ func ExampleGoDumper() {
 	// 						Position: &position.Position{
 	// 							StartLine: 4,
 	// 							EndLine: 4,
-	// 							StartPos: 35,
+	// 							StartPos: 34,
 	// 							EndPos: 37,
 	// 						},
 	// 						FreeFloating: freefloating.Collection{
@@ -192,7 +191,7 @@ func ExampleGoDumper() {
 	// 									Position: &position.Position{
 	// 										StartLine: 4,
 	// 										EndLine: 4,
-	// 										StartPos: 34,
+	// 										StartPos: 33,
 	// 										EndPos: 34,
 	// 									},
 	// 									Value: " ",
@@ -206,7 +205,7 @@ func ExampleGoDumper() {
 	// 							Position: &position.Position{
 	// 								StartLine: 5,
 	// 								EndLine: 9,
-	// 								StartPos: 45,
+	// 								StartPos: 44,
 	// 								EndPos: 134,
 	// 							},
 	// 							FreeFloating: freefloating.Collection{
@@ -216,7 +215,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 4,
 	// 											EndLine: 5,
-	// 											StartPos: 40,
+	// 											StartPos: 39,
 	// 											EndPos: 44,
 	// 										},
 	// 										Value: "\n\t\t\t\t",
@@ -228,7 +227,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
-	// 											StartPos: 51,
+	// 											StartPos: 50,
 	// 											EndPos: 51,
 	// 										},
 	// 										Value: " ",
@@ -240,7 +239,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
-	// 											StartPos: 60,
+	// 											StartPos: 59,
 	// 											EndPos: 60,
 	// 										},
 	// 										Value: " ",
@@ -253,7 +252,7 @@ func ExampleGoDumper() {
 	// 								Position: &position.Position{
 	// 									StartLine: 5,
 	// 									EndLine: 5,
-	// 									StartPos: 61,
+	// 									StartPos: 60,
 	// 									EndPos: 72,
 	// 								},
 	// 								Value: "FunctionName",
@@ -263,7 +262,7 @@ func ExampleGoDumper() {
 	// 									Position: &position.Position{
 	// 										StartLine: 5,
 	// 										EndLine: 5,
-	// 										StartPos: 45,
+	// 										StartPos: 44,
 	// 										EndPos: 50,
 	// 									},
 	// 									Value: "public",
@@ -274,7 +273,7 @@ func ExampleGoDumper() {
 	// 									Position: &position.Position{
 	// 										StartLine: 5,
 	// 										EndLine: 5,
-	// 										StartPos: 74,
+	// 										StartPos: 73,
 	// 										EndPos: 89,
 	// 									},
 	// 									FreeFloating: freefloating.Collection{
@@ -284,7 +283,7 @@ func ExampleGoDumper() {
 	// 												Position: &position.Position{
 	// 													StartLine: 5,
 	// 													EndLine: 5,
-	// 													StartPos: 78,
+	// 													StartPos: 77,
 	// 													EndPos: 78,
 	// 												},
 	// 												Value: " ",
@@ -296,7 +295,7 @@ func ExampleGoDumper() {
 	// 												Position: &position.Position{
 	// 													StartLine: 5,
 	// 													EndLine: 5,
-	// 													StartPos: 83,
+	// 													StartPos: 82,
 	// 													EndPos: 83,
 	// 												},
 	// 												Value: " ",
@@ -309,7 +308,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
-	// 											StartPos: 74,
+	// 											StartPos: 73,
 	// 											EndPos: 77,
 	// 										},
 	// 										Parts: []node.Node{
@@ -317,7 +316,7 @@ func ExampleGoDumper() {
 	// 												Position: &position.Position{
 	// 													StartLine: 5,
 	// 													EndLine: 5,
-	// 													StartPos: 74,
+	// 													StartPos: 73,
 	// 													EndPos: 77,
 	// 												},
 	// 												Value: "Type",
@@ -328,7 +327,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
-	// 											StartPos: 79,
+	// 											StartPos: 78,
 	// 											EndPos: 82,
 	// 										},
 	// 										FreeFloating: freefloating.Collection{
@@ -338,8 +337,8 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 5,
 	// 														EndLine: 5,
-	// 														StartPos: 79,
-	// 														EndPos: 80,
+	// 														StartPos: 78,
+	// 														EndPos: 79,
 	// 													},
 	// 													Value: "$",
 	// 												},
@@ -349,7 +348,7 @@ func ExampleGoDumper() {
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
 	// 												EndLine: 5,
-	// 												StartPos: 79,
+	// 												StartPos: 78,
 	// 												EndPos: 82,
 	// 											},
 	// 											Value: "var",
@@ -359,7 +358,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 5,
 	// 											EndLine: 5,
-	// 											StartPos: 86,
+	// 											StartPos: 85,
 	// 											EndPos: 89,
 	// 										},
 	// 										FreeFloating: freefloating.Collection{
@@ -369,7 +368,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 5,
 	// 														EndLine: 5,
-	// 														StartPos: 85,
+	// 														StartPos: 84,
 	// 														EndPos: 85,
 	// 													},
 	// 													Value: " ",
@@ -380,7 +379,7 @@ func ExampleGoDumper() {
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
 	// 												EndLine: 5,
-	// 												StartPos: 86,
+	// 												StartPos: 85,
 	// 												EndPos: 89,
 	// 											},
 	// 											Parts: []node.Node{
@@ -388,7 +387,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 5,
 	// 														EndLine: 5,
-	// 														StartPos: 86,
+	// 														StartPos: 85,
 	// 														EndPos: 89,
 	// 													},
 	// 													Value: "null",
@@ -402,30 +401,30 @@ func ExampleGoDumper() {
 	// 								Position: &position.Position{
 	// 									StartLine: 6,
 	// 									EndLine: 9,
-	// 									StartPos: 96,
+	// 									StartPos: 95,
 	// 									EndPos: 134,
 	// 								},
 	// 								FreeFloating: freefloating.Collection{
-	// 									"Stmts": []freefloating.String{
-	// 										freefloating.String{
-	// 											Type: freefloating.WhiteSpaceType,
-	// 											Position: &position.Position{
-	// 												StartLine: 8,
-	// 												EndLine: 9,
-	// 												StartPos: 129,
-	// 												EndPos: 133,
-	// 											},
-	// 											Value: "\n\t\t\t\t",
-	// 										},
-	// 									},
 	// 									"Start": []freefloating.String{
 	// 										freefloating.String{
 	// 											Type: freefloating.WhiteSpaceType,
 	// 											Position: &position.Position{
 	// 												StartLine: 5,
 	// 												EndLine: 6,
-	// 												StartPos: 91,
+	// 												StartPos: 90,
 	// 												EndPos: 95,
+	// 											},
+	// 											Value: "\n\t\t\t\t",
+	// 										},
+	// 									},
+	// 									"Stmts": []freefloating.String{
+	// 										freefloating.String{
+	// 											Type: freefloating.WhiteSpaceType,
+	// 											Position: &position.Position{
+	// 												StartLine: 8,
+	// 												EndLine: 9,
+	// 												StartPos: 128,
+	// 												EndPos: 133,
 	// 											},
 	// 											Value: "\n\t\t\t\t",
 	// 										},
@@ -436,7 +435,7 @@ func ExampleGoDumper() {
 	// 										Position: &position.Position{
 	// 											StartLine: 8,
 	// 											EndLine: 8,
-	// 											StartPos: 124,
+	// 											StartPos: 123,
 	// 											EndPos: 128,
 	// 										},
 	// 										FreeFloating: freefloating.Collection{
@@ -446,7 +445,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 6,
 	// 														EndLine: 7,
-	// 														StartPos: 97,
+	// 														StartPos: 96,
 	// 														EndPos: 102,
 	// 													},
 	// 													Value: "\n\t\t\t\t\t",
@@ -456,7 +455,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 7,
 	// 														EndLine: 7,
-	// 														StartPos: 103,
+	// 														StartPos: 102,
 	// 														EndPos: 118,
 	// 													},
 	// 													Value: "// some comment\n",
@@ -466,7 +465,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 8,
 	// 														EndLine: 8,
-	// 														StartPos: 119,
+	// 														StartPos: 118,
 	// 														EndPos: 123,
 	// 													},
 	// 													Value: "\t\t\t\t\t",
@@ -478,7 +477,7 @@ func ExampleGoDumper() {
 	// 													Position: &position.Position{
 	// 														StartLine: 8,
 	// 														EndLine: 8,
-	// 														StartPos: 128,
+	// 														StartPos: 127,
 	// 														EndPos: 128,
 	// 													},
 	// 													Value: ";",
@@ -489,7 +488,7 @@ func ExampleGoDumper() {
 	// 											Position: &position.Position{
 	// 												StartLine: 8,
 	// 												EndLine: 8,
-	// 												StartPos: 124,
+	// 												StartPos: 123,
 	// 												EndPos: 127,
 	// 											},
 	// 											FreeFloating: freefloating.Collection{
@@ -499,8 +498,8 @@ func ExampleGoDumper() {
 	// 														Position: &position.Position{
 	// 															StartLine: 8,
 	// 															EndLine: 8,
-	// 															StartPos: 124,
-	// 															EndPos: 125,
+	// 															StartPos: 123,
+	// 															EndPos: 124,
 	// 														},
 	// 														Value: "$",
 	// 													},
@@ -510,7 +509,7 @@ func ExampleGoDumper() {
 	// 												Position: &position.Position{
 	// 													StartLine: 8,
 	// 													EndLine: 8,
-	// 													StartPos: 124,
+	// 													StartPos: 123,
 	// 													EndPos: 127,
 	// 												},
 	// 												Value: "var",

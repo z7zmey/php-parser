@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -23,7 +22,7 @@ func TestSimpleClass(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -31,7 +30,7 @@ func TestSimpleClass(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				PhpDocComment: "",
@@ -39,7 +38,7 @@ func TestSimpleClass(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "foo",
@@ -49,12 +48,12 @@ func TestSimpleClass(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -67,7 +66,7 @@ func TestAbstractClass(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    24,
 		},
 		Stmts: []node.Node{
@@ -75,7 +74,7 @@ func TestAbstractClass(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    24,
 				},
 				PhpDocComment: "",
@@ -83,7 +82,7 @@ func TestAbstractClass(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  19,
+						StartPos:  18,
 						EndPos:    21,
 					},
 					Value: "foo",
@@ -93,7 +92,7 @@ func TestAbstractClass(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    11,
 						},
 						Value: "abstract",
@@ -104,12 +103,12 @@ func TestAbstractClass(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -122,7 +121,7 @@ func TestClassExtends(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    34,
 		},
 		Stmts: []node.Node{
@@ -130,7 +129,7 @@ func TestClassExtends(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    34,
 				},
 				PhpDocComment: "",
@@ -138,7 +137,7 @@ func TestClassExtends(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  16,
+						StartPos:  15,
 						EndPos:    18,
 					},
 					Value: "foo",
@@ -148,7 +147,7 @@ func TestClassExtends(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    8,
 						},
 						Value: "final",
@@ -158,14 +157,14 @@ func TestClassExtends(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  20,
+						StartPos:  19,
 						EndPos:    30,
 					},
 					ClassName: &name.Name{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  28,
+							StartPos:  27,
 							EndPos:    30,
 						},
 						Parts: []node.Node{
@@ -173,7 +172,7 @@ func TestClassExtends(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  28,
+									StartPos:  27,
 									EndPos:    30,
 								},
 								Value: "bar",
@@ -186,12 +185,12 @@ func TestClassExtends(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -204,7 +203,7 @@ func TestClassImplement(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    37,
 		},
 		Stmts: []node.Node{
@@ -212,7 +211,7 @@ func TestClassImplement(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    37,
 				},
 				PhpDocComment: "",
@@ -220,7 +219,7 @@ func TestClassImplement(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  16,
+						StartPos:  15,
 						EndPos:    18,
 					},
 					Value: "foo",
@@ -230,7 +229,7 @@ func TestClassImplement(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    8,
 						},
 						Value: "final",
@@ -240,7 +239,7 @@ func TestClassImplement(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  20,
+						StartPos:  19,
 						EndPos:    33,
 					},
 					InterfaceNames: []node.Node{
@@ -248,7 +247,7 @@ func TestClassImplement(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  31,
+								StartPos:  30,
 								EndPos:    33,
 							},
 							Parts: []node.Node{
@@ -256,7 +255,7 @@ func TestClassImplement(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  31,
+										StartPos:  30,
 										EndPos:    33,
 									},
 									Value: "bar",
@@ -270,12 +269,12 @@ func TestClassImplement(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -288,7 +287,7 @@ func TestClassImplements(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    42,
 		},
 		Stmts: []node.Node{
@@ -296,7 +295,7 @@ func TestClassImplements(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    42,
 				},
 				PhpDocComment: "",
@@ -304,7 +303,7 @@ func TestClassImplements(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  16,
+						StartPos:  15,
 						EndPos:    18,
 					},
 					Value: "foo",
@@ -314,7 +313,7 @@ func TestClassImplements(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  4,
+							StartPos:  3,
 							EndPos:    8,
 						},
 						Value: "final",
@@ -324,7 +323,7 @@ func TestClassImplements(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  20,
+						StartPos:  19,
 						EndPos:    38,
 					},
 					InterfaceNames: []node.Node{
@@ -332,7 +331,7 @@ func TestClassImplements(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  31,
+								StartPos:  30,
 								EndPos:    33,
 							},
 							Parts: []node.Node{
@@ -340,7 +339,7 @@ func TestClassImplements(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  31,
+										StartPos:  30,
 										EndPos:    33,
 									},
 									Value: "bar",
@@ -351,7 +350,7 @@ func TestClassImplements(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  36,
+								StartPos:  35,
 								EndPos:    38,
 							},
 							Parts: []node.Node{
@@ -359,7 +358,7 @@ func TestClassImplements(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  36,
+										StartPos:  35,
 										EndPos:    38,
 									},
 									Value: "baz",
@@ -373,12 +372,12 @@ func TestClassImplements(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -391,7 +390,7 @@ func TestAnonimousClass(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    51,
 		},
 		Stmts: []node.Node{
@@ -399,21 +398,21 @@ func TestAnonimousClass(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    51,
 				},
 				Expr: &expr.New{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    50,
 					},
 					Class: &stmt.Class{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    50,
 						},
 						PhpDocComment: "",
@@ -421,7 +420,7 @@ func TestAnonimousClass(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    14,
 							},
 						},
@@ -429,14 +428,14 @@ func TestAnonimousClass(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  16,
+								StartPos:  15,
 								EndPos:    26,
 							},
 							ClassName: &name.Name{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  24,
+									StartPos:  23,
 									EndPos:    26,
 								},
 								Parts: []node.Node{
@@ -444,7 +443,7 @@ func TestAnonimousClass(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  24,
+											StartPos:  23,
 											EndPos:    26,
 										},
 										Value: "foo",
@@ -456,7 +455,7 @@ func TestAnonimousClass(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  28,
+								StartPos:  27,
 								EndPos:    46,
 							},
 							InterfaceNames: []node.Node{
@@ -464,7 +463,7 @@ func TestAnonimousClass(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  39,
+										StartPos:  38,
 										EndPos:    41,
 									},
 									Parts: []node.Node{
@@ -472,7 +471,7 @@ func TestAnonimousClass(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  39,
+												StartPos:  38,
 												EndPos:    41,
 											},
 											Value: "bar",
@@ -483,7 +482,7 @@ func TestAnonimousClass(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  44,
+										StartPos:  43,
 										EndPos:    46,
 									},
 									Parts: []node.Node{
@@ -491,7 +490,7 @@ func TestAnonimousClass(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  44,
+												StartPos:  43,
 												EndPos:    46,
 											},
 											Value: "baz",
@@ -507,7 +506,7 @@ func TestAnonimousClass(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

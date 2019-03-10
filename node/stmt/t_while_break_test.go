@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestBreakEmpty(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    23,
 		},
 		Stmts: []node.Node{
@@ -30,14 +29,14 @@ func TestBreakEmpty(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    23,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  11,
+						StartPos:  10,
 						EndPos:    11,
 					},
 					Value: "1",
@@ -46,7 +45,7 @@ func TestBreakEmpty(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  14,
+						StartPos:  13,
 						EndPos:    23,
 					},
 					Stmts: []node.Node{
@@ -54,7 +53,7 @@ func TestBreakEmpty(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  16,
+								StartPos:  15,
 								EndPos:    21,
 							},
 						},
@@ -64,12 +63,12 @@ func TestBreakEmpty(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -82,7 +81,7 @@ func TestBreakLight(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    25,
 		},
 		Stmts: []node.Node{
@@ -90,14 +89,14 @@ func TestBreakLight(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    25,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  11,
+						StartPos:  10,
 						EndPos:    11,
 					},
 					Value: "1",
@@ -106,7 +105,7 @@ func TestBreakLight(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  14,
+						StartPos:  13,
 						EndPos:    25,
 					},
 					Stmts: []node.Node{
@@ -114,14 +113,14 @@ func TestBreakLight(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  16,
+								StartPos:  15,
 								EndPos:    23,
 							},
 							Expr: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  22,
+									StartPos:  21,
 									EndPos:    22,
 								},
 								Value: "2",
@@ -133,12 +132,12 @@ func TestBreakLight(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -151,7 +150,7 @@ func TestBreak(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    34,
 		},
 		Stmts: []node.Node{
@@ -159,14 +158,14 @@ func TestBreak(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    34,
 				},
 				Cond: &scalar.Lnumber{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  11,
+						StartPos:  10,
 						EndPos:    11,
 					},
 					Value: "1",
@@ -175,7 +174,7 @@ func TestBreak(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  16,
+						StartPos:  15,
 						EndPos:    24,
 					},
 					Stmts: []node.Node{
@@ -183,14 +182,14 @@ func TestBreak(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  16,
+								StartPos:  15,
 								EndPos:    24,
 							},
 							Expr: &scalar.Lnumber{
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  22,
+									StartPos:  21,
 									EndPos:    22,
 								},
 								Value: "3",
@@ -202,12 +201,12 @@ func TestBreak(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

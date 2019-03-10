@@ -1,7 +1,6 @@
 package cast_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestArray(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -30,28 +29,28 @@ func TestArray(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Expr: &cast.Array{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    12,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "a",
@@ -62,12 +61,12 @@ func TestArray(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -80,7 +79,7 @@ func TestBool(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -88,28 +87,28 @@ func TestBool(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				Expr: &cast.Bool{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    14,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    14,
 							},
 							Value: "a",
@@ -120,12 +119,12 @@ func TestBool(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -138,7 +137,7 @@ func TestBoolShort(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    12,
 		},
 		Stmts: []node.Node{
@@ -146,28 +145,28 @@ func TestBoolShort(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    12,
 				},
 				Expr: &cast.Bool{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    11,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  10,
+							StartPos:  9,
 							EndPos:    11,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  10,
+								StartPos:  9,
 								EndPos:    11,
 							},
 							Value: "a",
@@ -178,12 +177,12 @@ func TestBoolShort(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -196,7 +195,7 @@ func TestDouble(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    14,
 		},
 		Stmts: []node.Node{
@@ -204,28 +203,28 @@ func TestDouble(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    14,
 				},
 				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    13,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  12,
+							StartPos:  11,
 							EndPos:    13,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  12,
+								StartPos:  11,
 								EndPos:    13,
 							},
 							Value: "a",
@@ -236,12 +235,12 @@ func TestDouble(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -254,7 +253,7 @@ func TestCastFloat(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -262,28 +261,28 @@ func TestCastFloat(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    12,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "a",
@@ -294,12 +293,12 @@ func TestCastFloat(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -312,7 +311,7 @@ func TestInt(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -320,28 +319,28 @@ func TestInt(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    14,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    14,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    14,
 							},
 							Value: "a",
@@ -352,12 +351,12 @@ func TestInt(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -370,7 +369,7 @@ func TestIntShort(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    11,
 		},
 		Stmts: []node.Node{
@@ -378,28 +377,28 @@ func TestIntShort(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    11,
 				},
 				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    10,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    10,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    10,
 							},
 							Value: "a",
@@ -410,12 +409,12 @@ func TestIntShort(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -428,7 +427,7 @@ func TestObject(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    14,
 		},
 		Stmts: []node.Node{
@@ -436,28 +435,28 @@ func TestObject(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    14,
 				},
 				Expr: &cast.Object{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    13,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  12,
+							StartPos:  11,
 							EndPos:    13,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  12,
+								StartPos:  11,
 								EndPos:    13,
 							},
 							Value: "a",
@@ -468,12 +467,12 @@ func TestObject(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -486,7 +485,7 @@ func TestString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    14,
 		},
 		Stmts: []node.Node{
@@ -494,28 +493,28 @@ func TestString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    14,
 				},
 				Expr: &cast.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    13,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  12,
+							StartPos:  11,
 							EndPos:    13,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  12,
+								StartPos:  11,
 								EndPos:    13,
 							},
 							Value: "a",
@@ -526,12 +525,12 @@ func TestString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -544,7 +543,7 @@ func TestBinaryString(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    14,
 		},
 		Stmts: []node.Node{
@@ -552,28 +551,28 @@ func TestBinaryString(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    14,
 				},
 				Expr: &cast.String{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    13,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  12,
+							StartPos:  11,
 							EndPos:    13,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  12,
+								StartPos:  11,
 								EndPos:    13,
 							},
 							Value: "a",
@@ -584,12 +583,12 @@ func TestBinaryString(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -602,7 +601,7 @@ func TestUnset(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    13,
 		},
 		Stmts: []node.Node{
@@ -610,28 +609,28 @@ func TestUnset(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    13,
 				},
 				Expr: &cast.Unset{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    12,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  11,
+							StartPos:  10,
 							EndPos:    12,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  11,
+								StartPos:  10,
 								EndPos:    12,
 							},
 							Value: "a",
@@ -642,12 +641,12 @@ func TestUnset(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

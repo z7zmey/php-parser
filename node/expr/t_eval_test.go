@@ -1,7 +1,6 @@
 package expr_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestEval(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    12,
 		},
 		Stmts: []node.Node{
@@ -30,28 +29,28 @@ func TestEval(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    12,
 				},
 				Expr: &expr.Eval{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  4,
+						StartPos:  3,
 						EndPos:    11,
 					},
 					Expr: &expr.Variable{
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    10,
 						},
 						VarName: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    10,
 							},
 							Value: "a",
@@ -62,12 +61,12 @@ func TestEval(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

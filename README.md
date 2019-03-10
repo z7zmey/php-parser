@@ -9,7 +9,7 @@ PHP Parser written in Go
 [![Maintainability](https://api.codeclimate.com/v1/badges/950783b2e739db26e0ed/maintainability)](https://codeclimate.com/github/z7zmey/php-parser/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/950783b2e739db26e0ed/test_coverage)](https://codeclimate.com/github/z7zmey/php-parser/test_coverage)
 
-This project uses [goyacc](https://godoc.org/golang.org/x/tools/cmd/goyacc) and [golex](https://github.com/cznic/golex) libraries to parse PHP sources into [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It can be used to write static analysis, refactoring, metrics, code style formatting tools.
+This project uses [goyacc](https://godoc.org/golang.org/x/tools/cmd/goyacc) and [ragel](https://www.colm.net/open-source/ragel/) tools to create PHP parser. It parses source code into [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree). It can be used to write static analysis, refactoring, metrics, code style formatting tools.
 
 #### Try it online: [demo](https://php-parser.com)
 
@@ -62,7 +62,6 @@ package main
 
 import (
 	"fmt"
-	"bytes"
 	"os"
 
 	"github.com/z7zmey/php-parser/php7"
@@ -70,9 +69,9 @@ import (
 )
 
 func main() {
-	src := bytes.NewBufferString(`<? echo "Hello world";`)
+	src := []byte(`<? echo "Hello world";`)
 
-	parser := php7.NewParser(src, "example.php")
+	parser := php7.NewParser(src)
 	parser.Parse()
 
 	for _, e := range parser.GetErrors() {
@@ -82,12 +81,10 @@ func main() {
 	visitor := visitor.Dumper{
 		Writer:    os.Stdout,
 		Indent:    "",
-		Comments:  parser.GetComments(),
-		Positions: parser.GetPositions(),
 	}
 
 	rootNode := parser.GetRootNode()
-	rootNode.Walk(visitor)
+	rootNode.Walk(&visitor)
 }
 ```
 

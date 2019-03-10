@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestTraitUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    25,
 		},
 		Stmts: []node.Node{
@@ -30,7 +29,7 @@ func TestTraitUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    25,
 				},
 				PhpDocComment: "",
@@ -38,7 +37,7 @@ func TestTraitUse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -48,7 +47,7 @@ func TestTraitUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    23,
 						},
 						Traits: []node.Node{
@@ -56,7 +55,7 @@ func TestTraitUse(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -64,7 +63,7 @@ func TestTraitUse(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -76,7 +75,7 @@ func TestTraitUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  23,
+								StartPos:  22,
 								EndPos:    23,
 							},
 						},
@@ -86,12 +85,12 @@ func TestTraitUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -104,7 +103,7 @@ func TestTraitsUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    30,
 		},
 		Stmts: []node.Node{
@@ -112,7 +111,7 @@ func TestTraitsUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    30,
 				},
 				PhpDocComment: "",
@@ -120,7 +119,7 @@ func TestTraitsUse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -130,7 +129,7 @@ func TestTraitsUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    28,
 						},
 						Traits: []node.Node{
@@ -138,7 +137,7 @@ func TestTraitsUse(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -146,7 +145,7 @@ func TestTraitsUse(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -157,7 +156,7 @@ func TestTraitsUse(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  25,
+									StartPos:  24,
 									EndPos:    27,
 								},
 								Parts: []node.Node{
@@ -165,7 +164,7 @@ func TestTraitsUse(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  25,
+											StartPos:  24,
 											EndPos:    27,
 										},
 										Value: "Baz",
@@ -177,7 +176,7 @@ func TestTraitsUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  28,
+								StartPos:  27,
 								EndPos:    28,
 							},
 						},
@@ -187,12 +186,12 @@ func TestTraitsUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -205,7 +204,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    32,
 		},
 		Stmts: []node.Node{
@@ -213,7 +212,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    32,
 				},
 				PhpDocComment: "",
@@ -221,7 +220,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -231,7 +230,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    30,
 						},
 						Traits: []node.Node{
@@ -239,7 +238,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -247,7 +246,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -258,7 +257,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  25,
+									StartPos:  24,
 									EndPos:    27,
 								},
 								Parts: []node.Node{
@@ -266,7 +265,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  25,
+											StartPos:  24,
 											EndPos:    27,
 										},
 										Value: "Baz",
@@ -278,7 +277,7 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  29,
+								StartPos:  28,
 								EndPos:    30,
 							},
 						},
@@ -288,12 +287,12 @@ func TestTraitsUseEmptyAdaptations(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -306,7 +305,7 @@ func TestTraitsUseModifier(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    48,
 		},
 		Stmts: []node.Node{
@@ -314,7 +313,7 @@ func TestTraitsUseModifier(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    48,
 				},
 				PhpDocComment: "",
@@ -322,7 +321,7 @@ func TestTraitsUseModifier(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -332,7 +331,7 @@ func TestTraitsUseModifier(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    46,
 						},
 						Traits: []node.Node{
@@ -340,7 +339,7 @@ func TestTraitsUseModifier(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -348,7 +347,7 @@ func TestTraitsUseModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -359,7 +358,7 @@ func TestTraitsUseModifier(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  25,
+									StartPos:  24,
 									EndPos:    27,
 								},
 								Parts: []node.Node{
@@ -367,7 +366,7 @@ func TestTraitsUseModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  25,
+											StartPos:  24,
 											EndPos:    27,
 										},
 										Value: "Baz",
@@ -379,7 +378,7 @@ func TestTraitsUseModifier(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  29,
+								StartPos:  28,
 								EndPos:    46,
 							},
 							Adaptations: []node.Node{
@@ -387,21 +386,21 @@ func TestTraitsUseModifier(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  31,
+										StartPos:  30,
 										EndPos:    43,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  31,
+											StartPos:  30,
 											EndPos:    33,
 										},
 										Method: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  31,
+												StartPos:  30,
 												EndPos:    33,
 											},
 											Value: "one",
@@ -411,7 +410,7 @@ func TestTraitsUseModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  38,
+											StartPos:  37,
 											EndPos:    43,
 										},
 										Value: "public",
@@ -425,12 +424,12 @@ func TestTraitsUseModifier(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -443,7 +442,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    52,
 		},
 		Stmts: []node.Node{
@@ -451,7 +450,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    52,
 				},
 				PhpDocComment: "",
@@ -459,7 +458,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -469,7 +468,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    50,
 						},
 						Traits: []node.Node{
@@ -477,7 +476,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -485,7 +484,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -496,7 +495,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  25,
+									StartPos:  24,
 									EndPos:    27,
 								},
 								Parts: []node.Node{
@@ -504,7 +503,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  25,
+											StartPos:  24,
 											EndPos:    27,
 										},
 										Value: "Baz",
@@ -516,7 +515,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  29,
+								StartPos:  28,
 								EndPos:    50,
 							},
 							Adaptations: []node.Node{
@@ -524,21 +523,21 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  31,
+										StartPos:  30,
 										EndPos:    47,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  31,
+											StartPos:  30,
 											EndPos:    33,
 										},
 										Method: &node.Identifier{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  31,
+												StartPos:  30,
 												EndPos:    33,
 											},
 											Value: "one",
@@ -548,7 +547,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  38,
+											StartPos:  37,
 											EndPos:    43,
 										},
 										Value: "public",
@@ -557,7 +556,7 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  45,
+											StartPos:  44,
 											EndPos:    47,
 										},
 										Value: "two",
@@ -571,12 +570,12 @@ func TestTraitsUseAliasModifier(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -589,7 +588,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    80,
 		},
 		Stmts: []node.Node{
@@ -597,7 +596,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    80,
 				},
 				PhpDocComment: "",
@@ -605,7 +604,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  10,
+						StartPos:  9,
 						EndPos:    12,
 					},
 					Value: "Foo",
@@ -615,7 +614,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  16,
+							StartPos:  15,
 							EndPos:    78,
 						},
 						Traits: []node.Node{
@@ -623,7 +622,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  20,
+									StartPos:  19,
 									EndPos:    22,
 								},
 								Parts: []node.Node{
@@ -631,7 +630,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  20,
+											StartPos:  19,
 											EndPos:    22,
 										},
 										Value: "Bar",
@@ -642,7 +641,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 								Position: &position.Position{
 									StartLine: 1,
 									EndLine:   1,
-									StartPos:  25,
+									StartPos:  24,
 									EndPos:    27,
 								},
 								Parts: []node.Node{
@@ -650,7 +649,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  25,
+											StartPos:  24,
 											EndPos:    27,
 										},
 										Value: "Baz",
@@ -662,7 +661,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  29,
+								StartPos:  28,
 								EndPos:    78,
 							},
 							Adaptations: []node.Node{
@@ -670,21 +669,21 @@ func TestTraitsUseAdaptions(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  31,
+										StartPos:  30,
 										EndPos:    58,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  31,
+											StartPos:  30,
 											EndPos:    38,
 										},
 										Trait: &name.Name{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  31,
+												StartPos:  30,
 												EndPos:    33,
 											},
 											Parts: []node.Node{
@@ -692,7 +691,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
-														StartPos:  31,
+														StartPos:  30,
 														EndPos:    33,
 													},
 													Value: "Bar",
@@ -703,7 +702,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  36,
+												StartPos:  35,
 												EndPos:    38,
 											},
 											Value: "one",
@@ -714,7 +713,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  50,
+												StartPos:  49,
 												EndPos:    52,
 											},
 											Parts: []node.Node{
@@ -722,7 +721,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
-														StartPos:  50,
+														StartPos:  49,
 														EndPos:    52,
 													},
 													Value: "Baz",
@@ -733,7 +732,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  55,
+												StartPos:  54,
 												EndPos:    58,
 											},
 											Parts: []node.Node{
@@ -741,7 +740,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
-														StartPos:  55,
+														StartPos:  54,
 														EndPos:    58,
 													},
 													Value: "Quux",
@@ -754,21 +753,21 @@ func TestTraitsUseAdaptions(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  61,
+										StartPos:  60,
 										EndPos:    75,
 									},
 									Ref: &stmt.TraitMethodRef{
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  61,
+											StartPos:  60,
 											EndPos:    68,
 										},
 										Trait: &name.Name{
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  61,
+												StartPos:  60,
 												EndPos:    63,
 											},
 											Parts: []node.Node{
@@ -776,7 +775,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 													Position: &position.Position{
 														StartLine: 1,
 														EndLine:   1,
-														StartPos:  61,
+														StartPos:  60,
 														EndPos:    63,
 													},
 													Value: "Baz",
@@ -787,7 +786,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 											Position: &position.Position{
 												StartLine: 1,
 												EndLine:   1,
-												StartPos:  66,
+												StartPos:  65,
 												EndPos:    68,
 											},
 											Value: "one",
@@ -797,7 +796,7 @@ func TestTraitsUseAdaptions(t *testing.T) {
 										Position: &position.Position{
 											StartLine: 1,
 											EndLine:   1,
-											StartPos:  73,
+											StartPos:  72,
 											EndPos:    75,
 										},
 										Value: "two",
@@ -811,12 +810,12 @@ func TestTraitsUseAdaptions(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

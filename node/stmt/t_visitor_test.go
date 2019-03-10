@@ -129,9 +129,10 @@ var nodesToTest = []struct {
 		&stmt.Declare{
 			Consts: []node.Node{&stmt.Expression{}},
 			Stmt:   &stmt.StmtList{},
+			Alt:    true,
 		},
 		[]string{"Consts", "Stmt"},
-		nil,
+		map[string]interface{}{"Alt": true},
 	},
 	{
 		&stmt.Default{

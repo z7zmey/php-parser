@@ -1,7 +1,6 @@
 package php7_test
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/z7zmey/php-parser/php7"
@@ -382,7 +381,7 @@ CAD;
 	`
 
 	for n := 0; n < b.N; n++ {
-		php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+		php7parser := php7.NewParser([]byte(src))
 		php7parser.Parse()
 	}
 }

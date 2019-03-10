@@ -303,11 +303,9 @@ start:
                 // save position
                 yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-                
-                if yylex.(*Parser).currentToken.Value == "\xff" {
-                    yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
-                }
             }
 ;
 
@@ -485,8 +483,6 @@ top_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -4194,8 +4190,8 @@ expr_without_variable:
 backup_doc_comment:
         /* empty */
             {
-                $$ = yylex.(*Parser).PhpDocComment
-                yylex.(*Parser).PhpDocComment = ""
+                $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
+                yylex.(*Parser).Lexer.SetPhpDocComment("")
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
