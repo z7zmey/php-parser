@@ -618,9 +618,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 	nn := n.(*scalar.Heredoc)
 	p.printFreeFloating(nn, freefloating.Start)
 
-	io.WriteString(p.w, "<<<")
 	io.WriteString(p.w, nn.Label)
-	io.WriteString(p.w, "\n")
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -643,8 +641,7 @@ func (p *Printer) printScalarHeredoc(n node.Node) {
 		}
 	}
 
-	io.WriteString(p.w, "\n")
-	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
+	io.WriteString(p.w, strings.Trim(nn.Label, "<\"'\n"))
 
 	p.printFreeFloating(nn, freefloating.End)
 }

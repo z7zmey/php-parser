@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestSimpleUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    11,
 		},
 		Stmts: []node.Node{
@@ -30,7 +29,7 @@ func TestSimpleUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    11,
 				},
 				Uses: []node.Node{
@@ -38,14 +37,14 @@ func TestSimpleUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    10,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Parts: []node.Node{
@@ -53,7 +52,7 @@ func TestSimpleUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  8,
+										StartPos:  7,
 										EndPos:    10,
 									},
 									Value: "Foo",
@@ -66,12 +65,12 @@ func TestSimpleUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -84,7 +83,7 @@ func TestUseFullyQualified(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    12,
 		},
 		Stmts: []node.Node{
@@ -92,7 +91,7 @@ func TestUseFullyQualified(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    12,
 				},
 				Uses: []node.Node{
@@ -100,14 +99,14 @@ func TestUseFullyQualified(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    11,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    11,
 							},
 							Parts: []node.Node{
@@ -115,7 +114,7 @@ func TestUseFullyQualified(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  9,
+										StartPos:  8,
 										EndPos:    11,
 									},
 									Value: "Foo",
@@ -128,12 +127,12 @@ func TestUseFullyQualified(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -146,7 +145,7 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    19,
 		},
 		Stmts: []node.Node{
@@ -154,7 +153,7 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    19,
 				},
 				Uses: []node.Node{
@@ -162,14 +161,14 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  9,
+							StartPos:  8,
 							EndPos:    18,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  9,
+								StartPos:  8,
 								EndPos:    11,
 							},
 							Parts: []node.Node{
@@ -177,7 +176,7 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  9,
+										StartPos:  8,
 										EndPos:    11,
 									},
 									Value: "Foo",
@@ -188,7 +187,7 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  16,
+								StartPos:  15,
 								EndPos:    18,
 							},
 							Value: "Bar",
@@ -199,12 +198,12 @@ func TestUseFullyQualifiedAlias(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -217,7 +216,7 @@ func TestUseList(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    16,
 		},
 		Stmts: []node.Node{
@@ -225,7 +224,7 @@ func TestUseList(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    16,
 				},
 				Uses: []node.Node{
@@ -233,14 +232,14 @@ func TestUseList(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    10,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Parts: []node.Node{
@@ -248,7 +247,7 @@ func TestUseList(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  8,
+										StartPos:  7,
 										EndPos:    10,
 									},
 									Value: "Foo",
@@ -260,14 +259,14 @@ func TestUseList(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    15,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    15,
 							},
 							Parts: []node.Node{
@@ -275,7 +274,7 @@ func TestUseList(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  13,
+										StartPos:  12,
 										EndPos:    15,
 									},
 									Value: "Bar",
@@ -288,12 +287,12 @@ func TestUseList(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -306,7 +305,7 @@ func TestUseListAlias(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    23,
 		},
 		Stmts: []node.Node{
@@ -314,7 +313,7 @@ func TestUseListAlias(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    23,
 				},
 				Uses: []node.Node{
@@ -322,14 +321,14 @@ func TestUseListAlias(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  8,
+							StartPos:  7,
 							EndPos:    10,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Parts: []node.Node{
@@ -337,7 +336,7 @@ func TestUseListAlias(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  8,
+										StartPos:  7,
 										EndPos:    10,
 									},
 									Value: "Foo",
@@ -349,14 +348,14 @@ func TestUseListAlias(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    22,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    15,
 							},
 							Parts: []node.Node{
@@ -364,7 +363,7 @@ func TestUseListAlias(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  13,
+										StartPos:  12,
 										EndPos:    15,
 									},
 									Value: "Bar",
@@ -375,7 +374,7 @@ func TestUseListAlias(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  20,
+								StartPos:  19,
 								EndPos:    22,
 							},
 							Value: "Baz",
@@ -386,12 +385,12 @@ func TestUseListAlias(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -404,7 +403,7 @@ func TestUseListFunctionType(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    26,
 		},
 		Stmts: []node.Node{
@@ -412,14 +411,14 @@ func TestUseListFunctionType(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    26,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    15,
 					},
 					Value: "function",
@@ -429,14 +428,14 @@ func TestUseListFunctionType(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  17,
+							StartPos:  16,
 							EndPos:    19,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  17,
+								StartPos:  16,
 								EndPos:    19,
 							},
 							Parts: []node.Node{
@@ -444,7 +443,7 @@ func TestUseListFunctionType(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  17,
+										StartPos:  16,
 										EndPos:    19,
 									},
 									Value: "Foo",
@@ -456,14 +455,14 @@ func TestUseListFunctionType(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  23,
+							StartPos:  22,
 							EndPos:    25,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  23,
+								StartPos:  22,
 								EndPos:    25,
 							},
 							Parts: []node.Node{
@@ -471,7 +470,7 @@ func TestUseListFunctionType(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  23,
+										StartPos:  22,
 										EndPos:    25,
 									},
 									Value: "Bar",
@@ -484,12 +483,12 @@ func TestUseListFunctionType(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -502,7 +501,7 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    40,
 		},
 		Stmts: []node.Node{
@@ -510,14 +509,14 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    40,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    15,
 					},
 					Value: "function",
@@ -527,14 +526,14 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  17,
+							StartPos:  16,
 							EndPos:    26,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  17,
+								StartPos:  16,
 								EndPos:    19,
 							},
 							Parts: []node.Node{
@@ -542,7 +541,7 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  17,
+										StartPos:  16,
 										EndPos:    19,
 									},
 									Value: "Foo",
@@ -553,7 +552,7 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  24,
+								StartPos:  23,
 								EndPos:    26,
 							},
 							Value: "foo",
@@ -563,14 +562,14 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  30,
+							StartPos:  29,
 							EndPos:    39,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  30,
+								StartPos:  29,
 								EndPos:    32,
 							},
 							Parts: []node.Node{
@@ -578,7 +577,7 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  30,
+										StartPos:  29,
 										EndPos:    32,
 									},
 									Value: "Bar",
@@ -589,7 +588,7 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  37,
+								StartPos:  36,
 								EndPos:    39,
 							},
 							Value: "bar",
@@ -600,12 +599,12 @@ func TestUseListFunctionTypeAliases(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -618,7 +617,7 @@ func TestUseListConstType(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    23,
 		},
 		Stmts: []node.Node{
@@ -626,14 +625,14 @@ func TestUseListConstType(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    23,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    12,
 					},
 					Value: "const",
@@ -643,14 +642,14 @@ func TestUseListConstType(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  14,
+							StartPos:  13,
 							EndPos:    16,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    16,
 							},
 							Parts: []node.Node{
@@ -658,7 +657,7 @@ func TestUseListConstType(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  14,
+										StartPos:  13,
 										EndPos:    16,
 									},
 									Value: "Foo",
@@ -670,14 +669,14 @@ func TestUseListConstType(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  20,
+							StartPos:  19,
 							EndPos:    22,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  20,
+								StartPos:  19,
 								EndPos:    22,
 							},
 							Parts: []node.Node{
@@ -685,7 +684,7 @@ func TestUseListConstType(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  20,
+										StartPos:  19,
 										EndPos:    22,
 									},
 									Value: "Bar",
@@ -698,12 +697,12 @@ func TestUseListConstType(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -716,7 +715,7 @@ func TestUseListConstTypeAliases(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    37,
 		},
 		Stmts: []node.Node{
@@ -724,14 +723,14 @@ func TestUseListConstTypeAliases(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    37,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    12,
 					},
 					Value: "const",
@@ -741,14 +740,14 @@ func TestUseListConstTypeAliases(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  14,
+							StartPos:  13,
 							EndPos:    23,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    16,
 							},
 							Parts: []node.Node{
@@ -756,7 +755,7 @@ func TestUseListConstTypeAliases(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  14,
+										StartPos:  13,
 										EndPos:    16,
 									},
 									Value: "Foo",
@@ -767,7 +766,7 @@ func TestUseListConstTypeAliases(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  21,
+								StartPos:  20,
 								EndPos:    23,
 							},
 							Value: "foo",
@@ -777,14 +776,14 @@ func TestUseListConstTypeAliases(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  27,
+							StartPos:  26,
 							EndPos:    36,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  27,
+								StartPos:  26,
 								EndPos:    29,
 							},
 							Parts: []node.Node{
@@ -792,7 +791,7 @@ func TestUseListConstTypeAliases(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  27,
+										StartPos:  26,
 										EndPos:    29,
 									},
 									Value: "Bar",
@@ -803,7 +802,7 @@ func TestUseListConstTypeAliases(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  34,
+								StartPos:  33,
 								EndPos:    36,
 							},
 							Value: "bar",
@@ -814,12 +813,12 @@ func TestUseListConstTypeAliases(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -832,7 +831,7 @@ func TestGroupUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    22,
 		},
 		Stmts: []node.Node{
@@ -840,14 +839,14 @@ func TestGroupUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    22,
 				},
 				Prefix: &name.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    10,
 					},
 					Parts: []node.Node{
@@ -855,7 +854,7 @@ func TestGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Value: "Foo",
@@ -867,14 +866,14 @@ func TestGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    15,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    15,
 							},
 							Parts: []node.Node{
@@ -882,7 +881,7 @@ func TestGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  13,
+										StartPos:  12,
 										EndPos:    15,
 									},
 									Value: "Bar",
@@ -894,14 +893,14 @@ func TestGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  18,
+							StartPos:  17,
 							EndPos:    20,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  18,
+								StartPos:  17,
 								EndPos:    20,
 							},
 							Parts: []node.Node{
@@ -909,7 +908,7 @@ func TestGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  18,
+										StartPos:  17,
 										EndPos:    20,
 									},
 									Value: "Baz",
@@ -922,7 +921,7 @@ func TestGroupUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -935,7 +934,7 @@ func TestGroupUseAlias(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    30,
 		},
 		Stmts: []node.Node{
@@ -943,14 +942,14 @@ func TestGroupUseAlias(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    30,
 				},
 				Prefix: &name.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    10,
 					},
 					Parts: []node.Node{
@@ -958,7 +957,7 @@ func TestGroupUseAlias(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Value: "Foo",
@@ -970,14 +969,14 @@ func TestGroupUseAlias(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  13,
+							StartPos:  12,
 							EndPos:    15,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    15,
 							},
 							Parts: []node.Node{
@@ -985,7 +984,7 @@ func TestGroupUseAlias(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  13,
+										StartPos:  12,
 										EndPos:    15,
 									},
 									Value: "Bar",
@@ -997,14 +996,14 @@ func TestGroupUseAlias(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  18,
+							StartPos:  17,
 							EndPos:    28,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  18,
+								StartPos:  17,
 								EndPos:    20,
 							},
 							Parts: []node.Node{
@@ -1012,7 +1011,7 @@ func TestGroupUseAlias(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  18,
+										StartPos:  17,
 										EndPos:    20,
 									},
 									Value: "Baz",
@@ -1023,7 +1022,7 @@ func TestGroupUseAlias(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  25,
+								StartPos:  24,
 								EndPos:    28,
 							},
 							Value: "quux",
@@ -1034,7 +1033,7 @@ func TestGroupUseAlias(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1047,7 +1046,7 @@ func TestFunctionGroupUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    31,
 		},
 		Stmts: []node.Node{
@@ -1055,14 +1054,14 @@ func TestFunctionGroupUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    31,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    15,
 					},
 					Value: "function",
@@ -1071,7 +1070,7 @@ func TestFunctionGroupUse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  17,
+						StartPos:  16,
 						EndPos:    19,
 					},
 					Parts: []node.Node{
@@ -1079,7 +1078,7 @@ func TestFunctionGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  17,
+								StartPos:  16,
 								EndPos:    19,
 							},
 							Value: "Foo",
@@ -1091,14 +1090,14 @@ func TestFunctionGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  22,
+							StartPos:  21,
 							EndPos:    24,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  22,
+								StartPos:  21,
 								EndPos:    24,
 							},
 							Parts: []node.Node{
@@ -1106,7 +1105,7 @@ func TestFunctionGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  22,
+										StartPos:  21,
 										EndPos:    24,
 									},
 									Value: "Bar",
@@ -1118,14 +1117,14 @@ func TestFunctionGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  27,
+							StartPos:  26,
 							EndPos:    29,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  27,
+								StartPos:  26,
 								EndPos:    29,
 							},
 							Parts: []node.Node{
@@ -1133,7 +1132,7 @@ func TestFunctionGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  27,
+										StartPos:  26,
 										EndPos:    29,
 									},
 									Value: "Baz",
@@ -1146,7 +1145,7 @@ func TestFunctionGroupUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1159,7 +1158,7 @@ func TestConstGroupUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    28,
 		},
 		Stmts: []node.Node{
@@ -1167,14 +1166,14 @@ func TestConstGroupUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    28,
 				},
 				UseType: &node.Identifier{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    12,
 					},
 					Value: "const",
@@ -1183,7 +1182,7 @@ func TestConstGroupUse(t *testing.T) {
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  14,
+						StartPos:  13,
 						EndPos:    16,
 					},
 					Parts: []node.Node{
@@ -1191,7 +1190,7 @@ func TestConstGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    16,
 							},
 							Value: "Foo",
@@ -1203,14 +1202,14 @@ func TestConstGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    21,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  19,
+								StartPos:  18,
 								EndPos:    21,
 							},
 							Parts: []node.Node{
@@ -1218,7 +1217,7 @@ func TestConstGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  19,
+										StartPos:  18,
 										EndPos:    21,
 									},
 									Value: "Bar",
@@ -1230,14 +1229,14 @@ func TestConstGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  24,
+							StartPos:  23,
 							EndPos:    26,
 						},
 						Use: &name.Name{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  24,
+								StartPos:  23,
 								EndPos:    26,
 							},
 							Parts: []node.Node{
@@ -1245,7 +1244,7 @@ func TestConstGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  24,
+										StartPos:  23,
 										EndPos:    26,
 									},
 									Value: "Baz",
@@ -1258,7 +1257,7 @@ func TestConstGroupUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -1271,7 +1270,7 @@ func TestMixedGroupUse(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    37,
 		},
 		Stmts: []node.Node{
@@ -1279,14 +1278,14 @@ func TestMixedGroupUse(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    37,
 				},
 				Prefix: &name.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  8,
+						StartPos:  7,
 						EndPos:    10,
 					},
 					Parts: []node.Node{
@@ -1294,7 +1293,7 @@ func TestMixedGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  8,
+								StartPos:  7,
 								EndPos:    10,
 							},
 							Value: "Foo",
@@ -1306,14 +1305,14 @@ func TestMixedGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  19,
+							StartPos:  18,
 							EndPos:    21,
 						},
 						UseType: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  13,
+								StartPos:  12,
 								EndPos:    17,
 							},
 							Value: "const",
@@ -1322,7 +1321,7 @@ func TestMixedGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  19,
+								StartPos:  18,
 								EndPos:    21,
 							},
 							Parts: []node.Node{
@@ -1330,7 +1329,7 @@ func TestMixedGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  19,
+										StartPos:  18,
 										EndPos:    21,
 									},
 									Value: "Bar",
@@ -1342,14 +1341,14 @@ func TestMixedGroupUse(t *testing.T) {
 						Position: &position.Position{
 							StartLine: 1,
 							EndLine:   1,
-							StartPos:  33,
+							StartPos:  32,
 							EndPos:    35,
 						},
 						UseType: &node.Identifier{
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  24,
+								StartPos:  23,
 								EndPos:    31,
 							},
 							Value: "function",
@@ -1358,7 +1357,7 @@ func TestMixedGroupUse(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  33,
+								StartPos:  32,
 								EndPos:    35,
 							},
 							Parts: []node.Node{
@@ -1366,7 +1365,7 @@ func TestMixedGroupUse(t *testing.T) {
 									Position: &position.Position{
 										StartLine: 1,
 										EndLine:   1,
-										StartPos:  33,
+										StartPos:  32,
 										EndPos:    35,
 									},
 									Value: "Baz",
@@ -1379,7 +1378,7 @@ func TestMixedGroupUse(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

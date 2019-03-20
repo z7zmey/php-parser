@@ -42,7 +42,9 @@ func (n *Declare) GetFreeFloating() *freefloating.Collection {
 
 // Attributes returns node attributes as map
 func (n *Declare) Attributes() map[string]interface{} {
-	return nil
+	return map[string]interface{}{
+		"Alt": n.Alt,
+	}
 }
 
 // Walk traverses nodes

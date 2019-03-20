@@ -425,13 +425,13 @@ func TestPrinterPrintScalarHeredoc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
-		Label: "LBL",
+		Label: "<<<LBL\n",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
 			&expr.Variable{
 				VarName: &node.Identifier{Value: "var"},
 			},
-			&scalar.EncapsedStringPart{Value: " world"},
+			&scalar.EncapsedStringPart{Value: " world\n"},
 		},
 	})
 
@@ -450,9 +450,9 @@ func TestPrinterPrintScalarNowdoc(t *testing.T) {
 
 	p := printer.NewPrinter(o)
 	p.Print(&scalar.Heredoc{
-		Label: "'LBL'",
+		Label: "<<<'LBL'\n",
 		Parts: []node.Node{
-			&scalar.EncapsedStringPart{Value: "hello world"},
+			&scalar.EncapsedStringPart{Value: "hello world\n"},
 		},
 	})
 

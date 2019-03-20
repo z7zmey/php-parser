@@ -1,7 +1,6 @@
 package stmt_test
 
 import (
-	"bytes"
 	"testing"
 
 	"gotest.tools/assert"
@@ -22,7 +21,7 @@ func TestNamespace(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    17,
 		},
 		Stmts: []node.Node{
@@ -30,14 +29,14 @@ func TestNamespace(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    17,
 				},
 				NamespaceName: &name.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  14,
+						StartPos:  13,
 						EndPos:    16,
 					},
 					Parts: []node.Node{
@@ -45,7 +44,7 @@ func TestNamespace(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    16,
 							},
 							Value: "Foo",
@@ -56,12 +55,12 @@ func TestNamespace(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -74,7 +73,7 @@ func TestNamespaceStmts(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    19,
 		},
 		Stmts: []node.Node{
@@ -82,14 +81,14 @@ func TestNamespaceStmts(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    19,
 				},
 				NamespaceName: &name.Name{
 					Position: &position.Position{
 						StartLine: 1,
 						EndLine:   1,
-						StartPos:  14,
+						StartPos:  13,
 						EndPos:    16,
 					},
 					Parts: []node.Node{
@@ -97,7 +96,7 @@ func TestNamespaceStmts(t *testing.T) {
 							Position: &position.Position{
 								StartLine: 1,
 								EndLine:   1,
-								StartPos:  14,
+								StartPos:  13,
 								EndPos:    16,
 							},
 							Value: "Foo",
@@ -109,12 +108,12 @@ func TestNamespaceStmts(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -127,7 +126,7 @@ func TestAnonymousNamespace(t *testing.T) {
 		Position: &position.Position{
 			StartLine: 1,
 			EndLine:   1,
-			StartPos:  4,
+			StartPos:  3,
 			EndPos:    15,
 		},
 		Stmts: []node.Node{
@@ -135,7 +134,7 @@ func TestAnonymousNamespace(t *testing.T) {
 				Position: &position.Position{
 					StartLine: 1,
 					EndLine:   1,
-					StartPos:  4,
+					StartPos:  3,
 					EndPos:    15,
 				},
 				Stmts: []node.Node{},
@@ -143,12 +142,12 @@ func TestAnonymousNamespace(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser(bytes.NewBufferString(src), "test.php")
+	php7parser := php7.NewParser([]byte(src))
 	php7parser.Parse()
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
 
-	php5parser := php5.NewParser(bytes.NewBufferString(src), "test.php")
+	php5parser := php5.NewParser([]byte(src))
 	php5parser.Parse()
 	actual = php5parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)

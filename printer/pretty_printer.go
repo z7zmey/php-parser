@@ -569,9 +569,7 @@ func (p *PrettyPrinter) printScalarEncapsed(n node.Node) {
 func (p *PrettyPrinter) printScalarHeredoc(n node.Node) {
 	nn := n.(*scalar.Heredoc)
 
-	io.WriteString(p.w, "<<<")
 	io.WriteString(p.w, nn.Label)
-	io.WriteString(p.w, "\n")
 
 	for _, part := range nn.Parts {
 		switch part.(type) {
@@ -584,7 +582,7 @@ func (p *PrettyPrinter) printScalarHeredoc(n node.Node) {
 		}
 	}
 
-	io.WriteString(p.w, strings.Trim(nn.Label, "\"'"))
+	io.WriteString(p.w, strings.Trim(nn.Label, "<\"'\n"))
 }
 
 func (p *PrettyPrinter) printScalarMagicConstant(n node.Node) {

@@ -87,7 +87,7 @@ func TestPrintFileInlineHtml(t *testing.T) {
 			&stmt.InlineHtml{Value: "<div>HTML</div>"},
 			&stmt.Expression{
 				Expr: &scalar.Heredoc{
-					Label: "\"LBL\"",
+					Label: "<<<\"LBL\"\n",
 					Parts: []node.Node{
 						&scalar.EncapsedStringPart{Value: "hello world\n"},
 					},
@@ -356,7 +356,7 @@ func TestPrintScalarHeredoc(t *testing.T) {
 
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&scalar.Heredoc{
-		Label: "LBL",
+		Label: "<<<LBL\n",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello "},
 			&expr.Variable{VarName: &node.Identifier{Value: "var"}},
@@ -379,7 +379,7 @@ func TestPrintScalarNowdoc(t *testing.T) {
 
 	p := printer.NewPrettyPrinter(o, "    ")
 	p.Print(&scalar.Heredoc{
-		Label: "'LBL'",
+		Label: "<<<'LBL'\n",
 		Parts: []node.Node{
 			&scalar.EncapsedStringPart{Value: "hello world\n"},
 		},

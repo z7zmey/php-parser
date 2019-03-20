@@ -1,20 +1,18 @@
-package scanner_test
+package scanner
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
-	"github.com/z7zmey/php-parser/scanner"
 	"gotest.tools/assert"
 )
 
 type lval struct {
-	Tkn *scanner.Token
+	Tkn *Token
 }
 
-func (lv *lval) Token(t *scanner.Token) {
+func (lv *lval) Token(t *Token) {
 	lv.Tkn = t
 }
 
@@ -214,201 +212,203 @@ func TestTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		scanner.T_INLINE_HTML.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
-		scanner.T_ECHO.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_INLINE_HTML.String(),
+		TokenID(int(';')).String(),
+		T_INLINE_HTML.String(),
+		T_ECHO.String(),
+		TokenID(int(';')).String(),
+		T_INLINE_HTML.String(),
 
-		scanner.T_DNUMBER.String(),
-		scanner.T_DNUMBER.String(),
-		scanner.T_DNUMBER.String(),
-		scanner.T_DNUMBER.String(),
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
+		T_DNUMBER.String(),
 
-		scanner.T_LNUMBER.String(),
-		scanner.T_DNUMBER.String(),
+		T_LNUMBER.String(),
+		T_DNUMBER.String(),
 
-		scanner.T_LNUMBER.String(),
-		scanner.T_DNUMBER.String(),
+		T_LNUMBER.String(),
+		T_DNUMBER.String(),
 
-		scanner.T_LNUMBER.String(),
-		scanner.T_DNUMBER.String(),
+		T_LNUMBER.String(),
+		T_DNUMBER.String(),
 
-		scanner.T_ABSTRACT.String(),
-		scanner.T_ARRAY.String(),
-		scanner.T_AS.String(),
-		scanner.T_BREAK.String(),
-		scanner.T_CALLABLE.String(),
-		scanner.T_CASE.String(),
-		scanner.T_CATCH.String(),
-		scanner.T_CLASS.String(),
-		scanner.T_CLONE.String(),
-		scanner.T_CONST.String(),
-		scanner.T_CONTINUE.String(),
-		scanner.T_DECLARE.String(),
-		scanner.T_DEFAULT.String(),
-		scanner.T_DO.String(),
-		scanner.T_ECHO.String(),
-		scanner.T_ELSE.String(),
-		scanner.T_ELSEIF.String(),
-		scanner.T_EMPTY.String(),
-		scanner.T_ENDDECLARE.String(),
-		scanner.T_ENDFOR.String(),
-		scanner.T_ENDFOREACH.String(),
-		scanner.T_ENDIF.String(),
-		scanner.T_ENDSWITCH.String(),
-		scanner.T_ENDWHILE.String(),
-		scanner.T_EVAL.String(),
-		scanner.T_EXIT.String(),
-		scanner.T_EXTENDS.String(),
-		scanner.T_FINAL.String(),
-		scanner.T_FINALLY.String(),
-		scanner.T_FOR.String(),
-		scanner.T_FOREACH.String(),
-		scanner.T_FUNCTION.String(),
-		scanner.T_FUNCTION.String(),
-		scanner.T_GLOBAL.String(),
-		scanner.T_GOTO.String(),
-		scanner.T_IF.String(),
-		scanner.T_ISSET.String(),
-		scanner.T_IMPLEMENTS.String(),
-		scanner.T_INSTANCEOF.String(),
-		scanner.T_INSTEADOF.String(),
-		scanner.T_INTERFACE.String(),
-		scanner.T_LIST.String(),
-		scanner.T_NAMESPACE.String(),
-		scanner.T_PRIVATE.String(),
-		scanner.T_PUBLIC.String(),
-		scanner.T_PRINT.String(),
-		scanner.T_PROTECTED.String(),
-		scanner.T_RETURN.String(),
-		scanner.T_STATIC.String(),
-		scanner.T_SWITCH.String(),
-		scanner.T_THROW.String(),
-		scanner.T_TRAIT.String(),
-		scanner.T_TRY.String(),
-		scanner.T_UNSET.String(),
-		scanner.T_USE.String(),
-		scanner.T_VAR.String(),
-		scanner.T_WHILE.String(),
-		scanner.T_YIELD_FROM.String(),
-		scanner.T_YIELD.String(),
-		scanner.T_INCLUDE.String(),
-		scanner.T_INCLUDE_ONCE.String(),
-		scanner.T_REQUIRE.String(),
-		scanner.T_REQUIRE_ONCE.String(),
+		T_ABSTRACT.String(),
+		T_ARRAY.String(),
+		T_AS.String(),
+		T_BREAK.String(),
+		T_CALLABLE.String(),
+		T_CASE.String(),
+		T_CATCH.String(),
+		T_CLASS.String(),
+		T_CLONE.String(),
+		T_CONST.String(),
+		T_CONTINUE.String(),
+		T_DECLARE.String(),
+		T_DEFAULT.String(),
+		T_DO.String(),
+		T_ECHO.String(),
+		T_ELSE.String(),
+		T_ELSEIF.String(),
+		T_EMPTY.String(),
+		T_ENDDECLARE.String(),
+		T_ENDFOR.String(),
+		T_ENDFOREACH.String(),
+		T_ENDIF.String(),
+		T_ENDSWITCH.String(),
+		T_ENDWHILE.String(),
+		T_EVAL.String(),
+		T_EXIT.String(),
+		T_EXTENDS.String(),
+		T_FINAL.String(),
+		T_FINALLY.String(),
+		T_FOR.String(),
+		T_FOREACH.String(),
+		T_FUNCTION.String(),
+		T_FUNCTION.String(),
+		T_GLOBAL.String(),
+		T_GOTO.String(),
+		T_IF.String(),
+		T_ISSET.String(),
+		T_IMPLEMENTS.String(),
+		T_INSTANCEOF.String(),
+		T_INSTEADOF.String(),
+		T_INTERFACE.String(),
+		T_LIST.String(),
+		T_NAMESPACE.String(),
+		T_PRIVATE.String(),
+		T_PUBLIC.String(),
+		T_PRINT.String(),
+		T_PROTECTED.String(),
+		T_RETURN.String(),
+		T_STATIC.String(),
+		T_SWITCH.String(),
+		T_THROW.String(),
+		T_TRAIT.String(),
+		T_TRY.String(),
+		T_UNSET.String(),
+		T_USE.String(),
+		T_VAR.String(),
+		T_WHILE.String(),
+		T_YIELD_FROM.String(),
+		T_YIELD.String(),
+		T_INCLUDE.String(),
+		T_INCLUDE_ONCE.String(),
+		T_REQUIRE.String(),
+		T_REQUIRE_ONCE.String(),
 
-		scanner.T_CLASS_C.String(),
-		scanner.T_DIR.String(),
-		scanner.T_FILE.String(),
-		scanner.T_FUNC_C.String(),
-		scanner.T_LINE.String(),
-		scanner.T_NS_C.String(),
-		scanner.T_METHOD_C.String(),
-		scanner.T_TRAIT_C.String(),
-		scanner.T_HALT_COMPILER.String(),
+		T_CLASS_C.String(),
+		T_DIR.String(),
+		T_FILE.String(),
+		T_FUNC_C.String(),
+		T_LINE.String(),
+		T_NS_C.String(),
+		T_METHOD_C.String(),
+		T_TRAIT_C.String(),
+		T_HALT_COMPILER.String(),
 
-		scanner.T_NEW.String(),
-		scanner.T_LOGICAL_AND.String(),
-		scanner.T_LOGICAL_OR.String(),
-		scanner.T_LOGICAL_XOR.String(),
+		T_NEW.String(),
+		T_LOGICAL_AND.String(),
+		T_LOGICAL_OR.String(),
+		T_LOGICAL_XOR.String(),
 
-		scanner.T_NS_SEPARATOR.String(),
-		scanner.T_ELLIPSIS.String(),
-		scanner.T_PAAMAYIM_NEKUDOTAYIM.String(),
-		scanner.T_BOOLEAN_AND.String(),
-		scanner.T_BOOLEAN_OR.String(),
-		scanner.T_AND_EQUAL.String(),
-		scanner.T_OR_EQUAL.String(),
-		scanner.T_CONCAT_EQUAL.String(),
-		scanner.T_MUL_EQUAL.String(),
-		scanner.T_POW_EQUAL.String(),
-		scanner.T_DIV_EQUAL.String(),
-		scanner.T_PLUS_EQUAL.String(),
-		scanner.T_MINUS_EQUAL.String(),
-		scanner.T_XOR_EQUAL.String(),
-		scanner.T_MOD_EQUAL.String(),
-		scanner.T_DEC.String(),
-		scanner.T_INC.String(),
-		scanner.T_DOUBLE_ARROW.String(),
-		scanner.T_SPACESHIP.String(),
-		scanner.T_IS_NOT_EQUAL.String(),
-		scanner.T_IS_NOT_EQUAL.String(),
-		scanner.T_IS_NOT_IDENTICAL.String(),
-		scanner.T_IS_EQUAL.String(),
-		scanner.T_IS_IDENTICAL.String(),
-		scanner.T_SL_EQUAL.String(),
-		scanner.T_SR_EQUAL.String(),
-		scanner.T_IS_GREATER_OR_EQUAL.String(),
-		scanner.T_IS_SMALLER_OR_EQUAL.String(),
-		scanner.T_POW.String(),
-		scanner.T_SL.String(),
-		scanner.T_SR.String(),
-		scanner.T_COALESCE.String(),
+		T_NS_SEPARATOR.String(),
+		T_ELLIPSIS.String(),
+		T_PAAMAYIM_NEKUDOTAYIM.String(),
+		T_BOOLEAN_AND.String(),
+		T_BOOLEAN_OR.String(),
+		T_AND_EQUAL.String(),
+		T_OR_EQUAL.String(),
+		T_CONCAT_EQUAL.String(),
+		T_MUL_EQUAL.String(),
+		T_POW_EQUAL.String(),
+		T_DIV_EQUAL.String(),
+		T_PLUS_EQUAL.String(),
+		T_MINUS_EQUAL.String(),
+		T_XOR_EQUAL.String(),
+		T_MOD_EQUAL.String(),
+		T_DEC.String(),
+		T_INC.String(),
+		T_DOUBLE_ARROW.String(),
+		T_SPACESHIP.String(),
+		T_IS_NOT_EQUAL.String(),
+		T_IS_NOT_EQUAL.String(),
+		T_IS_NOT_IDENTICAL.String(),
+		T_IS_EQUAL.String(),
+		T_IS_IDENTICAL.String(),
+		T_SL_EQUAL.String(),
+		T_SR_EQUAL.String(),
+		T_IS_GREATER_OR_EQUAL.String(),
+		T_IS_SMALLER_OR_EQUAL.String(),
+		T_POW.String(),
+		T_SL.String(),
+		T_SR.String(),
+		T_COALESCE.String(),
 
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
-		scanner.LexerToken(scanner.Rune2Class(':')).String(),
-		scanner.LexerToken(scanner.Rune2Class(',')).String(),
-		scanner.LexerToken(scanner.Rune2Class('.')).String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.LexerToken(scanner.Rune2Class('(')).String(),
-		scanner.LexerToken(scanner.Rune2Class(')')).String(),
-		scanner.LexerToken(scanner.Rune2Class('|')).String(),
-		scanner.LexerToken(scanner.Rune2Class('/')).String(),
-		scanner.LexerToken(scanner.Rune2Class('^')).String(),
-		scanner.LexerToken(scanner.Rune2Class('&')).String(),
-		scanner.LexerToken(scanner.Rune2Class('+')).String(),
-		scanner.LexerToken(scanner.Rune2Class('-')).String(),
-		scanner.LexerToken(scanner.Rune2Class('*')).String(),
-		scanner.LexerToken(scanner.Rune2Class('=')).String(),
-		scanner.LexerToken(scanner.Rune2Class('%')).String(),
-		scanner.LexerToken(scanner.Rune2Class('!')).String(),
-		scanner.LexerToken(scanner.Rune2Class('~')).String(),
-		scanner.LexerToken(scanner.Rune2Class('$')).String(),
-		scanner.LexerToken(scanner.Rune2Class('<')).String(),
-		scanner.LexerToken(scanner.Rune2Class('>')).String(),
-		scanner.LexerToken(scanner.Rune2Class('?')).String(),
-		scanner.LexerToken(scanner.Rune2Class('@')).String(),
-		scanner.LexerToken(scanner.Rune2Class('{')).String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
+		TokenID(int(';')).String(),
+		TokenID(int(':')).String(),
+		TokenID(int(',')).String(),
+		TokenID(int('.')).String(),
+		TokenID(int('[')).String(),
+		TokenID(int(']')).String(),
+		TokenID(int('(')).String(),
+		TokenID(int(')')).String(),
+		TokenID(int('|')).String(),
+		TokenID(int('/')).String(),
+		TokenID(int('^')).String(),
+		TokenID(int('&')).String(),
+		TokenID(int('+')).String(),
+		TokenID(int('-')).String(),
+		TokenID(int('*')).String(),
+		TokenID(int('=')).String(),
+		TokenID(int('%')).String(),
+		TokenID(int('!')).String(),
+		TokenID(int('~')).String(),
+		TokenID(int('$')).String(),
+		TokenID(int('<')).String(),
+		TokenID(int('>')).String(),
+		TokenID(int('?')).String(),
+		TokenID(int('@')).String(),
+		TokenID(int('{')).String(),
+		TokenID(int('}')).String(),
 
-		scanner.T_VARIABLE.String(),
-		scanner.T_STRING.String(),
+		T_VARIABLE.String(),
+		T_STRING.String(),
 
-		scanner.T_OBJECT_OPERATOR.String(),
-		scanner.T_OBJECT_OPERATOR.String(),
-		scanner.T_STRING.String(),
+		T_OBJECT_OPERATOR.String(),
+		T_OBJECT_OPERATOR.String(),
+		T_STRING.String(),
 
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
 
-		scanner.T_ARRAY_CAST.String(),
-		scanner.T_BOOL_CAST.String(),
-		scanner.T_BOOL_CAST.String(),
-		scanner.T_DOUBLE_CAST.String(),
-		scanner.T_DOUBLE_CAST.String(),
-		scanner.T_DOUBLE_CAST.String(),
-		scanner.T_INT_CAST.String(),
-		scanner.T_INT_CAST.String(),
-		scanner.T_OBJECT_CAST.String(),
-		scanner.T_STRING_CAST.String(),
-		scanner.T_STRING_CAST.String(),
-		scanner.T_UNSET_CAST.String(),
+		T_ARRAY_CAST.String(),
+		T_BOOL_CAST.String(),
+		T_BOOL_CAST.String(),
+		T_DOUBLE_CAST.String(),
+		T_DOUBLE_CAST.String(),
+		T_DOUBLE_CAST.String(),
+		T_INT_CAST.String(),
+		T_INT_CAST.String(),
+		T_OBJECT_CAST.String(),
+		T_STRING_CAST.String(),
+		T_STRING_CAST.String(),
+		T_UNSET_CAST.String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -436,26 +436,26 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -479,72 +479,72 @@ func TestTeplateStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		scanner.T_STRING_VARNAME.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		T_STRING_VARNAME.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('"')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('"')).String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -565,72 +565,72 @@ func TestBackquoteStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		scanner.T_STRING_VARNAME.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		T_STRING_VARNAME.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('`')).String(),
 
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('`')).String(),
+		TokenID(int('`')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('`')).String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -661,71 +661,71 @@ CAT;
 	`
 
 	expected := []string{
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_OBJECT_OPERATOR.String(),
-		scanner.T_STRING.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_NUM_STRING.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_NUM_STRING.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_NUM_STRING.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_STRING.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_DOLLAR_OPEN_CURLY_BRACES.String(),
-		scanner.T_STRING_VARNAME.String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_OBJECT_OPERATOR.String(),
+		T_STRING.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_NUM_STRING.String(),
+		TokenID(int(']')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_NUM_STRING.String(),
+		TokenID(int(']')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_NUM_STRING.String(),
+		TokenID(int(']')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_STRING.String(),
+		TokenID(int(']')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_VARIABLE.String(),
+		TokenID(int(']')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_DOLLAR_OPEN_CURLY_BRACES.String(),
+		T_STRING_VARNAME.String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -755,49 +755,51 @@ CAT
 `
 
 	expected := []string{
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_END_HEREDOC.String(),
+		T_START_HEREDOC.String(),
+		T_VARIABLE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -813,30 +815,31 @@ CAT;
 
 	expected := []string{
 
-		scanner.T_START_HEREDOC.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_CURLY_OPEN.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('[')).String(),
-		scanner.T_CONSTANT_ENCAPSED_STRING.String(),
-		scanner.LexerToken(scanner.Rune2Class(']')).String(),
-		scanner.LexerToken(scanner.Rune2Class('}')).String(),
-		scanner.T_END_HEREDOC.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_CURLY_OPEN.String(),
+		T_VARIABLE.String(),
+		TokenID(int('[')).String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		TokenID(int(']')).String(),
+		TokenID(int('}')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenID(int(';')).String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -849,27 +852,27 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
-		scanner.T_INLINE_HTML.String(),
+		T_VARIABLE.String(),
+		TokenID(int(';')).String(),
+		T_INLINE_HTML.String(),
 
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class(';')).String(),
-		scanner.T_INLINE_HTML.String(),
+		T_VARIABLE.String(),
+		TokenID(int(';')).String(),
+		T_INLINE_HTML.String(),
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 	actual := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -879,11 +882,11 @@ func TestStringTokensAfterVariable(t *testing.T) {
 	src := `<?php "test \"$var\""`
 
 	expected := []string{
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.T_VARIABLE.String(),
-		scanner.T_ENCAPSED_AND_WHITESPACE.String(),
-		scanner.LexerToken(scanner.Rune2Class('"')).String(),
+		TokenID(int('"')).String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		TokenID(int('"')).String(),
 	}
 
 	expectedTokens := []string{
@@ -894,19 +897,19 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		"\"",
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lv := &lval{}
 	actual := []string{}
 	actualTokens := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -917,9 +920,9 @@ func TestSlashAfterVariable(t *testing.T) {
 	src := `<?php $foo/3`
 
 	expected := []string{
-		scanner.T_VARIABLE.String(),
-		scanner.LexerToken(scanner.Rune2Class('/')).String(),
-		scanner.T_LNUMBER.String(),
+		T_VARIABLE.String(),
+		TokenID(int('/')).String(),
+		T_LNUMBER.String(),
 	}
 
 	expectedTokens := []string{
@@ -928,19 +931,19 @@ func TestSlashAfterVariable(t *testing.T) {
 		"3",
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lv := &lval{}
 	actual := []string{}
 	actualTokens := []string{}
 
 	for {
 		token := lexer.Lex(lv)
-		if token < 0 {
+		if token == 0 {
 			break
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, scanner.LexerToken(token).String())
+		actual = append(actual, TokenID(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -954,21 +957,21 @@ func TestCommentEnd(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 1, 6, 6),
+			Position:   position.NewPosition(1, 1, 5, 6),
 		},
 		{
 			Value:      "//test",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(1, 1, 7, 12),
+			Position:   position.NewPosition(1, 1, 6, 12),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -986,21 +989,21 @@ func TestCommentNewLine(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 1, 6, 6),
+			Position:   position.NewPosition(1, 1, 5, 6),
 		},
 		{
 			Value:      "//test\n",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(1, 1, 7, 13),
+			Position:   position.NewPosition(1, 1, 6, 13),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1018,21 +1021,21 @@ func TestCommentNewLine1(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 1, 6, 6),
+			Position:   position.NewPosition(1, 1, 5, 6),
 		},
 		{
 			Value:      "//test\r",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(1, 1, 7, 13),
+			Position:   position.NewPosition(1, 1, 6, 13),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1050,21 +1053,21 @@ func TestCommentNewLine2(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 1, 6, 6),
+			Position:   position.NewPosition(1, 1, 5, 6),
 		},
 		{
 			Value:      "#test\r\n",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(1, 1, 7, 13),
+			Position:   position.NewPosition(1, 1, 6, 13),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1083,21 +1086,21 @@ func TestCommentWithPhpEndTag(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 		{
 			Value:      "//test",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(2, 2, 8, 13),
+			Position:   position.NewPosition(2, 2, 7, 13),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1116,21 +1119,21 @@ func TestInlineComment(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 		{
 			Value:      "/*test*/",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(2, 2, 8, 15),
+			Position:   position.NewPosition(2, 2, 7, 15),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1149,21 +1152,21 @@ func TestInlineComment2(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 		{
 			Value:      "/*/*/",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(2, 2, 8, 12),
+			Position:   position.NewPosition(2, 2, 7, 12),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1182,26 +1185,26 @@ func TestEmptyInlineComment(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 		{
 			Value:      "/**/",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(2, 2, 8, 11),
+			Position:   position.NewPosition(2, 2, 7, 11),
 		},
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 12, 12),
+			Position:   position.NewPosition(2, 2, 11, 12),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1220,21 +1223,21 @@ func TestEmptyInlineComment2(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 		{
 			Value:      "/***/",
 			StringType: freefloating.CommentType,
-			Position:   position.NewPosition(2, 2, 8, 12),
+			Position:   position.NewPosition(2, 2, 7, 12),
 		},
 	}
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1249,7 +1252,7 @@ func TestMethodCallTokens(t *testing.T) {
 	src := `<?php
 	$a -> bar ( '' ) ;`
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1257,12 +1260,12 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 	}
 	lexer.Lex(lv)
@@ -1273,7 +1276,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 10, 10),
+			Position:   position.NewPosition(2, 2, 9, 10),
 		},
 	}
 	lexer.Lex(lv)
@@ -1284,7 +1287,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 13, 13),
+			Position:   position.NewPosition(2, 2, 12, 13),
 		},
 	}
 	lexer.Lex(lv)
@@ -1295,7 +1298,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 17, 17),
+			Position:   position.NewPosition(2, 2, 16, 17),
 		},
 	}
 	lexer.Lex(lv)
@@ -1306,7 +1309,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 19, 19),
+			Position:   position.NewPosition(2, 2, 18, 19),
 		},
 	}
 	lexer.Lex(lv)
@@ -1317,7 +1320,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 22, 22),
+			Position:   position.NewPosition(2, 2, 21, 22),
 		},
 	}
 	lexer.Lex(lv)
@@ -1328,7 +1331,7 @@ func TestMethodCallTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 24, 24),
+			Position:   position.NewPosition(2, 2, 23, 24),
 		},
 	}
 	lexer.Lex(lv)
@@ -1340,7 +1343,7 @@ func TestYieldFromTokens(t *testing.T) {
 	src := `<?php
 	yield from $a`
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lexer.WithFreeFloating = true
 	lv := &lval{}
 
@@ -1348,12 +1351,12 @@ func TestYieldFromTokens(t *testing.T) {
 		{
 			Value:      "<?php",
 			StringType: freefloating.TokenType,
-			Position:   position.NewPosition(1, 1, 1, 5),
+			Position:   position.NewPosition(1, 1, 0, 5),
 		},
 		{
 			Value:      "\n\t",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(1, 2, 6, 7),
+			Position:   position.NewPosition(1, 2, 5, 7),
 		},
 	}
 	lexer.Lex(lv)
@@ -1364,7 +1367,7 @@ func TestYieldFromTokens(t *testing.T) {
 		{
 			Value:      " ",
 			StringType: freefloating.WhiteSpaceType,
-			Position:   position.NewPosition(2, 2, 18, 18),
+			Position:   position.NewPosition(2, 2, 17, 18),
 		},
 	}
 	lexer.Lex(lv)
@@ -1375,7 +1378,7 @@ func TestYieldFromTokens(t *testing.T) {
 func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lv := &lval{}
 
 	expected := "echo"
@@ -1392,7 +1395,7 @@ func TestIgnoreControllCharacters(t *testing.T) {
 func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	src := "<?php \"$a[test\004]\";"
 
-	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lexer := NewLexer([]byte(src))
 	lv := &lval{}
 
 	expected := "\""

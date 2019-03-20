@@ -282,11 +282,9 @@ start:
                 yylex.(*Parser).rootNode = node.NewRoot($1)
                 yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition($1))
 
+                yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-                
-                if yylex.(*Parser).currentToken.Value == "\xff" {
-                    yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
-                }
             }
 ;
 
@@ -383,8 +381,6 @@ top_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
     |   T_NAMESPACE namespace_name ';'
             {
@@ -871,8 +867,6 @@ inner_statement:
                 yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-
-                yylex.(*Parser).Begin(scanner.HALT_COMPILER)
             }
 ;
 
