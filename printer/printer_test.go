@@ -3279,7 +3279,7 @@ func TestPrinterPrintStmtEchoHtmlState(t *testing.T) {
 		},
 	})
 
-	expected := `<?=$a,$b;`
+	expected := `<?php echo $a,$b;`
 	actual := o.String()
 
 	if expected != actual {

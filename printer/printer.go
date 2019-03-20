@@ -2429,13 +2429,13 @@ func (p *Printer) printStmtDo(n node.Node) {
 
 func (p *Printer) printStmtEcho(n node.Node) {
 	nn := n.(*stmt.Echo)
+
 	if nn.GetFreeFloating().IsEmpty() {
 		io.WriteString(p.w, "echo")
 	}
 	if nn.Exprs[0].GetFreeFloating().IsEmpty() {
 		io.WriteString(p.w, " ")
 	}
-
 
 	p.printFreeFloating(nn, freefloating.Start)
 	p.printFreeFloating(nn, freefloating.Echo)
