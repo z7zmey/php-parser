@@ -43,8 +43,7 @@ func (p *Printer) SetState(s printerState) {
 func (p *Printer) Print(n node.Node) {
 	_, isRoot := n.(*node.Root)
 	_, isInlineHtml := n.(*stmt.InlineHtml)
-	_, isEcho := n.(*stmt.Echo)
-	if p.s == HtmlState && !isInlineHtml && !isRoot && !isEcho {
+	if p.s == HtmlState && !isInlineHtml && !isRoot {
 		if n.GetFreeFloating().IsEmpty() {
 			io.WriteString(p.w, "<?php ")
 		}
@@ -2430,21 +2429,13 @@ func (p *Printer) printStmtDo(n node.Node) {
 
 func (p *Printer) printStmtEcho(n node.Node) {
 	nn := n.(*stmt.Echo)
-
-	if p.s == HtmlState {
-		if nn.GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, "<?=")
-		}
-
-		p.SetState(PhpState)
-	} else {
-		if nn.GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, "echo")
-		}
-		if nn.Exprs[0].GetFreeFloating().IsEmpty() {
-			io.WriteString(p.w, " ")
-		}
+	if nn.GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, "echo")
 	}
+	if nn.Exprs[0].GetFreeFloating().IsEmpty() {
+		io.WriteString(p.w, " ")
+	}
+
 
 	p.printFreeFloating(nn, freefloating.Start)
 	p.printFreeFloating(nn, freefloating.Echo)
