@@ -13,8 +13,10 @@ import (
 )
 
 type JsonDumper struct {
-	Writer     io.Writer
-	NsResolver *NamespaceResolver
+	Writer         io.Writer
+	NsResolver     *NamespaceResolver
+	isChildNode    bool
+	isNotFirstNode bool
 }
 
 // EnterNode is invoked at every node in hierarchy
@@ -22,6 +24,14 @@ func (d *JsonDumper) EnterNode(w walker.Walkable) bool {
 	n := w.(node.Node)
 
 	nodeType := reflect.TypeOf(n).String()
+
+	if d.isChildNode {
+		d.isChildNode = false
+	} else if d.isNotFirstNode {
+		fmt.Fprint(d.Writer, ",")
+	} else {
+		d.isNotFirstNode = true
+	}
 
 	fmt.Fprintf(d.Writer, "{%q:%q", "type", nodeType)
 
@@ -114,6 +124,7 @@ func (d *JsonDumper) LeaveNode(n walker.Walkable) {
 
 func (d *JsonDumper) EnterChildNode(key string, w walker.Walkable) {
 	fmt.Fprintf(d.Writer, ",%q:", key)
+	d.isChildNode = true
 }
 
 func (d *JsonDumper) LeaveChildNode(key string, w walker.Walkable) {
@@ -122,6 +133,7 @@ func (d *JsonDumper) LeaveChildNode(key string, w walker.Walkable) {
 
 func (d *JsonDumper) EnterChildList(key string, w walker.Walkable) {
 	fmt.Fprintf(d.Writer, ",%q:[", key)
+	d.isNotFirstNode = false
 
 }
 
