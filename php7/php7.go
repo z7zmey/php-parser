@@ -8,30 +8,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/z7zmey/php-parser/freefloating"
-	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/node/expr"
-	"github.com/z7zmey/php-parser/node/expr/assign"
-	"github.com/z7zmey/php-parser/node/expr/binary"
-	"github.com/z7zmey/php-parser/node/expr/cast"
-	"github.com/z7zmey/php-parser/node/name"
-	"github.com/z7zmey/php-parser/node/scalar"
-	"github.com/z7zmey/php-parser/node/stmt"
+	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
-//line php7/php7.y:22
+//line php7/php7.y:14
 type yySymType struct {
 	yys   int
-	node  node.Node
+	node  ast.NodeID
 	token *scanner.Token
-	list  []node.Node
-	str   string
-
-	ClassExtends     *stmt.ClassExtends
-	ClassImplements  *stmt.ClassImplements
-	InterfaceExtends *stmt.InterfaceExtends
-	ClosureUse       *expr.ClosureUse
 }
 
 const T_INCLUDE = 57346
@@ -346,7 +331,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php7/php7.y:5614
+//line php7/php7.y:6570
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -619,13 +604,13 @@ var yyAct = [...]int{
 	750, 324, 422, 377, 755, 614, 233, 255, 408, 618,
 	375, 225, 701, 195, 634, 194, 762, 771, 768, 769,
 	758, 193, 232, 760, 187, 686, 763, 669, 670, 777,
-	671, 770, 1, 772, 766, 38, 797, 779, 798, 775,
-	579, 791, 546, 800, 787, 739, 134, 546, 546, 112,
-	736, 737, 230, 663, 231, 531, 234, 222, 521, 810,
-	527, 256, 257, 860, 738, 106, 367, 740, 818, 805,
-	526, 256, 257, 873, 145, 824, 792, 142, 827, 323,
-	806, 149, 817, 232, 823, 836, 719, 660, 822, 255,
-	251, 834, 381, 639, 278, 255, 845, 928, 830, 645,
+	671, 770, 521, 772, 766, 222, 797, 779, 798, 775,
+	579, 791, 546, 800, 787, 860, 134, 546, 546, 112,
+	251, 323, 230, 739, 231, 873, 234, 836, 737, 810,
+	527, 256, 257, 792, 738, 106, 736, 740, 818, 805,
+	526, 256, 257, 531, 663, 824, 38, 822, 827, 660,
+	806, 367, 817, 232, 823, 149, 719, 145, 142, 255,
+	1, 834, 381, 639, 278, 255, 845, 928, 830, 645,
 	422, 255, 840, 849, 224, 43, 282, 42, 16, 15,
 	851, 843, 599, 267, 546, 49, 546, 848, 745, 746,
 	747, 744, 743, 742, 853, 48, 867, 108, 671, 255,
@@ -1435,43 +1420,43 @@ var yyPgo = [...]int{
 	835, 825, 823, 119, 822, 819, 818, 817, 12, 815,
 	814, 44, 42, 32, 2, 15, 629, 41, 74, 812,
 	809, 807, 14, 806, 803, 47, 39, 802, 18, 8,
-	686, 20, 536, 800, 121, 798, 797, 795, 71, 791,
-	33, 789, 787, 30, 37, 786, 784, 28, 783, 776,
-	545, 773, 768, 767, 26, 765, 63, 1, 4, 763,
-	17, 761, 760, 755, 7, 745, 6, 742,
+	686, 20, 800, 63, 121, 545, 71, 30, 37, 1,
+	33, 798, 797, 795, 791, 789, 787, 6, 4, 786,
+	17, 7, 26, 28, 784, 783, 776, 773, 768, 767,
+	765, 763, 761, 760, 755, 536, 745, 742,
 }
 var yyR1 = [...]int{
 
-	0, 127, 4, 4, 4, 4, 4, 4, 4, 4,
+	0, 92, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4, 5,
-	5, 5, 5, 5, 5, 5, 6, 6, 116, 116,
+	5, 5, 5, 5, 5, 5, 6, 6, 93, 93,
 	94, 94, 10, 10, 10, 9, 9, 9, 9, 9,
 	9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-	90, 90, 16, 16, 18, 18, 7, 7, 104, 104,
-	103, 103, 110, 110, 17, 17, 20, 20, 19, 19,
-	98, 98, 117, 117, 22, 22, 22, 22, 22, 22,
+	90, 90, 16, 16, 18, 18, 7, 7, 98, 98,
+	97, 97, 95, 95, 17, 17, 20, 20, 19, 19,
+	96, 96, 99, 99, 22, 22, 22, 22, 22, 22,
 	22, 11, 11, 11, 11, 11, 11, 11, 11, 11,
 	11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
-	11, 11, 11, 11, 11, 96, 96, 95, 95, 26,
-	26, 109, 109, 27, 12, 1, 1, 2, 2, 13,
-	13, 125, 125, 76, 76, 14, 15, 85, 85, 87,
+	11, 11, 11, 11, 11, 105, 105, 106, 106, 26,
+	26, 104, 104, 27, 12, 1, 1, 2, 2, 13,
+	13, 109, 109, 76, 76, 14, 15, 85, 85, 87,
 	87, 86, 86, 91, 91, 91, 91, 83, 83, 82,
-	82, 25, 25, 80, 80, 80, 80, 107, 107, 107,
+	82, 25, 25, 80, 80, 80, 80, 113, 113, 113,
 	8, 8, 84, 84, 67, 67, 65, 65, 69, 69,
-	66, 66, 118, 118, 119, 119, 29, 29, 30, 30,
+	66, 66, 108, 108, 114, 114, 29, 29, 30, 30,
 	75, 75, 73, 73, 73, 74, 74, 77, 77, 115,
-	115, 31, 31, 102, 102, 33, 106, 106, 34, 34,
-	120, 120, 35, 35, 35, 35, 124, 124, 79, 79,
-	79, 108, 108, 36, 36, 37, 38, 38, 38, 38,
-	40, 40, 39, 81, 81, 122, 122, 121, 121, 123,
-	123, 89, 89, 89, 89, 89, 89, 105, 105, 41,
-	41, 97, 97, 68, 21, 99, 99, 42, 100, 100,
-	101, 101, 44, 43, 43, 32, 32, 32, 32, 32,
+	115, 31, 31, 101, 101, 33, 102, 102, 34, 34,
+	110, 110, 35, 35, 35, 35, 111, 111, 79, 79,
+	79, 120, 120, 36, 36, 37, 38, 38, 38, 38,
+	40, 40, 39, 81, 81, 116, 116, 118, 118, 121,
+	121, 89, 89, 89, 89, 89, 89, 117, 117, 41,
+	41, 119, 119, 68, 21, 103, 103, 42, 100, 100,
+	122, 122, 44, 43, 43, 32, 32, 32, 32, 32,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
@@ -1479,18 +1464,18 @@ var yyR1 = [...]int{
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
 	32, 32, 32, 32, 32, 32, 32, 32, 32, 32,
-	32, 126, 3, 3, 88, 88, 111, 111, 51, 51,
+	32, 107, 3, 3, 88, 88, 124, 124, 51, 51,
 	52, 52, 52, 52, 45, 45, 46, 46, 49, 49,
-	93, 93, 93, 78, 78, 56, 56, 56, 50, 50,
+	123, 123, 123, 78, 78, 56, 56, 56, 50, 50,
 	50, 50, 50, 50, 50, 50, 50, 50, 50, 50,
 	50, 50, 50, 50, 57, 57, 57, 23, 23, 24,
 	24, 55, 58, 58, 58, 59, 59, 59, 60, 60,
 	60, 60, 60, 60, 28, 28, 28, 47, 47, 47,
 	61, 61, 62, 62, 62, 62, 62, 62, 53, 53,
-	53, 54, 54, 54, 114, 71, 71, 113, 113, 70,
-	70, 70, 70, 70, 70, 92, 92, 92, 92, 63,
+	53, 54, 54, 54, 112, 71, 71, 126, 126, 70,
+	70, 70, 70, 70, 70, 125, 125, 125, 125, 63,
 	63, 63, 63, 63, 63, 63, 64, 64, 64, 64,
-	48, 48, 48, 48, 48, 48, 48, 112, 112, 72,
+	48, 48, 48, 48, 48, 48, 48, 127, 127, 72,
 }
 var yyR2 = [...]int{
 
@@ -1546,10 +1531,10 @@ var yyR2 = [...]int{
 }
 var yyChk = [...]int{
 
-	-1000, -127, -116, -9, 2, -11, -12, -13, -14, -15,
+	-1000, -92, -93, -9, 2, -11, -12, -13, -14, -15,
 	51, 79, 44, 38, 142, -65, -66, 21, 20, 23,
 	30, 34, 35, 39, 46, 98, 19, 14, -23, 48,
-	25, 27, 144, 40, 43, 36, 10, 37, -125, 52,
+	25, 27, 144, 40, 43, 36, 10, 37, -109, 52,
 	53, 54, -67, -69, -28, -32, -76, 7, -60, -61,
 	-58, 59, 148, 92, 104, 105, 153, 152, 154, 155,
 	146, -43, -48, 107, 108, 109, 110, 111, 112, 113,
@@ -1558,9 +1543,9 @@ var yyChk = [...]int{
 	84, 85, 86, 8, 9, 66, 67, 81, 63, 64,
 	65, 80, 62, 74, 140, 12, 157, -10, -59, 60,
 	18, -94, 82, 146, 82, -94, 142, 10, -18, -90,
-	-110, -94, 82, 37, 38, -19, -20, -98, -21, 10,
-	-117, 146, -11, 37, 79, 146, 146, -24, -23, 98,
-	-24, -24, -102, -33, -47, -106, 37, -34, 12, -99,
+	-95, -94, 82, 37, 38, -19, -20, -96, -21, 10,
+	-99, 146, -11, 37, 79, 146, 146, -24, -23, 98,
+	-24, -24, -101, -33, -47, -102, 37, -34, 12, -103,
 	-42, -23, 144, 129, 130, 87, 89, 88, 159, 151,
 	161, 167, 153, 152, 162, 131, 163, 164, 132, 133,
 	134, 135, 136, 137, 165, 138, 166, 139, 115, 90,
@@ -1568,26 +1553,26 @@ var yyChk = [...]int{
 	151, 52, -76, 10, 10, 10, 93, 94, 93, 95,
 	94, 160, 117, 118, 119, 120, 121, 122, 123, 124,
 	125, 126, 127, 128, 104, 105, 146, 148, 142, 57,
-	146, -114, -113, -71, -70, -23, 151, 59, -23, -28,
+	146, -112, -126, -71, -70, -23, 151, 59, -23, -28,
 	-57, 146, -56, 98, 148, -28, -23, -23, -23, -23,
 	-23, -23, -23, -23, -23, -23, -23, -23, -49, 146,
-	-23, -93, 17, -92, -63, 12, 76, 77, -23, -23,
+	-23, -123, 17, -125, -63, 12, 76, 77, -23, -23,
 	-23, 148, 78, 78, -46, -44, -45, -62, 52, -10,
 	-47, 146, 146, -23, -23, 146, -23, -23, 17, 75,
-	-92, -92, 17, 142, -47, -77, 146, -77, 146, 82,
-	-94, 147, -94, 144, 142, -116, 144, -16, -110, -94,
+	-125, -125, 17, 142, -47, -77, 146, -77, 146, 82,
+	-94, 147, -94, 144, 142, -93, 144, -16, -95, -94,
 	82, 144, 158, 82, 29, -94, -20, 144, 158, 160,
 	-22, 143, 2, -11, -12, -13, -14, -15, 51, -23,
-	21, -3, -100, -101, -23, -23, 144, 144, 144, 144,
+	21, -3, -100, -122, -23, -23, 144, 144, 144, 144,
 	158, 144, 158, -3, 160, 144, 158, -23, -23, -23,
 	-23, -23, -23, -23, -23, -23, -23, -23, -23, -23,
 	-23, -23, -23, -23, -23, -23, -23, -23, -23, -23,
-	-23, -23, -23, -46, -23, 145, -23, -109, -27, -28,
-	-23, -98, -117, 144, 144, 10, -126, 10, -85, 55,
-	-126, -87, 55, 146, -11, 146, 144, 145, -23, 151,
+	-23, -23, -23, -46, -23, 145, -23, -104, -27, -28,
+	-23, -96, -99, 144, 144, 10, -107, 10, -85, 55,
+	-107, -87, 55, 146, -11, 146, 144, 145, -23, 151,
 	-23, -23, -23, -23, -23, -23, -23, -23, -23, -23,
-	-23, -23, -23, -24, -23, -54, 10, 142, -47, -114,
-	149, 158, 58, -28, 146, -23, -114, 147, -24, 141,
+	-23, -23, -23, -24, -23, -54, 10, 142, -47, -112,
+	149, 158, 58, -28, 146, -23, -112, 147, -24, 141,
 	-63, -63, 17, 148, 57, -23, 11, -28, 58, -24,
 	-53, -6, -47, 142, 10, -5, -4, 98, 99, 100,
 	101, 102, 103, 4, 5, 84, 85, 86, 87, 88,
@@ -1598,48 +1583,48 @@ var yyChk = [...]int{
 	31, 32, 33, 34, 60, 61, 55, 56, 79, 53,
 	54, 52, 62, 63, 65, 64, 66, 67, 81, 80,
 	-53, -6, -47, -78, -77, 78, 148, 142, 57, 78,
-	-78, -112, -72, -23, -23, -23, 75, 75, 140, -23,
-	147, -115, -31, -23, 83, -114, 10, 144, -116, 143,
+	-78, -127, -72, -23, -23, -23, 75, 75, 140, -23,
+	147, -115, -31, -23, 83, -112, 10, 144, -93, 143,
 	144, 144, 82, -94, -19, 82, -94, 142, 10, 82,
 	-21, -23, 146, 147, 146, 144, 158, 147, -33, -34,
-	-126, -23, -42, 145, -23, -7, 158, 29, 147, 143,
-	-126, 146, -85, -86, 56, -10, 142, -126, -124, -10,
-	-23, -23, -117, -23, 147, 149, 143, -77, -23, 147,
-	160, -71, -23, 151, 59, -114, 147, 149, 147, -64,
+	-107, -23, -42, 145, -23, -7, 158, 29, 147, 143,
+	-107, 146, -85, -86, 56, -10, 142, -107, -111, -10,
+	-23, -23, -99, -23, 147, 149, 143, -77, -23, 147,
+	160, -71, -23, 151, 59, -112, 147, 149, 147, -64,
 	10, 13, 152, 12, 10, 143, 143, 148, 143, -23,
 	149, -77, -23, -77, -47, -24, -23, -54, -47, -85,
 	-7, 158, 147, 147, 143, -7, 158, -23, 147, 143,
-	142, 82, -104, -17, -20, -90, 142, -126, 147, -84,
+	142, 82, -98, -17, -20, -90, 142, -107, 147, -84,
 	-11, 145, -23, -100, -23, -80, 142, 145, 146, -23,
 	147, -27, -91, -28, 151, 59, 148, -25, -11, 145,
-	-96, 146, -118, -119, -29, -30, -75, -73, 150, 60,
-	61, -10, -86, -126, -124, -120, 142, 158, 147, 147,
+	-105, 146, -108, -114, -29, -30, -75, -73, 150, 60,
+	61, -10, -86, -107, -111, -110, 142, 158, 147, 147,
 	95, -11, 145, 143, 160, -23, -28, 146, 147, 149,
 	13, -23, 143, 149, 143, -86, 147, -72, 147, -31,
-	-103, -20, 142, -7, 158, -20, -104, 144, -117, 147,
-	144, -107, 144, -107, 144, -118, 144, 147, 58, -28,
-	146, -114, -117, -26, 41, 42, -118, 147, 158, -1,
-	151, -73, -126, 142, 143, -35, -122, -121, 44, -123,
-	47, -89, 103, 102, 101, 98, 99, 100, -120, -10,
-	-11, 145, 144, -117, -23, -114, 149, -126, -7, 158,
-	-103, 143, -17, -7, 22, 144, -100, 143, 32, 33,
-	-107, 31, -107, 147, -82, -11, 145, -91, -28, -114,
+	-97, -20, 142, -7, 158, -20, -98, 144, -99, 147,
+	144, -113, 144, -113, 144, -108, 144, 147, 58, -28,
+	146, -112, -99, -26, 41, 42, -108, 147, 158, -1,
+	151, -73, -107, 142, 143, -35, -116, -118, 44, -121,
+	47, -89, 103, 102, 101, 98, 99, 100, -110, -10,
+	-11, 145, 144, -99, -23, -112, 149, -107, -7, 158,
+	-97, 143, -17, -7, 22, 144, -100, 143, 32, 33,
+	-113, 31, -113, 147, -82, -11, 145, -91, -28, -112,
 	149, 28, 146, 142, 147, -88, 44, -29, -2, 83,
-	142, -120, -105, -41, 12, 38, 37, -124, -89, 143,
-	-117, 147, 143, 142, 143, -20, -7, 143, 144, 147,
-	-23, -8, 145, 144, 143, 144, 31, -88, -117, 147,
-	147, 144, -95, -10, -117, -74, 145, -74, 146, 12,
-	-120, 143, 144, 158, -126, 160, -97, -68, -6, -3,
-	-79, 144, 142, -120, 143, -83, -11, 145, -8, -117,
+	142, -110, -117, -41, 12, 38, 37, -111, -89, 143,
+	-99, 147, 143, 142, 143, -20, -7, 143, 144, 147,
+	-23, -8, 145, 144, 143, 144, 31, -88, -99, 147,
+	147, 144, -106, -10, -99, -74, 145, -74, 146, 12,
+	-110, 143, 144, 158, -107, 160, -119, -68, -6, -3,
+	-79, 144, 142, -110, 143, -83, -11, 145, -8, -99,
 	144, -74, 26, -82, 12, 159, 143, 142, -75, 142,
-	-111, -51, 12, 151, 160, 143, -41, -23, 144, 158,
-	160, -6, 143, -108, -36, -37, -38, -39, -40, -10,
-	-6, 79, 10, 143, -117, -117, 142, 144, 147, -10,
-	-117, -117, 147, 158, 12, -23, -126, -68, -23, -126,
-	143, -36, 144, 144, 45, 29, 78, 24, -117, 142,
-	143, 143, -51, -126, 146, -124, 10, -4, -89, -6,
-	144, 143, -117, -118, -6, 143, 147, -74, -81, 144,
-	142, -117, 143,
+	-124, -51, 12, 151, 160, 143, -41, -23, 144, 158,
+	160, -6, 143, -120, -36, -37, -38, -39, -40, -10,
+	-6, 79, 10, 143, -99, -99, 142, 144, 147, -10,
+	-99, -99, 147, 158, 12, -23, -107, -68, -23, -107,
+	143, -36, 144, 144, 45, 29, 78, 24, -99, 142,
+	143, 143, -51, -107, 146, -111, 10, -4, -89, -6,
+	144, 143, -99, -108, -6, 143, 147, -74, -81, 144,
+	142, -99, 143,
 }
 var yyDef = [...]int{
 
@@ -2114,582 +2099,595 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:300
+		//line php7/php7.y:272
 		{
-			yylex.(*Parser).rootNode = node.NewRoot(yyDollar[1].list)
+			children := yylex.(*Parser).list.pop()
+			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeRoot,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+			yylex.(*Parser).ast.Edges.Children(nodeID, ast.EdgeTypeStmts, children...)
 
-			// save position
-			yylex.(*Parser).rootNode.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			yylex.(*Parser).ast.RootNode = nodeID
 
-			yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
+			// save comments
+			// yylex.(*Parser).setFreeFloating(yylex.(*Parser).rootNode, freefloating.End, yylex.(*Parser).currentToken.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:290
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:314
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:315
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:316
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:317
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:318
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:319
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:324
+		//line php7/php7.y:301
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:327
+		//line php7/php7.y:304
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:332
+		//line php7/php7.y:309
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:336
+		//line php7/php7.y:313
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:343
+		//line php7/php7.y:320
 		{
-			if inlineHtmlNode, ok := yyDollar[2].node.(*stmt.InlineHtml); ok && len(yyDollar[1].list) > 0 {
-				prevNode := lastNode(yyDollar[1].list)
-				yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			if yyDollar[2].node == 0 {
+				yylex.(*Parser).list.add(yyDollar[2].node)
 			}
 
-			if yyDollar[2].node != nil {
-				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
-			}
+			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+			//     prevNode := lastNode($1)
+			//     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:356
+		//line php7/php7.y:333
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:365
+		//line php7/php7.y:342
 		{
-			namePart := name.NewNamePart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{namePart}
+			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameNamePart,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(nodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:378
+		//line php7/php7.y:357
 		{
-			namePart := name.NewNamePart(yyDollar[3].token.Value)
-			yyVAL.list = append(yyDollar[1].list, namePart)
-
-			// save position
-			namePart.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
+			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameNamePart,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
+			yylex.(*Parser).list.add(nodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(namePart, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:395
+		//line php7/php7.y:374
 		{
-			yyVAL.node = name.NewName(yyDollar[1].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:407
+		//line php7/php7.y:388
 		{
-			yyVAL.node = name.NewRelative(yyDollar[3].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[3].list))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameRelative,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:420
+		//line php7/php7.y:403
 		{
-			yyVAL.node = name.NewFullyQualified(yyDollar[2].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameFullyQualified,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:435
+		//line php7/php7.y:420
 		{
 			// error
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:442
+		//line php7/php7.y:427
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2697,7 +2695,7 @@ yydefault:
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:448
+		//line php7/php7.y:433
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2705,7 +2703,7 @@ yydefault:
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:454
+		//line php7/php7.y:439
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2713,7 +2711,7 @@ yydefault:
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:460
+		//line php7/php7.y:445
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2721,7 +2719,7 @@ yydefault:
 		}
 	case 90:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:466
+		//line php7/php7.y:451
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2729,350 +2727,430 @@ yydefault:
 		}
 	case 91:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:472
+		//line php7/php7.y:457
 		{
-			yyVAL.node = stmt.NewHaltCompiler()
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtHaltCompiler,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.HaltCompiller, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OpenParenthesisToken, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 92:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:488
+		//line php7/php7.y:473
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewNamespace(name, nil)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, children...)
+
+			// Create Namespace Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNamespace,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($2[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 93:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:505
+		//line php7/php7.y:499
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewNamespace(name, yyDollar[4].list)
+			childrenStmts := yylex.(*Parser).list.pop()
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create Namespace Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNamespace,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[5].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($2[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $5.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 94:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:522
+		//line php7/php7.y:527
 		{
-			yyVAL.node = stmt.NewNamespace(nil, yyDollar[3].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNamespace,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Namespace, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Namespace, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 95:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:536
+		//line php7/php7.y:543
 		{
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[2].node, node)
+
 			yyVAL.node = yyDollar[2].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 96:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:550
+		//line php7/php7.y:558
 		{
-			yyVAL.node = yyDollar[3].node.(*stmt.GroupUse).SetUseType(yyDollar[2].node)
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[2].node, node)
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyDollar[3].node, ast.EdgeTypeUseType, yyDollar[2].node)
+
+			yyVAL.node = yyDollar[3].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 97:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:564
+		//line php7/php7.y:575
 		{
-			yyVAL.node = stmt.NewUseList(nil, yyDollar[2].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtUseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUses, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 98:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:578
+		//line php7/php7.y:591
 		{
-			yyVAL.node = stmt.NewUseList(yyDollar[2].node, yyDollar[3].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtUseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUses, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseType, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseDeclarationList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.UseDeclarationList, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 99:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:592
+		//line php7/php7.y:608
 		{
-			yyVAL.node = stmt.NewConstList(yyDollar[2].list)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			children := yylex.(*Parser).list.pop()
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtConstList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConsts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:609
+		//line php7/php7.y:627
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 101:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:621
+		//line php7/php7.y:639
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 102:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:636
+		//line php7/php7.y:654
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
+			childrenUseDeclarations := yylex.(*Parser).list.pop()
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[6].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create GroupUse Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGroupUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yyDollar[3].token.FreeFloating)
-			if yyDollar[5].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, append(yyDollar[5].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[6].token.FreeFloating)
-			}
+			// yylex.(*Parser).MoveFreeFloating($1[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Slash, $3.FreeFloating)
+			// if $5 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, append($5.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($5), $6.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $6.FreeFloating)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 103:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:657
+		//line php7/php7.y:686
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
+			childrenUseDeclarations := yylex.(*Parser).list.pop()
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create GroupUse Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGroupUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.UseType, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yyDollar[4].token.FreeFloating)
-			if yyDollar[6].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, append(yyDollar[6].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[7].token.FreeFloating)
-			}
+			// yylex.(*Parser).setFreeFloating($$, freefloating.UseType, $1.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($2[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Slash, $4.FreeFloating)
+			// if $6 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, append($6.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($6), $7.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 104:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:682
+		//line php7/php7.y:722
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[4].list)
+			childrenUseDeclarations := yylex.(*Parser).list.pop()
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[6].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create GroupUse Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGroupUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yyDollar[3].token.FreeFloating)
-			if yyDollar[5].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, append(yyDollar[5].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token), yyDollar[6].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[6].token.FreeFloating)
-			}
+			// yylex.(*Parser).MoveFreeFloating($1[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Slash, $3.FreeFloating)
+			// if $5 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, append($5.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($5), $6.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $6.FreeFloating)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 105:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:703
+		//line php7/php7.y:754
 		{
-			name := name.NewName(yyDollar[2].list)
-			yyVAL.node = stmt.NewGroupUse(nil, name, yyDollar[5].list)
+			childrenUseDeclarations := yylex.(*Parser).list.pop()
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create GroupUse Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGroupUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Use, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).MoveFreeFloating(yyDollar[2].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yyDollar[4].token.FreeFloating)
-			if yyDollar[6].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, append(yyDollar[6].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token), yyDollar[7].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[7].token.FreeFloating)
-			}
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Use, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+			// yylex.(*Parser).MoveFreeFloating($2[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Slash, $4.FreeFloating)
+			// if $6 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, append($6.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($6), $7.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 106:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:728
+		//line php7/php7.y:790
 		{
 			yyVAL.token = nil
 		}
 	case 107:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:732
+		//line php7/php7.y:794
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 108:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:739
+		//line php7/php7.y:801
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 109:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:748
+		//line php7/php7.y:810
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 110:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:757
+		//line php7/php7.y:820
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 111:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:766
+		//line php7/php7.y:829
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 112:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:775
+		//line php7/php7.y:839
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:784
+		//line php7/php7.y:848
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 114:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:793
+		//line php7/php7.y:858
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3080,128 +3158,151 @@ yydefault:
 		}
 	case 115:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:799
+		//line php7/php7.y:864
 		{
-			yyVAL.node = yyDollar[2].node.(*stmt.Use).SetUseType(yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[2].node, ast.EdgeTypeUseType, yyDollar[1].node)
+
+			yyVAL.node = yyDollar[2].node
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 116:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:808
+		//line php7/php7.y:875
 		{
-			name := name.NewName(yyDollar[1].list)
-			yyVAL.node = stmt.NewUse(nil, name, nil)
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUse, nameNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
+			// yylex.(*Parser).MoveFreeFloating($1[0], name)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 117:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:822
+		//line php7/php7.y:898
 		{
-			name := name.NewName(yyDollar[1].list)
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewUse(nil, name, alias)
+			childrenNameParts := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[1].list))
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			// Create Name Node
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNameName,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+			})
+			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+
+			// create Alias Node
+			aliasNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
+
+			// Create Use Node
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[3].token),
+			})
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUse, nameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAlias, aliasNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], name)
-			yylex.(*Parser).setFreeFloating(name, freefloating.End, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1[0], name)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.End, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 118:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:843
+		//line php7/php7.y:933
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save coments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node.(*stmt.Use).Use, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1.(*stmt.Use).Use, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 119:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:852
+		//line php7/php7.y:942
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Slash, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:868
+		//line php7/php7.y:955
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 121:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:877
+		//line php7/php7.y:964
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 122:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:886
+		//line php7/php7.y:974
 		{
-			if inlineHtmlNode, ok := yyDollar[2].node.(*stmt.InlineHtml); ok && len(yyDollar[1].list) > 0 {
-				prevNode := lastNode(yyDollar[1].list)
-				yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
-			}
+			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
+			//     prevNode := lastNode($1)
+			//     yylex.(*Parser).splitSemiColonAndPhpCloseTag(inlineHtmlNode, prevNode)
+			// }
 
-			if yyDollar[2].node != nil {
-				yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			if yyDollar[2].node != 0 {
+				yylex.(*Parser).list.add(yyDollar[2].node)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 123:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:899
+		//line php7/php7.y:987
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:908
+		//line php7/php7.y:996
 		{
 			// error
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:915
+		//line php7/php7.y:1003
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3209,7 +3310,7 @@ yydefault:
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:921
+		//line php7/php7.y:1009
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3217,7 +3318,7 @@ yydefault:
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:927
+		//line php7/php7.y:1015
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3225,7 +3326,7 @@ yydefault:
 		}
 	case 128:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:933
+		//line php7/php7.y:1021
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3233,7 +3334,7 @@ yydefault:
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:939
+		//line php7/php7.y:1027
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3241,40 +3342,44 @@ yydefault:
 		}
 	case 130:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:945
+		//line php7/php7.y:1033
 		{
-			yyVAL.node = stmt.NewHaltCompiler()
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtHaltCompiler,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.HaltCompiller, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OpenParenthesisToken, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.HaltCompiller, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.OpenParenthesisToken, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 131:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:963
+		//line php7/php7.y:1051
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 132:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:976
+		//line php7/php7.y:1068
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3282,7 +3387,7 @@ yydefault:
 		}
 	case 133:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:982
+		//line php7/php7.y:1074
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3290,505 +3395,546 @@ yydefault:
 		}
 	case 134:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:988
+		//line php7/php7.y:1080
 		{
-			switch n := yyDollar[5].node.(type) {
-			case *stmt.While:
-				n.Cond = yyDollar[3].node
-			case *stmt.AltWhile:
-				n.Cond = yyDollar[3].node
-			}
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[5].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.While, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.While, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 135:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1009
+		//line php7/php7.y:1097
 		{
-			yyVAL.node = stmt.NewDo(yyDollar[2].node, yyDollar[5].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtDo,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[2].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.While, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[7].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.While, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $7.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($7))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 136:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1026
+		//line php7/php7.y:1117
 		{
-			switch n := yyDollar[9].node.(type) {
-			case *stmt.For:
-				n.Init = yyDollar[3].list
-				n.Cond = yyDollar[5].list
-				n.Loop = yyDollar[7].list
-			case *stmt.AltFor:
-				n.Init = yyDollar[3].list
-				n.Cond = yyDollar[5].list
-				n.Loop = yyDollar[7].list
-			}
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeCond, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeInit, yylex.(*Parser).list.pop()...)
 
 			yyVAL.node = yyDollar[9].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.For, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.InitExpr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CondExpr, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.IncExpr, yyDollar[8].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.For, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.InitExpr, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.CondExpr, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.IncExpr, $8.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 137:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1053
+		//line php7/php7.y:1138
 		{
-			switch n := yyDollar[5].node.(type) {
-			case *stmt.Switch:
-				n.Cond = yyDollar[3].node
-			case *stmt.AltSwitch:
-				n.Cond = yyDollar[3].node
-			default:
-				panic("unexpected node type")
-			}
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[5].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Switch, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Switch, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1076
+		//line php7/php7.y:1155
 		{
-			yyVAL.node = stmt.NewBreak(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtBreak,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1090
+		//line php7/php7.y:1171
 		{
-			yyVAL.node = stmt.NewContinue(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtContinue,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1104
+		//line php7/php7.y:1187
 		{
-			yyVAL.node = stmt.NewReturn(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtReturn,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1118
+		//line php7/php7.y:1203
 		{
-			yyVAL.node = stmt.NewGlobal(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGlobal,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 142:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1132
+		//line php7/php7.y:1221
 		{
-			yyVAL.node = stmt.NewStatic(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStatic,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 143:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1146
+		//line php7/php7.y:1239
 		{
-			yyVAL.node = stmt.NewEcho(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtEcho,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExprs, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Echo, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Echo, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 144:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1161
+		//line php7/php7.y:1258
 		{
-			yyVAL.node = stmt.NewInlineHtml(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtInlineHtml,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 145:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1173
+		//line php7/php7.y:1270
 		{
-			yyVAL.node = stmt.NewExpression(yyDollar[1].node)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtExpression,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+			})
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1187
+		//line php7/php7.y:1284
 		{
-			yyVAL.node = stmt.NewUnset(yyDollar[3].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtUnset,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Unset, yyDollar[2].token.FreeFloating)
-			if yyDollar[4].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, append(yyDollar[4].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[5].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.CloseParenthesisToken, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Unset, $2.FreeFloating)
+			// if $4 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.VarList, append($4.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($4), $5.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $5.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.CloseParenthesisToken, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($6))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 147:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1207
+		//line php7/php7.y:1308
 		{
-			switch n := yyDollar[7].node.(type) {
-			case *stmt.Foreach:
-				n.Expr = yyDollar[3].node
-				n.Variable = yyDollar[5].node
-			case *stmt.AltForeach:
-				n.Expr = yyDollar[3].node
-				n.Variable = yyDollar[5].node
-			}
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[7].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[7].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[7].node, ast.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[7].node, ast.EdgeTypeVar, yyDollar[5].node)
 
 			yyVAL.node = yyDollar[7].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Foreach, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[6].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $6.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 148:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1232
+		//line php7/php7.y:1328
 		{
-			switch n := yyDollar[9].node.(type) {
-			case *stmt.Foreach:
-				n.Expr = yyDollar[3].node
-				n.Key = yyDollar[5].node
-				n.Variable = yyDollar[7].node
-			case *stmt.AltForeach:
-				n.Expr = yyDollar[3].node
-				n.Key = yyDollar[5].node
-				n.Variable = yyDollar[7].node
-			}
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeKey, yyDollar[5].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeVar, yyDollar[7].node)
 
 			yyVAL.node = yyDollar[9].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Foreach, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Key, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[8].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Foreach, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Key, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $8.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 149:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1259
+		//line php7/php7.y:1349
 		{
-			yyVAL.node = yyDollar[5].node
-			yyVAL.node.(*stmt.Declare).Consts = yyDollar[3].list
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeConsts, children...)
+
+			yyVAL.node = yyDollar[5].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Declare, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ConstList, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Declare, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1274
+		//line php7/php7.y:1369
 		{
-			yyVAL.node = stmt.NewNop()
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNop,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 151:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1287
+		//line php7/php7.y:1382
 		{
-			if yyDollar[6].node == nil {
-				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[5].list))
+			childrenCatches := yylex.(*Parser).list.pop()
+			childrenStmts := yylex.(*Parser).list.pop()
+
+			var posID ast.PositionID
+			if yyDollar[6].node == 0 {
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, childrenCatches)
 			} else {
-				yyVAL.node = stmt.NewTry(yyDollar[3].list, yyDollar[5].list, yyDollar[6].node)
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node)
 			}
 
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTry,
+				Pos:  posID,
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCatches, childrenCatches...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConsts, yyDollar[6].node)
+
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Try, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Try, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1304
+		//line php7/php7.y:1410
 		{
-			yyVAL.node = stmt.NewThrow(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtThrow,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1318
+		//line php7/php7.y:1426
 		{
-			label := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewGoto(label)
+			LableNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtGoto,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLabel, LableNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(label, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Label, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(label, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Label, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 154:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1335
+		//line php7/php7.y:1448
 		{
-			label := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewLabel(label)
+			LableNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			label.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtLabel,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLabelName, LableNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Label, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Label, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 155:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1352
+		//line php7/php7.y:1470
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 156:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1358
+		//line php7/php7.y:1476
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[5].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			catch := stmt.NewCatch(yyDollar[4].list, variable, yyDollar[8].list)
-			yyVAL.list = append(yyDollar[1].list, catch)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[5].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[5].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[5].token))
-			catch.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[9].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[5].token),
+			})
+
+			catchNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCatch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[9].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeTypes, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeVar, varNodeID)
+
+			yylex.(*Parser).list.add(catchNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(catch, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catch, freefloating.Catch, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(catch, freefloating.Var, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catch, freefloating.Cond, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(catch, freefloating.Stmts, yyDollar[9].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(catch, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(catch, freefloating.Catch, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $5.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating(catch, freefloating.Var, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(catch, freefloating.Cond, $7.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(catch, freefloating.Stmts, $9.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1383
+		//line php7/php7.y:1513
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1389
+		//line php7/php7.y:1520
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1401
+		//line php7/php7.y:1532
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1407
+		//line php7/php7.y:1538
 		{
-			yyVAL.node = stmt.NewFinally(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtFinally,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Finally, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Finally, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1424
+		//line php7/php7.y:1557
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1430
+		//line php7/php7.y:1564
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1442
+		//line php7/php7.y:1576
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3796,254 +3942,310 @@ yydefault:
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:1451
+		//line php7/php7.y:1585
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewFunction(name, yyDollar[2].token != nil, yyDollar[6].list, yyDollar[8].node, yyDollar[10].list, yyDollar[4].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token))
+			var flag ast.NodeFlag
+			if yyDollar[2].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtFunction,
+				Flag: flag,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeReturnType, yyDollar[8].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeFunctionName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[2].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[3].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[3].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParamList, yyDollar[7].token.FreeFloating)
-			if yyDollar[8].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyDollar[8].node.GetFreeFloating())[freefloating.Colon])
-				delete((*yyDollar[8].node.GetFreeFloating()), freefloating.Colon)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ReturnType, yyDollar[9].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[11].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// if $2 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+			//     yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ParamList, $7.FreeFloating)
+			// if $8 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$8.GetFreeFloating())[freefloating.Colon]); delete((*$8.GetFreeFloating()), freefloating.Colon)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $9.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $11.FreeFloating)
 
 			// normalize
-			if yyDollar[8].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyVAL.node.GetFreeFloating())[freefloating.ReturnType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.ReturnType)
-			}
+			// if $8 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1487
+		//line php7/php7.y:1635
 		{
 			yyVAL.token = nil
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1491
+		//line php7/php7.y:1639
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1498
+		//line php7/php7.y:1646
 		{
 			yyVAL.token = nil
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1502
+		//line php7/php7.y:1650
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1509
+		//line php7/php7.y:1657
 		{
-			name := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewClass(name, yyDollar[1].list, nil, yyDollar[4].ClassExtends, yyDollar[5].ClassImplements, yyDollar[8].list, yyDollar[6].str)
+			childrenStmts := yylex.(*Parser).list.pop()
+			childrenModifiers := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[9].token))
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClass,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenModifiers, yyDollar[9].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeImplements, yyDollar[5].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExtends, yyDollar[4].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClassName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[7].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[9].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.Start, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $7.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $9.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:1527
+		//line php7/php7.y:1687
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewClass(name, nil, nil, yyDollar[3].ClassExtends, yyDollar[4].ClassImplements, yyDollar[7].list, yyDollar[5].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClass,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeImplements, yyDollar[4].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClassName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[8].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $8.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1547
+		//line php7/php7.y:1715
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1553
+		//line php7/php7.y:1722
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1562
+		//line php7/php7.y:1731
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1574
+		//line php7/php7.y:1743
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1589
+		//line php7/php7.y:1758
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewTrait(name, yyDollar[5].list, yyDollar[3].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTrait,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTraitName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[6].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $6.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1609
+		//line php7/php7.y:1784
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			yyVAL.node = stmt.NewInterface(name, yyDollar[3].InterfaceExtends, yyDollar[6].list, yyDollar[4].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtInterface,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInterfaceName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(name, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[7].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(name, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $5.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $7.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1629
+		//line php7/php7.y:1811
 		{
-			yyVAL.ClassExtends = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1635
+		//line php7/php7.y:1817
 		{
-			yyVAL.ClassExtends = stmt.NewClassExtends(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClassExtends,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.ClassExtends.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClassName, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassExtends, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1650
+		//line php7/php7.y:1834
 		{
-			yyVAL.InterfaceExtends = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1656
+		//line php7/php7.y:1840
 		{
-			yyVAL.InterfaceExtends = stmt.NewInterfaceExtends(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.InterfaceExtends.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtInterfaceExtends,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.InterfaceExtends, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1671
+		//line php7/php7.y:1859
 		{
-			yyVAL.ClassImplements = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1677
+		//line php7/php7.y:1865
 		{
-			yyVAL.ClassImplements = stmt.NewClassImplements(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.ClassImplements.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[2].list))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClassImplements,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClassImplements, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1692
+		//line php7/php7.y:1884
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4051,335 +4253,439 @@ yydefault:
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1698
+		//line php7/php7.y:1890
 		{
-			yyVAL.node = expr.NewReference(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprReference,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1710
+		//line php7/php7.y:1904
 		{
-			yyVAL.node = expr.NewList(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.List, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1724
+		//line php7/php7.y:1920
 		{
-			yyVAL.node = expr.NewShortList(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprShortList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save commentsc
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1740
+		//line php7/php7.y:1938
 		{
-			yyVAL.node = stmt.NewFor(nil, nil, nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtFor,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1749
+		//line php7/php7.y:1949
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltFor(nil, nil, nil, stmtList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltFor,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1769
+		//line php7/php7.y:1978
 		{
-			yyVAL.node = stmt.NewForeach(nil, nil, nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtForeach,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1778
+		//line php7/php7.y:1989
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltForeach(nil, nil, nil, stmtList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltForeach,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1798
+		//line php7/php7.y:2018
 		{
-			yyVAL.node = stmt.NewDeclare(nil, yyDollar[1].node, false)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtDeclare,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1807
+		//line php7/php7.y:2029
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewDeclare(nil, stmtList, true)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtDeclare,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1827
+		//line php7/php7.y:2058
 		{
-			caseList := stmt.NewCaseList(yyDollar[2].list)
-			yyVAL.node = stmt.NewSwitch(nil, caseList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCaseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtSwitch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1842
+		//line php7/php7.y:2081
 		{
-			caseList := stmt.NewCaseList(yyDollar[3].list)
-			yyVAL.node = stmt.NewSwitch(nil, caseList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCaseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtSwitch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1858
+		//line php7/php7.y:2105
 		{
-			caseList := stmt.NewCaseList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltSwitch(nil, caseList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCaseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltSwitch,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1875
+		//line php7/php7.y:2131
 		{
+			children := yylex.(*Parser).list.pop()
 
-			caseList := stmt.NewCaseList(yyDollar[3].list)
-			yyVAL.node = stmt.NewAltSwitch(nil, caseList)
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCaseList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
 
-			// save position
-			caseList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[3].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltSwitch,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListStart, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating(caseList, freefloating.CaseListEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $5.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($5))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1897
+		//line php7/php7.y:2161
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1903
+		//line php7/php7.y:2167
 		{
-			_case := stmt.NewCase(yyDollar[3].node, yyDollar[5].list)
-			yyVAL.list = append(yyDollar[1].list, _case)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			_case.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[5].list))
+			caseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtCase,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(caseNodeID, ast.EdgeTypeStmts, children...)
+
+			yylex.(*Parser).list.add(caseNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_case, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_case, freefloating.Expr, append(yyDollar[4].token.FreeFloating))
-			yylex.(*Parser).setFreeFloating(_case, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating(_case, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_case, freefloating.Expr, append($4.FreeFloating))
+			// yylex.(*Parser).setFreeFloating(_case, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1918
+		//line php7/php7.y:2187
 		{
-			_default := stmt.NewDefault(yyDollar[4].list)
-			yyVAL.list = append(yyDollar[1].list, _default)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			_default.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
+			defaultNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtDefault,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(defaultNodeID, ast.EdgeTypeStmts, children...)
+
+			yylex.(*Parser).list.add(defaultNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_default, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_default, freefloating.Default, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_default, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating(_default, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_default, freefloating.Default, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_default, freefloating.CaseSeparator, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1936
+		//line php7/php7.y:2210
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1940
+		//line php7/php7.y:2214
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1947
+		//line php7/php7.y:2221
 		{
-			yyVAL.node = stmt.NewWhile(nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtWhile,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1956
+		//line php7/php7.y:2232
 		{
-			stmtList := stmt.NewStmtList(yyDollar[2].list)
-			yyVAL.node = stmt.NewAltWhile(nil, stmtList)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmtList.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[2].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltWhile,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1976
+		//line php7/php7.y:2261
 		{
-			yyVAL.node = stmt.NewIf(yyDollar[3].node, yyDollar[5].node, nil, nil)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtIf,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.If, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.If, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1990
+		//line php7/php7.y:2278
 		{
-			_elseIf := stmt.NewElseIf(yyDollar[4].node, yyDollar[6].node)
-			yyVAL.node = yyDollar[1].node.(*stmt.If).AddElseIf(_elseIf)
+			elseIfNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtElseIf,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node),
+			})
 
-			// save position
-			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(elseIfNodeID, ast.EdgeTypeCond, yyDollar[4].node)
+			yylex.(*Parser).ast.Edges.Children(elseIfNodeID, ast.EdgeTypeStmt, yyDollar[6].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[1].node, ast.EdgeTypeElseIf, elseIfNodeID)
+
+			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, yyDollar[5].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, $5.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2009
+		//line php7/php7.y:2305
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4387,244 +4693,322 @@ yydefault:
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2015
+		//line php7/php7.y:2311
 		{
-			_else := stmt.NewElse(yyDollar[3].node)
-			yyVAL.node = yyDollar[1].node.(*stmt.If).SetElse(_else)
+			elseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtElse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node),
+			})
 
-			// save position
-			_else.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(elseNodeID, ast.EdgeTypeStmt, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[1].node, ast.EdgeTypeElse, elseNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_else, freefloating.Start, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_else, freefloating.Start, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2032
+		//line php7/php7.y:2334
 		{
-			stmts := stmt.NewStmtList(yyDollar[6].list)
-			yyVAL.node = stmt.NewAltIf(yyDollar[3].node, stmts, nil, nil)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[6].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[1].token, yyDollar[6].list))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltIf,
+				Flag: ast.NodeFlagAltSyntax,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.If, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[5].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.If, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $5.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:2049
+		//line php7/php7.y:2361
 		{
-			stmts := stmt.NewStmtList(yyDollar[7].list)
-			_elseIf := stmt.NewAltElseIf(yyDollar[4].node, stmts)
-			yyVAL.node = yyDollar[1].node.(*stmt.AltIf).AddElseIf(_elseIf)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[7].list))
-			_elseIf.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[7].list))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			AltElseIfNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltElseIf,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(AltElseIfNodeID, ast.EdgeTypeCond, yyDollar[4].node)
+			yylex.(*Parser).ast.Edges.Children(AltElseIfNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[1].node, ast.EdgeTypeElseIf, AltElseIfNodeID)
+
+			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Cond, yyDollar[6].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.ElseIf, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Expr, $5.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_elseIf, freefloating.Cond, $6.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2070
+		//line php7/php7.y:2393
 		{
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
+
 			yyVAL.node = yyDollar[1].node
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2084
+		//line php7/php7.y:2408
 		{
-			stmts := stmt.NewStmtList(yyDollar[4].list)
-			_else := stmt.NewAltElse(stmts)
-			yyVAL.node = yyDollar[1].node.(*stmt.AltIf).SetElse(_else)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			stmts.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListPosition(yyDollar[4].list))
-			_else.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodeListPosition(yyDollar[2].token, yyDollar[4].list))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token))
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+			})
+
+			AltElseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtAltElse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+			})
+
+			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
+			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token)
+			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
+
+			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Edges.Children(AltElseNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyDollar[1].node, ast.EdgeTypeElse, AltElseNodeID)
+
+			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(_else, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(_else, freefloating.Else, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[5].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AltEnd, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token))
+			// yylex.(*Parser).setFreeFloating(_else, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(_else, freefloating.Else, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $5.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AltEnd, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($6))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2107
+		//line php7/php7.y:2444
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2113
+		//line php7/php7.y:2448
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2122
+		//line php7/php7.y:2457
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2128
+		//line php7/php7.y:2464
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2140
+		//line php7/php7.y:2476
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = node.NewParameter(yyDollar[1].node, variable, nil, yyDollar[2].token != nil, yyDollar[3].token != nil)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].node != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
+
+			var posID ast.PositionID
+			if yyDollar[1].node != 0 {
+				posID = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token)
 			} else if yyDollar[2].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[4].token))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[4].token)
 			} else if yyDollar[3].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token)
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token)
 			}
 
-			// save comments
-			if yyDollar[1].node != nil {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			}
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, yyDollar[2].token.FreeFloating)
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[3].token.FreeFloating)
+				flag = flag | ast.NodeFlagVariadic
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Variadic, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
 
-			// normalize
-			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, (*yyVAL.node.GetFreeFloating())[freefloating.Variadic])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Variadic)
-			}
-			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, (*yyVAL.node.GetFreeFloating())[freefloating.Ampersand])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Ampersand)
-			}
-			if yyDollar[1].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, (*yyVAL.node.GetFreeFloating())[freefloating.OptionalType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.OptionalType)
-			}
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeParameter,
+				Flag: flag,
+				Pos:  posID,
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarType, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+
+			// // save comments
+			// if $1 != nil {
+			//     yylex.(*Parser).MoveFreeFloating($1, $$)
+			// }
+			// if $2 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
+			// }
+			// if $3 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+
+			// // normalize
+			// if $3 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
+			// }
+			// if $2 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+			// }
+			// if $1 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2185
+		//line php7/php7.y:2543
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[4].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = node.NewParameter(yyDollar[1].node, variable, yyDollar[6].node, yyDollar[2].token != nil, yyDollar[3].token != nil)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].node != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
+
+			var posID ast.PositionID
+			if yyDollar[1].node != 0 {
+				posID = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 			} else if yyDollar[2].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node)
 			} else if yyDollar[3].token != nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[6].node))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[6].node)
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node))
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node)
 			}
 
-			// save comments
-			if yyDollar[1].node != nil {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			}
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, yyDollar[2].token.FreeFloating)
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[3].token.FreeFloating)
+				flag = flag | ast.NodeFlagVariadic
 			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Variadic, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[5].token.FreeFloating)
 
-			// normalize
-			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, (*yyVAL.node.GetFreeFloating())[freefloating.Variadic])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Variadic)
-			}
-			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.OptionalType, (*yyVAL.node.GetFreeFloating())[freefloating.Ampersand])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.Ampersand)
-			}
-			if yyDollar[1].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, (*yyVAL.node.GetFreeFloating())[freefloating.OptionalType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.OptionalType)
-			}
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeParameter,
+				Flag: flag,
+				Pos:  posID,
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarType, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDefaultValue, yyDollar[6].node)
+
+			// // save comments
+			// if $1 != nil {
+			//     yylex.(*Parser).MoveFreeFloating($1, $$)
+			// }
+			// if $2 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, $2.FreeFloating)
+			// }
+			// if $3 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $3.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Variadic, $4.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
+
+			// // normalize
+			// if $3 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, (*$$.GetFreeFloating())[freefloating.Variadic]); delete((*$$.GetFreeFloating()), freefloating.Variadic)
+			// }
+			// if $2 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.OptionalType, (*$$.GetFreeFloating())[freefloating.Ampersand]); delete((*$$.GetFreeFloating()), freefloating.Ampersand)
+			// }
+			// if $1 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Start, (*$$.GetFreeFloating())[freefloating.OptionalType]); delete((*$$.GetFreeFloating()), freefloating.OptionalType)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2234
+		//line php7/php7.y:2615
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2240
+		//line php7/php7.y:2621
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4632,7 +5016,7 @@ yydefault:
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2249
+		//line php7/php7.y:2630
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4640,49 +5024,51 @@ yydefault:
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2255
+		//line php7/php7.y:2636
 		{
-			yyVAL.node = node.NewNullable(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeNullable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2270
+		//line php7/php7.y:2653
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2282
+		//line php7/php7.y:2665
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2294
+		//line php7/php7.y:2677
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4690,126 +5076,137 @@ yydefault:
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2303
+		//line php7/php7.y:2686
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2309
+		//line php7/php7.y:2692
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Colon, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Colon, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2321
+		//line php7/php7.y:2704
 		{
-			yyVAL.node = node.NewArgumentList(nil)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeArgumentList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2334
+		//line php7/php7.y:2717
 		{
-			yyVAL.node = node.NewArgumentList(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeArgumentList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArguments, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if yyDollar[3].token != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, append(yyDollar[3].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token), yyDollar[4].token.FreeFloating...)...))
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArgumentList, yyDollar[4].token.FreeFloating)
-			}
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// if $3 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, append($3.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($3), $4.FreeFloating...)...))
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.ArgumentList, $4.FreeFloating)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2354
+		//line php7/php7.y:2741
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2360
+		//line php7/php7.y:2748
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2372
+		//line php7/php7.y:2760
 		{
-			yyVAL.node = node.NewArgument(yyDollar[1].node, false, false)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeArgument,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2384
+		//line php7/php7.y:2774
 		{
-			yyVAL.node = node.NewArgument(yyDollar[2].node, true, false)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeArgument,
+				Flag: ast.NodeFlagVariadic,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2399
+		//line php7/php7.y:2792
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2408
+		//line php7/php7.y:2801
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2417
+		//line php7/php7.y:2811
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4817,370 +5214,468 @@ yydefault:
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2426
+		//line php7/php7.y:2820
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2435
+		//line php7/php7.y:2828
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2444
+		//line php7/php7.y:2838
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = stmt.NewStaticVar(variable, nil)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStaticVar,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2461
+		//line php7/php7.y:2864
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = stmt.NewStaticVar(variable, yyDollar[3].node)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStaticVar,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2482
+		//line php7/php7.y:2895
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2488
+		//line php7/php7.y:2901
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2497
+		//line php7/php7.y:2910
 		{
-			yyVAL.node = stmt.NewPropertyList(yyDollar[1].list, yyDollar[2].list)
+			childrenProperties := yylex.(*Parser).list.pop()
+			childrenModifiers := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListTokenPosition(yyDollar[1].list, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtPropertyList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenModifiers, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperties, childrenProperties...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.PropertyList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token))
+			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.PropertyList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($3))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2511
+		//line php7/php7.y:2930
 		{
-			yyVAL.node = stmt.NewClassConstList(yyDollar[1].list, yyDollar[3].list)
+			childrenConstants := yylex.(*Parser).list.pop()
+			childrenModifiers := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewOptionalListTokensPosition(yyDollar[1].list, yyDollar[2].token, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClassConstList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewOptionalListTokensPosition(childrenModifiers, yyDollar[2].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConsts, childrenConstants...)
 
 			// save comments
-			if len(yyDollar[1].list) > 0 {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[2].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ConstList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token))
+			// if len($1) > 0 {
+			//     yylex.(*Parser).MoveFreeFloating($1[0], $$)
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Start, $2.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ConstList, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($4))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2530
+		//line php7/php7.y:2955
 		{
-			yyVAL.node = stmt.NewTraitUse(yyDollar[2].list, yyDollar[3].node)
+			childrenTraits := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTraitAdaptationList, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTraits, childrenTraits...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line php7/php7.y:2542
+		//line php7/php7.y:2972
 		{
-			name := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewClassMethod(name, yyDollar[1].list, yyDollar[3].token != nil, yyDollar[7].list, yyDollar[9].node, yyDollar[10].node, yyDollar[5].str)
+			childrenParams := yylex.(*Parser).list.pop()
+			childrenModifiers := yylex.(*Parser).list.pop()
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			if yyDollar[1].list == nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[10].node))
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
+
+			var posID ast.PositionID
+			if len(childrenModifiers) == 0 {
+				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[10].node)
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeListNodePosition(yyDollar[1].list, yyDollar[10].node))
+				posID = yylex.(*Parser).astPositionBuilder.NewNodeListNodePosition(childrenModifiers, yyDollar[10].node)
 			}
+
+			var flag ast.NodeFlag
+			if yyDollar[3].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClassMethod,
+				Flag: flag,
+				Pos:  posID,
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeMethodName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParams, childrenParams...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParams, childrenParams...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeReturnType, yyDollar[9].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[10].node)
 
 			// save comments
-			if len(yyDollar[1].list) > 0 {
-				yylex.(*Parser).MoveFreeFloating(yyDollar[1].list[0], yyVAL.node)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ModifierList, yyDollar[2].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[2].token.FreeFloating)
-			}
-			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[4].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[3].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[4].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[8].token.FreeFloating)
-			if yyDollar[9].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyDollar[9].node.GetFreeFloating())[freefloating.Colon])
-				delete((*yyDollar[9].node.GetFreeFloating()), freefloating.Colon)
-			}
+			// if len($1) > 0 {
+			//     yylex.(*Parser).MoveFreeFloating($1[0], $$)
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.ModifierList, $2.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Start, $2.FreeFloating)
+			// }
+			// if $3 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $8.FreeFloating)
+			// if $9 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$9.GetFreeFloating())[freefloating.Colon]); delete((*$9.GetFreeFloating()), freefloating.Colon)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2579
+		//line php7/php7.y:3031
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2585
+		//line php7/php7.y:3038
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2597
+		//line php7/php7.y:3050
 		{
-			yyVAL.node = stmt.NewNop()
-
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNop,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2610
+		//line php7/php7.y:3064
 		{
-			yyVAL.node = stmt.NewTraitAdaptationList(nil)
-
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitAdaptationList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AdaptationList, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AdaptationList, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2622
+		//line php7/php7.y:3077
 		{
-			yyVAL.node = stmt.NewTraitAdaptationList(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitAdaptationList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAdaptations, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.AdaptationList, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.AdaptationList, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2637
+		//line php7/php7.y:3097
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2643
+		//line php7/php7.y:3104
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2652
+		//line php7/php7.y:3113
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.NameList, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.NameList, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2662
+		//line php7/php7.y:3123
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Alias, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Alias, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($2))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2675
+		//line php7/php7.y:3136
 		{
-			yyVAL.node = stmt.NewTraitUsePrecedence(yyDollar[1].node, yyDollar[3].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeNodeListPosition(yyDollar[1].node, yyDollar[3].list))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUsePrecedence,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeNodeListPosition(yyDollar[1].node, children),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInsteadof, children...)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2691
+		//line php7/php7.y:3157
 		{
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
 
-			// save position
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2707
+		//line php7/php7.y:3179
 		{
-			alias := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, nil, alias)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
 
-			// save position
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2723
+		//line php7/php7.y:3201
 		{
-			alias := node.NewIdentifier(yyDollar[4].token.Value)
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, alias)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+			})
 
-			// save position
-			alias.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifier, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(alias, freefloating.Start, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(alias, freefloating.Start, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2739
+		//line php7/php7.y:3224
 		{
-			yyVAL.node = stmt.NewTraitUseAlias(yyDollar[1].node, yyDollar[3].node, nil)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifier, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ref, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Ref, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2755
+		//line php7/php7.y:3243
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewTraitMethodRef(nil, name)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitMethodRef,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2769
+		//line php7/php7.y:3262
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5188,324 +5683,367 @@ yydefault:
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2778
+		//line php7/php7.y:3271
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = stmt.NewTraitMethodRef(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtTraitMethodRef,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTrait, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(target, freefloating.Start, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2797
+		//line php7/php7.y:3296
 		{
-			yyVAL.node = stmt.NewNop()
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtNop,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.SemiColon, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2810
+		//line php7/php7.y:3309
 		{
-			yyVAL.node = stmt.NewStmtList(yyDollar[2].list)
+			children := yylex.(*Parser).list.pop()
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtStmtList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2826
+		//line php7/php7.y:3329
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2832
+		//line php7/php7.y:3333
 		{
-			modifier := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{modifier}
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			modifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(modifier, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(modifier, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2848
+		//line php7/php7.y:3351
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2854
+		//line php7/php7.y:3357
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2863
+		//line php7/php7.y:3364
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2869
+		//line php7/php7.y:3371
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2878
+		//line php7/php7.y:3380
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2890
+		//line php7/php7.y:3392
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2902
+		//line php7/php7.y:3404
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2914
+		//line php7/php7.y:3416
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2926
+		//line php7/php7.y:3428
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2938
+		//line php7/php7.y:3440
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2953
+		//line php7/php7.y:3455
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2962
+		//line php7/php7.y:3464
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2971
+		//line php7/php7.y:3474
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = stmt.NewProperty(variable, nil, yyDollar[2].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtProperty,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2988
+		//line php7/php7.y:3500
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = stmt.NewProperty(variable, yyDollar[3].node, yyDollar[4].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtProperty,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3009
+		//line php7/php7.y:3531
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3018
+		//line php7/php7.y:3540
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3027
+		//line php7/php7.y:3550
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3045
+		//line php7/php7.y:3574
 		{
-			name := node.NewIdentifier(yyDollar[1].token.Value)
-			yyVAL.node = stmt.NewConstant(name, yyDollar[3].node, yyDollar[4].str)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3063
+		//line php7/php7.y:3598
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3072
+		//line php7/php7.y:3607
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3081
+		//line php7/php7.y:3617
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5513,887 +6051,1049 @@ yydefault:
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3090
+		//line php7/php7.y:3626
 		{
-			yyVAL.list = nil
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3096
+		//line php7/php7.y:3632
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3105
+		//line php7/php7.y:3639
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3114
+		//line php7/php7.y:3648
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:3123
+		//line php7/php7.y:3658
 		{
-			if yyDollar[2].node != nil {
-				yyVAL.node = stmt.NewClass(nil, nil, yyDollar[2].node.(*node.ArgumentList), yyDollar[3].ClassExtends, yyDollar[4].ClassImplements, yyDollar[7].list, yyDollar[5].str)
-			} else {
-				yyVAL.node = stmt.NewClass(nil, nil, nil, yyDollar[3].ClassExtends, yyDollar[4].ClassImplements, yyDollar[7].list, yyDollar[5].str)
-			}
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeStmtClass,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeImplements, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[6].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[8].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $6.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $8.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3144
+		//line php7/php7.y:3680
 		{
-			if yyDollar[3].node != nil {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, yyDollar[3].node.(*node.ArgumentList))
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node))
-			} else {
-				yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			lastNodeID := yyDollar[3].node
+			if lastNodeID == 0 {
+				lastNodeID = yyDollar[2].node
 			}
 
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprNew,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, lastNodeID),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[3].node)
+
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3159
+		//line php7/php7.y:3700
 		{
-			yyVAL.node = expr.NewNew(yyDollar[2].node, nil)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprNew,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3174
+		//line php7/php7.y:3717
 		{
-			listNode := expr.NewList(yyDollar[3].list)
-			yyVAL.node = assign.NewAssign(listNode, yyDollar[6].node)
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignAssign,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, listNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[6].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[5].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $5.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:3191
+		//line php7/php7.y:3741
 		{
-			shortList := expr.NewShortList(yyDollar[2].list)
-			yyVAL.node = assign.NewAssign(shortList, yyDollar[5].node)
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprShortList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			shortList.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignAssign,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, listNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(shortList, freefloating.ArrayPairList, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(shortList, freefloating.ArrayPairList, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3207
+		//line php7/php7.y:3764
 		{
-			yyVAL.node = assign.NewAssign(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignAssign,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3220
+		//line php7/php7.y:3780
 		{
-			yyVAL.node = assign.NewReference(yyDollar[1].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignReference,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Equal, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3234
+		//line php7/php7.y:3797
 		{
-			yyVAL.node = expr.NewClone(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClone,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3246
+		//line php7/php7.y:3811
 		{
-			yyVAL.node = assign.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignPlus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3259
+		//line php7/php7.y:3827
 		{
-			yyVAL.node = assign.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignMinus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3272
+		//line php7/php7.y:3843
 		{
-			yyVAL.node = assign.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignMul,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3285
+		//line php7/php7.y:3859
 		{
-			yyVAL.node = assign.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignPow,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3298
+		//line php7/php7.y:3875
 		{
-			yyVAL.node = assign.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignDiv,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3311
+		//line php7/php7.y:3891
 		{
-			yyVAL.node = assign.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignConcat,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3324
+		//line php7/php7.y:3907
 		{
-			yyVAL.node = assign.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignMod,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3337
+		//line php7/php7.y:3923
 		{
-			yyVAL.node = assign.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignBitwiseAnd,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3350
+		//line php7/php7.y:3939
 		{
-			yyVAL.node = assign.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignBitwiseOr,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3363
+		//line php7/php7.y:3955
 		{
-			yyVAL.node = assign.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignBitwiseXor,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3376
+		//line php7/php7.y:3971
 		{
-			yyVAL.node = assign.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignShiftLeft,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3389
+		//line php7/php7.y:3987
 		{
-			yyVAL.node = assign.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeAssignShiftRight,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3402
+		//line php7/php7.y:4003
 		{
-			yyVAL.node = expr.NewPostInc(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPostInc,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3415
+		//line php7/php7.y:4018
 		{
-			yyVAL.node = expr.NewPreInc(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPreInc,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3427
+		//line php7/php7.y:4032
 		{
-			yyVAL.node = expr.NewPostDec(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPostDec,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3440
+		//line php7/php7.y:4047
 		{
-			yyVAL.node = expr.NewPreDec(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPreDec,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3452
+		//line php7/php7.y:4061
 		{
-			yyVAL.node = binary.NewBooleanOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryBooleanOr,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3465
+		//line php7/php7.y:4077
 		{
-			yyVAL.node = binary.NewBooleanAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryBooleanAnd,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3478
+		//line php7/php7.y:4093
 		{
-			yyVAL.node = binary.NewLogicalOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryLogicalOr,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3491
+		//line php7/php7.y:4109
 		{
-			yyVAL.node = binary.NewLogicalAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryLogicalAnd,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3504
+		//line php7/php7.y:4125
 		{
-			yyVAL.node = binary.NewLogicalXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryLogicalXor,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3517
+		//line php7/php7.y:4141
 		{
-			yyVAL.node = binary.NewBitwiseOr(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryBitwiseOr,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3530
+		//line php7/php7.y:4157
 		{
-			yyVAL.node = binary.NewBitwiseAnd(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryBitwiseAnd,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3543
+		//line php7/php7.y:4173
 		{
-			yyVAL.node = binary.NewBitwiseXor(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryBitwiseXor,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3556
+		//line php7/php7.y:4189
 		{
-			yyVAL.node = binary.NewConcat(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryConcat,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3569
+		//line php7/php7.y:4205
 		{
-			yyVAL.node = binary.NewPlus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryPlus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3582
+		//line php7/php7.y:4221
 		{
-			yyVAL.node = binary.NewMinus(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryMinus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3595
+		//line php7/php7.y:4237
 		{
-			yyVAL.node = binary.NewMul(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryMul,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3608
+		//line php7/php7.y:4253
 		{
-			yyVAL.node = binary.NewPow(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryPow,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3621
+		//line php7/php7.y:4269
 		{
-			yyVAL.node = binary.NewDiv(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryDiv,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3634
+		//line php7/php7.y:4285
 		{
-			yyVAL.node = binary.NewMod(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryMod,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3647
+		//line php7/php7.y:4301
 		{
-			yyVAL.node = binary.NewShiftLeft(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryShiftLeft,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3660
+		//line php7/php7.y:4317
 		{
-			yyVAL.node = binary.NewShiftRight(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryShiftRight,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3673
+		//line php7/php7.y:4333
 		{
-			yyVAL.node = expr.NewUnaryPlus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprUnaryPlus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3685
+		//line php7/php7.y:4347
 		{
-			yyVAL.node = expr.NewUnaryMinus(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprUnaryMinus,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3697
+		//line php7/php7.y:4361
 		{
-			yyVAL.node = expr.NewBooleanNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprBooleanNot,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3709
+		//line php7/php7.y:4375
 		{
-			yyVAL.node = expr.NewBitwiseNot(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprBitwiseNot,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3721
+		//line php7/php7.y:4389
 		{
-			yyVAL.node = binary.NewIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryIdentical,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3734
+		//line php7/php7.y:4405
 		{
-			yyVAL.node = binary.NewNotIdentical(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryNotIdentical,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3747
+		//line php7/php7.y:4421
 		{
-			yyVAL.node = binary.NewEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryEqual,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3760
+		//line php7/php7.y:4437
 		{
-			yyVAL.node = binary.NewNotEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryNotEqual,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Equal, yylex.(*Parser).GetFreeFloatingToken($2))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3774
+		//line php7/php7.y:4454
 		{
-			yyVAL.node = binary.NewSmaller(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinarySmaller,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3787
+		//line php7/php7.y:4470
 		{
-			yyVAL.node = binary.NewSmallerOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinarySmallerOrEqual,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3800
+		//line php7/php7.y:4486
 		{
-			yyVAL.node = binary.NewGreater(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryGreater,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3813
+		//line php7/php7.y:4502
 		{
-			yyVAL.node = binary.NewGreaterOrEqual(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryGreaterOrEqual,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3826
+		//line php7/php7.y:4518
 		{
-			yyVAL.node = binary.NewSpaceship(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinarySpaceship,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3839
+		//line php7/php7.y:4534
 		{
-			yyVAL.node = expr.NewInstanceOf(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprInstanceOf,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3852
+		//line php7/php7.y:4550
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3862
+		//line php7/php7.y:4560
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6401,54 +7101,63 @@ yydefault:
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:3868
+		//line php7/php7.y:4566
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprTernary,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeIfTrue, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeIfFalse, yyDollar[5].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.True, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3882
+		//line php7/php7.y:4584
 		{
-			yyVAL.node = expr.NewTernary(yyDollar[1].node, nil, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprTernary,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeIfFalse, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cond, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.True, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.True, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3896
+		//line php7/php7.y:4601
 		{
-			yyVAL.node = binary.NewCoalesce(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeBinaryCoalesce,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, Coalesceeefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3909
+		//line php7/php7.y:4616
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6456,155 +7165,171 @@ yydefault:
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3915
+		//line php7/php7.y:4622
 		{
-			yyVAL.node = cast.NewInt(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastInt,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3928
+		//line php7/php7.y:4637
 		{
-			yyVAL.node = cast.NewDouble(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastDouble,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3941
+		//line php7/php7.y:4652
 		{
-			yyVAL.node = cast.NewString(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastString,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3954
+		//line php7/php7.y:4667
 		{
-			yyVAL.node = cast.NewArray(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastArray,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3967
+		//line php7/php7.y:4682
 		{
-			yyVAL.node = cast.NewObject(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastObject,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3980
+		//line php7/php7.y:4697
 		{
-			yyVAL.node = cast.NewBool(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastBool,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3993
+		//line php7/php7.y:4712
 		{
-			yyVAL.node = cast.NewUnset(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeCastUnset,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Cast, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4006
+		//line php7/php7.y:4727
 		{
-			var e *expr.Exit
-			if yyDollar[2].node != nil {
-				e = yyDollar[2].node.(*expr.Exit)
-			} else {
-				e = expr.NewExit(nil)
-			}
+			yyVAL.node = yyDollar[2].node
 
-			yyVAL.node = e
-
+			var flag ast.NodeFlag
 			if strings.EqualFold(yyDollar[1].token.Value, "die") {
-				e.Die = true
+				flag = ast.NodeFlagAltSyntax
 			}
 
-			// save position
-			if yyDollar[2].node == nil {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			if yyVAL.node == 0 {
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeExprExit,
+					Flag: flag,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				})
 			} else {
-				yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+				node := yylex.(*Parser).ast.Nodes.Get(yyVAL.node)
+				node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
+				node.Flag = flag
+				yylex.(*Parser).ast.Nodes.Save(yyVAL.node, node)
 			}
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4033
+		//line php7/php7.y:4754
 		{
-			yyVAL.node = expr.NewErrorSuppress(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprErrorSuppress,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4045
+		//line php7/php7.y:4768
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6612,340 +7337,398 @@ yydefault:
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4051
+		//line php7/php7.y:4774
 		{
-			yyVAL.node = expr.NewShellExec(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprShellExec,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4063
+		//line php7/php7.y:4788
 		{
-			yyVAL.node = expr.NewPrint(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPrint,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4075
+		//line php7/php7.y:4802
 		{
-			yyVAL.node = expr.NewYield(nil, nil)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprYield,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4087
+		//line php7/php7.y:4814
 		{
-			yyVAL.node = expr.NewYield(nil, yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprYield,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4099
+		//line php7/php7.y:4828
 		{
-			yyVAL.node = expr.NewYield(yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprYield,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[2].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4112
+		//line php7/php7.y:4844
 		{
-			yyVAL.node = expr.NewYieldFrom(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprYieldFrom,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:4124
+		//line php7/php7.y:4858
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[5].list, yyDollar[7].ClosureUse, yyDollar[8].node, yyDollar[10].list, false, yyDollar[2].token != nil, yyDollar[3].str)
+			var flag ast.NodeFlag
+			if yyDollar[2].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClosure,
+				Flag: flag,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
+			})
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			if yyDollar[2].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[4].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[2].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[4].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[6].token.FreeFloating)
-			if yyDollar[8].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, (*yyDollar[8].node.GetFreeFloating())[freefloating.Colon])
-				delete((*yyDollar[8].node.GetFreeFloating()), freefloating.Colon)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ReturnType, yyDollar[9].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[11].token.FreeFloating)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClosureUse, yyDollar[7].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeReturnType, yyDollar[8].node)
 
-			// normalize
-			if yyDollar[8].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, (*yyVAL.node.GetFreeFloating())[freefloating.ReturnType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.ReturnType)
-			}
-			if yyDollar[7].ClosureUse == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyVAL.node.GetFreeFloating())[freefloating.LexicalVarList])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.LexicalVarList)
-			}
+			// // save comments
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// if $2 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $4.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $2.FreeFloating)
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $4.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $6.FreeFloating)
+			// if $8 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$8.GetFreeFloating())[freefloating.Colon]); delete((*$8.GetFreeFloating()), freefloating.Colon)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $9.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $11.FreeFloating)
+
+			// // normalize
+			// if $8 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
+			// }
+			// if $7 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVarList]); delete((*$$.GetFreeFloating()), freefloating.LexicalVarList)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line php7/php7.y:4156
+		//line php7/php7.y:4901
 		{
-			yyVAL.node = expr.NewClosure(yyDollar[6].list, yyDollar[8].ClosureUse, yyDollar[9].node, yyDollar[11].list, true, yyDollar[3].token != nil, yyDollar[4].str)
+			flag := ast.NodeFlagStatic
+			if yyDollar[2].token != nil {
+				flag = flag | ast.NodeFlagRef
+			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[12].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClosure,
+				Flag: flag,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[12].token),
+			})
 
-			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Static, yyDollar[2].token.FreeFloating)
-			if yyDollar[3].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[5].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Function, yyDollar[3].token.FreeFloating)
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Ampersand, yyDollar[5].token.FreeFloating)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ParameterList, yyDollar[7].token.FreeFloating)
-			if yyDollar[9].node != nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, (*yyDollar[9].node.GetFreeFloating())[freefloating.Colon])
-				delete((*yyDollar[9].node.GetFreeFloating()), freefloating.Colon)
-			}
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ReturnType, yyDollar[10].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Stmts, yyDollar[12].token.FreeFloating)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClosureUse, yyDollar[8].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeReturnType, yyDollar[9].node)
 
-			// normalize
-			if yyDollar[9].node == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.LexicalVars, (*yyVAL.node.GetFreeFloating())[freefloating.ReturnType])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.ReturnType)
-			}
-			if yyDollar[8].ClosureUse == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Params, (*yyVAL.node.GetFreeFloating())[freefloating.LexicalVarList])
-				delete((*yyVAL.node.GetFreeFloating()), freefloating.LexicalVarList)
-			}
+			// // save comments
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Static, $2.FreeFloating)
+			// if $3 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $5.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Function, $3.FreeFloating)
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Ampersand, $5.FreeFloating)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ParameterList, $7.FreeFloating)
+			// if $9 != nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$9.GetFreeFloating())[freefloating.Colon]); delete((*$9.GetFreeFloating()), freefloating.Colon)
+			// }
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ReturnType, $10.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Stmts, $12.FreeFloating)
+
+			// // normalize
+			// if $9 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVars, (*$$.GetFreeFloating())[freefloating.ReturnType]); delete((*$$.GetFreeFloating()), freefloating.ReturnType)
+			// }
+			// if $8 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.Params, (*$$.GetFreeFloating())[freefloating.LexicalVarList]); delete((*$$.GetFreeFloating()), freefloating.LexicalVarList)
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 371:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4192
+		//line php7/php7.y:4948
 		{
-			yyVAL.str = yylex.(*Parser).Lexer.GetPhpDocComment()
+			// $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
 			yylex.(*Parser).Lexer.SetPhpDocComment("")
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4202
+		//line php7/php7.y:4958
 		{
 			yyVAL.token = nil
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4206
+		//line php7/php7.y:4962
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4213
+		//line php7/php7.y:4969
 		{
-			yyVAL.ClosureUse = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4219
+		//line php7/php7.y:4975
 		{
-			yyVAL.ClosureUse = expr.NewClosureUse(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClosureUse,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.ClosureUse.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.Use, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.ClosureUse, freefloating.LexicalVarList, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Use, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.LexicalVarList, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4236
+		//line php7/php7.y:4994
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4245
+		//line php7/php7.y:5003
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4254
+		//line php7/php7.y:5013
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(identifier)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken($$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4269
+		//line php7/php7.y:5033
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[2].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = expr.NewReference(variable)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprReference,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(variable, freefloating.Start, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(variable, freefloating.Start, $2.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4290
+		//line php7/php7.y:5063
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprFunctionCall,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4302
+		//line php7/php7.y:5078
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticCall,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 382:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4315
+		//line php7/php7.y:5095
 		{
-			yyVAL.node = expr.NewStaticCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticCall,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4328
+		//line php7/php7.y:5112
 		{
-			yyVAL.node = expr.NewFunctionCall(yyDollar[1].node, yyDollar[2].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprFunctionCall,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4343
+		//line php7/php7.y:5130
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4355
+		//line php7/php7.y:5142
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6953,7 +7736,7 @@ yydefault:
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4364
+		//line php7/php7.y:5151
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6961,7 +7744,7 @@ yydefault:
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4370
+		//line php7/php7.y:5157
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6969,66 +7752,68 @@ yydefault:
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4379
+		//line php7/php7.y:5166
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4385
+		//line php7/php7.y:5172
 		{
-			yyVAL.node = expr.NewExit(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprExit,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Exit, append(yyDollar[1].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Exit, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4401
+		//line php7/php7.y:5190
 		{
-			yyVAL.list = []node.Node{}
+			yylex.(*Parser).list.push()
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4407
+		//line php7/php7.y:5196
 		{
-			part := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{part}
-
-			// save position
-			part.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(
+				yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				}),
+			)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4417
+		//line php7/php7.y:5208
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4426
+		//line php7/php7.y:5215
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4432
+		//line php7/php7.y:5221
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7036,250 +7821,263 @@ yydefault:
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4441
+		//line php7/php7.y:5230
 		{
-			yyVAL.node = expr.NewArray(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArray,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Array, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Array, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4455
+		//line php7/php7.y:5246
 		{
-			yyVAL.node = expr.NewShortArray(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprShortArray,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.ArrayPairList, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.ArrayPairList, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4468
+		//line php7/php7.y:5261
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarString,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4483
+		//line php7/php7.y:5276
 		{
-			yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarLnumber,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4495
+		//line php7/php7.y:5288
 		{
-			yyVAL.node = scalar.NewDnumber(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarDnumber,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4507
+		//line php7/php7.y:5300
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4519
+		//line php7/php7.y:5312
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4531
+		//line php7/php7.y:5324
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4543
+		//line php7/php7.y:5336
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4555
+		//line php7/php7.y:5348
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4567
+		//line php7/php7.y:5360
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4579
+		//line php7/php7.y:5372
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4591
+		//line php7/php7.y:5384
 		{
-			yyVAL.node = scalar.NewMagicConstant(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4603
+		//line php7/php7.y:5396
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, []node.Node{encapsed})
+			stringPartNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarEncapsedStringPart,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarHeredoc,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, stringPartNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4617
+		//line php7/php7.y:5415
 		{
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, nil)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarHeredoc,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4629
+		//line php7/php7.y:5427
 		{
-			yyVAL.node = scalar.NewEncapsed(yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarEncapsed,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4641
+		//line php7/php7.y:5441
 		{
-			yyVAL.node = scalar.NewHeredoc(yyDollar[1].token.Value, yyDollar[2].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarHeredoc,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4653
+		//line php7/php7.y:5455
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7287,7 +8085,7 @@ yydefault:
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4659
+		//line php7/php7.y:5461
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7295,57 +8093,71 @@ yydefault:
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4668
+		//line php7/php7.y:5470
 		{
-			yyVAL.node = expr.NewConstFetch(yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprConstFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstant, yyDollar[1].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4680
+		//line php7/php7.y:5484
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClassConstFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4696
+		//line php7/php7.y:5506
 		{
-			target := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewClassConstFetch(yyDollar[1].node, target)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
 
-			// save position
-			target.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprClassConstFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(target, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(target, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4715
+		//line php7/php7.y:5531
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7353,7 +8165,7 @@ yydefault:
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4721
+		//line php7/php7.y:5537
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7361,15 +8173,15 @@ yydefault:
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4730
+		//line php7/php7.y:5546
 		{
-			yyVAL.node = nil
+			yyVAL.node = 0
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4736
+		//line php7/php7.y:5552
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7377,7 +8189,7 @@ yydefault:
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4745
+		//line php7/php7.y:5561
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7385,7 +8197,7 @@ yydefault:
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4754
+		//line php7/php7.y:5570
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7393,19 +8205,19 @@ yydefault:
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4760
+		//line php7/php7.y:5576
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4770
+		//line php7/php7.y:5586
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7413,7 +8225,7 @@ yydefault:
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4779
+		//line php7/php7.y:5595
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7421,19 +8233,19 @@ yydefault:
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4785
+		//line php7/php7.y:5601
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4795
+		//line php7/php7.y:5611
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7441,7 +8253,7 @@ yydefault:
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4804
+		//line php7/php7.y:5620
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7449,70 +8261,83 @@ yydefault:
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4810
+		//line php7/php7.y:5626
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4824
+		//line php7/php7.y:5643
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 431:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4838
+		//line php7/php7.y:5660
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4852
+		//line php7/php7.y:5677
 		{
-			yyVAL.node = expr.NewMethodCall(yyDollar[1].node, yyDollar[3].node, yyDollar[4].node.(*node.ArgumentList))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprMethodCall,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeMethod, yyDollar[3].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4865
+		//line php7/php7.y:5694
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7520,7 +8345,7 @@ yydefault:
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4874
+		//line php7/php7.y:5703
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7528,7 +8353,7 @@ yydefault:
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4880
+		//line php7/php7.y:5709
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7536,101 +8361,119 @@ yydefault:
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4886
+		//line php7/php7.y:5715
 		{
-			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4902
+		//line php7/php7.y:5734
 		{
-			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken($$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4917
+		//line php7/php7.y:5754
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.Start, append(yyDollar[2].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token), (*yyDollar[3].node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyDollar[3].node, freefloating.End, append((*yyDollar[3].node.GetFreeFloating())[freefloating.End], append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($3, freefloating.Start, append($2.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($2), (*$3.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($3, freefloating.End, append((*$3.GetFreeFloating())[freefloating.End], append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4932
+		//line php7/php7.y:5771
 		{
-			yyVAL.node = expr.NewVariable(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Dollar, yylex.(*Parser).GetFreeFloatingToken($1))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4948
+		//line php7/php7.y:5789
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4961
+		//line php7/php7.y:5805
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Name, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Name, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4977
+		//line php7/php7.y:5824
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7638,110 +8481,125 @@ yydefault:
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4983
+		//line php7/php7.y:5830
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4997
+		//line php7/php7.y:5847
 		{
-			yyVAL.node = expr.NewArrayDimFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5011
+		//line php7/php7.y:5863
 		{
-			yyVAL.node = expr.NewPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5024
+		//line php7/php7.y:5879
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5037
+		//line php7/php7.y:5895
 		{
-			yyVAL.node = expr.NewStaticPropertyFetch(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5053
+		//line php7/php7.y:5914
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5065
+		//line php7/php7.y:5926
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5075
+		//line php7/php7.y:5936
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7749,33 +8607,33 @@ yydefault:
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5084
+		//line php7/php7.y:5945
 		{
-			yyVAL.node = node.NewIdentifier(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5096
+		//line php7/php7.y:5957
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, append(yyDollar[1].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token), (*yyVAL.node.GetFreeFloating())[freefloating.Start]...)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append((*yyVAL.node.GetFreeFloating())[freefloating.End], append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, append($1.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($1), (*$$.GetFreeFloating())[freefloating.Start]...)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append((*$$.GetFreeFloating())[freefloating.End], append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5106
+		//line php7/php7.y:5967
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7783,23 +8641,23 @@ yydefault:
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5115
+		//line php7/php7.y:5976
 		{
-			yyVAL.list = yyDollar[1].list
-
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5124
+		//line php7/php7.y:5983
 		{
-			yyVAL.node = expr.NewArrayItem(nil, nil)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+			})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5130
+		//line php7/php7.y:5991
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7807,516 +8665,611 @@ yydefault:
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5139
+		//line php7/php7.y:6000
 		{
-			if len(yyDollar[1].list) == 0 {
-				yyDollar[1].list = []node.Node{expr.NewArrayItem(nil, nil)}
-			}
-
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5152
+		//line php7/php7.y:6009
 		{
-			if yyDollar[1].node.(*expr.ArrayItem).Key == nil && yyDollar[1].node.(*expr.ArrayItem).Val == nil {
-				yyVAL.list = []node.Node{}
-			} else {
-				yyVAL.list = []node.Node{yyDollar[1].node}
-			}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5165
+		//line php7/php7.y:6019
 		{
-			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5178
+		//line php7/php7.y:6035
 		{
-			yyVAL.node = expr.NewArrayItem(nil, yyDollar[1].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodePosition(yyDollar[1].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[1].node)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5190
+		//line php7/php7.y:6049
 		{
-			reference := expr.NewReference(yyDollar[4].node)
-			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, reference)
+			refNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprReference,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node))
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, yyDollar[4].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, refNodeID)
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(reference, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(reference, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5206
+		//line php7/php7.y:6072
 		{
-			reference := expr.NewReference(yyDollar[2].node)
-			yyVAL.node = expr.NewArrayItem(nil, reference)
+			refNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprReference,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
-			reference.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, yyDollar[2].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, refNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:5220
+		//line php7/php7.y:6092
 		{
-			// TODO: Cannot use list() as standalone expression
-			listNode := expr.NewList(yyDollar[5].list)
-			yyVAL.node = expr.NewArrayItem(yyDollar[1].node, listNode)
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[6].token),
+			})
 
-			// save position
-			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[6].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, listNodeID)
+
+			// TODO: Cannot use list() as standalone expression
 
 			// save comments
-			yylex.(*Parser).MoveFreeFloating(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.Start, yyDollar[3].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.List, yyDollar[4].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, yyDollar[6].token.FreeFloating)
+			// yylex.(*Parser).MoveFreeFloating($1, $$)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.Start, $3.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $4.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $6.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5239
+		//line php7/php7.y:6119
 		{
-			// TODO: Cannot use list() as standalone expression
-			listNode := expr.NewList(yyDollar[3].list)
-			yyVAL.node = expr.NewArrayItem(nil, listNode)
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprList,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			listNode.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayItem,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, listNodeID)
+
+			// TODO: Cannot use list() as standalone expression
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.List, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.List, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(listNode, freefloating.ArrayPairList, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5259
+		//line php7/php7.y:6146
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5265
+		//line php7/php7.y:6152
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[2].token.Value)
-			yyVAL.list = append(yyDollar[1].list, encapsed)
-
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
+			yylex.(*Parser).list.add(
+				yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				}),
+			)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5278
+		//line php7/php7.y:6166
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5284
+		//line php7/php7.y:6173
 		{
-			encapsed := scalar.NewEncapsedStringPart(yyDollar[1].token.Value)
-			yyVAL.list = []node.Node{encapsed, yyDollar[2].node}
-
-			// save position
-			encapsed.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(
+				yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				}),
+			)
+			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(encapsed, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5300
+		//line php7/php7.y:6192
 		{
-			name := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken($$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5315
+		//line php7/php7.y:6212
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[3].node)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[2].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[2].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[4].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token)...))
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($2.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($2)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($4.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($4)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5333
+		//line php7/php7.y:6240
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			variable := expr.NewVariable(identifier)
-			fetch := node.NewIdentifier(yyDollar[3].token.Value)
-			yyVAL.node = expr.NewPropertyFetch(variable, fetch)
+			varNameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			fetch.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[3].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			propertyNameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, varNameNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeProperty, propertyNameNodeID)
 
 			// save comments
-			yylex.(*Parser).addDollarToken(variable)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(fetch, freefloating.Start, yyDollar[3].token.FreeFloating)
+			// yylex.(*Parser).addDollarToken(variable)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(fetch, freefloating.Start, $3.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5353
+		//line php7/php7.y:6273
 		{
-			variable := expr.NewVariable(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			yyVAL.node = variable
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5368
+		//line php7/php7.y:6288
 		{
-			name := node.NewIdentifier(yyDollar[2].token.Value)
-			variable := expr.NewVariable(name)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			yyVAL.node = variable
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+			})
 
-			// save position
-			name.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:5385
+		//line php7/php7.y:6308
 		{
-			identifier := node.NewIdentifier(yyDollar[2].token.Value)
-			variable := expr.NewVariable(identifier)
-			yyVAL.node = expr.NewArrayDimFetch(variable, yyDollar[4].node)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			variable.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[2].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token))
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+			})
+
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeDim, yyDollar[4].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Var, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, append(yyDollar[5].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[5].token)...))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[6].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[6].token)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Var, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, append($5.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($5)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append($6.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($6)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5404
+		//line php7/php7.y:6337
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken(yyDollar[1].token))
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.End, append(yyDollar[3].token.FreeFloating, yylex.(*Parser).GetFreeFloatingToken(yyDollar[3].token)...))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
+			// yylex.(*Parser).setFreeFloating($$, freefloating.End, append($3.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($3)...))
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5417
+		//line php7/php7.y:6350
 		{
-			yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
-
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeScalarString,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5429
+		//line php7/php7.y:6362
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
-				yyVAL.node = scalar.NewLnumber(yyDollar[1].token.Value)
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarLnumber,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				})
 			} else {
-				yyVAL.node = scalar.NewString(yyDollar[1].token.Value)
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarString,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				})
 			}
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5446
+		//line php7/php7.y:6382
 		{
-			var lnumber *scalar.Lnumber
-			// TODO: add option to handle 64 bit integer
-			_, err := strconv.Atoi(yyDollar[2].token.Value)
-			isInt := err == nil
+			if _, err := strconv.Atoi(yyDollar[2].token.Value); err == nil {
+				lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarLnumber,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				})
 
-			if isInt {
-				lnumber = scalar.NewLnumber(yyDollar[2].token.Value)
-				yyVAL.node = expr.NewUnaryMinus(lnumber)
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeExprUnaryMinus,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				})
+
+				yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, lnumberNodeID)
 			} else {
-				yyDollar[2].token.Value = "-" + yyDollar[2].token.Value
-				yyVAL.node = scalar.NewString(yyDollar[2].token.Value)
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+					Type: ast.NodeTypeScalarString,
+					Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				})
 			}
-
-			// save position
-			if isInt {
-				lnumber.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
-			}
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token))
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5472
+		//line php7/php7.y:6408
 		{
-			identifier := node.NewIdentifier(strings.TrimLeftFunc(yyDollar[1].token.Value, isDollar))
-			yyVAL.node = expr.NewVariable(identifier)
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeIdentifier,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
 
-			// save position
-			identifier.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenPosition(yyDollar[1].token))
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprVariable,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+			})
+
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).addDollarToken(yyVAL.node)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).addDollarToken($$)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:5490
+		//line php7/php7.y:6431
 		{
-			yyVAL.node = expr.NewIsset(yyDollar[3].list)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprIsset,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Isset, yyDollar[2].token.FreeFloating)
-			if yyDollar[4].token == nil {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, yyDollar[5].token.FreeFloating)
-			} else {
-				yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.VarList, append(yyDollar[4].token.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken(yyDollar[4].token), yyDollar[5].token.FreeFloating...)...))
-			}
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Isset, $2.FreeFloating)
+			// if $4 == nil {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.VarList, $5.FreeFloating)
+			// } else {
+			//     yylex.(*Parser).setFreeFloating($$, freefloating.VarList, append($4.FreeFloating, append(yylex.(*Parser).GetFreeFloatingToken($4), $5.FreeFloating...)...))
+			// }
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5508
+		//line php7/php7.y:6451
 		{
-			yyVAL.node = expr.NewEmpty(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprEmpty,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Empty, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Empty, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5522
+		//line php7/php7.y:6467
 		{
-			yyVAL.node = expr.NewInclude(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprInclude,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5534
+		//line php7/php7.y:6481
 		{
-			yyVAL.node = expr.NewIncludeOnce(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprIncludeOnce,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5546
+		//line php7/php7.y:6495
 		{
-			yyVAL.node = expr.NewEval(yyDollar[3].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprEval,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Eval, yyDollar[2].token.FreeFloating)
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Expr, yyDollar[4].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Eval, $2.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $4.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5560
+		//line php7/php7.y:6511
 		{
-			yyVAL.node = expr.NewRequire(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprRequire,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5572
+		//line php7/php7.y:6525
 		{
-			yyVAL.node = expr.NewRequireOnce(yyDollar[2].node)
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+				Type: ast.NodeTypeExprRequireOnce,
+				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+			})
 
-			// save position
-			yyVAL.node.SetPosition(yylex.(*Parser).positionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node))
+			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(yyVAL.node, freefloating.Start, yyDollar[1].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5587
+		//line php7/php7.y:6542
 		{
-			yyVAL.list = []node.Node{yyDollar[1].node}
+			yylex.(*Parser).list.push()
+			yylex.(*Parser).list.add(yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5593
+		//line php7/php7.y:6549
 		{
-			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save comments
-			yylex.(*Parser).setFreeFloating(lastNode(yyDollar[1].list), freefloating.End, yyDollar[2].token.FreeFloating)
+			// yylex.(*Parser).setFreeFloating(lastNode($1), freefloating.End, $2.FreeFloating)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5605
+		//line php7/php7.y:6561
 		{
 			yyVAL.node = yyDollar[1].node
 

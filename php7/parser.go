@@ -3,6 +3,7 @@ package php7
 import (
 	"strings"
 
+	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
@@ -17,18 +18,23 @@ func (lval *yySymType) Token(t *scanner.Token) {
 
 // Parser structure
 type Parser struct {
-	Lexer           scanner.Scanner
-	currentToken    *scanner.Token
-	positionBuilder *parser.PositionBuilder
-	rootNode        node.Node
+	Lexer              scanner.Scanner
+	ast                *ast.AST
+	astPositionBuilder *ast.PositionBuilder
+	list               stackedNodeList
+	currentToken       *scanner.Token
+	positionBuilder    *parser.PositionBuilder
+	rootNode           node.Node
 }
 
 // NewParser creates and returns new Parser
 func NewParser(src []byte) *Parser {
 	lexer := scanner.NewLexer(src)
-
 	return &Parser{
 		lexer,
+		nil,
+		ast.NewPositionBuilder(nil),
+		stackedNodeList{},
 		nil,
 		nil,
 		nil,
@@ -57,8 +63,10 @@ func (l *Parser) WithFreeFloating() {
 }
 
 // Parse the php7 Parser entrypoint
-func (l *Parser) Parse() int {
+func (l *Parser) Parse(a *ast.AST) int {
 	// init
+	l.ast = a
+	l.astPositionBuilder.SetAST(a)
 	l.Lexer.SetErrors(nil)
 	l.rootNode = nil
 	l.positionBuilder = &parser.PositionBuilder{}
@@ -89,10 +97,6 @@ func lastNode(nn []node.Node) node.Node {
 
 func firstNode(nn []node.Node) node.Node {
 	return nn[0]
-}
-
-func isDollar(r rune) bool {
-	return r == '$'
 }
 
 func (l *Parser) MoveFreeFloating(src node.Node, dst node.Node) {

@@ -3,11 +3,11 @@ package php7_test
 import (
 	"testing"
 
+	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/php7"
 )
 
-func BenchmarkPhp7(b *testing.B) {
-	src := `<?
+var src = `<?
 		foo($a, ...$b);
 		$foo($a, ...$b);
 		$foo->bar($a, ...$b);
@@ -293,7 +293,7 @@ CAD;
 		yield $a;
 		yield $a => $b;
 		yield from $a;
-		
+
 		(array)$a;
 		(boolean)$a;
 		(bool)$a;
@@ -358,7 +358,7 @@ CAD;
 			trait Quux{}
 			interface Quuux {}
 		}
-		
+
 		function foo(&$a = 1, ...$b = 1, $c = 1) {}
 		function foo(array $a, callable $b) {}
 		abstract final class foo { abstract protected static function bar(); final private function baz() {} }
@@ -373,15 +373,33 @@ CAD;
 
 		Foo::$bar();
 		Foo::{$bar[0]}();
-		
+
 		$foo->$bar;
 		$foo->{$bar[0]};
 
 		[1=>&$a, 2=>list($b)];
 	`
 
+func BenchmarkPhp7(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		php7parser := php7.NewParser([]byte(src))
-		php7parser.Parse()
+		php7parser.Parse(&ast.AST{
+			Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
+			Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+			Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
+		})
+	}
+}
+
+func BenchmarkPhp7Reuse(b *testing.B) {
+	a := &ast.AST{
+		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
+	}
+	for n := 0; n < b.N; n++ {
+		php7parser := php7.NewParser([]byte(src))
+		a.Reset()
+		php7parser.Parse(a)
 	}
 }
