@@ -7,7 +7,7 @@ import (
 
 // Token value returned by lexer
 type Token struct {
-	Value        string
+	Value        []byte
 	FreeFloating []freefloating.String
 	StartLine    int
 	EndLine      int
@@ -23,7 +23,7 @@ func (t *Token) GetFreeFloatingToken() []freefloating.String {
 	return []freefloating.String{
 		{
 			StringType: freefloating.TokenType,
-			Value:      t.Value,
+			Value:      string(t.Value),
 			Position: &position.Position{
 				StartLine: t.StartLine,
 				EndLine:   t.EndLine,

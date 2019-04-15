@@ -94,7 +94,7 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 func (lex *Lexer) createToken(lval Lval) *Token {
 	token := lex.TokenPool.Get()
 	token.FreeFloating = lex.FreeFloating
-	// token.Value = string(lex.data[lex.ts:lex.te])
+	token.Value = lex.data[lex.ts:lex.te]
 
 	token.StartLine = lex.NewLines.GetLine(lex.ts)
 	token.EndLine = lex.NewLines.GetLine(lex.te - 1)

@@ -2,7 +2,7 @@
 package php7
 
 import (
-    "strings"
+    "bytes"
     "strconv"
 
     "github.com/z7zmey/php-parser/ast"
@@ -4728,7 +4728,7 @@ expr_without_variable:
                 $$ = $2
 
                 var flag ast.NodeFlag
-                if (strings.EqualFold($1.Value, "die")) {
+                if bytes.EqualFold($1.Value, []byte("die")) {
                     flag = ast.NodeFlagAltSyntax
                 }
 
@@ -6361,7 +6361,7 @@ encaps_var_offset:
     |   T_NUM_STRING
             {
                 // TODO: add option to handle 64 bit integer
-                if _, err := strconv.Atoi($1.Value); err == nil {
+                if _, err := strconv.Atoi(string($1.Value)); err == nil {
                     $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                         Type: ast.NodeTypeScalarLnumber,
                         Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition($1),
@@ -6380,7 +6380,7 @@ encaps_var_offset:
             }
     |   '-' T_NUM_STRING
             {
-                if _, err := strconv.Atoi($2.Value); err == nil {
+                if _, err := strconv.Atoi(string($2.Value)); err == nil {
                     lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
                         Type: ast.NodeTypeScalarLnumber,
                         Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition($2),

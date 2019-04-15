@@ -5,8 +5,8 @@ import __yyfmt__ "fmt"
 
 //line php7/php7.y:2
 import (
+	"bytes"
 	"strconv"
-	"strings"
 
 	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/scanner"
@@ -7289,7 +7289,7 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			var flag ast.NodeFlag
-			if strings.EqualFold(yyDollar[1].token.Value, "die") {
+			if bytes.EqualFold(yyDollar[1].token.Value, []byte("die")) {
 				flag = ast.NodeFlagAltSyntax
 			}
 
@@ -9058,7 +9058,7 @@ yydefault:
 		//line php7/php7.y:6362
 		{
 			// TODO: add option to handle 64 bit integer
-			if _, err := strconv.Atoi(yyDollar[1].token.Value); err == nil {
+			if _, err := strconv.Atoi(string(yyDollar[1].token.Value)); err == nil {
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarLnumber,
 					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
@@ -9079,7 +9079,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:6382
 		{
-			if _, err := strconv.Atoi(yyDollar[2].token.Value); err == nil {
+			if _, err := strconv.Atoi(string(yyDollar[2].token.Value)); err == nil {
 				lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarLnumber,
 					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
