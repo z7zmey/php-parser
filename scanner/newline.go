@@ -4,6 +4,10 @@ type NewLines struct {
 	data []int
 }
 
+func (nl *NewLines) Reset() {
+	nl.data = nl.data[:0]
+}
+
 func (nl *NewLines) Append(p int) {
 	if len(nl.data) == 0 || nl.data[len(nl.data)-1] < p {
 		nl.data = append(nl.data, p)

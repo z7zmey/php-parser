@@ -37,11 +37,11 @@ compile: ./php5/php5.go ./php7/php7.go ./scanner/scanner.go fmt
 	goyacc -o $@ $<
 
 cpu_pprof:
-	go test -cpuprofile cpu.pprof -bench=. -benchtime=20s ./php7
+	go test -cpuprofile cpu.pprof -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s ./php7
 	go tool pprof ./php7.test cpu.pprof
 
 mem_pprof:
-	go test -memprofile mem.pprof -bench=. -benchtime=20s -benchmem ./php7
+	go test -memprofile mem.pprof  -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s -benchmem ./php7
 	go tool pprof -alloc_objects ./php7.test mem.pprof
 
 cpu_pprof_php5:

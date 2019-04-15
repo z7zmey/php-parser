@@ -16120,7 +16120,7 @@ func TestPhp7(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse(&ast.AST{
+	php7parser.Parse([]byte(src), &ast.AST{
 		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
 		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
@@ -16239,7 +16239,7 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse(&ast.AST{
+	php7parser.Parse([]byte(src), &ast.AST{
 		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
 		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
@@ -16433,7 +16433,7 @@ CAD;
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse(&ast.AST{
+	php7parser.Parse([]byte(src), &ast.AST{
 		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
 		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
@@ -16457,7 +16457,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse(&ast.AST{
+	php7parser.Parse([]byte(src), &ast.AST{
 		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
 		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),

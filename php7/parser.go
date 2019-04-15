@@ -18,6 +18,7 @@ func (lval *yySymType) Token(t *scanner.Token) {
 
 // Parser structure
 type Parser struct {
+	yyParserImpl
 	Lexer              scanner.Scanner
 	ast                *ast.AST
 	astPositionBuilder *ast.PositionBuilder
@@ -31,6 +32,7 @@ type Parser struct {
 func NewParser(src []byte) *Parser {
 	lexer := scanner.NewLexer(src)
 	return &Parser{
+		yyParserImpl{},
 		lexer,
 		nil,
 		ast.NewPositionBuilder(nil),
@@ -63,8 +65,9 @@ func (l *Parser) WithFreeFloating() {
 }
 
 // Parse the php7 Parser entrypoint
-func (l *Parser) Parse(a *ast.AST) int {
-	// init
+func (l *Parser) Parse(src []byte, a *ast.AST) int {
+	l.Lexer.Reset(src)
+
 	l.ast = a
 	l.astPositionBuilder.SetAST(a)
 	l.Lexer.SetErrors(nil)
@@ -73,7 +76,7 @@ func (l *Parser) Parse(a *ast.AST) int {
 
 	// parse
 
-	return yyParse(l)
+	return l.yyParserImpl.Parse(l)
 }
 
 // GetRootNode returns root node

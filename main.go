@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"flag"
 	"fmt"
@@ -14,8 +13,8 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
+	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/php5"
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/printer"
 	"github.com/z7zmey/php-parser/visitor"
@@ -24,6 +23,7 @@ import (
 var wg sync.WaitGroup
 var usePhp5 *bool
 var dumpType string
+var dumpPath *bool
 var profiler string
 var withFreeFloating *bool
 var showResolvedNs *bool
@@ -41,6 +41,7 @@ type result struct {
 
 func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
+	dumpPath = flag.Bool("path", false, "print filepath")
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
@@ -106,23 +107,31 @@ func processPath(pathList []string, fileCh chan<- *file) {
 func parserWorker(fileCh <-chan *file, r chan<- result) {
 	var parserWorker parser.Parser
 
+	parserWorker = php7.NewParser(nil)
+
 	for {
 		f, ok := <-fileCh
 		if !ok {
 			return
 		}
 
-		if *usePhp5 {
-			parserWorker = php5.NewParser(f.content)
-		} else {
-			parserWorker = php7.NewParser(f.content)
-		}
+		// if *usePhp5 {
+		// 	parserWorker = php5.NewParser(f.content)
+		// } else {
+		// 	parserWorker = php7.NewParser(f.content)
+		// }
 
 		if *withFreeFloating {
 			parserWorker.WithFreeFloating()
 		}
 
-		parserWorker.Parse()
+		abstractSyntaxTree := &ast.AST{
+			Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
+			Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+			Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
+		}
+
+		parserWorker.Parse(f.content, abstractSyntaxTree)
 
 		r <- result{path: f.path, parser: parserWorker}
 	}
@@ -131,25 +140,20 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 func printerWorker(r <-chan result) {
 	var counter int
 
-	w := bufio.NewWriter(os.Stdout)
-
 	for {
 		res, ok := <-r
 		if !ok {
-			w.Flush()
 			return
 		}
 
 		counter++
 
-		fmt.Fprintf(w, "==> [%d] %s\n", counter, res.path)
+		if *dumpPath {
+			fmt.Printf("==> [%d] %s\n", counter, res.path)
+		}
 
 		for _, e := range res.parser.GetErrors() {
-			// if !strings.Contains(e.Msg, "WARNING") {
-			// 	fmt.Print("\n\n\n" + parserWorker.GetPath() + "\n ")
-			// 	panic(e.Msg)
-			// }
-			fmt.Fprintln(w, e)
+			fmt.Println(e)
 		}
 
 		if *printBack {

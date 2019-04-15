@@ -10,6 +10,7 @@ import (
 )
 
 type Scanner interface {
+	Reset(data []byte)
 	Lex(lval Lval) int
 	ReturnTokenToPool(t *Token)
 	GetPhpDocComment() string
@@ -41,6 +42,21 @@ type Lexer struct {
 	lastToken        *Token
 	Errors           []*errors.Error
 	NewLines         NewLines
+}
+
+func (l *Lexer) Reset(data []byte) {
+	l.data = data
+	l.pe = len(data)
+	l.p = 0
+
+	l.cs = lexer_start
+	l.top = 0
+	l.ts = 0
+	l.te = 0
+	l.act = 0
+	l.stack = l.stack[:0]
+
+	l.NewLines.Reset()
 }
 
 func (l *Lexer) ReturnTokenToPool(t *Token) {
@@ -78,7 +94,7 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 func (lex *Lexer) createToken(lval Lval) *Token {
 	token := lex.TokenPool.Get()
 	token.FreeFloating = lex.FreeFloating
-	token.Value = string(lex.data[lex.ts:lex.te])
+	// token.Value = string(lex.data[lex.ts:lex.te])
 
 	token.StartLine = lex.NewLines.GetLine(lex.ts)
 	token.EndLine = lex.NewLines.GetLine(lex.te - 1)
