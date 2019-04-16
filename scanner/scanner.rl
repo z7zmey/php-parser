@@ -223,7 +223,7 @@ func (lex *Lexer) Lex(lval Lval) int {
             'use'i                            => {lex.createToken(lval); tok = T_USE; fbreak;};
             'var'i                            => {lex.createToken(lval); tok = T_VAR; fbreak;};
             'while'i                          => {lex.createToken(lval); tok = T_WHILE; fbreak;};
-            'yield'i whitespace_line* 'from'i => {lex.createToken(lval); tok = T_YIELD_FROM; fbreak;};
+            'yield'i whitespace_line+ 'from'i => {lex.createToken(lval); tok = T_YIELD_FROM; fbreak;};
             'yield'i                          => {lex.createToken(lval); tok = T_YIELD; fbreak;};
             'include'i                        => {lex.createToken(lval); tok = T_INCLUDE; fbreak;};
             'include_once'i                   => {lex.createToken(lval); tok = T_INCLUDE_ONCE; fbreak;};
