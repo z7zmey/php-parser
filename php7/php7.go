@@ -2104,7 +2104,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeRoot,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 			yylex.(*Parser).ast.Edges.Children(nodeID, ast.EdgeTypeStmts, children...)
 
@@ -2600,7 +2600,7 @@ yydefault:
 		{
 			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameNamePart,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).list.push()
@@ -2617,7 +2617,7 @@ yydefault:
 		{
 			nodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameNamePart,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 			yylex.(*Parser).list.add(nodeID)
 
@@ -2634,7 +2634,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
@@ -2650,7 +2650,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameRelative,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
@@ -2667,7 +2667,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameFullyQualified,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, children...)
 
@@ -2731,7 +2731,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtHaltCompiler,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			// save comments
@@ -2752,14 +2752,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, children...)
 
 			// Create Namespace Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNamespace,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
 
@@ -2781,14 +2781,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create Namespace Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNamespace,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
@@ -2808,7 +2808,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNamespace,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
 
@@ -2824,7 +2824,7 @@ yydefault:
 		//line php7/php7.y:543
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
+			node.Pos = yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[2].node, node)
 
 			yyVAL.node = yyDollar[2].node
@@ -2841,7 +2841,7 @@ yydefault:
 		//line php7/php7.y:558
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
+			node.Pos = yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[2].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[3].node, ast.EdgeTypeUseType, yyDollar[2].node)
@@ -2862,7 +2862,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtUseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUses, children...)
 
@@ -2880,7 +2880,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtUseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUses, children...)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseType, yyDollar[2].node)
@@ -2899,7 +2899,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtConstList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConsts, children...)
 
@@ -2916,7 +2916,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -2930,7 +2930,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -2948,14 +2948,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGroupUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
@@ -2982,14 +2982,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGroupUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
@@ -3017,14 +3017,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGroupUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
@@ -3051,14 +3051,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGroupUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
@@ -3175,14 +3175,14 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create Use Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUse, nameNodeID)
 
@@ -3200,20 +3200,20 @@ yydefault:
 			// Create Name Node
 			nameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNameName,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(childrenNameParts),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
 			yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// create Alias Node
 			aliasNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			// Create Use Node
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenNameParts, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[3].token),
 			})
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeUse, nameNodeID)
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAlias, aliasNodeID)
@@ -3346,7 +3346,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtHaltCompiler,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			// save comments
@@ -3366,7 +3366,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
@@ -3398,7 +3398,7 @@ yydefault:
 		//line php7/php7.y:1080
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
@@ -3418,7 +3418,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtDo,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[2].node)
@@ -3439,7 +3439,7 @@ yydefault:
 		//line php7/php7.y:1117
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
@@ -3462,7 +3462,7 @@ yydefault:
 		//line php7/php7.y:1138
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
@@ -3482,7 +3482,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtBreak,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -3500,7 +3500,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtContinue,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -3518,7 +3518,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtReturn,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -3538,7 +3538,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGlobal,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
@@ -3558,7 +3558,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStatic,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
@@ -3578,7 +3578,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtEcho,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExprs, children...)
@@ -3597,7 +3597,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtInlineHtml,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -3611,7 +3611,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtExpression,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
 			// save comments
@@ -3629,7 +3629,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtUnset,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, children...)
@@ -3652,7 +3652,7 @@ yydefault:
 		//line php7/php7.y:1308
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[7].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[7].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[7].node, ast.EdgeTypeExpr, yyDollar[3].node)
@@ -3673,7 +3673,7 @@ yydefault:
 		//line php7/php7.y:1328
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[9].node, ast.EdgeTypeExpr, yyDollar[3].node)
@@ -3698,7 +3698,7 @@ yydefault:
 			children := yylex.(*Parser).list.pop()
 
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
+			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(yyDollar[5].node, ast.EdgeTypeConsts, children...)
@@ -3718,7 +3718,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNop,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -3736,9 +3736,9 @@ yydefault:
 
 			var posID ast.PositionID
 			if yyDollar[6].node == 0 {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, childrenCatches)
+				posID = yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, childrenCatches)
 			} else {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node)
+				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node)
 			}
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
@@ -3763,7 +3763,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtThrow,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -3781,12 +3781,12 @@ yydefault:
 		{
 			LableNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtGoto,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLabel, LableNodeID)
@@ -3805,12 +3805,12 @@ yydefault:
 		{
 			LableNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtLabel,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLabelName, LableNodeID)
@@ -3835,17 +3835,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[5].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[5].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[5].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[5].token),
 			})
 
 			catchNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCatch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[9].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[2].token, yyDollar[9].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -3900,7 +3900,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtFinally,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -3946,7 +3946,7 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			var flag ast.NodeFlag
@@ -3957,7 +3957,7 @@ yydefault:
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtFunction,
 				Flag: flag,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -4021,12 +4021,12 @@ yydefault:
 
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClass,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenModifiers, yyDollar[9].token),
+				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, yyDollar[9].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
@@ -4050,12 +4050,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClass,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -4094,7 +4094,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -4108,7 +4108,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -4122,12 +4122,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTrait,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -4147,12 +4147,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtInterface,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -4181,7 +4181,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClassExtends,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClassName, yyDollar[2].node)
@@ -4207,7 +4207,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtInterfaceExtends,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
@@ -4233,7 +4233,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClassImplements,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
@@ -4257,7 +4257,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprReference,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
@@ -4273,7 +4273,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -4291,7 +4291,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprShortList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -4308,7 +4308,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtFor,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
@@ -4323,13 +4323,13 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltFor,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4349,7 +4349,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtForeach,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
@@ -4364,13 +4364,13 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltForeach,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4390,7 +4390,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtDeclare,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
@@ -4405,13 +4405,13 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtDeclare,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4433,12 +4433,12 @@ yydefault:
 
 			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCaseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtSwitch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
@@ -4458,12 +4458,12 @@ yydefault:
 
 			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCaseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtSwitch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
@@ -4484,13 +4484,13 @@ yydefault:
 
 			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCaseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltSwitch,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
@@ -4512,13 +4512,13 @@ yydefault:
 
 			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCaseList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltSwitch,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
@@ -4549,7 +4549,7 @@ yydefault:
 
 			caseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtCase,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(caseNodeID, ast.EdgeTypeStmts, children...)
@@ -4571,7 +4571,7 @@ yydefault:
 
 			defaultNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtDefault,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(defaultNodeID, ast.EdgeTypeStmts, children...)
@@ -4603,7 +4603,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtWhile,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
@@ -4618,13 +4618,13 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltWhile,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4644,7 +4644,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtIf,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[3].node)
@@ -4663,11 +4663,11 @@ yydefault:
 		{
 			elseIfNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtElseIf,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node),
 			})
 
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
+			node.Pos = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(elseIfNodeID, ast.EdgeTypeCond, yyDollar[4].node)
@@ -4697,11 +4697,11 @@ yydefault:
 		{
 			elseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtElse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node),
 			})
 
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node)
+			node.Pos = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(elseNodeID, ast.EdgeTypeStmt, yyDollar[3].node)
@@ -4720,13 +4720,13 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltIf,
 				Flag: ast.NodeFlagAltSyntax,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[1].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4749,12 +4749,12 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			AltElseIfNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltElseIf,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4777,7 +4777,7 @@ yydefault:
 		//line php7/php7.y:2393
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
+			node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
 			yyVAL.node = yyDollar[1].node
@@ -4797,16 +4797,16 @@ yydefault:
 
 			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListPosition(children),
+				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
 			AltElseNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtAltElse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodeListPosition(yyDollar[2].token, children),
+				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
-			node.Pos = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token)
+			node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
 			yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
@@ -4864,23 +4864,23 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			var posID ast.PositionID
 			if yyDollar[1].node != 0 {
-				posID = yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token)
+				posID = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token)
 			} else if yyDollar[2].token != nil {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[2].token, yyDollar[4].token)
+				posID = yylex.(*Parser).ast.NewTokensPosition(yyDollar[2].token, yyDollar[4].token)
 			} else if yyDollar[3].token != nil {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[4].token)
+				posID = yylex.(*Parser).ast.NewTokensPosition(yyDollar[3].token, yyDollar[4].token)
 			} else {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token)
+				posID = yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token)
 			}
 
 			var flag ast.NodeFlag
@@ -4933,23 +4933,23 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			var posID ast.PositionID
 			if yyDollar[1].node != 0 {
-				posID = yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
+				posID = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 			} else if yyDollar[2].token != nil {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node)
+				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node)
 			} else if yyDollar[3].token != nil {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[6].node)
+				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[3].token, yyDollar[6].node)
 			} else {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node)
+				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node)
 			}
 
 			var flag ast.NodeFlag
@@ -5028,7 +5028,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeNullable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -5044,7 +5044,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5058,7 +5058,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5099,7 +5099,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeArgumentList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
 			// save comments
@@ -5116,7 +5116,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeArgumentList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeArguments, children...)
@@ -5157,7 +5157,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeArgument,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
@@ -5174,7 +5174,7 @@ yydefault:
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeArgument,
 				Flag: ast.NodeFlagVariadic,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -5237,17 +5237,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStaticVar,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -5265,17 +5265,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStaticVar,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -5314,7 +5314,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtPropertyList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeListTokenPosition(childrenModifiers, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
@@ -5336,7 +5336,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClassConstList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewOptionalListTokensPosition(childrenModifiers, yyDollar[2].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewOptionalListTokensPosition(childrenModifiers, yyDollar[2].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
@@ -5362,7 +5362,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTraitAdaptationList, yyDollar[3].node)
@@ -5382,14 +5382,14 @@ yydefault:
 
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			var posID ast.PositionID
 			if len(childrenModifiers) == 0 {
-				posID = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[2].token, yyDollar[10].node)
+				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[10].node)
 			} else {
-				posID = yylex.(*Parser).astPositionBuilder.NewNodeListNodePosition(childrenModifiers, yyDollar[10].node)
+				posID = yylex.(*Parser).ast.NewNodeListNodePosition(childrenModifiers, yyDollar[10].node)
 			}
 
 			var flag ast.NodeFlag
@@ -5457,7 +5457,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNop,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5472,7 +5472,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitAdaptationList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
 			// save comments
@@ -5489,7 +5489,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitAdaptationList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeAdaptations, children...)
@@ -5549,7 +5549,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUsePrecedence,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeNodeListPosition(yyDollar[1].node, children),
+				Pos:  yylex.(*Parser).ast.NewNodeNodeListPosition(yyDollar[1].node, children),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
@@ -5567,12 +5567,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
@@ -5591,12 +5591,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
@@ -5615,12 +5615,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
@@ -5640,7 +5640,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
@@ -5658,12 +5658,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitMethodRef,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
@@ -5687,12 +5687,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtTraitMethodRef,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeTrait, yyDollar[1].node)
@@ -5711,7 +5711,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtNop,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5728,7 +5728,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtStmtList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, children...)
@@ -5751,7 +5751,7 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).list.push()
@@ -5799,7 +5799,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5813,7 +5813,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5827,7 +5827,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5841,7 +5841,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5855,7 +5855,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5869,7 +5869,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -5903,17 +5903,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtProperty,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -5931,17 +5931,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtProperty,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -5981,12 +5981,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
@@ -6004,12 +6004,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
@@ -6089,7 +6089,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeStmtClass,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -6115,7 +6115,7 @@ yydefault:
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprNew,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, lastNodeID),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, lastNodeID),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
@@ -6132,7 +6132,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprNew,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
@@ -6148,12 +6148,12 @@ yydefault:
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignAssign,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -6174,12 +6174,12 @@ yydefault:
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprShortList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignAssign,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -6199,7 +6199,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignAssign,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6217,7 +6217,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignReference,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6236,7 +6236,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClone,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -6252,7 +6252,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignPlus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6270,7 +6270,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignMinus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6288,7 +6288,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignMul,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6306,7 +6306,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignPow,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6324,7 +6324,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignDiv,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6342,7 +6342,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignConcat,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6360,7 +6360,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignMod,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6378,7 +6378,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignBitwiseAnd,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6396,7 +6396,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignBitwiseOr,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6414,7 +6414,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignBitwiseXor,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6432,7 +6432,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignShiftLeft,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6450,7 +6450,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeAssignShiftRight,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6468,7 +6468,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPostInc,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6485,7 +6485,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPreInc,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
@@ -6501,7 +6501,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPostDec,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -6518,7 +6518,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPreDec,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
@@ -6534,7 +6534,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryBooleanOr,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6552,7 +6552,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryBooleanAnd,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6570,7 +6570,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryLogicalOr,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6588,7 +6588,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryLogicalAnd,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6606,7 +6606,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryLogicalXor,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6624,7 +6624,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryBitwiseOr,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6642,7 +6642,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryBitwiseAnd,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6660,7 +6660,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryBitwiseXor,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6678,7 +6678,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryConcat,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6696,7 +6696,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryPlus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6714,7 +6714,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryMinus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6732,7 +6732,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryMul,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6750,7 +6750,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryPow,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6768,7 +6768,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryDiv,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6786,7 +6786,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryMod,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6804,7 +6804,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryShiftLeft,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6822,7 +6822,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryShiftRight,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6840,7 +6840,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprUnaryPlus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -6856,7 +6856,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprUnaryMinus,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -6872,7 +6872,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprBooleanNot,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -6888,7 +6888,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprBitwiseNot,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -6904,7 +6904,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryIdentical,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6922,7 +6922,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryNotIdentical,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6940,7 +6940,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryEqual,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6958,7 +6958,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryNotEqual,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6977,7 +6977,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinarySmaller,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -6995,7 +6995,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinarySmallerOrEqual,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -7013,7 +7013,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryGreater,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -7031,7 +7031,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryGreaterOrEqual,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -7049,7 +7049,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinarySpaceship,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -7067,7 +7067,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprInstanceOf,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
@@ -7105,7 +7105,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprTernary,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[5].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[5].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
@@ -7125,7 +7125,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprTernary,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
@@ -7144,7 +7144,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeBinaryCoalesce,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
@@ -7169,7 +7169,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastInt,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7186,7 +7186,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastDouble,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7203,7 +7203,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastString,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7220,7 +7220,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastArray,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7237,7 +7237,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastObject,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7254,7 +7254,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastBool,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7271,7 +7271,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeCastUnset,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7297,11 +7297,11 @@ yydefault:
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeExprExit,
 					Flag: flag,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
 			} else {
 				node := yylex.(*Parser).ast.Nodes.Get(yyVAL.node)
-				node.Pos = yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
+				node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node)
 				node.Flag = flag
 				yylex.(*Parser).ast.Nodes.Save(yyVAL.node, node)
 			}
@@ -7317,7 +7317,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprErrorSuppress,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7341,7 +7341,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprShellExec,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
@@ -7357,7 +7357,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPrint,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7373,7 +7373,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprYield,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7387,7 +7387,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprYield,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[2].node)
@@ -7403,7 +7403,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprYield,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[2].node)
@@ -7421,7 +7421,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprYieldFrom,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7443,7 +7443,7 @@ yydefault:
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClosure,
 				Flag: flag,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -7488,7 +7488,7 @@ yydefault:
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClosure,
 				Flag: flag,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[12].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[12].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -7557,7 +7557,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClosureUse,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
@@ -7595,12 +7595,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
@@ -7617,17 +7617,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprReference,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -7646,7 +7646,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprFunctionCall,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
@@ -7663,7 +7663,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticCall,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -7682,7 +7682,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticCall,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -7701,7 +7701,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprFunctionCall,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
@@ -7718,7 +7718,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7764,7 +7764,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprExit,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -7791,7 +7791,7 @@ yydefault:
 			yylex.(*Parser).list.add(
 				yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarEncapsedStringPart,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				}),
 			)
 
@@ -7825,7 +7825,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArray,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -7843,7 +7843,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprShortArray,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -7860,7 +7860,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarString,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7874,7 +7874,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarLnumber,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7888,7 +7888,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarDnumber,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7902,7 +7902,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7916,7 +7916,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7930,7 +7930,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7944,7 +7944,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7958,7 +7958,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7972,7 +7972,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -7986,7 +7986,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -8000,7 +8000,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -8014,12 +8014,12 @@ yydefault:
 		{
 			stringPartNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarEncapsedStringPart,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarHeredoc,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, stringPartNodeID)
@@ -8035,7 +8035,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarHeredoc,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
 			// save comments
@@ -8049,7 +8049,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarEncapsed,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
@@ -8065,7 +8065,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarHeredoc,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
@@ -8097,7 +8097,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprConstFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeConstant, yyDollar[1].node)
@@ -8113,12 +8113,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClassConstFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8137,12 +8137,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprClassConstFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8265,7 +8265,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8284,7 +8284,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8303,7 +8303,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8322,7 +8322,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprMethodCall,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8365,7 +8365,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8383,12 +8383,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
@@ -8405,7 +8405,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[3].node)
@@ -8424,7 +8424,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
@@ -8441,7 +8441,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8459,7 +8459,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8485,7 +8485,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8504,7 +8504,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
@@ -8523,7 +8523,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8541,7 +8541,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8559,7 +8559,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
@@ -8577,7 +8577,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -8611,7 +8611,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -8689,7 +8689,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
@@ -8707,7 +8707,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodePosition(yyDollar[1].node),
+				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVal, yyDollar[1].node)
@@ -8723,12 +8723,12 @@ yydefault:
 		{
 			refNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprReference,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, yyDollar[4].node)
@@ -8748,12 +8748,12 @@ yydefault:
 		{
 			refNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprReference,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, yyDollar[2].node)
@@ -8770,12 +8770,12 @@ yydefault:
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[3].token, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[3].token, yyDollar[6].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -8799,12 +8799,12 @@ yydefault:
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprList,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayItem,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
@@ -8834,7 +8834,7 @@ yydefault:
 			yylex.(*Parser).list.add(
 				yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarEncapsedStringPart,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 				}),
 			)
 
@@ -8860,7 +8860,7 @@ yydefault:
 			yylex.(*Parser).list.add(
 				yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarEncapsedStringPart,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				}),
 			)
 			yylex.(*Parser).list.add(yyDollar[2].node)
@@ -8876,12 +8876,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
@@ -8898,17 +8898,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -8928,22 +8928,22 @@ yydefault:
 		{
 			varNameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			propertyNameNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, varNameNodeID)
@@ -8963,7 +8963,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
@@ -8980,12 +8980,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
@@ -9002,17 +9002,17 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			varNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
@@ -9045,7 +9045,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeScalarString,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			// save comments
@@ -9061,12 +9061,12 @@ yydefault:
 			if _, err := strconv.Atoi(string(yyDollar[1].token.Value)); err == nil {
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarLnumber,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
 			} else {
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarString,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
 			}
 
@@ -9082,19 +9082,19 @@ yydefault:
 			if _, err := strconv.Atoi(string(yyDollar[2].token.Value)); err == nil {
 				lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarLnumber,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[2].token),
+					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 				})
 
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeExprUnaryMinus,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+					Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				})
 
 				yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, lnumberNodeID)
 			} else {
 				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 					Type: ast.NodeTypeScalarString,
-					Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
+					Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				})
 			}
 
@@ -9109,12 +9109,12 @@ yydefault:
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeIdentifier,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprVariable,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenPosition(yyDollar[1].token),
+				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
@@ -9131,7 +9131,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprIsset,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
@@ -9153,7 +9153,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprEmpty,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
@@ -9171,7 +9171,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprInclude,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -9187,7 +9187,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprIncludeOnce,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -9203,7 +9203,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprEval,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
+				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
@@ -9221,7 +9221,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprRequire,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
@@ -9237,7 +9237,7 @@ yydefault:
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(ast.Node{
 				Type: ast.NodeTypeExprRequireOnce,
-				Pos:  yylex.(*Parser).astPositionBuilder.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
+				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
 			yylex.(*Parser).ast.Edges.Children(yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)

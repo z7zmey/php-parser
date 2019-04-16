@@ -7,7 +7,6 @@ import (
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
-	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
 )
@@ -19,13 +18,11 @@ func (lval *yySymType) Token(t *scanner.Token) {
 // Parser structure
 type Parser struct {
 	yyParserImpl
-	Lexer              scanner.Scanner
-	ast                *ast.AST
-	astPositionBuilder *ast.PositionBuilder
-	list               stackedNodeList
-	currentToken       *scanner.Token
-	positionBuilder    *parser.PositionBuilder
-	rootNode           node.Node
+	Lexer        scanner.Scanner
+	ast          *ast.AST
+	list         stackedNodeList
+	currentToken *scanner.Token
+	rootNode     node.Node
 }
 
 // NewParser creates and returns new Parser
@@ -35,9 +32,7 @@ func NewParser(src []byte) *Parser {
 		yyParserImpl{},
 		lexer,
 		nil,
-		ast.NewPositionBuilder(nil),
 		stackedNodeList{},
-		nil,
 		nil,
 		nil,
 	}
@@ -70,10 +65,8 @@ func (l *Parser) Parse(src []byte, a *ast.AST) int {
 	l.list.Reset()
 
 	l.ast = a
-	l.astPositionBuilder.SetAST(a)
 	l.Lexer.SetErrors(nil)
 	l.rootNode = nil
-	l.positionBuilder = &parser.PositionBuilder{}
 
 	// parse
 

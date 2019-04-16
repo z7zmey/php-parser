@@ -14,7 +14,6 @@ func TestNewTokenPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -24,14 +23,13 @@ func TestNewTokenPosition(t *testing.T) {
 	}
 
 	tkn := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
 		EndPos:    3,
 	}
 
-	posID := builder.NewTokenPosition(tkn)
+	posID := ast.NewTokenPosition(tkn)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -43,7 +41,6 @@ func TestNewTokensPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -53,21 +50,19 @@ func TestNewTokensPosition(t *testing.T) {
 	}
 
 	token1 := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
 		EndPos:    3,
 	}
 	token2 := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 2,
 		EndLine:   2,
 		StartPos:  4,
 		EndPos:    6,
 	}
 
-	posID := builder.NewTokensPosition(token1, token2)
+	posID := ast.NewTokensPosition(token1, token2)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -79,7 +74,6 @@ func TestNewTokenNodePosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -89,7 +83,6 @@ func TestNewTokenNodePosition(t *testing.T) {
 	}
 
 	tkn := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
@@ -103,7 +96,7 @@ func TestNewTokenNodePosition(t *testing.T) {
 	})
 	nID := ast.Nodes.Create(Node{Pos: nodePosID})
 
-	posID := builder.NewTokenNodePosition(tkn, nID)
+	posID := ast.NewTokenNodePosition(tkn, nID)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -115,7 +108,6 @@ func TestNewNodeTokenPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -139,7 +131,7 @@ func TestNewNodeTokenPosition(t *testing.T) {
 		EndPos:    12,
 	}
 
-	posID := builder.NewNodeTokenPosition(nID, tkn)
+	posID := ast.NewNodeTokenPosition(nID, tkn)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -151,7 +143,6 @@ func TestNewNodeListPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -176,7 +167,7 @@ func TestNewNodeListPosition(t *testing.T) {
 	})
 	neID := ast.Nodes.Create(Node{Pos: nePosID})
 
-	posID := builder.NewNodeListPosition([]NodeID{nsID, neID})
+	posID := ast.NewNodeListPosition([]NodeID{nsID, neID})
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -188,7 +179,6 @@ func TestNewNodesPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -213,7 +203,7 @@ func TestNewNodesPosition(t *testing.T) {
 	})
 	neID := ast.Nodes.Create(Node{Pos: nePosID})
 
-	posID := builder.NewNodesPosition(nsID, neID)
+	posID := ast.NewNodesPosition(nsID, neID)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -225,7 +215,6 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -257,7 +246,7 @@ func TestNewNodeListTokenPosition(t *testing.T) {
 		EndPos:    22,
 	}
 
-	posID := builder.NewNodeListTokenPosition([]NodeID{nsID, neID}, tkn)
+	posID := ast.NewNodeListTokenPosition([]NodeID{nsID, neID}, tkn)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -269,7 +258,6 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -301,7 +289,7 @@ func TestNewTokenNodeListPosition(t *testing.T) {
 	})
 	neID := ast.Nodes.Create(Node{Pos: nePosID})
 
-	posID := builder.NewTokenNodeListPosition(tkn, []NodeID{nsID, neID})
+	posID := ast.NewTokenNodeListPosition(tkn, []NodeID{nsID, neID})
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -313,7 +301,6 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -346,7 +333,7 @@ func TestNewNodeNodeListPosition(t *testing.T) {
 	})
 	neID := ast.Nodes.Create(Node{Pos: nePosID})
 
-	posID := builder.NewNodeNodeListPosition(nID, []NodeID{nsID, neID})
+	posID := ast.NewNodeNodeListPosition(nID, []NodeID{nsID, neID})
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -358,7 +345,6 @@ func TestNewNodeListNodePosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -391,7 +377,7 @@ func TestNewNodeListNodePosition(t *testing.T) {
 	})
 	nID := ast.Nodes.Create(Node{Pos: nPosID})
 
-	posID := builder.NewNodeListNodePosition([]NodeID{nsID, neID}, nID)
+	posID := ast.NewNodeListNodePosition([]NodeID{nsID, neID}, nID)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -403,7 +389,6 @@ func TestNewOptionalListTokensPosition(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -413,21 +398,19 @@ func TestNewOptionalListTokensPosition(t *testing.T) {
 	}
 
 	token1 := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 1,
 		EndLine:   1,
 		StartPos:  0,
 		EndPos:    3,
 	}
 	token2 := &scanner.Token{
-		Value:     `foo`,
 		StartLine: 2,
 		EndLine:   2,
 		StartPos:  4,
 		EndPos:    6,
 	}
 
-	posID := builder.NewOptionalListTokensPosition(nil, token1, token2)
+	posID := ast.NewOptionalListTokensPosition(nil, token1, token2)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -439,7 +422,6 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := Position{
 		PS: 0,
@@ -477,7 +459,7 @@ func TestNewOptionalListTokensPosition2(t *testing.T) {
 		EndPos:    25,
 	}
 
-	posID := builder.NewOptionalListTokensPosition([]NodeID{nsID, neID}, tkn1, tkn2)
+	posID := ast.NewOptionalListTokensPosition([]NodeID{nsID, neID}, tkn1, tkn2)
 	actual := ast.Positions.Get(posID)
 
 	assert.Equal(t, expected, actual)
@@ -489,11 +471,10 @@ func TestNilNodePos(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := PositionID(0)
 
-	actual := builder.NewNodesPosition(NodeID(0), NodeID(0))
+	actual := ast.NewNodesPosition(NodeID(0), NodeID(0))
 	assert.Equal(t, expected, actual)
 }
 
@@ -503,7 +484,6 @@ func TestNilNodeListPos(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := PositionID(0)
 
@@ -515,7 +495,7 @@ func TestNilNodeListPos(t *testing.T) {
 	})
 	nID := ast.Nodes.Create(Node{Pos: nPosID})
 
-	actual := builder.NewNodeNodeListPosition(nID, nil)
+	actual := ast.NewNodeNodeListPosition(nID, nil)
 	assert.Equal(t, expected, actual)
 }
 
@@ -525,7 +505,6 @@ func TestNilNodeListTokenPos(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := PositionID(0)
 
@@ -536,7 +515,7 @@ func TestNilNodeListTokenPos(t *testing.T) {
 		EndPos:    3,
 	}
 
-	actual := builder.NewNodeListTokenPosition(nil, token)
+	actual := ast.NewNodeListTokenPosition(nil, token)
 	assert.Equal(t, expected, actual)
 }
 
@@ -546,7 +525,6 @@ func TestEmptyNodeListPos(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := PositionID(0)
 
@@ -558,7 +536,7 @@ func TestEmptyNodeListPos(t *testing.T) {
 	})
 	nID := ast.Nodes.Create(Node{Pos: nPosID})
 
-	actual := builder.NewNodeNodeListPosition(nID, []NodeID{})
+	actual := ast.NewNodeNodeListPosition(nID, []NodeID{})
 	assert.Equal(t, expected, actual)
 }
 
@@ -568,7 +546,6 @@ func TestEmptyNodeListTokenPos(t *testing.T) {
 		Nodes:     NewNodeStorage(nil),
 		Edges:     NewEdgeStorage(nil),
 	}
-	builder := NewPositionBuilder(&ast)
 
 	expected := PositionID(0)
 
@@ -579,6 +556,6 @@ func TestEmptyNodeListTokenPos(t *testing.T) {
 		EndPos:    3,
 	}
 
-	actual := builder.NewNodeListTokenPosition([]NodeID{}, token)
+	actual := ast.NewNodeListTokenPosition([]NodeID{}, token)
 	assert.Equal(t, expected, actual)
 }
