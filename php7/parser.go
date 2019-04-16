@@ -67,6 +67,7 @@ func (l *Parser) WithFreeFloating() {
 // Parse the php7 Parser entrypoint
 func (l *Parser) Parse(src []byte, a *ast.AST) int {
 	l.Lexer.Reset(src)
+	l.list.Reset()
 
 	l.ast = a
 	l.astPositionBuilder.SetAST(a)

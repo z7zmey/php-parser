@@ -7,6 +7,11 @@ type stackedNodeList struct {
 	stack []int
 }
 
+func (s *stackedNodeList) Reset() {
+	s.list = s.list[:0]
+	s.stack = s.stack[:0]
+}
+
 func (s *stackedNodeList) add(n ast.NodeID) {
 	s.list = append(s.list, n)
 }
