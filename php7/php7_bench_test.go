@@ -387,7 +387,6 @@ func BenchmarkPhp7(b *testing.B) {
 		a := &ast.AST{
 			Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 			Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
-			Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
 		}
 		php7parser.Parse([]byte(src), a)
 	}
@@ -398,7 +397,6 @@ func BenchmarkPhp7Reuse(b *testing.B) {
 	a := &ast.AST{
 		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
-		Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
 	}
 	for n := 0; n < b.N; n++ {
 		a.Reset()

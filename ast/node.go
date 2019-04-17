@@ -201,16 +201,91 @@ const (
 	NodeTypeBinaryNotEqual       = 167 | NodeType(NodeClassTypeBinary)
 )
 
+type EdgeType uint8
+
+const (
+	EdgeTypeExpr EdgeType = iota
+	EdgeTypeVarType
+	EdgeTypeVar
+	EdgeTypeDefaultValue
+	EdgeTypeArguments
+	EdgeTypeStmts
+	EdgeTypeParts
+	EdgeTypeCond
+	EdgeTypeStmt
+	EdgeTypeElseIf
+	EdgeTypeElse
+	EdgeTypeTypes
+	EdgeTypeModifiers
+	EdgeTypeConsts
+	EdgeTypeMethodName
+	EdgeTypeParams
+	EdgeTypeReturnType
+	EdgeTypeClassName
+	EdgeTypeArgumentList
+	EdgeTypeExtends
+	EdgeTypeImplements
+	EdgeTypeConstantName
+	EdgeTypeExprs
+	EdgeTypeInit
+	EdgeTypeLoop
+	EdgeTypeKey
+	EdgeTypeFunctionName
+	EdgeTypeVars
+	EdgeTypeLabel
+	EdgeTypeUseType
+	EdgeTypePrefix
+	EdgeTypeUseList
+	EdgeTypeInterfaceName
+	EdgeTypeLabelName
+	EdgeTypeNamespaceName
+	EdgeTypeProperties
+	EdgeTypeCaseList
+	EdgeTypeTrait
+	EdgeTypeMethod
+	EdgeTypeRef
+	EdgeTypeModifier
+	EdgeTypeAlias
+	EdgeTypeInsteadof
+	EdgeTypeTraits
+	EdgeTypeTraitAdaptationList
+	EdgeTypeTraitName
+	EdgeTypeCatches
+	EdgeTypeFinally
+	EdgeTypeUses
+	EdgeTypeUse
+	EdgeTypeCases
+	EdgeTypeAdaptations
+	EdgeTypeInterfaceNames
+	EdgeTypeLeft
+	EdgeTypeRight
+	EdgeTypeDim
+	EdgeTypeVal
+	EdgeTypeItems
+	EdgeTypeClass
+	EdgeTypeClosureUse
+	EdgeTypeConstant
+	EdgeTypeFunction
+	EdgeTypeProperty
+	EdgeTypeCall
+	EdgeTypeIfTrue
+	EdgeTypeIfFalse
+	EdgeTypeVarName
+)
+
 func (nt NodeType) Is(nct NodeClassType) bool {
 	return uint16(nt)&uint16(nct) == uint16(nct)
 }
 
 type Node struct {
-	Parent NodeID
-	Type   NodeType
-	Flag   NodeFlag
+	Type NodeType
+	Flag NodeFlag
 
-	Child EdgeID
+	Parent NodeID
+	Child  NodeID
+	Next   NodeID
+
+	Key EdgeType
 
 	Pos PositionID
 }

@@ -275,7 +275,7 @@ start:
                     Type: ast.NodeTypeRoot,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
                 })
-                yylex.(*Parser).ast.Edges.Children(nodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, nodeID, ast.EdgeTypeStmts, children...)
 
                 yylex.(*Parser).ast.RootNode = nodeID
 
@@ -377,7 +377,7 @@ name:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, children...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -391,7 +391,7 @@ name:
                     Type: ast.NodeTypeNameRelative,
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($1, children),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -406,7 +406,7 @@ name:
                     Type: ast.NodeTypeNameFullyQualified,
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($1, children),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -478,14 +478,14 @@ top_statement:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, children...)
 
                 // Create Namespace Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtNamespace,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeNamespaceName, nameNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeNamespaceName, nameNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -505,15 +505,15 @@ top_statement:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create Namespace Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtNamespace,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $5),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeNamespaceName, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, childrenStmts...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeNamespaceName, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -530,7 +530,7 @@ top_statement:
                     Type: ast.NodeTypeStmtNamespace,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -560,7 +560,7 @@ top_statement:
                 node.Pos = yylex.(*Parser).ast.NewTokensPosition($1, $4)
                 yylex.(*Parser).ast.Nodes.Save($2, node)
 
-                yylex.(*Parser).ast.Edges.Children($3, ast.EdgeTypeUseType, $2)
+                yylex.(*Parser).ast.Children(0, $3, ast.EdgeTypeUseType, $2)
                 
                 $$ = $3
 
@@ -578,7 +578,7 @@ top_statement:
                     Type: ast.NodeTypeStmtUseList,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUses, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeUses, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -594,8 +594,8 @@ top_statement:
                     Type: ast.NodeTypeStmtUseList,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUses, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUseType, $2)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeUseType, $2)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUses, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -611,7 +611,7 @@ top_statement:
                     Type: ast.NodeTypeStmtConstList,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConsts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConsts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -660,15 +660,15 @@ group_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create GroupUse Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtGroupUse,
                     Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, $6),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -692,15 +692,15 @@ group_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create GroupUse Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtGroupUse,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $7),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.UseType, $1.FreeFloating)
@@ -728,15 +728,15 @@ mixed_group_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create GroupUse Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtGroupUse,
                     Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, $6),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -760,15 +760,15 @@ mixed_group_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create GroupUse Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtGroupUse,
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $7),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Use, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -862,7 +862,7 @@ inline_use_declaration:
             }
     |   use_type unprefixed_use_declaration
             {
-                yylex.(*Parser).ast.Edges.Children($2, ast.EdgeTypeUseType, $1)
+                yylex.(*Parser).ast.Children(0, $2, ast.EdgeTypeUseType, $1)
                 
                 $$ = $2
 
@@ -880,14 +880,14 @@ unprefixed_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // Create Use Node
                 $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeStmtUse,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUse, nameNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeUse, nameNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -903,7 +903,7 @@ unprefixed_use_declaration:
                     Type: ast.NodeTypeNameName,
                     Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).ast.Edges.Children(nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
                 // create Alias Node
                 aliasNodeID := yylex.(*Parser).ast.Nodes.Create(ast.Node{
@@ -916,8 +916,8 @@ unprefixed_use_declaration:
                     Type: ast.NodeTypeStmtUse,
                     Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, $3),
                 })
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeUse, nameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeAlias, aliasNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeUse, nameNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeAlias, aliasNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -1056,7 +1056,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1082,7 +1082,7 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $5)
                 yylex.(*Parser).ast.Nodes.Save($5, node)
 
-                yylex.(*Parser).ast.Edges.Children($5, ast.EdgeTypeCond, $3)
+                yylex.(*Parser).ast.Children(0, $5, ast.EdgeTypeCond, $3)
 
                 $$ = $5
 
@@ -1100,8 +1100,8 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $7),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $2)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCond, $5)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, $2)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeCond, $5)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1119,9 +1119,9 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $9)
                 yylex.(*Parser).ast.Nodes.Save($9, node)
 
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeCond, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeInit, yylex.(*Parser).list.pop()...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $9, ast.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $9, ast.EdgeTypeCond, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, $9, ast.EdgeTypeInit, yylex.(*Parser).list.pop()...)
 
                 $$ = $9
 
@@ -1140,7 +1140,7 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $5)
                 yylex.(*Parser).ast.Nodes.Save($5, node)
 
-                yylex.(*Parser).ast.Edges.Children($5, ast.EdgeTypeCond, $3)
+                yylex.(*Parser).ast.Children(0, $5, ast.EdgeTypeCond, $3)
 
                 $$ = $5
 
@@ -1158,7 +1158,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1174,7 +1174,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1190,7 +1190,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1208,7 +1208,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1226,7 +1226,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1244,7 +1244,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExprs, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExprs, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1289,7 +1289,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $6),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1310,8 +1310,8 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $7)
                 yylex.(*Parser).ast.Nodes.Save($7, node)
 
-                yylex.(*Parser).ast.Edges.Children($7, ast.EdgeTypeExpr, $3)
-                yylex.(*Parser).ast.Edges.Children($7, ast.EdgeTypeVar, $5)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $7, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $7, ast.EdgeTypeVar, $5)
 
                 $$ = $7
 
@@ -1330,9 +1330,9 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $9)
                 yylex.(*Parser).ast.Nodes.Save($9, node)
 
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeExpr, $3)
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeKey, $5)
-                yylex.(*Parser).ast.Edges.Children($9, ast.EdgeTypeVar, $7)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $9, ast.EdgeTypeExpr, $3)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $9, ast.EdgeTypeKey, $5)
+                yylex.(*Parser).ast.Children(prevNodeID, $9, ast.EdgeTypeVar, $7)
 
                 $$ = $9
 
@@ -1353,7 +1353,7 @@ statement:
                 node.Pos = yylex.(*Parser).ast.NewTokenNodePosition($1, $5)
                 yylex.(*Parser).ast.Nodes.Save($5, node)
 
-                yylex.(*Parser).ast.Edges.Children($5, ast.EdgeTypeConsts, children...)
+                yylex.(*Parser).ast.Children(0, $5, ast.EdgeTypeConsts, children...)
 
                 $$ = $5
 
@@ -1395,9 +1395,9 @@ statement:
                     Pos:  posID,
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCatches, childrenCatches...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, childrenStmts...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConsts, $6)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConsts, $6)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeCatches, childrenCatches...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1413,7 +1413,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1434,7 +1434,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLabel, LableNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLabel, LableNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1456,7 +1456,7 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLabelName, LableNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLabelName, LableNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1489,10 +1489,10 @@ catch_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($2, $9),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeTypes, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children(catchNodeID, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, catchNodeID, ast.EdgeTypeVar, varNodeID)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, ast.EdgeTypeTypes, yylex.(*Parser).list.pop()...)
 
                 yylex.(*Parser).list.add(catchNodeID)
 
@@ -1541,7 +1541,7 @@ finally_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1599,10 +1599,10 @@ function_declaration_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $11),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeReturnType, $8)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeFunctionName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeFunctionName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeReturnType, $8)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 
                 // save comments
@@ -1668,11 +1668,11 @@ class_declaration_statement:
                     Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, $9),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, childrenStmts...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeImplements, $5)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExtends, $4)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClassName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifiers, childrenModifiers...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeImplements, $5)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExtends, $4)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeClassName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeModifiers, childrenModifiers...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -1695,10 +1695,10 @@ class_declaration_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $8),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeImplements, $4)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExtends, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClassName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeImplements, $4)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExtends, $3)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeClassName, identifierNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1766,8 +1766,8 @@ trait_declaration_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $6),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeTraitName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeTraitName, identifierNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1792,9 +1792,9 @@ interface_declaration_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $7),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExtends, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeInterfaceName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExtends, $3)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeInterfaceName, identifierNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1820,7 +1820,7 @@ extends_from:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClassName, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClassName, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1845,7 +1845,7 @@ interface_extends_list:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($1, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeInterfaceNames, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1870,7 +1870,7 @@ implements_list:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($1, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeInterfaceNames, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1893,7 +1893,7 @@ foreach_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1907,7 +1907,7 @@ foreach_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1923,7 +1923,7 @@ foreach_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save commentsc
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -1941,7 +1941,7 @@ for_statement:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1960,8 +1960,8 @@ for_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -1981,7 +1981,7 @@ foreach_statement:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2000,8 +2000,8 @@ foreach_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -2021,7 +2021,7 @@ declare_statement:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2040,8 +2040,8 @@ declare_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -2068,8 +2068,8 @@ switch_case_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
@@ -2091,8 +2091,8 @@ switch_case_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
@@ -2116,8 +2116,8 @@ switch_case_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -2142,8 +2142,8 @@ switch_case_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $5),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -2172,7 +2172,7 @@ case_list:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($2, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(caseNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, caseNodeID, ast.EdgeTypeStmts, children...)
 
                 yylex.(*Parser).list.add(caseNodeID)
 
@@ -2192,7 +2192,7 @@ case_list:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($2, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(defaultNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, defaultNodeID, ast.EdgeTypeStmts, children...)
 
                 yylex.(*Parser).list.add(defaultNodeID)
 
@@ -2224,7 +2224,7 @@ while_statement:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2243,8 +2243,8 @@ while_statement:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -2264,8 +2264,8 @@ if_stmt_without_else:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $5),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCond, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $5)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCond, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, $5)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2285,9 +2285,9 @@ if_stmt_without_else:
                 node.Pos = yylex.(*Parser).ast.NewNodesPosition($1, $6)
                 yylex.(*Parser).ast.Nodes.Save($1, node)
 
-                yylex.(*Parser).ast.Edges.Children(elseIfNodeID, ast.EdgeTypeCond, $4)
-                yylex.(*Parser).ast.Edges.Children(elseIfNodeID, ast.EdgeTypeStmt, $6)
-                yylex.(*Parser).ast.Edges.Children($1, ast.EdgeTypeElseIf, elseIfNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, elseIfNodeID, ast.EdgeTypeCond, $4)
+                yylex.(*Parser).ast.Children(prevNodeID, elseIfNodeID, ast.EdgeTypeStmt, $6)
+                yylex.(*Parser).ast.Children(0, $1, ast.EdgeTypeElseIf, elseIfNodeID)
 
                 $$ = $1
 
@@ -2318,8 +2318,8 @@ if_stmt:
                 node.Pos = yylex.(*Parser).ast.NewNodesPosition($1, $3)
                 yylex.(*Parser).ast.Nodes.Save($1, node)
 
-                yylex.(*Parser).ast.Edges.Children(elseNodeID, ast.EdgeTypeStmt, $3)
-                yylex.(*Parser).ast.Edges.Children($1, ast.EdgeTypeElse, elseNodeID)
+                yylex.(*Parser).ast.Children(0, elseNodeID, ast.EdgeTypeStmt, $3)
+                yylex.(*Parser).ast.Children(0, $1, ast.EdgeTypeElse, elseNodeID)
 
 
                 // save comments
@@ -2345,9 +2345,9 @@ alt_if_stmt_without_else:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($1, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCond, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCond, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2371,10 +2371,10 @@ alt_if_stmt_without_else:
                     Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition($2, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children(AltElseIfNodeID, ast.EdgeTypeCond, $4)
-                yylex.(*Parser).ast.Edges.Children(AltElseIfNodeID, ast.EdgeTypeStmt, stmtListNodeID)
-                yylex.(*Parser).ast.Edges.Children($1, ast.EdgeTypeElseIf, AltElseIfNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, AltElseIfNodeID, ast.EdgeTypeCond, $4)
+                yylex.(*Parser).ast.Children(prevNodeID, AltElseIfNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, $1, ast.EdgeTypeElseIf, AltElseIfNodeID)
 
                 $$ = $1
 
@@ -2422,9 +2422,9 @@ alt_if_stmt:
                 node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition($1, $6)
                 yylex.(*Parser).ast.Nodes.Save($1, node)
 
-                yylex.(*Parser).ast.Edges.Children(stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).ast.Edges.Children(AltElseNodeID, ast.EdgeTypeStmt, stmtListNodeID)
-                yylex.(*Parser).ast.Edges.Children($1, ast.EdgeTypeElse, AltElseNodeID)
+                yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, AltElseNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).ast.Children(0, $1, ast.EdgeTypeElse, AltElseNodeID)
 
                 $$ = $1
 
@@ -2509,9 +2509,9 @@ parameter:
                     Pos:  posID,
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarType, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarType, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVar, varNodeID)
 
                 // // save comments
                 // if $1 != nil {
@@ -2576,10 +2576,10 @@ parameter:
                     Pos:  posID,
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarType, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDefaultValue, $6)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarType, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDefaultValue, $6)
 
                 // // save comments
                 // if $1 != nil {
@@ -2639,7 +2639,7 @@ type_expr:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2722,7 +2722,7 @@ argument_list:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArguments, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeArguments, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2763,7 +2763,7 @@ argument:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $1)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -2778,7 +2778,7 @@ argument:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2851,8 +2851,8 @@ static_var:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2877,9 +2877,9 @@ static_var:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2916,8 +2916,8 @@ class_statement:
                     Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperties, childrenProperties...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeModifiers, childrenModifiers...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperties, childrenProperties...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -2936,8 +2936,8 @@ class_statement:
                     Pos:  yylex.(*Parser).ast.NewOptionalListTokensPosition(childrenModifiers, $2, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConsts, childrenConstants...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeModifiers, childrenModifiers...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeConsts, childrenConstants...)
 
                 // save comments
                 // if len($1) > 0 {
@@ -2960,8 +2960,8 @@ class_statement:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeTraitAdaptationList, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeTraits, childrenTraits...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeTraitAdaptationList, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeTraits, childrenTraits...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2996,12 +2996,12 @@ class_statement:
                     Pos:  posID,
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeMethodName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParams, childrenParams...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParams, childrenParams...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeReturnType, $9)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmt, $10)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeMethodName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeReturnType, $9)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, $10)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeModifiers, childrenModifiers...)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, childrenParams...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, childrenParams...)
 
                 // save comments
                 // if len($1) > 0 {
@@ -3082,7 +3082,7 @@ trait_adaptations:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeAdaptations, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeAdaptations, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3141,8 +3141,8 @@ trait_precedence:
                     Pos:  yylex.(*Parser).ast.NewNodeNodeListPosition($1, children),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeInsteadof, children...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeRef, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeInsteadof, children...)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3165,8 +3165,8 @@ trait_alias:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeRef, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3187,8 +3187,8 @@ trait_alias:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeRef, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3209,9 +3209,9 @@ trait_alias:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifier, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeRef, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeModifier, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3227,8 +3227,8 @@ trait_alias:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeModifier, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeRef, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeModifier, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3251,7 +3251,7 @@ trait_method_reference:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeMethod, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeMethod, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3279,8 +3279,8 @@ absolute_trait_method_reference:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeTrait, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeMethod, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeTrait, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeMethod, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3314,7 +3314,7 @@ method_body:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
                 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3487,8 +3487,8 @@ property:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3513,9 +3513,9 @@ property:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3558,8 +3558,8 @@ class_const_decl:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConstantName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConstantName, identifierNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3582,8 +3582,8 @@ const_decl:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConstantName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConstantName, identifierNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3661,10 +3661,10 @@ anonymous_class:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $8),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExtends, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeImplements, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExtends, $3)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeImplements, $4)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3688,8 +3688,8 @@ new_expr:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, lastNodeID),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $2)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $2)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3703,7 +3703,7 @@ new_expr:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3725,9 +3725,9 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $6),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, listNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $6)
+                yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, listNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $6)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3749,9 +3749,9 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $5),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, listNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $5)
+                yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, listNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $5)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3767,8 +3767,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3783,8 +3783,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $4)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3800,7 +3800,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3814,8 +3814,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3830,8 +3830,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3846,8 +3846,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3862,8 +3862,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3878,8 +3878,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3894,8 +3894,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3910,8 +3910,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3926,8 +3926,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3942,8 +3942,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3958,8 +3958,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3974,8 +3974,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -3990,8 +3990,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4006,7 +4006,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4021,7 +4021,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4035,7 +4035,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4050,7 +4050,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4064,8 +4064,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4080,8 +4080,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4096,8 +4096,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4112,8 +4112,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4128,8 +4128,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4144,8 +4144,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4160,8 +4160,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4176,8 +4176,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4192,8 +4192,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4208,8 +4208,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4224,8 +4224,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4240,8 +4240,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4256,8 +4256,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4272,8 +4272,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4288,8 +4288,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4304,8 +4304,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4320,8 +4320,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4336,7 +4336,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4350,7 +4350,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4364,7 +4364,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4378,7 +4378,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4392,8 +4392,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4408,8 +4408,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4424,8 +4424,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4440,8 +4440,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4457,8 +4457,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4473,8 +4473,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4489,8 +4489,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4505,8 +4505,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4521,8 +4521,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4537,8 +4537,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeClass, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4569,9 +4569,9 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $5),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCond, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeIfTrue, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeIfFalse, $5)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCond, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeIfTrue, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeIfFalse, $5)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4587,8 +4587,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCond, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeIfFalse, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCond, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeIfFalse, $4)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -4604,8 +4604,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLeft, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, Coalesceeefloating.Expr, $2.FreeFloating)
@@ -4625,7 +4625,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4640,7 +4640,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4655,7 +4655,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4670,7 +4670,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4685,7 +4685,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4700,7 +4700,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4715,7 +4715,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4757,7 +4757,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4777,7 +4777,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4791,7 +4791,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4817,7 +4817,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4831,8 +4831,8 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeKey, $2)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeKey, $2)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVal, $4)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4847,7 +4847,7 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4867,10 +4867,10 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $11),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClosureUse, $7)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeReturnType, $8)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClosureUse, $7)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeReturnType, $8)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
                 
                 // // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4910,10 +4910,10 @@ expr_without_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $12),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClosureUse, $8)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeReturnType, $9)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClosureUse, $8)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeReturnType, $9)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
                 
                 // // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4978,7 +4978,7 @@ lexical_vars:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5021,7 +5021,7 @@ lexical_var:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5046,8 +5046,8 @@ lexical_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5066,8 +5066,8 @@ function_call:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeFunction, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $2)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeFunction, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $2)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5081,9 +5081,9 @@ function_call:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCall, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeCall, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5098,9 +5098,9 @@ function_call:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeCall, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeCall, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5115,8 +5115,8 @@ function_call:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeFunction, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $2)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeFunction, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $2)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5175,7 +5175,7 @@ exit_expr:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Exit, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -5233,7 +5233,7 @@ dereferencable_scalar:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5249,7 +5249,7 @@ dereferencable_scalar:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5404,7 +5404,7 @@ scalar:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, stringPartNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, stringPartNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5430,7 +5430,7 @@ scalar:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5444,7 +5444,7 @@ scalar:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5473,7 +5473,7 @@ constant:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConstant, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConstant, $1)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5492,8 +5492,8 @@ constant:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConstantName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeConstantName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5514,8 +5514,8 @@ constant:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeConstantName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeConstantName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5629,8 +5629,8 @@ callable_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5646,8 +5646,8 @@ callable_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5663,8 +5663,8 @@ callable_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5680,9 +5680,9 @@ callable_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeMethod, $3)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeMethod, $3)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5718,8 +5718,8 @@ variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5742,7 +5742,7 @@ simple_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5757,7 +5757,7 @@ simple_variable:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, $3)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5774,7 +5774,7 @@ simple_variable:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5792,8 +5792,8 @@ static_member:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5808,8 +5808,8 @@ static_member:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5833,8 +5833,8 @@ new_variable:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5844,13 +5844,14 @@ new_variable:
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
     |   new_variable '{' expr '}'
-            {$$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
+            {
+                $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5866,8 +5867,8 @@ new_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5882,8 +5883,8 @@ new_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5898,8 +5899,8 @@ new_variable:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6022,8 +6023,8 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, $3)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeKey, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVal, $3)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6038,7 +6039,7 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewNodePosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, $1)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, $1)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6057,9 +6058,9 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewNodesPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, $4)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, refNodeID)
+                yylex.(*Parser).ast.Children(0, refNodeID, ast.EdgeTypeVar, $4)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeKey, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVal, refNodeID)
 
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6080,8 +6081,8 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(refNodeID, ast.EdgeTypeVar, $2)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, refNodeID)
+                yylex.(*Parser).ast.Children(0, refNodeID, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, refNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6100,9 +6101,9 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $6),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, listNodeID)
+                yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeKey, $1)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVal, listNodeID)
 
                 // TODO: Cannot use list() as standalone expression
 
@@ -6127,8 +6128,8 @@ array_pair:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVal, listNodeID)
+                yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, listNodeID)
 
                 // TODO: Cannot use list() as standalone expression
                 
@@ -6200,7 +6201,7 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6225,9 +6226,9 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $3)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save comments
                 // yylex.(*Parser).addDollarToken(variable)
@@ -6258,9 +6259,9 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, varNameNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeProperty, propertyNameNodeID)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, varNameNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, propertyNameNodeID)
 
                 // save comments
                 // yylex.(*Parser).addDollarToken(variable)
@@ -6276,7 +6277,7 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6296,7 +6297,7 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $3),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6321,9 +6322,9 @@ encaps_var:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $6),
                 })
 
-                yylex.(*Parser).ast.Edges.Children(varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeDim, $4)
+                yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $4)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -6391,7 +6392,7 @@ encaps_var_offset:
                         Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $2),
                     })
 
-                    yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, lnumberNodeID)
+                    yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, lnumberNodeID)
                 } else {
                     $$ = yylex.(*Parser).ast.Nodes.Create(ast.Node{
                         Type: ast.NodeTypeScalarString,
@@ -6416,7 +6417,7 @@ encaps_var_offset:
                     Pos:  yylex.(*Parser).ast.NewTokenPosition($1),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6434,7 +6435,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $5),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6454,7 +6455,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6470,7 +6471,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6484,7 +6485,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6498,7 +6499,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokensPosition($1, $4),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $3)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6514,7 +6515,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6528,7 +6529,7 @@ internal_functions_in_yacc:
                     Pos:  yylex.(*Parser).ast.NewTokenNodePosition($1, $2),
                 })
 
-                yylex.(*Parser).ast.Edges.Children($$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save comments
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)

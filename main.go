@@ -128,7 +128,6 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		abstractSyntaxTree := &ast.AST{
 			Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
 			Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
-			Edges:     ast.NewEdgeStorage(make([]ast.Edge, 0, 1024)),
 		}
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)

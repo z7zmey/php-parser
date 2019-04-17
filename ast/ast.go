@@ -6,16 +6,53 @@ type AST struct {
 	FileData  []byte
 	Positions *PositionStorage
 	Nodes     *NodeStorage
-	Edges     *EdgeStorage
 	RootNode  NodeID
 }
 
-func (t *AST) Reset() {
-	t.FileData = t.FileData[:0]
-	t.Positions.Reset()
-	t.Nodes.Reset()
-	t.Edges.Reset()
-	t.RootNode = 0
+func (a *AST) Reset() {
+	a.FileData = a.FileData[:0]
+	a.Positions.Reset()
+	a.Nodes.Reset()
+	a.RootNode = 0
+}
+
+func (a *AST) Children(prevNodeID NodeID, parentNodeID NodeID, edgeType EdgeType, children ...NodeID) NodeID {
+	for _, childNodeID := range children {
+		if childNodeID == 0 {
+			continue
+		}
+
+		if prevNodeID == 0 {
+			a.linkChild(parentNodeID, childNodeID)
+		} else {
+			a.linkNext(prevNodeID, childNodeID)
+		}
+
+		a.linkParent(childNodeID, parentNodeID, edgeType)
+
+		prevNodeID = childNodeID
+	}
+
+	return prevNodeID
+}
+
+func (a *AST) linkParent(childNodeID, parentNodeID NodeID, key EdgeType) {
+	childNode := a.Nodes.Get(childNodeID)
+	childNode.Parent = parentNodeID
+	childNode.Key = key
+	a.Nodes.Save(childNodeID, childNode)
+}
+
+func (a *AST) linkChild(parentNodeID, childNodeID NodeID) {
+	parentNode := a.Nodes.Get(parentNodeID)
+	parentNode.Child = childNodeID
+	a.Nodes.Save(parentNodeID, parentNode)
+}
+
+func (a *AST) linkNext(prevNodeID, nextNodeID NodeID) {
+	prevNode := a.Nodes.Get(prevNodeID)
+	prevNode.Next = nextNodeID
+	a.Nodes.Save(prevNodeID, prevNode)
 }
 
 func (a *AST) getListStartPosID(l []NodeID) PositionID {
