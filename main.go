@@ -13,10 +13,10 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
-	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/printer"
+	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 	"github.com/z7zmey/php-parser/visitor"
 )
 
@@ -125,9 +125,9 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 			parserWorker.WithFreeFloating()
 		}
 
-		abstractSyntaxTree := &ast.AST{
-			Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
-			Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+		abstractSyntaxTree := &linkedtree.AST{
+			Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
+			Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
 		}
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)

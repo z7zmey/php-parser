@@ -1,4 +1,4 @@
-package ast
+package linkedtree
 
 type NodeID uint32
 type NodeType uint16

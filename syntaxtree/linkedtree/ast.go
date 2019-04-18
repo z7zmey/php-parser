@@ -1,4 +1,4 @@
-package ast
+package linkedtree
 
 import "github.com/z7zmey/php-parser/scanner"
 

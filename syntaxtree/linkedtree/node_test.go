@@ -1,8 +1,9 @@
-package ast
+package linkedtree
 
 import (
-	"gotest.tools/assert"
 	"testing"
+
+	"gotest.tools/assert"
 )
 
 func TestNodeType(t *testing.T) {

@@ -12329,7 +12329,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5096,
 					EndPos:    5106,
 				},
-				Expr: &cast.Array{
+				Expr: &clinkedtree.Array{
 					Position: &position.Position{
 						StartLine: 263,
 						EndLine:   263,
@@ -12362,7 +12362,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5109,
 					EndPos:    5121,
 				},
-				Expr: &cast.Bool{
+				Expr: &clinkedtree.Bool{
 					Position: &position.Position{
 						StartLine: 264,
 						EndLine:   264,
@@ -12395,7 +12395,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5124,
 					EndPos:    5133,
 				},
-				Expr: &cast.Bool{
+				Expr: &clinkedtree.Bool{
 					Position: &position.Position{
 						StartLine: 265,
 						EndLine:   265,
@@ -12428,7 +12428,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5136,
 					EndPos:    5147,
 				},
-				Expr: &cast.Double{
+				Expr: &clinkedtree.Double{
 					Position: &position.Position{
 						StartLine: 266,
 						EndLine:   266,
@@ -12461,7 +12461,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5150,
 					EndPos:    5160,
 				},
-				Expr: &cast.Double{
+				Expr: &clinkedtree.Double{
 					Position: &position.Position{
 						StartLine: 267,
 						EndLine:   267,
@@ -12494,7 +12494,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5163,
 					EndPos:    5175,
 				},
-				Expr: &cast.Int{
+				Expr: &clinkedtree.Int{
 					Position: &position.Position{
 						StartLine: 268,
 						EndLine:   268,
@@ -12527,7 +12527,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5178,
 					EndPos:    5186,
 				},
-				Expr: &cast.Int{
+				Expr: &clinkedtree.Int{
 					Position: &position.Position{
 						StartLine: 269,
 						EndLine:   269,
@@ -12560,7 +12560,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5189,
 					EndPos:    5200,
 				},
-				Expr: &cast.Object{
+				Expr: &clinkedtree.Object{
 					Position: &position.Position{
 						StartLine: 270,
 						EndLine:   270,
@@ -12593,7 +12593,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5203,
 					EndPos:    5214,
 				},
-				Expr: &cast.String{
+				Expr: &clinkedtree.String{
 					Position: &position.Position{
 						StartLine: 271,
 						EndLine:   271,
@@ -12626,7 +12626,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5217,
 					EndPos:    5227,
 				},
-				Expr: &cast.Unset{
+				Expr: &clinkedtree.Unset{
 					Position: &position.Position{
 						StartLine: 272,
 						EndLine:   272,
@@ -16120,9 +16120,9 @@ func TestPhp7(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &ast.AST{
-		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linkedtree.AST{
+		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
+		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16238,9 +16238,9 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &ast.AST{
-		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linkedtree.AST{
+		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
+		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16431,9 +16431,9 @@ CAD;
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &ast.AST{
-		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linkedtree.AST{
+		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
+		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16454,9 +16454,9 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &ast.AST{
-		Positions: ast.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     ast.NewNodeStorage(make([]ast.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linkedtree.AST{
+		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
+		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
 	})
 	actual := php7parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)
