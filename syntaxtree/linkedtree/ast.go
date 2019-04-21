@@ -1,6 +1,8 @@
 package linkedtree
 
-import "github.com/z7zmey/php-parser/scanner"
+import (
+	"github.com/z7zmey/php-parser/scanner"
+)
 
 type AST struct {
 	FileData  []byte
@@ -309,4 +311,44 @@ func (a *AST) NewOptionalListTokensPosition(list []NodeID, startToken *scanner.T
 		LS: s.LS,
 		LE: endToken.EndLine,
 	})
+}
+
+func (ast *AST) Traverse(v Visitor) {
+	depth := 0
+	curNodeID := ast.RootNode
+
+	for {
+		if curNodeID == 0 {
+			break
+		}
+
+		curNode := ast.Nodes.Get(curNodeID)
+		visitChild := v.VisitNode(curNode, depth)
+
+		if visitChild && curNode.Child != 0 {
+			curNodeID = curNode.Child
+			depth++
+			continue
+		}
+
+		if curNode.Next != 0 {
+			curNodeID = curNode.Next
+			continue
+		}
+
+		for {
+			if curNode.Parent == 0 {
+				curNodeID = 0
+				break
+			}
+
+			curNode = ast.Nodes.Get(curNode.Parent)
+			depth--
+
+			if curNode.Next != 0 {
+				curNodeID = curNode.Next
+				break
+			}
+		}
+	}
 }

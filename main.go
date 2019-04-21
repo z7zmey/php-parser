@@ -37,6 +37,7 @@ type file struct {
 type result struct {
 	path   string
 	parser parser.Parser
+	ast    *linkedtree.AST
 }
 
 func main() {
@@ -132,7 +133,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)
 
-		r <- result{path: f.path, parser: parserWorker}
+		r <- result{path: f.path, parser: parserWorker, ast: abstractSyntaxTree}
 	}
 }
 
@@ -173,11 +174,9 @@ func printerWorker(r <-chan result) {
 		switch dumpType {
 		case "custom":
 			dumper := &visitor.Dumper{
-				Writer:     os.Stdout,
-				Indent:     "| ",
-				NsResolver: nsResolver,
+				Writer: os.Stdout,
 			}
-			res.parser.GetRootNode().Walk(dumper)
+			res.ast.Traverse(dumper)
 		case "json":
 			dumper := &visitor.JsonDumper{
 				Writer:     os.Stdout,
