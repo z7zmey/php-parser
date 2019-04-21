@@ -5,7 +5,6 @@ import (
 
 	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -17,6 +16,7 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/position"
+	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 )
 
 func TestPhp7(t *testing.T) {
@@ -12329,7 +12329,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5096,
 					EndPos:    5106,
 				},
-				Expr: &clinkedtree.Array{
+				Expr: &cast.Array{
 					Position: &position.Position{
 						StartLine: 263,
 						EndLine:   263,
@@ -12362,7 +12362,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5109,
 					EndPos:    5121,
 				},
-				Expr: &clinkedtree.Bool{
+				Expr: &cast.Bool{
 					Position: &position.Position{
 						StartLine: 264,
 						EndLine:   264,
@@ -12395,7 +12395,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5124,
 					EndPos:    5133,
 				},
-				Expr: &clinkedtree.Bool{
+				Expr: &cast.Bool{
 					Position: &position.Position{
 						StartLine: 265,
 						EndLine:   265,
@@ -12428,7 +12428,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5136,
 					EndPos:    5147,
 				},
-				Expr: &clinkedtree.Double{
+				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 266,
 						EndLine:   266,
@@ -12461,7 +12461,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5150,
 					EndPos:    5160,
 				},
-				Expr: &clinkedtree.Double{
+				Expr: &cast.Double{
 					Position: &position.Position{
 						StartLine: 267,
 						EndLine:   267,
@@ -12494,7 +12494,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5163,
 					EndPos:    5175,
 				},
-				Expr: &clinkedtree.Int{
+				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 268,
 						EndLine:   268,
@@ -12527,7 +12527,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5178,
 					EndPos:    5186,
 				},
-				Expr: &clinkedtree.Int{
+				Expr: &cast.Int{
 					Position: &position.Position{
 						StartLine: 269,
 						EndLine:   269,
@@ -12560,7 +12560,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5189,
 					EndPos:    5200,
 				},
-				Expr: &clinkedtree.Object{
+				Expr: &cast.Object{
 					Position: &position.Position{
 						StartLine: 270,
 						EndLine:   270,
@@ -12593,7 +12593,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5203,
 					EndPos:    5214,
 				},
-				Expr: &clinkedtree.String{
+				Expr: &cast.String{
 					Position: &position.Position{
 						StartLine: 271,
 						EndLine:   271,
@@ -12626,7 +12626,7 @@ func TestPhp7(t *testing.T) {
 					StartPos:  5217,
 					EndPos:    5227,
 				},
-				Expr: &clinkedtree.Unset{
+				Expr: &cast.Unset{
 					Position: &position.Position{
 						StartLine: 272,
 						EndLine:   272,

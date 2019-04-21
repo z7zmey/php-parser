@@ -2575,7 +2575,7 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line php7/php7.y:320
 		{
-			if yyDollar[2].node == 0 {
+			if yyDollar[2].node != 0 {
 				yylex.(*Parser).list.add(yyDollar[2].node)
 			}
 

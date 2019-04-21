@@ -318,7 +318,7 @@ identifier:
 top_statement_list:
         top_statement_list top_statement
             {
-                if $2 == 0 {
+                if $2 != 0 {
                     yylex.(*Parser).list.add($2)
                 }
 
