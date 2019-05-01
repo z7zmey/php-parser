@@ -4,55 +4,181 @@ package ast
 
 import "strconv"
 
-const (
-	_NodeType_name_0 = "RootIdentifierParameterArgumentArgumentListNullable"
-	_NodeType_name_1 = "ScalarEncapsedStringPartScalarDnumberScalarHeredocScalarMagicConstantScalarLnumberScalarEncapsedScalarString"
-	_NodeType_name_2 = "NameNamePartNameNameNameFullyQualifiedNameRelative"
-	_NodeType_name_3 = "StmtFinallyStmtNopStmtUnsetStmtStaticStmtPropertyStmtGroupUseStmtAltElseIfStmtElseStmtCaseStmtConstListStmtExpressionStmtReturnStmtAltForeachStmtForStmtClassConstListStmtInterfaceStmtEchoStmtInterfaceExtendsStmtTraitStmtContinueStmtInlineHtmlStmtClassExtendsStmtUseListStmtTraitUseStmtTraitUsePrecedenceStmtTryStmtDeclareStmtDefaultStmtForeachStmtTraitAdaptationListStmtGlobalStmtWhileStmtIfStmtAltElseStmtGotoStmtClassStmtLabelStmtThrowStmtClassImplementsStmtUseStmtPropertyListStmtAltWhileStmtAltIfStmtCatchStmtConstantStmtTraitUseAliasStmtNamespaceStmtSwitchStmtBreakStmtClassMethodStmtFunctionStmtAltSwitchStmtHaltCompilerStmtTraitMethodRefStmtDoStmtStaticVarStmtCaseListStmtElseIfStmtAltForStmtStmtList"
-	_NodeType_name_4 = "ExprInstanceOfExprBooleanNotExprNewExprClosureUseExprPreDecExprEmptyExprErrorSuppressExprEvalExprIssetExprClassConstFetchExprExitExprShortListExprIncludeOnceExprPostIncExprConstFetchExprTernaryExprVariableExprRequireOnceExprPostDecExprBitwiseNotExprIncludeExprListExprShellExecExprMethodCallExprReferenceExprPrintExprUnaryPlusExprPropertyFetchExprArrayExprStaticPropertyFetchExprUnaryMinusExprRequireExprShortArrayExprPreIncExprYieldFromExprYieldExprCloneExprStaticCallExprClosureExprArrayDimFetchExprArrayItemExprFunctionCall"
-	_NodeType_name_5 = "AssignAssignAssignMulAssignMinusAssignShiftLeftAssignModAssignPowAssignBitwiseXorAssignConcatAssignDivAssignPlusAssignReferenceAssignBitwiseAndAssignBitwiseOrAssignShiftRight"
-	_NodeType_name_6 = "BinaryBooleanOrBinaryMulBinaryMinusBinaryEqualBinaryIdenticalBinaryLogicalXorBinaryCoalesceBinaryBooleanAndBinarySmallerBinarySmallerOrEqualBinaryShiftLeftBinaryModBinaryGreaterOrEqualBinaryLogicalAndBinaryLogicalOrBinaryPowBinaryBitwiseXorBinaryConcatBinaryDivBinaryPlusBinaryGreaterBinaryBitwiseAndBinaryBitwiseOrBinarySpaceshipBinaryShiftRightBinaryNotIdenticalBinaryNotEqual"
-	_NodeType_name_7 = "CastUnsetCastDoubleCastStringCastBoolCastArrayCastIntCastObject"
-)
+const _NodeType_name = "RootParameterArgumentArgumentListNullableIdentifierScalarHeredocScalarEncapsedScalarEncapsedStringPartScalarDnumberScalarMagicConstantScalarLnumberScalarStringNameNameNameFullyQualifiedNameRelativeNameNamePartStmtFinallyStmtNopStmtUnsetStmtStaticStmtPropertyStmtGroupUseStmtAltElseIfStmtElseStmtCaseStmtConstListStmtExpressionStmtReturnStmtAltForeachStmtForStmtClassConstListStmtInterfaceStmtEchoStmtInterfaceExtendsStmtTraitStmtContinueStmtClassExtendsStmtUseListStmtTraitUseStmtTraitUsePrecedenceStmtTryStmtDeclareStmtDefaultStmtForeachStmtTraitAdaptationListStmtGlobalStmtWhileStmtIfStmtAltElseStmtGotoStmtClassStmtLabelStmtThrowStmtClassImplementsStmtUseStmtPropertyListStmtAltWhileStmtAltIfStmtCatchStmtConstantStmtTraitUseAliasStmtNamespaceStmtSwitchStmtBreakStmtClassMethodStmtFunctionStmtAltSwitchStmtHaltCompilerStmtTraitMethodRefStmtDoStmtStaticVarStmtCaseListStmtElseIfStmtAltForStmtStmtListStmtInlineHtmlExprInstanceOfExprBooleanNotExprNewExprClosureUseExprPreDecExprEmptyExprErrorSuppressExprEvalExprIssetExprClassConstFetchExprExitExprShortListExprIncludeOnceExprPostIncExprConstFetchExprTernaryExprVariableExprRequireOnceExprPostDecExprBitwiseNotExprIncludeExprListExprShellExecExprMethodCallExprReferenceExprPrintExprUnaryPlusExprPropertyFetchExprArrayExprStaticPropertyFetchExprUnaryMinusExprRequireExprShortArrayExprPreIncExprYieldFromExprYieldExprCloneExprStaticCallExprClosureExprArrayDimFetchExprArrayItemExprFunctionCallAssignAssignAssignMulAssignMinusAssignShiftLeftAssignModAssignPowAssignBitwiseXorAssignConcatAssignDivAssignPlusAssignReferenceAssignBitwiseAndAssignBitwiseOrAssignShiftRightBinaryBooleanOrBinaryMulBinaryMinusBinaryEqualBinaryIdenticalBinaryLogicalXorBinaryCoalesceBinaryBooleanAndBinarySmallerBinarySmallerOrEqualBinaryShiftLeftBinaryModBinaryGreaterOrEqualBinaryLogicalAndBinaryLogicalOrBinaryPowBinaryBitwiseXorBinaryConcatBinaryDivBinaryPlusBinaryGreaterBinaryBitwiseAndBinaryBitwiseOrBinarySpaceshipBinaryShiftRightBinaryNotIdenticalBinaryNotEqualCastUnsetCastDoubleCastStringCastBoolCastArrayCastIntCastObject"
 
-var (
-	_NodeType_index_0 = [...]uint8{0, 4, 14, 23, 31, 43, 51}
-	_NodeType_index_1 = [...]uint8{0, 24, 37, 50, 69, 82, 96, 108}
-	_NodeType_index_2 = [...]uint8{0, 12, 20, 38, 50}
-	_NodeType_index_3 = [...]uint16{0, 11, 18, 27, 37, 49, 61, 74, 82, 90, 103, 117, 127, 141, 148, 166, 179, 187, 207, 216, 228, 242, 258, 269, 281, 303, 310, 321, 332, 343, 366, 376, 385, 391, 402, 410, 419, 428, 437, 456, 463, 479, 491, 500, 509, 521, 538, 551, 561, 570, 585, 597, 610, 626, 644, 650, 663, 675, 685, 695, 707}
-	_NodeType_index_4 = [...]uint16{0, 14, 28, 35, 49, 59, 68, 85, 93, 102, 121, 129, 142, 157, 168, 182, 193, 205, 220, 231, 245, 256, 264, 277, 291, 304, 313, 326, 343, 352, 375, 389, 400, 414, 424, 437, 446, 455, 469, 480, 497, 510, 526}
-	_NodeType_index_5 = [...]uint8{0, 12, 21, 32, 47, 56, 65, 81, 93, 102, 112, 127, 143, 158, 174}
-	_NodeType_index_6 = [...]uint16{0, 15, 24, 35, 46, 61, 77, 91, 107, 120, 140, 155, 164, 184, 200, 215, 224, 240, 252, 261, 271, 284, 300, 315, 330, 346, 364, 378}
-	_NodeType_index_7 = [...]uint8{0, 9, 19, 29, 37, 46, 53, 63}
-)
+var _NodeType_map = map[NodeType]string{
+	1:     _NodeType_name[0:4],
+	3:     _NodeType_name[4:13],
+	4:     _NodeType_name[13:21],
+	5:     _NodeType_name[21:33],
+	6:     _NodeType_name[33:41],
+	258:   _NodeType_name[41:51],
+	525:   _NodeType_name[51:64],
+	528:   _NodeType_name[64:78],
+	779:   _NodeType_name[78:102],
+	780:   _NodeType_name[102:115],
+	782:   _NodeType_name[115:134],
+	783:   _NodeType_name[134:147],
+	785:   _NodeType_name[147:159],
+	1032:  _NodeType_name[159:167],
+	1033:  _NodeType_name[167:185],
+	1034:  _NodeType_name[185:197],
+	1287:  _NodeType_name[197:209],
+	2066:  _NodeType_name[209:220],
+	2067:  _NodeType_name[220:227],
+	2068:  _NodeType_name[227:236],
+	2069:  _NodeType_name[236:246],
+	2070:  _NodeType_name[246:258],
+	2071:  _NodeType_name[258:270],
+	2072:  _NodeType_name[270:283],
+	2073:  _NodeType_name[283:291],
+	2074:  _NodeType_name[291:299],
+	2075:  _NodeType_name[299:312],
+	2076:  _NodeType_name[312:326],
+	2077:  _NodeType_name[326:336],
+	2078:  _NodeType_name[336:350],
+	2079:  _NodeType_name[350:357],
+	2080:  _NodeType_name[357:375],
+	2081:  _NodeType_name[375:388],
+	2082:  _NodeType_name[388:396],
+	2083:  _NodeType_name[396:416],
+	2084:  _NodeType_name[416:425],
+	2085:  _NodeType_name[425:437],
+	2087:  _NodeType_name[437:453],
+	2088:  _NodeType_name[453:464],
+	2089:  _NodeType_name[464:476],
+	2090:  _NodeType_name[476:498],
+	2091:  _NodeType_name[498:505],
+	2092:  _NodeType_name[505:516],
+	2093:  _NodeType_name[516:527],
+	2094:  _NodeType_name[527:538],
+	2095:  _NodeType_name[538:561],
+	2096:  _NodeType_name[561:571],
+	2097:  _NodeType_name[571:580],
+	2098:  _NodeType_name[580:586],
+	2099:  _NodeType_name[586:597],
+	2100:  _NodeType_name[597:605],
+	2101:  _NodeType_name[605:614],
+	2102:  _NodeType_name[614:623],
+	2103:  _NodeType_name[623:632],
+	2104:  _NodeType_name[632:651],
+	2105:  _NodeType_name[651:658],
+	2106:  _NodeType_name[658:674],
+	2107:  _NodeType_name[674:686],
+	2108:  _NodeType_name[686:695],
+	2109:  _NodeType_name[695:704],
+	2110:  _NodeType_name[704:716],
+	2111:  _NodeType_name[716:733],
+	2112:  _NodeType_name[733:746],
+	2113:  _NodeType_name[746:756],
+	2114:  _NodeType_name[756:765],
+	2115:  _NodeType_name[765:780],
+	2116:  _NodeType_name[780:792],
+	2117:  _NodeType_name[792:805],
+	2118:  _NodeType_name[805:821],
+	2119:  _NodeType_name[821:839],
+	2120:  _NodeType_name[839:845],
+	2121:  _NodeType_name[845:858],
+	2122:  _NodeType_name[858:870],
+	2123:  _NodeType_name[870:880],
+	2124:  _NodeType_name[880:890],
+	2125:  _NodeType_name[890:902],
+	2342:  _NodeType_name[902:916],
+	4174:  _NodeType_name[916:930],
+	4175:  _NodeType_name[930:944],
+	4176:  _NodeType_name[944:951],
+	4177:  _NodeType_name[951:965],
+	4178:  _NodeType_name[965:975],
+	4179:  _NodeType_name[975:984],
+	4180:  _NodeType_name[984:1001],
+	4181:  _NodeType_name[1001:1009],
+	4182:  _NodeType_name[1009:1018],
+	4183:  _NodeType_name[1018:1037],
+	4184:  _NodeType_name[1037:1045],
+	4185:  _NodeType_name[1045:1058],
+	4186:  _NodeType_name[1058:1073],
+	4187:  _NodeType_name[1073:1084],
+	4188:  _NodeType_name[1084:1098],
+	4189:  _NodeType_name[1098:1109],
+	4190:  _NodeType_name[1109:1121],
+	4191:  _NodeType_name[1121:1136],
+	4192:  _NodeType_name[1136:1147],
+	4193:  _NodeType_name[1147:1161],
+	4194:  _NodeType_name[1161:1172],
+	4195:  _NodeType_name[1172:1180],
+	4196:  _NodeType_name[1180:1193],
+	4197:  _NodeType_name[1193:1207],
+	4198:  _NodeType_name[1207:1220],
+	4199:  _NodeType_name[1220:1229],
+	4200:  _NodeType_name[1229:1242],
+	4201:  _NodeType_name[1242:1259],
+	4202:  _NodeType_name[1259:1268],
+	4203:  _NodeType_name[1268:1291],
+	4204:  _NodeType_name[1291:1305],
+	4205:  _NodeType_name[1305:1316],
+	4206:  _NodeType_name[1316:1330],
+	4207:  _NodeType_name[1330:1340],
+	4208:  _NodeType_name[1340:1353],
+	4209:  _NodeType_name[1353:1362],
+	4210:  _NodeType_name[1362:1371],
+	4211:  _NodeType_name[1371:1385],
+	4212:  _NodeType_name[1385:1396],
+	4213:  _NodeType_name[1396:1413],
+	4214:  _NodeType_name[1413:1426],
+	4215:  _NodeType_name[1426:1442],
+	12415: _NodeType_name[1442:1454],
+	12416: _NodeType_name[1454:1463],
+	12417: _NodeType_name[1463:1474],
+	12418: _NodeType_name[1474:1489],
+	12419: _NodeType_name[1489:1498],
+	12420: _NodeType_name[1498:1507],
+	12421: _NodeType_name[1507:1523],
+	12422: _NodeType_name[1523:1535],
+	12423: _NodeType_name[1535:1544],
+	12424: _NodeType_name[1544:1554],
+	12425: _NodeType_name[1554:1569],
+	12426: _NodeType_name[1569:1585],
+	12427: _NodeType_name[1585:1600],
+	12428: _NodeType_name[1600:1616],
+	20621: _NodeType_name[1616:1631],
+	20622: _NodeType_name[1631:1640],
+	20623: _NodeType_name[1640:1651],
+	20624: _NodeType_name[1651:1662],
+	20625: _NodeType_name[1662:1677],
+	20626: _NodeType_name[1677:1693],
+	20627: _NodeType_name[1693:1707],
+	20628: _NodeType_name[1707:1723],
+	20629: _NodeType_name[1723:1736],
+	20630: _NodeType_name[1736:1756],
+	20631: _NodeType_name[1756:1771],
+	20632: _NodeType_name[1771:1780],
+	20633: _NodeType_name[1780:1800],
+	20634: _NodeType_name[1800:1816],
+	20635: _NodeType_name[1816:1831],
+	20636: _NodeType_name[1831:1840],
+	20637: _NodeType_name[1840:1856],
+	20638: _NodeType_name[1856:1868],
+	20639: _NodeType_name[1868:1877],
+	20640: _NodeType_name[1877:1887],
+	20641: _NodeType_name[1887:1900],
+	20642: _NodeType_name[1900:1916],
+	20643: _NodeType_name[1916:1931],
+	20644: _NodeType_name[1931:1946],
+	20645: _NodeType_name[1946:1962],
+	20646: _NodeType_name[1962:1980],
+	20647: _NodeType_name[1980:1994],
+	36984: _NodeType_name[1994:2003],
+	36985: _NodeType_name[2003:2013],
+	36986: _NodeType_name[2013:2023],
+	36987: _NodeType_name[2023:2031],
+	36988: _NodeType_name[2031:2040],
+	36989: _NodeType_name[2040:2047],
+	36990: _NodeType_name[2047:2057],
+}
 
 func (i NodeType) String() string {
-	switch {
-	case 257 <= i && i <= 262:
-		i -= 257
-		return _NodeType_name_0[_NodeType_index_0[i]:_NodeType_index_0[i+1]]
-	case 523 <= i && i <= 529:
-		i -= 523
-		return _NodeType_name_1[_NodeType_index_1[i]:_NodeType_index_1[i+1]]
-	case 1031 <= i && i <= 1034:
-		i -= 1031
-		return _NodeType_name_2[_NodeType_index_2[i]:_NodeType_index_2[i+1]]
-	case 2066 <= i && i <= 2125:
-		i -= 2066
-		return _NodeType_name_3[_NodeType_index_3[i]:_NodeType_index_3[i+1]]
-	case 4174 <= i && i <= 4215:
-		i -= 4174
-		return _NodeType_name_4[_NodeType_index_4[i]:_NodeType_index_4[i+1]]
-	case 12415 <= i && i <= 12428:
-		i -= 12415
-		return _NodeType_name_5[_NodeType_index_5[i]:_NodeType_index_5[i+1]]
-	case 20621 <= i && i <= 20647:
-		i -= 20621
-		return _NodeType_name_6[_NodeType_index_6[i]:_NodeType_index_6[i+1]]
-	case 36984 <= i && i <= 36990:
-		i -= 36984
-		return _NodeType_name_7[_NodeType_index_7[i]:_NodeType_index_7[i+1]]
-	default:
-		return "NodeType(" + strconv.FormatInt(int64(i), 10) + ")"
+	if str, ok := _NodeType_map[i]; ok {
+		return str
 	}
+	return "NodeType(" + strconv.FormatInt(int64(i), 10) + ")"
 }

@@ -64,6 +64,8 @@ func (l *Parser) Parse(src []byte, a *linear.AST) int {
 	l.Lexer.Reset(src)
 	l.list.Reset()
 
+	a.FileData = src
+
 	l.ast = a
 	l.Lexer.SetErrors(nil)
 	l.rootNode = nil

@@ -1274,6 +1274,8 @@ statement:
                     Pos:  yylex.(*Parser).ast.NewNodeTokenPosition($1, $2),
                 })
 
+                yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, $1)
+
                 // save comments
                 // yylex.(*Parser).MoveFreeFloating($1, $$)
                 // yylex.(*Parser).setFreeFloating($$, freefloating.Expr, $2.FreeFloating)
@@ -3001,7 +3003,6 @@ class_statement:
                 prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeReturnType, $9)
                 prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, $10)
                 prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeModifiers, childrenModifiers...)
-                prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, childrenParams...)
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, childrenParams...)
 
                 // save comments

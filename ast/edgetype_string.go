@@ -4,13 +4,24 @@ package ast
 
 import "strconv"
 
-const _EdgeType_name = "NilExprVarTypeVarDefaultValueArgumentsStmtsPartsCondStmtElseIfElseTypesModifiersConstsMethodNameParamsReturnTypeClassNameArgumentListExtendsImplementsConstantNameExprsInitLoopKeyFunctionNameVarsLabelUseTypePrefixUseListInterfaceNameLabelNameNamespaceNamePropertiesCaseListTraitMethodRefModifierAliasInsteadofTraitsTraitAdaptationListTraitNameCatchesFinallyUsesUseCasesAdaptationsInterfaceNamesLeftRightDimValItemsClassClosureUseConstantFunctionPropertyCallIfTrueIfFalseVarName"
+const (
+	_EdgeType_name_0 = "NilExprVarTypeVarDefaultValueStmtElseIfMethodNameReturnTypeClassNameExtendsImplementsConstantNameKeyFunctionNameLabelUseTypePrefixInterfaceNameLabelNameNamespaceNameCaseListTraitMethodRefModifierAliasTraitAdaptationListTraitNameFinallyUseLeftRightDimValClassClosureUseConstantFunctionPropertyCallIfTrueIfFalseVarName"
+	_EdgeType_name_1 = "StmtsPartsUsesConstsUseListLoopCondInitVarsExprsCatchesTypesParamsModifiersInterfaceNamesItemsCasesArgumentsPropertiesTraitsAdaptationsInsteadofArgumentListElse"
+)
 
-var _EdgeType_index = [...]uint16{0, 3, 7, 14, 17, 29, 38, 43, 48, 52, 56, 62, 66, 71, 80, 86, 96, 102, 112, 121, 133, 140, 150, 162, 167, 171, 175, 178, 190, 194, 199, 206, 212, 219, 232, 241, 254, 264, 272, 277, 283, 286, 294, 299, 308, 314, 333, 342, 349, 356, 360, 363, 368, 379, 393, 397, 402, 405, 408, 413, 418, 428, 436, 444, 452, 456, 462, 469, 476}
+var (
+	_EdgeType_index_0 = [...]uint16{0, 3, 7, 14, 17, 29, 33, 39, 49, 59, 68, 75, 85, 97, 100, 112, 117, 124, 130, 143, 152, 165, 173, 178, 184, 187, 195, 200, 219, 228, 235, 238, 242, 247, 250, 253, 258, 268, 276, 284, 292, 296, 302, 309, 316}
+	_EdgeType_index_1 = [...]uint8{0, 5, 10, 14, 20, 27, 31, 35, 39, 43, 48, 55, 60, 66, 75, 89, 94, 99, 108, 118, 124, 135, 144, 156, 160}
+)
 
 func (i EdgeType) String() string {
-	if i >= EdgeType(len(_EdgeType_index)-1) {
+	switch {
+	case 0 <= i && i <= 43:
+		return _EdgeType_name_0[_EdgeType_index_0[i]:_EdgeType_index_0[i+1]]
+	case 172 <= i && i <= 195:
+		i -= 172
+		return _EdgeType_name_1[_EdgeType_index_1[i]:_EdgeType_index_1[i+1]]
+	default:
 		return "EdgeType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _EdgeType_name[_EdgeType_index[i]:_EdgeType_index[i+1]]
 }

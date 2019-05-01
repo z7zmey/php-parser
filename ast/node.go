@@ -2,6 +2,7 @@ package ast
 
 type NodeFlag uint8
 
+//go:generate stringer -type=NodeFlag -trimprefix=NodeFlag -output ./nodeflag_string.go
 const (
 	NodeFlagRef NodeFlag = 1 << iota
 	NodeFlagVariadic
@@ -9,43 +10,55 @@ const (
 	NodeFlagAltSyntax
 )
 
+func (nf NodeFlag) GetFlagNames() []string {
+	flags := make([]string, 0, 4)
+
+	for _, flag := range [...]NodeFlag{NodeFlagRef, NodeFlagVariadic, NodeFlagStatic, NodeFlagAltSyntax} {
+		if nf&flag != 0 {
+			flags = append(flags, flag.String())
+		}
+	}
+
+	return flags
+}
+
 type NodeClassType uint16
 
 const (
-	NodeClassTypeGeneral NodeClassType = 1 << 8
-	NodeClassTypeScalar  NodeClassType = 1 << 9
-	NodeClassTypeName    NodeClassType = 1 << 10
-	NodeClassTypeStmt    NodeClassType = 1 << 11
-	NodeClassTypeExpr    NodeClassType = 1 << 12
-	NodeClassTypeAssign  NodeClassType = 1<<13 | NodeClassTypeExpr
-	NodeClassTypeBinary  NodeClassType = 1<<14 | NodeClassTypeExpr
-	NodeClassTypeCast    NodeClassType = 1<<15 | NodeClassTypeExpr
+	NodeClassTypeValue  NodeClassType = 1 << 8
+	NodeClassTypeScalar NodeClassType = 1 << 9
+	NodeClassTypeName   NodeClassType = 1 << 10
+	NodeClassTypeStmt   NodeClassType = 1 << 11
+	NodeClassTypeExpr   NodeClassType = 1 << 12
+	NodeClassTypeAssign NodeClassType = 1<<13 | NodeClassTypeExpr
+	NodeClassTypeBinary NodeClassType = 1<<14 | NodeClassTypeExpr
+	NodeClassTypeCast   NodeClassType = 1<<15 | NodeClassTypeExpr
 )
 
 type NodeType uint16
 
 //go:generate stringer -type=NodeType -trimprefix=NodeType -output ./nodetype_string.go
 const (
-	NodeTypeRoot NodeType = 1 | NodeType(NodeClassTypeGeneral)
+	NodeTypeRoot NodeType = 1
 
-	NodeTypeIdentifier   NodeType = 2 | NodeType(NodeClassTypeGeneral)
-	NodeTypeParameter    NodeType = 3 | NodeType(NodeClassTypeGeneral)
-	NodeTypeArgument     NodeType = 4 | NodeType(NodeClassTypeGeneral)
-	NodeTypeArgumentList NodeType = 5 | NodeType(NodeClassTypeGeneral)
-	NodeTypeNullable     NodeType = 6 | NodeType(NodeClassTypeGeneral)
+	NodeTypeIdentifier   NodeType = 2 | NodeType(NodeClassTypeValue)
+	NodeTypeParameter    NodeType = 3
+	NodeTypeArgument     NodeType = 4
+	NodeTypeArgumentList NodeType = 5
+	NodeTypeNullable     NodeType = 6
 
-	NodeTypeNameNamePart       NodeType = 7 | NodeType(NodeClassTypeName)
+	NodeTypeNameNamePart       NodeType = 7 | NodeType(NodeClassTypeName) | NodeType(NodeClassTypeValue)
 	NodeTypeNameName           NodeType = 8 | NodeType(NodeClassTypeName)
 	NodeTypeNameFullyQualified NodeType = 9 | NodeType(NodeClassTypeName)
 	NodeTypeNameRelative       NodeType = 10 | NodeType(NodeClassTypeName)
 
-	NodeTypeScalarEncapsedStringPart NodeType = 11 | NodeType(NodeClassTypeScalar)
-	NodeTypeScalarDnumber            NodeType = 12 | NodeType(NodeClassTypeScalar)
+	NodeTypeScalarEncapsedStringPart NodeType = 11 | NodeType(NodeClassTypeScalar) | NodeType(NodeClassTypeValue)
+	NodeTypeScalarDnumber            NodeType = 12 | NodeType(NodeClassTypeScalar) | NodeType(NodeClassTypeValue)
 	NodeTypeScalarHeredoc            NodeType = 13 | NodeType(NodeClassTypeScalar)
-	NodeTypeScalarMagicConstant      NodeType = 14 | NodeType(NodeClassTypeScalar)
-	NodeTypeScalarLnumber            NodeType = 15 | NodeType(NodeClassTypeScalar)
+	NodeTypeScalarMagicConstant      NodeType = 14 | NodeType(NodeClassTypeScalar) | NodeType(NodeClassTypeValue)
+	NodeTypeScalarLnumber            NodeType = 15 | NodeType(NodeClassTypeScalar) | NodeType(NodeClassTypeValue)
 	NodeTypeScalarEncapsed           NodeType = 16 | NodeType(NodeClassTypeScalar)
-	NodeTypeScalarString             NodeType = 17 | NodeType(NodeClassTypeScalar)
+	NodeTypeScalarString             NodeType = 17 | NodeType(NodeClassTypeScalar) | NodeType(NodeClassTypeValue)
 
 	NodeTypeStmtFinally             NodeType = 18 | NodeType(NodeClassTypeStmt)
 	NodeTypeStmtNop                 NodeType = 19 | NodeType(NodeClassTypeStmt)
@@ -67,7 +80,7 @@ const (
 	NodeTypeStmtInterfaceExtends    NodeType = 35 | NodeType(NodeClassTypeStmt)
 	NodeTypeStmtTrait               NodeType = 36 | NodeType(NodeClassTypeStmt)
 	NodeTypeStmtContinue            NodeType = 37 | NodeType(NodeClassTypeStmt)
-	NodeTypeStmtInlineHtml          NodeType = 38 | NodeType(NodeClassTypeStmt)
+	NodeTypeStmtInlineHtml          NodeType = 38 | NodeType(NodeClassTypeStmt) | NodeType(NodeClassTypeValue)
 	NodeTypeStmtClassExtends        NodeType = 39 | NodeType(NodeClassTypeStmt)
 	NodeTypeStmtUseList             NodeType = 40 | NodeType(NodeClassTypeStmt)
 	NodeTypeStmtTraitUse            NodeType = 41 | NodeType(NodeClassTypeStmt)

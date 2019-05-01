@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -23,7 +24,7 @@ import (
 
 var wg sync.WaitGroup
 var usePhp5 *bool
-var dumpType string
+var dump *bool
 var dumpPath *bool
 var profiler string
 var withFreeFloating *bool
@@ -43,11 +44,11 @@ type result struct {
 
 func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
-	dumpPath = flag.Bool("path", false, "print filepath")
+	dump = flag.Bool("d", false, "dump ast")
+	dumpPath = flag.Bool("p", false, "print filepath")
 	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
-	flag.StringVar(&dumpType, "d", "", "dump format: [custom, go, json, pretty_json]")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 
 	flag.Parse()
@@ -172,27 +173,11 @@ func printerWorker(r <-chan result) {
 			res.parser.GetRootNode().Walk(nsResolver)
 		}
 
-		switch dumpType {
-		case "custom":
-			dumper := &visitor.Dumper{
-				Writer: os.Stdout,
-			}
-			res.ast.Traverse(dumper)
-		case "json":
-			dumper := &visitor.JsonDumper{
-				Writer:     os.Stdout,
-				NsResolver: nsResolver,
-			}
-			res.parser.GetRootNode().Walk(dumper)
-		case "pretty_json":
-			dumper := &visitor.PrettyJsonDumper{
-				Writer:     os.Stdout,
-				NsResolver: nsResolver,
-			}
-			res.parser.GetRootNode().Walk(dumper)
-		case "go":
-			dumper := &visitor.GoDumper{Writer: os.Stdout}
-			res.parser.GetRootNode().Walk(dumper)
+		if *dump {
+			buf, err := json.MarshalIndent(res.ast.Nested(), "", "  ")
+			checkErr(err)
+			_, err = os.Stdout.Write(buf)
+			checkErr(err)
 		}
 
 		wg.Done()

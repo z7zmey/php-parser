@@ -1,5 +1,5 @@
 package linear
 
 type Visitor interface {
-	VisitNode(n Node, depth int) bool
+	VisitNode(stxtree *AST, n Node, depth int) bool
 }

@@ -1,5 +1,8 @@
 package ast
 
 type Position struct {
-	PS, PE, LS, LE int
+	PS int `json:"pos_start"`
+	PE int `json:"pos_end"`
+	LS int `json:"line_start"`
+	LE int `json:"line_end"`
 }

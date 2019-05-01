@@ -2,6 +2,7 @@ package linear
 
 import (
 	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/ast/nested"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -314,17 +315,17 @@ func (a *AST) NewOptionalListTokensPosition(list []NodeID, startToken *scanner.T
 	})
 }
 
-func (ast *AST) Traverse(v Visitor) {
+func (stxtree *AST) Traverse(v Visitor) {
 	depth := 0
-	curNodeID := ast.RootNode
+	curNodeID := stxtree.RootNode
 
 	for {
 		if curNodeID == 0 {
 			break
 		}
 
-		curNode := ast.Nodes.Get(curNodeID)
-		visitChild := v.VisitNode(curNode, depth)
+		curNode := stxtree.Nodes.Get(curNodeID)
+		visitChild := v.VisitNode(stxtree, curNode, depth)
 
 		if visitChild && curNode.Child != 0 {
 			curNodeID = curNode.Child
@@ -343,7 +344,7 @@ func (ast *AST) Traverse(v Visitor) {
 				break
 			}
 
-			curNode = ast.Nodes.Get(curNode.Parent)
+			curNode = stxtree.Nodes.Get(curNode.Parent)
 			depth--
 
 			if curNode.Next != 0 {
@@ -352,4 +353,68 @@ func (ast *AST) Traverse(v Visitor) {
 			}
 		}
 	}
+}
+
+func (stxtree *AST) Nested() nested.Node {
+	depth := 0
+	curNodeID := stxtree.RootNode
+
+	stack := []nested.Node{}
+
+	for {
+		if curNodeID == 0 {
+			break
+		}
+
+		curNode := stxtree.Nodes.Get(curNodeID)
+
+		if len(stack) <= depth+1 {
+			stack = append(stack, nested.Node{})
+		}
+
+		pos := stxtree.Positions.Get(curNode.Pos)
+
+		stack[depth] = nested.Node{
+			Type:     curNode.Type,
+			Flags:    curNode.Flag,
+			Position: pos,
+			Children: make(map[ast.EdgeType][]nested.Node),
+		}
+
+		if curNode.Type.Is(ast.NodeClassTypeValue) {
+			stack[depth].Value = string(stxtree.FileData[pos.PS:pos.PE])
+		}
+
+		if depth > 0 {
+			stack[depth-1].Children[curNode.Key] = append(stack[depth-1].Children[curNode.Key], stack[depth])
+		}
+
+		if curNode.Child != 0 {
+			curNodeID = curNode.Child
+			depth++
+			continue
+		}
+
+		if curNode.Next != 0 {
+			curNodeID = curNode.Next
+			continue
+		}
+
+		for {
+			if curNode.Parent == 0 {
+				curNodeID = 0
+				break
+			}
+
+			curNode = stxtree.Nodes.Get(curNode.Parent)
+			depth--
+
+			if curNode.Next != 0 {
+				curNodeID = curNode.Next
+				break
+			}
+		}
+	}
+
+	return stack[0]
 }

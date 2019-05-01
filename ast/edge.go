@@ -1,5 +1,9 @@
 package ast
 
+type EdgeClassType uint8
+
+const EdgeClassTypeMultiple EdgeClassType = 1 << 7
+
 type EdgeType uint8
 
 //go:generate stringer -type=EdgeType -trimprefix=EdgeType -output ./edgetype_string.go
@@ -9,60 +13,36 @@ const (
 	EdgeTypeVarType
 	EdgeTypeVar
 	EdgeTypeDefaultValue
-	EdgeTypeArguments
-	EdgeTypeStmts
-	EdgeTypeParts
-	EdgeTypeCond
 	EdgeTypeStmt
 	EdgeTypeElseIf
-	EdgeTypeElse
-	EdgeTypeTypes
-	EdgeTypeModifiers
-	EdgeTypeConsts
 	EdgeTypeMethodName
-	EdgeTypeParams
 	EdgeTypeReturnType
 	EdgeTypeClassName
-	EdgeTypeArgumentList
 	EdgeTypeExtends
 	EdgeTypeImplements
 	EdgeTypeConstantName
-	EdgeTypeExprs
-	EdgeTypeInit
-	EdgeTypeLoop
 	EdgeTypeKey
 	EdgeTypeFunctionName
-	EdgeTypeVars
 	EdgeTypeLabel
 	EdgeTypeUseType
 	EdgeTypePrefix
-	EdgeTypeUseList
 	EdgeTypeInterfaceName
 	EdgeTypeLabelName
 	EdgeTypeNamespaceName
-	EdgeTypeProperties
 	EdgeTypeCaseList
 	EdgeTypeTrait
 	EdgeTypeMethod
 	EdgeTypeRef
 	EdgeTypeModifier
 	EdgeTypeAlias
-	EdgeTypeInsteadof
-	EdgeTypeTraits
 	EdgeTypeTraitAdaptationList
 	EdgeTypeTraitName
-	EdgeTypeCatches
 	EdgeTypeFinally
-	EdgeTypeUses
 	EdgeTypeUse
-	EdgeTypeCases
-	EdgeTypeAdaptations
-	EdgeTypeInterfaceNames
 	EdgeTypeLeft
 	EdgeTypeRight
 	EdgeTypeDim
 	EdgeTypeVal
-	EdgeTypeItems
 	EdgeTypeClass
 	EdgeTypeClosureUse
 	EdgeTypeConstant
@@ -72,4 +52,33 @@ const (
 	EdgeTypeIfTrue
 	EdgeTypeIfFalse
 	EdgeTypeVarName
+
+	EdgeTypeStmts EdgeType = iota | EdgeType(EdgeClassTypeMultiple)
+	EdgeTypeParts
+	EdgeTypeUses
+	EdgeTypeConsts
+	EdgeTypeUseList
+	EdgeTypeLoop
+	EdgeTypeCond
+	EdgeTypeInit
+	EdgeTypeVars
+	EdgeTypeExprs
+	EdgeTypeCatches
+	EdgeTypeTypes
+	EdgeTypeParams
+	EdgeTypeModifiers
+	EdgeTypeInterfaceNames
+	EdgeTypeItems
+	EdgeTypeCases
+	EdgeTypeArguments
+	EdgeTypeProperties
+	EdgeTypeTraits
+	EdgeTypeAdaptations
+	EdgeTypeInsteadof
+	EdgeTypeArgumentList
+	EdgeTypeElse
 )
+
+func (et EdgeType) Is(ect EdgeClassType) bool {
+	return uint8(et)&uint8(ect) == uint8(ect)
+}
