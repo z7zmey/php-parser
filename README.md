@@ -35,8 +35,8 @@ Usage example
 package main
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 	"os"
 
 	"github.com/z7zmey/php-parser/php7"
@@ -54,14 +54,12 @@ func main() {
 	}
 
 	visitor := visitor.Dumper{
-		Writer:    os.Stdout,
-		Indent:    "",
-		Comments:  parser.GetComments(),
-		Positions: parser.GetPositions(),
+		Writer: os.Stdout,
+		Indent: "",
 	}
 
 	rootNode := parser.GetRootNode()
-	rootNode.Walk(visitor)
+	rootNode.Walk(&visitor)
 }
 ```
 
