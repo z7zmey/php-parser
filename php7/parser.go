@@ -3,12 +3,12 @@ package php7
 import (
 	"strings"
 
+	"github.com/z7zmey/php-parser/ast/linear"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/position"
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 )
 
 func (lval *yySymType) Token(t *scanner.Token) {
@@ -19,7 +19,7 @@ func (lval *yySymType) Token(t *scanner.Token) {
 type Parser struct {
 	yyParserImpl
 	Lexer        scanner.Scanner
-	ast          *linkedtree.AST
+	ast          *linear.AST
 	list         stackedNodeList
 	currentToken *scanner.Token
 	rootNode     node.Node
@@ -60,7 +60,7 @@ func (l *Parser) WithFreeFloating() {
 }
 
 // Parse the php7 Parser entrypoint
-func (l *Parser) Parse(src []byte, a *linkedtree.AST) int {
+func (l *Parser) Parse(src []byte, a *linear.AST) int {
 	l.Lexer.Reset(src)
 	l.list.Reset()
 

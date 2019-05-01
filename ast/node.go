@@ -1,8 +1,5 @@
-package linkedtree
+package ast
 
-type NodeID uint32
-type NodeType uint16
-type NodeClassType uint16
 type NodeFlag uint8
 
 const (
@@ -11,6 +8,8 @@ const (
 	NodeFlagStatic
 	NodeFlagAltSyntax
 )
+
+type NodeClassType uint16
 
 const (
 	NodeClassTypeGeneral NodeClassType = 1 << 8
@@ -22,6 +21,8 @@ const (
 	NodeClassTypeBinary  NodeClassType = 1<<14 | NodeClassTypeExpr
 	NodeClassTypeCast    NodeClassType = 1<<15 | NodeClassTypeExpr
 )
+
+type NodeType uint16
 
 //go:generate stringer -type=NodeType -trimprefix=NodeType -output ./nodetype_string.go
 const (
@@ -202,133 +203,6 @@ const (
 	NodeTypeBinaryNotEqual       NodeType = 167 | NodeType(NodeClassTypeBinary)
 )
 
-type EdgeType uint8
-
-//go:generate stringer -type=EdgeType -trimprefix=EdgeType -output ./edgetype_string.go
-const (
-	EdgeTypeNil EdgeType = iota
-	EdgeTypeExpr
-	EdgeTypeVarType
-	EdgeTypeVar
-	EdgeTypeDefaultValue
-	EdgeTypeArguments
-	EdgeTypeStmts
-	EdgeTypeParts
-	EdgeTypeCond
-	EdgeTypeStmt
-	EdgeTypeElseIf
-	EdgeTypeElse
-	EdgeTypeTypes
-	EdgeTypeModifiers
-	EdgeTypeConsts
-	EdgeTypeMethodName
-	EdgeTypeParams
-	EdgeTypeReturnType
-	EdgeTypeClassName
-	EdgeTypeArgumentList
-	EdgeTypeExtends
-	EdgeTypeImplements
-	EdgeTypeConstantName
-	EdgeTypeExprs
-	EdgeTypeInit
-	EdgeTypeLoop
-	EdgeTypeKey
-	EdgeTypeFunctionName
-	EdgeTypeVars
-	EdgeTypeLabel
-	EdgeTypeUseType
-	EdgeTypePrefix
-	EdgeTypeUseList
-	EdgeTypeInterfaceName
-	EdgeTypeLabelName
-	EdgeTypeNamespaceName
-	EdgeTypeProperties
-	EdgeTypeCaseList
-	EdgeTypeTrait
-	EdgeTypeMethod
-	EdgeTypeRef
-	EdgeTypeModifier
-	EdgeTypeAlias
-	EdgeTypeInsteadof
-	EdgeTypeTraits
-	EdgeTypeTraitAdaptationList
-	EdgeTypeTraitName
-	EdgeTypeCatches
-	EdgeTypeFinally
-	EdgeTypeUses
-	EdgeTypeUse
-	EdgeTypeCases
-	EdgeTypeAdaptations
-	EdgeTypeInterfaceNames
-	EdgeTypeLeft
-	EdgeTypeRight
-	EdgeTypeDim
-	EdgeTypeVal
-	EdgeTypeItems
-	EdgeTypeClass
-	EdgeTypeClosureUse
-	EdgeTypeConstant
-	EdgeTypeFunction
-	EdgeTypeProperty
-	EdgeTypeCall
-	EdgeTypeIfTrue
-	EdgeTypeIfFalse
-	EdgeTypeVarName
-)
-
 func (nt NodeType) Is(nct NodeClassType) bool {
 	return uint16(nt)&uint16(nct) == uint16(nct)
-}
-
-type Node struct {
-	Type NodeType
-	Flag NodeFlag
-
-	Parent NodeID
-	Child  NodeID
-	Next   NodeID
-
-	Key EdgeType
-
-	Pos PositionID
-}
-
-func (n Node) IsNode() bool {
-	return true
-}
-
-// NodeStorage store nodes
-type NodeStorage struct {
-	buf []Node
-}
-
-// NewNodeStorage creates new NodeStorage
-func NewNodeStorage(buf []Node) *NodeStorage {
-	return &NodeStorage{buf}
-}
-
-// Reset storage
-func (b *NodeStorage) Reset() {
-	b.buf = b.buf[:0]
-}
-
-// Create saves new Node in store
-func (b *NodeStorage) Create(n Node) NodeID {
-	b.buf = append(b.buf, n)
-	return NodeID(len(b.buf))
-}
-
-// Save modified Node
-func (b *NodeStorage) Save(id NodeID, n Node) {
-	b.buf[id-1] = n
-}
-
-// Get returns Node by NodeID
-func (b NodeStorage) Get(id NodeID) Node {
-	return b.buf[id-1]
-}
-
-// GetAll returns all Nodes
-func (b NodeStorage) GetAll() []Node {
-	return b.buf
 }

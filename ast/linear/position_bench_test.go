@@ -1,8 +1,10 @@
-package linkedtree
+package linear
 
 import (
 	"runtime"
 	"testing"
+
+	"github.com/z7zmey/php-parser/ast"
 )
 
 const k = 3000
@@ -11,11 +13,11 @@ const gc = false
 
 func BenchmarkPositionStorageSave(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		buf := make([]Position, 0, s)
+		buf := make([]ast.Position, 0, s)
 		posBuf := NewPositionStorage(buf)
 
 		for i := 0; i < k; i++ {
-			p := Position{1, 1, 1, 1}
+			p := ast.Position{1, 1, 1, 1}
 			_ = posBuf.Create(p)
 		}
 

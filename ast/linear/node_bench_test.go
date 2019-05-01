@@ -1,8 +1,10 @@
-package linkedtree
+package linear
 
 import (
 	"runtime"
 	"testing"
+
+	"github.com/z7zmey/php-parser/ast"
 )
 
 func BenchmarkNodeStorageSave(b *testing.B) {
@@ -12,7 +14,7 @@ func BenchmarkNodeStorageSave(b *testing.B) {
 
 		for i := 0; i < k; i++ {
 			n := Node{
-				Type: NodeTypeRoot,
+				Type: ast.NodeTypeRoot,
 			}
 			_ = nodeBuf.Create(n)
 		}

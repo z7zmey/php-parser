@@ -8,14 +8,15 @@ import (
 	"bytes"
 	"strconv"
 
+	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/ast/linear"
 	"github.com/z7zmey/php-parser/scanner"
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 )
 
-//line php7/php7.y:14
+//line php7/php7.y:15
 type yySymType struct {
 	yys   int
-	node  linkedtree.NodeID
+	node  linear.NodeID
 	token *scanner.Token
 }
 
@@ -331,7 +332,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php7/php7.y:6571
+//line php7/php7.y:6572
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -2099,14 +2100,14 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:272
+		//line php7/php7.y:273
 		{
 			children := yylex.(*Parser).list.pop()
-			nodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeRoot,
+			nodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeRoot,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
-			yylex.(*Parser).ast.Children(0, nodeID, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, nodeID, ast.EdgeTypeStmts, children...)
 
 			yylex.(*Parser).ast.RootNode = nodeID
 
@@ -2117,463 +2118,463 @@ yydefault:
 		}
 	case 2:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 3:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 4:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 5:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 6:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 8:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 9:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:290
+		//line php7/php7.y:291
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 11:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 12:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 13:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 15:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 18:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:291
+		//line php7/php7.y:292
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 29:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 30:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 31:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:292
+		//line php7/php7.y:293
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 32:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 33:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 34:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 37:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 39:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 41:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:293
+		//line php7/php7.y:294
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 42:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 43:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 45:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 46:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 52:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:294
+		//line php7/php7.y:295
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 53:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 54:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 55:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 56:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 57:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 58:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 59:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 60:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:295
+		//line php7/php7.y:296
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 61:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 62:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 63:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 64:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 65:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 66:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 67:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 68:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:296
+		//line php7/php7.y:297
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 69:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:301
+		//line php7/php7.y:302
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 70:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 71:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 72:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 73:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 74:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 75:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:304
+		//line php7/php7.y:305
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 76:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:309
+		//line php7/php7.y:310
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 77:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:313
+		//line php7/php7.y:314
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 78:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:320
+		//line php7/php7.y:321
 		{
 			if yyDollar[2].node != 0 {
 				yylex.(*Parser).list.add(yyDollar[2].node)
@@ -2588,7 +2589,7 @@ yydefault:
 		}
 	case 79:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:333
+		//line php7/php7.y:334
 		{
 			yylex.(*Parser).list.push()
 
@@ -2596,10 +2597,10 @@ yydefault:
 		}
 	case 80:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:342
+		//line php7/php7.y:343
 		{
-			nodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameNamePart,
+			nodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameNamePart,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -2613,10 +2614,10 @@ yydefault:
 		}
 	case 81:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:357
+		//line php7/php7.y:358
 		{
-			nodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameNamePart,
+			nodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameNamePart,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 			yylex.(*Parser).list.add(nodeID)
@@ -2629,14 +2630,14 @@ yydefault:
 		}
 	case 82:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:374
+		//line php7/php7.y:375
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -2645,14 +2646,14 @@ yydefault:
 		}
 	case 83:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:388
+		//line php7/php7.y:389
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameRelative,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameRelative,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2662,14 +2663,14 @@ yydefault:
 		}
 	case 84:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:403
+		//line php7/php7.y:404
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameFullyQualified,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameFullyQualified,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2678,7 +2679,7 @@ yydefault:
 		}
 	case 85:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:420
+		//line php7/php7.y:421
 		{
 			// error
 			yyVAL.node = 0
@@ -2687,7 +2688,7 @@ yydefault:
 		}
 	case 86:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:427
+		//line php7/php7.y:428
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2695,7 +2696,7 @@ yydefault:
 		}
 	case 87:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:433
+		//line php7/php7.y:434
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2703,7 +2704,7 @@ yydefault:
 		}
 	case 88:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:439
+		//line php7/php7.y:440
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2711,7 +2712,7 @@ yydefault:
 		}
 	case 89:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:445
+		//line php7/php7.y:446
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2719,7 +2720,7 @@ yydefault:
 		}
 	case 90:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:451
+		//line php7/php7.y:452
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -2727,10 +2728,10 @@ yydefault:
 		}
 	case 91:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:457
+		//line php7/php7.y:458
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtHaltCompiler,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtHaltCompiler,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
@@ -2745,23 +2746,23 @@ yydefault:
 		}
 	case 92:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:473
+		//line php7/php7.y:474
 		{
 			children := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, children...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, children...)
 
 			// Create Namespace Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNamespace,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNamespace,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeNamespaceName, nameNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2773,25 +2774,25 @@ yydefault:
 		}
 	case 93:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:499
+		//line php7/php7.y:500
 		{
 			childrenStmts := yylex.(*Parser).list.pop()
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create Namespace Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNamespace,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNamespace,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeNamespaceName, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, childrenStmts...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeNamespaceName, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2803,14 +2804,14 @@ yydefault:
 		}
 	case 94:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:527
+		//line php7/php7.y:528
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNamespace,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNamespace,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2821,7 +2822,7 @@ yydefault:
 		}
 	case 95:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:543
+		//line php7/php7.y:544
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
 			node.Pos = yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token)
@@ -2838,13 +2839,13 @@ yydefault:
 		}
 	case 96:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:558
+		//line php7/php7.y:559
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[2].node)
 			node.Pos = yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[2].node, node)
 
-			yylex.(*Parser).ast.Children(0, yyDollar[3].node, linkedtree.EdgeTypeUseType, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[3].node, ast.EdgeTypeUseType, yyDollar[2].node)
 
 			yyVAL.node = yyDollar[3].node
 
@@ -2857,14 +2858,14 @@ yydefault:
 		}
 	case 97:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:575
+		//line php7/php7.y:576
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtUseList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtUseList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeUses, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeUses, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2875,15 +2876,15 @@ yydefault:
 		}
 	case 98:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:591
+		//line php7/php7.y:592
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtUseList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtUseList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeUseType, yyDollar[2].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeUses, children...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeUseType, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUses, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2894,14 +2895,14 @@ yydefault:
 		}
 	case 99:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:608
+		//line php7/php7.y:609
 		{
 			children := yylex.(*Parser).list.pop()
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtConstList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtConstList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeConsts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConsts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -2912,10 +2913,10 @@ yydefault:
 		}
 	case 100:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:627
+		//line php7/php7.y:628
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -2926,10 +2927,10 @@ yydefault:
 		}
 	case 101:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:639
+		//line php7/php7.y:640
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -2940,25 +2941,25 @@ yydefault:
 		}
 	case 102:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:654
+		//line php7/php7.y:655
 		{
 			childrenUseDeclarations := yylex.(*Parser).list.pop()
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGroupUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGroupUse,
 				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypePrefix, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeUseList, childrenUseDeclarations...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -2974,25 +2975,25 @@ yydefault:
 		}
 	case 103:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:686
+		//line php7/php7.y:687
 		{
 			childrenUseDeclarations := yylex.(*Parser).list.pop()
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGroupUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGroupUse,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypePrefix, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeUseList, childrenUseDeclarations...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.UseType, $1.FreeFloating)
@@ -3009,25 +3010,25 @@ yydefault:
 		}
 	case 104:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:722
+		//line php7/php7.y:723
 		{
 			childrenUseDeclarations := yylex.(*Parser).list.pop()
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGroupUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGroupUse,
 				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[6].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypePrefix, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeUseList, childrenUseDeclarations...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -3043,25 +3044,25 @@ yydefault:
 		}
 	case 105:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:754
+		//line php7/php7.y:755
 		{
 			childrenUseDeclarations := yylex.(*Parser).list.pop()
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create GroupUse Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGroupUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGroupUse,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypePrefix, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeUseList, childrenUseDeclarations...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypePrefix, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUseList, childrenUseDeclarations...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Use, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -3078,19 +3079,19 @@ yydefault:
 		}
 	case 106:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:790
+		//line php7/php7.y:791
 		{
 			yyVAL.token = nil
 		}
 	case 107:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:794
+		//line php7/php7.y:795
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 108:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:801
+		//line php7/php7.y:802
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3101,7 +3102,7 @@ yydefault:
 		}
 	case 109:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:810
+		//line php7/php7.y:811
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3110,7 +3111,7 @@ yydefault:
 		}
 	case 110:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:820
+		//line php7/php7.y:821
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3121,7 +3122,7 @@ yydefault:
 		}
 	case 111:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:829
+		//line php7/php7.y:830
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3130,7 +3131,7 @@ yydefault:
 		}
 	case 112:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:839
+		//line php7/php7.y:840
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3141,7 +3142,7 @@ yydefault:
 		}
 	case 113:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:848
+		//line php7/php7.y:849
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3150,7 +3151,7 @@ yydefault:
 		}
 	case 114:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:858
+		//line php7/php7.y:859
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3158,9 +3159,9 @@ yydefault:
 		}
 	case 115:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:864
+		//line php7/php7.y:865
 		{
-			yylex.(*Parser).ast.Children(0, yyDollar[2].node, linkedtree.EdgeTypeUseType, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[2].node, ast.EdgeTypeUseType, yyDollar[1].node)
 
 			yyVAL.node = yyDollar[2].node
 
@@ -3168,23 +3169,23 @@ yydefault:
 		}
 	case 116:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:875
+		//line php7/php7.y:876
 		{
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// Create Use Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtUse,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeUse, nameNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeUse, nameNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -3193,30 +3194,30 @@ yydefault:
 		}
 	case 117:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:898
+		//line php7/php7.y:899
 		{
 			childrenNameParts := yylex.(*Parser).list.pop()
 
 			// Create Name Node
-			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNameName,
+			nameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNameName,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(childrenNameParts),
 			})
-			yylex.(*Parser).ast.Children(0, nameNodeID, linkedtree.EdgeTypeParts, childrenNameParts...)
+			yylex.(*Parser).ast.Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
 
 			// create Alias Node
-			aliasNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			aliasNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
 			// Create Use Node
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtUse,
 				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenNameParts, yyDollar[3].token),
 			})
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeUse, nameNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeAlias, aliasNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeUse, nameNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeAlias, aliasNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], name)
@@ -3227,7 +3228,7 @@ yydefault:
 		}
 	case 118:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:933
+		//line php7/php7.y:934
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3238,7 +3239,7 @@ yydefault:
 		}
 	case 119:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:942
+		//line php7/php7.y:943
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -3250,7 +3251,7 @@ yydefault:
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:955
+		//line php7/php7.y:956
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3261,7 +3262,7 @@ yydefault:
 		}
 	case 121:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:964
+		//line php7/php7.y:965
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3270,7 +3271,7 @@ yydefault:
 		}
 	case 122:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:974
+		//line php7/php7.y:975
 		{
 			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
 			//     prevNode := lastNode($1)
@@ -3285,7 +3286,7 @@ yydefault:
 		}
 	case 123:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:987
+		//line php7/php7.y:988
 		{
 			yylex.(*Parser).list.push()
 
@@ -3293,7 +3294,7 @@ yydefault:
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:996
+		//line php7/php7.y:997
 		{
 			// error
 			yyVAL.node = 0
@@ -3302,7 +3303,7 @@ yydefault:
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1003
+		//line php7/php7.y:1004
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3310,7 +3311,7 @@ yydefault:
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1009
+		//line php7/php7.y:1010
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3318,7 +3319,7 @@ yydefault:
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1015
+		//line php7/php7.y:1016
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3326,7 +3327,7 @@ yydefault:
 		}
 	case 128:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1021
+		//line php7/php7.y:1022
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3334,7 +3335,7 @@ yydefault:
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1027
+		//line php7/php7.y:1028
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3342,10 +3343,10 @@ yydefault:
 		}
 	case 130:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1033
+		//line php7/php7.y:1034
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtHaltCompiler,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtHaltCompiler,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
@@ -3360,16 +3361,16 @@ yydefault:
 		}
 	case 131:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1051
+		//line php7/php7.y:1052
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3379,7 +3380,7 @@ yydefault:
 		}
 	case 132:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1068
+		//line php7/php7.y:1069
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3387,7 +3388,7 @@ yydefault:
 		}
 	case 133:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1074
+		//line php7/php7.y:1075
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3395,13 +3396,13 @@ yydefault:
 		}
 	case 134:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1080
+		//line php7/php7.y:1081
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
-			yylex.(*Parser).ast.Children(0, yyDollar[5].node, linkedtree.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[5].node
 
@@ -3414,15 +3415,15 @@ yydefault:
 		}
 	case 135:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1097
+		//line php7/php7.y:1098
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtDo,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtDo,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[2].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeCond, yyDollar[5].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCond, yyDollar[5].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3436,15 +3437,15 @@ yydefault:
 		}
 	case 136:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1117
+		//line php7/php7.y:1118
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[9].node, linkedtree.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, linkedtree.EdgeTypeCond, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, linkedtree.EdgeTypeInit, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[9].node, ast.EdgeTypeLoop, yylex.(*Parser).list.pop()...)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, ast.EdgeTypeCond, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, ast.EdgeTypeInit, yylex.(*Parser).list.pop()...)
 
 			yyVAL.node = yyDollar[9].node
 
@@ -3459,13 +3460,13 @@ yydefault:
 		}
 	case 137:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1138
+		//line php7/php7.y:1139
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[5].node)
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
-			yylex.(*Parser).ast.Children(0, yyDollar[5].node, linkedtree.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[5].node, ast.EdgeTypeCond, yyDollar[3].node)
 
 			yyVAL.node = yyDollar[5].node
 
@@ -3478,14 +3479,14 @@ yydefault:
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1155
+		//line php7/php7.y:1156
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtBreak,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtBreak,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3496,14 +3497,14 @@ yydefault:
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1171
+		//line php7/php7.y:1172
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtContinue,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtContinue,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3514,14 +3515,14 @@ yydefault:
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1187
+		//line php7/php7.y:1188
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtReturn,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtReturn,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3532,16 +3533,16 @@ yydefault:
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1203
+		//line php7/php7.y:1204
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGlobal,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGlobal,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVars, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3552,16 +3553,16 @@ yydefault:
 		}
 	case 142:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1221
+		//line php7/php7.y:1222
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStatic,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStatic,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVars, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3572,16 +3573,16 @@ yydefault:
 		}
 	case 143:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1239
+		//line php7/php7.y:1240
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtEcho,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtEcho,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExprs, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExprs, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3593,10 +3594,10 @@ yydefault:
 		}
 	case 144:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1258
+		//line php7/php7.y:1259
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtInlineHtml,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtInlineHtml,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -3607,10 +3608,10 @@ yydefault:
 		}
 	case 145:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1270
+		//line php7/php7.y:1271
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtExpression,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtExpression,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
@@ -3623,16 +3624,16 @@ yydefault:
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1284
+		//line php7/php7.y:1285
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtUnset,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtUnset,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVars, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3649,14 +3650,14 @@ yydefault:
 		}
 	case 147:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1308
+		//line php7/php7.y:1309
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[7].node)
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[7].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[7].node, node)
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[7].node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[7].node, linkedtree.EdgeTypeVar, yyDollar[5].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[7].node, ast.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[7].node, ast.EdgeTypeVar, yyDollar[5].node)
 
 			yyVAL.node = yyDollar[7].node
 
@@ -3670,15 +3671,15 @@ yydefault:
 		}
 	case 148:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1328
+		//line php7/php7.y:1329
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[9].node)
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[9].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[9].node, node)
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[9].node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, linkedtree.EdgeTypeKey, yyDollar[5].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, linkedtree.EdgeTypeVar, yyDollar[7].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyDollar[9].node, ast.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, ast.EdgeTypeKey, yyDollar[5].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyDollar[9].node, ast.EdgeTypeVar, yyDollar[7].node)
 
 			yyVAL.node = yyDollar[9].node
 
@@ -3693,7 +3694,7 @@ yydefault:
 		}
 	case 149:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:1349
+		//line php7/php7.y:1350
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -3701,7 +3702,7 @@ yydefault:
 			node.Pos = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[5].node, node)
 
-			yylex.(*Parser).ast.Children(0, yyDollar[5].node, linkedtree.EdgeTypeConsts, children...)
+			yylex.(*Parser).ast.Children(0, yyDollar[5].node, ast.EdgeTypeConsts, children...)
 
 			yyVAL.node = yyDollar[5].node
 
@@ -3714,10 +3715,10 @@ yydefault:
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1369
+		//line php7/php7.y:1370
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNop,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNop,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -3729,26 +3730,26 @@ yydefault:
 		}
 	case 151:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1382
+		//line php7/php7.y:1383
 		{
 			childrenCatches := yylex.(*Parser).list.pop()
 			childrenStmts := yylex.(*Parser).list.pop()
 
-			var posID linkedtree.PositionID
+			var posID linear.PositionID
 			if yyDollar[6].node == 0 {
 				posID = yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, childrenCatches)
 			} else {
 				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node)
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTry,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTry,
 				Pos:  posID,
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeConsts, yyDollar[6].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeCatches, childrenCatches...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, childrenStmts...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConsts, yyDollar[6].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCatches, childrenCatches...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3759,14 +3760,14 @@ yydefault:
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1410
+		//line php7/php7.y:1411
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtThrow,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtThrow,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3777,19 +3778,19 @@ yydefault:
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1426
+		//line php7/php7.y:1427
 		{
-			LableNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			LableNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtGoto,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtGoto,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLabel, LableNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLabel, LableNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3801,19 +3802,19 @@ yydefault:
 		}
 	case 154:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1448
+		//line php7/php7.y:1449
 		{
-			LableNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			LableNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtLabel,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtLabel,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLabelName, LableNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLabelName, LableNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3823,7 +3824,7 @@ yydefault:
 		}
 	case 155:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1470
+		//line php7/php7.y:1471
 		{
 			yylex.(*Parser).list.push()
 
@@ -3831,27 +3832,27 @@ yydefault:
 		}
 	case 156:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1476
+		//line php7/php7.y:1477
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[5].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[5].token),
 			})
 
-			catchNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCatch,
+			catchNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCatch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[2].token, yyDollar[9].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, catchNodeID, linkedtree.EdgeTypeVar, varNodeID)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, linkedtree.EdgeTypeTypes, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, catchNodeID, ast.EdgeTypeVar, varNodeID)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, catchNodeID, ast.EdgeTypeTypes, yylex.(*Parser).list.pop()...)
 
 			yylex.(*Parser).list.add(catchNodeID)
 
@@ -3868,7 +3869,7 @@ yydefault:
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1513
+		//line php7/php7.y:1514
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3877,7 +3878,7 @@ yydefault:
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1520
+		//line php7/php7.y:1521
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3888,7 +3889,7 @@ yydefault:
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1532
+		//line php7/php7.y:1533
 		{
 			yyVAL.node = 0
 
@@ -3896,14 +3897,14 @@ yydefault:
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1538
+		//line php7/php7.y:1539
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtFinally,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtFinally,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3914,7 +3915,7 @@ yydefault:
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1557
+		//line php7/php7.y:1558
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3923,7 +3924,7 @@ yydefault:
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1564
+		//line php7/php7.y:1565
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -3934,7 +3935,7 @@ yydefault:
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1576
+		//line php7/php7.y:1577
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3942,28 +3943,28 @@ yydefault:
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:1585
+		//line php7/php7.y:1586
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtFunction,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtFunction,
 				Flag: flag,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeFunctionName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeReturnType, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeFunctionName, identifierNodeID)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeReturnType, yyDollar[8].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -3990,50 +3991,50 @@ yydefault:
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1635
+		//line php7/php7.y:1636
 		{
 			yyVAL.token = nil
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1639
+		//line php7/php7.y:1640
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1646
+		//line php7/php7.y:1647
 		{
 			yyVAL.token = nil
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1650
+		//line php7/php7.y:1651
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1657
+		//line php7/php7.y:1658
 		{
 			childrenStmts := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
 
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClass,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClass,
 				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, yyDollar[9].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeImplements, yyDollar[5].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExtends, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeClassName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeModifiers, childrenModifiers...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, childrenStmts...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeImplements, yyDollar[5].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExtends, yyDollar[4].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeClassName, identifierNodeID)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -4046,22 +4047,22 @@ yydefault:
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:1687
+		//line php7/php7.y:1688
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClass,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClass,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeImplements, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeClassName, identifierNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeImplements, yyDollar[4].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeClassName, identifierNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4073,7 +4074,7 @@ yydefault:
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1715
+		//line php7/php7.y:1716
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -4082,7 +4083,7 @@ yydefault:
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1722
+		//line php7/php7.y:1723
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -4090,10 +4091,10 @@ yydefault:
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1731
+		//line php7/php7.y:1732
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -4104,10 +4105,10 @@ yydefault:
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1743
+		//line php7/php7.y:1744
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -4118,20 +4119,20 @@ yydefault:
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1758
+		//line php7/php7.y:1759
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTrait,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTrait,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeTraitName, identifierNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeTraitName, identifierNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4143,21 +4144,21 @@ yydefault:
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1784
+		//line php7/php7.y:1785
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtInterface,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtInterface,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[7].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeInterfaceName, identifierNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeInterfaceName, identifierNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4169,7 +4170,7 @@ yydefault:
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1811
+		//line php7/php7.y:1812
 		{
 			yyVAL.node = 0
 
@@ -4177,14 +4178,14 @@ yydefault:
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1817
+		//line php7/php7.y:1818
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClassExtends,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClassExtends,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClassName, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClassName, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4193,7 +4194,7 @@ yydefault:
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1834
+		//line php7/php7.y:1835
 		{
 			yyVAL.node = 0
 
@@ -4201,16 +4202,16 @@ yydefault:
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1840
+		//line php7/php7.y:1841
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtInterfaceExtends,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtInterfaceExtends,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeInterfaceNames, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4219,7 +4220,7 @@ yydefault:
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1859
+		//line php7/php7.y:1860
 		{
 			yyVAL.node = 0
 
@@ -4227,16 +4228,16 @@ yydefault:
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1865
+		//line php7/php7.y:1866
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClassImplements,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClassImplements,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeInterfaceNames, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4245,7 +4246,7 @@ yydefault:
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1884
+		//line php7/php7.y:1885
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4253,14 +4254,14 @@ yydefault:
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1890
+		//line php7/php7.y:1891
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprReference,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprReference,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4269,14 +4270,14 @@ yydefault:
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1904
+		//line php7/php7.y:1905
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4287,14 +4288,14 @@ yydefault:
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1920
+		//line php7/php7.y:1921
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprShortList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprShortList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save commentsc
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4304,36 +4305,36 @@ yydefault:
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1938
+		//line php7/php7.y:1939
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtFor,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtFor,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1949
+		//line php7/php7.y:1950
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltFor,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltFor,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4345,36 +4346,36 @@ yydefault:
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1978
+		//line php7/php7.y:1979
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtForeach,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtForeach,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1989
+		//line php7/php7.y:1990
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltForeach,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltForeach,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4386,36 +4387,36 @@ yydefault:
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2018
+		//line php7/php7.y:2019
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtDeclare,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtDeclare,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2029
+		//line php7/php7.y:2030
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtDeclare,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtDeclare,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4427,22 +4428,22 @@ yydefault:
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2058
+		//line php7/php7.y:2059
 		{
 			children := yylex.(*Parser).list.pop()
 
-			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCaseList,
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCaseList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtSwitch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtSwitch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, caseListNodeID, linkedtree.EdgeTypeCases, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCaseList, caseListNodeID)
+			yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
@@ -4452,22 +4453,22 @@ yydefault:
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2081
+		//line php7/php7.y:2082
 		{
 			children := yylex.(*Parser).list.pop()
 
-			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCaseList,
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCaseList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtSwitch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtSwitch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, caseListNodeID, linkedtree.EdgeTypeCases, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCaseList, caseListNodeID)
+			yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating(caseList, freefloating.Start, $1.FreeFloating)
@@ -4478,23 +4479,23 @@ yydefault:
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2105
+		//line php7/php7.y:2106
 		{
 			children := yylex.(*Parser).list.pop()
 
-			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCaseList,
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCaseList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltSwitch,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltSwitch,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, caseListNodeID, linkedtree.EdgeTypeCases, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCaseList, caseListNodeID)
+			yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4506,23 +4507,23 @@ yydefault:
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2131
+		//line php7/php7.y:2132
 		{
 			children := yylex.(*Parser).list.pop()
 
-			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCaseList,
+			caseListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCaseList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltSwitch,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltSwitch,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, caseListNodeID, linkedtree.EdgeTypeCases, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCaseList, caseListNodeID)
+			yylex.(*Parser).ast.Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4535,7 +4536,7 @@ yydefault:
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2161
+		//line php7/php7.y:2162
 		{
 			yylex.(*Parser).list.push()
 
@@ -4543,16 +4544,16 @@ yydefault:
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2167
+		//line php7/php7.y:2168
 		{
 			children := yylex.(*Parser).list.pop()
 
-			caseNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtCase,
+			caseNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtCase,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, caseNodeID, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, caseNodeID, ast.EdgeTypeStmts, children...)
 
 			yylex.(*Parser).list.add(caseNodeID)
 
@@ -4565,16 +4566,16 @@ yydefault:
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2187
+		//line php7/php7.y:2188
 		{
 			children := yylex.(*Parser).list.pop()
 
-			defaultNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtDefault,
+			defaultNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtDefault,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, defaultNodeID, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, defaultNodeID, ast.EdgeTypeStmts, children...)
 
 			yylex.(*Parser).list.add(defaultNodeID)
 
@@ -4587,48 +4588,48 @@ yydefault:
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2210
+		//line php7/php7.y:2211
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2214
+		//line php7/php7.y:2215
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2221
+		//line php7/php7.y:2222
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtWhile,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtWhile,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, yyDollar[1].node)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2232
+		//line php7/php7.y:2233
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltWhile,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltWhile,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Cond, $1.FreeFloating)
@@ -4640,15 +4641,15 @@ yydefault:
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2261
+		//line php7/php7.y:2262
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtIf,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtIf,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCond, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[5].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmt, yyDollar[5].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4659,10 +4660,10 @@ yydefault:
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2278
+		//line php7/php7.y:2279
 		{
-			elseIfNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtElseIf,
+			elseIfNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtElseIf,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[6].node),
 			})
 
@@ -4670,9 +4671,9 @@ yydefault:
 			node.Pos = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, elseIfNodeID, linkedtree.EdgeTypeCond, yyDollar[4].node)
-			yylex.(*Parser).ast.Children(prevNodeID, elseIfNodeID, linkedtree.EdgeTypeStmt, yyDollar[6].node)
-			yylex.(*Parser).ast.Children(0, yyDollar[1].node, linkedtree.EdgeTypeElseIf, elseIfNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, elseIfNodeID, ast.EdgeTypeCond, yyDollar[4].node)
+			yylex.(*Parser).ast.Children(prevNodeID, elseIfNodeID, ast.EdgeTypeStmt, yyDollar[6].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[1].node, ast.EdgeTypeElseIf, elseIfNodeID)
 
 			yyVAL.node = yyDollar[1].node
 
@@ -4685,7 +4686,7 @@ yydefault:
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2305
+		//line php7/php7.y:2306
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4693,10 +4694,10 @@ yydefault:
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2311
+		//line php7/php7.y:2312
 		{
-			elseNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtElse,
+			elseNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtElse,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[3].node),
 			})
 
@@ -4704,8 +4705,8 @@ yydefault:
 			node.Pos = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
-			yylex.(*Parser).ast.Children(0, elseNodeID, linkedtree.EdgeTypeStmt, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(0, yyDollar[1].node, linkedtree.EdgeTypeElse, elseNodeID)
+			yylex.(*Parser).ast.Children(0, elseNodeID, ast.EdgeTypeStmt, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyDollar[1].node, ast.EdgeTypeElse, elseNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating(_else, freefloating.Start, $2.FreeFloating)
@@ -4714,24 +4715,24 @@ yydefault:
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2334
+		//line php7/php7.y:2335
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltIf,
-				Flag: linkedtree.NodeFlagAltSyntax,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltIf,
+				Flag: ast.NodeFlagAltSyntax,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[1].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCond, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCond, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -4743,24 +4744,24 @@ yydefault:
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:2361
+		//line php7/php7.y:2362
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			AltElseIfNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltElseIf,
+			AltElseIfNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltElseIf,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			prevNodeID := yylex.(*Parser).ast.Children(0, AltElseIfNodeID, linkedtree.EdgeTypeCond, yyDollar[4].node)
-			yylex.(*Parser).ast.Children(prevNodeID, AltElseIfNodeID, linkedtree.EdgeTypeStmt, stmtListNodeID)
-			yylex.(*Parser).ast.Children(0, yyDollar[1].node, linkedtree.EdgeTypeElseIf, AltElseIfNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, AltElseIfNodeID, ast.EdgeTypeCond, yyDollar[4].node)
+			yylex.(*Parser).ast.Children(prevNodeID, AltElseIfNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, yyDollar[1].node, ast.EdgeTypeElseIf, AltElseIfNodeID)
 
 			yyVAL.node = yyDollar[1].node
 
@@ -4774,7 +4775,7 @@ yydefault:
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2393
+		//line php7/php7.y:2394
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
 			node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
@@ -4791,17 +4792,17 @@ yydefault:
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2408
+		//line php7/php7.y:2409
 		{
 			children := yylex.(*Parser).list.pop()
 
-			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			stmtListNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewNodeListPosition(children),
 			})
 
-			AltElseNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtAltElse,
+			AltElseNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtAltElse,
 				Pos:  yylex.(*Parser).ast.NewTokenNodeListPosition(yyDollar[2].token, children),
 			})
 
@@ -4809,9 +4810,9 @@ yydefault:
 			node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token)
 			yylex.(*Parser).ast.Nodes.Save(yyDollar[1].node, node)
 
-			yylex.(*Parser).ast.Children(0, stmtListNodeID, linkedtree.EdgeTypeStmts, children...)
-			yylex.(*Parser).ast.Children(0, AltElseNodeID, linkedtree.EdgeTypeStmt, stmtListNodeID)
-			yylex.(*Parser).ast.Children(0, yyDollar[1].node, linkedtree.EdgeTypeElse, AltElseNodeID)
+			yylex.(*Parser).ast.Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, AltElseNodeID, ast.EdgeTypeStmt, stmtListNodeID)
+			yylex.(*Parser).ast.Children(0, yyDollar[1].node, ast.EdgeTypeElse, AltElseNodeID)
 
 			yyVAL.node = yyDollar[1].node
 
@@ -4826,13 +4827,13 @@ yydefault:
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2444
+		//line php7/php7.y:2445
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2448
+		//line php7/php7.y:2449
 		{
 			yylex.(*Parser).list.push()
 
@@ -4840,7 +4841,7 @@ yydefault:
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2457
+		//line php7/php7.y:2458
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -4849,7 +4850,7 @@ yydefault:
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2464
+		//line php7/php7.y:2465
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -4860,19 +4861,19 @@ yydefault:
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2476
+		//line php7/php7.y:2477
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			var posID linkedtree.PositionID
+			var posID linear.PositionID
 			if yyDollar[1].node != 0 {
 				posID = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token)
 			} else if yyDollar[2].token != nil {
@@ -4883,23 +4884,23 @@ yydefault:
 				posID = yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token)
 			}
 
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				flag = flag | linkedtree.NodeFlagVariadic
+				flag = flag | ast.NodeFlagVariadic
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeParameter,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeParameter,
 				Flag: flag,
 				Pos:  posID,
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarType, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarType, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// // save comments
 			// if $1 != nil {
@@ -4929,19 +4930,19 @@ yydefault:
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2543
+		//line php7/php7.y:2544
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			var posID linkedtree.PositionID
+			var posID linear.PositionID
 			if yyDollar[1].node != 0 {
 				posID = yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[6].node)
 			} else if yyDollar[2].token != nil {
@@ -4952,24 +4953,24 @@ yydefault:
 				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[4].token, yyDollar[6].node)
 			}
 
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 			if yyDollar[3].token != nil {
-				flag = flag | linkedtree.NodeFlagVariadic
+				flag = flag | ast.NodeFlagVariadic
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeParameter,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeParameter,
 				Flag: flag,
 				Pos:  posID,
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarType, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDefaultValue, yyDollar[6].node)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarType, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDefaultValue, yyDollar[6].node)
 
 			// // save comments
 			// if $1 != nil {
@@ -5000,7 +5001,7 @@ yydefault:
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2615
+		//line php7/php7.y:2616
 		{
 			yyVAL.node = 0
 
@@ -5008,7 +5009,7 @@ yydefault:
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2621
+		//line php7/php7.y:2622
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5016,7 +5017,7 @@ yydefault:
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2630
+		//line php7/php7.y:2631
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5024,14 +5025,14 @@ yydefault:
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2636
+		//line php7/php7.y:2637
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeNullable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeNullable,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5040,10 +5041,10 @@ yydefault:
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2653
+		//line php7/php7.y:2654
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5054,10 +5055,10 @@ yydefault:
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2665
+		//line php7/php7.y:2666
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5068,7 +5069,7 @@ yydefault:
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2677
+		//line php7/php7.y:2678
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5076,7 +5077,7 @@ yydefault:
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2686
+		//line php7/php7.y:2687
 		{
 			yyVAL.node = 0
 
@@ -5084,7 +5085,7 @@ yydefault:
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2692
+		//line php7/php7.y:2693
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -5095,10 +5096,10 @@ yydefault:
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2704
+		//line php7/php7.y:2705
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeArgumentList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeArgumentList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
@@ -5110,16 +5111,16 @@ yydefault:
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2717
+		//line php7/php7.y:2718
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeArgumentList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeArgumentList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeArguments, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeArguments, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5133,7 +5134,7 @@ yydefault:
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2741
+		//line php7/php7.y:2742
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5142,7 +5143,7 @@ yydefault:
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2748
+		//line php7/php7.y:2749
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5153,14 +5154,14 @@ yydefault:
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2760
+		//line php7/php7.y:2761
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeArgument,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeArgument,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5169,15 +5170,15 @@ yydefault:
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2774
+		//line php7/php7.y:2775
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeArgument,
-				Flag: linkedtree.NodeFlagVariadic,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeArgument,
+				Flag: ast.NodeFlagVariadic,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5186,7 +5187,7 @@ yydefault:
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2792
+		//line php7/php7.y:2793
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5197,7 +5198,7 @@ yydefault:
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2801
+		//line php7/php7.y:2802
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5206,7 +5207,7 @@ yydefault:
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2811
+		//line php7/php7.y:2812
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5214,7 +5215,7 @@ yydefault:
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2820
+		//line php7/php7.y:2821
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5224,7 +5225,7 @@ yydefault:
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2828
+		//line php7/php7.y:2829
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5233,25 +5234,25 @@ yydefault:
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2838
+		//line php7/php7.y:2839
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStaticVar,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStaticVar,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5261,26 +5262,26 @@ yydefault:
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2864
+		//line php7/php7.y:2865
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStaticVar,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStaticVar,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5291,7 +5292,7 @@ yydefault:
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2895
+		//line php7/php7.y:2896
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5299,7 +5300,7 @@ yydefault:
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2901
+		//line php7/php7.y:2902
 		{
 			yylex.(*Parser).list.push()
 
@@ -5307,18 +5308,18 @@ yydefault:
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2910
+		//line php7/php7.y:2911
 		{
 			childrenProperties := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtPropertyList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtPropertyList,
 				Pos:  yylex.(*Parser).ast.NewNodeListTokenPosition(childrenModifiers, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeModifiers, childrenModifiers...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperties, childrenProperties...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperties, childrenProperties...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1[0], $$)
@@ -5329,18 +5330,18 @@ yydefault:
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2930
+		//line php7/php7.y:2931
 		{
 			childrenConstants := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClassConstList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClassConstList,
 				Pos:  yylex.(*Parser).ast.NewOptionalListTokensPosition(childrenModifiers, yyDollar[2].token, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeModifiers, childrenModifiers...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeConsts, childrenConstants...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeConsts, childrenConstants...)
 
 			// save comments
 			// if len($1) > 0 {
@@ -5356,17 +5357,17 @@ yydefault:
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2955
+		//line php7/php7.y:2956
 		{
 			childrenTraits := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUse,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeTraitAdaptationList, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeTraits, childrenTraits...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeTraitAdaptationList, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeTraits, childrenTraits...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5375,40 +5376,40 @@ yydefault:
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line php7/php7.y:2972
+		//line php7/php7.y:2973
 		{
 			childrenParams := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
 
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			var posID linkedtree.PositionID
+			var posID linear.PositionID
 			if len(childrenModifiers) == 0 {
 				posID = yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[2].token, yyDollar[10].node)
 			} else {
 				posID = yylex.(*Parser).ast.NewNodeListNodePosition(childrenModifiers, yyDollar[10].node)
 			}
 
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if yyDollar[3].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClassMethod,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClassMethod,
 				Flag: flag,
 				Pos:  posID,
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeMethodName, identifierNodeID)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeReturnType, yyDollar[9].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmt, yyDollar[10].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeModifiers, childrenModifiers...)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeParams, childrenParams...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeParams, childrenParams...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeMethodName, identifierNodeID)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeReturnType, yyDollar[9].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmt, yyDollar[10].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeModifiers, childrenModifiers...)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, childrenParams...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, childrenParams...)
 
 			// save comments
 			// if len($1) > 0 {
@@ -5433,7 +5434,7 @@ yydefault:
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3031
+		//line php7/php7.y:3032
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5442,7 +5443,7 @@ yydefault:
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3038
+		//line php7/php7.y:3039
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5453,10 +5454,10 @@ yydefault:
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3050
+		//line php7/php7.y:3051
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNop,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNop,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5468,10 +5469,10 @@ yydefault:
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3064
+		//line php7/php7.y:3065
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitAdaptationList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitAdaptationList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
@@ -5483,16 +5484,16 @@ yydefault:
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3077
+		//line php7/php7.y:3078
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitAdaptationList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitAdaptationList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeAdaptations, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeAdaptations, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5502,7 +5503,7 @@ yydefault:
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3097
+		//line php7/php7.y:3098
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5511,7 +5512,7 @@ yydefault:
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3104
+		//line php7/php7.y:3105
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5519,7 +5520,7 @@ yydefault:
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3113
+		//line php7/php7.y:3114
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5531,7 +5532,7 @@ yydefault:
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3123
+		//line php7/php7.y:3124
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5543,17 +5544,17 @@ yydefault:
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3136
+		//line php7/php7.y:3137
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUsePrecedence,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUsePrecedence,
 				Pos:  yylex.(*Parser).ast.NewNodeNodeListPosition(yyDollar[1].node, children),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeRef, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeInsteadof, children...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeInsteadof, children...)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5563,20 +5564,20 @@ yydefault:
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3157
+		//line php7/php7.y:3158
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUseAlias,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeRef, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeAlias, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5587,20 +5588,20 @@ yydefault:
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3179
+		//line php7/php7.y:3180
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUseAlias,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeRef, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeAlias, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5611,21 +5612,21 @@ yydefault:
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3201
+		//line php7/php7.y:3202
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[4].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUseAlias,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeRef, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeModifier, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeAlias, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeModifier, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeAlias, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5636,15 +5637,15 @@ yydefault:
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3224
+		//line php7/php7.y:3225
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitUseAlias,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitUseAlias,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeRef, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeModifier, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeRef, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeModifier, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5654,19 +5655,19 @@ yydefault:
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3243
+		//line php7/php7.y:3244
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitMethodRef,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitMethodRef,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeMethod, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5675,7 +5676,7 @@ yydefault:
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3262
+		//line php7/php7.y:3263
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5683,20 +5684,20 @@ yydefault:
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3271
+		//line php7/php7.y:3272
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtTraitMethodRef,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtTraitMethodRef,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeTrait, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeMethod, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeTrait, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -5707,10 +5708,10 @@ yydefault:
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3296
+		//line php7/php7.y:3297
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtNop,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtNop,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5722,16 +5723,16 @@ yydefault:
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3309
+		//line php7/php7.y:3310
 		{
 			children := yylex.(*Parser).list.pop()
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtStmtList,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtStmtList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmts, children...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5741,16 +5742,16 @@ yydefault:
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3329
+		//line php7/php7.y:3330
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3333
+		//line php7/php7.y:3334
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5764,7 +5765,7 @@ yydefault:
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3351
+		//line php7/php7.y:3352
 		{
 			yylex.(*Parser).list.push()
 
@@ -5772,13 +5773,13 @@ yydefault:
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3357
+		//line php7/php7.y:3358
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3364
+		//line php7/php7.y:3365
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5787,7 +5788,7 @@ yydefault:
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3371
+		//line php7/php7.y:3372
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5795,10 +5796,10 @@ yydefault:
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3380
+		//line php7/php7.y:3381
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5809,10 +5810,10 @@ yydefault:
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3392
+		//line php7/php7.y:3393
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5823,10 +5824,10 @@ yydefault:
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3404
+		//line php7/php7.y:3405
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5837,10 +5838,10 @@ yydefault:
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3416
+		//line php7/php7.y:3417
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5851,10 +5852,10 @@ yydefault:
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3428
+		//line php7/php7.y:3429
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5865,10 +5866,10 @@ yydefault:
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3440
+		//line php7/php7.y:3441
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -5879,7 +5880,7 @@ yydefault:
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3455
+		//line php7/php7.y:3456
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5890,7 +5891,7 @@ yydefault:
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3464
+		//line php7/php7.y:3465
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5899,25 +5900,25 @@ yydefault:
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3474
+		//line php7/php7.y:3475
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtProperty,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtProperty,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5927,26 +5928,26 @@ yydefault:
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3500
+		//line php7/php7.y:3501
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtProperty,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtProperty,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -5957,7 +5958,7 @@ yydefault:
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3531
+		//line php7/php7.y:3532
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -5968,7 +5969,7 @@ yydefault:
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3540
+		//line php7/php7.y:3541
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5977,20 +5978,20 @@ yydefault:
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3550
+		//line php7/php7.y:3551
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeConstantName, identifierNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6000,20 +6001,20 @@ yydefault:
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3574
+		//line php7/php7.y:3575
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeConstantName, identifierNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6023,7 +6024,7 @@ yydefault:
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3598
+		//line php7/php7.y:3599
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -6034,7 +6035,7 @@ yydefault:
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3607
+		//line php7/php7.y:3608
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -6043,7 +6044,7 @@ yydefault:
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3617
+		//line php7/php7.y:3618
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6051,7 +6052,7 @@ yydefault:
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3626
+		//line php7/php7.y:3627
 		{
 			yylex.(*Parser).list.push()
 
@@ -6059,13 +6060,13 @@ yydefault:
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3632
+		//line php7/php7.y:3633
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3639
+		//line php7/php7.y:3640
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -6076,7 +6077,7 @@ yydefault:
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3648
+		//line php7/php7.y:3649
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -6085,17 +6086,17 @@ yydefault:
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:3658
+		//line php7/php7.y:3659
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeStmtClass,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeStmtClass,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[8].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExtends, yyDollar[3].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeImplements, yyDollar[4].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExtends, yyDollar[3].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeImplements, yyDollar[4].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6106,20 +6107,20 @@ yydefault:
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3680
+		//line php7/php7.y:3681
 		{
 			lastNodeID := yyDollar[3].node
 			if lastNodeID == 0 {
 				lastNodeID = yyDollar[2].node
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprNew,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprNew,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, lastNodeID),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[2].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6128,14 +6129,14 @@ yydefault:
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3700
+		//line php7/php7.y:3701
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprNew,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprNew,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6144,21 +6145,21 @@ yydefault:
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3717
+		//line php7/php7.y:3718
 		{
-			listNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprList,
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignAssign,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignAssign,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[6].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, listNodeID, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, listNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[6].node)
+			yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, listNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[6].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6170,21 +6171,21 @@ yydefault:
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:3741
+		//line php7/php7.y:3742
 		{
-			listNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprShortList,
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprShortList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignAssign,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignAssign,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[5].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, listNodeID, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, listNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[5].node)
+			yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, listNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[5].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6195,15 +6196,15 @@ yydefault:
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3764
+		//line php7/php7.y:3765
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignAssign,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignAssign,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6213,15 +6214,15 @@ yydefault:
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3780
+		//line php7/php7.y:3781
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignReference,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignReference,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6232,14 +6233,14 @@ yydefault:
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3797
+		//line php7/php7.y:3798
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClone,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClone,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6248,15 +6249,15 @@ yydefault:
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3811
+		//line php7/php7.y:3812
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignPlus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignPlus,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6266,15 +6267,15 @@ yydefault:
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3827
+		//line php7/php7.y:3828
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignMinus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignMinus,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6284,15 +6285,15 @@ yydefault:
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3843
+		//line php7/php7.y:3844
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignMul,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignMul,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6302,15 +6303,15 @@ yydefault:
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3859
+		//line php7/php7.y:3860
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignPow,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignPow,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6320,15 +6321,15 @@ yydefault:
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3875
+		//line php7/php7.y:3876
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignDiv,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignDiv,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6338,15 +6339,15 @@ yydefault:
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3891
+		//line php7/php7.y:3892
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignConcat,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignConcat,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6356,15 +6357,15 @@ yydefault:
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3907
+		//line php7/php7.y:3908
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignMod,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignMod,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6374,15 +6375,15 @@ yydefault:
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3923
+		//line php7/php7.y:3924
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignBitwiseAnd,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignBitwiseAnd,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6392,15 +6393,15 @@ yydefault:
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3939
+		//line php7/php7.y:3940
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignBitwiseOr,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignBitwiseOr,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6410,15 +6411,15 @@ yydefault:
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3955
+		//line php7/php7.y:3956
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignBitwiseXor,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignBitwiseXor,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6428,15 +6429,15 @@ yydefault:
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3971
+		//line php7/php7.y:3972
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignShiftLeft,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignShiftLeft,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6446,15 +6447,15 @@ yydefault:
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3987
+		//line php7/php7.y:3988
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeAssignShiftRight,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeAssignShiftRight,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6464,14 +6465,14 @@ yydefault:
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4003
+		//line php7/php7.y:4004
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPostInc,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPostInc,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6481,14 +6482,14 @@ yydefault:
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4018
+		//line php7/php7.y:4019
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPreInc,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPreInc,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6497,14 +6498,14 @@ yydefault:
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4032
+		//line php7/php7.y:4033
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPostDec,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPostDec,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[2].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6514,14 +6515,14 @@ yydefault:
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4047
+		//line php7/php7.y:4048
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPreDec,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPreDec,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6530,15 +6531,15 @@ yydefault:
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4061
+		//line php7/php7.y:4062
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryBooleanOr,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryBooleanOr,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6548,15 +6549,15 @@ yydefault:
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4077
+		//line php7/php7.y:4078
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryBooleanAnd,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryBooleanAnd,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6566,15 +6567,15 @@ yydefault:
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4093
+		//line php7/php7.y:4094
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryLogicalOr,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryLogicalOr,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6584,15 +6585,15 @@ yydefault:
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4109
+		//line php7/php7.y:4110
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryLogicalAnd,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryLogicalAnd,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6602,15 +6603,15 @@ yydefault:
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4125
+		//line php7/php7.y:4126
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryLogicalXor,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryLogicalXor,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6620,15 +6621,15 @@ yydefault:
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4141
+		//line php7/php7.y:4142
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryBitwiseOr,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryBitwiseOr,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6638,15 +6639,15 @@ yydefault:
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4157
+		//line php7/php7.y:4158
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryBitwiseAnd,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryBitwiseAnd,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6656,15 +6657,15 @@ yydefault:
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4173
+		//line php7/php7.y:4174
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryBitwiseXor,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryBitwiseXor,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6674,15 +6675,15 @@ yydefault:
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4189
+		//line php7/php7.y:4190
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryConcat,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryConcat,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6692,15 +6693,15 @@ yydefault:
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4205
+		//line php7/php7.y:4206
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryPlus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryPlus,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6710,15 +6711,15 @@ yydefault:
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4221
+		//line php7/php7.y:4222
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryMinus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryMinus,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6728,15 +6729,15 @@ yydefault:
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4237
+		//line php7/php7.y:4238
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryMul,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryMul,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6746,15 +6747,15 @@ yydefault:
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4253
+		//line php7/php7.y:4254
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryPow,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryPow,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6764,15 +6765,15 @@ yydefault:
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4269
+		//line php7/php7.y:4270
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryDiv,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryDiv,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6782,15 +6783,15 @@ yydefault:
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4285
+		//line php7/php7.y:4286
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryMod,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryMod,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6800,15 +6801,15 @@ yydefault:
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4301
+		//line php7/php7.y:4302
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryShiftLeft,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryShiftLeft,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6818,15 +6819,15 @@ yydefault:
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4317
+		//line php7/php7.y:4318
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryShiftRight,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryShiftRight,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6836,14 +6837,14 @@ yydefault:
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4333
+		//line php7/php7.y:4334
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprUnaryPlus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprUnaryPlus,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6852,14 +6853,14 @@ yydefault:
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4347
+		//line php7/php7.y:4348
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprUnaryMinus,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprUnaryMinus,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6868,14 +6869,14 @@ yydefault:
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4361
+		//line php7/php7.y:4362
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprBooleanNot,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprBooleanNot,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6884,14 +6885,14 @@ yydefault:
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4375
+		//line php7/php7.y:4376
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprBitwiseNot,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprBitwiseNot,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -6900,15 +6901,15 @@ yydefault:
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4389
+		//line php7/php7.y:4390
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryIdentical,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryIdentical,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6918,15 +6919,15 @@ yydefault:
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4405
+		//line php7/php7.y:4406
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryNotIdentical,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryNotIdentical,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6936,15 +6937,15 @@ yydefault:
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4421
+		//line php7/php7.y:4422
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryEqual,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryEqual,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6954,15 +6955,15 @@ yydefault:
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4437
+		//line php7/php7.y:4438
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryNotEqual,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryNotEqual,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6973,15 +6974,15 @@ yydefault:
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4454
+		//line php7/php7.y:4455
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinarySmaller,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinarySmaller,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -6991,15 +6992,15 @@ yydefault:
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4470
+		//line php7/php7.y:4471
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinarySmallerOrEqual,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinarySmallerOrEqual,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7009,15 +7010,15 @@ yydefault:
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4486
+		//line php7/php7.y:4487
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryGreater,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryGreater,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7027,15 +7028,15 @@ yydefault:
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4502
+		//line php7/php7.y:4503
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryGreaterOrEqual,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryGreaterOrEqual,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7045,15 +7046,15 @@ yydefault:
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4518
+		//line php7/php7.y:4519
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinarySpaceship,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinarySpaceship,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7063,15 +7064,15 @@ yydefault:
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4534
+		//line php7/php7.y:4535
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprInstanceOf,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprInstanceOf,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeClass, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7081,7 +7082,7 @@ yydefault:
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4550
+		//line php7/php7.y:4551
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -7093,7 +7094,7 @@ yydefault:
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4560
+		//line php7/php7.y:4561
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7101,16 +7102,16 @@ yydefault:
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:4566
+		//line php7/php7.y:4567
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprTernary,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprTernary,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[5].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCond, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeIfTrue, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeIfFalse, yyDollar[5].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeIfTrue, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeIfFalse, yyDollar[5].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7121,15 +7122,15 @@ yydefault:
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4584
+		//line php7/php7.y:4585
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprTernary,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprTernary,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeCond, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeIfFalse, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCond, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeIfFalse, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7140,15 +7141,15 @@ yydefault:
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4601
+		//line php7/php7.y:4602
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeBinaryCoalesce,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeBinaryCoalesce,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeLeft, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeRight, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLeft, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeRight, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, Coalesceeefloating.Expr, $2.FreeFloating)
@@ -7157,7 +7158,7 @@ yydefault:
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4616
+		//line php7/php7.y:4617
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7165,14 +7166,14 @@ yydefault:
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4622
+		//line php7/php7.y:4623
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastInt,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastInt,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7182,14 +7183,14 @@ yydefault:
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4637
+		//line php7/php7.y:4638
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastDouble,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastDouble,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7199,14 +7200,14 @@ yydefault:
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4652
+		//line php7/php7.y:4653
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastString,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastString,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7216,14 +7217,14 @@ yydefault:
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4667
+		//line php7/php7.y:4668
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastArray,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastArray,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7233,14 +7234,14 @@ yydefault:
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4682
+		//line php7/php7.y:4683
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastObject,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastObject,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7250,14 +7251,14 @@ yydefault:
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4697
+		//line php7/php7.y:4698
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastBool,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastBool,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7267,14 +7268,14 @@ yydefault:
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4712
+		//line php7/php7.y:4713
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeCastUnset,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeCastUnset,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7284,18 +7285,18 @@ yydefault:
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4727
+		//line php7/php7.y:4728
 		{
 			yyVAL.node = yyDollar[2].node
 
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if bytes.EqualFold(yyDollar[1].token.Value, []byte("die")) {
-				flag = linkedtree.NodeFlagAltSyntax
+				flag = ast.NodeFlagAltSyntax
 			}
 
 			if yyVAL.node == 0 {
-				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeExprExit,
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeExprExit,
 					Flag: flag,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
@@ -7313,14 +7314,14 @@ yydefault:
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4754
+		//line php7/php7.y:4755
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprErrorSuppress,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprErrorSuppress,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7329,7 +7330,7 @@ yydefault:
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4768
+		//line php7/php7.y:4769
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7337,14 +7338,14 @@ yydefault:
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4774
+		//line php7/php7.y:4775
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprShellExec,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprShellExec,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7353,14 +7354,14 @@ yydefault:
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4788
+		//line php7/php7.y:4789
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPrint,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPrint,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7369,10 +7370,10 @@ yydefault:
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4802
+		//line php7/php7.y:4803
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprYield,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprYield,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7383,14 +7384,14 @@ yydefault:
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4814
+		//line php7/php7.y:4815
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprYield,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprYield,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVal, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7399,15 +7400,15 @@ yydefault:
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4828
+		//line php7/php7.y:4829
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprYield,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprYield,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeKey, yyDollar[2].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVal, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeKey, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVal, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7417,14 +7418,14 @@ yydefault:
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4844
+		//line php7/php7.y:4845
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprYieldFrom,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprYieldFrom,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7433,23 +7434,23 @@ yydefault:
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:4858
+		//line php7/php7.y:4859
 		{
-			var flag linkedtree.NodeFlag
+			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClosure,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClosure,
 				Flag: flag,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[11].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClosureUse, yyDollar[7].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeReturnType, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClosureUse, yyDollar[7].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeReturnType, yyDollar[8].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// // save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7478,23 +7479,23 @@ yydefault:
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line php7/php7.y:4901
+		//line php7/php7.y:4902
 		{
-			flag := linkedtree.NodeFlagStatic
+			flag := ast.NodeFlagStatic
 			if yyDollar[2].token != nil {
-				flag = flag | linkedtree.NodeFlagRef
+				flag = flag | ast.NodeFlagRef
 			}
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClosure,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClosure,
 				Flag: flag,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[12].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClosureUse, yyDollar[8].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeReturnType, yyDollar[9].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeParams, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClosureUse, yyDollar[8].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeReturnType, yyDollar[9].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// // save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7524,7 +7525,7 @@ yydefault:
 		}
 	case 371:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4948
+		//line php7/php7.y:4949
 		{
 			// $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
 			yylex.(*Parser).Lexer.SetPhpDocComment("")
@@ -7533,19 +7534,19 @@ yydefault:
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4958
+		//line php7/php7.y:4959
 		{
 			yyVAL.token = nil
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4962
+		//line php7/php7.y:4963
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4969
+		//line php7/php7.y:4970
 		{
 			yyVAL.node = 0
 
@@ -7553,14 +7554,14 @@ yydefault:
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4975
+		//line php7/php7.y:4976
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClosureUse,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClosureUse,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7571,7 +7572,7 @@ yydefault:
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4994
+		//line php7/php7.y:4995
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -7582,7 +7583,7 @@ yydefault:
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5003
+		//line php7/php7.y:5004
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -7591,19 +7592,19 @@ yydefault:
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5013
+		//line php7/php7.y:5014
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7613,25 +7614,25 @@ yydefault:
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5033
+		//line php7/php7.y:5034
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprReference,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprReference,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7642,15 +7643,15 @@ yydefault:
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5063
+		//line php7/php7.y:5064
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprFunctionCall,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprFunctionCall,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeFunction, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[2].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7659,16 +7660,16 @@ yydefault:
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5078
+		//line php7/php7.y:5079
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticCall,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticCall,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeCall, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7678,16 +7679,16 @@ yydefault:
 		}
 	case 382:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5095
+		//line php7/php7.y:5096
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticCall,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticCall,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeCall, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7697,15 +7698,15 @@ yydefault:
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5112
+		//line php7/php7.y:5113
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprFunctionCall,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprFunctionCall,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[2].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeFunction, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[2].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeFunction, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -7714,10 +7715,10 @@ yydefault:
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5130
+		//line php7/php7.y:5131
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7728,7 +7729,7 @@ yydefault:
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5142
+		//line php7/php7.y:5143
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7736,7 +7737,7 @@ yydefault:
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5151
+		//line php7/php7.y:5152
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7744,7 +7745,7 @@ yydefault:
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5157
+		//line php7/php7.y:5158
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7752,7 +7753,7 @@ yydefault:
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5166
+		//line php7/php7.y:5167
 		{
 			yyVAL.node = 0
 
@@ -7760,14 +7761,14 @@ yydefault:
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5172
+		//line php7/php7.y:5173
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprExit,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprExit,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Exit, append($1.FreeFloating, yylex.(*Parser).GetFreeFloatingToken($1)...))
@@ -7777,7 +7778,7 @@ yydefault:
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5190
+		//line php7/php7.y:5191
 		{
 			yylex.(*Parser).list.push()
 
@@ -7785,12 +7786,12 @@ yydefault:
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5196
+		//line php7/php7.y:5197
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(
-				yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarEncapsedStringPart,
+				yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				}),
 			)
@@ -7799,13 +7800,13 @@ yydefault:
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5208
+		//line php7/php7.y:5209
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5215
+		//line php7/php7.y:5216
 		{
 			yyVAL.node = 0
 
@@ -7813,7 +7814,7 @@ yydefault:
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5221
+		//line php7/php7.y:5222
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7821,14 +7822,14 @@ yydefault:
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5230
+		//line php7/php7.y:5231
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArray,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArray,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7839,14 +7840,14 @@ yydefault:
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5246
+		//line php7/php7.y:5247
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprShortArray,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprShortArray,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -7856,10 +7857,10 @@ yydefault:
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5261
+		//line php7/php7.y:5262
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarString,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarString,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7870,10 +7871,10 @@ yydefault:
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5276
+		//line php7/php7.y:5277
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarLnumber,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarLnumber,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7884,10 +7885,10 @@ yydefault:
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5288
+		//line php7/php7.y:5289
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarDnumber,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarDnumber,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7898,10 +7899,10 @@ yydefault:
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5300
+		//line php7/php7.y:5301
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7912,10 +7913,10 @@ yydefault:
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5312
+		//line php7/php7.y:5313
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7926,10 +7927,10 @@ yydefault:
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5324
+		//line php7/php7.y:5325
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7940,10 +7941,10 @@ yydefault:
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5336
+		//line php7/php7.y:5337
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7954,10 +7955,10 @@ yydefault:
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5348
+		//line php7/php7.y:5349
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7968,10 +7969,10 @@ yydefault:
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5360
+		//line php7/php7.y:5361
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7982,10 +7983,10 @@ yydefault:
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5372
+		//line php7/php7.y:5373
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -7996,10 +7997,10 @@ yydefault:
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5384
+		//line php7/php7.y:5385
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarMagicConstant,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarMagicConstant,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -8010,19 +8011,19 @@ yydefault:
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5396
+		//line php7/php7.y:5397
 		{
-			stringPartNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarEncapsedStringPart,
+			stringPartNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarEncapsedStringPart,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarHeredoc,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarHeredoc,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, stringPartNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, stringPartNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8031,10 +8032,10 @@ yydefault:
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5415
+		//line php7/php7.y:5416
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarHeredoc,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarHeredoc,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 			})
 
@@ -8045,14 +8046,14 @@ yydefault:
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5427
+		//line php7/php7.y:5428
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarEncapsed,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarEncapsed,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8061,14 +8062,14 @@ yydefault:
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5441
+		//line php7/php7.y:5442
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarHeredoc,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarHeredoc,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeParts, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8077,7 +8078,7 @@ yydefault:
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5455
+		//line php7/php7.y:5456
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8085,7 +8086,7 @@ yydefault:
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5461
+		//line php7/php7.y:5462
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8093,14 +8094,14 @@ yydefault:
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5470
+		//line php7/php7.y:5471
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprConstFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprConstFetch,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeConstant, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConstant, yyDollar[1].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8109,20 +8110,20 @@ yydefault:
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5484
+		//line php7/php7.y:5485
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClassConstFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClassConstFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeConstantName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8133,20 +8134,20 @@ yydefault:
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5506
+		//line php7/php7.y:5507
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprClassConstFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprClassConstFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeConstantName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeConstantName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8157,7 +8158,7 @@ yydefault:
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5531
+		//line php7/php7.y:5532
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8165,7 +8166,7 @@ yydefault:
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5537
+		//line php7/php7.y:5538
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8173,7 +8174,7 @@ yydefault:
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5546
+		//line php7/php7.y:5547
 		{
 			yyVAL.node = 0
 
@@ -8181,7 +8182,7 @@ yydefault:
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5552
+		//line php7/php7.y:5553
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8189,7 +8190,7 @@ yydefault:
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5561
+		//line php7/php7.y:5562
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8197,7 +8198,7 @@ yydefault:
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5570
+		//line php7/php7.y:5571
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8205,7 +8206,7 @@ yydefault:
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5576
+		//line php7/php7.y:5577
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8217,7 +8218,7 @@ yydefault:
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5586
+		//line php7/php7.y:5587
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8225,7 +8226,7 @@ yydefault:
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5595
+		//line php7/php7.y:5596
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8233,7 +8234,7 @@ yydefault:
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5601
+		//line php7/php7.y:5602
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8245,7 +8246,7 @@ yydefault:
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5611
+		//line php7/php7.y:5612
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8253,7 +8254,7 @@ yydefault:
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5620
+		//line php7/php7.y:5621
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8261,15 +8262,15 @@ yydefault:
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5626
+		//line php7/php7.y:5627
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8280,15 +8281,15 @@ yydefault:
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5643
+		//line php7/php7.y:5644
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8299,15 +8300,15 @@ yydefault:
 		}
 	case 431:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5660
+		//line php7/php7.y:5661
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8318,16 +8319,16 @@ yydefault:
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5677
+		//line php7/php7.y:5678
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprMethodCall,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprMethodCall,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeMethod, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeArgumentList, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeMethod, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8337,7 +8338,7 @@ yydefault:
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5694
+		//line php7/php7.y:5695
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8345,7 +8346,7 @@ yydefault:
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5703
+		//line php7/php7.y:5704
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8353,7 +8354,7 @@ yydefault:
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5709
+		//line php7/php7.y:5710
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8361,15 +8362,15 @@ yydefault:
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5715
+		//line php7/php7.y:5716
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8379,19 +8380,19 @@ yydefault:
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5734
+		//line php7/php7.y:5735
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8401,14 +8402,14 @@ yydefault:
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5754
+		//line php7/php7.y:5755
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8420,14 +8421,14 @@ yydefault:
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5771
+		//line php7/php7.y:5772
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8437,15 +8438,15 @@ yydefault:
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5789
+		//line php7/php7.y:5790
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8455,15 +8456,15 @@ yydefault:
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5805
+		//line php7/php7.y:5806
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8473,7 +8474,7 @@ yydefault:
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5824
+		//line php7/php7.y:5825
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8481,15 +8482,15 @@ yydefault:
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5830
+		//line php7/php7.y:5831
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8500,15 +8501,15 @@ yydefault:
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5847
+		//line php7/php7.y:5848
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[4].token),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8519,15 +8520,15 @@ yydefault:
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5864
+		//line php7/php7.y:5865
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8537,15 +8538,15 @@ yydefault:
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5880
+		//line php7/php7.y:5881
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8555,15 +8556,15 @@ yydefault:
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5896
+		//line php7/php7.y:5897
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprStaticPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeClass, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8573,10 +8574,10 @@ yydefault:
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5915
+		//line php7/php7.y:5916
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -8587,7 +8588,7 @@ yydefault:
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5927
+		//line php7/php7.y:5928
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8599,7 +8600,7 @@ yydefault:
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5937
+		//line php7/php7.y:5938
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8607,10 +8608,10 @@ yydefault:
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5946
+		//line php7/php7.y:5947
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -8621,7 +8622,7 @@ yydefault:
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5958
+		//line php7/php7.y:5959
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8633,7 +8634,7 @@ yydefault:
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5968
+		//line php7/php7.y:5969
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8641,23 +8642,23 @@ yydefault:
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5977
+		//line php7/php7.y:5978
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5984
+		//line php7/php7.y:5985
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 			})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5992
+		//line php7/php7.y:5993
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8665,7 +8666,7 @@ yydefault:
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6001
+		//line php7/php7.y:6002
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -8676,7 +8677,7 @@ yydefault:
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6010
+		//line php7/php7.y:6011
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -8685,15 +8686,15 @@ yydefault:
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6020
+		//line php7/php7.y:6021
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[3].node),
 			})
 
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeKey, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVal, yyDollar[3].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVal, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8703,14 +8704,14 @@ yydefault:
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6036
+		//line php7/php7.y:6037
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewNodePosition(yyDollar[1].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVal, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, yyDollar[1].node)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8719,21 +8720,21 @@ yydefault:
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6050
+		//line php7/php7.y:6051
 		{
-			refNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprReference,
+			refNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprReference,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[3].token, yyDollar[4].node),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, refNodeID, linkedtree.EdgeTypeVar, yyDollar[4].node)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeKey, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVal, refNodeID)
+			yylex.(*Parser).ast.Children(0, refNodeID, ast.EdgeTypeVar, yyDollar[4].node)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVal, refNodeID)
 
 			// save comments
 			// yylex.(*Parser).MoveFreeFloating($1, $$)
@@ -8744,20 +8745,20 @@ yydefault:
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6073
+		//line php7/php7.y:6074
 		{
-			refNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprReference,
+			refNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprReference,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, refNodeID, linkedtree.EdgeTypeVar, yyDollar[2].node)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVal, refNodeID)
+			yylex.(*Parser).ast.Children(0, refNodeID, ast.EdgeTypeVar, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, refNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8766,21 +8767,21 @@ yydefault:
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:6093
+		//line php7/php7.y:6094
 		{
-			listNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprList,
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[3].token, yyDollar[6].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[6].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, listNodeID, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeKey, yyDollar[1].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeVal, listNodeID)
+			yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeKey, yyDollar[1].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVal, listNodeID)
 
 			// TODO: Cannot use list() as standalone expression
 
@@ -8795,20 +8796,20 @@ yydefault:
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6120
+		//line php7/php7.y:6121
 		{
-			listNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprList,
+			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprList,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayItem,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayItem,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, listNodeID, linkedtree.EdgeTypeItems, yylex.(*Parser).list.pop()...)
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVal, listNodeID)
+			yylex.(*Parser).ast.Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, listNodeID)
 
 			// TODO: Cannot use list() as standalone expression
 
@@ -8821,7 +8822,7 @@ yydefault:
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6147
+		//line php7/php7.y:6148
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -8829,11 +8830,11 @@ yydefault:
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6153
+		//line php7/php7.y:6154
 		{
 			yylex.(*Parser).list.add(
-				yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarEncapsedStringPart,
+				yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 				}),
 			)
@@ -8845,7 +8846,7 @@ yydefault:
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6167
+		//line php7/php7.y:6168
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -8854,12 +8855,12 @@ yydefault:
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6174
+		//line php7/php7.y:6175
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(
-				yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarEncapsedStringPart,
+				yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarEncapsedStringPart,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				}),
 			)
@@ -8872,19 +8873,19 @@ yydefault:
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6193
+		//line php7/php7.y:6194
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -8894,26 +8895,26 @@ yydefault:
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6213
+		//line php7/php7.y:6214
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).addDollarToken(variable)
@@ -8924,31 +8925,31 @@ yydefault:
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6241
+		//line php7/php7.y:6242
 		{
-			varNameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			varNameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			propertyNameNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			propertyNameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[3].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprPropertyFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprPropertyFetch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, varNameNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeProperty, propertyNameNodeID)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, varNameNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, propertyNameNodeID)
 
 			// save comments
 			// yylex.(*Parser).addDollarToken(variable)
@@ -8959,14 +8960,14 @@ yydefault:
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6274
+		//line php7/php7.y:6275
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -8976,19 +8977,19 @@ yydefault:
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6289
+		//line php7/php7.y:6290
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[3].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -8998,26 +8999,26 @@ yydefault:
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:6309
+		//line php7/php7.y:6310
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			varNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			varNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprArrayDimFetch,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprArrayDimFetch,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[6].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, varNodeID, linkedtree.EdgeTypeVarName, identifierNodeID)
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVar, varNodeID)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, linkedtree.EdgeTypeDim, yyDollar[4].node)
+			yylex.(*Parser).ast.Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[4].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, yylex.(*Parser).GetFreeFloatingToken($1))
@@ -9029,7 +9030,7 @@ yydefault:
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6338
+		//line php7/php7.y:6339
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -9041,10 +9042,10 @@ yydefault:
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6351
+		//line php7/php7.y:6352
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeScalarString,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeScalarString,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
@@ -9055,17 +9056,17 @@ yydefault:
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6363
+		//line php7/php7.y:6364
 		{
 			// TODO: add option to handle 64 bit integer
 			if _, err := strconv.Atoi(string(yyDollar[1].token.Value)); err == nil {
-				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarLnumber,
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarLnumber,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
 			} else {
-				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarString,
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarString,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 				})
 			}
@@ -9077,23 +9078,23 @@ yydefault:
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6383
+		//line php7/php7.y:6384
 		{
 			if _, err := strconv.Atoi(string(yyDollar[2].token.Value)); err == nil {
-				lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarLnumber,
+				lnumberNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarLnumber,
 					Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[2].token),
 				})
 
-				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeExprUnaryMinus,
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeExprUnaryMinus,
 					Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				})
 
-				yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, lnumberNodeID)
+				yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, lnumberNodeID)
 			} else {
-				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-					Type: linkedtree.NodeTypeScalarString,
+				yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+					Type: ast.NodeTypeScalarString,
 					Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[2].token),
 				})
 			}
@@ -9105,19 +9106,19 @@ yydefault:
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6409
+		//line php7/php7.y:6410
 		{
-			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeIdentifier,
+			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeIdentifier,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprVariable,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprVariable,
 				Pos:  yylex.(*Parser).ast.NewTokenPosition(yyDollar[1].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVarName, identifierNodeID)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9127,14 +9128,14 @@ yydefault:
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:6432
+		//line php7/php7.y:6433
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprIsset,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprIsset,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[5].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeVars, yylex.(*Parser).list.pop()...)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9149,14 +9150,14 @@ yydefault:
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6452
+		//line php7/php7.y:6453
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprEmpty,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprEmpty,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9167,14 +9168,14 @@ yydefault:
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6468
+		//line php7/php7.y:6469
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprInclude,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprInclude,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9183,14 +9184,14 @@ yydefault:
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6482
+		//line php7/php7.y:6483
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprIncludeOnce,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprIncludeOnce,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9199,14 +9200,14 @@ yydefault:
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6496
+		//line php7/php7.y:6497
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprEval,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprEval,
 				Pos:  yylex.(*Parser).ast.NewTokensPosition(yyDollar[1].token, yyDollar[4].token),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9217,14 +9218,14 @@ yydefault:
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6512
+		//line php7/php7.y:6513
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprRequire,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprRequire,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9233,14 +9234,14 @@ yydefault:
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6526
+		//line php7/php7.y:6527
 		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linkedtree.Node{
-				Type: linkedtree.NodeTypeExprRequireOnce,
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprRequireOnce,
 				Pos:  yylex.(*Parser).ast.NewTokenNodePosition(yyDollar[1].token, yyDollar[2].node),
 			})
 
-			yylex.(*Parser).ast.Children(0, yyVAL.node, linkedtree.EdgeTypeExpr, yyDollar[2].node)
+			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save comments
 			// yylex.(*Parser).setFreeFloating($$, freefloating.Start, $1.FreeFloating)
@@ -9249,7 +9250,7 @@ yydefault:
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6543
+		//line php7/php7.y:6544
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -9258,7 +9259,7 @@ yydefault:
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6550
+		//line php7/php7.y:6551
 		{
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
@@ -9269,7 +9270,7 @@ yydefault:
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6562
+		//line php7/php7.y:6563
 		{
 			yyVAL.node = yyDollar[1].node
 

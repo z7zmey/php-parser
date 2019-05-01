@@ -1,6 +1,7 @@
-package linkedtree
+package linear
 
 import (
+	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/scanner"
 )
 
@@ -18,7 +19,7 @@ func (a *AST) Reset() {
 	a.RootNode = 0
 }
 
-func (a *AST) Children(prevNodeID NodeID, parentNodeID NodeID, edgeType EdgeType, children ...NodeID) NodeID {
+func (a *AST) Children(prevNodeID NodeID, parentNodeID NodeID, edgeType ast.EdgeType, children ...NodeID) NodeID {
 	for _, childNodeID := range children {
 		if childNodeID == 0 {
 			continue
@@ -38,7 +39,7 @@ func (a *AST) Children(prevNodeID NodeID, parentNodeID NodeID, edgeType EdgeType
 	return prevNodeID
 }
 
-func (a *AST) linkParent(childNodeID, parentNodeID NodeID, key EdgeType) {
+func (a *AST) linkParent(childNodeID, parentNodeID NodeID, key ast.EdgeType) {
 	childNode := a.Nodes.Get(childNodeID)
 	childNode.Parent = parentNodeID
 	childNode.Key = key
@@ -90,7 +91,7 @@ func (a *AST) NewNodeListPosition(list []NodeID) PositionID {
 	s := a.Positions.Get(sPosID)
 	e := a.Positions.Get(ePosID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: e.PE,
 		LS: s.LS,
@@ -103,7 +104,7 @@ func (a *AST) NewTokenPosition(t *scanner.Token) PositionID {
 		return PositionID(0)
 	}
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: t.StartPos,
 		PE: t.EndPos,
 		LS: t.StartLine,
@@ -116,7 +117,7 @@ func (a *AST) NewTokensPosition(startToken *scanner.Token, endToken *scanner.Tok
 		return PositionID(0)
 	}
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: startToken.StartPos,
 		PE: endToken.EndPos,
 		LS: startToken.StartLine,
@@ -135,7 +136,7 @@ func (a *AST) NewTokenNodePosition(t *scanner.Token, n NodeID) PositionID {
 	}
 	e := a.Positions.Get(nPos)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: t.StartPos,
 		PE: e.PE,
 		LS: t.StartLine,
@@ -154,7 +155,7 @@ func (a *AST) NewNodeTokenPosition(n NodeID, t *scanner.Token) PositionID {
 	}
 	s := a.Positions.Get(nPos)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: t.EndPos,
 		LS: s.LS,
@@ -176,7 +177,7 @@ func (a *AST) NewNodesPosition(startNodeID NodeID, endNodeID NodeID) PositionID 
 	s := a.Positions.Get(sPos)
 	e := a.Positions.Get(ePos)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: e.PE,
 		LS: s.LS,
@@ -193,7 +194,7 @@ func (a *AST) NewNodePosition(nodeID NodeID) PositionID {
 	posID := a.Nodes.Get(nodeID).Pos
 	pos := a.Positions.Get(posID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: pos.PS,
 		PE: pos.PE,
 		LS: pos.LS,
@@ -212,7 +213,7 @@ func (a *AST) NewNodeListTokenPosition(list []NodeID, t *scanner.Token) Position
 	}
 	s := a.Positions.Get(sPosID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: t.EndPos,
 		LS: s.LS,
@@ -231,7 +232,7 @@ func (a *AST) NewTokenNodeListPosition(t *scanner.Token, list []NodeID) Position
 	}
 	e := a.Positions.Get(ePosID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: t.StartPos,
 		PE: e.PE,
 		LS: t.StartLine,
@@ -252,7 +253,7 @@ func (a *AST) NewNodeNodeListPosition(n NodeID, list []NodeID) PositionID {
 	s := a.Positions.Get(nPos)
 	e := a.Positions.Get(ePosID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: e.PE,
 		LS: s.LS,
@@ -273,7 +274,7 @@ func (a *AST) NewNodeListNodePosition(list []NodeID, n NodeID) PositionID {
 	s := a.Positions.Get(sPosID)
 	e := a.Positions.Get(nPos)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: e.PE,
 		LS: s.LS,
@@ -287,7 +288,7 @@ func (a *AST) NewOptionalListTokensPosition(list []NodeID, startToken *scanner.T
 			return PositionID(0)
 		}
 
-		return a.Positions.Create(Position{
+		return a.Positions.Create(ast.Position{
 			PS: startToken.StartPos,
 			PE: endToken.EndPos,
 			LS: startToken.StartLine,
@@ -305,7 +306,7 @@ func (a *AST) NewOptionalListTokensPosition(list []NodeID, startToken *scanner.T
 	}
 	s := a.Positions.Get(sPosID)
 
-	return a.Positions.Create(Position{
+	return a.Positions.Create(ast.Position{
 		PS: s.PS,
 		PE: endToken.EndPos,
 		LS: s.LS,

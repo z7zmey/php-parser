@@ -6,26 +6,27 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
+	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/ast/linear"
 )
 
 type tplData struct {
 	Indent string
-	Node   linkedtree.Node
+	Node   linear.Node
 }
 
 type stackItem struct {
-	parent     linkedtree.NodeID
-	nextNodeID linkedtree.NodeID
+	parent     linear.NodeID
+	nextNodeID linear.NodeID
 	depth      int
 }
 
 type Dumper struct {
 	Writer    io.Writer
-	edgeStack []linkedtree.EdgeType
+	edgeStack []ast.EdgeType
 }
 
-func (d *Dumper) VisitNode(n linkedtree.Node, depth int) bool {
+func (d *Dumper) VisitNode(n linear.Node, depth int) bool {
 
 	// print key
 
