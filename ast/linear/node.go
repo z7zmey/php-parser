@@ -15,6 +15,7 @@ type Node struct {
 	Key ast.EdgeType
 
 	Pos PositionID
+	Tkn TokenID
 }
 
 // NodeStorage store nodes

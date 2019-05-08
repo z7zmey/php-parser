@@ -5,6 +5,8 @@ import (
 
 	"gotest.tools/assert"
 
+	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/ast/linear"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/node"
 	"github.com/z7zmey/php-parser/node/expr"
@@ -16,7 +18,6 @@ import (
 	"github.com/z7zmey/php-parser/node/stmt"
 	"github.com/z7zmey/php-parser/php7"
 	"github.com/z7zmey/php-parser/position"
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 )
 
 func TestPhp7(t *testing.T) {
@@ -16120,9 +16121,9 @@ func TestPhp7(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &linkedtree.AST{
-		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linear.AST{
+		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16238,9 +16239,9 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &linkedtree.AST{
-		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linear.AST{
+		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16431,9 +16432,9 @@ CAD;
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &linkedtree.AST{
-		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linear.AST{
+		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
 	actual := php7parser.GetRootNode()
 	assert.DeepEqual(t, expected, actual)
@@ -16454,9 +16455,9 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser([]byte(src))
-	php7parser.Parse([]byte(src), &linkedtree.AST{
-		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+	php7parser.Parse([]byte(src), &linear.AST{
+		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
 	actual := php7parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)

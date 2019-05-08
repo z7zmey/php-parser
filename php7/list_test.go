@@ -5,7 +5,7 @@ import (
 
 	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
+	"github.com/z7zmey/php-parser/ast/linear"
 )
 
 func TestList(t *testing.T) {
@@ -13,15 +13,15 @@ func TestList(t *testing.T) {
 
 	s.push()
 
-	s.add(linkedtree.NodeID(1))
-	s.add(linkedtree.NodeID(2))
-	s.add(linkedtree.NodeID(3))
+	s.add(linear.NodeID(1))
+	s.add(linear.NodeID(2))
+	s.add(linear.NodeID(3))
 
-	expected := []linkedtree.NodeID{linkedtree.NodeID(1), linkedtree.NodeID(2), linkedtree.NodeID(3)}
+	expected := []linear.NodeID{linear.NodeID(1), linear.NodeID(2), linear.NodeID(3)}
 	actual := s.pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linkedtree.NodeID{}
+	expected = []linear.NodeID{}
 	actual = s.pop()
 	assert.DeepEqual(t, expected, actual)
 }
@@ -31,23 +31,23 @@ func TestListNested(t *testing.T) {
 
 	s.push()
 
-	s.add(linkedtree.NodeID(1))
-	s.add(linkedtree.NodeID(2))
-	s.add(linkedtree.NodeID(3))
+	s.add(linear.NodeID(1))
+	s.add(linear.NodeID(2))
+	s.add(linear.NodeID(3))
 
 	s.push()
-	s.add(linkedtree.NodeID(4))
-	s.add(linkedtree.NodeID(5))
+	s.add(linear.NodeID(4))
+	s.add(linear.NodeID(5))
 
-	expected := []linkedtree.NodeID{linkedtree.NodeID(4), linkedtree.NodeID(5)}
+	expected := []linear.NodeID{linear.NodeID(4), linear.NodeID(5)}
 	actual := s.pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linkedtree.NodeID{linkedtree.NodeID(1), linkedtree.NodeID(2), linkedtree.NodeID(3)}
+	expected = []linear.NodeID{linear.NodeID(1), linear.NodeID(2), linear.NodeID(3)}
 	actual = s.pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linkedtree.NodeID{}
+	expected = []linear.NodeID{}
 	actual = s.pop()
 	assert.DeepEqual(t, expected, actual)
 }

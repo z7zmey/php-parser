@@ -27,7 +27,6 @@ var usePhp5 *bool
 var dump *bool
 var dumpPath *bool
 var profiler string
-var withFreeFloating *bool
 var showResolvedNs *bool
 var printBack *bool
 
@@ -46,7 +45,6 @@ func main() {
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
 	dump = flag.Bool("d", false, "dump ast")
 	dumpPath = flag.Bool("p", false, "print filepath")
-	withFreeFloating = flag.Bool("ff", false, "parse and show free floating strings")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
@@ -124,13 +122,10 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		// 	parserWorker = php7.NewParser(f.content)
 		// }
 
-		if *withFreeFloating {
-			parserWorker.WithFreeFloating()
-		}
-
 		abstractSyntaxTree := &linear.AST{
 			Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 			Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
+			Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
 		}
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)

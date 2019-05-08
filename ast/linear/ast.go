@@ -6,11 +6,19 @@ import (
 	"github.com/z7zmey/php-parser/scanner"
 )
 
+type lastTknCache struct {
+	nodeID  NodeID
+	tokenID TokenID
+}
+
 type AST struct {
 	FileData  []byte
 	Positions *PositionStorage
 	Nodes     *NodeStorage
+	Tokens    *TokenStorage
 	RootNode  NodeID
+
+	lastTknCache lastTknCache
 }
 
 func (a *AST) Reset() {
@@ -57,6 +65,190 @@ func (a *AST) linkNext(prevNodeID, nextNodeID NodeID) {
 	prevNode := a.Nodes.Get(prevNodeID)
 	prevNode.Next = nextNodeID
 	a.Nodes.Save(prevNodeID, prevNode)
+}
+
+func (a *AST) lastToken(nodeID NodeID) TokenID {
+	if a.lastTknCache.nodeID == nodeID {
+		return a.lastTknCache.tokenID
+	}
+
+	node := a.Nodes.Get(nodeID)
+	tknID := node.Tkn
+
+	if tknID == 0 {
+		return tknID
+	}
+
+	for {
+		token := a.Tokens.Get(tknID)
+
+		if token.Next == 0 {
+			break
+		}
+
+		tknID = token.Next
+	}
+
+	a.lastTknCache = lastTknCache{
+		nodeID:  nodeID,
+		tokenID: tknID,
+	}
+
+	return tknID
+}
+
+func (a *AST) AppendTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.SkippedToken) {
+	lastTokenID := a.lastToken(nodeID)
+
+	for _, str := range ffStrs {
+		tkn := a.convertToken(str)
+		tkn.Group = group
+		tokenID := a.Tokens.Create(tkn)
+
+		if lastTokenID == 0 {
+			node := a.Nodes.Get(nodeID)
+			node.Tkn = tokenID
+			a.Nodes.Save(nodeID, node)
+		} else {
+			prevString := a.Tokens.Get(lastTokenID)
+			prevString.Next = tokenID
+			a.Tokens.Save(lastTokenID, prevString)
+		}
+
+		lastTokenID = tokenID
+	}
+
+	a.lastTknCache = lastTknCache{
+		nodeID:  nodeID,
+		tokenID: lastTokenID,
+	}
+}
+
+func (a *AST) PrependTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.SkippedToken) {
+	node := a.Nodes.Get(nodeID)
+	firstTokenID := node.Tkn
+
+	var prevTokenID TokenID
+	for _, str := range ffStrs {
+		tkn := a.convertToken(str)
+		tkn.Group = group
+		tkn.Next = firstTokenID
+		tokenID := a.Tokens.Create(tkn)
+
+		if prevTokenID == 0 {
+			node := a.Nodes.Get(nodeID)
+			node.Tkn = tokenID
+			a.Nodes.Save(nodeID, node)
+		} else {
+			prevToken := a.Tokens.Get(prevTokenID)
+			prevToken.Next = tokenID
+			a.Tokens.Save(prevTokenID, prevToken)
+		}
+
+		prevTokenID = tokenID
+	}
+}
+
+func (a *AST) MoveStartTokens(src NodeID, dst NodeID) {
+	srcNode := a.Nodes.Get(src)
+
+	if srcNode.Tkn == 0 {
+		return
+	}
+
+	srcStartFirstTkn := a.Tokens.Get(srcNode.Tkn)
+	if srcStartFirstTkn.Group != ast.TokenGroupStart {
+		return
+	}
+
+	srcStartLastTknID := srcNode.Tkn
+	srcStartLastTkn := srcStartFirstTkn
+
+	for {
+		if srcStartLastTkn.Next == 0 {
+			break
+		}
+
+		tkn := a.Tokens.Get(srcStartLastTkn.Next)
+		if tkn.Group == ast.TokenGroupStart {
+			srcStartLastTknID = srcStartLastTkn.Next
+			srcStartLastTkn = tkn
+		} else {
+			break
+		}
+	}
+
+	dstNode := a.Nodes.Get(dst)
+
+	// move
+
+	dstNode.Tkn, srcNode.Tkn, srcStartLastTkn.Next = srcNode.Tkn, srcStartLastTkn.Next, dstNode.Tkn
+
+	// save
+
+	a.Nodes.Save(src, srcNode)
+	a.Nodes.Save(dst, dstNode)
+	a.Tokens.Save(srcStartLastTknID, srcStartLastTkn)
+}
+
+func (a *AST) AppendDollarToken(nodeID NodeID) {
+	node := a.Nodes.Get(nodeID)
+	nodePos := a.Positions.Get(node.Pos)
+
+	tknPos := ast.Position{
+		PS: nodePos.PS,
+		PE: nodePos.PS + 1,
+		LS: nodePos.LS,
+		LE: nodePos.LS,
+	}
+	tknPosID := a.Positions.Create(tknPos)
+
+	token := Token{
+		Type:  ast.TokenTypeToken,
+		Group: ast.TokenGroupDollar,
+		Pos:   tknPosID,
+	}
+	tokenID := a.Tokens.Create(token)
+
+	lastTokenID := a.lastToken(nodeID)
+	if lastTokenID == 0 {
+		node.Tkn = tokenID
+		a.Nodes.Save(nodeID, node)
+	} else {
+		prevToken := a.Tokens.Get(lastTokenID)
+		prevToken.Next = tokenID
+		a.Tokens.Save(lastTokenID, prevToken)
+	}
+
+	a.lastTknCache = lastTknCache{
+		nodeID:  nodeID,
+		tokenID: lastTokenID,
+	}
+}
+
+func (a *AST) convertToken(skippedToken scanner.SkippedToken) Token {
+	var tknType ast.TokenType
+	switch skippedToken.Type {
+	case scanner.SkippedTokenTypeToken:
+		tknType = ast.TokenTypeToken
+	case scanner.SkippedTokenTypeWhitespace:
+		tknType = ast.TokenTypeWhitespace
+	case scanner.SkippedTokenTypeComment:
+		tknType = ast.TokenTypeComment
+	}
+
+	pos := ast.Position{
+		PS: skippedToken.StartPos,
+		PE: skippedToken.EndPos,
+		LS: skippedToken.StartLine,
+		LE: skippedToken.EndLine,
+	}
+	posID := a.Positions.Create(pos)
+
+	return Token{
+		Type: tknType,
+		Pos:  posID,
+	}
 }
 
 func (a *AST) getListStartPosID(l []NodeID) PositionID {
@@ -378,7 +570,27 @@ func (stxtree *AST) Nested() nested.Node {
 			Type:     curNode.Type,
 			Flags:    curNode.Flag,
 			Position: pos,
+			Tokens:   make(map[ast.TokenGroup][]nested.Token),
 			Children: make(map[ast.EdgeType][]nested.Node),
+		}
+
+		tokenID := curNode.Tkn
+		for {
+			if tokenID == 0 {
+				break
+			}
+
+			token := stxtree.Tokens.Get(tokenID)
+			tokenPos := stxtree.Positions.Get(token.Pos)
+
+			nestedToken := nested.Token{
+				Type:  token.Type,
+				Value: string(stxtree.FileData[tokenPos.PS:tokenPos.PE]),
+			}
+
+			stack[depth].Tokens[token.Group] = append(stack[depth].Tokens[token.Group], nestedToken)
+
+			tokenID = token.Next
 		}
 
 		if curNode.Type.Is(ast.NodeClassTypeValue) {

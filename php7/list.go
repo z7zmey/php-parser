@@ -22,6 +22,10 @@ func (s *stackedNodeList) push() {
 	s.stack = append(s.stack, len(s.list))
 }
 
+func (s *stackedNodeList) last() linear.NodeID {
+	return s.list[len(s.list)-1]
+}
+
 func (s *stackedNodeList) pop() []linear.NodeID {
 	p := 0
 	if len(s.stack) > 0 {

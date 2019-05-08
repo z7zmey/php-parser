@@ -11,5 +11,4 @@ type Parser interface {
 	Parse([]byte, *linear.AST) int
 	GetRootNode() node.Node
 	GetErrors() []*errors.Error
-	WithFreeFloating()
 }

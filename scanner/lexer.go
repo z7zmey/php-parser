@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/z7zmey/php-parser/errors"
-	"github.com/z7zmey/php-parser/freefloating"
 	"github.com/z7zmey/php-parser/position"
 )
 
@@ -16,8 +15,6 @@ type Scanner interface {
 	GetPhpDocComment() string
 	SetPhpDocComment(string)
 	GetErrors() []*errors.Error
-	GetWithFreeFloating() bool
-	SetWithFreeFloating(bool)
 	AddError(e *errors.Error)
 	SetErrors(e []*errors.Error)
 }
@@ -35,13 +32,11 @@ type Lexer struct {
 	top          int
 	heredocLabel []byte
 
-	TokenPool        *TokenPool
-	FreeFloating     []freefloating.String
-	WithFreeFloating bool
-	PhpDocComment    string
-	lastToken        *Token
-	Errors           []*errors.Error
-	NewLines         NewLines
+	TokenPool     *TokenPool
+	PhpDocComment string
+	lastToken     *Token
+	Errors        []*errors.Error
+	NewLines      NewLines
 }
 
 func (l *Lexer) Reset(data []byte) {
@@ -75,14 +70,6 @@ func (l *Lexer) GetErrors() []*errors.Error {
 	return l.Errors
 }
 
-func (l *Lexer) GetWithFreeFloating() bool {
-	return l.WithFreeFloating
-}
-
-func (l *Lexer) SetWithFreeFloating(b bool) {
-	l.WithFreeFloating = b
-}
-
 func (l *Lexer) AddError(e *errors.Error) {
 	l.Errors = append(l.Errors, e)
 }
@@ -91,36 +78,22 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 	l.Errors = e
 }
 
-func (lex *Lexer) createToken(lval Lval) *Token {
-	token := lex.TokenPool.Get()
-	token.FreeFloating = lex.FreeFloating
-	token.Value = lex.data[lex.ts:lex.te]
-
+func (lex *Lexer) prepareToken(token *Token) *Token {
 	token.StartLine = lex.NewLines.GetLine(lex.ts)
 	token.EndLine = lex.NewLines.GetLine(lex.te - 1)
 	token.StartPos = lex.ts
 	token.EndPos = lex.te
 
-	lval.Token(token)
 	return token
 }
 
-func (lex *Lexer) addFreeFloating(t freefloating.StringType, ps, pe int) {
-	if !lex.WithFreeFloating {
-		return
-	}
-
-	pos := position.NewPosition(
-		lex.NewLines.GetLine(lex.ts),
-		lex.NewLines.GetLine(lex.te-1),
-		lex.ts,
-		lex.te,
-	)
-
-	lex.FreeFloating = append(lex.FreeFloating, freefloating.String{
-		StringType: t,
-		Value:      string(lex.data[ps:pe]),
-		Position:   pos,
+func (lex *Lexer) addSkippedToken(token *Token, t SkippedTokenType, ps, pe int) {
+	token.SkippedTokens = append(token.SkippedTokens, SkippedToken{
+		Type:      t,
+		StartLine: lex.NewLines.GetLine(lex.ts),
+		EndLine:   lex.NewLines.GetLine(lex.te - 1),
+		StartPos:  lex.ts,
+		EndPos:    lex.te,
 	})
 }
 

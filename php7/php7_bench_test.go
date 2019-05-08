@@ -3,8 +3,9 @@ package php7_test
 import (
 	"testing"
 
+	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/ast/linear"
 	"github.com/z7zmey/php-parser/php7"
-	"github.com/z7zmey/php-parser/syntaxtree/linkedtree"
 )
 
 var src = `<?
@@ -384,9 +385,10 @@ func BenchmarkPhp7(b *testing.B) {
 	php7parser := php7.NewParser(nil)
 
 	for n := 0; n < b.N; n++ {
-		a := &linkedtree.AST{
-			Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-			Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+		a := &linear.AST{
+			Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+			Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
+			Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
 		}
 		php7parser.Parse([]byte(src), a)
 	}
@@ -394,9 +396,10 @@ func BenchmarkPhp7(b *testing.B) {
 
 func BenchmarkPhp7Reuse(b *testing.B) {
 	php7parser := php7.NewParser(nil)
-	a := &linkedtree.AST{
-		Positions: linkedtree.NewPositionStorage(make([]linkedtree.Position, 0, 1024)),
-		Nodes:     linkedtree.NewNodeStorage(make([]linkedtree.Node, 0, 1024)),
+	a := &linear.AST{
+		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
+		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
+		Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
 	}
 	for n := 0; n < b.N; n++ {
 		a.Reset()

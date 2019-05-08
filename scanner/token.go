@@ -1,35 +1,38 @@
 package scanner
 
-import (
-	"github.com/z7zmey/php-parser/freefloating"
-	"github.com/z7zmey/php-parser/position"
+type SkippedTokenType int8
+
+const (
+	SkippedTokenTypeWhitespace SkippedTokenType = iota
+	SkippedTokenTypeComment
+	SkippedTokenTypeToken
 )
+
+type SkippedToken struct {
+	Type      SkippedTokenType
+	StartLine int
+	EndLine   int
+	StartPos  int
+	EndPos    int
+}
 
 // Token value returned by lexer
 type Token struct {
-	Value        []byte
-	FreeFloating []freefloating.String
-	StartLine    int
-	EndLine      int
-	StartPos     int
-	EndPos       int
+	SkippedTokens []SkippedToken
+	StartLine     int
+	EndLine       int
+	StartPos      int
+	EndPos        int
 }
 
-func (t *Token) String() string {
-	return string(t.Value)
-}
-
-func (t *Token) GetFreeFloatingToken() []freefloating.String {
-	return []freefloating.String{
+func (t *Token) AsSkippedTokens() []SkippedToken {
+	return []SkippedToken{
 		{
-			StringType: freefloating.TokenType,
-			Value:      string(t.Value),
-			Position: &position.Position{
-				StartLine: t.StartLine,
-				EndLine:   t.EndLine,
-				StartPos:  t.StartPos,
-				EndPos:    t.EndPos,
-			},
+			Type:      SkippedTokenTypeToken,
+			StartLine: t.StartLine,
+			EndLine:   t.EndLine,
+			StartPos:  t.StartPos,
+			EndPos:    t.EndPos,
 		},
 	}
 }
