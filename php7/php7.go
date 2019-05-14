@@ -332,7 +332,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line php7/php7.y:6649
+//line php7/php7.y:6627
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -2112,7 +2112,7 @@ yydefault:
 			yylex.(*Parser).ast.RootNode = nodeID
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).currentToken.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).currentToken.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2609,7 +2609,7 @@ yydefault:
 			yylex.(*Parser).list.add(nodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2625,8 +2625,8 @@ yydefault:
 			yylex.(*Parser).list.add(nodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2658,8 +2658,8 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2675,7 +2675,7 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2738,11 +2738,11 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2768,9 +2768,9 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(children[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2798,9 +2798,9 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2816,9 +2816,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNamespace, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2833,9 +2833,9 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2852,9 +2852,9 @@ yydefault:
 			yyVAL.node = yyDollar[3].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2870,9 +2870,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeUses, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2889,9 +2889,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeUses, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseDeclarationList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2907,9 +2907,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeConsts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2923,7 +2923,7 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2937,7 +2937,7 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -2965,14 +2965,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[3].token.HiddenTokens)
 			if yyDollar[5].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.AsSkippedTokens())
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, []scanner.Token{*yyDollar[5].token})
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3001,15 +3001,15 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseType, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUseType, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[4].token.HiddenTokens)
 			if yyDollar[6].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.AsSkippedTokens())
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, []scanner.Token{*yyDollar[6].token})
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3038,14 +3038,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[3].token.HiddenTokens)
 			if yyDollar[5].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.AsSkippedTokens())
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, []scanner.Token{*yyDollar[5].token})
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3074,16 +3074,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[4].token.HiddenTokens)
 			if yyDollar[6].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.AsSkippedTokens())
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, []scanner.Token{*yyDollar[6].token})
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 			}
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3108,7 +3108,7 @@ yydefault:
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3129,7 +3129,7 @@ yydefault:
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3150,7 +3150,7 @@ yydefault:
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3235,8 +3235,8 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(aliasNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3259,8 +3259,8 @@ yydefault:
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSlash, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3272,7 +3272,7 @@ yydefault:
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3368,11 +3368,11 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupHaltCompiller, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupOpenParenthesisToken, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3390,8 +3390,8 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3424,9 +3424,9 @@ yydefault:
 			yyVAL.node = yyDollar[5].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupWhile, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupWhile, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3443,12 +3443,12 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCond, yyDollar[5].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupWhile, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[7].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[7].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupWhile, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[7].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3467,11 +3467,11 @@ yydefault:
 			yyVAL.node = yyDollar[9].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFor, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupInitExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCondExpr, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIncExpr, yyDollar[8].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFor, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupInitExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCondExpr, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIncExpr, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3488,9 +3488,9 @@ yydefault:
 			yyVAL.node = yyDollar[5].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSwitch, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSwitch, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3506,9 +3506,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3524,9 +3524,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3542,9 +3542,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3562,9 +3562,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3582,9 +3582,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3602,10 +3602,10 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExprs, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEcho, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEcho, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3619,7 +3619,7 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3636,8 +3636,8 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[2].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3655,17 +3655,17 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUnset, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUnset, yyDollar[2].token.HiddenTokens)
 			if yyDollar[4].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.AsSkippedTokens())
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, []scanner.Token{*yyDollar[4].token})
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[6].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCloseParenthesisToken, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[6].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3683,10 +3683,10 @@ yydefault:
 			yyVAL.node = yyDollar[7].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[6].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[6].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3705,11 +3705,11 @@ yydefault:
 			yyVAL.node = yyDollar[9].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupKey, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[8].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupForeach, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupKey, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3728,9 +3728,9 @@ yydefault:
 			yyVAL.node = yyDollar[5].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDeclare, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDeclare, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3744,8 +3744,8 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3773,9 +3773,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, childrenStmts...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTry, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTry, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3791,9 +3791,9 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3814,10 +3814,10 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLabel, LableNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(LableNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(LableNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3838,8 +3838,8 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeLabelName, LableNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLabel, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
@@ -3878,19 +3878,18 @@ yydefault:
 			yylex.(*Parser).list.add(catchNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCatch, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupVar, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCond, yyDollar[7].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStmts, yyDollar[9].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCatch, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupVar, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCond, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStmts, yyDollar[9].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1535
+		//line php7/php7.y:1534
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3899,19 +3898,19 @@ yydefault:
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1542
+		//line php7/php7.y:1541
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1555
+		//line php7/php7.y:1554
 		{
 			yyVAL.node = 0
 
@@ -3919,7 +3918,7 @@ yydefault:
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1561
+		//line php7/php7.y:1560
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtFinally,
@@ -3929,15 +3928,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFinally, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFinally, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1580
+		//line php7/php7.y:1579
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -3946,19 +3945,19 @@ yydefault:
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1587
+		//line php7/php7.y:1586
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1600
+		//line php7/php7.y:1599
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3966,7 +3965,7 @@ yydefault:
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:1609
+		//line php7/php7.y:1608
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -3990,45 +3989,45 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 			if yyDollar[2].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParamList, yyDollar[7].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[9].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[11].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParamList, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[9].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[11].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1649
+		//line php7/php7.y:1648
 		{
 			yyVAL.token = nil
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1653
+		//line php7/php7.y:1652
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1660
+		//line php7/php7.y:1659
 		{
 			yyVAL.token = nil
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1664
+		//line php7/php7.y:1663
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line php7/php7.y:1671
+		//line php7/php7.y:1670
 		{
 			childrenStmts := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
@@ -4051,16 +4050,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[7].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[9].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[9].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:1701
+		//line php7/php7.y:1700
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4078,16 +4077,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[8].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1729
+		//line php7/php7.y:1728
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -4096,7 +4095,7 @@ yydefault:
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1736
+		//line php7/php7.y:1735
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -4104,7 +4103,7 @@ yydefault:
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1745
+		//line php7/php7.y:1744
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4112,13 +4111,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1757
+		//line php7/php7.y:1756
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4126,13 +4125,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:1772
+		//line php7/php7.y:1771
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4148,16 +4147,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[6].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:1798
+		//line php7/php7.y:1797
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4174,16 +4173,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[7].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1825
+		//line php7/php7.y:1824
 		{
 			yyVAL.node = 0
 
@@ -4191,7 +4190,7 @@ yydefault:
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1831
+		//line php7/php7.y:1830
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtClassExtends,
@@ -4201,13 +4200,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClassName, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1848
+		//line php7/php7.y:1847
 		{
 			yyVAL.node = 0
 
@@ -4215,7 +4214,7 @@ yydefault:
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1854
+		//line php7/php7.y:1853
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4227,13 +4226,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:1873
+		//line php7/php7.y:1872
 		{
 			yyVAL.node = 0
 
@@ -4241,7 +4240,7 @@ yydefault:
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1879
+		//line php7/php7.y:1878
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4253,13 +4252,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeInterfaceNames, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1898
+		//line php7/php7.y:1897
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4267,7 +4266,7 @@ yydefault:
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:1904
+		//line php7/php7.y:1903
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprReference,
@@ -4277,13 +4276,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1918
+		//line php7/php7.y:1917
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprList,
@@ -4293,15 +4292,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupList, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:1934
+		//line php7/php7.y:1933
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprShortList,
@@ -4311,14 +4310,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save tokensc
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1952
+		//line php7/php7.y:1951
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtFor,
@@ -4331,7 +4330,7 @@ yydefault:
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:1963
+		//line php7/php7.y:1962
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4350,16 +4349,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:1992
+		//line php7/php7.y:1991
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtForeach,
@@ -4372,7 +4371,7 @@ yydefault:
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2003
+		//line php7/php7.y:2002
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4391,16 +4390,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2032
+		//line php7/php7.y:2031
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtDeclare,
@@ -4413,7 +4412,7 @@ yydefault:
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2043
+		//line php7/php7.y:2042
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4432,16 +4431,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2072
+		//line php7/php7.y:2071
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4459,14 +4458,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2095
+		//line php7/php7.y:2094
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4484,16 +4483,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2120
+		//line php7/php7.y:2119
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4512,16 +4511,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2146
+		//line php7/php7.y:2145
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4540,18 +4539,18 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeCaseList, caseListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[5].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[5].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2177
+		//line php7/php7.y:2176
 		{
 			yylex.(*Parser).list.push()
 
@@ -4559,7 +4558,7 @@ yydefault:
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2183
+		//line php7/php7.y:2182
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4573,15 +4572,15 @@ yydefault:
 			yylex.(*Parser).list.add(caseNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2203
+		//line php7/php7.y:2202
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4595,27 +4594,27 @@ yydefault:
 			yylex.(*Parser).list.add(defaultNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupDefault, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupDefault, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2226
+		//line php7/php7.y:2225
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2230
+		//line php7/php7.y:2229
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2237
+		//line php7/php7.y:2236
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtWhile,
@@ -4628,7 +4627,7 @@ yydefault:
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2248
+		//line php7/php7.y:2247
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4647,16 +4646,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:2277
+		//line php7/php7.y:2276
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtIf,
@@ -4667,15 +4666,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmt, yyDollar[5].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIf, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIf, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2294
+		//line php7/php7.y:2293
 		{
 			elseIfNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtElseIf,
@@ -4693,15 +4692,15 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupElseIf, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupExpr, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupElseIf, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupExpr, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2321
+		//line php7/php7.y:2320
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4709,7 +4708,7 @@ yydefault:
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2327
+		//line php7/php7.y:2326
 		{
 			elseNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtElse,
@@ -4724,13 +4723,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyDollar[1].node, ast.EdgeTypeElse, elseNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(elseNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(elseNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2350
+		//line php7/php7.y:2349
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4750,16 +4749,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeStmt, stmtListNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIf, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIf, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line php7/php7.y:2377
+		//line php7/php7.y:2376
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4781,16 +4780,16 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupElseIf, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupExpr, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, yyDollar[6].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupElseIf, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupExpr, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, yyDollar[6].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2409
+		//line php7/php7.y:2408
 		{
 			node := yylex.(*Parser).ast.Nodes.Get(yyDollar[1].node)
 			node.Pos = yylex.(*Parser).ast.NewNodeTokenPosition(yyDollar[1].node, yyDollar[3].token)
@@ -4799,15 +4798,15 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2424
+		//line php7/php7.y:2423
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -4832,23 +4831,23 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupElse, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[6].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupElse, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAltEnd, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[6].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2460
+		//line php7/php7.y:2459
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2464
+		//line php7/php7.y:2463
 		{
 			yylex.(*Parser).list.push()
 
@@ -4856,7 +4855,7 @@ yydefault:
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2473
+		//line php7/php7.y:2472
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -4865,19 +4864,19 @@ yydefault:
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2480
+		//line php7/php7.y:2479
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2493
+		//line php7/php7.y:2492
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4920,14 +4919,14 @@ yydefault:
 
 			// save tokens
 
-			tmp := [4][]scanner.SkippedToken{}
+			tmp := [4][]scanner.Token{}
 			if yyDollar[2].token != nil {
-				tmp[1] = yyDollar[2].token.SkippedTokens
+				tmp[1] = yyDollar[2].token.HiddenTokens
 			}
 			if yyDollar[3].token != nil {
-				tmp[2] = yyDollar[3].token.SkippedTokens
+				tmp[2] = yyDollar[3].token.HiddenTokens
 			}
-			tmp[3] = yyDollar[4].token.SkippedTokens
+			tmp[3] = yyDollar[4].token.HiddenTokens
 
 			if yyDollar[3].token == nil {
 				tmp[2] = tmp[3]
@@ -4957,13 +4956,12 @@ yydefault:
 			if tmp[3] != nil {
 				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVariadic, tmp[3])
 			}
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:2577
+		//line php7/php7.y:2575
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5007,14 +5005,14 @@ yydefault:
 
 			// save tokens
 
-			tmp := [4][]scanner.SkippedToken{}
+			tmp := [4][]scanner.Token{}
 			if yyDollar[2].token != nil {
-				tmp[1] = yyDollar[2].token.SkippedTokens
+				tmp[1] = yyDollar[2].token.HiddenTokens
 			}
 			if yyDollar[3].token != nil {
-				tmp[2] = yyDollar[3].token.SkippedTokens
+				tmp[2] = yyDollar[3].token.HiddenTokens
 			}
-			tmp[3] = yyDollar[4].token.SkippedTokens
+			tmp[3] = yyDollar[4].token.HiddenTokens
 
 			if yyDollar[3].token == nil {
 				tmp[2] = tmp[3]
@@ -5044,14 +5042,13 @@ yydefault:
 			if tmp[3] != nil {
 				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVariadic, tmp[3])
 			}
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2666
+		//line php7/php7.y:2663
 		{
 			yyVAL.node = 0
 
@@ -5059,7 +5056,7 @@ yydefault:
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2672
+		//line php7/php7.y:2669
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5067,7 +5064,7 @@ yydefault:
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2681
+		//line php7/php7.y:2678
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5075,7 +5072,7 @@ yydefault:
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2687
+		//line php7/php7.y:2684
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeNullable,
@@ -5085,13 +5082,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2704
+		//line php7/php7.y:2701
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5099,13 +5096,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2716
+		//line php7/php7.y:2713
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5113,13 +5110,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2728
+		//line php7/php7.y:2725
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5127,7 +5124,7 @@ yydefault:
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2737
+		//line php7/php7.y:2734
 		{
 			yyVAL.node = 0
 
@@ -5135,7 +5132,7 @@ yydefault:
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2743
+		//line php7/php7.y:2740
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtReturnType,
@@ -5145,13 +5142,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2760
+		//line php7/php7.y:2757
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeArgumentList,
@@ -5159,14 +5156,14 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2773
+		//line php7/php7.y:2770
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -5178,18 +5175,18 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeArguments, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 			if yyDollar[3].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[3].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[3].token.AsSkippedTokens())
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[3].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, []scanner.Token{*yyDollar[3].token})
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArgumentList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2797
+		//line php7/php7.y:2794
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5198,19 +5195,19 @@ yydefault:
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2804
+		//line php7/php7.y:2801
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2817
+		//line php7/php7.y:2814
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeArgument,
@@ -5226,7 +5223,7 @@ yydefault:
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2831
+		//line php7/php7.y:2828
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeArgument,
@@ -5237,25 +5234,25 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2849
+		//line php7/php7.y:2846
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2859
+		//line php7/php7.y:2856
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5264,7 +5261,7 @@ yydefault:
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2869
+		//line php7/php7.y:2866
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5272,19 +5269,19 @@ yydefault:
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2878
+		//line php7/php7.y:2875
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2888
+		//line php7/php7.y:2885
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5293,7 +5290,7 @@ yydefault:
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:2898
+		//line php7/php7.y:2895
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5314,14 +5311,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2924
+		//line php7/php7.y:2920
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5343,15 +5339,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:2955
+		//line php7/php7.y:2950
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5359,7 +5354,7 @@ yydefault:
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:2961
+		//line php7/php7.y:2956
 		{
 			yylex.(*Parser).list.push()
 
@@ -5367,7 +5362,7 @@ yydefault:
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:2970
+		//line php7/php7.y:2965
 		{
 			childrenProperties := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
@@ -5382,14 +5377,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupPropertyList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupPropertyList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:2990
+		//line php7/php7.y:2985
 		{
 			childrenConstants := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
@@ -5405,18 +5400,18 @@ yydefault:
 			// save tokens
 			if len(childrenModifiers) > 0 {
 				yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], yyVAL.node)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupConstList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3015
+		//line php7/php7.y:3010
 		{
 			childrenTraits := yylex.(*Parser).list.pop()
 
@@ -5429,13 +5424,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeTraits, childrenTraits...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line php7/php7.y:3032
+		//line php7/php7.y:3027
 		{
 			childrenParams := yylex.(*Parser).list.pop()
 			childrenModifiers := yylex.(*Parser).list.pop()
@@ -5472,24 +5467,24 @@ yydefault:
 			// save tokens
 			if len(childrenModifiers) > 0 {
 				yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], yyVAL.node)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupModifierList, yyDollar[2].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 			}
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[8].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3087
+		//line php7/php7.y:3082
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5498,19 +5493,19 @@ yydefault:
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3094
+		//line php7/php7.y:3089
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3107
+		//line php7/php7.y:3102
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtNop,
@@ -5518,14 +5513,14 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3121
+		//line php7/php7.y:3116
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtTraitAdaptationList,
@@ -5533,14 +5528,14 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAdaptationList, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAdaptationList, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3134
+		//line php7/php7.y:3129
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -5552,14 +5547,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeAdaptations, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAdaptationList, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAdaptationList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3154
+		//line php7/php7.y:3149
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5568,7 +5563,7 @@ yydefault:
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3161
+		//line php7/php7.y:3156
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5576,31 +5571,31 @@ yydefault:
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3170
+		//line php7/php7.y:3165
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNameList, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[2].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupNameList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3180
+		//line php7/php7.y:3175
 		{
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAlias, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[2].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAlias, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3193
+		//line php7/php7.y:3188
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -5614,13 +5609,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3214
+		//line php7/php7.y:3209
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5637,14 +5632,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3236
+		//line php7/php7.y:3231
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5661,14 +5656,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3258
+		//line php7/php7.y:3253
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5686,14 +5681,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3281
+		//line php7/php7.y:3276
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
@@ -5705,13 +5700,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupRef, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3300
+		//line php7/php7.y:3295
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5726,13 +5721,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeMethod, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3319
+		//line php7/php7.y:3314
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5740,7 +5735,7 @@ yydefault:
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3328
+		//line php7/php7.y:3323
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5757,14 +5752,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3353
+		//line php7/php7.y:3348
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtNop,
@@ -5772,14 +5767,14 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupSemiColon, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3366
+		//line php7/php7.y:3361
 		{
 			children := yylex.(*Parser).list.pop()
 
@@ -5791,20 +5786,20 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, children...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3386
+		//line php7/php7.y:3381
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3390
+		//line php7/php7.y:3385
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5815,13 +5810,13 @@ yydefault:
 			yylex.(*Parser).list.add(identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3408
+		//line php7/php7.y:3403
 		{
 			yylex.(*Parser).list.push()
 
@@ -5829,13 +5824,13 @@ yydefault:
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3414
+		//line php7/php7.y:3409
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3421
+		//line php7/php7.y:3416
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5844,7 +5839,7 @@ yydefault:
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3428
+		//line php7/php7.y:3423
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -5852,7 +5847,7 @@ yydefault:
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3437
+		//line php7/php7.y:3432
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5860,13 +5855,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3449
+		//line php7/php7.y:3444
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5874,13 +5869,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3461
+		//line php7/php7.y:3456
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5888,13 +5883,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3473
+		//line php7/php7.y:3468
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5902,13 +5897,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3485
+		//line php7/php7.y:3480
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5916,13 +5911,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3497
+		//line php7/php7.y:3492
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5930,25 +5925,25 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3512
+		//line php7/php7.y:3507
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3522
+		//line php7/php7.y:3517
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -5957,7 +5952,7 @@ yydefault:
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3532
+		//line php7/php7.y:3527
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5978,14 +5973,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3558
+		//line php7/php7.y:3552
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -6007,27 +6001,26 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3589
+		//line php7/php7.y:3582
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3599
+		//line php7/php7.y:3592
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -6036,7 +6029,7 @@ yydefault:
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3609
+		//line php7/php7.y:3602
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -6052,14 +6045,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3633
+		//line php7/php7.y:3626
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -6075,26 +6068,26 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3657
+		//line php7/php7.y:3650
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3667
+		//line php7/php7.y:3660
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -6103,7 +6096,7 @@ yydefault:
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3677
+		//line php7/php7.y:3670
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6111,7 +6104,7 @@ yydefault:
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:3686
+		//line php7/php7.y:3679
 		{
 			yylex.(*Parser).list.push()
 
@@ -6119,25 +6112,25 @@ yydefault:
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3692
+		//line php7/php7.y:3685
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3699
+		//line php7/php7.y:3692
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:3709
+		//line php7/php7.y:3702
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -6146,7 +6139,7 @@ yydefault:
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line php7/php7.y:3719
+		//line php7/php7.y:3712
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeStmtClass,
@@ -6159,15 +6152,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[8].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[8].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3741
+		//line php7/php7.y:3734
 		{
 			lastNodeID := yyDollar[3].node
 			if lastNodeID == 0 {
@@ -6183,13 +6176,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3761
+		//line php7/php7.y:3754
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprNew,
@@ -6199,13 +6192,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:3778
+		//line php7/php7.y:3771
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprList,
@@ -6222,16 +6215,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[6].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:3802
+		//line php7/php7.y:3795
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprShortList,
@@ -6248,15 +6241,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeExpr, yyDollar[5].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3825
+		//line php7/php7.y:3818
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignAssign,
@@ -6268,13 +6261,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:3841
+		//line php7/php7.y:3834
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignReference,
@@ -6286,14 +6279,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEqual, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEqual, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:3858
+		//line php7/php7.y:3851
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprClone,
@@ -6303,13 +6296,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3872
+		//line php7/php7.y:3865
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignPlus,
@@ -6321,13 +6314,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3888
+		//line php7/php7.y:3881
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignMinus,
@@ -6339,13 +6332,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3904
+		//line php7/php7.y:3897
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignMul,
@@ -6357,13 +6350,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3920
+		//line php7/php7.y:3913
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignPow,
@@ -6375,13 +6368,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3936
+		//line php7/php7.y:3929
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignDiv,
@@ -6393,13 +6386,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3952
+		//line php7/php7.y:3945
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignConcat,
@@ -6411,13 +6404,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3968
+		//line php7/php7.y:3961
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignMod,
@@ -6429,13 +6422,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:3984
+		//line php7/php7.y:3977
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignBitwiseAnd,
@@ -6447,13 +6440,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4000
+		//line php7/php7.y:3993
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignBitwiseOr,
@@ -6465,13 +6458,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4016
+		//line php7/php7.y:4009
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignBitwiseXor,
@@ -6483,13 +6476,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4032
+		//line php7/php7.y:4025
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignShiftLeft,
@@ -6501,13 +6494,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4048
+		//line php7/php7.y:4041
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeAssignShiftRight,
@@ -6519,13 +6512,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4064
+		//line php7/php7.y:4057
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPostInc,
@@ -6536,13 +6529,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4079
+		//line php7/php7.y:4072
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPreInc,
@@ -6552,13 +6545,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4093
+		//line php7/php7.y:4086
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPostDec,
@@ -6569,13 +6562,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4108
+		//line php7/php7.y:4101
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPreDec,
@@ -6585,13 +6578,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4122
+		//line php7/php7.y:4115
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryBooleanOr,
@@ -6603,13 +6596,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4138
+		//line php7/php7.y:4131
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryBooleanAnd,
@@ -6621,13 +6614,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4154
+		//line php7/php7.y:4147
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryLogicalOr,
@@ -6639,13 +6632,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4170
+		//line php7/php7.y:4163
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryLogicalAnd,
@@ -6657,13 +6650,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4186
+		//line php7/php7.y:4179
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryLogicalXor,
@@ -6675,13 +6668,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4202
+		//line php7/php7.y:4195
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryBitwiseOr,
@@ -6693,13 +6686,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4218
+		//line php7/php7.y:4211
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryBitwiseAnd,
@@ -6711,13 +6704,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4234
+		//line php7/php7.y:4227
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryBitwiseXor,
@@ -6729,13 +6722,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4250
+		//line php7/php7.y:4243
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryConcat,
@@ -6747,13 +6740,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4266
+		//line php7/php7.y:4259
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryPlus,
@@ -6765,13 +6758,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4282
+		//line php7/php7.y:4275
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryMinus,
@@ -6783,13 +6776,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4298
+		//line php7/php7.y:4291
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryMul,
@@ -6801,13 +6794,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4314
+		//line php7/php7.y:4307
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryPow,
@@ -6819,13 +6812,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4330
+		//line php7/php7.y:4323
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryDiv,
@@ -6837,13 +6830,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4346
+		//line php7/php7.y:4339
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryMod,
@@ -6855,13 +6848,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4362
+		//line php7/php7.y:4355
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryShiftLeft,
@@ -6873,13 +6866,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4378
+		//line php7/php7.y:4371
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryShiftRight,
@@ -6891,13 +6884,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4394
+		//line php7/php7.y:4387
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprUnaryPlus,
@@ -6907,13 +6900,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4408
+		//line php7/php7.y:4401
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprUnaryMinus,
@@ -6923,13 +6916,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4422
+		//line php7/php7.y:4415
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprBooleanNot,
@@ -6939,13 +6932,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4436
+		//line php7/php7.y:4429
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprBitwiseNot,
@@ -6955,13 +6948,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4450
+		//line php7/php7.y:4443
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryIdentical,
@@ -6973,13 +6966,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4466
+		//line php7/php7.y:4459
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryNotIdentical,
@@ -6991,13 +6984,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4482
+		//line php7/php7.y:4475
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryEqual,
@@ -7009,13 +7002,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4498
+		//line php7/php7.y:4491
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryNotEqual,
@@ -7027,14 +7020,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEqual, yyDollar[2].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEqual, []scanner.Token{*yyDollar[2].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4515
+		//line php7/php7.y:4508
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinarySmaller,
@@ -7046,13 +7039,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4531
+		//line php7/php7.y:4524
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinarySmallerOrEqual,
@@ -7064,13 +7057,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4547
+		//line php7/php7.y:4540
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryGreater,
@@ -7082,13 +7075,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4563
+		//line php7/php7.y:4556
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryGreaterOrEqual,
@@ -7100,13 +7093,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4579
+		//line php7/php7.y:4572
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinarySpaceship,
@@ -7118,13 +7111,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4595
+		//line php7/php7.y:4588
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprInstanceOf,
@@ -7136,27 +7129,27 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4611
+		//line php7/php7.y:4604
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4623
+		//line php7/php7.y:4616
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7164,7 +7157,7 @@ yydefault:
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:4629
+		//line php7/php7.y:4622
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprTernary,
@@ -7177,14 +7170,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4647
+		//line php7/php7.y:4640
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprTernary,
@@ -7196,14 +7189,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCond, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupTrue, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4664
+		//line php7/php7.y:4657
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeBinaryCoalesce,
@@ -7215,13 +7208,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4680
+		//line php7/php7.y:4673
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7229,7 +7222,7 @@ yydefault:
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4686
+		//line php7/php7.y:4679
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastInt,
@@ -7239,14 +7232,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4701
+		//line php7/php7.y:4694
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastDouble,
@@ -7256,14 +7249,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4716
+		//line php7/php7.y:4709
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastString,
@@ -7273,14 +7266,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4731
+		//line php7/php7.y:4724
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastArray,
@@ -7290,14 +7283,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4746
+		//line php7/php7.y:4739
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastObject,
@@ -7307,14 +7300,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4761
+		//line php7/php7.y:4754
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastBool,
@@ -7324,14 +7317,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4776
+		//line php7/php7.y:4769
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeCastUnset,
@@ -7341,14 +7334,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupCast, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4791
+		//line php7/php7.y:4784
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -7372,13 +7365,13 @@ yydefault:
 			}
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4819
+		//line php7/php7.y:4812
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprErrorSuppress,
@@ -7388,13 +7381,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4833
+		//line php7/php7.y:4826
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7402,7 +7395,7 @@ yydefault:
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:4839
+		//line php7/php7.y:4832
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprShellExec,
@@ -7412,13 +7405,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4853
+		//line php7/php7.y:4846
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPrint,
@@ -7428,13 +7421,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:4867
+		//line php7/php7.y:4860
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7442,13 +7435,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4879
+		//line php7/php7.y:4872
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7458,13 +7451,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:4893
+		//line php7/php7.y:4886
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7475,14 +7468,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeVal, yyDollar[4].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:4909
+		//line php7/php7.y:4902
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprYieldFrom,
@@ -7492,13 +7485,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line php7/php7.y:4923
+		//line php7/php7.y:4916
 		{
 			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
@@ -7517,22 +7510,22 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// // save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 			if yyDollar[2].token == nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[4].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[2].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[4].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[9].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[11].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[9].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[11].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line php7/php7.y:4955
+		//line php7/php7.y:4948
 		{
 			flag := ast.NodeFlagStatic
 			if yyDollar[2].token != nil {
@@ -7551,44 +7544,35 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
 
 			// // save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStatic, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStatic, yyDollar[2].token.HiddenTokens)
 			if yyDollar[3].token == nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[5].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[5].token.HiddenTokens)
 			} else {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[5].token.SkippedTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupFunction, yyDollar[3].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupAmpersand, yyDollar[5].token.HiddenTokens)
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[7].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[10].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[12].token.SkippedTokens)
-
-			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-		}
-	case 371:
-		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:4991
-		{
-			// $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
-			yylex.(*Parser).Lexer.SetPhpDocComment("")
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupParameterList, yyDollar[7].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupReturnType, yyDollar[10].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStmts, yyDollar[12].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5001
+		//line php7/php7.y:4986
 		{
 			yyVAL.token = nil
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5005
+		//line php7/php7.y:4990
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5012
+		//line php7/php7.y:4997
 		{
 			yyVAL.node = 0
 
@@ -7596,7 +7580,7 @@ yydefault:
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5018
+		//line php7/php7.y:5003
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprClosureUse,
@@ -7606,27 +7590,27 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLexicalVarList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupUse, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupLexicalVarList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5037
+		//line php7/php7.y:5022
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5047
+		//line php7/php7.y:5032
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -7635,7 +7619,7 @@ yydefault:
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5057
+		//line php7/php7.y:5042
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7650,14 +7634,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(yyVAL.node)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5077
+		//line php7/php7.y:5061
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7678,15 +7661,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVar, varNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5107
+		//line php7/php7.y:5090
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprFunctionCall,
@@ -7703,6 +7685,25 @@ yydefault:
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
+		//line php7/php7.y:5105
+		{
+			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
+				Type: ast.NodeTypeExprStaticCall,
+				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
+			})
+
+			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
+			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
+			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
+
+			// save tokens
+			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+
+			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
+		}
+	case 382:
+		yyDollar = yyS[yypt-4 : yypt+1]
 		//line php7/php7.y:5122
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
@@ -7716,32 +7717,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
-
-			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-		}
-	case 382:
-		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5139
-		{
-			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
-				Type: ast.NodeTypeExprStaticCall,
-				Pos:  yylex.(*Parser).ast.NewNodesPosition(yyDollar[1].node, yyDollar[4].node),
-			})
-
-			prevNodeID := yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeClass, yyDollar[1].node)
-			prevNodeID = yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeCall, yyDollar[3].node)
-			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeArgumentList, yyDollar[4].node)
-
-			// save tokens
-			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5156
+		//line php7/php7.y:5139
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprFunctionCall,
@@ -7758,7 +7740,7 @@ yydefault:
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5174
+		//line php7/php7.y:5157
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7766,13 +7748,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5186
+		//line php7/php7.y:5169
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7780,7 +7762,7 @@ yydefault:
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5195
+		//line php7/php7.y:5178
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7788,7 +7770,7 @@ yydefault:
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5201
+		//line php7/php7.y:5184
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7796,7 +7778,7 @@ yydefault:
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5210
+		//line php7/php7.y:5193
 		{
 			yyVAL.node = 0
 
@@ -7804,7 +7786,7 @@ yydefault:
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5216
+		//line php7/php7.y:5199
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprExit,
@@ -7814,16 +7796,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExit, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExit, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExit, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExit, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5236
+		//line php7/php7.y:5219
 		{
 			yylex.(*Parser).list.push()
 
@@ -7831,7 +7813,7 @@ yydefault:
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5242
+		//line php7/php7.y:5225
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(
@@ -7845,13 +7827,13 @@ yydefault:
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5254
+		//line php7/php7.y:5237
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5261
+		//line php7/php7.y:5244
 		{
 			yyVAL.node = 0
 
@@ -7859,7 +7841,7 @@ yydefault:
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5267
+		//line php7/php7.y:5250
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7867,7 +7849,7 @@ yydefault:
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5276
+		//line php7/php7.y:5259
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArray,
@@ -7877,15 +7859,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArray, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArray, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5292
+		//line php7/php7.y:5275
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprShortArray,
@@ -7895,14 +7877,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupArrayPairList, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5307
+		//line php7/php7.y:5290
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarString,
@@ -7910,13 +7892,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5322
+		//line php7/php7.y:5305
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarLnumber,
@@ -7924,13 +7906,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5334
+		//line php7/php7.y:5317
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarDnumber,
@@ -7938,13 +7920,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5346
+		//line php7/php7.y:5329
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7952,13 +7934,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5358
+		//line php7/php7.y:5341
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7966,13 +7948,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5370
+		//line php7/php7.y:5353
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7980,13 +7962,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5382
+		//line php7/php7.y:5365
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7994,13 +7976,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5394
+		//line php7/php7.y:5377
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -8008,13 +7990,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5406
+		//line php7/php7.y:5389
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -8022,13 +8004,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5418
+		//line php7/php7.y:5401
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -8036,13 +8018,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5430
+		//line php7/php7.y:5413
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -8050,13 +8032,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5442
+		//line php7/php7.y:5425
 		{
 			stringPartNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarEncapsedStringPart,
@@ -8071,13 +8053,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, stringPartNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5461
+		//line php7/php7.y:5444
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarHeredoc,
@@ -8085,13 +8067,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5473
+		//line php7/php7.y:5456
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarEncapsed,
@@ -8101,13 +8083,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5487
+		//line php7/php7.y:5470
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarHeredoc,
@@ -8117,13 +8099,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5501
+		//line php7/php7.y:5484
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8131,7 +8113,7 @@ yydefault:
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5507
+		//line php7/php7.y:5490
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8139,7 +8121,7 @@ yydefault:
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5516
+		//line php7/php7.y:5499
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprConstFetch,
@@ -8155,7 +8137,7 @@ yydefault:
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5530
+		//line php7/php7.y:5513
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8172,14 +8154,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5552
+		//line php7/php7.y:5535
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8196,14 +8178,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5577
+		//line php7/php7.y:5560
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8211,7 +8193,7 @@ yydefault:
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5583
+		//line php7/php7.y:5566
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8219,7 +8201,7 @@ yydefault:
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:5592
+		//line php7/php7.y:5575
 		{
 			yyVAL.node = 0
 
@@ -8227,7 +8209,7 @@ yydefault:
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5598
+		//line php7/php7.y:5581
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8235,7 +8217,7 @@ yydefault:
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5607
+		//line php7/php7.y:5590
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8243,7 +8225,7 @@ yydefault:
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5616
+		//line php7/php7.y:5599
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8251,21 +8233,21 @@ yydefault:
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5622
+		//line php7/php7.y:5605
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5634
+		//line php7/php7.y:5617
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8273,7 +8255,7 @@ yydefault:
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5643
+		//line php7/php7.y:5626
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8281,21 +8263,21 @@ yydefault:
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5649
+		//line php7/php7.y:5632
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5661
+		//line php7/php7.y:5644
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8303,7 +8285,7 @@ yydefault:
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5670
+		//line php7/php7.y:5653
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8311,7 +8293,7 @@ yydefault:
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5676
+		//line php7/php7.y:5659
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8323,16 +8305,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5695
+		//line php7/php7.y:5678
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8344,16 +8326,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 431:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5714
+		//line php7/php7.y:5697
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8365,16 +8347,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5733
+		//line php7/php7.y:5716
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprMethodCall,
@@ -8387,13 +8369,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5750
+		//line php7/php7.y:5733
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8401,7 +8383,7 @@ yydefault:
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5759
+		//line php7/php7.y:5742
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8409,7 +8391,7 @@ yydefault:
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5765
+		//line php7/php7.y:5748
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8417,7 +8399,7 @@ yydefault:
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5771
+		//line php7/php7.y:5754
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
@@ -8429,13 +8411,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5790
+		//line php7/php7.y:5773
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8450,14 +8432,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(yyVAL.node)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5810
+		//line php7/php7.y:5792
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -8467,18 +8448,18 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDollar, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyDollar[3].node, ast.TokenGroupStart, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyDollar[3].node, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyDollar[3].node, ast.TokenGroupStart, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.PrependTokens(yyDollar[3].node, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyDollar[3].node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:5829
+		//line php7/php7.y:5811
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -8488,13 +8469,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDollar, yyDollar[1].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupDollar, []scanner.Token{*yyDollar[1].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5846
+		//line php7/php7.y:5828
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8506,13 +8487,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5862
+		//line php7/php7.y:5844
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8524,13 +8505,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupName, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5881
+		//line php7/php7.y:5863
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8538,7 +8519,7 @@ yydefault:
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5887
+		//line php7/php7.y:5869
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8550,16 +8531,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:5906
+		//line php7/php7.y:5888
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8571,16 +8552,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5925
+		//line php7/php7.y:5907
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
@@ -8592,13 +8573,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5941
+		//line php7/php7.y:5923
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8610,13 +8591,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5957
+		//line php7/php7.y:5939
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8628,13 +8609,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:5976
+		//line php7/php7.y:5958
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8642,27 +8623,27 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:5988
+		//line php7/php7.y:5970
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6000
+		//line php7/php7.y:5982
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8670,7 +8651,7 @@ yydefault:
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6009
+		//line php7/php7.y:5991
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8678,27 +8659,27 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6021
+		//line php7/php7.y:6003
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.PrependTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6033
+		//line php7/php7.y:6015
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8706,13 +8687,13 @@ yydefault:
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6042
+		//line php7/php7.y:6024
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line php7/php7.y:6049
+		//line php7/php7.y:6031
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8722,7 +8703,7 @@ yydefault:
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6057
+		//line php7/php7.y:6039
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8730,19 +8711,19 @@ yydefault:
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6066
+		//line php7/php7.y:6048
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6076
+		//line php7/php7.y:6058
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -8751,7 +8732,7 @@ yydefault:
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6086
+		//line php7/php7.y:6068
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8763,13 +8744,13 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6102
+		//line php7/php7.y:6084
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8785,7 +8766,7 @@ yydefault:
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6116
+		//line php7/php7.y:6098
 		{
 			refNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprReference,
@@ -8803,14 +8784,14 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(refNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(refNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6139
+		//line php7/php7.y:6121
 		{
 			refNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprReference,
@@ -8826,13 +8807,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVal, refNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:6159
+		//line php7/php7.y:6141
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprList,
@@ -8852,16 +8833,16 @@ yydefault:
 
 			// save tokens
 			yylex.(*Parser).ast.MoveStartTokens(yyDollar[1].node, yyVAL.node)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[6].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[6].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6186
+		//line php7/php7.y:6168
 		{
 			listNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprList,
@@ -8879,15 +8860,15 @@ yydefault:
 			// TODO: Cannot use list() as standalone expression
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6213
+		//line php7/php7.y:6195
 		{
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
@@ -8895,7 +8876,7 @@ yydefault:
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6219
+		//line php7/php7.y:6201
 		{
 			encapsNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarEncapsedStringPart,
@@ -8905,13 +8886,13 @@ yydefault:
 			yylex.(*Parser).list.add(encapsNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6233
+		//line php7/php7.y:6215
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -8920,7 +8901,7 @@ yydefault:
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6240
+		//line php7/php7.y:6222
 		{
 			yylex.(*Parser).list.push()
 
@@ -8933,13 +8914,13 @@ yydefault:
 			yylex.(*Parser).list.add(yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6260
+		//line php7/php7.y:6242
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8954,14 +8935,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(yyVAL.node)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6280
+		//line php7/php7.y:6261
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8983,17 +8963,16 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[2].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[4].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6310
+		//line php7/php7.y:6290
 		{
 			varNameNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9020,15 +8999,14 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeProperty, propertyNameNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(propertyNameNodeID, ast.TokenGroupStart, yyDollar[3].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(propertyNameNodeID, ast.TokenGroupStart, yyDollar[3].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6343
+		//line php7/php7.y:6322
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -9038,15 +9016,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6359
+		//line php7/php7.y:6338
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9061,15 +9039,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line php7/php7.y:6380
+		//line php7/php7.y:6359
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9091,32 +9069,32 @@ yydefault:
 			yylex.(*Parser).ast.Children(prevNodeID, yyVAL.node, ast.EdgeTypeDim, yyDollar[4].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[3].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[5].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[5].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[6].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[6].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVar, []scanner.Token{*yyDollar[3].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[5].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, []scanner.Token{*yyDollar[5].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[6].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[6].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6412
+		//line php7/php7.y:6391
 		{
 			yyVAL.node = yyDollar[2].node
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.AsSkippedTokens())
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.AsSkippedTokens())
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, []scanner.Token{*yyDollar[1].token})
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, yyDollar[3].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEnd, []scanner.Token{*yyDollar[3].token})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6426
+		//line php7/php7.y:6405
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeScalarString,
@@ -9124,13 +9102,13 @@ yydefault:
 			})
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6438
+		//line php7/php7.y:6417
 		{
 			// TODO: add option to handle 64 bit integer
 			tknValue := yylex.(*Parser).ast.FileData[yyDollar[1].token.StartPos:yyDollar[1].token.EndPos]
@@ -9147,13 +9125,13 @@ yydefault:
 			}
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6459
+		//line php7/php7.y:6438
 		{
 			tknValue := yylex.(*Parser).ast.FileData[yyDollar[2].token.StartPos:yyDollar[2].token.EndPos]
 			if _, err := strconv.Atoi(string(tknValue)); err == nil {
@@ -9176,13 +9154,13 @@ yydefault:
 			}
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6486
+		//line php7/php7.y:6465
 		{
 			identifierNodeID := yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9197,14 +9175,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVarName, identifierNodeID)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendDollarToken(yyVAL.node)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line php7/php7.y:6509
+		//line php7/php7.y:6487
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprIsset,
@@ -9214,19 +9191,19 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIsset, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupIsset, yyDollar[2].token.HiddenTokens)
 			if yyDollar[4].token != nil {
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.SkippedTokens)
-				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.AsSkippedTokens())
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[4].token.HiddenTokens)
+				yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, []scanner.Token{*yyDollar[4].token})
 			}
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupVarList, yyDollar[5].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6529
+		//line php7/php7.y:6507
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprEmpty,
@@ -9236,15 +9213,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEmpty, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEmpty, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6545
+		//line php7/php7.y:6523
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprInclude,
@@ -9254,13 +9231,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6559
+		//line php7/php7.y:6537
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprIncludeOnce,
@@ -9270,13 +9247,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line php7/php7.y:6573
+		//line php7/php7.y:6551
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprEval,
@@ -9286,15 +9263,15 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEval, yyDollar[2].token.SkippedTokens)
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupEval, yyDollar[2].token.HiddenTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupExpr, yyDollar[4].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6589
+		//line php7/php7.y:6567
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprRequire,
@@ -9304,13 +9281,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line php7/php7.y:6603
+		//line php7/php7.y:6581
 		{
 			yyVAL.node = yylex.(*Parser).ast.Nodes.Create(linear.Node{
 				Type: ast.NodeTypeExprRequireOnce,
@@ -9320,13 +9297,13 @@ yydefault:
 			yylex.(*Parser).ast.Children(0, yyVAL.node, ast.EdgeTypeExpr, yyDollar[2].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(yyVAL.node, ast.TokenGroupStart, yyDollar[1].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6620
+		//line php7/php7.y:6598
 		{
 			yylex.(*Parser).list.push()
 			yylex.(*Parser).list.add(yyDollar[1].node)
@@ -9335,19 +9312,19 @@ yydefault:
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line php7/php7.y:6627
+		//line php7/php7.y:6605
 		{
 			prevNodeID := yylex.(*Parser).list.last()
 			yylex.(*Parser).list.add(yyDollar[3].node)
 
 			// save tokens
-			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.SkippedTokens)
+			yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, yyDollar[2].token.HiddenTokens)
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line php7/php7.y:6640
+		//line php7/php7.y:6618
 		{
 			yyVAL.node = yyDollar[1].node
 

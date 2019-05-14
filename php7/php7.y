@@ -281,7 +281,7 @@ start:
                 yylex.(*Parser).ast.RootNode = nodeID
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).currentToken.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupEnd, yylex.(*Parser).currentToken.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -351,7 +351,7 @@ namespace_name:
                 yylex.(*Parser).list.add(nodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -365,8 +365,8 @@ namespace_name:
                 yylex.(*Parser).list.add(nodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(nodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -397,8 +397,8 @@ name:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNamespace, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -412,7 +412,7 @@ name:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -464,11 +464,11 @@ top_statement:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupHaltCompiller, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -492,9 +492,9 @@ top_statement:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(children[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -520,9 +520,9 @@ top_statement:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -536,9 +536,9 @@ top_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNamespace, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNamespace, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -551,9 +551,9 @@ top_statement:
                 $$ = $2
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -568,9 +568,9 @@ top_statement:
                 $$ = $3
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -584,9 +584,9 @@ top_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeUses, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -601,9 +601,9 @@ top_statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeUses, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseDeclarationList, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -617,9 +617,9 @@ top_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeConsts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -634,7 +634,7 @@ use_type:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -646,7 +646,7 @@ use_type:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -675,14 +675,14 @@ group_use_declaration:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $3.HiddenTokens)
                 if $5 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.AsSkippedTokens())
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$5})
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -709,15 +709,15 @@ group_use_declaration:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseType, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUseType, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $4.HiddenTokens)
                 if $6 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.AsSkippedTokens())
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$6})
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -747,14 +747,14 @@ mixed_group_use_declaration:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $3.HiddenTokens)
                 if $5 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.AsSkippedTokens())
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$5})
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
                 }
                 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -781,16 +781,16 @@ mixed_group_use_declaration:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $4.HiddenTokens)
                 if $6 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.AsSkippedTokens())
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, []scanner.Token{*$6})
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
                 }
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -815,7 +815,7 @@ inline_use_declarations:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -835,7 +835,7 @@ unprefixed_use_declarations:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -855,7 +855,7 @@ use_declarations:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -936,8 +936,8 @@ unprefixed_use_declaration:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenNameParts[0], nameNodeID)
-                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(nameNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(aliasNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -959,8 +959,8 @@ use_declaration:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSlash, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -973,7 +973,7 @@ const_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1055,11 +1055,11 @@ inner_statement:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupHaltCompiller, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupHaltCompiller, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupOpenParenthesisToken, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1077,8 +1077,8 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1105,9 +1105,9 @@ statement:
                 $$ = $5
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupWhile, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupWhile, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1122,12 +1122,12 @@ statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeCond, $5)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupWhile, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $7.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $7.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupWhile, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $7.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$7})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1144,11 +1144,11 @@ statement:
                 $$ = $9
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFor, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupInitExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCondExpr, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIncExpr, $8.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFor, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupInitExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCondExpr, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIncExpr, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1163,9 +1163,9 @@ statement:
                 $$ = $5
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSwitch, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSwitch, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1179,9 +1179,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1195,9 +1195,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1211,9 +1211,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1229,9 +1229,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1247,9 +1247,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1265,10 +1265,10 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExprs, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEcho, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEcho, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1280,7 +1280,7 @@ statement:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1295,8 +1295,8 @@ statement:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $2.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1312,17 +1312,17 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUnset, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUnset, $2.HiddenTokens)
                 if $4 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.AsSkippedTokens())
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, []scanner.Token{*$4})
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $6.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCloseParenthesisToken, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$6})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1338,10 +1338,10 @@ statement:
                 $$ = $7
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupForeach, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $6.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $6.HiddenTokens)
 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -1359,11 +1359,11 @@ statement:
                 $$ = $9
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupForeach, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupKey, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $8.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupForeach, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupKey, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1381,9 +1381,9 @@ statement:
 
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDeclare, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupConstList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDeclare, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupConstList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1395,8 +1395,8 @@ statement:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1422,9 +1422,9 @@ statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTry, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTry, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1438,9 +1438,9 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1459,10 +1459,10 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLabel, LableNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(LableNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLabel, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(LableNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLabel, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1481,8 +1481,8 @@ statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeLabelName, LableNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLabel, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLabel, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1519,13 +1519,12 @@ catch_list:
                 yylex.(*Parser).list.add(catchNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCatch, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupVar, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCond, $7.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStmts, $9.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCatch, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupVar, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupCond, $7.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(catchNodeID, ast.TokenGroupStmts, $9.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1544,7 +1543,7 @@ catch_name_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1567,9 +1566,9 @@ finally_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFinally, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFinally, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1589,7 +1588,7 @@ unset_variables:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1630,15 +1629,15 @@ function_declaration_statement:
 
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
                 if $2 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $2.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
                 } 
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParamList, $7.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $9.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $11.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParamList, $7.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $9.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $11.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1690,10 +1689,10 @@ class_declaration_statement:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], $$)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $7.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $9.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $7.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $9.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1715,10 +1714,10 @@ class_declaration_statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $8.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1749,7 +1748,7 @@ class_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1761,7 +1760,7 @@ class_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1784,10 +1783,10 @@ trait_declaration_statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $6.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1811,10 +1810,10 @@ interface_declaration_statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $7.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1837,7 +1836,7 @@ extends_from:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClassName, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1862,7 +1861,7 @@ interface_extends_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1887,7 +1886,7 @@ implements_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1910,7 +1909,7 @@ foreach_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1924,9 +1923,9 @@ foreach_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupList, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1940,8 +1939,8 @@ foreach_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save tokensc
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1978,10 +1977,10 @@ for_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2018,10 +2017,10 @@ foreach_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2058,10 +2057,10 @@ declare_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2086,8 +2085,8 @@ switch_case_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2109,10 +2108,10 @@ switch_case_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2135,10 +2134,10 @@ switch_case_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2161,12 +2160,12 @@ switch_case_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $5.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$5})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2193,9 +2192,9 @@ case_list:
                 yylex.(*Parser).list.add(caseNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(caseNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2213,9 +2212,9 @@ case_list:
                 yylex.(*Parser).list.add(defaultNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupDefault, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupDefault, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(defaultNodeID, ast.TokenGroupCaseSeparator, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2263,10 +2262,10 @@ while_statement:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2284,9 +2283,9 @@ if_stmt_without_else:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, $5)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIf, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIf, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2308,9 +2307,9 @@ if_stmt_without_else:
                 $$ = $1
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupElseIf, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupExpr, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupElseIf, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(elseIfNodeID, ast.TokenGroupExpr, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2339,7 +2338,7 @@ if_stmt:
 
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(elseNodeID, ast.TokenGroupStart, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(elseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2366,10 +2365,10 @@ alt_if_stmt_without_else:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeStmt, stmtListNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIf, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIf, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2395,10 +2394,10 @@ alt_if_stmt_without_else:
                 $$ = $1
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupElseIf, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupExpr, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, $6.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupElseIf, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupExpr, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(AltElseIfNodeID, ast.TokenGroupCond, $6.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2414,9 +2413,9 @@ alt_if_stmt:
                 $$ = $1
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2445,11 +2444,11 @@ alt_if_stmt:
                 $$ = $1
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupElse, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $6.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(AltElseNodeID, ast.TokenGroupElse, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAltEnd, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$6})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2482,7 +2481,7 @@ non_empty_parameter_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2532,14 +2531,14 @@ parameter:
 
                 // save tokens
 
-                tmp := [4][]scanner.SkippedToken{}
+                tmp := [4][]scanner.Token{}
                 if $2 != nil {
-                    tmp[1] = $2.SkippedTokens
+                    tmp[1] = $2.HiddenTokens
                 }
                 if $3 != nil {
-                    tmp[2] = $3.SkippedTokens
+                    tmp[2] = $3.HiddenTokens
                 }
-                tmp[3] = $4.SkippedTokens
+                tmp[3] = $4.HiddenTokens
 
                 if $3 == nil {
                     tmp[2] = tmp[3]
@@ -2569,7 +2568,6 @@ parameter:
                 if tmp[3] != nil {
                     yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
                 }
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2617,14 +2615,14 @@ parameter:
 
                 // save tokens
 
-                tmp := [4][]scanner.SkippedToken{}
+                tmp := [4][]scanner.Token{}
                 if $2 != nil {
-                    tmp[1] = $2.SkippedTokens
+                    tmp[1] = $2.HiddenTokens
                 }
                 if $3 != nil {
-                    tmp[2] = $3.SkippedTokens
+                    tmp[2] = $3.HiddenTokens
                 }
-                tmp[3] = $4.SkippedTokens
+                tmp[3] = $4.HiddenTokens
 
                 if $3 == nil {
                     tmp[2] = tmp[3]
@@ -2654,8 +2652,7 @@ parameter:
                 if tmp[3] != nil {
                     yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVariadic, tmp[3])
                 }
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2693,7 +2690,7 @@ type_expr:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2708,7 +2705,7 @@ type:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2720,7 +2717,7 @@ type:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2749,7 +2746,7 @@ return_type:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2764,8 +2761,8 @@ argument_list:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2781,12 +2778,12 @@ argument_list:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeArguments, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
                 if $3 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $3.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $3.AsSkippedTokens())
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $3.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, []scanner.Token{*$3})
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArgumentList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2806,7 +2803,7 @@ non_empty_argument_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2838,7 +2835,7 @@ argument:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2851,7 +2848,7 @@ global_var_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2880,7 +2877,7 @@ static_var_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2915,8 +2912,7 @@ static_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2942,9 +2938,8 @@ static_var:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2981,8 +2976,8 @@ class_statement:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupPropertyList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupPropertyList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3002,12 +2997,12 @@ class_statement:
                 // save tokens
                 if len(childrenModifiers) > 0 {
                     yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], $$)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $2.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $2.HiddenTokens)
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupConstList, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupConstList, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3024,7 +3019,7 @@ class_statement:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeTraits, childrenTraits...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3065,18 +3060,18 @@ class_statement:
                 // save tokens
                 if len(childrenModifiers) > 0 {
                     yylex.(*Parser).ast.MoveStartTokens(childrenModifiers[0], $$)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupModifierList, $2.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $2.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $2.HiddenTokens)
                 }
                 if $3 == nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $4.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $3.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $4.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $8.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3096,7 +3091,7 @@ name_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3111,8 +3106,8 @@ trait_adaptations:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -3125,8 +3120,8 @@ trait_adaptations:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAdaptationList, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAdaptationList, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3142,8 +3137,8 @@ trait_adaptations:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeAdaptations, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAdaptationList, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAdaptationList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3171,8 +3166,8 @@ trait_adaptation:
                 $$ = $1;
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNameList, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $2.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupNameList, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3181,8 +3176,8 @@ trait_adaptation:
                 $$ = $1;
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAlias, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $2.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAlias, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3203,7 +3198,7 @@ trait_precedence:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3227,8 +3222,8 @@ trait_alias:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3249,8 +3244,8 @@ trait_alias:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3272,8 +3267,8 @@ trait_alias:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3289,7 +3284,7 @@ trait_alias:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupRef, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3311,7 +3306,7 @@ trait_method_reference:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeMethod, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3341,8 +3336,8 @@ absolute_trait_method_reference:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3357,8 +3352,8 @@ method_body:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupSemiColon, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3374,8 +3369,8 @@ method_body:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, children...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3397,7 +3392,7 @@ variable_modifiers:
                 yylex.(*Parser).list.add(identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3441,7 +3436,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3453,7 +3448,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3465,7 +3460,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3477,7 +3472,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3489,7 +3484,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3501,7 +3496,7 @@ member_modifier:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3514,7 +3509,7 @@ property_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3549,8 +3544,7 @@ property:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3576,9 +3570,8 @@ property:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3591,7 +3584,7 @@ class_const_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3621,8 +3614,8 @@ class_const_decl:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3645,8 +3638,8 @@ const_decl:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3659,7 +3652,7 @@ echo_expr_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3701,7 +3694,7 @@ non_empty_for_exprs:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3728,9 +3721,9 @@ anonymous_class:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $8.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $8.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3753,7 +3746,7 @@ new_expr:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3767,7 +3760,7 @@ new_expr:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeClass, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3791,10 +3784,10 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $6)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3815,9 +3808,9 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeExpr, $5)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3833,7 +3826,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3849,8 +3842,8 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEqual, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEqual, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3864,7 +3857,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3880,7 +3873,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3896,7 +3889,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3912,7 +3905,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3928,7 +3921,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3944,7 +3937,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3960,7 +3953,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3976,7 +3969,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -3992,7 +3985,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4008,7 +4001,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4024,7 +4017,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4040,7 +4033,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4056,7 +4049,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4071,7 +4064,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4085,7 +4078,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4100,7 +4093,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4114,7 +4107,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4130,7 +4123,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4146,7 +4139,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4162,7 +4155,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4178,7 +4171,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4194,7 +4187,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4210,7 +4203,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4226,7 +4219,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4242,7 +4235,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4258,7 +4251,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4274,7 +4267,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4290,7 +4283,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4306,7 +4299,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4322,7 +4315,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4338,7 +4331,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4354,7 +4347,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4370,7 +4363,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4386,7 +4379,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4400,7 +4393,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4414,7 +4407,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4428,7 +4421,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4442,7 +4435,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4458,7 +4451,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4474,7 +4467,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4490,7 +4483,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4506,8 +4499,8 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEqual, $2.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEqual, []scanner.Token{*$2})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4523,7 +4516,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4539,7 +4532,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4555,7 +4548,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4571,7 +4564,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4587,7 +4580,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4603,7 +4596,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4612,10 +4605,10 @@ expr_without_variable:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4638,8 +4631,8 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTrue, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTrue, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4655,8 +4648,8 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTrue, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCond, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupTrue, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4672,7 +4665,7 @@ expr_without_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4692,8 +4685,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4707,8 +4700,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4722,8 +4715,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4737,8 +4730,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4752,8 +4745,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4767,8 +4760,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4782,8 +4775,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupCast, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4811,7 +4804,7 @@ expr_without_variable:
                 }
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4825,7 +4818,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4845,7 +4838,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4859,7 +4852,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4871,7 +4864,7 @@ expr_without_variable:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4885,7 +4878,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4900,8 +4893,8 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeVal, $4)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4915,7 +4908,7 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4938,16 +4931,16 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
                 
                 // // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
                 if $2 == nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $4.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $4.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $2.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $4.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $2.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $4.HiddenTokens)
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $9.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $11.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $9.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $11.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -4970,31 +4963,23 @@ expr_without_variable:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).list.pop()...)
                 
                 // // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStatic, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStatic, $2.HiddenTokens)
                 if $3 == nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $5.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $5.HiddenTokens)
                 } else {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $3.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $5.SkippedTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupFunction, $3.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupAmpersand, $5.HiddenTokens)
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $7.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $10.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $12.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupParameterList, $7.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupReturnType, $10.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStmts, $12.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
 ;
 
-backup_doc_comment:
-        /* empty */
-            {
-                // $$ = yylex.(*Parser).Lexer.GetPhpDocComment()
-                yylex.(*Parser).Lexer.SetPhpDocComment("")
-
-                yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
-            }
-;
+backup_doc_comment:;
 
 returns_ref:
         /* empty */
@@ -5024,9 +5009,9 @@ lexical_vars:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLexicalVarList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupUse, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupLexicalVarList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5039,7 +5024,7 @@ lexical_var_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5068,8 +5053,7 @@ lexical_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken($$)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5094,9 +5078,8 @@ lexical_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVar, varNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(varNodeID, ast.TokenGroupStart, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5131,7 +5114,7 @@ function_call:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5148,7 +5131,7 @@ function_call:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5178,7 +5161,7 @@ class_name:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5222,10 +5205,10 @@ exit_expr:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExit, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExit, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExit, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExit, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5282,9 +5265,9 @@ dereferencable_scalar:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArray, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArray, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5298,8 +5281,8 @@ dereferencable_scalar:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupArrayPairList, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5311,7 +5294,7 @@ dereferencable_scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5326,7 +5309,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5338,7 +5321,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5350,7 +5333,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5362,7 +5345,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5374,7 +5357,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5386,7 +5369,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5398,7 +5381,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5410,7 +5393,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5422,7 +5405,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5434,7 +5417,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5453,7 +5436,7 @@ scalar:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, stringPartNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5465,7 +5448,7 @@ scalar:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5479,7 +5462,7 @@ scalar:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5493,7 +5476,7 @@ scalar:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5543,8 +5526,8 @@ constant:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5565,8 +5548,8 @@ constant:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(identifierNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5623,10 +5606,10 @@ dereferencable:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5650,10 +5633,10 @@ callable_expr:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5684,10 +5667,10 @@ callable_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5703,10 +5686,10 @@ callable_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5722,10 +5705,10 @@ callable_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5742,7 +5725,7 @@ callable_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5779,7 +5762,7 @@ variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5801,8 +5784,7 @@ simple_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken($$)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5816,12 +5798,12 @@ simple_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDollar, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($3, ast.TokenGroupStart, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($3, ast.TokenGroupStart, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($3, ast.TokenGroupEnd, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($3, ast.TokenGroupEnd, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($3, ast.TokenGroupStart, []scanner.Token{*$2})
+                yylex.(*Parser).ast.PrependTokens($3, ast.TokenGroupStart, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($3, ast.TokenGroupEnd, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($3, ast.TokenGroupEnd, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5835,7 +5817,7 @@ simple_variable:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDollar, $1.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5854,7 +5836,7 @@ static_member:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5870,7 +5852,7 @@ static_member:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupName, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5895,10 +5877,10 @@ new_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5914,10 +5896,10 @@ new_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5933,7 +5915,7 @@ new_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5949,7 +5931,7 @@ new_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5965,7 +5947,7 @@ new_variable:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5980,7 +5962,7 @@ member_name:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5989,10 +5971,10 @@ member_name:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6013,7 +5995,7 @@ property_name:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6022,10 +6004,10 @@ property_name:
                 $$ = $2;
                 
                 // save tokens
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.PrependTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6068,7 +6050,7 @@ non_empty_array_pair_list:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6094,7 +6076,7 @@ array_pair:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6130,8 +6112,8 @@ array_pair:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(refNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(refNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6151,7 +6133,7 @@ array_pair:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVal, refNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6175,10 +6157,10 @@ array_pair:
 
                 // save tokens
                 yylex.(*Parser).ast.MoveStartTokens($1, $$)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupStart, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $6.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupStart, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $6.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6200,9 +6182,9 @@ array_pair:
                 // TODO: Cannot use list() as standalone expression
                 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6225,7 +6207,7 @@ encaps_list:
                 yylex.(*Parser).list.add(encapsNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6249,7 +6231,7 @@ encaps_list:
                 yylex.(*Parser).list.add($2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(encapsNodeID, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6271,8 +6253,7 @@ encaps_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken($$)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6298,11 +6279,10 @@ encaps_var:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$2})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$4})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6333,9 +6313,8 @@ encaps_var:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeProperty, propertyNameNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendDollarToken(varNodeID)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens(propertyNameNodeID, ast.TokenGroupStart, $3.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens(propertyNameNodeID, ast.TokenGroupStart, $3.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6349,9 +6328,9 @@ encaps_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6370,9 +6349,9 @@ encaps_var:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6398,13 +6377,13 @@ encaps_var:
                 yylex.(*Parser).ast.Children(prevNodeID, $$, ast.EdgeTypeDim, $4)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $3.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $5.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $5.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $6.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $6.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVar, []scanner.Token{*$3})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $5.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, []scanner.Token{*$5})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $6.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$6})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6413,9 +6392,9 @@ encaps_var:
                 $$ = $2;
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.AsSkippedTokens())
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.AsSkippedTokens())
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, $3.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEnd, []scanner.Token{*$3})
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6430,7 +6409,7 @@ encaps_var_offset:
                 })
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6451,7 +6430,7 @@ encaps_var_offset:
                 }
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6478,7 +6457,7 @@ encaps_var_offset:
                 }
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6497,8 +6476,7 @@ encaps_var_offset:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendDollarToken($$)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6515,13 +6493,13 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeVars, yylex.(*Parser).list.pop()...)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIsset, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupIsset, $2.HiddenTokens)
                 if $4 != nil {
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.SkippedTokens)
-                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.AsSkippedTokens())
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $4.HiddenTokens)
+                    yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, []scanner.Token{*$4})
                 }
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupVarList, $5.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6535,9 +6513,9 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEmpty, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEmpty, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6551,7 +6529,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6565,7 +6543,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6579,9 +6557,9 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEval, $2.SkippedTokens)
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupEval, $2.HiddenTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupExpr, $4.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6595,7 +6573,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6609,7 +6587,7 @@ internal_functions_in_yacc:
                 yylex.(*Parser).ast.Children(0, $$, ast.EdgeTypeExpr, $2)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -6629,7 +6607,7 @@ isset_variables:
                 yylex.(*Parser).list.add($3)
 
                 // save tokens
-                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.SkippedTokens)
+                yylex.(*Parser).ast.AppendTokens(prevNodeID, ast.TokenGroupEnd, $2.HiddenTokens)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

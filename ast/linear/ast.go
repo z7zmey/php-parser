@@ -97,7 +97,7 @@ func (a *AST) lastToken(nodeID NodeID) TokenID {
 	return tknID
 }
 
-func (a *AST) AppendTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.SkippedToken) {
+func (a *AST) AppendTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.Token) {
 	lastTokenID := a.lastToken(nodeID)
 
 	for _, str := range ffStrs {
@@ -124,7 +124,7 @@ func (a *AST) AppendTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner
 	}
 }
 
-func (a *AST) PrependTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.SkippedToken) {
+func (a *AST) PrependTokens(nodeID NodeID, group ast.TokenGroup, ffStrs []scanner.Token) {
 	node := a.Nodes.Get(nodeID)
 	firstTokenID := node.Tkn
 
@@ -191,62 +191,16 @@ func (a *AST) MoveStartTokens(src NodeID, dst NodeID) {
 	a.Tokens.Save(srcStartLastTknID, srcStartLastTkn)
 }
 
-func (a *AST) AppendDollarToken(nodeID NodeID) {
-	node := a.Nodes.Get(nodeID)
-	nodePos := a.Positions.Get(node.Pos)
-
-	tknPos := ast.Position{
-		PS: nodePos.PS,
-		PE: nodePos.PS + 1,
-		LS: nodePos.LS,
-		LE: nodePos.LS,
-	}
-	tknPosID := a.Positions.Create(tknPos)
-
-	token := Token{
-		Type:  ast.TokenTypeToken,
-		Group: ast.TokenGroupDollar,
-		Pos:   tknPosID,
-	}
-	tokenID := a.Tokens.Create(token)
-
-	lastTokenID := a.lastToken(nodeID)
-	if lastTokenID == 0 {
-		node.Tkn = tokenID
-		a.Nodes.Save(nodeID, node)
-	} else {
-		prevToken := a.Tokens.Get(lastTokenID)
-		prevToken.Next = tokenID
-		a.Tokens.Save(lastTokenID, prevToken)
-	}
-
-	a.lastTknCache = lastTknCache{
-		nodeID:  nodeID,
-		tokenID: lastTokenID,
-	}
-}
-
-func (a *AST) convertToken(skippedToken scanner.SkippedToken) Token {
-	var tknType ast.TokenType
-	switch skippedToken.Type {
-	case scanner.SkippedTokenTypeToken:
-		tknType = ast.TokenTypeToken
-	case scanner.SkippedTokenTypeWhitespace:
-		tknType = ast.TokenTypeWhitespace
-	case scanner.SkippedTokenTypeComment:
-		tknType = ast.TokenTypeComment
-	}
-
+func (a *AST) convertToken(token scanner.Token) Token {
 	pos := ast.Position{
-		PS: skippedToken.StartPos,
-		PE: skippedToken.EndPos,
-		LS: skippedToken.StartLine,
-		LE: skippedToken.EndLine,
+		PS: token.StartPos,
+		PE: token.EndPos,
+		LS: token.StartLine,
 	}
 	posID := a.Positions.Create(pos)
 
 	return Token{
-		Type: tknType,
+		Type: token.Type,
 		Pos:  posID,
 	}
 }

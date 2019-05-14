@@ -12,8 +12,6 @@ type Scanner interface {
 	Reset(data []byte)
 	Lex(lval Lval) int
 	ReturnTokenToPool(t *Token)
-	GetPhpDocComment() string
-	SetPhpDocComment(string)
 	GetErrors() []*errors.Error
 	AddError(e *errors.Error)
 	SetErrors(e []*errors.Error)
@@ -32,11 +30,10 @@ type Lexer struct {
 	top          int
 	heredocLabel []byte
 
-	TokenPool     *TokenPool
-	PhpDocComment string
-	lastToken     *Token
-	Errors        []*errors.Error
-	NewLines      NewLines
+	TokenPool *TokenPool
+	lastToken *Token
+	Errors    []*errors.Error
+	NewLines  NewLines
 }
 
 func (l *Lexer) Reset(data []byte) {
@@ -58,14 +55,6 @@ func (l *Lexer) ReturnTokenToPool(t *Token) {
 	l.TokenPool.Put(t)
 }
 
-func (l *Lexer) GetPhpDocComment() string {
-	return l.PhpDocComment
-}
-
-func (l *Lexer) SetPhpDocComment(s string) {
-	l.PhpDocComment = s
-}
-
 func (l *Lexer) GetErrors() []*errors.Error {
 	return l.Errors
 }
@@ -78,7 +67,8 @@ func (l *Lexer) SetErrors(e []*errors.Error) {
 	l.Errors = e
 }
 
-func (lex *Lexer) prepareToken(token *Token) *Token {
+func (lex *Lexer) prepareToken(token *Token, tokenType TokenType) *Token {
+	token.Type = tokenType
 	token.StartLine = lex.NewLines.GetLine(lex.ts)
 	token.EndLine = lex.NewLines.GetLine(lex.te - 1)
 	token.StartPos = lex.ts
@@ -87,8 +77,8 @@ func (lex *Lexer) prepareToken(token *Token) *Token {
 	return token
 }
 
-func (lex *Lexer) addSkippedToken(token *Token, t SkippedTokenType, ps, pe int) {
-	token.SkippedTokens = append(token.SkippedTokens, SkippedToken{
+func (lex *Lexer) addHiddenToken(token *Token, t TokenType, ps, pe int) {
+	token.HiddenTokens = append(token.HiddenTokens, Token{
 		Type:      t,
 		StartLine: lex.NewLines.GetLine(lex.ts),
 		EndLine:   lex.NewLines.GetLine(lex.te - 1),

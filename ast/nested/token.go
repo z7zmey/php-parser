@@ -3,11 +3,11 @@ package nested
 import (
 	"encoding/json"
 
-	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/scanner"
 )
 
 type Token struct {
-	Type  ast.TokenType
+	Type  scanner.TokenType
 	Value string
 }
 

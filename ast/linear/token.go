@@ -1,11 +1,14 @@
 package linear
 
-import "github.com/z7zmey/php-parser/ast"
+import (
+	"github.com/z7zmey/php-parser/ast"
+	"github.com/z7zmey/php-parser/scanner"
+)
 
 type TokenID int32
 
 type Token struct {
-	Type  ast.TokenType
+	Type  scanner.TokenType
 	Group ast.TokenGroup
 	Next  TokenID
 	Pos   PositionID

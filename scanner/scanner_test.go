@@ -213,10 +213,10 @@ func TestTokens(t *testing.T) {
 
 	expected := []string{
 		T_INLINE_HTML.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 		T_INLINE_HTML.String(),
 		T_ECHO.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 		T_INLINE_HTML.String(),
 
 		T_DNUMBER.String(),
@@ -345,32 +345,32 @@ func TestTokens(t *testing.T) {
 		T_SR.String(),
 		T_COALESCE.String(),
 
-		TokenID(int(';')).String(),
-		TokenID(int(':')).String(),
-		TokenID(int(',')).String(),
-		TokenID(int('.')).String(),
-		TokenID(int('[')).String(),
-		TokenID(int(']')).String(),
-		TokenID(int('(')).String(),
-		TokenID(int(')')).String(),
-		TokenID(int('|')).String(),
-		TokenID(int('/')).String(),
-		TokenID(int('^')).String(),
-		TokenID(int('&')).String(),
-		TokenID(int('+')).String(),
-		TokenID(int('-')).String(),
-		TokenID(int('*')).String(),
-		TokenID(int('=')).String(),
-		TokenID(int('%')).String(),
-		TokenID(int('!')).String(),
-		TokenID(int('~')).String(),
-		TokenID(int('$')).String(),
-		TokenID(int('<')).String(),
-		TokenID(int('>')).String(),
-		TokenID(int('?')).String(),
-		TokenID(int('@')).String(),
-		TokenID(int('{')).String(),
-		TokenID(int('}')).String(),
+		TokenType(int(';')).String(),
+		TokenType(int(':')).String(),
+		TokenType(int(',')).String(),
+		TokenType(int('.')).String(),
+		TokenType(int('[')).String(),
+		TokenType(int(']')).String(),
+		TokenType(int('(')).String(),
+		TokenType(int(')')).String(),
+		TokenType(int('|')).String(),
+		TokenType(int('/')).String(),
+		TokenType(int('^')).String(),
+		TokenType(int('&')).String(),
+		TokenType(int('+')).String(),
+		TokenType(int('-')).String(),
+		TokenType(int('*')).String(),
+		TokenType(int('=')).String(),
+		TokenType(int('%')).String(),
+		TokenType(int('!')).String(),
+		TokenType(int('~')).String(),
+		TokenType(int('$')).String(),
+		TokenType(int('<')).String(),
+		TokenType(int('>')).String(),
+		TokenType(int('?')).String(),
+		TokenType(int('@')).String(),
+		TokenType(int('{')).String(),
+		TokenType(int('}')).String(),
 
 		T_VARIABLE.String(),
 		T_STRING.String(),
@@ -408,7 +408,7 @@ func TestTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -455,7 +455,7 @@ func TestSingleQuoteStringTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -479,58 +479,58 @@ func TestTeplateStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('"')).String(),
+		TokenType(int('}')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_DOLLAR_OPEN_CURLY_BRACES.String(),
 		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('"')).String(),
+		TokenType(int('}')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 	}
 
 	lexer := NewLexer([]byte(src))
@@ -544,7 +544,7 @@ func TestTeplateStringTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -565,58 +565,58 @@ func TestBackquoteStringTokens(t *testing.T) {
 	`
 
 	expected := []string{
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('`')).String(),
+		TokenType(int('}')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_DOLLAR_OPEN_CURLY_BRACES.String(),
 		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
-		TokenID(int('`')).String(),
+		TokenType(int('}')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('`')).String(),
+		TokenType(int('`')).String(),
 	}
 
 	lexer := NewLexer([]byte(src))
@@ -630,7 +630,7 @@ func TestBackquoteStringTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -664,12 +664,12 @@ CAT;
 		T_START_HEREDOC.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 
 		T_START_HEREDOC.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 
 		T_START_HEREDOC.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
@@ -678,40 +678,40 @@ CAT;
 		T_STRING.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
+		TokenType(int(']')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
+		TokenType(int(']')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_NUM_STRING.String(),
-		TokenID(int(']')).String(),
+		TokenType(int(']')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_STRING.String(),
-		TokenID(int(']')).String(),
+		TokenType(int(']')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_VARIABLE.String(),
-		TokenID(int(']')).String(),
+		TokenType(int(']')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_DOLLAR_OPEN_CURLY_BRACES.String(),
 		T_STRING_VARNAME.String(),
-		TokenID(int('}')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 	}
 
 	lexer := NewLexer([]byte(src))
@@ -725,7 +725,7 @@ CAT;
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -759,27 +759,27 @@ CAT
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 
 		T_START_HEREDOC.String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
-
-		T_START_HEREDOC.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_VARIABLE.String(),
-		T_ENCAPSED_AND_WHITESPACE.String(),
-		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 
 		T_START_HEREDOC.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
+
+		T_START_HEREDOC.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_VARIABLE.String(),
+		T_ENCAPSED_AND_WHITESPACE.String(),
+		T_END_HEREDOC.String(),
+		TokenType(int(';')).String(),
 
 		T_START_HEREDOC.String(),
 		T_VARIABLE.String(),
@@ -799,7 +799,7 @@ CAT
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -819,13 +819,13 @@ CAT;
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_CURLY_OPEN.String(),
 		T_VARIABLE.String(),
-		TokenID(int('[')).String(),
+		TokenType(int('[')).String(),
 		T_CONSTANT_ENCAPSED_STRING.String(),
-		TokenID(int(']')).String(),
-		TokenID(int('}')).String(),
+		TokenType(int(']')).String(),
+		TokenType(int('}')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_END_HEREDOC.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 	}
 
 	lexer := NewLexer([]byte(src))
@@ -839,7 +839,7 @@ CAT;
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -853,11 +853,11 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 
 	expected := []string{
 		T_VARIABLE.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 		T_INLINE_HTML.String(),
 
 		T_VARIABLE.String(),
-		TokenID(int(';')).String(),
+		TokenType(int(';')).String(),
 		T_INLINE_HTML.String(),
 	}
 
@@ -872,7 +872,7 @@ func TestInlineHtmlNopTokens(t *testing.T) {
 			break
 		}
 
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -882,11 +882,11 @@ func TestStringTokensAfterVariable(t *testing.T) {
 	src := `<?php "test \"$var\""`
 
 	expected := []string{
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
 		T_VARIABLE.String(),
 		T_ENCAPSED_AND_WHITESPACE.String(),
-		TokenID(int('"')).String(),
+		TokenType(int('"')).String(),
 	}
 
 	expectedTokens := []string{
@@ -909,7 +909,7 @@ func TestStringTokensAfterVariable(t *testing.T) {
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)
@@ -921,7 +921,7 @@ func TestSlashAfterVariable(t *testing.T) {
 
 	expected := []string{
 		T_VARIABLE.String(),
-		TokenID(int('/')).String(),
+		TokenType(int('/')).String(),
 		T_LNUMBER.String(),
 	}
 
@@ -943,7 +943,7 @@ func TestSlashAfterVariable(t *testing.T) {
 		}
 
 		actualTokens = append(actualTokens, lv.Tkn.Value)
-		actual = append(actual, TokenID(token).String())
+		actual = append(actual, TokenType(token).String())
 	}
 
 	assert.DeepEqual(t, expected, actual)

@@ -1,10 +1,10 @@
 package scanner
 
-type TokenID int
+type TokenType int
 
-//go:generate stringer -type=TokenID -output ./tokenid_string.go
+//go:generate stringer -type=TokenType -output ./tokentype_string.go
 const (
-	T_INCLUDE TokenID = iota + 57346
+	T_INCLUDE TokenType = iota + 57346
 	T_INCLUDE_ONCE
 	T_EXIT
 	T_IF

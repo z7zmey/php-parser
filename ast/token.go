@@ -1,14 +1,5 @@
 package ast
 
-type TokenType uint8
-
-//go:generate stringer -type=TokenType -trimprefix=TokenType -output ./tokentype_string.go
-const (
-	TokenTypeComment TokenType = iota
-	TokenTypeWhitespace
-	TokenTypeToken
-)
-
 type TokenGroup uint8
 
 //go:generate stringer -type=TokenGroup -trimprefix=TokenGroup -output ./tokengroup_string.go
