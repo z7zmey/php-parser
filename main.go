@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -17,9 +16,7 @@ import (
 	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/ast/linear"
 	"github.com/z7zmey/php-parser/parser"
-	"github.com/z7zmey/php-parser/php7"
-	"github.com/z7zmey/php-parser/printer"
-	"github.com/z7zmey/php-parser/visitor"
+	"github.com/z7zmey/php-parser/parser/php7"
 )
 
 var wg sync.WaitGroup
@@ -108,7 +105,7 @@ func processPath(pathList []string, fileCh chan<- *file) {
 func parserWorker(fileCh <-chan *file, r chan<- result) {
 	var parserWorker parser.Parser
 
-	parserWorker = php7.NewParser(nil)
+	parserWorker = php7.NewParser()
 
 	for {
 		f, ok := <-fileCh
@@ -153,20 +150,20 @@ func printerWorker(r <-chan result) {
 			fmt.Println(e)
 		}
 
-		if *printBack {
-			o := bytes.NewBuffer([]byte{})
-			p := printer.NewPrinter(o)
-			p.Print(res.parser.GetRootNode())
+		// if *printBack {
+		// 	o := bytes.NewBuffer([]byte{})
+		// 	p := printer.NewPrinter(o)
+		// 	p.Print(res.parser.GetRootNode())
 
-			err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
-			checkErr(err)
-		}
+		// 	err := ioutil.WriteFile(res.path, o.Bytes(), 0644)
+		// 	checkErr(err)
+		// }
 
-		var nsResolver *visitor.NamespaceResolver
-		if *showResolvedNs {
-			nsResolver = visitor.NewNamespaceResolver()
-			res.parser.GetRootNode().Walk(nsResolver)
-		}
+		// var nsResolver *visitor.NamespaceResolver
+		// if *showResolvedNs {
+		// 	nsResolver = visitor.NewNamespaceResolver()
+		// 	res.parser.GetRootNode().Walk(nsResolver)
+		// }
 
 		if *dump {
 			buf, err := json.MarshalIndent(res.ast.Nested(), "", "  ")

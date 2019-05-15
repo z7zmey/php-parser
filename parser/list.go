@@ -1,4 +1,4 @@
-package php7
+package parser
 
 import (
 	"github.com/z7zmey/php-parser/ast/linear"
@@ -14,19 +14,19 @@ func (s *stackedNodeList) Reset() {
 	s.stack = s.stack[:0]
 }
 
-func (s *stackedNodeList) add(n linear.NodeID) {
+func (s *stackedNodeList) Add(n linear.NodeID) {
 	s.list = append(s.list, n)
 }
 
-func (s *stackedNodeList) push() {
+func (s *stackedNodeList) Push() {
 	s.stack = append(s.stack, len(s.list))
 }
 
-func (s *stackedNodeList) last() linear.NodeID {
+func (s *stackedNodeList) Last() linear.NodeID {
 	return s.list[len(s.list)-1]
 }
 
-func (s *stackedNodeList) pop() []linear.NodeID {
+func (s *stackedNodeList) Pop() []linear.NodeID {
 	p := 0
 	if len(s.stack) > 0 {
 		p = s.stack[len(s.stack)-1]

@@ -16,7 +16,7 @@ import (
 	"github.com/z7zmey/php-parser/node/name"
 	"github.com/z7zmey/php-parser/node/scalar"
 	"github.com/z7zmey/php-parser/node/stmt"
-	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/parser/php7"
 	"github.com/z7zmey/php-parser/position"
 )
 
@@ -16120,12 +16120,12 @@ func TestPhp7(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser()
 	php7parser.Parse([]byte(src), &linear.AST{
 		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
-	actual := php7parser.GetRootNode()
+	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -16238,12 +16238,12 @@ func TestPhp5Strings(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser()
 	php7parser.Parse([]byte(src), &linear.AST{
 		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
-	actual := php7parser.GetRootNode()
+	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -16431,12 +16431,12 @@ CAD;
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser()
 	php7parser.Parse([]byte(src), &linear.AST{
 		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
 	})
-	actual := php7parser.GetRootNode()
+	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
 
@@ -16454,7 +16454,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 		},
 	}
 
-	php7parser := php7.NewParser([]byte(src))
+	php7parser := php7.NewParser()
 	php7parser.Parse([]byte(src), &linear.AST{
 		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),

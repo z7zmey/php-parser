@@ -5,7 +5,7 @@ import (
 
 	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/ast/linear"
-	"github.com/z7zmey/php-parser/php7"
+	"github.com/z7zmey/php-parser/parser/php7"
 )
 
 var src = `<?
@@ -382,7 +382,7 @@ CAD;
 	`
 
 func BenchmarkPhp7(b *testing.B) {
-	php7parser := php7.NewParser(nil)
+	php7parser := php7.NewParser()
 
 	for n := 0; n < b.N; n++ {
 		a := &linear.AST{
@@ -395,7 +395,7 @@ func BenchmarkPhp7(b *testing.B) {
 }
 
 func BenchmarkPhp7Reuse(b *testing.B) {
-	php7parser := php7.NewParser(nil)
+	php7parser := php7.NewParser()
 	a := &linear.AST{
 		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
 		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
