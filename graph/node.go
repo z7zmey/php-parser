@@ -1,21 +1,38 @@
-package linear
+package graph
 
-import "github.com/z7zmey/php-parser/ast"
+import (
+	"encoding/json"
+
+	"github.com/z7zmey/php-parser/ast"
+)
+
+var EdgeTypeNode = NewEdgeType("node")
 
 type NodeID uint32
 
 type Node struct {
-	Type ast.NodeType
-	Flag ast.NodeFlag
+	Type  ast.NodeType
+	Flag  ast.NodeFlag
+	Group ast.NodeGroup
 
-	Parent NodeID
-	Child  NodeID
-	Next   NodeID
+	Edge EdgeID
+}
 
-	Key ast.EdgeType
+type node struct {
+	Type  string
+	Group string
 
-	Pos PositionID
-	Tkn TokenID
+	Edge EdgeID
+}
+
+func (n Node) MarshalJSON() ([]byte, error) {
+	out := node{
+		Type:  n.Type.String(),
+		Group: n.Group.String(),
+		Edge:  n.Edge,
+	}
+
+	return json.Marshal(out)
 }
 
 // NodeStorage store nodes

@@ -1,9 +1,11 @@
-package linear
+package graph
 
 import (
 	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/scanner"
 )
+
+var EdgeTypeToken = NewEdgeType("token")
 
 type TokenID int32
 

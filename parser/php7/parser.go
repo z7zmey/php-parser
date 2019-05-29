@@ -1,7 +1,7 @@
 package php7
 
 import (
-	"github.com/z7zmey/php-parser/ast/linear"
+	"github.com/z7zmey/php-parser/graph"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/scanner"
 )
@@ -33,7 +33,7 @@ func (p *Parser) Lex(lval *yySymType) int {
 }
 
 // Parse the php7 Parser entrypoint
-func (p *Parser) Parse(src []byte, a *linear.AST) int {
+func (p *Parser) Parse(src []byte, a *graph.AST) int {
 	p.AbstractParser.Reset(src, a)
 	return p.yyParserImpl.Parse(p)
 }

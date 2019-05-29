@@ -1,5 +1,9 @@
 package ast
 
+import (
+	"encoding/json"
+)
+
 type NodeFlag uint8
 
 //go:generate stringer -type=NodeFlag -trimprefix=NodeFlag -output ./nodeflag_string.go
@@ -219,4 +223,128 @@ const (
 
 func (nt NodeType) Is(nct NodeClassType) bool {
 	return uint16(nt)&uint16(nct) == uint16(nct)
+}
+
+type NodeGroupFlag uint8
+
+const NodeGroupFlagMultiple NodeGroupFlag = 1 << 7
+
+type NodeGroup uint8
+
+//go:generate stringer -type=NodeGroup -trimprefix=NodeGroup -output ./nodegroup_string.go
+const (
+	NodeGroupNil NodeGroup = iota
+	NodeGroupExpr
+	NodeGroupVarType
+	NodeGroupVar
+	NodeGroupDefaultValue
+	NodeGroupStmt
+	NodeGroupElseIf
+	NodeGroupMethodName
+	NodeGroupReturnType
+	NodeGroupClassName
+	NodeGroupExtends
+	NodeGroupImplements
+	NodeGroupConstantName
+	NodeGroupKey
+	NodeGroupFunctionName
+	NodeGroupLabel
+	NodeGroupUseType
+	NodeGroupPrefix
+	NodeGroupInterfaceName
+	NodeGroupLabelName
+	NodeGroupNamespaceName
+	NodeGroupCaseList
+	NodeGroupTrait
+	NodeGroupMethod
+	NodeGroupRef
+	NodeGroupModifier
+	NodeGroupAlias
+	NodeGroupTraitAdaptationList
+	NodeGroupTraitName
+	NodeGroupFinally
+	NodeGroupUse
+	NodeGroupLeft
+	NodeGroupRight
+	NodeGroupDim
+	NodeGroupVal
+	NodeGroupClass
+	NodeGroupClosureUse
+	NodeGroupConstant
+	NodeGroupFunction
+	NodeGroupProperty
+	NodeGroupCall
+	NodeGroupIfTrue
+	NodeGroupIfFalse
+	NodeGroupVarName
+
+	NodeGroupStmts NodeGroup = iota | NodeGroup(NodeGroupFlagMultiple)
+	NodeGroupParts
+	NodeGroupUses
+	NodeGroupConsts
+	NodeGroupUseList
+	NodeGroupLoop
+	NodeGroupCond
+	NodeGroupInit
+	NodeGroupVars
+	NodeGroupExprs
+	NodeGroupCatches
+	NodeGroupTypes
+	NodeGroupParams
+	NodeGroupModifiers
+	NodeGroupInterfaceNames
+	NodeGroupItems
+	NodeGroupCases
+	NodeGroupArguments
+	NodeGroupProperties
+	NodeGroupTraits
+	NodeGroupAdaptations
+	NodeGroupInsteadof
+	NodeGroupArgumentList
+	NodeGroupElse
+)
+
+func (et NodeGroup) Is(ect EdgeClassType) bool {
+	return uint8(et)&uint8(ect) == uint8(ect)
+}
+
+type Node struct {
+	Type     NodeType
+	Flags    NodeFlag
+	Position Position
+	Children map[NodeGroup][]Node
+	Tokens   map[TokenGroup][]Token
+	Value    string
+}
+
+type node struct {
+	Type     string             `json:"type"`
+	Flags    []string           `json:"flags"`
+	Value    string             `json:"value"`
+	Position Position           `json:"position"`
+	Tokens   map[string][]Token `json:"tokens"`
+	Children map[string][]Node  `json:"children"`
+}
+
+func (n Node) MarshalJSON() ([]byte, error) {
+	children := map[string][]Node{}
+	for k, v := range n.Children {
+		children[k.String()] = v
+	}
+
+	tokens := map[string][]Token{}
+	for k, v := range n.Tokens {
+		tokens[k.String()] = v
+	}
+
+	out := node{
+		Type:     n.Type.String(),
+		Flags:    n.Flags.GetFlagNames(),
+		Value:    n.Value,
+		Position: n.Position,
+		Tokens:   tokens,
+		Children: children,
+	}
+
+	return json.Marshal(out)
 }

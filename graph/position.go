@@ -1,6 +1,8 @@
-package linear
+package graph
 
 import "github.com/z7zmey/php-parser/ast"
+
+var EdgeTypePosition = NewEdgeType("position")
 
 type PositionID uint32
 

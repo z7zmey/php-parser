@@ -13,8 +13,7 @@ import (
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
-	"github.com/z7zmey/php-parser/ast"
-	"github.com/z7zmey/php-parser/ast/linear"
+	"github.com/z7zmey/php-parser/graph"
 	"github.com/z7zmey/php-parser/parser"
 	"github.com/z7zmey/php-parser/parser/php7"
 )
@@ -35,7 +34,7 @@ type file struct {
 type result struct {
 	path   string
 	parser parser.Parser
-	ast    *linear.AST
+	ast    *graph.AST
 }
 
 func main() {
@@ -119,10 +118,11 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		// 	parserWorker = php7.NewParser(f.content)
 		// }
 
-		abstractSyntaxTree := &linear.AST{
-			Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
-			Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
-			Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
+		abstractSyntaxTree := &graph.AST{
+			Nodes:     &graph.NodeStorage{},
+			Edges:     &graph.EdgeStorage{},
+			Positions: &graph.PositionStorage{},
+			Tokens:    &graph.TokenStorage{},
 		}
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)

@@ -6,14 +6,14 @@ import (
     "strconv"
 
     "github.com/z7zmey/php-parser/ast"
-    "github.com/z7zmey/php-parser/ast/linear"
+    "github.com/z7zmey/php-parser/graph"
     "github.com/z7zmey/php-parser/scanner"
 )
 
 %}
 
 %union{
-    node  linear.NodeID
+    node  graph.NodeID
     token *scanner.Token
 }
 
@@ -272,11 +272,11 @@ start:
         top_statement_list
             {
                 children := yylex.(*Parser).List.Pop()
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeRoot,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
-                yylex.(*Parser).Children(0, nodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nodeID, ast.NodeGroupStmts, children...)
 
                 yylex.(*Parser).Ast.RootNode = nodeID
 
@@ -342,10 +342,10 @@ top_statement_list:
 namespace_name:
         T_STRING
             {
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameNamePart,
-                    Pos: yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 yylex.(*Parser).List.Push()
                 yylex.(*Parser).List.Add(nodeID)
@@ -358,10 +358,10 @@ namespace_name:
     |   namespace_name T_NS_SEPARATOR T_STRING
             {
                 prevNodeID := yylex.(*Parser).List.Last()
-                nodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameNamePart,
-                    Pos: yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 yylex.(*Parser).List.Add(nodeID)
 
                 // save tokens
@@ -376,11 +376,11 @@ name:
         namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(children[0], $$)
@@ -390,11 +390,11 @@ name:
     | T_NAMESPACE T_NS_SEPARATOR namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameRelative,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($1, children),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -405,11 +405,11 @@ name:
     | T_NS_SEPARATOR namespace_name
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameFullyQualified,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($1, children),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -458,10 +458,10 @@ top_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtHaltCompiler,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -477,18 +477,18 @@ top_statement:
                 children := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, children...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, children...)
 
                 // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNamespace,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeNamespaceName, nameNodeID)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupNamespaceName, nameNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(children[0], nameNodeID)
@@ -504,19 +504,19 @@ top_statement:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create Namespace Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNamespace,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $5),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeNamespaceName, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupNamespaceName, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, childrenStmts...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -529,11 +529,11 @@ top_statement:
     |   T_NAMESPACE '{' top_statement_list '}'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNamespace,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -544,11 +544,8 @@ top_statement:
             }
     |   T_USE mixed_group_use_declaration ';'
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($2)
-                node.Pos = yylex.(*Parser).NewTokensPosition($1, $3)
-                yylex.(*Parser).Ast.Nodes.Save($2, node)
-
                 $$ = $2
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -559,11 +556,8 @@ top_statement:
             }
     |   T_USE use_type group_use_declaration ';'
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($2)
-                node.Pos = yylex.(*Parser).NewTokensPosition($1, $4)
-                yylex.(*Parser).Ast.Nodes.Save($2, node)
-
-                yylex.(*Parser).Children(0, $3, ast.EdgeTypeUseType, $2)
+                yylex.(*Parser).SavePosition($2, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                yylex.(*Parser).Children(0, $3, ast.NodeGroupUseType, $2)
                 
                 $$ = $3
 
@@ -577,11 +571,11 @@ top_statement:
     |   T_USE use_declarations ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtUseList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeUses, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUses, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -593,12 +587,12 @@ top_statement:
     |   T_USE use_type use_declarations ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtUseList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeUseType, $2)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeUses, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUseType, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUses, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -610,11 +604,11 @@ top_statement:
     |   T_CONST const_list ';'
             {
                 children := yylex.(*Parser).List.Pop()
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtConstList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeConsts, children...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -628,10 +622,10 @@ top_statement:
 use_type:
         T_FUNCTION
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -640,10 +634,10 @@ use_type:
             }
     |   T_CONST
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -659,19 +653,19 @@ group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGroupUse,
-                    Pos:  yylex.(*Parser).NewNodeListTokenPosition(childrenNameParts, $6),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupPrefix, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUseList, childrenUseDeclarations...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -693,19 +687,19 @@ group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGroupUse,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $7),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupPrefix, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUseList, childrenUseDeclarations...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -731,19 +725,19 @@ mixed_group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGroupUse,
-                    Pos:  yylex.(*Parser).NewNodeListTokenPosition(childrenNameParts, $6),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$6}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupPrefix, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUseList, childrenUseDeclarations...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -765,19 +759,19 @@ mixed_group_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create GroupUse Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGroupUse,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $7),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypePrefix, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeUseList, childrenUseDeclarations...)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupPrefix, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupUseList, childrenUseDeclarations...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -877,7 +871,7 @@ inline_use_declaration:
             }
     |   use_type unprefixed_use_declaration
             {
-                yylex.(*Parser).Children(0, $2, ast.EdgeTypeUseType, $1)
+                yylex.(*Parser).Children(0, $2, ast.NodeGroupUseType, $1)
                 
                 $$ = $2
 
@@ -891,18 +885,18 @@ unprefixed_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // Create Use Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtUse,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeUse, nameNodeID)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -914,25 +908,25 @@ unprefixed_use_declaration:
                 childrenNameParts := yylex.(*Parser).List.Pop()
 
                 // Create Name Node
-                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                nameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNameName,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(childrenNameParts),
                 })
-                yylex.(*Parser).Children(0, nameNodeID, ast.EdgeTypeParts, childrenNameParts...)
+                yylex.(*Parser).SavePosition(nameNodeID, yylex.(*Parser).NewPosition(childrenNameParts, nil, nil))
+                yylex.(*Parser).Children(0, nameNodeID, ast.NodeGroupParts, childrenNameParts...)
 
                 // create Alias Node
-                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                aliasNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(aliasNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
                 // Create Use Node
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtUse,
-                    Pos:  yylex.(*Parser).NewNodeListTokenPosition(childrenNameParts, $3),
                 })
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeUse, nameNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeAlias, aliasNodeID)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenNameParts, []*scanner.Token{$3}, nil))
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupUse, nameNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, aliasNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenNameParts[0], nameNodeID)
@@ -949,7 +943,9 @@ use_declaration:
                 $$ = $1
 
                 // save tokens
-                useNodeID := yylex.(*Parser).Ast.Nodes.Get($1).Child
+                edgeID := yylex.(*Parser).Ast.Nodes.Get($1).Edge
+                edges := yylex.(*Parser).Ast.Edges.Get(edgeID, graph.EdgeTypeNode)
+                useNodeID := graph.NodeID(edges[0].Target)
                 yylex.(*Parser).MoveStartTokens(useNodeID, $$)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
@@ -1049,10 +1045,10 @@ inner_statement:
             }
     |   T_HALT_COMPILER '(' ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtHaltCompiler,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1069,12 +1065,12 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1096,13 +1092,10 @@ statement:
             }
     |   T_WHILE '(' expr ')' while_statement
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($5)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $5)
-                yylex.(*Parser).Ast.Nodes.Save($5, node)
-
-                yylex.(*Parser).Children(0, $5, ast.EdgeTypeCond, $3)
-
                 $$ = $5
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $3)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1113,13 +1106,13 @@ statement:
             }
     |   T_DO statement T_WHILE '(' expr ')' ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtDo,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $7),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
                 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, $2)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeCond, $5)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCond, $5)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1133,15 +1126,12 @@ statement:
             }
     |   T_FOR '(' for_exprs ';' for_exprs ';' for_exprs ')' for_statement
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($9)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $9)
-                yylex.(*Parser).Ast.Nodes.Save($9, node)
-
-                prevNodeID := yylex.(*Parser).Children(0, $9, ast.EdgeTypeLoop, yylex.(*Parser).List.Pop()...)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $9, ast.EdgeTypeCond, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $9, ast.EdgeTypeInit, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $9, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupInit, yylex.(*Parser).List.Pop()...)
 
                 $$ = $9
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$9}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1154,13 +1144,10 @@ statement:
             }
     |   T_SWITCH '(' expr ')' switch_case_list
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($5)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $5)
-                yylex.(*Parser).Ast.Nodes.Save($5, node)
-
-                yylex.(*Parser).Children(0, $5, ast.EdgeTypeCond, $3)
-
                 $$ = $5
+
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $3)
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1171,12 +1158,12 @@ statement:
             }
     |   T_BREAK optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtBreak,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1187,12 +1174,12 @@ statement:
             }
     |   T_CONTINUE optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtContinue,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1203,12 +1190,12 @@ statement:
             }
     |   T_RETURN optional_expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtReturn,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1221,12 +1208,12 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGlobal,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1239,12 +1226,12 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStatic,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1257,12 +1244,12 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtEcho,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExprs, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExprs, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1274,10 +1261,10 @@ statement:
             }
     |   T_INLINE_HTML
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtInlineHtml,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1286,12 +1273,13 @@ statement:
             }
     |   expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                tmp := $1
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtExpression,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVars, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, tmp)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -1304,12 +1292,12 @@ statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtUnset,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $6),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVars, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1328,14 +1316,11 @@ statement:
             }
     |   T_FOREACH '(' expr T_AS foreach_variable ')' foreach_statement
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($7)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $7)
-                yylex.(*Parser).Ast.Nodes.Save($7, node)
-
-                prevNodeID := yylex.(*Parser).Children(0, $7, ast.EdgeTypeExpr, $3)
-                yylex.(*Parser).Children(prevNodeID, $7, ast.EdgeTypeVar, $5)
+                prevNodeID := yylex.(*Parser).Children(0, $7, ast.NodeGroupExpr, $3)
+                yylex.(*Parser).Children(prevNodeID, $7, ast.NodeGroupVar, $5)
 
                 $$ = $7
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$7}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1348,15 +1333,12 @@ statement:
             }
     |   T_FOREACH '(' expr T_AS variable T_DOUBLE_ARROW foreach_variable ')' foreach_statement
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($9)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $9)
-                yylex.(*Parser).Ast.Nodes.Save($9, node)
-
-                prevNodeID := yylex.(*Parser).Children(0, $9, ast.EdgeTypeExpr, $3)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $9, ast.EdgeTypeKey, $5)
-                yylex.(*Parser).Children(prevNodeID, $9, ast.EdgeTypeVar, $7)
+                prevNodeID := yylex.(*Parser).Children(0, $9, ast.NodeGroupExpr, $3)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupKey, $5)
+                yylex.(*Parser).Children(prevNodeID, $9, ast.NodeGroupVar, $7)
 
                 $$ = $9
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$9}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1370,15 +1352,10 @@ statement:
     |   T_DECLARE '(' const_list ')' declare_statement
             {
                 children := yylex.(*Parser).List.Pop()
-
-                node := yylex.(*Parser).Ast.Nodes.Get($5)
-                node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $5)
-                yylex.(*Parser).Ast.Nodes.Save($5, node)
-
-                yylex.(*Parser).Children(0, $5, ast.EdgeTypeConsts, children...)
+                yylex.(*Parser).Children(0, $5, ast.NodeGroupConsts, children...)
 
                 $$ = $5
-
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1389,10 +1366,10 @@ statement:
             }
     |   ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNop,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1405,21 +1382,21 @@ statement:
                 childrenCatches := yylex.(*Parser).List.Pop()
                 childrenStmts := yylex.(*Parser).List.Pop()
 
-                var posID linear.PositionID
+                var posID graph.PositionID
                 if $6 == 0 {
-                    posID = yylex.(*Parser).NewTokenNodeListPosition($1, childrenCatches)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, childrenCatches)
                 } else {
-                    posID = yylex.(*Parser).NewTokenNodePosition($1, $6)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6})
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTry,
-                    Pos:  posID,
                 })
+                yylex.(*Parser).SavePosition($$, posID)
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeConsts, $6)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeCatches, childrenCatches...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupConsts, $6)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCatches, childrenCatches...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, childrenStmts...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1430,12 +1407,12 @@ statement:
             }
     |   T_THROW expr ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtThrow,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1446,17 +1423,17 @@ statement:
             }
     |   T_GOTO T_STRING ';'
             {
-                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtGoto,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeLabel, LableNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupLabel, LableNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(LableNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -1468,17 +1445,17 @@ statement:
             }
     |   T_STRING ':'
             {
-                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(LableNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtLabel,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeLabelName, LableNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupLabelName, LableNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1496,25 +1473,25 @@ catch_list:
             }
     |   catch_list T_CATCH '(' catch_name_list T_VARIABLE ')' '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($5),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
                 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($5),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$5}, nil))
                 
-                catchNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                catchNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCatch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($2, $9),
                 })
+                yylex.(*Parser).SavePosition(catchNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $9}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, catchNodeID, ast.EdgeTypeVar, varNodeID)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.EdgeTypeTypes, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, catchNodeID, ast.NodeGroupVar, varNodeID)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, catchNodeID, ast.NodeGroupTypes, yylex.(*Parser).List.Pop()...)
 
                 yylex.(*Parser).List.Add(catchNodeID)
 
@@ -1558,12 +1535,12 @@ finally_statement:
             }
     |   T_FINALLY '{' inner_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtFinally,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1606,26 +1583,26 @@ unset_variable:
 function_declaration_statement:
         T_FUNCTION returns_ref T_STRING backup_doc_comment '(' parameter_list ')' return_type '{' inner_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
                 var flag ast.NodeFlag
                 if $2 != nil {
                     flag = flag | ast.NodeFlagRef
                 }
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtFunction,
                     Flag: flag,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $11),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeFunctionName, identifierNodeID)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeReturnType, $8)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupFunctionName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupReturnType, $8)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
 
 
                 // save tokens
@@ -1671,21 +1648,21 @@ class_declaration_statement:
                 childrenStmts := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClass,
-                    Pos:  yylex.(*Parser).NewNodeListTokenPosition(childrenModifiers, $9),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$9}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeImplements, $5)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExtends, $4)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeClassName, identifierNodeID)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, childrenStmts...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupImplements, $5)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExtends, $4)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupClassName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, childrenStmts...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
@@ -1698,20 +1675,20 @@ class_declaration_statement:
             }
     |   T_CLASS T_STRING extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClass,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $8),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeImplements, $4)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExtends, $3)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeClassName, identifierNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupImplements, $4)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExtends, $3)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupClassName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -1742,10 +1719,10 @@ class_modifiers:
 class_modifier:
         T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1754,10 +1731,10 @@ class_modifier:
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1769,18 +1746,18 @@ class_modifier:
 trait_declaration_statement:
         T_TRAIT T_STRING backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTrait,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $6),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeTraitName, identifierNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupTraitName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -1795,19 +1772,19 @@ trait_declaration_statement:
 interface_declaration_statement:
         T_INTERFACE T_STRING interface_extends_list backup_doc_comment '{' class_statement_list '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtInterface,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $7),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $7}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeExtends, $3)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeInterfaceName, identifierNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupExtends, $3)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupInterfaceName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(identifierNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -1828,12 +1805,12 @@ extends_from:
             }
     |   T_EXTENDS name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClassExtends,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeClassName, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClassName, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1853,12 +1830,12 @@ interface_extends_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtInterfaceExtends,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($1, children),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupInterfaceNames, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1878,12 +1855,12 @@ implements_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClassImplements,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($1, children),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeInterfaceNames, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupInterfaceNames, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1901,12 +1878,12 @@ foreach_variable:
             }
     |   '&' variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprReference,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1915,12 +1892,12 @@ foreach_variable:
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1931,12 +1908,12 @@ foreach_variable:
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprShortList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
                 // save tokensc
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -1949,12 +1926,12 @@ foreach_variable:
 for_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtFor,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -1962,19 +1939,19 @@ for_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltFor,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
@@ -1989,12 +1966,12 @@ for_statement:
 foreach_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtForeach,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2002,19 +1979,19 @@ foreach_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltForeach,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
@@ -2029,12 +2006,12 @@ foreach_statement:
 declare_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtDeclare,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2042,19 +2019,19 @@ declare_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtDeclare,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
@@ -2071,18 +2048,18 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtSwitch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2094,18 +2071,18 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtSwitch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2119,19 +2096,19 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltSwitch,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListEnd, $3.HiddenTokens)
@@ -2145,19 +2122,19 @@ switch_case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                caseListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCaseList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(caseListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltSwitch,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $5),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
 
-                yylex.(*Parser).Children(0, caseListNodeID, ast.EdgeTypeCases, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeCaseList, caseListNodeID)
+                yylex.(*Parser).Children(0, caseListNodeID, ast.NodeGroupCases, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupCaseList, caseListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(caseListNodeID, ast.TokenGroupCaseListStart, $2.HiddenTokens)
@@ -2182,12 +2159,12 @@ case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                caseNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                caseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtCase,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($2, children),
                 })
+                yylex.(*Parser).SavePosition(caseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                yylex.(*Parser).Children(0, caseNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).Children(0, caseNodeID, ast.NodeGroupStmts, children...)
 
                 yylex.(*Parser).List.Add(caseNodeID)
 
@@ -2202,12 +2179,12 @@ case_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                defaultNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                defaultNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtDefault,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($2, children),
                 })
+                yylex.(*Parser).SavePosition(defaultNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                yylex.(*Parser).Children(0, defaultNodeID, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).Children(0, defaultNodeID, ast.NodeGroupStmts, children...)
 
                 yylex.(*Parser).List.Add(defaultNodeID)
 
@@ -2234,12 +2211,12 @@ case_separator:
 while_statement:
         statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtWhile,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, $1)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -2247,19 +2224,19 @@ while_statement:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltWhile,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmt, stmtListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupCond, $1.HiddenTokens)
@@ -2274,13 +2251,13 @@ while_statement:
 if_stmt_without_else:
         T_IF '(' expr ')' statement
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtIf,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $5),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeCond, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmt, $5)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmt, $5)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2291,20 +2268,17 @@ if_stmt_without_else:
             }
     |   if_stmt_without_else T_ELSEIF '(' expr ')' statement
             {
-                elseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                elseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtElseIf,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($2, $6),
                 })
+                yylex.(*Parser).SavePosition(elseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$6}))
 
-                node := yylex.(*Parser).Ast.Nodes.Get($1)
-                node.Pos = yylex.(*Parser).NewNodesPosition($1, $6)
-                yylex.(*Parser).Ast.Nodes.Save($1, node)
-
-                prevNodeID := yylex.(*Parser).Children(0, elseIfNodeID, ast.EdgeTypeCond, $4)
-                yylex.(*Parser).Children(prevNodeID, elseIfNodeID, ast.EdgeTypeStmt, $6)
-                yylex.(*Parser).Children(0, $1, ast.EdgeTypeElseIf, elseIfNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, elseIfNodeID, ast.NodeGroupCond, $4)
+                yylex.(*Parser).Children(prevNodeID, elseIfNodeID, ast.NodeGroupStmt, $6)
+                yylex.(*Parser).Children(0, $1, ast.NodeGroupElseIf, elseIfNodeID)
 
                 $$ = $1
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $6}, nil, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(elseIfNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -2324,18 +2298,14 @@ if_stmt:
             }
     |   if_stmt_without_else T_ELSE statement
             {
-                elseNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                elseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtElse,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($2, $3),
                 })
+                yylex.(*Parser).SavePosition(elseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$3}))
+                yylex.(*Parser).SavePosition($1, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                node := yylex.(*Parser).Ast.Nodes.Get($1)
-                node.Pos = yylex.(*Parser).NewNodesPosition($1, $3)
-                yylex.(*Parser).Ast.Nodes.Save($1, node)
-
-                yylex.(*Parser).Children(0, elseNodeID, ast.EdgeTypeStmt, $3)
-                yylex.(*Parser).Children(0, $1, ast.EdgeTypeElse, elseNodeID)
-
+                yylex.(*Parser).Children(0, elseNodeID, ast.NodeGroupStmt, $3)
+                yylex.(*Parser).Children(0, $1, ast.NodeGroupElse, elseNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(elseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -2349,20 +2319,20 @@ alt_if_stmt_without_else:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltIf,
                     Flag: ast.NodeFlagAltSyntax,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($1, children),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, children))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeCond, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmt, stmtListNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2376,20 +2346,20 @@ alt_if_stmt_without_else:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                AltElseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltElseIf,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($2, children),
                 })
+                yylex.(*Parser).SavePosition(AltElseIfNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                prevNodeID := yylex.(*Parser).Children(0, AltElseIfNodeID, ast.EdgeTypeCond, $4)
-                yylex.(*Parser).Children(prevNodeID, AltElseIfNodeID, ast.EdgeTypeStmt, stmtListNodeID)
-                yylex.(*Parser).Children(0, $1, ast.EdgeTypeElseIf, AltElseIfNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                prevNodeID := yylex.(*Parser).Children(0, AltElseIfNodeID, ast.NodeGroupCond, $4)
+                yylex.(*Parser).Children(prevNodeID, AltElseIfNodeID, ast.NodeGroupStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, $1, ast.NodeGroupElseIf, AltElseIfNodeID)
 
                 $$ = $1
 
@@ -2406,11 +2376,8 @@ alt_if_stmt_without_else:
 alt_if_stmt:
         alt_if_stmt_without_else T_ENDIF ';'
             {
-                node := yylex.(*Parser).Ast.Nodes.Get($1)
-                node.Pos = yylex.(*Parser).NewNodeTokenPosition($1, $3)
-                yylex.(*Parser).Ast.Nodes.Save($1, node)
-
                 $$ = $1
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStmts, $2.HiddenTokens)
@@ -2423,25 +2390,22 @@ alt_if_stmt:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stmtListNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewNodeListPosition(children),
                 })
+                yylex.(*Parser).SavePosition(stmtListNodeID, yylex.(*Parser).NewPosition(children, nil, nil))
 
-                AltElseNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                AltElseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtAltElse,
-                    Pos:  yylex.(*Parser).NewTokenNodeListPosition($2, children),
                 })
+                yylex.(*Parser).SavePosition(AltElseNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, children))
 
-                node := yylex.(*Parser).Ast.Nodes.Get($1)
-                node.Pos = yylex.(*Parser).NewNodeTokenPosition($1, $6)
-                yylex.(*Parser).Ast.Nodes.Save($1, node)
-
-                yylex.(*Parser).Children(0, stmtListNodeID, ast.EdgeTypeStmts, children...)
-                yylex.(*Parser).Children(0, AltElseNodeID, ast.EdgeTypeStmt, stmtListNodeID)
-                yylex.(*Parser).Children(0, $1, ast.EdgeTypeElse, AltElseNodeID)
+                yylex.(*Parser).Children(0, stmtListNodeID, ast.NodeGroupStmts, children...)
+                yylex.(*Parser).Children(0, AltElseNodeID, ast.NodeGroupStmt, stmtListNodeID)
+                yylex.(*Parser).Children(0, $1, ast.NodeGroupElse, AltElseNodeID)
 
                 $$ = $1
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$6}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(AltElseNodeID, ast.TokenGroupStart, $2.HiddenTokens)
@@ -2490,25 +2454,25 @@ non_empty_parameter_list:
 parameter:
         optional_type is_reference is_variadic T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                var posID linear.PositionID
+                var posID graph.PositionID
                 if $1 != 0 {
-                    posID = yylex.(*Parser).NewNodeTokenPosition($1, $4)
+                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil)
                 } else if $2 != nil {
-                    posID = yylex.(*Parser).NewTokensPosition($2, $4)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2, $4}, nil)
                 } else if $3 != nil {
-                    posID = yylex.(*Parser).NewTokensPosition($3, $4)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $4}, nil)
                 } else {
-                    posID = yylex.(*Parser).NewTokenPosition($4)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil)
                 }
 
                 var flag ast.NodeFlag
@@ -2519,15 +2483,15 @@ parameter:
                     flag = flag | ast.NodeFlagVariadic
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeParameter,
                     Flag: flag,
-                    Pos:  posID,
                 })
+                yylex.(*Parser).SavePosition($$, posID)
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarType, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVarType, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVar, varNodeID)
 
                 // save tokens
 
@@ -2573,25 +2537,25 @@ parameter:
             }
     |   optional_type is_reference is_variadic T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                var posID linear.PositionID
+                var posID graph.PositionID
                 if $1 != 0 {
-                    posID = yylex.(*Parser).NewNodesPosition($1, $6)
+                    posID = yylex.(*Parser).NewPosition([]graph.NodeID{$1, $6}, nil, nil)
                 } else if $2 != nil {
-                    posID = yylex.(*Parser).NewTokenNodePosition($2, $6)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$6})
                 } else if $3 != nil {
-                    posID = yylex.(*Parser).NewTokenNodePosition($3, $6)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$6})
                 } else {
-                    posID = yylex.(*Parser).NewTokenNodePosition($4, $6)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, []graph.NodeID{$6})
                 }
 
                 var flag ast.NodeFlag
@@ -2602,16 +2566,16 @@ parameter:
                     flag = flag | ast.NodeFlagVariadic
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeParameter,
                     Flag: flag,
-                    Pos:  posID,
                 })
+                yylex.(*Parser).SavePosition($$, posID)
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarType, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDefaultValue, $6)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVarType, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDefaultValue, $6)
 
                 // save tokens
 
@@ -2682,12 +2646,12 @@ type_expr:
             }
     |   '?' type
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeNullable,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2699,10 +2663,10 @@ type_expr:
 type:
         T_ARRAY
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2711,10 +2675,10 @@ type:
             }
     |   T_CALLABLE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2738,12 +2702,12 @@ return_type:
             }
     |   ':' type_expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtReturnType,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2755,10 +2719,10 @@ return_type:
 argument_list:
         '(' ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeArgumentList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2770,12 +2734,12 @@ argument_list:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeArgumentList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeArguments, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupArguments, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2812,12 +2776,12 @@ non_empty_argument_list:
 argument:
         expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeArgument,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -2826,13 +2790,13 @@ argument:
             }
     |   T_ELLIPSIS expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeArgument,
                     Flag: ast.NodeFlagVariadic,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2893,23 +2857,23 @@ static_var_list:
 static_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStaticVar,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2918,24 +2882,24 @@ static_var:
             }
     |   T_VARIABLE '=' expr
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStaticVar,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -2966,13 +2930,13 @@ class_statement:
                 childrenProperties := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtPropertyList,
-                    Pos:  yylex.(*Parser).NewNodeListTokenPosition(childrenModifiers, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperties, childrenProperties...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperties, childrenProperties...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens(childrenModifiers[0], $$)
@@ -2986,13 +2950,13 @@ class_statement:
                 childrenConstants := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClassConstList,
-                    Pos:  yylex.(*Parser).NewOptionalListTokensPosition(childrenModifiers, $2, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(childrenModifiers, []*scanner.Token{$2, $4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeConsts, childrenConstants...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConsts, childrenConstants...)
 
                 // save tokens
                 if len(childrenModifiers) > 0 {
@@ -3010,13 +2974,13 @@ class_statement:
             {
                 childrenTraits := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUse,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeTraitAdaptationList, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeTraits, childrenTraits...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupTraitAdaptationList, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupTraits, childrenTraits...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3028,16 +2992,16 @@ class_statement:
                 childrenParams := yylex.(*Parser).List.Pop()
                 childrenModifiers := yylex.(*Parser).List.Pop()
 
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                var posID linear.PositionID
+                var posID graph.PositionID
                 if len(childrenModifiers) == 0 {
-                    posID = yylex.(*Parser).NewTokenNodePosition($2, $10)
+                    posID = yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, []graph.NodeID{$10})
                 } else {
-                    posID = yylex.(*Parser).NewNodeListNodePosition(childrenModifiers, $10)
+                    posID = yylex.(*Parser).NewPosition(childrenModifiers, nil, []graph.NodeID{$10})
                 }
 
                 var flag ast.NodeFlag
@@ -3045,17 +3009,17 @@ class_statement:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClassMethod,
                     Flag: flag,
-                    Pos:  posID,
                 })
+                yylex.(*Parser).SavePosition($$, posID)
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeMethodName, identifierNodeID)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeReturnType, $9)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmt, $10)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeModifiers, childrenModifiers...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeParams, childrenParams...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupMethodName, identifierNodeID)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupReturnType, $9)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmt, $10)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifiers, childrenModifiers...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupParams, childrenParams...)
 
                 // save tokens
                 if len(childrenModifiers) > 0 {
@@ -3100,10 +3064,10 @@ name_list:
 trait_adaptations:
         ';'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNop,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3114,10 +3078,10 @@ trait_adaptations:
             }
     |   '{' '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitAdaptationList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3129,12 +3093,12 @@ trait_adaptations:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitAdaptationList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeAdaptations, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupAdaptations, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3188,13 +3152,13 @@ trait_precedence:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUsePrecedence,
-                    Pos:  yylex.(*Parser).NewNodeNodeListPosition($1, children),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, nil, children))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeInsteadof, children...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupInsteadof, children...)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3207,18 +3171,18 @@ trait_precedence:
 trait_alias:
         trait_method_reference T_AS T_STRING
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3229,18 +3193,18 @@ trait_alias:
             }
     |   trait_method_reference T_AS reserved_non_modifiers
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3251,19 +3215,19 @@ trait_alias:
             }
     |   trait_method_reference T_AS member_modifier identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($4),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$4}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeRef, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeModifier, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeAlias, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifier, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupAlias, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3274,13 +3238,13 @@ trait_alias:
             }
     |   trait_method_reference T_AS member_modifier
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitUseAlias,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeRef, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeModifier, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupRef, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupModifier, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3293,17 +3257,17 @@ trait_alias:
 trait_method_reference:
         identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitMethodRef,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeMethod, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupMethod, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3321,18 +3285,18 @@ trait_method_reference:
 absolute_trait_method_reference:
         name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtTraitMethodRef,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeTrait, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeMethod, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupTrait, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupMethod, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3346,10 +3310,10 @@ absolute_trait_method_reference:
 method_body:
         ';' /* abstract method */ 
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtNop,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3361,12 +3325,12 @@ method_body:
             {
                 children := yylex.(*Parser).List.Pop()
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtStmtList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmts, children...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, children...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3383,10 +3347,10 @@ variable_modifiers:
             }
     |   T_VAR
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 yylex.(*Parser).List.Push()
                 yylex.(*Parser).List.Add(identifierNodeID)
@@ -3430,10 +3394,10 @@ non_empty_member_modifiers:
 member_modifier:
         T_PUBLIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3442,10 +3406,10 @@ member_modifier:
             }
     |   T_PROTECTED
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3454,10 +3418,10 @@ member_modifier:
             }
     |   T_PRIVATE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3466,10 +3430,10 @@ member_modifier:
             }
     |   T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3478,10 +3442,10 @@ member_modifier:
             }
     |   T_ABSTRACT
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3490,10 +3454,10 @@ member_modifier:
             }
     |   T_FINAL
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3525,23 +3489,23 @@ property_list:
 property:
         T_VARIABLE backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtProperty,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3550,24 +3514,24 @@ property:
             }
     |   T_VARIABLE '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtProperty,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3600,18 +3564,18 @@ class_const_list:
 class_const_decl:
         identifier '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtConstant,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeConstantName, identifierNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3624,18 +3588,18 @@ class_const_decl:
 const_decl:
         T_STRING '=' expr backup_doc_comment
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtConstant,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$3}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeConstantName, identifierNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupConstantName, identifierNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3710,15 +3674,15 @@ non_empty_for_exprs:
 anonymous_class:
         T_CLASS ctor_arguments extends_from implements_list backup_doc_comment '{' class_statement_list '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeStmtClass,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $8),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $8}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeExtends, $3)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeImplements, $4)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupExtends, $3)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupImplements, $4)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3737,13 +3701,13 @@ new_expr:
                     lastNodeID = $2
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprNew,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, lastNodeID),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{lastNodeID}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $2)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3752,12 +3716,12 @@ new_expr:
             }
     |   T_NEW anonymous_class
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprNew,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3769,19 +3733,19 @@ new_expr:
 expr_without_variable:
         T_LIST '(' array_pair_list ')' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignAssign,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $6),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$6}))
 
-                yylex.(*Parser).Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, listNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $6)
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, listNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $6)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupList, $2.HiddenTokens)
@@ -3793,19 +3757,19 @@ expr_without_variable:
             }
     |   '[' array_pair_list ']' '=' expr
             {
-                listNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprShortList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignAssign,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $5),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$5}))
 
-                yylex.(*Parser).Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, listNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $5)
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, listNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $5)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens(listNodeID, ast.TokenGroupArrayPairList, $3.HiddenTokens)
@@ -3816,13 +3780,13 @@ expr_without_variable:
             }
     |   variable '=' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignAssign,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3832,13 +3796,13 @@ expr_without_variable:
             }
     |   variable '=' '&' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignReference,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $4)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3849,12 +3813,12 @@ expr_without_variable:
             }
     |   T_CLONE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClone,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -3863,13 +3827,13 @@ expr_without_variable:
             }
     |   variable T_PLUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignPlus,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3879,13 +3843,13 @@ expr_without_variable:
             }
     |   variable T_MINUS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignMinus,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3895,13 +3859,13 @@ expr_without_variable:
             }
     |   variable T_MUL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignMul,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3911,13 +3875,13 @@ expr_without_variable:
             }
     |   variable T_POW_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignPow,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3927,13 +3891,13 @@ expr_without_variable:
             }
     |   variable T_DIV_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignDiv,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3943,13 +3907,13 @@ expr_without_variable:
             }
     |   variable T_CONCAT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignConcat,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3959,13 +3923,13 @@ expr_without_variable:
             }
     |   variable T_MOD_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignMod,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3975,13 +3939,13 @@ expr_without_variable:
             }
     |   variable T_AND_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignBitwiseAnd,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -3991,13 +3955,13 @@ expr_without_variable:
             }
     |   variable T_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignBitwiseOr,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4007,13 +3971,13 @@ expr_without_variable:
             }
     |   variable T_XOR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignBitwiseXor,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4023,13 +3987,13 @@ expr_without_variable:
             }
     |   variable T_SL_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignShiftLeft,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4039,13 +4003,13 @@ expr_without_variable:
             }
     |   variable T_SR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeAssignShiftRight,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeExpr, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4055,12 +4019,12 @@ expr_without_variable:
             }
     |   variable T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPostInc,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4070,12 +4034,12 @@ expr_without_variable:
             }
     |   T_INC variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPreInc,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4084,12 +4048,12 @@ expr_without_variable:
             }
     |   variable T_DEC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPostDec,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$2}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4099,12 +4063,12 @@ expr_without_variable:
             }
     |   T_DEC variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPreDec,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4113,13 +4077,13 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_OR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryBooleanOr,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4129,13 +4093,13 @@ expr_without_variable:
             }
     |   expr T_BOOLEAN_AND expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryBooleanAnd,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4145,13 +4109,13 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_OR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryLogicalOr,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4161,13 +4125,13 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_AND expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryLogicalAnd,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4177,13 +4141,13 @@ expr_without_variable:
             }
     |   expr T_LOGICAL_XOR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryLogicalXor,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4193,13 +4157,13 @@ expr_without_variable:
             }
     |   expr '|' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryBitwiseOr,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4209,13 +4173,13 @@ expr_without_variable:
             }
     |   expr '&' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryBitwiseAnd,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4225,13 +4189,13 @@ expr_without_variable:
             }
     |   expr '^' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryBitwiseXor,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4241,13 +4205,13 @@ expr_without_variable:
             }
     |   expr '.' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryConcat,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4257,13 +4221,13 @@ expr_without_variable:
             }
     |   expr '+' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryPlus,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4273,13 +4237,13 @@ expr_without_variable:
             }
     |   expr '-' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryMinus,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4289,13 +4253,13 @@ expr_without_variable:
             }
     |   expr '*' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryMul,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4305,13 +4269,13 @@ expr_without_variable:
             }
     |   expr T_POW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryPow,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4321,13 +4285,13 @@ expr_without_variable:
             }
     |   expr '/' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryDiv,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4337,13 +4301,13 @@ expr_without_variable:
             }
     |   expr '%' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryMod,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4353,13 +4317,13 @@ expr_without_variable:
             }
     |   expr T_SL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryShiftLeft,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4369,13 +4333,13 @@ expr_without_variable:
             }
     |   expr T_SR expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryShiftRight,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4385,12 +4349,12 @@ expr_without_variable:
             }
     |   '+' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprUnaryPlus,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4399,12 +4363,12 @@ expr_without_variable:
             }
     |   '-' expr %prec T_INC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprUnaryMinus,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4413,12 +4377,12 @@ expr_without_variable:
             }
     |   '!' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprBooleanNot,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4427,12 +4391,12 @@ expr_without_variable:
             }
     |   '~' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprBitwiseNot,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4441,13 +4405,13 @@ expr_without_variable:
             }
     |   expr T_IS_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryIdentical,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4457,13 +4421,13 @@ expr_without_variable:
             }
     |   expr T_IS_NOT_IDENTICAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryNotIdentical,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4473,13 +4437,13 @@ expr_without_variable:
             }
     |   expr T_IS_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryEqual,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4489,13 +4453,13 @@ expr_without_variable:
             }
     |   expr T_IS_NOT_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryNotEqual,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4506,13 +4470,13 @@ expr_without_variable:
             }
     |   expr '<' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinarySmaller,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4522,13 +4486,13 @@ expr_without_variable:
             }
     |   expr T_IS_SMALLER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinarySmallerOrEqual,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4538,13 +4502,13 @@ expr_without_variable:
             }
     |   expr '>' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryGreater,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4554,13 +4518,13 @@ expr_without_variable:
             }
     |   expr T_IS_GREATER_OR_EQUAL expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryGreaterOrEqual,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4570,13 +4534,13 @@ expr_without_variable:
             }
     |   expr T_SPACESHIP expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinarySpaceship,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4586,13 +4550,13 @@ expr_without_variable:
             }
     |   expr T_INSTANCEOF class_name_reference
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprInstanceOf,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeClass, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupClass, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4620,14 +4584,14 @@ expr_without_variable:
             }
     |   expr '?' expr ':' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprTernary,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $5),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $5}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeCond, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeIfTrue, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeIfFalse, $5)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfTrue, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $5)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4638,13 +4602,13 @@ expr_without_variable:
             }
     |   expr '?' ':' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprTernary,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeCond, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeIfFalse, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupCond, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupIfFalse, $4)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4655,13 +4619,13 @@ expr_without_variable:
             }
     |   expr T_COALESCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeBinaryCoalesce,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeLeft, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeRight, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupLeft, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupRight, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -4677,12 +4641,12 @@ expr_without_variable:
             }
     |   T_INT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastInt,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4692,12 +4656,12 @@ expr_without_variable:
             }
     |   T_DOUBLE_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastDouble,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4707,12 +4671,12 @@ expr_without_variable:
             }
     |   T_STRING_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastString,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4722,12 +4686,12 @@ expr_without_variable:
             }
     |   T_ARRAY_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastArray,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4737,12 +4701,12 @@ expr_without_variable:
             }
     |   T_OBJECT_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastObject,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4752,12 +4716,12 @@ expr_without_variable:
             }
     |   T_BOOL_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastBool,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4767,12 +4731,12 @@ expr_without_variable:
             }
     |   T_UNSET_CAST expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeCastUnset,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4791,16 +4755,16 @@ expr_without_variable:
                 }
 
                 if $$ == 0 {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeExprExit,
                         Flag: flag,
-                        Pos:  yylex.(*Parser).NewTokenPosition($1),
                     })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
                     node := yylex.(*Parser).Ast.Nodes.Get($$)
-                    node.Pos = yylex.(*Parser).NewTokenNodePosition($1, $2)
                     node.Flag = flag
                     yylex.(*Parser).Ast.Nodes.Save($$, node)
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 }
 
                 // save tokens
@@ -4810,12 +4774,12 @@ expr_without_variable:
             }
     |   '@' expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprErrorSuppress,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4830,12 +4794,12 @@ expr_without_variable:
             }
     |   '`' backticks_expr '`'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprShellExec,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4844,12 +4808,12 @@ expr_without_variable:
             }
     |   T_PRINT expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPrint,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4858,10 +4822,10 @@ expr_without_variable:
             }
     |   T_YIELD
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprYield,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4870,12 +4834,12 @@ expr_without_variable:
             }
     |   T_YIELD expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprYield,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVal, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4884,13 +4848,13 @@ expr_without_variable:
             }
     |   T_YIELD expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprYield,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$4}))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeKey, $2)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVal, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $2)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, $4)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4900,12 +4864,12 @@ expr_without_variable:
             }
     |   T_YIELD_FROM expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprYieldFrom,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4919,16 +4883,16 @@ expr_without_variable:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClosure,
                     Flag: flag,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $11),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $11}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClosureUse, $7)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeReturnType, $8)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClosureUse, $7)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupReturnType, $8)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
                 
                 // // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -4951,16 +4915,16 @@ expr_without_variable:
                     flag = flag | ast.NodeFlagRef
                 }
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClosure,
                     Flag: flag,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $12),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $12}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClosureUse, $8)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeReturnType, $9)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeParams, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClosureUse, $8)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupReturnType, $9)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupParams, yylex.(*Parser).List.Pop()...)
                 
                 // // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5001,12 +4965,12 @@ lexical_vars:
             }
     |   T_USE '(' lexical_var_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClosureUse,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeStmts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5040,17 +5004,17 @@ lexical_var_list:
 lexical_var:
     T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5059,23 +5023,23 @@ lexical_var:
             }
     |   '&' T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprReference,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5088,13 +5052,13 @@ lexical_var:
 function_call:
         name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprFunctionCall,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $2}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeFunction, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $2)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $2)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5103,14 +5067,14 @@ function_call:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticCall,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeCall, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5120,14 +5084,14 @@ function_call:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM member_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticCall,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeCall, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupCall, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5137,13 +5101,13 @@ function_call:
             }
     |   callable_expr argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprFunctionCall,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $2}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeFunction, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $2)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupFunction, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $2)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5155,10 +5119,10 @@ function_call:
 class_name:
         T_STATIC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5197,12 +5161,12 @@ exit_expr:
             }
     |   '(' optional_expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprExit,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupExit, $1.HiddenTokens)
@@ -5224,12 +5188,11 @@ backticks_expr:
     |   T_ENCAPSED_AND_WHITESPACE
             {
                 yylex.(*Parser).List.Push()
-                yylex.(*Parser).List.Add(
-                    yylex.(*Parser).Ast.Nodes.Create(linear.Node{
-                        Type: ast.NodeTypeScalarEncapsedStringPart,
-                        Pos:  yylex.(*Parser).NewTokenPosition($1),
-                    }),
-                )
+                nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
+                    Type: ast.NodeTypeScalarEncapsedStringPart,
+                })
+                yylex.(*Parser).SavePosition(nodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
+                yylex.(*Parser).List.Add(nodeID)
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }
@@ -5257,12 +5220,12 @@ ctor_arguments:
 dereferencable_scalar:
     T_ARRAY '(' array_pair_list ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArray,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5273,12 +5236,12 @@ dereferencable_scalar:
             }
     |   '[' array_pair_list ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprShortArray,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5288,10 +5251,10 @@ dereferencable_scalar:
             }
     |   T_CONSTANT_ENCAPSED_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarString,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5303,10 +5266,10 @@ dereferencable_scalar:
 scalar:
         T_LNUMBER
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarLnumber,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5315,10 +5278,10 @@ scalar:
             }
     |   T_DNUMBER
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarDnumber,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5327,10 +5290,10 @@ scalar:
             }
     |   T_LINE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5339,10 +5302,10 @@ scalar:
             }
     |   T_FILE
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5351,10 +5314,10 @@ scalar:
             }
     |   T_DIR
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5363,10 +5326,10 @@ scalar:
             }
     |   T_TRAIT_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5375,10 +5338,10 @@ scalar:
             }
     |   T_METHOD_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5387,10 +5350,10 @@ scalar:
             }
     |   T_FUNC_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5399,10 +5362,10 @@ scalar:
             }
     |   T_NS_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5411,10 +5374,10 @@ scalar:
             }
     |   T_CLASS_C
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarMagicConstant,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5423,17 +5386,17 @@ scalar:
             }
     |   T_START_HEREDOC T_ENCAPSED_AND_WHITESPACE T_END_HEREDOC
             {
-                stringPartNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                stringPartNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(stringPartNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarHeredoc,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, stringPartNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, stringPartNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5442,10 +5405,10 @@ scalar:
             }
     |   T_START_HEREDOC T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarHeredoc,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5454,12 +5417,12 @@ scalar:
             }
     |   '"' encaps_list '"'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarEncapsed,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5468,12 +5431,12 @@ scalar:
             }
     |   T_START_HEREDOC encaps_list T_END_HEREDOC
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarHeredoc,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeParts, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupParts, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5497,12 +5460,12 @@ scalar:
 constant:
         name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprConstFetch,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeConstant, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupConstant, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5511,18 +5474,18 @@ constant:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClassConstFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeConstantName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5533,18 +5496,18 @@ constant:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM identifier
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprClassConstFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$3}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeConstantName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupConstantName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5657,13 +5620,13 @@ callable_variable:
             }
     |   dereferencable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5676,13 +5639,13 @@ callable_variable:
             }
     |   constant '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5695,13 +5658,13 @@ callable_variable:
             }
     |   dereferencable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5714,14 +5677,14 @@ callable_variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name argument_list
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprMethodCall,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeMethod, $3)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeArgumentList, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupMethod, $3)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $4)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5752,13 +5715,13 @@ variable:
             }
     |   dereferencable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5771,17 +5734,17 @@ variable:
 simple_variable:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5790,12 +5753,12 @@ simple_variable:
             }
     |   '$' '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5809,12 +5772,12 @@ simple_variable:
             }
     |   '$' simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupDollar, []scanner.Token{*$1})
@@ -5826,13 +5789,13 @@ simple_variable:
 static_member:
         class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5842,13 +5805,13 @@ static_member:
             }
     |   variable_class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5867,13 +5830,13 @@ new_variable:
             }
     |   new_variable '[' optional_expr ']'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5886,13 +5849,13 @@ new_variable:
             }
     |   new_variable '{' expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$4}, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5905,13 +5868,13 @@ new_variable:
             }
     |   new_variable T_OBJECT_OPERATOR property_name
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5921,13 +5884,13 @@ new_variable:
             }
     |   class_name T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5937,13 +5900,13 @@ new_variable:
             }
     |   new_variable T_PAAMAYIM_NEKUDOTAYIM simple_variable
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprStaticPropertyFetch,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeClass, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupClass, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -5956,10 +5919,10 @@ new_variable:
 member_name:
         identifier
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -5989,10 +5952,10 @@ member_name:
 property_name:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6029,7 +5992,7 @@ array_pair_list:
 possible_array_pair:
         /* empty */
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
                 })
 
@@ -6066,13 +6029,13 @@ non_empty_array_pair_list:
 array_pair:
         expr T_DOUBLE_ARROW expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $3}, nil, nil))
 
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVal, $3)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, $3)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -6082,12 +6045,12 @@ array_pair:
             }
     |   expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewNodePosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition( []graph.NodeID{$1}, nil, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVal, $1)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, $1)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -6096,19 +6059,19 @@ array_pair:
             }
     |   expr T_DOUBLE_ARROW '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprReference,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($3, $4),
                 })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, []graph.NodeID{$4}))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewNodesPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1, $4}, nil, nil))
 
-                yylex.(*Parser).Children(0, refNodeID, ast.EdgeTypeVar, $4)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVal, refNodeID)
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $4)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, refNodeID)
 
                 // save tokens
                 yylex.(*Parser).MoveStartTokens($1, $$)
@@ -6119,18 +6082,18 @@ array_pair:
             }
     |   '&' variable
             {
-                refNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprReference,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition(refNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, refNodeID, ast.EdgeTypeVar, $2)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVal, refNodeID)
+                yylex.(*Parser).Children(0, refNodeID, ast.NodeGroupVar, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, refNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6139,19 +6102,19 @@ array_pair:
             }
     |   expr T_DOUBLE_ARROW T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($3, $6),
                 })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3, $6}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewNodeTokenPosition($1, $6),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition([]graph.NodeID{$1}, []*scanner.Token{$6}, nil))
 
-                yylex.(*Parser).Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeKey, $1)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeVal, listNodeID)
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupKey, $1)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupVal, listNodeID)
 
                 // TODO: Cannot use list() as standalone expression
 
@@ -6166,18 +6129,18 @@ array_pair:
             }
     |   T_LIST '(' array_pair_list ')'
             {
-                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                listNodeID :=  yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprList,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition(listNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayItem,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, listNodeID, ast.EdgeTypeItems, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVal, listNodeID)
+                yylex.(*Parser).Children(0, listNodeID, ast.NodeGroupItems, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVal, listNodeID)
 
                 // TODO: Cannot use list() as standalone expression
                 
@@ -6199,10 +6162,10 @@ encaps_list:
             }
     |   encaps_list T_ENCAPSED_AND_WHITESPACE
             {
-                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
                 yylex.(*Parser).List.Add(encapsNodeID)
 
@@ -6222,10 +6185,10 @@ encaps_list:
             {
                 yylex.(*Parser).List.Push()
                 
-                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarEncapsedStringPart,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(encapsNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 yylex.(*Parser).List.Add(encapsNodeID)
                 yylex.(*Parser).List.Add($2)
@@ -6240,17 +6203,17 @@ encaps_list:
 encaps_var:
         T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6259,24 +6222,24 @@ encaps_var:
             }
     |   T_VARIABLE '[' encaps_var_offset ']'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $3)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
@@ -6288,29 +6251,29 @@ encaps_var:
             }
     |   T_VARIABLE T_OBJECT_OPERATOR T_STRING
             {
-                varNameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                propertyNameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($3),
                 })
+                yylex.(*Parser).SavePosition(propertyNameNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$3}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprPropertyFetch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, varNameNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeProperty, propertyNameNodeID)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, varNameNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupProperty, propertyNameNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupVar, $2.HiddenTokens)
@@ -6320,12 +6283,12 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES expr '}'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
@@ -6336,17 +6299,17 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $3),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $3}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
@@ -6357,24 +6320,24 @@ encaps_var:
             }
     |   T_DOLLAR_OPEN_CURLY_BRACES T_STRING_VARNAME '[' expr ']' '}'
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
 
-                varNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                varNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($2),
                 })
+                yylex.(*Parser).SavePosition(varNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprArrayDimFetch,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $6),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $6}, nil))
 
-                yylex.(*Parser).Children(0, varNodeID, ast.EdgeTypeVarName, identifierNodeID)
-                prevNodeID := yylex.(*Parser).Children(0, $$, ast.EdgeTypeVar, varNodeID)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.EdgeTypeDim, $4)
+                yylex.(*Parser).Children(0, varNodeID, ast.NodeGroupVarName, identifierNodeID)
+                prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupVar, varNodeID)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupDim, $4)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, []scanner.Token{*$1})
@@ -6403,10 +6366,10 @@ encaps_var:
 encaps_var_offset:
         T_STRING
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeScalarString,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6418,15 +6381,15 @@ encaps_var_offset:
                 // TODO: add option to handle 64 bit integer
                 tknValue := yylex.(*Parser).Ast.FileData[$1.StartPos:$1.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeScalarLnumber,
-                        Pos:  yylex.(*Parser).NewTokenPosition($1),
                     })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeScalarString,
-                        Pos:  yylex.(*Parser).NewTokenPosition($1),
                     })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 }
 
                 // save tokens
@@ -6438,22 +6401,22 @@ encaps_var_offset:
             {
                 tknValue := yylex.(*Parser).Ast.FileData[$2.StartPos:$2.EndPos]
                 if _, err := strconv.Atoi(string(tknValue)); err == nil {
-                    lnumberNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    lnumberNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeScalarLnumber,
-                        Pos:  yylex.(*Parser).NewTokenPosition($2),
                     })
+                    yylex.(*Parser).SavePosition(lnumberNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$2}, nil))
                     
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeExprUnaryMinus,
-                        Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                     })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
 
-                    yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, lnumberNodeID)
+                    yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, lnumberNodeID)
                 } else {
-                    $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                    $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                         Type: ast.NodeTypeScalarString,
-                        Pos:  yylex.(*Parser).NewTokensPosition($1, $2),
                     })
+                    yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $2}, nil))
                 }
 
                 // save tokens
@@ -6463,17 +6426,17 @@ encaps_var_offset:
             }
     |   T_VARIABLE
             {
-                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeIdentifier,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition(identifierNodeID, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprVariable,
-                    Pos:  yylex.(*Parser).NewTokenPosition($1),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVarName, identifierNodeID)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVarName, identifierNodeID)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6485,12 +6448,12 @@ encaps_var_offset:
 internal_functions_in_yacc:
         T_ISSET '(' isset_variables possible_comma ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprIsset,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $5),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $5}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeVars, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupVars, yylex.(*Parser).List.Pop()...)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6505,12 +6468,12 @@ internal_functions_in_yacc:
             }
     |   T_EMPTY '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprEmpty,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6521,12 +6484,12 @@ internal_functions_in_yacc:
             }
     |   T_INCLUDE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprInclude,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6535,12 +6498,12 @@ internal_functions_in_yacc:
             }
     |   T_INCLUDE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprIncludeOnce,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6549,12 +6512,12 @@ internal_functions_in_yacc:
             }
     |   T_EVAL '(' expr ')'
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprEval,
-                    Pos:  yylex.(*Parser).NewTokensPosition($1, $4),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1, $4}, nil))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $3)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $3)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6565,12 +6528,12 @@ internal_functions_in_yacc:
             }
     |   T_REQUIRE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprRequire,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)
@@ -6579,12 +6542,12 @@ internal_functions_in_yacc:
             }
     |   T_REQUIRE_ONCE expr
             {
-                $$ = yylex.(*Parser).Ast.Nodes.Create(linear.Node{
+                $$ = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
                     Type: ast.NodeTypeExprRequireOnce,
-                    Pos:  yylex.(*Parser).NewTokenNodePosition($1, $2),
                 })
+                yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
 
-                yylex.(*Parser).Children(0, $$, ast.EdgeTypeExpr, $2)
+                yylex.(*Parser).Children(0, $$, ast.NodeGroupExpr, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)

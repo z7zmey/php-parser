@@ -3,8 +3,7 @@ package php7_test
 import (
 	"testing"
 
-	"github.com/z7zmey/php-parser/ast"
-	"github.com/z7zmey/php-parser/ast/linear"
+	"github.com/z7zmey/php-parser/graph"
 	"github.com/z7zmey/php-parser/parser/php7"
 )
 
@@ -385,10 +384,11 @@ func BenchmarkPhp7(b *testing.B) {
 	php7parser := php7.NewParser()
 
 	for n := 0; n < b.N; n++ {
-		a := &linear.AST{
-			Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
-			Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
-			Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
+		a := &graph.AST{
+			Nodes:     &graph.NodeStorage{},
+			Edges:     &graph.EdgeStorage{},
+			Positions: &graph.PositionStorage{},
+			Tokens:    &graph.TokenStorage{},
 		}
 		php7parser.Parse([]byte(src), a)
 	}
@@ -396,10 +396,11 @@ func BenchmarkPhp7(b *testing.B) {
 
 func BenchmarkPhp7Reuse(b *testing.B) {
 	php7parser := php7.NewParser()
-	a := &linear.AST{
-		Positions: linear.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     linear.NewNodeStorage(make([]linear.Node, 0, 1024)),
-		Tokens:    linear.NewTokenStorage(make([]linear.Token, 0, 1024)),
+	a := &graph.AST{
+		Nodes:     &graph.NodeStorage{},
+		Edges:     &graph.EdgeStorage{},
+		Positions: &graph.PositionStorage{},
+		Tokens:    &graph.TokenStorage{},
 	}
 	for n := 0; n < b.N; n++ {
 		a.Reset()

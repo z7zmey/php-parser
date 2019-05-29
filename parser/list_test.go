@@ -5,7 +5,7 @@ import (
 
 	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/ast/linear"
+	"github.com/z7zmey/php-parser/graph"
 )
 
 func TestList(t *testing.T) {
@@ -13,15 +13,15 @@ func TestList(t *testing.T) {
 
 	s.Push()
 
-	s.Add(linear.NodeID(1))
-	s.Add(linear.NodeID(2))
-	s.Add(linear.NodeID(3))
+	s.Add(graph.NodeID(1))
+	s.Add(graph.NodeID(2))
+	s.Add(graph.NodeID(3))
 
-	expected := []linear.NodeID{linear.NodeID(1), linear.NodeID(2), linear.NodeID(3)}
+	expected := []graph.NodeID{graph.NodeID(1), graph.NodeID(2), graph.NodeID(3)}
 	actual := s.Pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linear.NodeID{}
+	expected = []graph.NodeID{}
 	actual = s.Pop()
 	assert.DeepEqual(t, expected, actual)
 }
@@ -31,23 +31,23 @@ func TestListNested(t *testing.T) {
 
 	s.Push()
 
-	s.Add(linear.NodeID(1))
-	s.Add(linear.NodeID(2))
-	s.Add(linear.NodeID(3))
+	s.Add(graph.NodeID(1))
+	s.Add(graph.NodeID(2))
+	s.Add(graph.NodeID(3))
 
 	s.Push()
-	s.Add(linear.NodeID(4))
-	s.Add(linear.NodeID(5))
+	s.Add(graph.NodeID(4))
+	s.Add(graph.NodeID(5))
 
-	expected := []linear.NodeID{linear.NodeID(4), linear.NodeID(5)}
+	expected := []graph.NodeID{graph.NodeID(4), graph.NodeID(5)}
 	actual := s.Pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linear.NodeID{linear.NodeID(1), linear.NodeID(2), linear.NodeID(3)}
+	expected = []graph.NodeID{graph.NodeID(1), graph.NodeID(2), graph.NodeID(3)}
 	actual = s.Pop()
 	assert.DeepEqual(t, expected, actual)
 
-	expected = []linear.NodeID{}
+	expected = []graph.NodeID{}
 	actual = s.Pop()
 	assert.DeepEqual(t, expected, actual)
 }
