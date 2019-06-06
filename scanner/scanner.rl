@@ -58,8 +58,9 @@ func (lex *Lexer) Lex(lval Lval) int {
         bnum = '0b' [01]+;
 
         exponent_dnum = (lnum | dnum) ('e'|'E') ('+'|'-')? lnum;
-        varname       = /[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/;
-        varname_first = /[a-zA-Z_\x7f-\xff]/;
+        varname_first = [a-zA-Z_] | (0x0080..0x00FF);
+        varname_second = varname_first | [0-9];
+        varname       = varname_first (varname_second)*;
         heredoc_label = varname >heredoc_lbl_start %heredoc_lbl_end;
         operators     = ';'|':'|','|'.'|'['|']'|'('|')'|'|'|'/'|'^'|'&'|'+'|'-'|'*'|'='|'%'|'!'|'~'|'$'|'<'|'>'|'?'|'@';
         

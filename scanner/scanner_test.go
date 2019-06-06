@@ -1375,6 +1375,19 @@ func TestYieldFromTokens(t *testing.T) {
 	assert.DeepEqual(t, expected, actual)
 }
 
+func TestVarNameByteChars(t *testing.T) {
+	src := "<?php $\x80 $\xff"
+
+	lexer := NewLexer([]byte(src))
+	lv := &lval{}
+
+	lexer.Lex(lv)
+	assert.Equal(t, "$\x80", lv.Tkn.Value)
+
+	lexer.Lex(lv)
+	assert.Equal(t, "$\xff", lv.Tkn.Value)
+}
+
 func TestIgnoreControllCharacters(t *testing.T) {
 	src := "<?php \004 echo $b;"
 
