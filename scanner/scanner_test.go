@@ -191,11 +191,6 @@ func TestTokens(t *testing.T) {
 
 		-> ` + "\t\r\n" + ` ->prop
 
-		'adsf\'adsf\''
-
-		"test"
-		b"\$var $4 {a"
-
 		( array )
 		( bool )
 		( boolean )
@@ -379,10 +374,6 @@ func TestTokens(t *testing.T) {
 		T_OBJECT_OPERATOR.String(),
 		T_STRING.String(),
 
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-		T_CONSTANT_ENCAPSED_STRING.String(),
-
 		T_ARRAY_CAST.String(),
 		T_BOOL_CAST.String(),
 		T_BOOL_CAST.String(),
@@ -395,6 +386,62 @@ func TestTokens(t *testing.T) {
 		T_STRING_CAST.String(),
 		T_STRING_CAST.String(),
 		T_UNSET_CAST.String(),
+	}
+
+	lexer := NewLexer([]byte(src))
+	lexer.WithFreeFloating = true
+	lv := &lval{}
+	actual := []string{}
+
+	for {
+		token := lexer.Lex(lv)
+		if token == 0 {
+			break
+		}
+
+		actual = append(actual, TokenID(token).String())
+	}
+
+	assert.DeepEqual(t, expected, actual)
+}
+
+func TestConstantStrings(t *testing.T) {
+	src := `<?
+		'str'
+		'\''
+		'\\'
+
+		b"str"
+		"\""
+		"\\"
+
+		"\$var"
+		"$4"
+		"$"
+		"$\\"
+
+		"{"
+		"{a"
+		"\{$"
+	`
+
+	expected := []string{
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
+		T_CONSTANT_ENCAPSED_STRING.String(),
 	}
 
 	lexer := NewLexer([]byte(src))
@@ -1386,6 +1433,28 @@ func TestVarNameByteChars(t *testing.T) {
 
 	lexer.Lex(lv)
 	assert.Equal(t, "$\xff", lv.Tkn.Value)
+}
+
+func TestStringVarNameByteChars(t *testing.T) {
+	src := "<?php \"$\x80 $\xff\""
+
+	lexer := NewLexer([]byte(src))
+	lv := &lval{}
+
+	lexer.Lex(lv)
+	assert.Equal(t, "\"", lv.Tkn.Value)
+
+	lexer.Lex(lv)
+	assert.Equal(t, "$\x80", lv.Tkn.Value)
+
+	lexer.Lex(lv)
+	assert.Equal(t, " ", lv.Tkn.Value)
+
+	lexer.Lex(lv)
+	assert.Equal(t, "$\xff", lv.Tkn.Value)
+
+	lexer.Lex(lv)
+	assert.Equal(t, "\"", lv.Tkn.Value)
 }
 
 func TestIgnoreControllCharacters(t *testing.T) {

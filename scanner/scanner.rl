@@ -41,6 +41,16 @@ func (lex *Lexer) Lex(lval Lval) int {
         action heredoc_lbl_start {lblStart = lex.p}
         action heredoc_lbl_end   {lblEnd = lex.p}
 
+        action constant_string_new_line   {
+            if lex.data[lex.p] == '\n' {
+                lex.NewLines.Append(lex.p)
+            }
+
+            if lex.data[lex.p] == '\r' && lex.data[lex.p+1] != '\n' {
+                lex.NewLines.Append(lex.p)
+            }
+        }
+
         action is_not_heredoc_end { lex.isNotHeredocEnd(lex.p) }
         action is_not_comment_end { lex.isNotPhpCloseToken() && lex.isNotNewLine()  }
         action is_not_heredoc_end_or_var { lex.isNotHeredocEnd(lex.p) && lex.isNotStringVar() }
@@ -68,40 +78,53 @@ func (lex *Lexer) Lex(lval Lval) int {
 
         constant_string =
             start: (
-                "'"        -> qoute
+                "'"         -> qoute
                 | "b"i? '"' -> double_qoute
             ),
+
+            # single qoute string
+
             qoute: (
-                (any - [\\'\r\n]) -> qoute
-                | "\r" @{if lex.p+1 != eof && lex.data[lex.p+1] != '\n' {lex.NewLines.Append(lex.p)}} -> qoute
-                | "\n" @{lex.NewLines.Append(lex.p)} -> qoute
-                | "\\"                               -> qoute_any
-                | "'"                                -> final
+                (any - [\\'\r\n])                -> qoute
+                | "\r" @constant_string_new_line -> qoute
+                | "\n" @constant_string_new_line -> qoute
+                | "\\"                           -> qoute_any
+                | "'"                            -> final
             ),
             qoute_any: (
-                any_line -> qoute
+                (any - [\r\n])                   -> qoute
+                | "\r" @constant_string_new_line -> qoute
+                | "\n" @constant_string_new_line -> qoute
             ),
+
+            # double qoute string
+
             double_qoute: (
-                (any - [\\"${\r\n])  -> double_qoute
-                | "\r" @{if lex.p+1 != eof && lex.data[lex.p+1] != '\n' {lex.NewLines.Append(lex.p)}} -> double_qoute
-                | "\n" @{lex.NewLines.Append(lex.p)} -> double_qoute
-                | "\\"                               -> double_qoute_any
-                | '"'                                -> final
-                | '$'                                -> double_qoute_nonvarname
-                | '{'                                -> double_qoute_nondollar
+                (any - [\\"${\r\n])                -> double_qoute
+                | "\r" @constant_string_new_line   -> double_qoute
+                | "\n" @constant_string_new_line   -> double_qoute
+                | "\\"                             -> double_qoute_any
+                | '"'                              -> final
+                | '$'                              -> double_qoute_nonvarname
+                | '{'                              -> double_qoute_nondollar
             ),
             double_qoute_any: (
-                any_line -> double_qoute
+                (any - [\r\n])                     -> double_qoute
+                | "\r" @constant_string_new_line   -> double_qoute
+                | "\n" @constant_string_new_line   -> double_qoute
             ),
             double_qoute_nondollar: (
-                '"'    -> final
-                | "\\"               -> double_qoute_any
-                | [^$\\"] -> double_qoute
+                (any - [$"\r\n])                   -> double_qoute
+                | "\r" @constant_string_new_line   -> double_qoute
+                | "\n" @constant_string_new_line   -> double_qoute
+                | '"'                              -> final
             ),
             double_qoute_nonvarname: (
-                '"'                      -> final
-                | "\\"                   -> double_qoute_any
-                | /[^"\\{a-zA-Z_\x7f-\xff]/ -> double_qoute
+                (any - [\\{"\r\n] - varname_first) -> double_qoute
+                | "\r" @constant_string_new_line   -> double_qoute
+                | "\n" @constant_string_new_line   -> double_qoute
+                | "\\"                             -> double_qoute_any
+                | '"'                              -> final
             );
 
         main := |*
