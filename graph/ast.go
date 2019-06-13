@@ -6,10 +6,10 @@ import (
 
 type AST struct {
 	FileData  []byte
-	Positions *PositionStorage
-	Nodes     *NodeStorage
-	Edges     *EdgeStorage
-	Tokens    *TokenStorage
+	Positions PositionStorage
+	Nodes     NodeStorage
+	Edges     EdgeStorage
+	Tokens    TokenStorage
 	RootNode  NodeID
 
 	queue []queueItem
@@ -22,11 +22,130 @@ type queueItem struct {
 
 func (a *AST) Reset() {
 	a.FileData = a.FileData[:0]
-	a.Nodes.Reset()
-	a.Edges.Reset()
-	a.Positions.Reset()
-	a.Tokens.Reset()
+	a.Nodes = a.Nodes[:0]
+	a.Edges = a.Edges[:0]
+	a.Positions = a.Positions[:0]
+	a.Tokens = a.Tokens[:0]
 	a.RootNode = 0
+}
+
+func (a *AST) Link(nodeID NodeID, edgeType EdgeType, target uint32) {
+	edge := Edge{
+		Type:   edgeType,
+		Target: target,
+	}
+
+	edgeID := a.Edges.Put(edge)
+
+	nodeEdges := &a.Nodes[nodeID-1].Edges
+
+	if nodeEdges.First == 0 {
+		nodeEdges.First = edgeID
+		nodeEdges.Last = edgeID
+	} else {
+		a.Edges[nodeEdges.Last-1].next = edgeID
+		nodeEdges.Last = edgeID
+	}
+}
+
+func (a *AST) LinkFront(nodeID NodeID, edgeType EdgeType, target uint32) {
+	edge := Edge{
+		Type:   edgeType,
+		Target: target,
+	}
+
+	edgeID := a.Edges.Put(edge)
+
+	nodeEdges := &a.Nodes[nodeID-1].Edges
+
+	if nodeEdges.First == 0 {
+		nodeEdges.First = edgeID
+		nodeEdges.Last = edgeID
+	} else {
+		a.Edges[edgeID-1].next = nodeEdges.First
+		nodeEdges.First = edgeID
+	}
+}
+
+func (a *AST) RemoveEdges(nodeID NodeID, f EdgeFilter) EdgeList {
+	nodeEdges := &a.Nodes[nodeID-1].Edges
+
+	var removedEdges EdgeList
+	var prevEdgeID EdgeID
+
+	edgeID := nodeEdges.First
+	for edgeID != 0 {
+		edge := &a.Edges[edgeID-1]
+
+		if f(*edge) {
+			if prevEdgeID == 0 {
+				nodeEdges.First = edge.next
+			} else {
+				a.Edges[prevEdgeID-1].next = edge.next
+			}
+
+			removedEdges = a.AppendEdges(removedEdges, EdgeList{edgeID, edgeID})
+		} else {
+			prevEdgeID = edgeID
+		}
+
+		edgeID = edge.next
+	}
+
+	return removedEdges
+}
+
+func (a *AST) AppendEdges(src EdgeList, edges EdgeList) EdgeList {
+	if edges.First == 0 {
+		return src
+	}
+
+	if src.First == 0 {
+		return edges
+	}
+
+	a.Edges[src.Last-1].next = edges.First
+	src.Last = edges.Last
+
+	return src
+}
+
+func (a *AST) AppendNodeEdges(nodeID NodeID, edges EdgeList) {
+	nodeEdges := a.Nodes[nodeID-1].Edges
+	a.Nodes[nodeID-1].Edges = a.AppendEdges(nodeEdges, edges)
+}
+
+func (a *AST) PrependEdges(src EdgeList, edges EdgeList) EdgeList {
+	if edges.First == 0 {
+		return src
+	}
+
+	if src.First == 0 {
+		return edges
+	}
+
+	a.Edges[edges.Last-1].next = src.First
+	src.First = edges.First
+
+	return src
+}
+
+func (a *AST) EachEdge(edges EdgeList, callback func(e Edge) bool) {
+	edgeID := edges.First
+	for edgeID != 0 {
+		edge := a.Edges[edgeID-1]
+
+		if callback(edge) {
+			return
+		}
+
+		edgeID = edge.next
+	}
+}
+
+func (a *AST) PrependNodeEdges(nodeID NodeID, edges EdgeList) {
+	nodeEdges := a.Nodes[nodeID-1].Edges
+	a.Nodes[nodeID-1].Edges = a.PrependEdges(nodeEdges, edges)
 }
 
 func (stxtree *AST) Traverse(v Visitor) {
@@ -51,14 +170,18 @@ func (stxtree *AST) Traverse(v Visitor) {
 
 		if visitChild {
 			depth++
-			edges := stxtree.Edges.Get(node.Edge, EdgeTypeNode)
+			stxtree.EachEdge(node.Edges, func(e Edge) bool {
+				if e.Type != EdgeTypeNode {
+					return false
+				}
 
-			for i := len(edges) - 1; i >= 0; i-- {
 				stxtree.queue = append(stxtree.queue, queueItem{
-					id:    NodeID(edges[i].Target),
+					id:    NodeID(e.Target),
 					depth: depth,
 				})
-			}
+
+				return false
+			})
 		}
 
 	}
@@ -95,15 +218,24 @@ func (stxtree *AST) Nested() ast.Node {
 			Children: make(map[ast.NodeGroup][]ast.Node),
 		}
 
-		posEdges := stxtree.Edges.Get(node.Edge, EdgeTypePosition)
-		if len(posEdges) > 0 {
-			posID := PositionID(posEdges[0].Target)
-			stack[depth].Position = stxtree.Positions.Get(posID)
-		}
+		var posID PositionID
+		stxtree.EachEdge(node.Edges, func(e Edge) bool {
+			if e.Type != EdgeTypePosition {
+				return false
+			}
 
-		tknEdges := stxtree.Edges.Get(node.Edge, EdgeTypeToken)
-		for _, tknEdge := range tknEdges {
-			tokenID := TokenID(tknEdge.Target)
+			posID = PositionID(e.Target)
+			stack[depth].Position = stxtree.Positions.Get(posID)
+
+			return true
+		})
+
+		stxtree.EachEdge(node.Edges, func(e Edge) bool {
+			if e.Type != EdgeTypeToken {
+				return false
+			}
+
+			tokenID := TokenID(e.Target)
 
 			token := stxtree.Tokens.Get(tokenID)
 			tokenPos := stxtree.Positions.Get(token.Pos)
@@ -114,10 +246,11 @@ func (stxtree *AST) Nested() ast.Node {
 			}
 
 			stack[depth].Tokens[token.Group] = append(stack[depth].Tokens[token.Group], nestedToken)
-		}
 
-		if node.Type.Is(ast.NodeClassTypeValue) && len(posEdges) > 0 {
-			posID := PositionID(posEdges[0].Target)
+			return false
+		})
+
+		if node.Type.Is(ast.NodeClassTypeValue) && posID > 0 {
 			pos := stxtree.Positions.Get(posID)
 			stack[depth].Value = string(stxtree.FileData[pos.PS:pos.PE])
 		}
@@ -127,14 +260,19 @@ func (stxtree *AST) Nested() ast.Node {
 		}
 
 		depth++
-		edges := stxtree.Edges.Get(node.Edge, EdgeTypeNode)
 
-		for i := len(edges) - 1; i >= 0; i-- {
+		stxtree.EachEdge(node.Edges, func(e Edge) bool {
+			if e.Type != EdgeTypeNode {
+				return false
+			}
+
 			stxtree.queue = append(stxtree.queue, queueItem{
-				id:    NodeID(edges[i].Target),
+				id:    NodeID(e.Target),
 				depth: depth,
 			})
-		}
+
+			return false
+		})
 
 	}
 

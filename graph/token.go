@@ -1,6 +1,8 @@
 package graph
 
 import (
+	"encoding/json"
+
 	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/scanner"
 )
@@ -16,37 +18,38 @@ type Token struct {
 	Pos   PositionID
 }
 
-type TokenStorage struct {
-	buf []Token
+type token struct {
+	Type  string
+	Group string
+	Next  TokenID
+	Pos   PositionID
 }
 
-// NewTokenStorage creates new TokenStorage
-func NewTokenStorage(buf []Token) *TokenStorage {
-	return &TokenStorage{buf}
+func (t Token) MarshalJSON() ([]byte, error) {
+	out := token{
+		Type:  t.Type.String(),
+		Group: t.Group.String(),
+		Next:  t.Next,
+		Pos:   t.Pos,
+	}
+
+	return json.Marshal(out)
 }
 
-// Reset storage
-func (b *TokenStorage) Reset() {
-	b.buf = b.buf[:0]
-}
+type TokenStorage []Token
 
 // Create saves new Node in store
 func (b *TokenStorage) Create(s Token) TokenID {
-	b.buf = append(b.buf, s)
-	return TokenID(len(b.buf))
+	*b = append(*b, s)
+	return TokenID(len(*b))
 }
 
 // Save modified Node
-func (b *TokenStorage) Save(id TokenID, s Token) {
-	b.buf[id-1] = s
+func (b TokenStorage) Save(id TokenID, s Token) {
+	b[id-1] = s
 }
 
 // Get returns Node by NodeID
 func (b TokenStorage) Get(id TokenID) Token {
-	return b.buf[id-1]
-}
-
-// GetAll returns all Nodes
-func (b TokenStorage) GetAll() []Token {
-	return b.buf
+	return b[id-1]
 }

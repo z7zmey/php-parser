@@ -8,22 +8,16 @@ import (
 	"github.com/z7zmey/php-parser/scanner"
 )
 
-type lastEdgeCache struct {
-	nodeID graph.NodeID
-	edgeID graph.EdgeID
-}
-
 type Parser interface {
 	Parse([]byte, *graph.AST) int
 	GetErrors() []*errors.Error
 }
 
 type AbstractParser struct {
-	Lexer         scanner.Scanner
-	CurrentToken  *scanner.Token
-	List          stackedNodeList
-	Ast           *graph.AST
-	lastEdgeCache lastEdgeCache
+	Lexer        scanner.Scanner
+	CurrentToken *scanner.Token
+	List         stackedNodeList
+	Ast          *graph.AST
 }
 
 func (l *AbstractParser) Error(msg string) {
@@ -45,7 +39,6 @@ func (p *AbstractParser) GetErrors() []*errors.Error {
 func (p *AbstractParser) Reset(src []byte, a *graph.AST) {
 	p.Lexer.Reset(src)
 	p.List.Reset()
-	p.lastEdgeCache = lastEdgeCache{}
 
 	a.FileData = src
 
@@ -58,13 +51,19 @@ func (p *AbstractParser) getPosID(n graph.NodeID) graph.PositionID {
 		return 0
 	}
 
-	e := p.Ast.Nodes.Get(n).Edge
-	posEdges := p.Ast.Edges.Get(e, graph.EdgeTypePosition)
-	if len(posEdges) == 0 {
-		return 0
-	}
+	node := p.Ast.Nodes.Get(n)
+	var posID graph.PositionID
+	p.Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+		if e.Type != graph.EdgeTypePosition {
+			return false
+		}
 
-	return graph.PositionID(posEdges[0].Target)
+		posID = graph.PositionID(e.Target)
+
+		return true
+	})
+
+	return posID
 }
 
 func (p *AbstractParser) getListStartPosID(l []graph.NodeID) graph.PositionID {
@@ -153,8 +152,6 @@ func (p *AbstractParser) NewPosition(startNodeIDlist []graph.NodeID, tokenList [
 }
 
 func (p *AbstractParser) Children(prevNodeID graph.NodeID, parentNodeID graph.NodeID, nodeGroup ast.NodeGroup, children ...graph.NodeID) graph.NodeID {
-	lastEdgeID := p.lastEdge(parentNodeID)
-
 	for _, childNodeID := range children {
 		if childNodeID == 0 {
 			continue
@@ -164,203 +161,53 @@ func (p *AbstractParser) Children(prevNodeID graph.NodeID, parentNodeID graph.No
 		childNode.Group = nodeGroup
 		p.Ast.Nodes.Save(childNodeID, childNode)
 
-		edge := graph.Edge{
-			Type:   graph.EdgeTypeNode,
-			Target: uint32(childNodeID),
-		}
-		edgeID := p.Ast.Edges.Put(edge)
-
-		if lastEdgeID == 0 {
-			node := p.Ast.Nodes.Get(parentNodeID)
-			node.Edge = edgeID
-			p.Ast.Nodes.Save(parentNodeID, node)
-		} else {
-			lastEdge := p.Ast.Edges.GetOne(lastEdgeID)
-			lastEdge.Next = edgeID
-			p.Ast.Edges.Set(lastEdgeID, lastEdge)
-		}
-
-		lastEdgeID = edgeID
-		prevNodeID = childNodeID
+		p.Ast.Link(parentNodeID, graph.EdgeTypeNode, uint32(childNodeID))
 	}
 
-	p.lastEdgeCache = lastEdgeCache{
-		nodeID: parentNodeID,
-		edgeID: lastEdgeID,
-	}
-
-	return prevNodeID
+	return 0
 }
 
 func (p *AbstractParser) SavePosition(nodeID graph.NodeID, posID graph.PositionID) {
-	edge := graph.Edge{
-		Type:   graph.EdgeTypePosition,
-		Target: uint32(posID),
-	}
-	edgeID := p.Ast.Edges.Put(edge)
-
-	lastEdgeID := p.lastEdge(nodeID)
-	if lastEdgeID == 0 {
-		node := p.Ast.Nodes.Get(nodeID)
-		node.Edge = edgeID
-		p.Ast.Nodes.Save(nodeID, node)
-	} else {
-		lastEdge := p.Ast.Edges.GetOne(lastEdgeID)
-		lastEdge.Next = edgeID
-		p.Ast.Edges.Set(lastEdgeID, lastEdge)
-	}
+	p.Ast.Link(nodeID, graph.EdgeTypePosition, uint32(posID))
 }
 
-func (p *AbstractParser) lastEdge(nodeID graph.NodeID) graph.EdgeID {
-	if p.lastEdgeCache.nodeID == nodeID {
-		return p.lastEdgeCache.edgeID
-	}
-
-	node := p.Ast.Nodes.Get(nodeID)
-	edgeID := node.Edge
-
-	return p.Ast.Edges.GetLastID(edgeID)
-}
-
-func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup, ffStrs []scanner.Token) {
-	lastEdgeID := p.lastEdge(nodeID)
-
-	for _, str := range ffStrs {
-		tkn := p.convertToken(str)
+func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
+	for _, token := range tokens {
+		tkn := p.convertToken(token)
 		tkn.Group = group
 		tokenID := p.Ast.Tokens.Create(tkn)
 
-		edge := graph.Edge{
-			Type:   graph.EdgeTypeToken,
-			Target: uint32(tokenID),
-		}
-		edgeID := p.Ast.Edges.Put(edge)
+		p.Ast.Link(nodeID, graph.EdgeTypeToken, uint32(tokenID))
 
-		if lastEdgeID == 0 {
-			node := p.Ast.Nodes.Get(nodeID)
-			node.Edge = edgeID
-			p.Ast.Nodes.Save(nodeID, node)
-		} else {
-			lastEdge := p.Ast.Edges.GetOne(lastEdgeID)
-			lastEdge.Next = edgeID
-			p.Ast.Edges.Set(lastEdgeID, lastEdge)
-		}
-
-		lastEdgeID = edgeID
-	}
-
-	p.lastEdgeCache = lastEdgeCache{
-		nodeID: nodeID,
-		edgeID: lastEdgeID,
 	}
 }
 
-func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup, ffStrs []scanner.Token) {
-	bufEdgeID := p.Ast.Nodes.Get(nodeID).Edge
-
-	var lastEdgeID graph.EdgeID
-	for _, str := range ffStrs {
-		tkn := p.convertToken(str)
+func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
+	for i := len(tokens) - 1; i >= 0; i-- {
+		tkn := p.convertToken(tokens[i])
 		tkn.Group = group
 		tokenID := p.Ast.Tokens.Create(tkn)
 
-		edge := graph.Edge{
-			Type:   graph.EdgeTypeToken,
-			Target: uint32(tokenID),
-		}
-		edgeID := p.Ast.Edges.Put(edge)
-
-		if lastEdgeID == 0 {
-			node := p.Ast.Nodes.Get(nodeID)
-			node.Edge = edgeID
-			p.Ast.Nodes.Save(nodeID, node)
-		} else {
-			lastEdge := p.Ast.Edges.GetOne(lastEdgeID)
-			lastEdge.Next = edgeID
-			p.Ast.Edges.Set(lastEdgeID, lastEdge)
-		}
-
-		lastEdgeID = edgeID
-	}
-
-	if lastEdgeID != 0 {
-		lastEdge := p.Ast.Edges.GetOne(lastEdgeID)
-		lastEdge.Next = bufEdgeID
-		p.Ast.Edges.Set(lastEdgeID, lastEdge)
+		p.Ast.LinkFront(nodeID, graph.EdgeTypeToken, uint32(tokenID))
 	}
 }
 
-// [] => (prev) => (start) => ()
 func (p *AbstractParser) MoveStartTokens(src graph.NodeID, dst graph.NodeID) {
-	srcNode := p.Ast.Nodes.Get(src)
-
-	if srcNode.Edge == 0 {
-		return
-	}
-
-	edgeID := srcNode.Edge
-
-	var prevEdgeID graph.EdgeID
-	for {
-		edge := p.Ast.Edges.GetOne(edgeID)
-		if edge.Type == graph.EdgeTypeToken {
-			token := p.Ast.Tokens.Get(graph.TokenID(edge.Target))
-			if token.Group == ast.TokenGroupStart {
-				break
-			}
+	list := p.Ast.RemoveEdges(src, func(e graph.Edge) bool {
+		if e.Type != graph.EdgeTypeToken {
+			return false
 		}
 
-		if edge.Next == 0 {
-			return
-		}
+		token := p.Ast.Tokens.Get(graph.TokenID(e.Target))
 
-		prevEdgeID = edgeID
-		edgeID = edge.Next
-	}
-
-	startEdgeID := edgeID
-	endEdgeID := startEdgeID
-
-	for {
-		edge := p.Ast.Edges.GetOne(edgeID)
-		if edge.Type != graph.EdgeTypeToken {
-			break
-		}
-
-		token := p.Ast.Tokens.Get(graph.TokenID(edge.Target))
 		if token.Group != ast.TokenGroupStart {
-			break
+			return false
 		}
 
-		endEdgeID = edgeID
+		return true
+	})
 
-		if edge.Next == 0 {
-			break
-		}
-
-		edgeID = edge.Next
-	}
-
-	edge := p.Ast.Edges.GetOne(edgeID)
-
-	if prevEdgeID == 0 {
-		node := p.Ast.Nodes.Get(src)
-		node.Edge = edge.Next
-		p.Ast.Nodes.Save(src, node)
-	} else {
-		prevEdge := p.Ast.Edges.GetOne(prevEdgeID)
-		prevEdge.Next = edge.Next
-		p.Ast.Edges.Set(prevEdgeID, prevEdge)
-	}
-
-	dstNode := p.Ast.Nodes.Get(dst)
-	endEdge := p.Ast.Edges.GetOne(endEdgeID)
-
-	endEdge.Next = dstNode.Edge
-	dstNode.Edge = startEdgeID
-
-	p.Ast.Nodes.Save(dst, dstNode)
-	p.Ast.Edges.Set(endEdgeID, endEdge)
+	p.Ast.PrependNodeEdges(dst, list)
 }
 
 func (p *AbstractParser) convertToken(token scanner.Token) graph.Token {

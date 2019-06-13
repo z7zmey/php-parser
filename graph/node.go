@@ -15,58 +15,41 @@ type Node struct {
 	Flag  ast.NodeFlag
 	Group ast.NodeGroup
 
-	Edge EdgeID
+	Edges EdgeList
 }
 
 type node struct {
 	Type  string
 	Group string
 
-	Edge EdgeID
+	Edges EdgeList
 }
 
 func (n Node) MarshalJSON() ([]byte, error) {
 	out := node{
 		Type:  n.Type.String(),
 		Group: n.Group.String(),
-		Edge:  n.Edge,
+		Edges: n.Edges,
 	}
 
 	return json.Marshal(out)
 }
 
 // NodeStorage store nodes
-type NodeStorage struct {
-	buf []Node
-}
-
-// NewNodeStorage creates new NodeStorage
-func NewNodeStorage(buf []Node) *NodeStorage {
-	return &NodeStorage{buf}
-}
-
-// Reset storage
-func (b *NodeStorage) Reset() {
-	b.buf = b.buf[:0]
-}
+type NodeStorage []Node
 
 // Create saves new Node in store
 func (b *NodeStorage) Create(n Node) NodeID {
-	b.buf = append(b.buf, n)
-	return NodeID(len(b.buf))
+	*b = append(*b, n)
+	return NodeID(len(*b))
 }
 
 // Save modified Node
-func (b *NodeStorage) Save(id NodeID, n Node) {
-	b.buf[id-1] = n
+func (b NodeStorage) Save(id NodeID, n Node) {
+	b[id-1] = n
 }
 
 // Get returns Node by NodeID
 func (b NodeStorage) Get(id NodeID) Node {
-	return b.buf[id-1]
-}
-
-// GetAll returns all Nodes
-func (b NodeStorage) GetAll() []Node {
-	return b.buf
+	return b[id-1]
 }

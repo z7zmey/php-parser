@@ -5,7 +5,6 @@ import (
 
 	"gotest.tools/assert"
 
-	"github.com/z7zmey/php-parser/ast"
 	"github.com/z7zmey/php-parser/errors"
 	"github.com/z7zmey/php-parser/graph"
 	"github.com/z7zmey/php-parser/node"
@@ -16121,10 +16120,7 @@ func TestPhp7(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{
-		Positions: graph.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     graph.NewNodeStorage(make([]graph.Node, 0, 1024)),
-	})
+	php7parser.Parse([]byte(src), &graph.AST{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16239,10 +16235,7 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{
-		Positions: graph.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     graph.NewNodeStorage(make([]graph.Node, 0, 1024)),
-	})
+	php7parser.Parse([]byte(src), &graph.AST{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16432,10 +16425,7 @@ CAD;
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{
-		Positions: graph.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     graph.NewNodeStorage(make([]graph.Node, 0, 1024)),
-	})
+	php7parser.Parse([]byte(src), &graph.AST{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16455,10 +16445,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{
-		Positions: graph.NewPositionStorage(make([]ast.Position, 0, 1024)),
-		Nodes:     graph.NewNodeStorage(make([]graph.Node, 0, 1024)),
-	})
+	php7parser.Parse([]byte(src), &graph.AST{})
 	actual := php7parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)
 }

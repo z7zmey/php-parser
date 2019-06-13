@@ -7,36 +7,20 @@ var EdgeTypePosition = NewEdgeType("position")
 type PositionID uint32
 
 // PositionStorage stores positions
-type PositionStorage struct {
-	buf []ast.Position
-}
-
-// NewPositionStorage creates new position buffer
-func NewPositionStorage(buf []ast.Position) *PositionStorage {
-	return &PositionStorage{buf}
-}
-
-func (b *PositionStorage) Reset() {
-	b.buf = b.buf[:0]
-}
+type PositionStorage []ast.Position
 
 // Create saves new Position in store
 func (b *PositionStorage) Create(n ast.Position) PositionID {
-	b.buf = append(b.buf, n)
-	return PositionID(len(b.buf))
+	*b = append(*b, n)
+	return PositionID(len(*b))
 }
 
 // Save modified Position
-func (b *PositionStorage) Save(id PositionID, n ast.Position) {
-	b.buf[id-1] = n
+func (b PositionStorage) Save(id PositionID, n ast.Position) {
+	b[id-1] = n
 }
 
 // Get returns position by PositionID
 func (b PositionStorage) Get(id PositionID) ast.Position {
-	return b.buf[id-1]
-}
-
-// GetAll returns all Positions
-func (b PositionStorage) GetAll() []ast.Position {
-	return b.buf
+	return b[id-1]
 }

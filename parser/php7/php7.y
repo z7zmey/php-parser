@@ -943,10 +943,18 @@ use_declaration:
                 $$ = $1
 
                 // save tokens
-                edgeID := yylex.(*Parser).Ast.Nodes.Get($1).Edge
-                edges := yylex.(*Parser).Ast.Edges.Get(edgeID, graph.EdgeTypeNode)
-                useNodeID := graph.NodeID(edges[0].Target)
-                yylex.(*Parser).MoveStartTokens(useNodeID, $$)
+                node := yylex.(*Parser).Ast.Nodes.Get($1)
+
+                yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+                    if e.Type != graph.EdgeTypeNode {
+                        return false
+                    }
+
+                    useNodeID := graph.NodeID(e.Target)
+                    yylex.(*Parser).MoveStartTokens(useNodeID, $$)
+
+                    return true
+                })
 
                 yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
             }

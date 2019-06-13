@@ -384,24 +384,14 @@ func BenchmarkPhp7(b *testing.B) {
 	php7parser := php7.NewParser()
 
 	for n := 0; n < b.N; n++ {
-		a := &graph.AST{
-			Nodes:     &graph.NodeStorage{},
-			Edges:     &graph.EdgeStorage{},
-			Positions: &graph.PositionStorage{},
-			Tokens:    &graph.TokenStorage{},
-		}
+		a := &graph.AST{}
 		php7parser.Parse([]byte(src), a)
 	}
 }
 
 func BenchmarkPhp7Reuse(b *testing.B) {
 	php7parser := php7.NewParser()
-	a := &graph.AST{
-		Nodes:     &graph.NodeStorage{},
-		Edges:     &graph.EdgeStorage{},
-		Positions: &graph.PositionStorage{},
-		Tokens:    &graph.TokenStorage{},
-	}
+	a := &graph.AST{}
 	for n := 0; n < b.N; n++ {
 		a.Reset()
 		php7parser.Parse([]byte(src), a)

@@ -332,7 +332,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser/php7/php7.y:6590
+//line parser/php7/php7.y:6598
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -3241,16 +3241,24 @@ yydefault:
 			yyVAL.node = yyDollar[1].node
 
 			// save tokens
-			edgeID := yylex.(*Parser).Ast.Nodes.Get(yyDollar[1].node).Edge
-			edges := yylex.(*Parser).Ast.Edges.Get(edgeID, graph.EdgeTypeNode)
-			useNodeID := graph.NodeID(edges[0].Target)
-			yylex.(*Parser).MoveStartTokens(useNodeID, yyVAL.node)
+			node := yylex.(*Parser).Ast.Nodes.Get(yyDollar[1].node)
+
+			yylex.(*Parser).Ast.EachEdge(node.Edges, func(e graph.Edge) bool {
+				if e.Type != graph.EdgeTypeNode {
+					return false
+				}
+
+				useNodeID := graph.NodeID(e.Target)
+				yylex.(*Parser).MoveStartTokens(useNodeID, yyVAL.node)
+
+				return true
+			})
 
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 119:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:954
+		//line parser/php7/php7.y:962
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -3262,7 +3270,7 @@ yydefault:
 		}
 	case 120:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:967
+		//line parser/php7/php7.y:975
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -3274,7 +3282,7 @@ yydefault:
 		}
 	case 121:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:977
+		//line parser/php7/php7.y:985
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -3283,7 +3291,7 @@ yydefault:
 		}
 	case 122:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:987
+		//line parser/php7/php7.y:995
 		{
 			// TODO
 			// if inlineHtmlNode, ok := $2.(*stmt.InlineHtml); ok && len($1) > 0 {
@@ -3299,7 +3307,7 @@ yydefault:
 		}
 	case 123:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1001
+		//line parser/php7/php7.y:1009
 		{
 			yylex.(*Parser).List.Push()
 
@@ -3307,7 +3315,7 @@ yydefault:
 		}
 	case 124:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1010
+		//line parser/php7/php7.y:1018
 		{
 			// error
 			yyVAL.node = 0
@@ -3316,7 +3324,7 @@ yydefault:
 		}
 	case 125:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1017
+		//line parser/php7/php7.y:1025
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3324,7 +3332,7 @@ yydefault:
 		}
 	case 126:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1023
+		//line parser/php7/php7.y:1031
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3332,7 +3340,7 @@ yydefault:
 		}
 	case 127:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1029
+		//line parser/php7/php7.y:1037
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3340,7 +3348,7 @@ yydefault:
 		}
 	case 128:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1035
+		//line parser/php7/php7.y:1043
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3348,7 +3356,7 @@ yydefault:
 		}
 	case 129:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1041
+		//line parser/php7/php7.y:1049
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3356,7 +3364,7 @@ yydefault:
 		}
 	case 130:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:1047
+		//line parser/php7/php7.y:1055
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtHaltCompiler,
@@ -3374,7 +3382,7 @@ yydefault:
 		}
 	case 131:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1065
+		//line parser/php7/php7.y:1073
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -3393,7 +3401,7 @@ yydefault:
 		}
 	case 132:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1082
+		//line parser/php7/php7.y:1090
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3401,7 +3409,7 @@ yydefault:
 		}
 	case 133:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1088
+		//line parser/php7/php7.y:1096
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3409,7 +3417,7 @@ yydefault:
 		}
 	case 134:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:1094
+		//line parser/php7/php7.y:1102
 		{
 			yyVAL.node = yyDollar[5].node
 
@@ -3425,7 +3433,7 @@ yydefault:
 		}
 	case 135:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/php7/php7.y:1108
+		//line parser/php7/php7.y:1116
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtDo,
@@ -3447,7 +3455,7 @@ yydefault:
 		}
 	case 136:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/php7/php7.y:1128
+		//line parser/php7/php7.y:1136
 		{
 			prevNodeID := yylex.(*Parser).Children(0, yyDollar[9].node, ast.NodeGroupLoop, yylex.(*Parser).List.Pop()...)
 			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupCond, yylex.(*Parser).List.Pop()...)
@@ -3467,7 +3475,7 @@ yydefault:
 		}
 	case 137:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:1146
+		//line parser/php7/php7.y:1154
 		{
 			yyVAL.node = yyDollar[5].node
 
@@ -3483,7 +3491,7 @@ yydefault:
 		}
 	case 138:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1160
+		//line parser/php7/php7.y:1168
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtBreak,
@@ -3501,7 +3509,7 @@ yydefault:
 		}
 	case 139:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1176
+		//line parser/php7/php7.y:1184
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtContinue,
@@ -3519,7 +3527,7 @@ yydefault:
 		}
 	case 140:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1192
+		//line parser/php7/php7.y:1200
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtReturn,
@@ -3537,7 +3545,7 @@ yydefault:
 		}
 	case 141:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1208
+		//line parser/php7/php7.y:1216
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -3557,7 +3565,7 @@ yydefault:
 		}
 	case 142:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1226
+		//line parser/php7/php7.y:1234
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -3577,7 +3585,7 @@ yydefault:
 		}
 	case 143:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1244
+		//line parser/php7/php7.y:1252
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -3598,7 +3606,7 @@ yydefault:
 		}
 	case 144:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1263
+		//line parser/php7/php7.y:1271
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtInlineHtml,
@@ -3612,7 +3620,7 @@ yydefault:
 		}
 	case 145:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1275
+		//line parser/php7/php7.y:1283
 		{
 			tmp := yyDollar[1].node
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
@@ -3631,7 +3639,7 @@ yydefault:
 		}
 	case 146:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:1292
+		//line parser/php7/php7.y:1300
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -3659,7 +3667,7 @@ yydefault:
 		}
 	case 147:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/php7/php7.y:1318
+		//line parser/php7/php7.y:1326
 		{
 			prevNodeID := yylex.(*Parser).Children(0, yyDollar[7].node, ast.NodeGroupExpr, yyDollar[3].node)
 			yylex.(*Parser).Children(prevNodeID, yyDollar[7].node, ast.NodeGroupVar, yyDollar[5].node)
@@ -3677,7 +3685,7 @@ yydefault:
 		}
 	case 148:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/php7/php7.y:1335
+		//line parser/php7/php7.y:1343
 		{
 			prevNodeID := yylex.(*Parser).Children(0, yyDollar[9].node, ast.NodeGroupExpr, yyDollar[3].node)
 			prevNodeID = yylex.(*Parser).Children(prevNodeID, yyDollar[9].node, ast.NodeGroupKey, yyDollar[5].node)
@@ -3697,7 +3705,7 @@ yydefault:
 		}
 	case 149:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:1353
+		//line parser/php7/php7.y:1361
 		{
 			children := yylex.(*Parser).List.Pop()
 			yylex.(*Parser).Children(0, yyDollar[5].node, ast.NodeGroupConsts, children...)
@@ -3714,7 +3722,7 @@ yydefault:
 		}
 	case 150:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1368
+		//line parser/php7/php7.y:1376
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtNop,
@@ -3729,7 +3737,7 @@ yydefault:
 		}
 	case 151:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:1381
+		//line parser/php7/php7.y:1389
 		{
 			childrenCatches := yylex.(*Parser).List.Pop()
 			childrenStmts := yylex.(*Parser).List.Pop()
@@ -3759,7 +3767,7 @@ yydefault:
 		}
 	case 152:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1409
+		//line parser/php7/php7.y:1417
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtThrow,
@@ -3777,7 +3785,7 @@ yydefault:
 		}
 	case 153:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1425
+		//line parser/php7/php7.y:1433
 		{
 			LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -3801,7 +3809,7 @@ yydefault:
 		}
 	case 154:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1447
+		//line parser/php7/php7.y:1455
 		{
 			LableNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -3823,7 +3831,7 @@ yydefault:
 		}
 	case 155:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1469
+		//line parser/php7/php7.y:1477
 		{
 			yylex.(*Parser).List.Push()
 
@@ -3831,7 +3839,7 @@ yydefault:
 		}
 	case 156:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/php7/php7.y:1475
+		//line parser/php7/php7.y:1483
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -3867,7 +3875,7 @@ yydefault:
 		}
 	case 157:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1511
+		//line parser/php7/php7.y:1519
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -3876,7 +3884,7 @@ yydefault:
 		}
 	case 158:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1518
+		//line parser/php7/php7.y:1526
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -3888,7 +3896,7 @@ yydefault:
 		}
 	case 159:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1531
+		//line parser/php7/php7.y:1539
 		{
 			yyVAL.node = 0
 
@@ -3896,7 +3904,7 @@ yydefault:
 		}
 	case 160:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:1537
+		//line parser/php7/php7.y:1545
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtFinally,
@@ -3914,7 +3922,7 @@ yydefault:
 		}
 	case 161:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1556
+		//line parser/php7/php7.y:1564
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -3923,7 +3931,7 @@ yydefault:
 		}
 	case 162:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1563
+		//line parser/php7/php7.y:1571
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -3935,7 +3943,7 @@ yydefault:
 		}
 	case 163:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1576
+		//line parser/php7/php7.y:1584
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -3943,7 +3951,7 @@ yydefault:
 		}
 	case 164:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line parser/php7/php7.y:1585
+		//line parser/php7/php7.y:1593
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -3981,31 +3989,31 @@ yydefault:
 		}
 	case 165:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1625
+		//line parser/php7/php7.y:1633
 		{
 			yyVAL.token = nil
 		}
 	case 166:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1629
+		//line parser/php7/php7.y:1637
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 167:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1636
+		//line parser/php7/php7.y:1644
 		{
 			yyVAL.token = nil
 		}
 	case 168:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1640
+		//line parser/php7/php7.y:1648
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 169:
 		yyDollar = yyS[yypt-9 : yypt+1]
-		//line parser/php7/php7.y:1647
+		//line parser/php7/php7.y:1655
 		{
 			childrenStmts := yylex.(*Parser).List.Pop()
 			childrenModifiers := yylex.(*Parser).List.Pop()
@@ -4037,7 +4045,7 @@ yydefault:
 		}
 	case 170:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line parser/php7/php7.y:1677
+		//line parser/php7/php7.y:1685
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4064,7 +4072,7 @@ yydefault:
 		}
 	case 171:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1705
+		//line parser/php7/php7.y:1713
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -4073,7 +4081,7 @@ yydefault:
 		}
 	case 172:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1712
+		//line parser/php7/php7.y:1720
 		{
 			yylex.(*Parser).List.Add(yyDollar[2].node)
 
@@ -4081,7 +4089,7 @@ yydefault:
 		}
 	case 173:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1721
+		//line parser/php7/php7.y:1729
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4095,7 +4103,7 @@ yydefault:
 		}
 	case 174:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1733
+		//line parser/php7/php7.y:1741
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4109,7 +4117,7 @@ yydefault:
 		}
 	case 175:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:1748
+		//line parser/php7/php7.y:1756
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4134,7 +4142,7 @@ yydefault:
 		}
 	case 176:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/php7/php7.y:1774
+		//line parser/php7/php7.y:1782
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4160,7 +4168,7 @@ yydefault:
 		}
 	case 177:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1801
+		//line parser/php7/php7.y:1809
 		{
 			yyVAL.node = 0
 
@@ -4168,7 +4176,7 @@ yydefault:
 		}
 	case 178:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1807
+		//line parser/php7/php7.y:1815
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtClassExtends,
@@ -4184,7 +4192,7 @@ yydefault:
 		}
 	case 179:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1824
+		//line parser/php7/php7.y:1832
 		{
 			yyVAL.node = 0
 
@@ -4192,7 +4200,7 @@ yydefault:
 		}
 	case 180:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1830
+		//line parser/php7/php7.y:1838
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4210,7 +4218,7 @@ yydefault:
 		}
 	case 181:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:1849
+		//line parser/php7/php7.y:1857
 		{
 			yyVAL.node = 0
 
@@ -4218,7 +4226,7 @@ yydefault:
 		}
 	case 182:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1855
+		//line parser/php7/php7.y:1863
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4236,7 +4244,7 @@ yydefault:
 		}
 	case 183:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1874
+		//line parser/php7/php7.y:1882
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4244,7 +4252,7 @@ yydefault:
 		}
 	case 184:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:1880
+		//line parser/php7/php7.y:1888
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprReference,
@@ -4260,7 +4268,7 @@ yydefault:
 		}
 	case 185:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:1894
+		//line parser/php7/php7.y:1902
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprList,
@@ -4278,7 +4286,7 @@ yydefault:
 		}
 	case 186:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:1910
+		//line parser/php7/php7.y:1918
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprShortList,
@@ -4295,7 +4303,7 @@ yydefault:
 		}
 	case 187:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1928
+		//line parser/php7/php7.y:1936
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtFor,
@@ -4308,7 +4316,7 @@ yydefault:
 		}
 	case 188:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:1939
+		//line parser/php7/php7.y:1947
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4336,7 +4344,7 @@ yydefault:
 		}
 	case 189:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:1968
+		//line parser/php7/php7.y:1976
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtForeach,
@@ -4349,7 +4357,7 @@ yydefault:
 		}
 	case 190:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:1979
+		//line parser/php7/php7.y:1987
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4377,7 +4385,7 @@ yydefault:
 		}
 	case 191:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2008
+		//line parser/php7/php7.y:2016
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtDeclare,
@@ -4390,7 +4398,7 @@ yydefault:
 		}
 	case 192:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2019
+		//line parser/php7/php7.y:2027
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4418,7 +4426,7 @@ yydefault:
 		}
 	case 193:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2048
+		//line parser/php7/php7.y:2056
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4443,7 +4451,7 @@ yydefault:
 		}
 	case 194:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2071
+		//line parser/php7/php7.y:2079
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4470,7 +4478,7 @@ yydefault:
 		}
 	case 195:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2096
+		//line parser/php7/php7.y:2104
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4498,7 +4506,7 @@ yydefault:
 		}
 	case 196:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:2122
+		//line parser/php7/php7.y:2130
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4528,7 +4536,7 @@ yydefault:
 		}
 	case 197:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:2153
+		//line parser/php7/php7.y:2161
 		{
 			yylex.(*Parser).List.Push()
 
@@ -4536,7 +4544,7 @@ yydefault:
 		}
 	case 198:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:2159
+		//line parser/php7/php7.y:2167
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4558,7 +4566,7 @@ yydefault:
 		}
 	case 199:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2179
+		//line parser/php7/php7.y:2187
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4580,19 +4588,19 @@ yydefault:
 		}
 	case 200:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2202
+		//line parser/php7/php7.y:2210
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 201:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2206
+		//line parser/php7/php7.y:2214
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 202:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2213
+		//line parser/php7/php7.y:2221
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtWhile,
@@ -4605,7 +4613,7 @@ yydefault:
 		}
 	case 203:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2224
+		//line parser/php7/php7.y:2232
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4633,7 +4641,7 @@ yydefault:
 		}
 	case 204:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:2253
+		//line parser/php7/php7.y:2261
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtIf,
@@ -4652,7 +4660,7 @@ yydefault:
 		}
 	case 205:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:2270
+		//line parser/php7/php7.y:2278
 		{
 			elseIfNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtElseIf,
@@ -4675,7 +4683,7 @@ yydefault:
 		}
 	case 206:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2294
+		//line parser/php7/php7.y:2302
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -4683,7 +4691,7 @@ yydefault:
 		}
 	case 207:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2300
+		//line parser/php7/php7.y:2308
 		{
 			elseNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtElse,
@@ -4701,7 +4709,7 @@ yydefault:
 		}
 	case 208:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:2319
+		//line parser/php7/php7.y:2327
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4730,7 +4738,7 @@ yydefault:
 		}
 	case 209:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line parser/php7/php7.y:2346
+		//line parser/php7/php7.y:2354
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4761,7 +4769,7 @@ yydefault:
 		}
 	case 210:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2378
+		//line parser/php7/php7.y:2386
 		{
 			yyVAL.node = yyDollar[1].node
 			yylex.(*Parser).SavePosition(yyVAL.node, yylex.(*Parser).NewPosition([]graph.NodeID{yyDollar[1].node}, []*scanner.Token{yyDollar[3].token}, nil))
@@ -4775,7 +4783,7 @@ yydefault:
 		}
 	case 211:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:2390
+		//line parser/php7/php7.y:2398
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -4807,13 +4815,13 @@ yydefault:
 		}
 	case 212:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2423
+		//line parser/php7/php7.y:2431
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 213:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:2427
+		//line parser/php7/php7.y:2435
 		{
 			yylex.(*Parser).List.Push()
 
@@ -4821,7 +4829,7 @@ yydefault:
 		}
 	case 214:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2436
+		//line parser/php7/php7.y:2444
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -4830,7 +4838,7 @@ yydefault:
 		}
 	case 215:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2443
+		//line parser/php7/php7.y:2451
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -4842,7 +4850,7 @@ yydefault:
 		}
 	case 216:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2456
+		//line parser/php7/php7.y:2464
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -4927,7 +4935,7 @@ yydefault:
 		}
 	case 217:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:2539
+		//line parser/php7/php7.y:2547
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5014,7 +5022,7 @@ yydefault:
 		}
 	case 218:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:2627
+		//line parser/php7/php7.y:2635
 		{
 			yyVAL.node = 0
 
@@ -5022,7 +5030,7 @@ yydefault:
 		}
 	case 219:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2633
+		//line parser/php7/php7.y:2641
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5030,7 +5038,7 @@ yydefault:
 		}
 	case 220:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2642
+		//line parser/php7/php7.y:2650
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5038,7 +5046,7 @@ yydefault:
 		}
 	case 221:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:2648
+		//line parser/php7/php7.y:2656
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeNullable,
@@ -5054,7 +5062,7 @@ yydefault:
 		}
 	case 222:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2665
+		//line parser/php7/php7.y:2673
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5068,7 +5076,7 @@ yydefault:
 		}
 	case 223:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2677
+		//line parser/php7/php7.y:2685
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5082,7 +5090,7 @@ yydefault:
 		}
 	case 224:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2689
+		//line parser/php7/php7.y:2697
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5090,7 +5098,7 @@ yydefault:
 		}
 	case 225:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:2698
+		//line parser/php7/php7.y:2706
 		{
 			yyVAL.node = 0
 
@@ -5098,7 +5106,7 @@ yydefault:
 		}
 	case 226:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:2704
+		//line parser/php7/php7.y:2712
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtReturnType,
@@ -5114,7 +5122,7 @@ yydefault:
 		}
 	case 227:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:2721
+		//line parser/php7/php7.y:2729
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeArgumentList,
@@ -5129,7 +5137,7 @@ yydefault:
 		}
 	case 228:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2734
+		//line parser/php7/php7.y:2742
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -5152,7 +5160,7 @@ yydefault:
 		}
 	case 229:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2758
+		//line parser/php7/php7.y:2766
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5161,7 +5169,7 @@ yydefault:
 		}
 	case 230:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2765
+		//line parser/php7/php7.y:2773
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5173,7 +5181,7 @@ yydefault:
 		}
 	case 231:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2778
+		//line parser/php7/php7.y:2786
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeArgument,
@@ -5189,7 +5197,7 @@ yydefault:
 		}
 	case 232:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:2792
+		//line parser/php7/php7.y:2800
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeArgument,
@@ -5206,7 +5214,7 @@ yydefault:
 		}
 	case 233:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2810
+		//line parser/php7/php7.y:2818
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5218,7 +5226,7 @@ yydefault:
 		}
 	case 234:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2820
+		//line parser/php7/php7.y:2828
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5227,7 +5235,7 @@ yydefault:
 		}
 	case 235:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2830
+		//line parser/php7/php7.y:2838
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5235,7 +5243,7 @@ yydefault:
 		}
 	case 236:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2839
+		//line parser/php7/php7.y:2847
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5247,7 +5255,7 @@ yydefault:
 		}
 	case 237:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2849
+		//line parser/php7/php7.y:2857
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5256,7 +5264,7 @@ yydefault:
 		}
 	case 238:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:2859
+		//line parser/php7/php7.y:2867
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5283,7 +5291,7 @@ yydefault:
 		}
 	case 239:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2884
+		//line parser/php7/php7.y:2892
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5312,7 +5320,7 @@ yydefault:
 		}
 	case 240:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:2914
+		//line parser/php7/php7.y:2922
 		{
 			yylex.(*Parser).List.Add(yyDollar[2].node)
 
@@ -5320,7 +5328,7 @@ yydefault:
 		}
 	case 241:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:2920
+		//line parser/php7/php7.y:2928
 		{
 			yylex.(*Parser).List.Push()
 
@@ -5328,7 +5336,7 @@ yydefault:
 		}
 	case 242:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2929
+		//line parser/php7/php7.y:2937
 		{
 			childrenProperties := yylex.(*Parser).List.Pop()
 			childrenModifiers := yylex.(*Parser).List.Pop()
@@ -5350,7 +5358,7 @@ yydefault:
 		}
 	case 243:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:2949
+		//line parser/php7/php7.y:2957
 		{
 			childrenConstants := yylex.(*Parser).List.Pop()
 			childrenModifiers := yylex.(*Parser).List.Pop()
@@ -5377,7 +5385,7 @@ yydefault:
 		}
 	case 244:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:2974
+		//line parser/php7/php7.y:2982
 		{
 			childrenTraits := yylex.(*Parser).List.Pop()
 
@@ -5396,7 +5404,7 @@ yydefault:
 		}
 	case 245:
 		yyDollar = yyS[yypt-10 : yypt+1]
-		//line parser/php7/php7.y:2991
+		//line parser/php7/php7.y:2999
 		{
 			childrenParams := yylex.(*Parser).List.Pop()
 			childrenModifiers := yylex.(*Parser).List.Pop()
@@ -5450,7 +5458,7 @@ yydefault:
 		}
 	case 246:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3046
+		//line parser/php7/php7.y:3054
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5459,7 +5467,7 @@ yydefault:
 		}
 	case 247:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3053
+		//line parser/php7/php7.y:3061
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5471,7 +5479,7 @@ yydefault:
 		}
 	case 248:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3066
+		//line parser/php7/php7.y:3074
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtNop,
@@ -5486,7 +5494,7 @@ yydefault:
 		}
 	case 249:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3080
+		//line parser/php7/php7.y:3088
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtTraitAdaptationList,
@@ -5501,7 +5509,7 @@ yydefault:
 		}
 	case 250:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3093
+		//line parser/php7/php7.y:3101
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -5520,7 +5528,7 @@ yydefault:
 		}
 	case 251:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3113
+		//line parser/php7/php7.y:3121
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5529,7 +5537,7 @@ yydefault:
 		}
 	case 252:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3120
+		//line parser/php7/php7.y:3128
 		{
 			yylex.(*Parser).List.Add(yyDollar[2].node)
 
@@ -5537,7 +5545,7 @@ yydefault:
 		}
 	case 253:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3129
+		//line parser/php7/php7.y:3137
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5549,7 +5557,7 @@ yydefault:
 		}
 	case 254:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3139
+		//line parser/php7/php7.y:3147
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5561,7 +5569,7 @@ yydefault:
 		}
 	case 255:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3152
+		//line parser/php7/php7.y:3160
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -5581,7 +5589,7 @@ yydefault:
 		}
 	case 256:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3173
+		//line parser/php7/php7.y:3181
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5605,7 +5613,7 @@ yydefault:
 		}
 	case 257:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3195
+		//line parser/php7/php7.y:3203
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5629,7 +5637,7 @@ yydefault:
 		}
 	case 258:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:3217
+		//line parser/php7/php7.y:3225
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5654,7 +5662,7 @@ yydefault:
 		}
 	case 259:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3240
+		//line parser/php7/php7.y:3248
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtTraitUseAlias,
@@ -5672,7 +5680,7 @@ yydefault:
 		}
 	case 260:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3259
+		//line parser/php7/php7.y:3267
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5693,7 +5701,7 @@ yydefault:
 		}
 	case 261:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3278
+		//line parser/php7/php7.y:3286
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -5701,7 +5709,7 @@ yydefault:
 		}
 	case 262:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3287
+		//line parser/php7/php7.y:3295
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5725,7 +5733,7 @@ yydefault:
 		}
 	case 263:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3312
+		//line parser/php7/php7.y:3320
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtNop,
@@ -5740,7 +5748,7 @@ yydefault:
 		}
 	case 264:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3325
+		//line parser/php7/php7.y:3333
 		{
 			children := yylex.(*Parser).List.Pop()
 
@@ -5759,13 +5767,13 @@ yydefault:
 		}
 	case 265:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3345
+		//line parser/php7/php7.y:3353
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 266:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3349
+		//line parser/php7/php7.y:3357
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5782,7 +5790,7 @@ yydefault:
 		}
 	case 267:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:3367
+		//line parser/php7/php7.y:3375
 		{
 			yylex.(*Parser).List.Push()
 
@@ -5790,13 +5798,13 @@ yydefault:
 		}
 	case 268:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3373
+		//line parser/php7/php7.y:3381
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 269:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3380
+		//line parser/php7/php7.y:3388
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5805,7 +5813,7 @@ yydefault:
 		}
 	case 270:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3387
+		//line parser/php7/php7.y:3395
 		{
 			yylex.(*Parser).List.Add(yyDollar[2].node)
 
@@ -5813,7 +5821,7 @@ yydefault:
 		}
 	case 271:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3396
+		//line parser/php7/php7.y:3404
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5827,7 +5835,7 @@ yydefault:
 		}
 	case 272:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3408
+		//line parser/php7/php7.y:3416
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5841,7 +5849,7 @@ yydefault:
 		}
 	case 273:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3420
+		//line parser/php7/php7.y:3428
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5855,7 +5863,7 @@ yydefault:
 		}
 	case 274:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3432
+		//line parser/php7/php7.y:3440
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5869,7 +5877,7 @@ yydefault:
 		}
 	case 275:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3444
+		//line parser/php7/php7.y:3452
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5883,7 +5891,7 @@ yydefault:
 		}
 	case 276:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3456
+		//line parser/php7/php7.y:3464
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5897,7 +5905,7 @@ yydefault:
 		}
 	case 277:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3471
+		//line parser/php7/php7.y:3479
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5909,7 +5917,7 @@ yydefault:
 		}
 	case 278:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3481
+		//line parser/php7/php7.y:3489
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5918,7 +5926,7 @@ yydefault:
 		}
 	case 279:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3491
+		//line parser/php7/php7.y:3499
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5945,7 +5953,7 @@ yydefault:
 		}
 	case 280:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:3516
+		//line parser/php7/php7.y:3524
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -5974,7 +5982,7 @@ yydefault:
 		}
 	case 281:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3546
+		//line parser/php7/php7.y:3554
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -5986,7 +5994,7 @@ yydefault:
 		}
 	case 282:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3556
+		//line parser/php7/php7.y:3564
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -5995,7 +6003,7 @@ yydefault:
 		}
 	case 283:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:3566
+		//line parser/php7/php7.y:3574
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -6018,7 +6026,7 @@ yydefault:
 		}
 	case 284:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:3590
+		//line parser/php7/php7.y:3598
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -6041,7 +6049,7 @@ yydefault:
 		}
 	case 285:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3614
+		//line parser/php7/php7.y:3622
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -6053,7 +6061,7 @@ yydefault:
 		}
 	case 286:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3624
+		//line parser/php7/php7.y:3632
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -6062,7 +6070,7 @@ yydefault:
 		}
 	case 287:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3634
+		//line parser/php7/php7.y:3642
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -6070,7 +6078,7 @@ yydefault:
 		}
 	case 288:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:3643
+		//line parser/php7/php7.y:3651
 		{
 			yylex.(*Parser).List.Push()
 
@@ -6078,13 +6086,13 @@ yydefault:
 		}
 	case 289:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3649
+		//line parser/php7/php7.y:3657
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 290:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3656
+		//line parser/php7/php7.y:3664
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -6096,7 +6104,7 @@ yydefault:
 		}
 	case 291:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:3666
+		//line parser/php7/php7.y:3674
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -6105,7 +6113,7 @@ yydefault:
 		}
 	case 292:
 		yyDollar = yyS[yypt-8 : yypt+1]
-		//line parser/php7/php7.y:3676
+		//line parser/php7/php7.y:3684
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeStmtClass,
@@ -6126,7 +6134,7 @@ yydefault:
 		}
 	case 293:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3698
+		//line parser/php7/php7.y:3706
 		{
 			lastNodeID := yyDollar[3].node
 			if lastNodeID == 0 {
@@ -6148,7 +6156,7 @@ yydefault:
 		}
 	case 294:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3718
+		//line parser/php7/php7.y:3726
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprNew,
@@ -6164,7 +6172,7 @@ yydefault:
 		}
 	case 295:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:3735
+		//line parser/php7/php7.y:3743
 		{
 			listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprList,
@@ -6190,7 +6198,7 @@ yydefault:
 		}
 	case 296:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:3759
+		//line parser/php7/php7.y:3767
 		{
 			listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprShortList,
@@ -6215,7 +6223,7 @@ yydefault:
 		}
 	case 297:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3782
+		//line parser/php7/php7.y:3790
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignAssign,
@@ -6233,7 +6241,7 @@ yydefault:
 		}
 	case 298:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:3798
+		//line parser/php7/php7.y:3806
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignReference,
@@ -6252,7 +6260,7 @@ yydefault:
 		}
 	case 299:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:3815
+		//line parser/php7/php7.y:3823
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprClone,
@@ -6268,7 +6276,7 @@ yydefault:
 		}
 	case 300:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3829
+		//line parser/php7/php7.y:3837
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignPlus,
@@ -6286,7 +6294,7 @@ yydefault:
 		}
 	case 301:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3845
+		//line parser/php7/php7.y:3853
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignMinus,
@@ -6304,7 +6312,7 @@ yydefault:
 		}
 	case 302:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3861
+		//line parser/php7/php7.y:3869
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignMul,
@@ -6322,7 +6330,7 @@ yydefault:
 		}
 	case 303:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3877
+		//line parser/php7/php7.y:3885
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignPow,
@@ -6340,7 +6348,7 @@ yydefault:
 		}
 	case 304:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3893
+		//line parser/php7/php7.y:3901
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignDiv,
@@ -6358,7 +6366,7 @@ yydefault:
 		}
 	case 305:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3909
+		//line parser/php7/php7.y:3917
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignConcat,
@@ -6376,7 +6384,7 @@ yydefault:
 		}
 	case 306:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3925
+		//line parser/php7/php7.y:3933
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignMod,
@@ -6394,7 +6402,7 @@ yydefault:
 		}
 	case 307:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3941
+		//line parser/php7/php7.y:3949
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignBitwiseAnd,
@@ -6412,7 +6420,7 @@ yydefault:
 		}
 	case 308:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3957
+		//line parser/php7/php7.y:3965
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignBitwiseOr,
@@ -6430,7 +6438,7 @@ yydefault:
 		}
 	case 309:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3973
+		//line parser/php7/php7.y:3981
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignBitwiseXor,
@@ -6448,7 +6456,7 @@ yydefault:
 		}
 	case 310:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:3989
+		//line parser/php7/php7.y:3997
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignShiftLeft,
@@ -6466,7 +6474,7 @@ yydefault:
 		}
 	case 311:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4005
+		//line parser/php7/php7.y:4013
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeAssignShiftRight,
@@ -6484,7 +6492,7 @@ yydefault:
 		}
 	case 312:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4021
+		//line parser/php7/php7.y:4029
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPostInc,
@@ -6501,7 +6509,7 @@ yydefault:
 		}
 	case 313:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4036
+		//line parser/php7/php7.y:4044
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPreInc,
@@ -6517,7 +6525,7 @@ yydefault:
 		}
 	case 314:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4050
+		//line parser/php7/php7.y:4058
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPostDec,
@@ -6534,7 +6542,7 @@ yydefault:
 		}
 	case 315:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4065
+		//line parser/php7/php7.y:4073
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPreDec,
@@ -6550,7 +6558,7 @@ yydefault:
 		}
 	case 316:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4079
+		//line parser/php7/php7.y:4087
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryBooleanOr,
@@ -6568,7 +6576,7 @@ yydefault:
 		}
 	case 317:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4095
+		//line parser/php7/php7.y:4103
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryBooleanAnd,
@@ -6586,7 +6594,7 @@ yydefault:
 		}
 	case 318:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4111
+		//line parser/php7/php7.y:4119
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryLogicalOr,
@@ -6604,7 +6612,7 @@ yydefault:
 		}
 	case 319:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4127
+		//line parser/php7/php7.y:4135
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryLogicalAnd,
@@ -6622,7 +6630,7 @@ yydefault:
 		}
 	case 320:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4143
+		//line parser/php7/php7.y:4151
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryLogicalXor,
@@ -6640,7 +6648,7 @@ yydefault:
 		}
 	case 321:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4159
+		//line parser/php7/php7.y:4167
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryBitwiseOr,
@@ -6658,7 +6666,7 @@ yydefault:
 		}
 	case 322:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4175
+		//line parser/php7/php7.y:4183
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryBitwiseAnd,
@@ -6676,7 +6684,7 @@ yydefault:
 		}
 	case 323:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4191
+		//line parser/php7/php7.y:4199
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryBitwiseXor,
@@ -6694,7 +6702,7 @@ yydefault:
 		}
 	case 324:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4207
+		//line parser/php7/php7.y:4215
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryConcat,
@@ -6712,7 +6720,7 @@ yydefault:
 		}
 	case 325:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4223
+		//line parser/php7/php7.y:4231
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryPlus,
@@ -6730,7 +6738,7 @@ yydefault:
 		}
 	case 326:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4239
+		//line parser/php7/php7.y:4247
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryMinus,
@@ -6748,7 +6756,7 @@ yydefault:
 		}
 	case 327:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4255
+		//line parser/php7/php7.y:4263
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryMul,
@@ -6766,7 +6774,7 @@ yydefault:
 		}
 	case 328:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4271
+		//line parser/php7/php7.y:4279
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryPow,
@@ -6784,7 +6792,7 @@ yydefault:
 		}
 	case 329:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4287
+		//line parser/php7/php7.y:4295
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryDiv,
@@ -6802,7 +6810,7 @@ yydefault:
 		}
 	case 330:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4303
+		//line parser/php7/php7.y:4311
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryMod,
@@ -6820,7 +6828,7 @@ yydefault:
 		}
 	case 331:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4319
+		//line parser/php7/php7.y:4327
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryShiftLeft,
@@ -6838,7 +6846,7 @@ yydefault:
 		}
 	case 332:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4335
+		//line parser/php7/php7.y:4343
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryShiftRight,
@@ -6856,7 +6864,7 @@ yydefault:
 		}
 	case 333:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4351
+		//line parser/php7/php7.y:4359
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprUnaryPlus,
@@ -6872,7 +6880,7 @@ yydefault:
 		}
 	case 334:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4365
+		//line parser/php7/php7.y:4373
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprUnaryMinus,
@@ -6888,7 +6896,7 @@ yydefault:
 		}
 	case 335:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4379
+		//line parser/php7/php7.y:4387
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprBooleanNot,
@@ -6904,7 +6912,7 @@ yydefault:
 		}
 	case 336:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4393
+		//line parser/php7/php7.y:4401
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprBitwiseNot,
@@ -6920,7 +6928,7 @@ yydefault:
 		}
 	case 337:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4407
+		//line parser/php7/php7.y:4415
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryIdentical,
@@ -6938,7 +6946,7 @@ yydefault:
 		}
 	case 338:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4423
+		//line parser/php7/php7.y:4431
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryNotIdentical,
@@ -6956,7 +6964,7 @@ yydefault:
 		}
 	case 339:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4439
+		//line parser/php7/php7.y:4447
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryEqual,
@@ -6974,7 +6982,7 @@ yydefault:
 		}
 	case 340:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4455
+		//line parser/php7/php7.y:4463
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryNotEqual,
@@ -6993,7 +7001,7 @@ yydefault:
 		}
 	case 341:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4472
+		//line parser/php7/php7.y:4480
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinarySmaller,
@@ -7011,7 +7019,7 @@ yydefault:
 		}
 	case 342:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4488
+		//line parser/php7/php7.y:4496
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinarySmallerOrEqual,
@@ -7029,7 +7037,7 @@ yydefault:
 		}
 	case 343:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4504
+		//line parser/php7/php7.y:4512
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryGreater,
@@ -7047,7 +7055,7 @@ yydefault:
 		}
 	case 344:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4520
+		//line parser/php7/php7.y:4528
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryGreaterOrEqual,
@@ -7065,7 +7073,7 @@ yydefault:
 		}
 	case 345:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4536
+		//line parser/php7/php7.y:4544
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinarySpaceship,
@@ -7083,7 +7091,7 @@ yydefault:
 		}
 	case 346:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4552
+		//line parser/php7/php7.y:4560
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprInstanceOf,
@@ -7101,7 +7109,7 @@ yydefault:
 		}
 	case 347:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4568
+		//line parser/php7/php7.y:4576
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -7115,7 +7123,7 @@ yydefault:
 		}
 	case 348:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4580
+		//line parser/php7/php7.y:4588
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7123,7 +7131,7 @@ yydefault:
 		}
 	case 349:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:4586
+		//line parser/php7/php7.y:4594
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprTernary,
@@ -7143,7 +7151,7 @@ yydefault:
 		}
 	case 350:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:4604
+		//line parser/php7/php7.y:4612
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprTernary,
@@ -7162,7 +7170,7 @@ yydefault:
 		}
 	case 351:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4621
+		//line parser/php7/php7.y:4629
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeBinaryCoalesce,
@@ -7180,7 +7188,7 @@ yydefault:
 		}
 	case 352:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4637
+		//line parser/php7/php7.y:4645
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7188,7 +7196,7 @@ yydefault:
 		}
 	case 353:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4643
+		//line parser/php7/php7.y:4651
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastInt,
@@ -7205,7 +7213,7 @@ yydefault:
 		}
 	case 354:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4658
+		//line parser/php7/php7.y:4666
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastDouble,
@@ -7222,7 +7230,7 @@ yydefault:
 		}
 	case 355:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4673
+		//line parser/php7/php7.y:4681
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastString,
@@ -7239,7 +7247,7 @@ yydefault:
 		}
 	case 356:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4688
+		//line parser/php7/php7.y:4696
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastArray,
@@ -7256,7 +7264,7 @@ yydefault:
 		}
 	case 357:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4703
+		//line parser/php7/php7.y:4711
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastObject,
@@ -7273,7 +7281,7 @@ yydefault:
 		}
 	case 358:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4718
+		//line parser/php7/php7.y:4726
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastBool,
@@ -7290,7 +7298,7 @@ yydefault:
 		}
 	case 359:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4733
+		//line parser/php7/php7.y:4741
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeCastUnset,
@@ -7307,7 +7315,7 @@ yydefault:
 		}
 	case 360:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4748
+		//line parser/php7/php7.y:4756
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -7337,7 +7345,7 @@ yydefault:
 		}
 	case 361:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4776
+		//line parser/php7/php7.y:4784
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprErrorSuppress,
@@ -7353,7 +7361,7 @@ yydefault:
 		}
 	case 362:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4790
+		//line parser/php7/php7.y:4798
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7361,7 +7369,7 @@ yydefault:
 		}
 	case 363:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4796
+		//line parser/php7/php7.y:4804
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprShellExec,
@@ -7377,7 +7385,7 @@ yydefault:
 		}
 	case 364:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4810
+		//line parser/php7/php7.y:4818
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPrint,
@@ -7393,7 +7401,7 @@ yydefault:
 		}
 	case 365:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4824
+		//line parser/php7/php7.y:4832
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7407,7 +7415,7 @@ yydefault:
 		}
 	case 366:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4836
+		//line parser/php7/php7.y:4844
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7423,7 +7431,7 @@ yydefault:
 		}
 	case 367:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:4850
+		//line parser/php7/php7.y:4858
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprYield,
@@ -7441,7 +7449,7 @@ yydefault:
 		}
 	case 368:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:4866
+		//line parser/php7/php7.y:4874
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprYieldFrom,
@@ -7457,7 +7465,7 @@ yydefault:
 		}
 	case 369:
 		yyDollar = yyS[yypt-11 : yypt+1]
-		//line parser/php7/php7.y:4880
+		//line parser/php7/php7.y:4888
 		{
 			var flag ast.NodeFlag
 			if yyDollar[2].token != nil {
@@ -7491,7 +7499,7 @@ yydefault:
 		}
 	case 370:
 		yyDollar = yyS[yypt-12 : yypt+1]
-		//line parser/php7/php7.y:4912
+		//line parser/php7/php7.y:4920
 		{
 			flag := ast.NodeFlagStatic
 			if yyDollar[2].token != nil {
@@ -7526,19 +7534,19 @@ yydefault:
 		}
 	case 372:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:4950
+		//line parser/php7/php7.y:4958
 		{
 			yyVAL.token = nil
 		}
 	case 373:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4954
+		//line parser/php7/php7.y:4962
 		{
 			yyVAL.token = yyDollar[1].token
 		}
 	case 374:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:4961
+		//line parser/php7/php7.y:4969
 		{
 			yyVAL.node = 0
 
@@ -7546,7 +7554,7 @@ yydefault:
 		}
 	case 375:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:4967
+		//line parser/php7/php7.y:4975
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprClosureUse,
@@ -7564,7 +7572,7 @@ yydefault:
 		}
 	case 376:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:4986
+		//line parser/php7/php7.y:4994
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -7576,7 +7584,7 @@ yydefault:
 		}
 	case 377:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:4996
+		//line parser/php7/php7.y:5004
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -7585,7 +7593,7 @@ yydefault:
 		}
 	case 378:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5006
+		//line parser/php7/php7.y:5014
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7606,7 +7614,7 @@ yydefault:
 		}
 	case 379:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:5025
+		//line parser/php7/php7.y:5033
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7634,7 +7642,7 @@ yydefault:
 		}
 	case 380:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:5054
+		//line parser/php7/php7.y:5062
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprFunctionCall,
@@ -7651,7 +7659,7 @@ yydefault:
 		}
 	case 381:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5069
+		//line parser/php7/php7.y:5077
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticCall,
@@ -7670,7 +7678,7 @@ yydefault:
 		}
 	case 382:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5086
+		//line parser/php7/php7.y:5094
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticCall,
@@ -7689,7 +7697,7 @@ yydefault:
 		}
 	case 383:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:5103
+		//line parser/php7/php7.y:5111
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprFunctionCall,
@@ -7706,7 +7714,7 @@ yydefault:
 		}
 	case 384:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5121
+		//line parser/php7/php7.y:5129
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -7720,7 +7728,7 @@ yydefault:
 		}
 	case 385:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5133
+		//line parser/php7/php7.y:5141
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7728,7 +7736,7 @@ yydefault:
 		}
 	case 386:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5142
+		//line parser/php7/php7.y:5150
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7736,7 +7744,7 @@ yydefault:
 		}
 	case 387:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5148
+		//line parser/php7/php7.y:5156
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7744,7 +7752,7 @@ yydefault:
 		}
 	case 388:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:5157
+		//line parser/php7/php7.y:5165
 		{
 			yyVAL.node = 0
 
@@ -7752,7 +7760,7 @@ yydefault:
 		}
 	case 389:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5163
+		//line parser/php7/php7.y:5171
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprExit,
@@ -7771,7 +7779,7 @@ yydefault:
 		}
 	case 390:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:5183
+		//line parser/php7/php7.y:5191
 		{
 			yylex.(*Parser).List.Push()
 
@@ -7779,7 +7787,7 @@ yydefault:
 		}
 	case 391:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5189
+		//line parser/php7/php7.y:5197
 		{
 			yylex.(*Parser).List.Push()
 			nodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
@@ -7792,13 +7800,13 @@ yydefault:
 		}
 	case 392:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5200
+		//line parser/php7/php7.y:5208
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 393:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:5207
+		//line parser/php7/php7.y:5215
 		{
 			yyVAL.node = 0
 
@@ -7806,7 +7814,7 @@ yydefault:
 		}
 	case 394:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5213
+		//line parser/php7/php7.y:5221
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -7814,7 +7822,7 @@ yydefault:
 		}
 	case 395:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5222
+		//line parser/php7/php7.y:5230
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArray,
@@ -7832,7 +7840,7 @@ yydefault:
 		}
 	case 396:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5238
+		//line parser/php7/php7.y:5246
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprShortArray,
@@ -7849,7 +7857,7 @@ yydefault:
 		}
 	case 397:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5253
+		//line parser/php7/php7.y:5261
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarString,
@@ -7863,7 +7871,7 @@ yydefault:
 		}
 	case 398:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5268
+		//line parser/php7/php7.y:5276
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarLnumber,
@@ -7877,7 +7885,7 @@ yydefault:
 		}
 	case 399:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5280
+		//line parser/php7/php7.y:5288
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarDnumber,
@@ -7891,7 +7899,7 @@ yydefault:
 		}
 	case 400:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5292
+		//line parser/php7/php7.y:5300
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7905,7 +7913,7 @@ yydefault:
 		}
 	case 401:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5304
+		//line parser/php7/php7.y:5312
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7919,7 +7927,7 @@ yydefault:
 		}
 	case 402:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5316
+		//line parser/php7/php7.y:5324
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7933,7 +7941,7 @@ yydefault:
 		}
 	case 403:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5328
+		//line parser/php7/php7.y:5336
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7947,7 +7955,7 @@ yydefault:
 		}
 	case 404:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5340
+		//line parser/php7/php7.y:5348
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7961,7 +7969,7 @@ yydefault:
 		}
 	case 405:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5352
+		//line parser/php7/php7.y:5360
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7975,7 +7983,7 @@ yydefault:
 		}
 	case 406:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5364
+		//line parser/php7/php7.y:5372
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -7989,7 +7997,7 @@ yydefault:
 		}
 	case 407:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5376
+		//line parser/php7/php7.y:5384
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarMagicConstant,
@@ -8003,7 +8011,7 @@ yydefault:
 		}
 	case 408:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5388
+		//line parser/php7/php7.y:5396
 		{
 			stringPartNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarEncapsedStringPart,
@@ -8024,7 +8032,7 @@ yydefault:
 		}
 	case 409:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:5407
+		//line parser/php7/php7.y:5415
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarHeredoc,
@@ -8038,7 +8046,7 @@ yydefault:
 		}
 	case 410:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5419
+		//line parser/php7/php7.y:5427
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarEncapsed,
@@ -8054,7 +8062,7 @@ yydefault:
 		}
 	case 411:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5433
+		//line parser/php7/php7.y:5441
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarHeredoc,
@@ -8070,7 +8078,7 @@ yydefault:
 		}
 	case 412:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5447
+		//line parser/php7/php7.y:5455
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8078,7 +8086,7 @@ yydefault:
 		}
 	case 413:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5453
+		//line parser/php7/php7.y:5461
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8086,7 +8094,7 @@ yydefault:
 		}
 	case 414:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5462
+		//line parser/php7/php7.y:5470
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprConstFetch,
@@ -8102,7 +8110,7 @@ yydefault:
 		}
 	case 415:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5476
+		//line parser/php7/php7.y:5484
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8126,7 +8134,7 @@ yydefault:
 		}
 	case 416:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5498
+		//line parser/php7/php7.y:5506
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8150,7 +8158,7 @@ yydefault:
 		}
 	case 417:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5523
+		//line parser/php7/php7.y:5531
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8158,7 +8166,7 @@ yydefault:
 		}
 	case 418:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5529
+		//line parser/php7/php7.y:5537
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8166,7 +8174,7 @@ yydefault:
 		}
 	case 419:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:5538
+		//line parser/php7/php7.y:5546
 		{
 			yyVAL.node = 0
 
@@ -8174,7 +8182,7 @@ yydefault:
 		}
 	case 420:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5544
+		//line parser/php7/php7.y:5552
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8182,7 +8190,7 @@ yydefault:
 		}
 	case 421:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5553
+		//line parser/php7/php7.y:5561
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8190,7 +8198,7 @@ yydefault:
 		}
 	case 422:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5562
+		//line parser/php7/php7.y:5570
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8198,7 +8206,7 @@ yydefault:
 		}
 	case 423:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5568
+		//line parser/php7/php7.y:5576
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8212,7 +8220,7 @@ yydefault:
 		}
 	case 424:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5580
+		//line parser/php7/php7.y:5588
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8220,7 +8228,7 @@ yydefault:
 		}
 	case 425:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5589
+		//line parser/php7/php7.y:5597
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8228,7 +8236,7 @@ yydefault:
 		}
 	case 426:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5595
+		//line parser/php7/php7.y:5603
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8242,7 +8250,7 @@ yydefault:
 		}
 	case 427:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5607
+		//line parser/php7/php7.y:5615
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8250,7 +8258,7 @@ yydefault:
 		}
 	case 428:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5616
+		//line parser/php7/php7.y:5624
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8258,7 +8266,7 @@ yydefault:
 		}
 	case 429:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5622
+		//line parser/php7/php7.y:5630
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8279,7 +8287,7 @@ yydefault:
 		}
 	case 430:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5641
+		//line parser/php7/php7.y:5649
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8300,7 +8308,7 @@ yydefault:
 		}
 	case 431:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5660
+		//line parser/php7/php7.y:5668
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8321,7 +8329,7 @@ yydefault:
 		}
 	case 432:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5679
+		//line parser/php7/php7.y:5687
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprMethodCall,
@@ -8340,7 +8348,7 @@ yydefault:
 		}
 	case 433:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5696
+		//line parser/php7/php7.y:5704
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8348,7 +8356,7 @@ yydefault:
 		}
 	case 434:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5705
+		//line parser/php7/php7.y:5713
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8356,7 +8364,7 @@ yydefault:
 		}
 	case 435:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5711
+		//line parser/php7/php7.y:5719
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8364,7 +8372,7 @@ yydefault:
 		}
 	case 436:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5717
+		//line parser/php7/php7.y:5725
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
@@ -8382,7 +8390,7 @@ yydefault:
 		}
 	case 437:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5736
+		//line parser/php7/php7.y:5744
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8403,7 +8411,7 @@ yydefault:
 		}
 	case 438:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5755
+		//line parser/php7/php7.y:5763
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -8424,7 +8432,7 @@ yydefault:
 		}
 	case 439:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:5774
+		//line parser/php7/php7.y:5782
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -8440,7 +8448,7 @@ yydefault:
 		}
 	case 440:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5791
+		//line parser/php7/php7.y:5799
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8458,7 +8466,7 @@ yydefault:
 		}
 	case 441:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5807
+		//line parser/php7/php7.y:5815
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8476,7 +8484,7 @@ yydefault:
 		}
 	case 442:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5826
+		//line parser/php7/php7.y:5834
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8484,7 +8492,7 @@ yydefault:
 		}
 	case 443:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5832
+		//line parser/php7/php7.y:5840
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8505,7 +8513,7 @@ yydefault:
 		}
 	case 444:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:5851
+		//line parser/php7/php7.y:5859
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayDimFetch,
@@ -8526,7 +8534,7 @@ yydefault:
 		}
 	case 445:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5870
+		//line parser/php7/php7.y:5878
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprPropertyFetch,
@@ -8544,7 +8552,7 @@ yydefault:
 		}
 	case 446:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5886
+		//line parser/php7/php7.y:5894
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8562,7 +8570,7 @@ yydefault:
 		}
 	case 447:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5902
+		//line parser/php7/php7.y:5910
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprStaticPropertyFetch,
@@ -8580,7 +8588,7 @@ yydefault:
 		}
 	case 448:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5921
+		//line parser/php7/php7.y:5929
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8594,7 +8602,7 @@ yydefault:
 		}
 	case 449:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5933
+		//line parser/php7/php7.y:5941
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8608,7 +8616,7 @@ yydefault:
 		}
 	case 450:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5945
+		//line parser/php7/php7.y:5953
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8616,7 +8624,7 @@ yydefault:
 		}
 	case 451:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5954
+		//line parser/php7/php7.y:5962
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8630,7 +8638,7 @@ yydefault:
 		}
 	case 452:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:5966
+		//line parser/php7/php7.y:5974
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -8644,7 +8652,7 @@ yydefault:
 		}
 	case 453:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5978
+		//line parser/php7/php7.y:5986
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8652,13 +8660,13 @@ yydefault:
 		}
 	case 454:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:5987
+		//line parser/php7/php7.y:5995
 		{
 			yylex.(*Parser).returnTokenToPool(yyDollar, &yyVAL)
 		}
 	case 455:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/php7/php7.y:5994
+		//line parser/php7/php7.y:6002
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8668,7 +8676,7 @@ yydefault:
 		}
 	case 456:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6002
+		//line parser/php7/php7.y:6010
 		{
 			yyVAL.node = yyDollar[1].node
 
@@ -8676,7 +8684,7 @@ yydefault:
 		}
 	case 457:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6011
+		//line parser/php7/php7.y:6019
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -8688,7 +8696,7 @@ yydefault:
 		}
 	case 458:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6021
+		//line parser/php7/php7.y:6029
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -8697,7 +8705,7 @@ yydefault:
 		}
 	case 459:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6031
+		//line parser/php7/php7.y:6039
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8715,7 +8723,7 @@ yydefault:
 		}
 	case 460:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6047
+		//line parser/php7/php7.y:6055
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprArrayItem,
@@ -8731,7 +8739,7 @@ yydefault:
 		}
 	case 461:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:6061
+		//line parser/php7/php7.y:6069
 		{
 			refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprReference,
@@ -8756,7 +8764,7 @@ yydefault:
 		}
 	case 462:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6084
+		//line parser/php7/php7.y:6092
 		{
 			refNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprReference,
@@ -8778,7 +8786,7 @@ yydefault:
 		}
 	case 463:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:6104
+		//line parser/php7/php7.y:6112
 		{
 			listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprList,
@@ -8807,7 +8815,7 @@ yydefault:
 		}
 	case 464:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:6131
+		//line parser/php7/php7.y:6139
 		{
 			listNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprList,
@@ -8833,7 +8841,7 @@ yydefault:
 		}
 	case 465:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6158
+		//line parser/php7/php7.y:6166
 		{
 			yylex.(*Parser).List.Add(yyDollar[2].node)
 
@@ -8841,7 +8849,7 @@ yydefault:
 		}
 	case 466:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6164
+		//line parser/php7/php7.y:6172
 		{
 			encapsNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarEncapsedStringPart,
@@ -8857,7 +8865,7 @@ yydefault:
 		}
 	case 467:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6178
+		//line parser/php7/php7.y:6186
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -8866,7 +8874,7 @@ yydefault:
 		}
 	case 468:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6185
+		//line parser/php7/php7.y:6193
 		{
 			yylex.(*Parser).List.Push()
 
@@ -8885,7 +8893,7 @@ yydefault:
 		}
 	case 469:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6205
+		//line parser/php7/php7.y:6213
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8906,7 +8914,7 @@ yydefault:
 		}
 	case 470:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:6224
+		//line parser/php7/php7.y:6232
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8937,7 +8945,7 @@ yydefault:
 		}
 	case 471:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6253
+		//line parser/php7/php7.y:6261
 		{
 			varNameNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -8971,7 +8979,7 @@ yydefault:
 		}
 	case 472:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6285
+		//line parser/php7/php7.y:6293
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprVariable,
@@ -8989,7 +8997,7 @@ yydefault:
 		}
 	case 473:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6301
+		//line parser/php7/php7.y:6309
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9012,7 +9020,7 @@ yydefault:
 		}
 	case 474:
 		yyDollar = yyS[yypt-6 : yypt+1]
-		//line parser/php7/php7.y:6322
+		//line parser/php7/php7.y:6330
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9046,7 +9054,7 @@ yydefault:
 		}
 	case 475:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6354
+		//line parser/php7/php7.y:6362
 		{
 			yyVAL.node = yyDollar[2].node
 
@@ -9059,7 +9067,7 @@ yydefault:
 		}
 	case 476:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6368
+		//line parser/php7/php7.y:6376
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeScalarString,
@@ -9073,7 +9081,7 @@ yydefault:
 		}
 	case 477:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6380
+		//line parser/php7/php7.y:6388
 		{
 			// TODO: add option to handle 64 bit integer
 			tknValue := yylex.(*Parser).Ast.FileData[yyDollar[1].token.StartPos:yyDollar[1].token.EndPos]
@@ -9096,7 +9104,7 @@ yydefault:
 		}
 	case 478:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6401
+		//line parser/php7/php7.y:6409
 		{
 			tknValue := yylex.(*Parser).Ast.FileData[yyDollar[2].token.StartPos:yyDollar[2].token.EndPos]
 			if _, err := strconv.Atoi(string(tknValue)); err == nil {
@@ -9125,7 +9133,7 @@ yydefault:
 		}
 	case 479:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6428
+		//line parser/php7/php7.y:6436
 		{
 			identifierNodeID := yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeIdentifier,
@@ -9146,7 +9154,7 @@ yydefault:
 		}
 	case 480:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line parser/php7/php7.y:6450
+		//line parser/php7/php7.y:6458
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprIsset,
@@ -9168,7 +9176,7 @@ yydefault:
 		}
 	case 481:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:6470
+		//line parser/php7/php7.y:6478
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprEmpty,
@@ -9186,7 +9194,7 @@ yydefault:
 		}
 	case 482:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6486
+		//line parser/php7/php7.y:6494
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprInclude,
@@ -9202,7 +9210,7 @@ yydefault:
 		}
 	case 483:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6500
+		//line parser/php7/php7.y:6508
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprIncludeOnce,
@@ -9218,7 +9226,7 @@ yydefault:
 		}
 	case 484:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line parser/php7/php7.y:6514
+		//line parser/php7/php7.y:6522
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprEval,
@@ -9236,7 +9244,7 @@ yydefault:
 		}
 	case 485:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6530
+		//line parser/php7/php7.y:6538
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprRequire,
@@ -9252,7 +9260,7 @@ yydefault:
 		}
 	case 486:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/php7/php7.y:6544
+		//line parser/php7/php7.y:6552
 		{
 			yyVAL.node = yylex.(*Parser).Ast.Nodes.Create(graph.Node{
 				Type: ast.NodeTypeExprRequireOnce,
@@ -9268,7 +9276,7 @@ yydefault:
 		}
 	case 487:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6561
+		//line parser/php7/php7.y:6569
 		{
 			yylex.(*Parser).List.Push()
 			yylex.(*Parser).List.Add(yyDollar[1].node)
@@ -9277,7 +9285,7 @@ yydefault:
 		}
 	case 488:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/php7/php7.y:6568
+		//line parser/php7/php7.y:6576
 		{
 			prevNodeID := yylex.(*Parser).List.Last()
 			yylex.(*Parser).List.Add(yyDollar[3].node)
@@ -9289,7 +9297,7 @@ yydefault:
 		}
 	case 489:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/php7/php7.y:6581
+		//line parser/php7/php7.y:6589
 		{
 			yyVAL.node = yyDollar[1].node
 

@@ -118,12 +118,7 @@ func parserWorker(fileCh <-chan *file, r chan<- result) {
 		// 	parserWorker = php7.NewParser(f.content)
 		// }
 
-		abstractSyntaxTree := &graph.AST{
-			Nodes:     &graph.NodeStorage{},
-			Edges:     &graph.EdgeStorage{},
-			Positions: &graph.PositionStorage{},
-			Tokens:    &graph.TokenStorage{},
-		}
+		abstractSyntaxTree := new(graph.AST)
 
 		parserWorker.Parse(f.content, abstractSyntaxTree)
 
