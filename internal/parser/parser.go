@@ -188,7 +188,15 @@ func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup
 		tkn.Group = group
 		tokenID := p.Ast.Tokens.Create(tkn)
 
-		p.Ast.LinkFront(nodeID, graph.EdgeTypeToken, uint32(tokenID))
+		edge := graph.Edge{
+			Type:   graph.EdgeTypeToken,
+			Target: uint32(tokenID),
+		}
+		edgeID := p.Ast.Edges.Put(edge)
+		node := p.Ast.Nodes.Get(nodeID)
+
+		node.Edges = p.Ast.AppendEdges(graph.EdgeList{edgeID, edgeID}, node.Edges)
+		p.Ast.Nodes.Save(nodeID, node)
 	}
 }
 
@@ -207,7 +215,9 @@ func (p *AbstractParser) MoveStartTokens(src graph.NodeID, dst graph.NodeID) {
 		return true
 	})
 
-	p.Ast.PrependNodeEdges(dst, list)
+	dstNode := p.Ast.Nodes.Get(dst)
+	dstNode.Edges = p.Ast.AppendEdges(list, dstNode.Edges)
+	p.Ast.Nodes.Save(dst, dstNode)
 }
 
 func (p *AbstractParser) convertToken(token scanner.Token) graph.Token {
