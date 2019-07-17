@@ -1,10 +1,10 @@
 .vscode
 .idea
-php-parser
-**/*.test
 
+/php-parser
+**/*.test
 *example.php
 
-cpu.pprof
-mem.pprof
-trace.out
+/cpu.pprof
+/mem.pprof
+/trace.out

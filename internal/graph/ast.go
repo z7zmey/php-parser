@@ -2,6 +2,7 @@ package graph
 
 import (
 	"github.com/z7zmey/php-parser/pkg/ast"
+	"github.com/z7zmey/php-parser/pkg/traverser"
 )
 
 type AST struct {
@@ -148,7 +149,7 @@ func (a *AST) PrependNodeEdges(nodeID NodeID, edges EdgeList) {
 	a.Nodes[nodeID-1].Edges = a.PrependEdges(nodeEdges, edges)
 }
 
-func (stxtree *AST) Traverse(v Visitor) {
+func (stxtree *AST) Traverse(v traverser.Visitor) {
 	stxtree.queue = stxtree.queue[:0]
 	stxtree.queue = append(stxtree.queue, queueItem{
 		id:    stxtree.RootNode,
@@ -163,74 +164,27 @@ func (stxtree *AST) Traverse(v Visitor) {
 		item := stxtree.queue[len(stxtree.queue)-1]
 		stxtree.queue = stxtree.queue[:len(stxtree.queue)-1]
 
-		node := stxtree.Nodes.Get(item.id)
+		graphNode := stxtree.Nodes.Get(item.id)
 		depth := item.depth
 
-		visitChild := v.VisitNode(stxtree, node, depth)
-
-		if visitChild {
-			depth++
-			stxtree.EachEdge(node.Edges, func(e Edge) bool {
-				if e.Type != EdgeTypeNode {
-					return false
-				}
-
-				stxtree.queue = append(stxtree.queue, queueItem{
-					id:    NodeID(e.Target),
-					depth: depth,
-				})
-
-				return false
-			})
+		astNode := ast.Node{
+			Type:   graphNode.Type,
+			Flags:  graphNode.Flag,
+			Tokens: make(map[ast.TokenGroup][]ast.Token),
 		}
 
-	}
-}
-
-func (stxtree *AST) Nested() ast.Node {
-	stack := []ast.Node{}
-
-	stxtree.queue = stxtree.queue[:0]
-	stxtree.queue = append(stxtree.queue, queueItem{
-		id:    stxtree.RootNode,
-		depth: 0,
-	})
-
-	for {
-		if len(stxtree.queue) == 0 {
-			break
-		}
-
-		item := stxtree.queue[len(stxtree.queue)-1]
-		stxtree.queue = stxtree.queue[:len(stxtree.queue)-1]
-
-		node := stxtree.Nodes.Get(item.id)
-		depth := item.depth
-
-		if len(stack) <= depth+1 {
-			stack = append(stack, ast.Node{})
-		}
-
-		stack[depth] = ast.Node{
-			Type:     node.Type,
-			Flags:    node.Flag,
-			Tokens:   make(map[ast.TokenGroup][]ast.Token),
-			Children: make(map[ast.NodeGroup][]ast.Node),
-		}
-
-		var posID PositionID
-		stxtree.EachEdge(node.Edges, func(e Edge) bool {
+		stxtree.EachEdge(graphNode.Edges, func(e Edge) bool {
 			if e.Type != EdgeTypePosition {
 				return false
 			}
 
-			posID = PositionID(e.Target)
-			stack[depth].Position = stxtree.Positions.Get(posID)
+			posID := PositionID(e.Target)
+			astNode.Position = stxtree.Positions.Get(posID)
 
 			return true
 		})
 
-		stxtree.EachEdge(node.Edges, func(e Edge) bool {
+		stxtree.EachEdge(graphNode.Edges, func(e Edge) bool {
 			if e.Type != EdgeTypeToken {
 				return false
 			}
@@ -245,36 +199,28 @@ func (stxtree *AST) Nested() ast.Node {
 				Value: string(stxtree.FileData[tokenPos.PS:tokenPos.PE]),
 			}
 
-			stack[depth].Tokens[token.Group] = append(stack[depth].Tokens[token.Group], nestedToken)
+			astNode.Tokens[token.Group] = append(astNode.Tokens[token.Group], nestedToken)
 
 			return false
 		})
 
-		if node.Type.Is(ast.NodeClassTypeValue) && posID > 0 {
-			pos := stxtree.Positions.Get(posID)
-			stack[depth].Value = string(stxtree.FileData[pos.PS:pos.PE])
-		}
+		visitChild := v.VisitNode(astNode, graphNode.Group, depth)
 
-		if depth > 0 {
-			stack[depth-1].Children[node.Group] = append(stack[depth-1].Children[node.Group], stack[depth])
-		}
+		if visitChild {
+			depth++
+			stxtree.EachEdge(graphNode.Edges, func(e Edge) bool {
+				if e.Type != EdgeTypeNode {
+					return false
+				}
 
-		depth++
+				stxtree.queue = append(stxtree.queue, queueItem{
+					id:    NodeID(e.Target),
+					depth: depth,
+				})
 
-		stxtree.EachEdge(node.Edges, func(e Edge) bool {
-			if e.Type != EdgeTypeNode {
 				return false
-			}
-
-			stxtree.queue = append(stxtree.queue, queueItem{
-				id:    NodeID(e.Target),
-				depth: depth,
 			})
-
-			return false
-		})
+		}
 
 	}
-
-	return stack[0]
 }

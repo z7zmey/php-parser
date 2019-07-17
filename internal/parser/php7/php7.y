@@ -3690,7 +3690,7 @@ anonymous_class:
                 prevNodeID := yylex.(*Parser).Children(0, $$, ast.NodeGroupExtends, $3)
                 prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupImplements, $4)
                 prevNodeID = yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupStmts, yylex.(*Parser).List.Pop()...)
-                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, yylex.(*Parser).List.Pop()...)
+                yylex.(*Parser).Children(prevNodeID, $$, ast.NodeGroupArgumentList, $2)
 
                 // save tokens
                 yylex.(*Parser).AppendTokens($$, ast.TokenGroupStart, $1.HiddenTokens)

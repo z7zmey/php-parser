@@ -312,7 +312,7 @@ type Node struct {
 	Type     NodeType
 	Flags    NodeFlag
 	Position Position
-	Children map[NodeGroup][]Node
+	Children map[NodeGroup][]*Node
 	Tokens   map[TokenGroup][]Token
 	Value    string
 }
@@ -323,11 +323,11 @@ type node struct {
 	Value    string             `json:"value"`
 	Position Position           `json:"position"`
 	Tokens   map[string][]Token `json:"tokens"`
-	Children map[string][]Node  `json:"children"`
+	Children map[string][]*Node `json:"children"`
 }
 
 func (n Node) MarshalJSON() ([]byte, error) {
-	children := map[string][]Node{}
+	children := map[string][]*Node{}
 	for k, v := range n.Children {
 		children[k.String()] = v
 	}

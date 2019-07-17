@@ -26,6 +26,8 @@ bench:
 compile: ./internal/parser/php5/php5.go ./internal/parser/php7/php7.go ./internal/scanner/scanner.go fmt
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/parser/php7/php7.go
 	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/parser/php5/php5.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/parser/php7/php7.go
+	sed -i '' -e 's/\/\/line/\/\/ line/g' ./internal/parser/php5/php5.go
 	rm -f y.output
 
 ./internal/scanner/scanner.go: ./internal/scanner/scanner.rl
