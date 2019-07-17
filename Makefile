@@ -7,10 +7,11 @@ fmt:
 
 build:
 	go generate ./...
-	go build
+	go build ./cmd/...
 
-run:
-	./php-parser -d go $(PHPFILE)
+install:
+	go generate ./...
+	go install ./cmd/...
 
 test:
 	go test ./...
@@ -22,18 +23,18 @@ bench:
 	go test -benchmem -bench=. ./parser/php5
 	go test -benchmem -bench=. ./parser/php7
 
-compile: ./parser/php5/php5.go ./parser/php7/php7.go ./scanner/scanner.go fmt
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./parser/php7/php7.go
-	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./parser/php5/php5.go
+compile: ./internal/parser/php5/php5.go ./internal/parser/php7/php7.go ./internal/scanner/scanner.go fmt
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/parser/php7/php7.go
+	sed -i '' -e 's/yyErrorVerbose = false/yyErrorVerbose = true/g' ./internal/parser/php5/php5.go
 	rm -f y.output
 
-./scanner/scanner.go: ./scanner/scanner.rl
+./internal/scanner/scanner.go: ./internal/scanner/scanner.rl
 	ragel -Z -G2 -o $@ $<
 
-./parser/php5/php5.go: ./parser/php5/php5.y
+./internal/parser/php5/php5.go: ./internal/parser/php5/php5.y
 	goyacc -o $@ $<
 
-./parser/php7/php7.go: ./parser/php7/php7.y
+./internal/parser/php7/php7.go: ./internal/parser/php7/php7.y
 	goyacc -o $@ $<
 
 cpu_pprof:

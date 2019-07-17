@@ -27,7 +27,7 @@ Package usage example:
 		"os"
 
 		"github.com/z7zmey/php-parser/php7"
-		"github.com/z7zmey/php-parser/visitor"
+		"github.com/z7zmey/php-parser/pkg/visitor"
 	)
 
 	func main() {
