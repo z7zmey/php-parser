@@ -33,7 +33,7 @@ func (p *Parser) Lex(lval *yySymType) int {
 }
 
 // Parse the php7 Parser entrypoint
-func (p *Parser) Parse(src []byte, a *graph.AST) int {
+func (p *Parser) Parse(src []byte, a *graph.Graph) int {
 	p.AbstractParser.Reset(src, a)
 	return p.yyParserImpl.Parse(p)
 }

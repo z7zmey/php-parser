@@ -9,7 +9,7 @@ import (
 )
 
 type Parser interface {
-	Parse([]byte, *graph.AST) int
+	Parse([]byte, *graph.Graph) int
 	GetErrors() []*errors.Error
 }
 
@@ -17,18 +17,18 @@ type AbstractParser struct {
 	Lexer        scanner.Scanner
 	CurrentToken *scanner.Token
 	List         stackedNodeList
-	Ast          *graph.AST
+	Ast          *graph.Graph
 }
 
-func (l *AbstractParser) Error(msg string) {
+func (p *AbstractParser) Error(msg string) {
 	pos := &position.Position{
-		StartLine: l.CurrentToken.StartLine,
-		EndLine:   l.CurrentToken.EndLine,
-		StartPos:  l.CurrentToken.StartPos,
-		EndPos:    l.CurrentToken.EndPos,
+		StartLine: p.CurrentToken.StartLine,
+		EndLine:   p.CurrentToken.EndLine,
+		StartPos:  p.CurrentToken.StartPos,
+		EndPos:    p.CurrentToken.EndPos,
 	}
 
-	l.Lexer.AddError(errors.NewError(msg, pos))
+	p.Lexer.AddError(errors.NewError(msg, pos))
 }
 
 // GetErrors returns errors list
@@ -36,7 +36,7 @@ func (p *AbstractParser) GetErrors() []*errors.Error {
 	return p.Lexer.GetErrors()
 }
 
-func (p *AbstractParser) Reset(src []byte, a *graph.AST) {
+func (p *AbstractParser) Reset(src []byte, a *graph.Graph) {
 	p.Lexer.Reset(src)
 	p.List.Reset()
 

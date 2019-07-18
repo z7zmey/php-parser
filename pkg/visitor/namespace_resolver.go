@@ -27,7 +27,7 @@ func NewNamespaceResolver() *NamespaceResolver {
 	}
 }
 
-// EnterNode is invoked at every node in heirerchy
+// EnterNode is invoked at every node in hierarchy
 func (nsr *NamespaceResolver) EnterNode(w walker.Walkable) bool {
 	switch n := w.(type) {
 	case *stmt.Namespace:

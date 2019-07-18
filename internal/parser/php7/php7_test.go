@@ -16120,7 +16120,7 @@ func TestPhp7(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{})
+	php7parser.Parse([]byte(src), &graph.Graph{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16235,7 +16235,7 @@ func TestPhp5Strings(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{})
+	php7parser.Parse([]byte(src), &graph.Graph{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16425,7 +16425,7 @@ CAD;
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{})
+	php7parser.Parse([]byte(src), &graph.Graph{})
 	actual := php7parser.Ast
 	assert.DeepEqual(t, expected, actual)
 }
@@ -16445,7 +16445,7 @@ func TestPhp7ControlCharsErrors(t *testing.T) {
 	}
 
 	php7parser := php7.NewParser()
-	php7parser.Parse([]byte(src), &graph.AST{})
+	php7parser.Parse([]byte(src), &graph.Graph{})
 	actual := php7parser.GetErrors()
 	assert.DeepEqual(t, expected, actual)
 }

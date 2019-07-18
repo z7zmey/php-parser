@@ -14,7 +14,7 @@ type Parser interface {
 
 type phpParser struct {
 	p parser.Parser
-	t *graph.AST
+	t *graph.Graph
 }
 
 func (p phpParser) Parse(data []byte) (traverser.Traverser, []*errors.Error) {
@@ -25,6 +25,6 @@ func (p phpParser) Parse(data []byte) (traverser.Traverser, []*errors.Error) {
 func NewPHP7Parser() Parser {
 	return phpParser{
 		p: php7.NewParser(),
-		t: new(graph.AST),
+		t: new(graph.Graph),
 	}
 }

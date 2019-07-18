@@ -5,7 +5,7 @@ import (
 	"github.com/z7zmey/php-parser/pkg/traverser"
 )
 
-type AST struct {
+type Graph struct {
 	FileData  []byte
 	Positions PositionStorage
 	Nodes     NodeStorage
@@ -21,7 +21,7 @@ type queueItem struct {
 	depth int
 }
 
-func (g *AST) Reset() {
+func (g *Graph) Reset() {
 	g.FileData = g.FileData[:0]
 	g.Nodes = g.Nodes[:0]
 	g.Edges = g.Edges[:0]
@@ -30,7 +30,7 @@ func (g *AST) Reset() {
 	g.RootNode = 0
 }
 
-func (g *AST) Link(nodeID NodeID, edgeType EdgeType, target uint32) {
+func (g *Graph) Link(nodeID NodeID, edgeType EdgeType, target uint32) {
 	edge := Edge{
 		Type:   edgeType,
 		Target: target,
@@ -49,7 +49,7 @@ func (g *AST) Link(nodeID NodeID, edgeType EdgeType, target uint32) {
 	}
 }
 
-func (g *AST) AppendEdges(src EdgeList, edges EdgeList) EdgeList {
+func (g *Graph) AppendEdges(src EdgeList, edges EdgeList) EdgeList {
 	if edges.First == 0 {
 		return src
 	}
@@ -64,7 +64,7 @@ func (g *AST) AppendEdges(src EdgeList, edges EdgeList) EdgeList {
 	return src
 }
 
-func (g *AST) RemoveEdges(nodeID NodeID, f EdgeFilter) EdgeList {
+func (g *Graph) RemoveEdges(nodeID NodeID, f EdgeFilter) EdgeList {
 	nodeEdges := &g.Nodes[nodeID-1].Edges
 
 	var removedEdges EdgeList
@@ -92,7 +92,7 @@ func (g *AST) RemoveEdges(nodeID NodeID, f EdgeFilter) EdgeList {
 	return removedEdges
 }
 
-func (g *AST) EachEdge(edges EdgeList, callback func(e Edge) bool) {
+func (g *Graph) EachEdge(edges EdgeList, callback func(e Edge) bool) {
 	edgeID := edges.First
 	for edgeID != 0 {
 		edge := g.Edges[edgeID-1]
@@ -105,7 +105,7 @@ func (g *AST) EachEdge(edges EdgeList, callback func(e Edge) bool) {
 	}
 }
 
-func (g *AST) Traverse(v traverser.Visitor) {
+func (g *Graph) Traverse(v traverser.Visitor) {
 	g.queue = g.queue[:0]
 	g.queue = append(g.queue, queueItem{
 		id:    g.RootNode,
@@ -150,12 +150,12 @@ func (g *AST) Traverse(v traverser.Visitor) {
 			token := g.Tokens.Get(tokenID)
 			tokenPos := g.Positions.Get(token.Pos)
 
-			nestedToken := ast.Token{
+			astToken := ast.Token{
 				Type:  token.Type,
 				Value: string(g.FileData[tokenPos.PS:tokenPos.PE]),
 			}
 
-			astNode.Tokens[token.Group] = append(astNode.Tokens[token.Group], nestedToken)
+			astNode.Tokens[token.Group] = append(astNode.Tokens[token.Group], astToken)
 
 			return false
 		})

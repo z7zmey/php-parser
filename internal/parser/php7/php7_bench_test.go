@@ -17,7 +17,7 @@ func BenchmarkPhp7(b *testing.B) {
 	php7parser := php7.NewParser()
 
 	for n := 0; n < b.N; n++ {
-		a := &graph.AST{}
+		a := &graph.Graph{}
 		php7parser.Parse([]byte(src), a)
 	}
 }
@@ -29,7 +29,7 @@ func BenchmarkPhp7Reuse(b *testing.B) {
 	}
 
 	php7parser := php7.NewParser()
-	a := &graph.AST{}
+	a := &graph.Graph{}
 	for n := 0; n < b.N; n++ {
 		a.Reset()
 		php7parser.Parse([]byte(src), a)
