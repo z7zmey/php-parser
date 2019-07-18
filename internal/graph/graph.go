@@ -123,44 +123,32 @@ func (g *Graph) Traverse(v traverser.Visitor) {
 		graphNode := g.Nodes.Get(item.id)
 		depth := item.depth
 
-		astNode := ast.Node{
-			Type:   graphNode.Type,
-			Flags:  graphNode.Flag,
-			Tokens: make(map[ast.TokenGroup][]ast.Token),
-		}
+		visitChild := v.VisitNode(graphNode.SimpleNode, depth)
 
 		g.EachEdge(graphNode.Edges, func(e Edge) bool {
-			if e.Type != EdgeTypePosition {
-				return false
+			if e.Type == EdgeTypeToken {
+				tokenID := TokenID(e.Target)
+
+				token := g.Tokens.Get(tokenID)
+				tokenPos := g.Positions.Get(token.Pos)
+
+				astToken := ast.Token{
+					Type:  token.Type,
+					Group: token.Group,
+					Value: string(g.FileData[tokenPos.PS:tokenPos.PE]),
+				}
+
+				visitChild = v.VisitToken(astToken, depth)
 			}
 
-			posID := PositionID(e.Target)
-			astNode.Position = g.Positions.Get(posID)
+			if e.Type == EdgeTypeToken {
+				posID := PositionID(e.Target)
 
-			return true
-		})
-
-		g.EachEdge(graphNode.Edges, func(e Edge) bool {
-			if e.Type != EdgeTypeToken {
-				return false
+				visitChild = v.VisitPosition(g.Positions.Get(posID), depth)
 			}
-
-			tokenID := TokenID(e.Target)
-
-			token := g.Tokens.Get(tokenID)
-			tokenPos := g.Positions.Get(token.Pos)
-
-			astToken := ast.Token{
-				Type:  token.Type,
-				Value: string(g.FileData[tokenPos.PS:tokenPos.PE]),
-			}
-
-			astNode.Tokens[token.Group] = append(astNode.Tokens[token.Group], astToken)
 
 			return false
 		})
-
-		visitChild := v.VisitNode(astNode, graphNode.Group, depth)
 
 		if visitChild {
 			depth++

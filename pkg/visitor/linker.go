@@ -6,12 +6,15 @@ type Linker struct {
 	stack []*ast.Node
 }
 
-func (v *Linker) VisitNode(n ast.Node, group ast.NodeGroup, depth int) bool {
+func (v *Linker) VisitNode(n ast.SimpleNode, depth int) bool {
 	if len(v.stack) == depth {
-		v.stack = append(v.stack, &n)
+		v.stack = append(v.stack, nil)
 	}
 
-	v.stack[depth] = &n
+	v.stack[depth] = &ast.Node{
+		SimpleNode: n,
+		Tokens:     make(map[ast.TokenGroup][]ast.Token),
+	}
 
 	if depth == 0 {
 		return true
@@ -23,7 +26,19 @@ func (v *Linker) VisitNode(n ast.Node, group ast.NodeGroup, depth int) bool {
 		parent.Children = make(map[ast.NodeGroup][]*ast.Node)
 	}
 
-	parent.Children[group] = append(parent.Children[group], &n)
+	parent.Children[n.Group] = append(parent.Children[n.Group], v.stack[depth])
+
+	return true
+}
+
+func (v *Linker) VisitPosition(p ast.Position, depth int) bool {
+	v.stack[depth].Position = p
+
+	return true
+}
+
+func (v *Linker) VisitToken(t ast.Token, depth int) bool {
+	v.stack[depth].Tokens[t.Group] = append(v.stack[depth].Tokens[t.Group], t)
 
 	return true
 }

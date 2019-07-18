@@ -11,9 +11,7 @@ var EdgeTypeNode = NewEdgeType("node")
 type NodeID uint32
 
 type Node struct {
-	Type  ast.NodeType
-	Flag  ast.NodeFlag
-	Group ast.NodeGroup
+	ast.SimpleNode
 
 	Edges EdgeList
 }

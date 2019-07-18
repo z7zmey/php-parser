@@ -308,9 +308,14 @@ func (et NodeGroup) Is(ect EdgeClassType) bool {
 	return uint8(et)&uint8(ect) == uint8(ect)
 }
 
+type SimpleNode struct {
+	Type  NodeType
+	Flag  NodeFlag
+	Group NodeGroup
+}
+
 type Node struct {
-	Type     NodeType
-	Flags    NodeFlag
+	SimpleNode
 	Position Position
 	Children map[NodeGroup][]*Node
 	Tokens   map[TokenGroup][]Token
@@ -339,7 +344,7 @@ func (n Node) MarshalJSON() ([]byte, error) {
 
 	out := node{
 		Type:     n.Type.String(),
-		Flags:    n.Flags.GetFlagNames(),
+		Flags:    n.Flag.GetFlagNames(),
 		Value:    n.Value,
 		Position: n.Position,
 		Tokens:   tokens,

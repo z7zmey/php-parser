@@ -92,6 +92,7 @@ const (
 
 type Token struct {
 	Type  scanner.TokenType
+	Group TokenGroup
 	Value string
 }
 
