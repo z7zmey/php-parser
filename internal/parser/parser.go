@@ -11,6 +11,7 @@ import (
 type Parser interface {
 	Parse([]byte, *graph.Graph) int
 	GetErrors() []*errors.Error
+	WithTokens() Parser
 }
 
 type AbstractParser struct {
@@ -18,6 +19,8 @@ type AbstractParser struct {
 	CurrentToken *scanner.Token
 	List         stackedNodeList
 	Ast          *graph.Graph
+
+	WithTokens bool
 }
 
 func (p *AbstractParser) Error(msg string) {
@@ -172,6 +175,10 @@ func (p *AbstractParser) SavePosition(nodeID graph.NodeID, posID graph.PositionI
 }
 
 func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
+	if !p.WithTokens {
+		return
+	}
+
 	for _, token := range tokens {
 		tkn := p.convertToken(token)
 		tkn.Group = group
@@ -183,6 +190,10 @@ func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup,
 }
 
 func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup, tokens []scanner.Token) {
+	if !p.WithTokens {
+		return
+	}
+
 	for i := len(tokens) - 1; i >= 0; i-- {
 		tkn := p.convertToken(tokens[i])
 		tkn.Group = group
@@ -201,6 +212,10 @@ func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup
 }
 
 func (p *AbstractParser) MoveStartTokens(src graph.NodeID, dst graph.NodeID) {
+	if !p.WithTokens {
+		return
+	}
+
 	list := p.Ast.RemoveEdges(src, func(e graph.Edge) bool {
 		if e.Type != graph.EdgeTypeToken {
 			return false

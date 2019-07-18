@@ -38,6 +38,11 @@ func (p *Parser) Parse(src []byte, a *graph.Graph) int {
 	return p.yyParserImpl.Parse(p)
 }
 
+func (p *Parser) WithTokens() parser.Parser {
+	p.AbstractParser.WithTokens = true
+	return p
+}
+
 func (p *Parser) returnTokenToPool(yyDollar []yySymType, yyVAL *yySymType) {
 	for i := 1; i < len(yyDollar); i++ {
 		if yyDollar[i].token != nil {

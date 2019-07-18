@@ -26,6 +26,7 @@ var dumpPath *bool
 var profiler string
 var showResolvedNs *bool
 var printBack *bool
+var withTokens *bool
 
 type file struct {
 	path    string
@@ -43,6 +44,7 @@ func main() {
 	dump = flag.Bool("d", false, "dump ast")
 	dumpPath = flag.Bool("p", false, "print filepath")
 	showResolvedNs = flag.Bool("r", false, "resolve names")
+	withTokens = flag.Bool("t", false, "parse free-floating tokens")
 	printBack = flag.Bool("pb", false, "print AST back into the parsed file")
 	flag.StringVar(&profiler, "prof", "", "start profiler: [cpu, mem, trace]")
 
@@ -104,6 +106,9 @@ func processPath(pathList []string, fileCh chan<- *file) {
 
 func parserWorker(fileCh <-chan *file, r chan<- result) {
 	parserWorker := parser.NewPHP7Parser()
+	if *withTokens {
+		parserWorker = parserWorker.WithTokens()
+	}
 
 	for {
 		f, ok := <-fileCh
@@ -161,6 +166,8 @@ func printerWorker(r <-chan result) {
 			_, err = os.Stdout.Write(buf)
 			checkErr(err)
 		}
+
+		parser.Reuse(res.traverser)
 
 		wg.Done()
 	}
