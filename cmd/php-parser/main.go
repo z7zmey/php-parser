@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/z7zmey/php-parser/pkg/errors"
-	"github.com/z7zmey/php-parser/pkg/traverser"
-	"github.com/z7zmey/php-parser/pkg/visitor"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 	"sync"
+
+	"github.com/z7zmey/php-parser/pkg/errors"
+	"github.com/z7zmey/php-parser/pkg/traverser"
+	"github.com/z7zmey/php-parser/pkg/visitor"
 
 	"github.com/pkg/profile"
 	"github.com/yookoala/realpath"
@@ -40,6 +41,8 @@ type result struct {
 }
 
 func main() {
+	ballast := make([]byte, 100<<20)
+
 	usePhp5 = flag.Bool("php5", false, "parse as PHP5")
 	dump = flag.Bool("d", false, "dump ast")
 	dumpPath = flag.Bool("p", false, "print filepath")
@@ -84,6 +87,8 @@ func main() {
 	wg.Wait()
 	close(fileCh)
 	close(resultCh)
+
+	runtime.KeepAlive(ballast)
 }
 
 func processPath(pathList []string, fileCh chan<- *file) {

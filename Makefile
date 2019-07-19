@@ -40,17 +40,17 @@ compile: ./internal/parser/php5/php5.go ./internal/parser/php7/php7.go ./interna
 	goyacc -o $@ $<
 
 cpu_pprof:
-	go test -cpuprofile cpu.pprof -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s ./parser/php7
+	go test -cpuprofile cpu.pprof -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s ./internal/parser/php7
 	go tool pprof ./php7.test cpu.pprof
 
 mem_pprof:
-	go test -memprofile mem.pprof  -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s -benchmem ./parser/php7
+	go test -memprofile mem.pprof  -run=^$$ -bench=^BenchmarkPhp7$$ -benchtime=20s -benchmem ./internal/parser/php7
 	go tool pprof -alloc_objects ./php7.test mem.pprof
 
 cpu_pprof_php5:
-	go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./parser/php5
+	go test -cpuprofile cpu.prof -bench=. -benchtime=20s ./internal/parser/php5
 	go tool pprof ./php5.test cpu.prof
 
 mem_pprof_php5:
-	go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./parser/php5
+	go test -memprofile mem.prof -bench=. -benchtime=20s -benchmem ./internal/parser/php5
 	go tool pprof -alloc_objects ./php5.test mem.prof
