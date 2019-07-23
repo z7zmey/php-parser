@@ -160,10 +160,7 @@ func (p *AbstractParser) Children(prevNodeID graph.NodeID, parentNodeID graph.No
 			continue
 		}
 
-		childNode := p.Ast.Nodes.Get(childNodeID)
-		childNode.Group = nodeGroup
-		p.Ast.Nodes.Save(childNodeID, childNode)
-
+		p.Ast.Nodes[childNodeID-1].Group = nodeGroup
 		p.Ast.Link(parentNodeID, graph.EdgeTypeNode, uint32(childNodeID))
 	}
 
@@ -182,7 +179,7 @@ func (p *AbstractParser) AppendTokens(nodeID graph.NodeID, group ast.TokenGroup,
 	for _, token := range tokens {
 		tkn := p.convertToken(token)
 		tkn.Group = group
-		tokenID := p.Ast.Tokens.Create(tkn)
+		tokenID := p.Ast.Tokens.Put(tkn)
 
 		p.Ast.Link(nodeID, graph.EdgeTypeToken, uint32(tokenID))
 
@@ -197,17 +194,16 @@ func (p *AbstractParser) PrependTokens(nodeID graph.NodeID, group ast.TokenGroup
 	for i := len(tokens) - 1; i >= 0; i-- {
 		tkn := p.convertToken(tokens[i])
 		tkn.Group = group
-		tokenID := p.Ast.Tokens.Create(tkn)
+		tokenID := p.Ast.Tokens.Put(tkn)
 
 		edge := graph.Edge{
 			Type:   graph.EdgeTypeToken,
 			Target: uint32(tokenID),
 		}
 		edgeID := p.Ast.Edges.Put(edge)
-		node := p.Ast.Nodes.Get(nodeID)
 
+		node := &p.Ast.Nodes[nodeID-1]
 		node.Edges = p.Ast.AppendEdges(graph.EdgeList{edgeID, edgeID}, node.Edges)
-		p.Ast.Nodes.Save(nodeID, node)
 	}
 }
 
@@ -230,9 +226,8 @@ func (p *AbstractParser) MoveStartTokens(src graph.NodeID, dst graph.NodeID) {
 		return true
 	})
 
-	dstNode := p.Ast.Nodes.Get(dst)
-	dstNode.Edges = p.Ast.AppendEdges(list, dstNode.Edges)
-	p.Ast.Nodes.Save(dst, dstNode)
+	node := &p.Ast.Nodes[dst-1]
+	node.Edges = p.Ast.AppendEdges(list, node.Edges)
 }
 
 func (p *AbstractParser) convertToken(token scanner.Token) graph.Token {

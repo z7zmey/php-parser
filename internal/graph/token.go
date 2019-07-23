@@ -38,15 +38,10 @@ func (t Token) MarshalJSON() ([]byte, error) {
 
 type TokenStorage []Token
 
-// Create saves new Node in store
-func (b *TokenStorage) Create(s Token) TokenID {
+// Put saves new Node in store
+func (b *TokenStorage) Put(s Token) TokenID {
 	*b = append(*b, s)
 	return TokenID(len(*b))
-}
-
-// Save modified Node
-func (b TokenStorage) Save(id TokenID, s Token) {
-	b[id-1] = s
 }
 
 // Get returns Node by NodeID

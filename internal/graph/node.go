@@ -36,15 +36,10 @@ func (n Node) MarshalJSON() ([]byte, error) {
 // NodeStorage store nodes
 type NodeStorage []Node
 
-// Create saves new Node in store
-func (b *NodeStorage) Create(n Node) NodeID {
+// Put saves new Node in store
+func (b *NodeStorage) Put(n Node) NodeID {
 	*b = append(*b, n)
 	return NodeID(len(*b))
-}
-
-// Save modified Node
-func (b NodeStorage) Save(id NodeID, n Node) {
-	b[id-1] = n
 }
 
 // Get returns Node by NodeID

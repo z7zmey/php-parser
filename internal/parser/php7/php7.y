@@ -5227,9 +5227,7 @@ expr_without_variable:
                     })
                     yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, nil))
                 } else {
-                    node := yylex.(*Parser).Ast.Nodes.Get($$)
-                    node.Flag = flag
-                    yylex.(*Parser).Ast.Nodes.Save($$, node)
+                    yylex.(*Parser).Ast.Nodes[$$-1].Flag = flag
                     yylex.(*Parser).SavePosition($$, yylex.(*Parser).NewPosition(nil, []*scanner.Token{$1}, []graph.NodeID{$2}))
                 }
 
