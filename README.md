@@ -27,6 +27,7 @@ Who Uses
 --------
 
 [VKCOM/noverify](https://github.com/VKCOM/noverify) - NoVerify is a pretty fast linter for PHP
+
 [quasilyte/phpgrep](https://github.com/quasilyte/phpgrep) - phpgrep is a tool for syntax-aware PHP code search
 
 Usage example
