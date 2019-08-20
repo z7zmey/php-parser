@@ -1420,3 +1420,15 @@ func TestIgnoreControllCharactersAtStringVarOffset(t *testing.T) {
 	actual = lv.Tkn.Value
 	assert.DeepEqual(t, expected, actual)
 }
+
+func TestBomInMiddleOfFile(t *testing.T) {
+	src := "<?php \xEF\xBB\xBF $a;"
+
+	lexer := scanner.NewLexer(bytes.NewBufferString(src), "test.php")
+	lv := &lval{}
+
+	lexer.Lex(lv)
+
+	assert.Assert(t, len(lexer.Errors) > 0)
+	assert.Assert(t, lexer.Errors[0].String() == "unicode (UTF-8) BOM in middle of file at line 1")
+}

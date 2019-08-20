@@ -4,6 +4,7 @@ package scanner
 import (
 	"bufio"
 	"bytes"
+	"go/token"
 	t "go/token"
 	"io"
 	"unicode"
@@ -62,23 +63,31 @@ func Rune2Class(r rune) int {
 	return classOther
 }
 
+func (l *Lexer) lexErrorFunc(p token.Pos, msg string) {
+	pos := position.NewPosition(
+		l.File.Line(p),
+		l.File.Line(p),
+		int(p),
+		int(p),
+	)
+	l.Errors = append(l.Errors, errors.NewError(msg, pos))
+}
+
 // NewLexer the Lexer constructor
 func NewLexer(src io.Reader, fName string) *Lexer {
-	file := t.NewFileSet().AddFile(fName, -1, 1<<31-3)
-	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(Rune2Class))
-	if err != nil {
-		panic(err)
-	}
-
-	return &Lexer{
-		Lexer:         lx,
+	lexer := &Lexer{
 		StateStack:    []int{0},
-		PhpDocComment: "",
-		FreeFloating:  nil,
-		heredocLabel:  "",
 		tokenBytesBuf: &bytes.Buffer{},
 		TokenPool:     &TokenPool{},
 	}
+
+	file := t.NewFileSet().AddFile(fName, -1, 1<<31-3)
+	lx, err := lex.New(file, bufio.NewReader(src), lex.RuneClass(Rune2Class), lex.ErrorFunc(lexer.lexErrorFunc))
+	if err != nil {
+		panic(err)
+	}
+	lexer.Lexer = lx
+	return lexer
 }
 
 func (l *Lexer) Error(msg string) {
